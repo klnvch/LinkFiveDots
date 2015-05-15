@@ -1,0 +1,938 @@
+android.support.v4.app.BackStackState
+android.support.v4.app.BackStackState: android.os.Parcelable$Creator CREATOR
+android.support.v4.app.Fragment$SavedState
+android.support.v4.app.Fragment$SavedState: android.os.Parcelable$Creator CREATOR
+android.support.v4.app.FragmentManagerState
+android.support.v4.app.FragmentManagerState: android.os.Parcelable$Creator CREATOR
+android.support.v4.app.FragmentState
+android.support.v4.app.FragmentState: android.os.Parcelable$Creator CREATOR
+android.support.v4.app.FragmentTabHost: void setOnTabChangedListener(android.widget.TabHost$OnTabChangeListener)
+android.support.v4.app.FragmentTabHost$SavedState
+android.support.v4.app.FragmentTabHost$SavedState: android.os.Parcelable$Creator CREATOR
+android.support.v4.content.ModernAsyncTask$Status: android.support.v4.content.ModernAsyncTask$Status[] values()
+android.support.v4.content.ModernAsyncTask$Status: android.support.v4.content.ModernAsyncTask$Status valueOf(java.lang.String)
+android.support.v4.media.MediaDescriptionCompat
+android.support.v4.media.MediaDescriptionCompat: android.os.Parcelable$Creator CREATOR
+android.support.v4.media.MediaMetadataCompat
+android.support.v4.media.MediaMetadataCompat: android.os.Parcelable$Creator CREATOR
+android.support.v4.media.RatingCompat
+android.support.v4.media.RatingCompat: android.os.Parcelable$Creator CREATOR
+android.support.v4.media.session.MediaSessionCompat$QueueItem
+android.support.v4.media.session.MediaSessionCompat$QueueItem: android.os.Parcelable$Creator CREATOR
+android.support.v4.media.session.MediaSessionCompat$ResultReceiverWrapper
+android.support.v4.media.session.MediaSessionCompat$ResultReceiverWrapper: android.os.Parcelable$Creator CREATOR
+android.support.v4.media.session.MediaSessionCompat$Token
+android.support.v4.media.session.MediaSessionCompat$Token: android.os.Parcelable$Creator CREATOR
+android.support.v4.media.session.ParcelableVolumeInfo
+android.support.v4.media.session.ParcelableVolumeInfo: android.os.Parcelable$Creator CREATOR
+android.support.v4.media.session.PlaybackStateCompat
+android.support.v4.media.session.PlaybackStateCompat: android.os.Parcelable$Creator CREATOR
+android.support.v4.media.session.PlaybackStateCompat$CustomAction
+android.support.v4.media.session.PlaybackStateCompat$CustomAction: android.os.Parcelable$Creator CREATOR
+android.support.v4.view.PagerTabStrip: void setTabIndicatorColor(int)
+android.support.v4.view.PagerTabStrip: void setTabIndicatorColorResource(int)
+android.support.v4.view.PagerTabStrip: int getTabIndicatorColor()
+android.support.v4.view.PagerTabStrip: void setTextSpacing(int)
+android.support.v4.view.PagerTabStrip: void setBackgroundDrawable(android.graphics.drawable.Drawable)
+android.support.v4.view.PagerTabStrip: void setBackgroundColor(int)
+android.support.v4.view.PagerTabStrip: void setBackgroundResource(int)
+android.support.v4.view.PagerTabStrip: void setDrawFullUnderline(boolean)
+android.support.v4.view.PagerTabStrip: boolean getDrawFullUnderline()
+android.support.v4.view.PagerTabStrip: int getMinHeight()
+android.support.v4.view.PagerTitleStrip: void setSingleLineAllCaps(android.widget.TextView)
+android.support.v4.view.PagerTitleStrip: void setTextSpacing(int)
+android.support.v4.view.PagerTitleStrip: int getTextSpacing()
+android.support.v4.view.PagerTitleStrip: void setNonPrimaryAlpha(float)
+android.support.v4.view.PagerTitleStrip: void setTextColor(int)
+android.support.v4.view.PagerTitleStrip: void setGravity(int)
+android.support.v4.view.PagerTitleStrip: int getMinHeight()
+android.support.v4.view.ViewPager: void setScrollState(int)
+android.support.v4.view.ViewPager: void setAdapter(android.support.v4.view.PagerAdapter)
+android.support.v4.view.ViewPager: android.support.v4.view.PagerAdapter getAdapter()
+android.support.v4.view.ViewPager: void setOnAdapterChangeListener(android.support.v4.view.ViewPager$OnAdapterChangeListener)
+android.support.v4.view.ViewPager: int getClientWidth()
+android.support.v4.view.ViewPager: void setCurrentItem(int)
+android.support.v4.view.ViewPager: int getCurrentItem()
+android.support.v4.view.ViewPager: void setOnPageChangeListener(android.support.v4.view.ViewPager$OnPageChangeListener)
+android.support.v4.view.ViewPager: void setChildrenDrawingOrderEnabledCompat(boolean)
+android.support.v4.view.ViewPager: int getOffscreenPageLimit()
+android.support.v4.view.ViewPager: void setOffscreenPageLimit(int)
+android.support.v4.view.ViewPager: void setPageMargin(int)
+android.support.v4.view.ViewPager: int getPageMargin()
+android.support.v4.view.ViewPager: void setPageMarginDrawable(android.graphics.drawable.Drawable)
+android.support.v4.view.ViewPager: void setPageMarginDrawable(int)
+android.support.v4.view.ViewPager: void setScrollingCacheEnabled(boolean)
+android.support.v4.view.ViewPager$SavedState
+android.support.v4.view.ViewPager$SavedState: android.os.Parcelable$Creator CREATOR
+android.support.v4.widget.DrawerLayout: void setScrimColor(int)
+android.support.v4.widget.DrawerLayout: void setDrawerListener(android.support.v4.widget.DrawerLayout$DrawerListener)
+android.support.v4.widget.DrawerLayout: void setDrawerLockMode(int)
+android.support.v4.widget.DrawerLayout: void setStatusBarBackground(android.graphics.drawable.Drawable)
+android.support.v4.widget.DrawerLayout: android.graphics.drawable.Drawable getStatusBarBackgroundDrawable()
+android.support.v4.widget.DrawerLayout: void setStatusBarBackground(int)
+android.support.v4.widget.DrawerLayout: void setStatusBarBackgroundColor(int)
+android.support.v4.widget.DrawerLayout$SavedState
+android.support.v4.widget.DrawerLayout$SavedState: android.os.Parcelable$Creator CREATOR
+android.support.v4.widget.SlidingPaneLayout: void setParallaxDistance(int)
+android.support.v4.widget.SlidingPaneLayout: int getParallaxDistance()
+android.support.v4.widget.SlidingPaneLayout: void setSliderFadeColor(int)
+android.support.v4.widget.SlidingPaneLayout: int getSliderFadeColor()
+android.support.v4.widget.SlidingPaneLayout: void setCoveredFadeColor(int)
+android.support.v4.widget.SlidingPaneLayout: int getCoveredFadeColor()
+android.support.v4.widget.SlidingPaneLayout: void setPanelSlideListener(android.support.v4.widget.SlidingPaneLayout$PanelSlideListener)
+android.support.v4.widget.SlidingPaneLayout: void setShadowDrawable(android.graphics.drawable.Drawable)
+android.support.v4.widget.SlidingPaneLayout: void setShadowDrawableLeft(android.graphics.drawable.Drawable)
+android.support.v4.widget.SlidingPaneLayout: void setShadowDrawableRight(android.graphics.drawable.Drawable)
+android.support.v4.widget.SlidingPaneLayout: void setShadowResource(int)
+android.support.v4.widget.SlidingPaneLayout: void setShadowResourceLeft(int)
+android.support.v4.widget.SlidingPaneLayout: void setShadowResourceRight(int)
+android.support.v4.widget.SlidingPaneLayout$SavedState
+android.support.v4.widget.SlidingPaneLayout$SavedState: android.os.Parcelable$Creator CREATOR
+android.support.v4.widget.SwipeRefreshLayout: void setColorViewAlpha(int)
+android.support.v4.widget.SwipeRefreshLayout: void setSize(int)
+android.support.v4.widget.SwipeRefreshLayout: void setOnRefreshListener(android.support.v4.widget.SwipeRefreshLayout$OnRefreshListener)
+android.support.v4.widget.SwipeRefreshLayout: void setRefreshing(boolean)
+android.support.v4.widget.SwipeRefreshLayout: void setAnimationProgress(float)
+android.support.v4.widget.SwipeRefreshLayout: void setProgressBackgroundColor(int)
+android.support.v4.widget.SwipeRefreshLayout: void setProgressBackgroundColorSchemeResource(int)
+android.support.v4.widget.SwipeRefreshLayout: void setProgressBackgroundColorSchemeColor(int)
+android.support.v4.widget.SwipeRefreshLayout: void setColorScheme(int[])
+android.support.v4.widget.SwipeRefreshLayout: void setColorSchemeResources(int[])
+android.support.v4.widget.SwipeRefreshLayout: void setColorSchemeColors(int[])
+android.support.v4.widget.SwipeRefreshLayout: void setDistanceToTriggerSync(int)
+android.support.v4.widget.SwipeRefreshLayout: int getProgressCircleDiameter()
+by.klnvch.link5dots.GameView
+by.klnvch.link5dots.GameView: GameView(android.content.Context)
+by.klnvch.link5dots.GameView: GameView(android.content.Context,android.util.AttributeSet)
+by.klnvch.link5dots.GameView: GameView(android.content.Context,android.util.AttributeSet,int)
+by.klnvch.link5dots.GameView: void setOnGameEventListener(by.klnvch.link5dots.GameView$OnGameEventListener)
+by.klnvch.link5dots.GameView: by.klnvch.link5dots.Offset[][] getPointerToNet()
+by.klnvch.link5dots.GameView: void setOpponentDot(by.klnvch.link5dots.Offset)
+by.klnvch.link5dots.HowToActivity
+by.klnvch.link5dots.HowToActivity: HowToActivity()
+by.klnvch.link5dots.InfoActivity
+by.klnvch.link5dots.InfoActivity: InfoActivity()
+by.klnvch.link5dots.MainActivity
+by.klnvch.link5dots.MainActivity: MainActivity()
+by.klnvch.link5dots.MainMenuActivity
+by.klnvch.link5dots.MainMenuActivity: MainMenuActivity()
+by.klnvch.link5dots.MainMenuActivity: void onClick(android.view.View)
+by.klnvch.link5dots.MyApplication
+by.klnvch.link5dots.MyApplication: MyApplication()
+by.klnvch.link5dots.R$attr: int adSize
+by.klnvch.link5dots.R$attr: int adSizes
+by.klnvch.link5dots.R$attr: int adUnitId
+by.klnvch.link5dots.R$attr: int circleCrop
+by.klnvch.link5dots.R$attr: int imageAspectRatio
+by.klnvch.link5dots.R$attr: int imageAspectRatioAdjust
+by.klnvch.link5dots.R$color: int black
+by.klnvch.link5dots.R$color: int common_action_bar_splitter
+by.klnvch.link5dots.R$color: int common_signin_btn_dark_text_default
+by.klnvch.link5dots.R$color: int common_signin_btn_dark_text_disabled
+by.klnvch.link5dots.R$color: int common_signin_btn_dark_text_focused
+by.klnvch.link5dots.R$color: int common_signin_btn_dark_text_pressed
+by.klnvch.link5dots.R$color: int common_signin_btn_default_background
+by.klnvch.link5dots.R$color: int common_signin_btn_light_text_default
+by.klnvch.link5dots.R$color: int common_signin_btn_light_text_disabled
+by.klnvch.link5dots.R$color: int common_signin_btn_light_text_focused
+by.klnvch.link5dots.R$color: int common_signin_btn_light_text_pressed
+by.klnvch.link5dots.R$color: int common_signin_btn_text_dark
+by.klnvch.link5dots.R$color: int common_signin_btn_text_light
+by.klnvch.link5dots.R$color: int custom_color
+by.klnvch.link5dots.R$dimen: int bt_text_size
+by.klnvch.link5dots.R$dimen: int btn_corner_radius
+by.klnvch.link5dots.R$dimen: int btn_inset
+by.klnvch.link5dots.R$dimen: int btn_padding_horizontal
+by.klnvch.link5dots.R$dimen: int btn_padding_vertical
+by.klnvch.link5dots.R$dimen: int btn_table_padding
+by.klnvch.link5dots.R$dimen: int btn_text_size
+by.klnvch.link5dots.R$dimen: int plus_one_button_margin
+by.klnvch.link5dots.R$dimen: int separator_width
+by.klnvch.link5dots.R$dimen: int text_size_help_content
+by.klnvch.link5dots.R$drawable: int arrows
+by.klnvch.link5dots.R$drawable: int background
+by.klnvch.link5dots.R$drawable: int bluedot
+by.klnvch.link5dots.R$drawable: int bluelinediag1
+by.klnvch.link5dots.R$drawable: int bluelinehor
+by.klnvch.link5dots.R$drawable: int btn_normal
+by.klnvch.link5dots.R$drawable: int btn_pressed
+by.klnvch.link5dots.R$drawable: int btn_selector
+by.klnvch.link5dots.R$drawable: int common_full_open_on_phone
+by.klnvch.link5dots.R$drawable: int common_ic_googleplayservices
+by.klnvch.link5dots.R$drawable: int common_signin_btn_icon_dark
+by.klnvch.link5dots.R$drawable: int common_signin_btn_icon_disabled_dark
+by.klnvch.link5dots.R$drawable: int common_signin_btn_icon_disabled_focus_dark
+by.klnvch.link5dots.R$drawable: int common_signin_btn_icon_disabled_focus_light
+by.klnvch.link5dots.R$drawable: int common_signin_btn_icon_disabled_light
+by.klnvch.link5dots.R$drawable: int common_signin_btn_icon_focus_dark
+by.klnvch.link5dots.R$drawable: int common_signin_btn_icon_focus_light
+by.klnvch.link5dots.R$drawable: int common_signin_btn_icon_light
+by.klnvch.link5dots.R$drawable: int common_signin_btn_icon_normal_dark
+by.klnvch.link5dots.R$drawable: int common_signin_btn_icon_normal_light
+by.klnvch.link5dots.R$drawable: int common_signin_btn_icon_pressed_dark
+by.klnvch.link5dots.R$drawable: int common_signin_btn_icon_pressed_light
+by.klnvch.link5dots.R$drawable: int common_signin_btn_text_dark
+by.klnvch.link5dots.R$drawable: int common_signin_btn_text_disabled_dark
+by.klnvch.link5dots.R$drawable: int common_signin_btn_text_disabled_focus_dark
+by.klnvch.link5dots.R$drawable: int common_signin_btn_text_disabled_focus_light
+by.klnvch.link5dots.R$drawable: int common_signin_btn_text_disabled_light
+by.klnvch.link5dots.R$drawable: int common_signin_btn_text_focus_dark
+by.klnvch.link5dots.R$drawable: int common_signin_btn_text_focus_light
+by.klnvch.link5dots.R$drawable: int common_signin_btn_text_light
+by.klnvch.link5dots.R$drawable: int common_signin_btn_text_normal_dark
+by.klnvch.link5dots.R$drawable: int common_signin_btn_text_normal_light
+by.klnvch.link5dots.R$drawable: int common_signin_btn_text_pressed_dark
+by.klnvch.link5dots.R$drawable: int common_signin_btn_text_pressed_light
+by.klnvch.link5dots.R$drawable: int ic_android_black_48dp
+by.klnvch.link5dots.R$drawable: int ic_bluetooth_black_48dp
+by.klnvch.link5dots.R$drawable: int ic_help_black_48dp
+by.klnvch.link5dots.R$drawable: int ic_info_black_48dp
+by.klnvch.link5dots.R$drawable: int ic_plusone_medium_off_client
+by.klnvch.link5dots.R$drawable: int ic_plusone_small_off_client
+by.klnvch.link5dots.R$drawable: int ic_plusone_standard_off_client
+by.klnvch.link5dots.R$drawable: int ic_plusone_tall_off_client
+by.klnvch.link5dots.R$drawable: int ic_star_black_48dp
+by.klnvch.link5dots.R$drawable: int icon
+by.klnvch.link5dots.R$drawable: int paper
+by.klnvch.link5dots.R$drawable: int paper_tiled
+by.klnvch.link5dots.R$drawable: int reddot
+by.klnvch.link5dots.R$drawable: int redlinediag1
+by.klnvch.link5dots.R$drawable: int redlinehor
+by.klnvch.link5dots.R$id: int TableLayout111
+by.klnvch.link5dots.R$id: int adView
+by.klnvch.link5dots.R$id: int adjust_height
+by.klnvch.link5dots.R$id: int adjust_width
+by.klnvch.link5dots.R$id: int bt_menu_refresh
+by.klnvch.link5dots.R$id: int game_view
+by.klnvch.link5dots.R$id: int label_available_devices
+by.klnvch.link5dots.R$id: int label_no_device_found
+by.klnvch.link5dots.R$id: int label_paired_devices
+by.klnvch.link5dots.R$id: int layout_available_devices
+by.klnvch.link5dots.R$id: int layout_paired_devices
+by.klnvch.link5dots.R$id: int layout_visibility
+by.klnvch.link5dots.R$id: int list_available_devices
+by.klnvch.link5dots.R$id: int list_paired_devices
+by.klnvch.link5dots.R$id: int main_menu_bluetooth_game
+by.klnvch.link5dots.R$id: int main_menu_how_to
+by.klnvch.link5dots.R$id: int main_menu_info
+by.klnvch.link5dots.R$id: int main_menu_scores
+by.klnvch.link5dots.R$id: int main_menu_single_player
+by.klnvch.link5dots.R$id: int menu_new_game
+by.klnvch.link5dots.R$id: int menu_search
+by.klnvch.link5dots.R$id: int menu_undo
+by.klnvch.link5dots.R$id: int none
+by.klnvch.link5dots.R$id: int plus_one_button
+by.klnvch.link5dots.R$id: int progressBar
+by.klnvch.link5dots.R$id: int rate_this_app
+by.klnvch.link5dots.R$id: int scores_edit
+by.klnvch.link5dots.R$id: int scores_update
+by.klnvch.link5dots.R$id: int send_feedback
+by.klnvch.link5dots.R$id: int separator
+by.klnvch.link5dots.R$id: int set_visibility
+by.klnvch.link5dots.R$id: int share
+by.klnvch.link5dots.R$id: int version
+by.klnvch.link5dots.R$id: int visibility_info
+by.klnvch.link5dots.R$integer: int google_play_services_version
+by.klnvch.link5dots.R$layout: int bluetooth
+by.klnvch.link5dots.R$layout: int device_name
+by.klnvch.link5dots.R$layout: int howto
+by.klnvch.link5dots.R$layout: int info_activity
+by.klnvch.link5dots.R$layout: int main_menu
+by.klnvch.link5dots.R$layout: int play
+by.klnvch.link5dots.R$layout: int scores
+by.klnvch.link5dots.R$menu: int bluetooth
+by.klnvch.link5dots.R$menu: int menu
+by.klnvch.link5dots.R$menu: int scoresmenu
+by.klnvch.link5dots.R$raw: int gtm_analytics
+by.klnvch.link5dots.R$string: int accept
+by.klnvch.link5dots.R$string: int app_name
+by.klnvch.link5dots.R$string: int application_info_label
+by.klnvch.link5dots.R$string: int banner_ad_unit_id
+by.klnvch.link5dots.R$string: int bluetooth_connected
+by.klnvch.link5dots.R$string: int bluetooth_connecting
+by.klnvch.link5dots.R$string: int bluetooth_connecting_error_message
+by.klnvch.link5dots.R$string: int bluetooth_connection_dialog_text
+by.klnvch.link5dots.R$string: int bluetooth_disconnected
+by.klnvch.link5dots.R$string: int bluetooth_is_disconnect_question
+by.klnvch.link5dots.R$string: int bluetooth_is_discoverable
+by.klnvch.link5dots.R$string: int bluetooth_no_devices_found
+by.klnvch.link5dots.R$string: int bluetooth_not_discoverable
+by.klnvch.link5dots.R$string: int bluetooth_only_visible_to_paired_devices
+by.klnvch.link5dots.R$string: int bluetooth_preference_found_devices
+by.klnvch.link5dots.R$string: int bluetooth_preference_paired_devices
+by.klnvch.link5dots.R$string: int bluetooth_search_for_devices
+by.klnvch.link5dots.R$string: int bt_message_opponents_turn
+by.klnvch.link5dots.R$string: int bt_message_your_turn
+by.klnvch.link5dots.R$string: int common_android_wear_notification_needs_update_text
+by.klnvch.link5dots.R$string: int common_android_wear_update_text
+by.klnvch.link5dots.R$string: int common_android_wear_update_title
+by.klnvch.link5dots.R$string: int common_google_play_services_enable_button
+by.klnvch.link5dots.R$string: int common_google_play_services_enable_text
+by.klnvch.link5dots.R$string: int common_google_play_services_enable_title
+by.klnvch.link5dots.R$string: int common_google_play_services_error_notification_requested_by_msg
+by.klnvch.link5dots.R$string: int common_google_play_services_install_button
+by.klnvch.link5dots.R$string: int common_google_play_services_install_text_phone
+by.klnvch.link5dots.R$string: int common_google_play_services_install_text_tablet
+by.klnvch.link5dots.R$string: int common_google_play_services_install_title
+by.klnvch.link5dots.R$string: int common_google_play_services_invalid_account_text
+by.klnvch.link5dots.R$string: int common_google_play_services_invalid_account_title
+by.klnvch.link5dots.R$string: int common_google_play_services_needs_enabling_title
+by.klnvch.link5dots.R$string: int common_google_play_services_network_error_text
+by.klnvch.link5dots.R$string: int common_google_play_services_network_error_title
+by.klnvch.link5dots.R$string: int common_google_play_services_notification_needs_installation_title
+by.klnvch.link5dots.R$string: int common_google_play_services_notification_needs_update_title
+by.klnvch.link5dots.R$string: int common_google_play_services_notification_ticker
+by.klnvch.link5dots.R$string: int common_google_play_services_sign_in_failed_text
+by.klnvch.link5dots.R$string: int common_google_play_services_sign_in_failed_title
+by.klnvch.link5dots.R$string: int common_google_play_services_unknown_issue
+by.klnvch.link5dots.R$string: int common_google_play_services_unsupported_text
+by.klnvch.link5dots.R$string: int common_google_play_services_unsupported_title
+by.klnvch.link5dots.R$string: int common_google_play_services_update_button
+by.klnvch.link5dots.R$string: int common_google_play_services_update_text
+by.klnvch.link5dots.R$string: int common_google_play_services_update_title
+by.klnvch.link5dots.R$string: int common_open_on_phone
+by.klnvch.link5dots.R$string: int common_signin_button_text
+by.klnvch.link5dots.R$string: int common_signin_button_text_long
+by.klnvch.link5dots.R$string: int commono_google_play_services_api_unavailable_text
+by.klnvch.link5dots.R$string: int create_calendar_message
+by.klnvch.link5dots.R$string: int create_calendar_title
+by.klnvch.link5dots.R$string: int decline
+by.klnvch.link5dots.R$string: int device_feedback
+by.klnvch.link5dots.R$string: int device_picker
+by.klnvch.link5dots.R$string: int end_lose
+by.klnvch.link5dots.R$string: int end_move
+by.klnvch.link5dots.R$string: int end_new_game
+by.klnvch.link5dots.R$string: int end_publish
+by.klnvch.link5dots.R$string: int end_undo
+by.klnvch.link5dots.R$string: int end_win
+by.klnvch.link5dots.R$string: int how_to_text
+by.klnvch.link5dots.R$string: int how_to_title
+by.klnvch.link5dots.R$string: int menu_bt_game
+by.klnvch.link5dots.R$string: int menu_single_player
+by.klnvch.link5dots.R$string: int no
+by.klnvch.link5dots.R$string: int prompt_cancel
+by.klnvch.link5dots.R$string: int prompt_save
+by.klnvch.link5dots.R$string: int prompt_text
+by.klnvch.link5dots.R$string: int rate_this_app
+by.klnvch.link5dots.R$string: int scores_edit_profile
+by.klnvch.link5dots.R$string: int scores_loading
+by.klnvch.link5dots.R$string: int scores_lost
+by.klnvch.link5dots.R$string: int scores_moves
+by.klnvch.link5dots.R$string: int scores_name
+by.klnvch.link5dots.R$string: int scores_no_internet
+by.klnvch.link5dots.R$string: int scores_number
+by.klnvch.link5dots.R$string: int scores_status
+by.klnvch.link5dots.R$string: int scores_time
+by.klnvch.link5dots.R$string: int scores_title
+by.klnvch.link5dots.R$string: int scores_update
+by.klnvch.link5dots.R$string: int scores_won
+by.klnvch.link5dots.R$string: int share
+by.klnvch.link5dots.R$string: int store_picture_message
+by.klnvch.link5dots.R$string: int store_picture_title
+by.klnvch.link5dots.R$string: int version_text
+by.klnvch.link5dots.R$string: int yes
+by.klnvch.link5dots.R$style: int EndTheme
+by.klnvch.link5dots.R$style: int Theme_IAPTheme
+by.klnvch.link5dots.R$styleable: int[] AdsAttrs
+by.klnvch.link5dots.R$styleable: int AdsAttrs_adSize
+by.klnvch.link5dots.R$styleable: int AdsAttrs_adSizes
+by.klnvch.link5dots.R$styleable: int AdsAttrs_adUnitId
+by.klnvch.link5dots.R$styleable: int[] LoadingImageView
+by.klnvch.link5dots.R$styleable: int LoadingImageView_circleCrop
+by.klnvch.link5dots.R$styleable: int LoadingImageView_imageAspectRatio
+by.klnvch.link5dots.R$styleable: int LoadingImageView_imageAspectRatioAdjust
+by.klnvch.link5dots.R$xml: int tracker
+by.klnvch.link5dots.ScoresActivity
+by.klnvch.link5dots.ScoresActivity: ScoresActivity()
+by.klnvch.link5dots.bluetooth.BluetoothActivity
+by.klnvch.link5dots.bluetooth.BluetoothActivity: BluetoothActivity()
+by.klnvch.link5dots.bluetooth.BluetoothService
+by.klnvch.link5dots.bluetooth.BluetoothService: BluetoothService()
+by.klnvch.link5dots.bluetooth.DevicePickerActivity
+by.klnvch.link5dots.bluetooth.DevicePickerActivity: DevicePickerActivity()
+com.google.ads.AdRequest$ErrorCode: com.google.ads.AdRequest$ErrorCode[] values()
+com.google.ads.AdRequest$ErrorCode: com.google.ads.AdRequest$ErrorCode valueOf(java.lang.String)
+com.google.ads.AdRequest$Gender: com.google.ads.AdRequest$Gender[] values()
+com.google.ads.AdRequest$Gender: com.google.ads.AdRequest$Gender valueOf(java.lang.String)
+com.google.android.gms.R$attr: int adSize
+com.google.android.gms.R$attr: int adSizes
+com.google.android.gms.R$attr: int adUnitId
+com.google.android.gms.R$attr: int circleCrop
+com.google.android.gms.R$attr: int imageAspectRatio
+com.google.android.gms.R$attr: int imageAspectRatioAdjust
+com.google.android.gms.R$color: int common_action_bar_splitter
+com.google.android.gms.R$color: int common_signin_btn_dark_text_default
+com.google.android.gms.R$color: int common_signin_btn_dark_text_disabled
+com.google.android.gms.R$color: int common_signin_btn_dark_text_focused
+com.google.android.gms.R$color: int common_signin_btn_dark_text_pressed
+com.google.android.gms.R$color: int common_signin_btn_default_background
+com.google.android.gms.R$color: int common_signin_btn_light_text_default
+com.google.android.gms.R$color: int common_signin_btn_light_text_disabled
+com.google.android.gms.R$color: int common_signin_btn_light_text_focused
+com.google.android.gms.R$color: int common_signin_btn_light_text_pressed
+com.google.android.gms.R$color: int common_signin_btn_text_dark
+com.google.android.gms.R$color: int common_signin_btn_text_light
+com.google.android.gms.R$drawable: int common_full_open_on_phone
+com.google.android.gms.R$drawable: int common_ic_googleplayservices
+com.google.android.gms.R$drawable: int common_signin_btn_icon_dark
+com.google.android.gms.R$drawable: int common_signin_btn_icon_disabled_dark
+com.google.android.gms.R$drawable: int common_signin_btn_icon_disabled_focus_dark
+com.google.android.gms.R$drawable: int common_signin_btn_icon_disabled_focus_light
+com.google.android.gms.R$drawable: int common_signin_btn_icon_disabled_light
+com.google.android.gms.R$drawable: int common_signin_btn_icon_focus_dark
+com.google.android.gms.R$drawable: int common_signin_btn_icon_focus_light
+com.google.android.gms.R$drawable: int common_signin_btn_icon_light
+com.google.android.gms.R$drawable: int common_signin_btn_icon_normal_dark
+com.google.android.gms.R$drawable: int common_signin_btn_icon_normal_light
+com.google.android.gms.R$drawable: int common_signin_btn_icon_pressed_dark
+com.google.android.gms.R$drawable: int common_signin_btn_icon_pressed_light
+com.google.android.gms.R$drawable: int common_signin_btn_text_dark
+com.google.android.gms.R$drawable: int common_signin_btn_text_disabled_dark
+com.google.android.gms.R$drawable: int common_signin_btn_text_disabled_focus_dark
+com.google.android.gms.R$drawable: int common_signin_btn_text_disabled_focus_light
+com.google.android.gms.R$drawable: int common_signin_btn_text_disabled_light
+com.google.android.gms.R$drawable: int common_signin_btn_text_focus_dark
+com.google.android.gms.R$drawable: int common_signin_btn_text_focus_light
+com.google.android.gms.R$drawable: int common_signin_btn_text_light
+com.google.android.gms.R$drawable: int common_signin_btn_text_normal_dark
+com.google.android.gms.R$drawable: int common_signin_btn_text_normal_light
+com.google.android.gms.R$drawable: int common_signin_btn_text_pressed_dark
+com.google.android.gms.R$drawable: int common_signin_btn_text_pressed_light
+com.google.android.gms.R$drawable: int ic_plusone_medium_off_client
+com.google.android.gms.R$drawable: int ic_plusone_small_off_client
+com.google.android.gms.R$drawable: int ic_plusone_standard_off_client
+com.google.android.gms.R$drawable: int ic_plusone_tall_off_client
+com.google.android.gms.R$id: int adjust_height
+com.google.android.gms.R$id: int adjust_width
+com.google.android.gms.R$id: int none
+com.google.android.gms.R$integer: int google_play_services_version
+com.google.android.gms.R$raw: int gtm_analytics
+com.google.android.gms.R$string: int accept
+com.google.android.gms.R$string: int common_android_wear_notification_needs_update_text
+com.google.android.gms.R$string: int common_android_wear_update_text
+com.google.android.gms.R$string: int common_android_wear_update_title
+com.google.android.gms.R$string: int common_google_play_services_enable_button
+com.google.android.gms.R$string: int common_google_play_services_enable_text
+com.google.android.gms.R$string: int common_google_play_services_enable_title
+com.google.android.gms.R$string: int common_google_play_services_error_notification_requested_by_msg
+com.google.android.gms.R$string: int common_google_play_services_install_button
+com.google.android.gms.R$string: int common_google_play_services_install_text_phone
+com.google.android.gms.R$string: int common_google_play_services_install_text_tablet
+com.google.android.gms.R$string: int common_google_play_services_install_title
+com.google.android.gms.R$string: int common_google_play_services_invalid_account_text
+com.google.android.gms.R$string: int common_google_play_services_invalid_account_title
+com.google.android.gms.R$string: int common_google_play_services_needs_enabling_title
+com.google.android.gms.R$string: int common_google_play_services_network_error_text
+com.google.android.gms.R$string: int common_google_play_services_network_error_title
+com.google.android.gms.R$string: int common_google_play_services_notification_needs_installation_title
+com.google.android.gms.R$string: int common_google_play_services_notification_needs_update_title
+com.google.android.gms.R$string: int common_google_play_services_notification_ticker
+com.google.android.gms.R$string: int common_google_play_services_sign_in_failed_text
+com.google.android.gms.R$string: int common_google_play_services_sign_in_failed_title
+com.google.android.gms.R$string: int common_google_play_services_unknown_issue
+com.google.android.gms.R$string: int common_google_play_services_unsupported_text
+com.google.android.gms.R$string: int common_google_play_services_unsupported_title
+com.google.android.gms.R$string: int common_google_play_services_update_button
+com.google.android.gms.R$string: int common_google_play_services_update_text
+com.google.android.gms.R$string: int common_google_play_services_update_title
+com.google.android.gms.R$string: int common_open_on_phone
+com.google.android.gms.R$string: int common_signin_button_text
+com.google.android.gms.R$string: int common_signin_button_text_long
+com.google.android.gms.R$string: int commono_google_play_services_api_unavailable_text
+com.google.android.gms.R$string: int create_calendar_message
+com.google.android.gms.R$string: int create_calendar_title
+com.google.android.gms.R$string: int decline
+com.google.android.gms.R$string: int store_picture_message
+com.google.android.gms.R$string: int store_picture_title
+com.google.android.gms.R$style: int Theme_IAPTheme
+com.google.android.gms.R$styleable: int[] AdsAttrs
+com.google.android.gms.R$styleable: int AdsAttrs_adSize
+com.google.android.gms.R$styleable: int AdsAttrs_adSizes
+com.google.android.gms.R$styleable: int AdsAttrs_adUnitId
+com.google.android.gms.R$styleable: int[] LoadingImageView
+com.google.android.gms.R$styleable: int LoadingImageView_circleCrop
+com.google.android.gms.R$styleable: int LoadingImageView_imageAspectRatio
+com.google.android.gms.R$styleable: int LoadingImageView_imageAspectRatioAdjust
+com.google.android.gms.ads.AdActivity
+com.google.android.gms.ads.AdActivity: AdActivity()
+com.google.android.gms.ads.AdActivity: void setContentView(android.view.View)
+com.google.android.gms.ads.AdView
+com.google.android.gms.ads.AdView: AdView(android.content.Context)
+com.google.android.gms.ads.AdView: AdView(android.content.Context,android.util.AttributeSet)
+com.google.android.gms.ads.AdView: AdView(android.content.Context,android.util.AttributeSet,int)
+com.google.android.gms.ads.AdView: com.google.android.gms.ads.AdListener getAdListener()
+com.google.android.gms.ads.AdView: com.google.android.gms.ads.AdSize getAdSize()
+com.google.android.gms.ads.AdView: java.lang.String getAdUnitId()
+com.google.android.gms.ads.AdView: com.google.android.gms.ads.purchase.InAppPurchaseListener getInAppPurchaseListener()
+com.google.android.gms.ads.AdView: void setAdListener(com.google.android.gms.ads.AdListener)
+com.google.android.gms.ads.AdView: void setAdSize(com.google.android.gms.ads.AdSize)
+com.google.android.gms.ads.AdView: void setAdUnitId(java.lang.String)
+com.google.android.gms.ads.AdView: void setInAppPurchaseListener(com.google.android.gms.ads.purchase.InAppPurchaseListener)
+com.google.android.gms.ads.AdView: java.lang.String getMediationAdapterClassName()
+com.google.android.gms.ads.R$attr: int adSize
+com.google.android.gms.ads.R$attr: int adSizes
+com.google.android.gms.ads.R$attr: int adUnitId
+com.google.android.gms.ads.R$attr: int circleCrop
+com.google.android.gms.ads.R$attr: int imageAspectRatio
+com.google.android.gms.ads.R$attr: int imageAspectRatioAdjust
+com.google.android.gms.ads.R$color: int common_action_bar_splitter
+com.google.android.gms.ads.R$color: int common_signin_btn_dark_text_default
+com.google.android.gms.ads.R$color: int common_signin_btn_dark_text_disabled
+com.google.android.gms.ads.R$color: int common_signin_btn_dark_text_focused
+com.google.android.gms.ads.R$color: int common_signin_btn_dark_text_pressed
+com.google.android.gms.ads.R$color: int common_signin_btn_default_background
+com.google.android.gms.ads.R$color: int common_signin_btn_light_text_default
+com.google.android.gms.ads.R$color: int common_signin_btn_light_text_disabled
+com.google.android.gms.ads.R$color: int common_signin_btn_light_text_focused
+com.google.android.gms.ads.R$color: int common_signin_btn_light_text_pressed
+com.google.android.gms.ads.R$color: int common_signin_btn_text_dark
+com.google.android.gms.ads.R$color: int common_signin_btn_text_light
+com.google.android.gms.ads.R$drawable: int common_full_open_on_phone
+com.google.android.gms.ads.R$drawable: int common_ic_googleplayservices
+com.google.android.gms.ads.R$drawable: int common_signin_btn_icon_dark
+com.google.android.gms.ads.R$drawable: int common_signin_btn_icon_disabled_dark
+com.google.android.gms.ads.R$drawable: int common_signin_btn_icon_disabled_focus_dark
+com.google.android.gms.ads.R$drawable: int common_signin_btn_icon_disabled_focus_light
+com.google.android.gms.ads.R$drawable: int common_signin_btn_icon_disabled_light
+com.google.android.gms.ads.R$drawable: int common_signin_btn_icon_focus_dark
+com.google.android.gms.ads.R$drawable: int common_signin_btn_icon_focus_light
+com.google.android.gms.ads.R$drawable: int common_signin_btn_icon_light
+com.google.android.gms.ads.R$drawable: int common_signin_btn_icon_normal_dark
+com.google.android.gms.ads.R$drawable: int common_signin_btn_icon_normal_light
+com.google.android.gms.ads.R$drawable: int common_signin_btn_icon_pressed_dark
+com.google.android.gms.ads.R$drawable: int common_signin_btn_icon_pressed_light
+com.google.android.gms.ads.R$drawable: int common_signin_btn_text_dark
+com.google.android.gms.ads.R$drawable: int common_signin_btn_text_disabled_dark
+com.google.android.gms.ads.R$drawable: int common_signin_btn_text_disabled_focus_dark
+com.google.android.gms.ads.R$drawable: int common_signin_btn_text_disabled_focus_light
+com.google.android.gms.ads.R$drawable: int common_signin_btn_text_disabled_light
+com.google.android.gms.ads.R$drawable: int common_signin_btn_text_focus_dark
+com.google.android.gms.ads.R$drawable: int common_signin_btn_text_focus_light
+com.google.android.gms.ads.R$drawable: int common_signin_btn_text_light
+com.google.android.gms.ads.R$drawable: int common_signin_btn_text_normal_dark
+com.google.android.gms.ads.R$drawable: int common_signin_btn_text_normal_light
+com.google.android.gms.ads.R$drawable: int common_signin_btn_text_pressed_dark
+com.google.android.gms.ads.R$drawable: int common_signin_btn_text_pressed_light
+com.google.android.gms.ads.R$drawable: int ic_plusone_medium_off_client
+com.google.android.gms.ads.R$drawable: int ic_plusone_small_off_client
+com.google.android.gms.ads.R$drawable: int ic_plusone_standard_off_client
+com.google.android.gms.ads.R$drawable: int ic_plusone_tall_off_client
+com.google.android.gms.ads.R$id: int adjust_height
+com.google.android.gms.ads.R$id: int adjust_width
+com.google.android.gms.ads.R$id: int none
+com.google.android.gms.ads.R$integer: int google_play_services_version
+com.google.android.gms.ads.R$raw: int gtm_analytics
+com.google.android.gms.ads.R$string: int accept
+com.google.android.gms.ads.R$string: int common_android_wear_notification_needs_update_text
+com.google.android.gms.ads.R$string: int common_android_wear_update_text
+com.google.android.gms.ads.R$string: int common_android_wear_update_title
+com.google.android.gms.ads.R$string: int common_google_play_services_enable_button
+com.google.android.gms.ads.R$string: int common_google_play_services_enable_text
+com.google.android.gms.ads.R$string: int common_google_play_services_enable_title
+com.google.android.gms.ads.R$string: int common_google_play_services_error_notification_requested_by_msg
+com.google.android.gms.ads.R$string: int common_google_play_services_install_button
+com.google.android.gms.ads.R$string: int common_google_play_services_install_text_phone
+com.google.android.gms.ads.R$string: int common_google_play_services_install_text_tablet
+com.google.android.gms.ads.R$string: int common_google_play_services_install_title
+com.google.android.gms.ads.R$string: int common_google_play_services_invalid_account_text
+com.google.android.gms.ads.R$string: int common_google_play_services_invalid_account_title
+com.google.android.gms.ads.R$string: int common_google_play_services_needs_enabling_title
+com.google.android.gms.ads.R$string: int common_google_play_services_network_error_text
+com.google.android.gms.ads.R$string: int common_google_play_services_network_error_title
+com.google.android.gms.ads.R$string: int common_google_play_services_notification_needs_installation_title
+com.google.android.gms.ads.R$string: int common_google_play_services_notification_needs_update_title
+com.google.android.gms.ads.R$string: int common_google_play_services_notification_ticker
+com.google.android.gms.ads.R$string: int common_google_play_services_sign_in_failed_text
+com.google.android.gms.ads.R$string: int common_google_play_services_sign_in_failed_title
+com.google.android.gms.ads.R$string: int common_google_play_services_unknown_issue
+com.google.android.gms.ads.R$string: int common_google_play_services_unsupported_text
+com.google.android.gms.ads.R$string: int common_google_play_services_unsupported_title
+com.google.android.gms.ads.R$string: int common_google_play_services_update_button
+com.google.android.gms.ads.R$string: int common_google_play_services_update_text
+com.google.android.gms.ads.R$string: int common_google_play_services_update_title
+com.google.android.gms.ads.R$string: int common_open_on_phone
+com.google.android.gms.ads.R$string: int common_signin_button_text
+com.google.android.gms.ads.R$string: int common_signin_button_text_long
+com.google.android.gms.ads.R$string: int commono_google_play_services_api_unavailable_text
+com.google.android.gms.ads.R$string: int create_calendar_message
+com.google.android.gms.ads.R$string: int create_calendar_title
+com.google.android.gms.ads.R$string: int decline
+com.google.android.gms.ads.R$string: int store_picture_message
+com.google.android.gms.ads.R$string: int store_picture_title
+com.google.android.gms.ads.R$style: int Theme_IAPTheme
+com.google.android.gms.ads.R$styleable: int[] AdsAttrs
+com.google.android.gms.ads.R$styleable: int AdsAttrs_adSize
+com.google.android.gms.ads.R$styleable: int AdsAttrs_adSizes
+com.google.android.gms.ads.R$styleable: int AdsAttrs_adUnitId
+com.google.android.gms.ads.R$styleable: int[] LoadingImageView
+com.google.android.gms.ads.R$styleable: int LoadingImageView_circleCrop
+com.google.android.gms.ads.R$styleable: int LoadingImageView_imageAspectRatio
+com.google.android.gms.ads.R$styleable: int LoadingImageView_imageAspectRatioAdjust
+com.google.android.gms.ads.doubleclick.PublisherAdView: com.google.android.gms.ads.AdListener getAdListener()
+com.google.android.gms.ads.doubleclick.PublisherAdView: com.google.android.gms.ads.AdSize getAdSize()
+com.google.android.gms.ads.doubleclick.PublisherAdView: com.google.android.gms.ads.AdSize[] getAdSizes()
+com.google.android.gms.ads.doubleclick.PublisherAdView: java.lang.String getAdUnitId()
+com.google.android.gms.ads.doubleclick.PublisherAdView: com.google.android.gms.ads.doubleclick.AppEventListener getAppEventListener()
+com.google.android.gms.ads.doubleclick.PublisherAdView: com.google.android.gms.ads.doubleclick.OnCustomRenderedAdLoadedListener getOnCustomRenderedAdLoadedListener()
+com.google.android.gms.ads.doubleclick.PublisherAdView: void setAdListener(com.google.android.gms.ads.AdListener)
+com.google.android.gms.ads.doubleclick.PublisherAdView: void setAdSizes(com.google.android.gms.ads.AdSize[])
+com.google.android.gms.ads.doubleclick.PublisherAdView: void setAdUnitId(java.lang.String)
+com.google.android.gms.ads.doubleclick.PublisherAdView: void setAppEventListener(com.google.android.gms.ads.doubleclick.AppEventListener)
+com.google.android.gms.ads.doubleclick.PublisherAdView: void setOnCustomRenderedAdLoadedListener(com.google.android.gms.ads.doubleclick.OnCustomRenderedAdLoadedListener)
+com.google.android.gms.ads.doubleclick.PublisherAdView: java.lang.String getMediationAdapterClassName()
+com.google.android.gms.ads.internal.InterstitialAdParameterParcel
+com.google.android.gms.ads.internal.InterstitialAdParameterParcel: com.google.android.gms.ads.internal.zze CREATOR
+com.google.android.gms.ads.internal.client.AdRequestParcel
+com.google.android.gms.ads.internal.client.AdRequestParcel: com.google.android.gms.ads.internal.client.zze CREATOR
+com.google.android.gms.ads.internal.client.AdSizeParcel
+com.google.android.gms.ads.internal.client.AdSizeParcel: com.google.android.gms.ads.internal.client.zzg CREATOR
+com.google.android.gms.ads.internal.client.SearchAdRequestParcel
+com.google.android.gms.ads.internal.client.SearchAdRequestParcel: com.google.android.gms.ads.internal.client.zzx CREATOR
+com.google.android.gms.ads.internal.overlay.AdLauncherIntentInfoParcel
+com.google.android.gms.ads.internal.overlay.AdLauncherIntentInfoParcel: com.google.android.gms.ads.internal.overlay.zzb CREATOR
+com.google.android.gms.ads.internal.overlay.AdOverlayInfoParcel
+com.google.android.gms.ads.internal.overlay.AdOverlayInfoParcel: com.google.android.gms.ads.internal.overlay.zze CREATOR
+com.google.android.gms.ads.internal.overlay.zzg: void setBackgroundColor(int)
+com.google.android.gms.ads.internal.purchase.GInAppPurchaseManagerInfoParcel
+com.google.android.gms.ads.internal.purchase.GInAppPurchaseManagerInfoParcel: com.google.android.gms.ads.internal.purchase.zza CREATOR
+com.google.android.gms.ads.internal.request.AdRequestInfoParcel
+com.google.android.gms.ads.internal.request.AdRequestInfoParcel: com.google.android.gms.ads.internal.request.zzf CREATOR
+com.google.android.gms.ads.internal.request.AdResponseParcel
+com.google.android.gms.ads.internal.request.AdResponseParcel: com.google.android.gms.ads.internal.request.zzh CREATOR
+com.google.android.gms.ads.internal.request.LargeParcelTeleporter
+com.google.android.gms.ads.internal.request.LargeParcelTeleporter: android.os.Parcelable$Creator CREATOR
+com.google.android.gms.ads.internal.request.StringParcel
+com.google.android.gms.ads.internal.request.StringParcel: android.os.Parcelable$Creator CREATOR
+com.google.android.gms.ads.internal.util.client.VersionInfoParcel
+com.google.android.gms.ads.internal.util.client.VersionInfoParcel: com.google.android.gms.ads.internal.util.client.zzc CREATOR
+com.google.android.gms.ads.search.SearchAdView: com.google.android.gms.ads.AdListener getAdListener()
+com.google.android.gms.ads.search.SearchAdView: com.google.android.gms.ads.AdSize getAdSize()
+com.google.android.gms.ads.search.SearchAdView: java.lang.String getAdUnitId()
+com.google.android.gms.ads.search.SearchAdView: void setAdListener(com.google.android.gms.ads.AdListener)
+com.google.android.gms.ads.search.SearchAdView: void setAdSize(com.google.android.gms.ads.AdSize)
+com.google.android.gms.ads.search.SearchAdView: void setAdUnitId(java.lang.String)
+com.google.android.gms.analytics.R$attr: int adSize
+com.google.android.gms.analytics.R$attr: int adSizes
+com.google.android.gms.analytics.R$attr: int adUnitId
+com.google.android.gms.analytics.R$attr: int circleCrop
+com.google.android.gms.analytics.R$attr: int imageAspectRatio
+com.google.android.gms.analytics.R$attr: int imageAspectRatioAdjust
+com.google.android.gms.analytics.R$color: int common_action_bar_splitter
+com.google.android.gms.analytics.R$color: int common_signin_btn_dark_text_default
+com.google.android.gms.analytics.R$color: int common_signin_btn_dark_text_disabled
+com.google.android.gms.analytics.R$color: int common_signin_btn_dark_text_focused
+com.google.android.gms.analytics.R$color: int common_signin_btn_dark_text_pressed
+com.google.android.gms.analytics.R$color: int common_signin_btn_default_background
+com.google.android.gms.analytics.R$color: int common_signin_btn_light_text_default
+com.google.android.gms.analytics.R$color: int common_signin_btn_light_text_disabled
+com.google.android.gms.analytics.R$color: int common_signin_btn_light_text_focused
+com.google.android.gms.analytics.R$color: int common_signin_btn_light_text_pressed
+com.google.android.gms.analytics.R$color: int common_signin_btn_text_dark
+com.google.android.gms.analytics.R$color: int common_signin_btn_text_light
+com.google.android.gms.analytics.R$drawable: int common_full_open_on_phone
+com.google.android.gms.analytics.R$drawable: int common_ic_googleplayservices
+com.google.android.gms.analytics.R$drawable: int common_signin_btn_icon_dark
+com.google.android.gms.analytics.R$drawable: int common_signin_btn_icon_disabled_dark
+com.google.android.gms.analytics.R$drawable: int common_signin_btn_icon_disabled_focus_dark
+com.google.android.gms.analytics.R$drawable: int common_signin_btn_icon_disabled_focus_light
+com.google.android.gms.analytics.R$drawable: int common_signin_btn_icon_disabled_light
+com.google.android.gms.analytics.R$drawable: int common_signin_btn_icon_focus_dark
+com.google.android.gms.analytics.R$drawable: int common_signin_btn_icon_focus_light
+com.google.android.gms.analytics.R$drawable: int common_signin_btn_icon_light
+com.google.android.gms.analytics.R$drawable: int common_signin_btn_icon_normal_dark
+com.google.android.gms.analytics.R$drawable: int common_signin_btn_icon_normal_light
+com.google.android.gms.analytics.R$drawable: int common_signin_btn_icon_pressed_dark
+com.google.android.gms.analytics.R$drawable: int common_signin_btn_icon_pressed_light
+com.google.android.gms.analytics.R$drawable: int common_signin_btn_text_dark
+com.google.android.gms.analytics.R$drawable: int common_signin_btn_text_disabled_dark
+com.google.android.gms.analytics.R$drawable: int common_signin_btn_text_disabled_focus_dark
+com.google.android.gms.analytics.R$drawable: int common_signin_btn_text_disabled_focus_light
+com.google.android.gms.analytics.R$drawable: int common_signin_btn_text_disabled_light
+com.google.android.gms.analytics.R$drawable: int common_signin_btn_text_focus_dark
+com.google.android.gms.analytics.R$drawable: int common_signin_btn_text_focus_light
+com.google.android.gms.analytics.R$drawable: int common_signin_btn_text_light
+com.google.android.gms.analytics.R$drawable: int common_signin_btn_text_normal_dark
+com.google.android.gms.analytics.R$drawable: int common_signin_btn_text_normal_light
+com.google.android.gms.analytics.R$drawable: int common_signin_btn_text_pressed_dark
+com.google.android.gms.analytics.R$drawable: int common_signin_btn_text_pressed_light
+com.google.android.gms.analytics.R$drawable: int ic_plusone_medium_off_client
+com.google.android.gms.analytics.R$drawable: int ic_plusone_small_off_client
+com.google.android.gms.analytics.R$drawable: int ic_plusone_standard_off_client
+com.google.android.gms.analytics.R$drawable: int ic_plusone_tall_off_client
+com.google.android.gms.analytics.R$id: int adjust_height
+com.google.android.gms.analytics.R$id: int adjust_width
+com.google.android.gms.analytics.R$id: int none
+com.google.android.gms.analytics.R$integer: int google_play_services_version
+com.google.android.gms.analytics.R$raw: int gtm_analytics
+com.google.android.gms.analytics.R$string: int accept
+com.google.android.gms.analytics.R$string: int common_android_wear_notification_needs_update_text
+com.google.android.gms.analytics.R$string: int common_android_wear_update_text
+com.google.android.gms.analytics.R$string: int common_android_wear_update_title
+com.google.android.gms.analytics.R$string: int common_google_play_services_enable_button
+com.google.android.gms.analytics.R$string: int common_google_play_services_enable_text
+com.google.android.gms.analytics.R$string: int common_google_play_services_enable_title
+com.google.android.gms.analytics.R$string: int common_google_play_services_error_notification_requested_by_msg
+com.google.android.gms.analytics.R$string: int common_google_play_services_install_button
+com.google.android.gms.analytics.R$string: int common_google_play_services_install_text_phone
+com.google.android.gms.analytics.R$string: int common_google_play_services_install_text_tablet
+com.google.android.gms.analytics.R$string: int common_google_play_services_install_title
+com.google.android.gms.analytics.R$string: int common_google_play_services_invalid_account_text
+com.google.android.gms.analytics.R$string: int common_google_play_services_invalid_account_title
+com.google.android.gms.analytics.R$string: int common_google_play_services_needs_enabling_title
+com.google.android.gms.analytics.R$string: int common_google_play_services_network_error_text
+com.google.android.gms.analytics.R$string: int common_google_play_services_network_error_title
+com.google.android.gms.analytics.R$string: int common_google_play_services_notification_needs_installation_title
+com.google.android.gms.analytics.R$string: int common_google_play_services_notification_needs_update_title
+com.google.android.gms.analytics.R$string: int common_google_play_services_notification_ticker
+com.google.android.gms.analytics.R$string: int common_google_play_services_sign_in_failed_text
+com.google.android.gms.analytics.R$string: int common_google_play_services_sign_in_failed_title
+com.google.android.gms.analytics.R$string: int common_google_play_services_unknown_issue
+com.google.android.gms.analytics.R$string: int common_google_play_services_unsupported_text
+com.google.android.gms.analytics.R$string: int common_google_play_services_unsupported_title
+com.google.android.gms.analytics.R$string: int common_google_play_services_update_button
+com.google.android.gms.analytics.R$string: int common_google_play_services_update_text
+com.google.android.gms.analytics.R$string: int common_google_play_services_update_title
+com.google.android.gms.analytics.R$string: int common_open_on_phone
+com.google.android.gms.analytics.R$string: int common_signin_button_text
+com.google.android.gms.analytics.R$string: int common_signin_button_text_long
+com.google.android.gms.analytics.R$string: int commono_google_play_services_api_unavailable_text
+com.google.android.gms.analytics.R$string: int create_calendar_message
+com.google.android.gms.analytics.R$string: int create_calendar_title
+com.google.android.gms.analytics.R$string: int decline
+com.google.android.gms.analytics.R$string: int store_picture_message
+com.google.android.gms.analytics.R$string: int store_picture_title
+com.google.android.gms.analytics.R$style: int Theme_IAPTheme
+com.google.android.gms.analytics.R$styleable: int[] AdsAttrs
+com.google.android.gms.analytics.R$styleable: int AdsAttrs_adSize
+com.google.android.gms.analytics.R$styleable: int AdsAttrs_adSizes
+com.google.android.gms.analytics.R$styleable: int AdsAttrs_adUnitId
+com.google.android.gms.analytics.R$styleable: int[] LoadingImageView
+com.google.android.gms.analytics.R$styleable: int LoadingImageView_circleCrop
+com.google.android.gms.analytics.R$styleable: int LoadingImageView_imageAspectRatio
+com.google.android.gms.analytics.R$styleable: int LoadingImageView_imageAspectRatioAdjust
+com.google.android.gms.analytics.internal.Command
+com.google.android.gms.analytics.internal.Command: android.os.Parcelable$Creator CREATOR
+com.google.android.gms.analytics.internal.zzl: com.google.android.gms.analytics.internal.zzl[] values()
+com.google.android.gms.analytics.internal.zzl: com.google.android.gms.analytics.internal.zzl valueOf(java.lang.String)
+com.google.android.gms.analytics.internal.zzn: com.google.android.gms.analytics.internal.zzn[] values()
+com.google.android.gms.analytics.internal.zzn: com.google.android.gms.analytics.internal.zzn valueOf(java.lang.String)
+com.google.android.gms.auth.AccountChangeEvent
+com.google.android.gms.auth.AccountChangeEvent: com.google.android.gms.auth.AccountChangeEventCreator CREATOR
+com.google.android.gms.auth.AccountChangeEventsRequest
+com.google.android.gms.auth.AccountChangeEventsRequest: com.google.android.gms.auth.AccountChangeEventsRequestCreator CREATOR
+com.google.android.gms.auth.AccountChangeEventsResponse
+com.google.android.gms.auth.AccountChangeEventsResponse: com.google.android.gms.auth.AccountChangeEventsResponseCreator CREATOR
+com.google.android.gms.common.ConnectionResult
+com.google.android.gms.common.ConnectionResult: com.google.android.gms.common.ConnectionResultCreator CREATOR
+com.google.android.gms.common.SignInButton: void setSize(int)
+com.google.android.gms.common.SignInButton: void setColorScheme(int)
+com.google.android.gms.common.SignInButton: void setOnClickListener(android.view.View$OnClickListener)
+com.google.android.gms.common.SignInButton: void setEnabled(boolean)
+com.google.android.gms.common.api.Scope
+com.google.android.gms.common.api.Scope: android.os.Parcelable$Creator CREATOR
+com.google.android.gms.common.api.Status
+com.google.android.gms.common.api.Status: com.google.android.gms.common.api.StatusCreator CREATOR
+com.google.android.gms.common.data.BitmapTeleporter
+com.google.android.gms.common.data.BitmapTeleporter: android.os.Parcelable$Creator CREATOR
+com.google.android.gms.common.data.DataHolder
+com.google.android.gms.common.data.DataHolder: com.google.android.gms.common.data.zze CREATOR
+com.google.android.gms.common.images.ImageManager$ImageReceiver
+com.google.android.gms.common.images.WebImage
+com.google.android.gms.common.images.WebImage: android.os.Parcelable$Creator CREATOR
+com.google.android.gms.common.internal.AuthAccountRequest
+com.google.android.gms.common.internal.AuthAccountRequest: android.os.Parcelable$Creator CREATOR
+com.google.android.gms.common.internal.BinderWrapper
+com.google.android.gms.common.internal.BinderWrapper: android.os.Parcelable$Creator CREATOR
+com.google.android.gms.common.internal.DowngradeableSafeParcel
+com.google.android.gms.common.internal.GetServiceRequest
+com.google.android.gms.common.internal.GetServiceRequest: android.os.Parcelable$Creator CREATOR
+com.google.android.gms.common.internal.ResolveAccountRequest
+com.google.android.gms.common.internal.ResolveAccountRequest: android.os.Parcelable$Creator CREATOR
+com.google.android.gms.common.internal.ResolveAccountResponse
+com.google.android.gms.common.internal.ResolveAccountResponse: android.os.Parcelable$Creator CREATOR
+com.google.android.gms.common.internal.ValidateAccountRequest
+com.google.android.gms.common.internal.ValidateAccountRequest: android.os.Parcelable$Creator CREATOR
+com.google.android.gms.common.internal.safeparcel.SafeParcelable
+com.google.android.gms.common.internal.safeparcel.SafeParcelable: java.lang.String NULL
+com.google.android.gms.common.server.FavaDiagnosticsEntity
+com.google.android.gms.common.server.FavaDiagnosticsEntity: com.google.android.gms.common.server.zza CREATOR
+com.google.android.gms.common.server.converter.ConverterWrapper
+com.google.android.gms.common.server.converter.ConverterWrapper: com.google.android.gms.common.server.converter.zza CREATOR
+com.google.android.gms.common.server.converter.StringToIntConverter
+com.google.android.gms.common.server.converter.StringToIntConverter: com.google.android.gms.common.server.converter.zzb CREATOR
+com.google.android.gms.common.server.converter.StringToIntConverter$Entry
+com.google.android.gms.common.server.converter.StringToIntConverter$Entry: com.google.android.gms.common.server.converter.zzc CREATOR
+com.google.android.gms.common.server.response.FastJsonResponse$Field
+com.google.android.gms.common.server.response.FastJsonResponse$Field: com.google.android.gms.common.server.response.zza CREATOR
+com.google.android.gms.common.server.response.FastSafeParcelableJsonResponse
+com.google.android.gms.common.server.response.FieldMappingDictionary
+com.google.android.gms.common.server.response.FieldMappingDictionary: com.google.android.gms.common.server.response.zzc CREATOR
+com.google.android.gms.common.server.response.FieldMappingDictionary$Entry
+com.google.android.gms.common.server.response.FieldMappingDictionary$Entry: com.google.android.gms.common.server.response.zzd CREATOR
+com.google.android.gms.common.server.response.FieldMappingDictionary$FieldMapPair
+com.google.android.gms.common.server.response.FieldMappingDictionary$FieldMapPair: com.google.android.gms.common.server.response.zzb CREATOR
+com.google.android.gms.common.server.response.SafeParcelResponse
+com.google.android.gms.common.server.response.SafeParcelResponse: com.google.android.gms.common.server.response.zze CREATOR
+com.google.android.gms.common.stats.ConnectionEvent
+com.google.android.gms.common.stats.ConnectionEvent: android.os.Parcelable$Creator CREATOR
+com.google.android.gms.internal.zza: com.google.android.gms.internal.zza[] values()
+com.google.android.gms.internal.zza: com.google.android.gms.internal.zza valueOf(java.lang.String)
+com.google.android.gms.internal.zzb: com.google.android.gms.internal.zzb[] values()
+com.google.android.gms.internal.zzb: com.google.android.gms.internal.zzb valueOf(java.lang.String)
+com.google.android.gms.internal.zzgg: android.webkit.WebView getWebView()
+com.google.android.gms.internal.zzgg: void setContext(android.content.Context)
+com.google.android.gms.internal.zzgg: int getRequestedOrientation()
+com.google.android.gms.internal.zzgg: void setRequestedOrientation(int)
+com.google.android.gms.internal.zzha: com.google.android.gms.internal.zzha[] values()
+com.google.android.gms.internal.zzha: com.google.android.gms.internal.zzha valueOf(java.lang.String)
+com.google.android.gms.internal.zzmp$zza$zza: com.google.android.gms.internal.zzmp$zza$zza[] values()
+com.google.android.gms.internal.zzmp$zza$zza: com.google.android.gms.internal.zzmp$zza$zza valueOf(java.lang.String)
+com.google.android.gms.internal.zzmy$zza: com.google.android.gms.internal.zzmy$zza[] values()
+com.google.android.gms.internal.zzmy$zza: com.google.android.gms.internal.zzmy$zza valueOf(java.lang.String)
+com.google.android.gms.playlog.internal.LogEvent
+com.google.android.gms.playlog.internal.LogEvent: com.google.android.gms.playlog.internal.zzc CREATOR
+com.google.android.gms.playlog.internal.PlayLoggerContext
+com.google.android.gms.playlog.internal.PlayLoggerContext: com.google.android.gms.playlog.internal.zze CREATOR
+com.google.android.gms.plus.PlusOneButton
+com.google.android.gms.plus.PlusOneButton: PlusOneButton(android.content.Context)
+com.google.android.gms.plus.PlusOneButton: PlusOneButton(android.content.Context,android.util.AttributeSet)
+com.google.android.gms.plus.PlusOneButton: void setOnPlusOneClickListener(com.google.android.gms.plus.PlusOneButton$OnPlusOneClickListener)
+com.google.android.gms.plus.PlusOneButton: void setAnnotation(int)
+com.google.android.gms.plus.PlusOneButton: void setSize(int)
+com.google.android.gms.plus.R$attr: int adSize
+com.google.android.gms.plus.R$attr: int adSizes
+com.google.android.gms.plus.R$attr: int adUnitId
+com.google.android.gms.plus.R$attr: int circleCrop
+com.google.android.gms.plus.R$attr: int imageAspectRatio
+com.google.android.gms.plus.R$attr: int imageAspectRatioAdjust
+com.google.android.gms.plus.R$color: int common_action_bar_splitter
+com.google.android.gms.plus.R$color: int common_signin_btn_dark_text_default
+com.google.android.gms.plus.R$color: int common_signin_btn_dark_text_disabled
+com.google.android.gms.plus.R$color: int common_signin_btn_dark_text_focused
+com.google.android.gms.plus.R$color: int common_signin_btn_dark_text_pressed
+com.google.android.gms.plus.R$color: int common_signin_btn_default_background
+com.google.android.gms.plus.R$color: int common_signin_btn_light_text_default
+com.google.android.gms.plus.R$color: int common_signin_btn_light_text_disabled
+com.google.android.gms.plus.R$color: int common_signin_btn_light_text_focused
+com.google.android.gms.plus.R$color: int common_signin_btn_light_text_pressed
+com.google.android.gms.plus.R$color: int common_signin_btn_text_dark
+com.google.android.gms.plus.R$color: int common_signin_btn_text_light
+com.google.android.gms.plus.R$drawable: int common_full_open_on_phone
+com.google.android.gms.plus.R$drawable: int common_ic_googleplayservices
+com.google.android.gms.plus.R$drawable: int common_signin_btn_icon_dark
+com.google.android.gms.plus.R$drawable: int common_signin_btn_icon_disabled_dark
+com.google.android.gms.plus.R$drawable: int common_signin_btn_icon_disabled_focus_dark
+com.google.android.gms.plus.R$drawable: int common_signin_btn_icon_disabled_focus_light
+com.google.android.gms.plus.R$drawable: int common_signin_btn_icon_disabled_light
+com.google.android.gms.plus.R$drawable: int common_signin_btn_icon_focus_dark
+com.google.android.gms.plus.R$drawable: int common_signin_btn_icon_focus_light
+com.google.android.gms.plus.R$drawable: int common_signin_btn_icon_light
+com.google.android.gms.plus.R$drawable: int common_signin_btn_icon_normal_dark
+com.google.android.gms.plus.R$drawable: int common_signin_btn_icon_normal_light
+com.google.android.gms.plus.R$drawable: int common_signin_btn_icon_pressed_dark
+com.google.android.gms.plus.R$drawable: int common_signin_btn_icon_pressed_light
+com.google.android.gms.plus.R$drawable: int common_signin_btn_text_dark
+com.google.android.gms.plus.R$drawable: int common_signin_btn_text_disabled_dark
+com.google.android.gms.plus.R$drawable: int common_signin_btn_text_disabled_focus_dark
+com.google.android.gms.plus.R$drawable: int common_signin_btn_text_disabled_focus_light
+com.google.android.gms.plus.R$drawable: int common_signin_btn_text_disabled_light
+com.google.android.gms.plus.R$drawable: int common_signin_btn_text_focus_dark
+com.google.android.gms.plus.R$drawable: int common_signin_btn_text_focus_light
+com.google.android.gms.plus.R$drawable: int common_signin_btn_text_light
+com.google.android.gms.plus.R$drawable: int common_signin_btn_text_normal_dark
+com.google.android.gms.plus.R$drawable: int common_signin_btn_text_normal_light
+com.google.android.gms.plus.R$drawable: int common_signin_btn_text_pressed_dark
+com.google.android.gms.plus.R$drawable: int common_signin_btn_text_pressed_light
+com.google.android.gms.plus.R$drawable: int ic_plusone_medium_off_client
+com.google.android.gms.plus.R$drawable: int ic_plusone_small_off_client
+com.google.android.gms.plus.R$drawable: int ic_plusone_standard_off_client
+com.google.android.gms.plus.R$drawable: int ic_plusone_tall_off_client
+com.google.android.gms.plus.R$id: int adjust_height
+com.google.android.gms.plus.R$id: int adjust_width
+com.google.android.gms.plus.R$id: int none
+com.google.android.gms.plus.R$integer: int google_play_services_version
+com.google.android.gms.plus.R$raw: int gtm_analytics
+com.google.android.gms.plus.R$string: int accept
+com.google.android.gms.plus.R$string: int common_android_wear_notification_needs_update_text
+com.google.android.gms.plus.R$string: int common_android_wear_update_text
+com.google.android.gms.plus.R$string: int common_android_wear_update_title
+com.google.android.gms.plus.R$string: int common_google_play_services_enable_button
+com.google.android.gms.plus.R$string: int common_google_play_services_enable_text
+com.google.android.gms.plus.R$string: int common_google_play_services_enable_title
+com.google.android.gms.plus.R$string: int common_google_play_services_error_notification_requested_by_msg
+com.google.android.gms.plus.R$string: int common_google_play_services_install_button
+com.google.android.gms.plus.R$string: int common_google_play_services_install_text_phone
+com.google.android.gms.plus.R$string: int common_google_play_services_install_text_tablet
+com.google.android.gms.plus.R$string: int common_google_play_services_install_title
+com.google.android.gms.plus.R$string: int common_google_play_services_invalid_account_text
+com.google.android.gms.plus.R$string: int common_google_play_services_invalid_account_title
+com.google.android.gms.plus.R$string: int common_google_play_services_needs_enabling_title
+com.google.android.gms.plus.R$string: int common_google_play_services_network_error_text
+com.google.android.gms.plus.R$string: int common_google_play_services_network_error_title
+com.google.android.gms.plus.R$string: int common_google_play_services_notification_needs_installation_title
+com.google.android.gms.plus.R$string: int common_google_play_services_notification_needs_update_title
+com.google.android.gms.plus.R$string: int common_google_play_services_notification_ticker
+com.google.android.gms.plus.R$string: int common_google_play_services_sign_in_failed_text
+com.google.android.gms.plus.R$string: int common_google_play_services_sign_in_failed_title
+com.google.android.gms.plus.R$string: int common_google_play_services_unknown_issue
+com.google.android.gms.plus.R$string: int common_google_play_services_unsupported_text
+com.google.android.gms.plus.R$string: int common_google_play_services_unsupported_title
+com.google.android.gms.plus.R$string: int common_google_play_services_update_button
+com.google.android.gms.plus.R$string: int common_google_play_services_update_text
+com.google.android.gms.plus.R$string: int common_google_play_services_update_title
+com.google.android.gms.plus.R$string: int common_open_on_phone
+com.google.android.gms.plus.R$string: int common_signin_button_text
+com.google.android.gms.plus.R$string: int common_signin_button_text_long
+com.google.android.gms.plus.R$string: int commono_google_play_services_api_unavailable_text
+com.google.android.gms.plus.R$string: int create_calendar_message
+com.google.android.gms.plus.R$string: int create_calendar_title
+com.google.android.gms.plus.R$string: int decline
+com.google.android.gms.plus.R$string: int store_picture_message
+com.google.android.gms.plus.R$string: int store_picture_title
+com.google.android.gms.plus.R$style: int Theme_IAPTheme
+com.google.android.gms.plus.R$styleable: int[] AdsAttrs
+com.google.android.gms.plus.R$styleable: int AdsAttrs_adSize
+com.google.android.gms.plus.R$styleable: int AdsAttrs_adSizes
+com.google.android.gms.plus.R$styleable: int AdsAttrs_adUnitId
+com.google.android.gms.plus.R$styleable: int[] LoadingImageView
+com.google.android.gms.plus.R$styleable: int LoadingImageView_circleCrop
+com.google.android.gms.plus.R$styleable: int LoadingImageView_imageAspectRatio
+com.google.android.gms.plus.R$styleable: int LoadingImageView_imageAspectRatioAdjust
+com.google.android.gms.plus.internal.PlusCommonExtras
+com.google.android.gms.plus.internal.PlusCommonExtras: com.google.android.gms.plus.internal.zzf CREATOR
+com.google.android.gms.plus.internal.PlusSession
+com.google.android.gms.plus.internal.PlusSession: com.google.android.gms.plus.internal.zzh CREATOR
+com.google.android.gms.plus.internal.model.moments.ItemScopeEntity
+com.google.android.gms.plus.internal.model.moments.ItemScopeEntity: com.google.android.gms.plus.internal.model.moments.zza CREATOR
+com.google.android.gms.plus.internal.model.moments.MomentEntity
+com.google.android.gms.plus.internal.model.moments.MomentEntity: com.google.android.gms.plus.internal.model.moments.zzb CREATOR
+com.google.android.gms.plus.internal.model.people.PersonEntity
+com.google.android.gms.plus.internal.model.people.PersonEntity: com.google.android.gms.plus.internal.model.people.zza CREATOR
+com.google.android.gms.plus.internal.model.people.PersonEntity$AgeRangeEntity
+com.google.android.gms.plus.internal.model.people.PersonEntity$AgeRangeEntity: com.google.android.gms.plus.internal.model.people.zzb CREATOR
+com.google.android.gms.plus.internal.model.people.PersonEntity$CoverEntity
+com.google.android.gms.plus.internal.model.people.PersonEntity$CoverEntity: com.google.android.gms.plus.internal.model.people.zzc CREATOR
+com.google.android.gms.plus.internal.model.people.PersonEntity$CoverEntity$CoverInfoEntity
+com.google.android.gms.plus.internal.model.people.PersonEntity$CoverEntity$CoverInfoEntity: com.google.android.gms.plus.internal.model.people.zzd CREATOR
+com.google.android.gms.plus.internal.model.people.PersonEntity$CoverEntity$CoverPhotoEntity
+com.google.android.gms.plus.internal.model.people.PersonEntity$CoverEntity$CoverPhotoEntity: com.google.android.gms.plus.internal.model.people.zze CREATOR
+com.google.android.gms.plus.internal.model.people.PersonEntity$ImageEntity
+com.google.android.gms.plus.internal.model.people.PersonEntity$ImageEntity: com.google.android.gms.plus.internal.model.people.zzf CREATOR
+com.google.android.gms.plus.internal.model.people.PersonEntity$NameEntity
+com.google.android.gms.plus.internal.model.people.PersonEntity$NameEntity: com.google.android.gms.plus.internal.model.people.zzg CREATOR
+com.google.android.gms.plus.internal.model.people.PersonEntity$OrganizationsEntity
+com.google.android.gms.plus.internal.model.people.PersonEntity$OrganizationsEntity: com.google.android.gms.plus.internal.model.people.zzh CREATOR
+com.google.android.gms.plus.internal.model.people.PersonEntity$PlacesLivedEntity
+com.google.android.gms.plus.internal.model.people.PersonEntity$PlacesLivedEntity: com.google.android.gms.plus.internal.model.people.zzi CREATOR
+com.google.android.gms.plus.internal.model.people.PersonEntity$UrlsEntity
+com.google.android.gms.plus.internal.model.people.PersonEntity$UrlsEntity: com.google.android.gms.plus.internal.model.people.zzj CREATOR
+com.google.android.gms.signin.internal.AuthAccountResult
+com.google.android.gms.signin.internal.AuthAccountResult: android.os.Parcelable$Creator CREATOR
+com.google.android.gms.signin.internal.CheckServerAuthResult
+com.google.android.gms.signin.internal.CheckServerAuthResult: android.os.Parcelable$Creator CREATOR
+com.google.android.gms.tagmanager.zzay$zza: com.google.android.gms.tagmanager.zzay$zza[] values()
+com.google.android.gms.tagmanager.zzay$zza: com.google.android.gms.tagmanager.zzay$zza valueOf(java.lang.String)
+com.google.android.gms.tagmanager.zzbf$zza: com.google.android.gms.tagmanager.zzbf$zza[] values()
+com.google.android.gms.tagmanager.zzbf$zza: com.google.android.gms.tagmanager.zzbf$zza valueOf(java.lang.String)
+com.google.android.gms.tagmanager.zzcb$zza: com.google.android.gms.tagmanager.zzcb$zza[] values()
+com.google.android.gms.tagmanager.zzcb$zza: com.google.android.gms.tagmanager.zzcb$zza valueOf(java.lang.String)

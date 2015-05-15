@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:ns1="urn:oasis:names:tc:xliff:document:1.2">
+    <!-- From: file:/E:/AndroidStudioProjects/LinkFiveDots/app/src/main/res/values/colors.xml -->
+    <eat-comment/>
+    <color name="black">#000000</color>
+    <!-- From: file:/E:/AndroidStudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.3.0/res/values/common_colors.xml -->
+    <eat-comment/>
+    <color name="common_action_bar_splitter">#d2d2d2</color>
+    <color name="common_signin_btn_dark_text_default">@android:color/white</color>
+    <color name="common_signin_btn_dark_text_disabled">#FFAAAAAA</color>
+    <color name="common_signin_btn_dark_text_focused">@android:color/white</color>
+    <color name="common_signin_btn_dark_text_pressed">@android:color/white</color>
+    <color name="common_signin_btn_default_background">#FFDD4B39</color>
+    <color name="common_signin_btn_light_text_default">#FF737373</color>
+    <color name="common_signin_btn_light_text_disabled">#FFAAAAAA</color>
+    <color name="common_signin_btn_light_text_focused">#FF737373</color>
+    <color name="common_signin_btn_light_text_pressed">@android:color/white</color>
+    <!-- From: file:/E:/AndroidStudioProjects/LinkFiveDots/app/src/main/res/values/styles.xml -->
+    <eat-comment/>
+    <color name="custom_color">#4f4f4f</color>
+    <declare-styleable name="AdsAttrs"><attr format="string" name="adSize"/><attr format="string" name="adSizes"/><attr format="string" name="adUnitId"/></declare-styleable>
+    <declare-styleable name="LoadingImageView"><attr format="enum" name="imageAspectRatioAdjust"><enum name="none" value="0"/><enum name="adjust_width" value="1"/><enum name="adjust_height" value="2"/></attr><attr format="float" name="imageAspectRatio"/><attr format="boolean" name="circleCrop"/></declare-styleable>
+    <!-- From: file:/E:/AndroidStudioProjects/LinkFiveDots/app/src/main/res/values/dimens.xml -->
+    <eat-comment/>
+    <dimen name="bt_text_size">14sp</dimen>
+    <dimen name="btn_corner_radius">2dp</dimen>
+    <dimen name="btn_inset">4dp</dimen>
+    <dimen name="btn_padding_horizontal">8dp</dimen>
+    <dimen name="btn_padding_vertical">4dp</dimen>
+    <dimen name="btn_table_padding">20dp</dimen>
+    <dimen name="btn_text_size">14sp</dimen>
+    <dimen name="plus_one_button_margin">16dp</dimen>
+    <dimen name="separator_width">2dp</dimen>
+    <dimen name="text_size_help_content">20sp</dimen>
+    <!-- From: file:/E:/AndroidStudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.3.0/res/values/version.xml -->
+    <eat-comment/>
+    <integer name="google_play_services_version">7327000</integer>
+    <!-- From: file:/E:/AndroidStudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-ads/7.3.0/res/values/admob_strings.xml -->
+    <eat-comment/>
+    <string name="accept">Accept</string>
+    <!-- From: file:/E:/AndroidStudioProjects/LinkFiveDots/app/src/main/res/values/strings.xml -->
+    <eat-comment/>
+    <string name="app_name">Link Five Dots</string>
+    <string name="application_info_label">App info</string>
+    <string name="banner_ad_unit_id" translatable="false">ca-app-pub-9653730523387780/5316470559</string>
+    <string name="bluetooth_connected">Connected</string>
+    <string name="bluetooth_connecting">Connecting\u2026</string>
+    <string name="bluetooth_connecting_error_message">Couldn\'t connect to \u0022%1$s\u0022.</string>
+    <string name="bluetooth_connection_dialog_text">"Do you want to connect to \u0022%1$s\u0022?"</string>
+    <string name="bluetooth_disconnected">Disconnected</string>
+    <string name="bluetooth_is_disconnect_question">"Disconnect \u0022%1$s\u0022?"</string>
+    <string name="bluetooth_is_discoverable">Visible to all nearby Bluetooth devices (%1$s)</string>
+    <string name="bluetooth_no_devices_found">No nearby Bluetooth devices were found.</string>
+    <string name="bluetooth_not_discoverable">Make device discoverable</string>
+    <string name="bluetooth_only_visible_to_paired_devices">Only visible to paired devices</string>
+    <string name="bluetooth_preference_found_devices">Available devices</string>
+    <string name="bluetooth_preference_paired_devices">Paired devices</string>
+    <string name="bluetooth_search_for_devices">Refresh</string>
+    <string name="bt_message_opponents_turn">Opponent\'s move, wait…</string>
+    <string name="bt_message_your_turn">Your move, put a dot…</string>
+    <!-- From: file:/E:/AndroidStudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.3.0/res/values/common_strings.xml -->
+    <eat-comment/>
+    <string name="common_android_wear_notification_needs_update_text">An application requires an update to the Android Wear app.</string>
+    <string name="common_android_wear_update_text">This app won\'t run unless you update the Android Wear app.</string>
+    <string msgid="6006316683626838685" name="common_android_wear_update_title">Update Android Wear</string>
+    <string msgid="2523291102206661146" name="common_google_play_services_enable_button">Enable Google Play services</string>
+    <string msgid="227660514972886228" name="common_google_play_services_enable_text">This app won\'t work unless you enable Google Play services.</string>
+    <string msgid="5122002158466380389" name="common_google_play_services_enable_title">Enable Google Play services</string>
+    <string name="common_google_play_services_error_notification_requested_by_msg">Requested by <ns1:g id="app_name">%1$s</ns1:g></string>
+    <string msgid="7153882981874058840" name="common_google_play_services_install_button">Get Google Play services</string>
+    <string msgid="2122112764540849864" name="common_google_play_services_install_text_phone">This app won\'t run without Google Play services, which are missing from your phone.</string>
+    <string msgid="7351599665250191022" name="common_google_play_services_install_text_tablet">This app won\'t run without Google Play services, which are missing from your tablet.</string>
+    <string msgid="7215213145546190223" name="common_google_play_services_install_title">Get Google Play services</string>
+    <string name="common_google_play_services_invalid_account_text">The specified account does not exist on this device. Please choose a different account.</string>
+    <string name="common_google_play_services_invalid_account_title">Invalid Account</string>
+    <string name="common_google_play_services_needs_enabling_title">An application requires Google Play services to be enabled.</string>
+    <string name="common_google_play_services_network_error_text">A data connection is required to connect to Google Play services.</string>
+    <string name="common_google_play_services_network_error_title">Network Error</string>
+    <string name="common_google_play_services_notification_needs_installation_title">An application requires installation of Google Play services.</string>
+    <string name="common_google_play_services_notification_needs_update_title">An application requires an update for Google Play services.</string>
+    <string name="common_google_play_services_notification_ticker">Google Play services error</string>
+    <string name="common_google_play_services_sign_in_failed_text">Error signing in the specified account. Please choose a different account.</string>
+    <string name="common_google_play_services_sign_in_failed_title">Sign in failed</string>
+    <string name="common_google_play_services_unknown_issue">Unknown issue with Google Play services.</string>
+    <string name="common_google_play_services_unsupported_text">Google Play services, which some of your applications rely on, is not supported by your device. Please contact the manufacturer for assistance.</string>
+    <string name="common_google_play_services_unsupported_title">Google Play services</string>
+    <string msgid="6556509956452265614" name="common_google_play_services_update_button">Update</string>
+    <string msgid="9053896323427875356" name="common_google_play_services_update_text">This app won\'t run unless you update Google Play services.</string>
+    <string msgid="6006316683626838685" name="common_google_play_services_update_title">Update Google Play services</string>
+    <string name="common_open_on_phone">Open on phone</string>
+    <string name="common_signin_button_text">Sign in</string>
+    <string name="common_signin_button_text_long">Sign in with Google</string>
+    <string name="commono_google_play_services_api_unavailable_text">This app requires one or more Google Play services that are not currently
+available. Please contact the developer for assistance.</string>
+    <!-- From: file:/E:/AndroidStudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-ads/7.3.0/res/values/admob_strings.xml -->
+    <eat-comment/>
+    <string name="create_calendar_message">Allow Ad to create a calendar event?</string>
+    <string name="create_calendar_title">Create calendar event</string>
+    <string name="decline">Decline</string>
+    <!-- From: file:/E:/AndroidStudioProjects/LinkFiveDots/app/src/main/res/values/strings.xml -->
+    <eat-comment/>
+    <string name="device_feedback">Send feedback</string>
+    <string name="device_picker">Choose Bluetooth device</string>
+    <string name="end_lose">You’ve failed!</string>
+    <string name="end_move">%1$d moves done for %2$d s.</string>
+    <string name="end_new_game">New</string>
+    <string name="end_publish">Publish</string>
+    <string name="end_undo">Undo</string>
+    <string name="end_win">You’ve won!</string>
+    <string name="how_to_text">\tBe the first to link five dots in a straight line horizontally, vertically or diagonally. Android plays blue dots, you play red dots. Red and blue dots are put in turn on the line intersections. The first move is yours.\n\n\tDrag the screen to move the grid.\n\tScale the screen to enlarge or reduce grid size.\n\tUse menu to restart the game, undo last move, see game scores or see how to play.\n\tPress \"Search\" button to hide/show arrows around the last move dot.</string>
+    <string name="how_to_title">How To Play</string>
+    <string name="menu_bt_game">Bluetooth Game</string>
+    <string name="menu_single_player">Single Player Game</string>
+    <string name="no">"No"</string>
+    <string name="prompt_cancel">Cancel</string>
+    <string name="prompt_save">Save</string>
+    <string name="prompt_text">Type your name here:</string>
+    <string name="rate_this_app">Rate this app</string>
+    <string name="scores_edit_profile">Edit profile</string>
+    <string name="scores_loading">Loading…</string>
+    <string name="scores_lost">lost</string>
+    <string name="scores_moves">Number of moves</string>
+    <string name="scores_name">Name</string>
+    <string name="scores_no_internet">No internet access</string>
+    <string name="scores_number">#</string>
+    <string name="scores_status">Status</string>
+    <string name="scores_time">Time</string>
+    <string name="scores_title">Scores</string>
+    <string name="scores_update">Refresh</string>
+    <string name="scores_won">won</string>
+    <string name="share">Share</string>
+    <!-- From: file:/E:/AndroidStudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-ads/7.3.0/res/values/admob_strings.xml -->
+    <eat-comment/>
+    <string name="store_picture_message">"Allow Ad to store image in Picture gallery?"</string>
+    <string name="store_picture_title">Save image</string>
+    <!-- From: file:/E:/AndroidStudioProjects/LinkFiveDots/app/src/main/res/values/strings.xml -->
+    <eat-comment/>
+    <string name="version_text">version %1$s</string>
+    <string name="yes">"Yes"</string>
+    <!-- From: file:/E:/AndroidStudioProjects/LinkFiveDots/app/src/main/res/values/styles.xml -->
+    <eat-comment/>
+    <style name="EndTheme" parent="android:Theme.Panel">
+    	<item name="android:windowBackground">@color/custom_color</item>
+    	<item name="android:colorBackground">@color/custom_color</item>
+	</style>
+    <!-- From: file:/E:/AndroidStudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-ads/7.3.0/res/values/admob_iap_style.xml -->
+    <eat-comment/>
+    <style name="Theme.IAPTheme" parent="android:Theme">
+    <item name="android:windowIsTranslucent">true</item>
+    <item name="android:windowBackground">@android:color/transparent</item>
+    <item name="android:windowContentOverlay">@null</item>
+    <item name="android:windowNoTitle">true</item>
+    <item name="android:windowIsFloating">true</item>
+    <item name="android:backgroundDimEnabled">false</item>
+  </style>
+</resources>

@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Junta cinco puntos</string>
+    
+	<string name="how_to_title">Cómo Jugar</string>
+	<string name="how_to_text">\tSea el primero en juntar cinco puntos en la forma de una línea recta de modo horizontal, vertical o diagonal. El Android posiciona los azules, mientras Usted los puntos rojos. A los puntos de ambos colores los meten en turno sobre las intersecciones de las líneas. Su turno es inicial.\n\n\tArrastre Ud. la pantalla para mover el campo de juego.\n\tEstire Ud. la pantalla para aumentar o disminuir el tamaño de las células.\n\tUtilice Ud. el menú para reiniciar el juego, deshacer el último movimiento, mirar las cuentas y la información sobre el juego.\n\tAprete Ud. el botón \"Buscar\" para esconder/mostrar las flechas alrededor del punto del movimiento último.</string>
+	
+	<string name="scores_title">Cuentas</string>
+	<string name="scores_no_internet">Sin acceso a internet</string>
+	<string name="scores_number">#</string>
+	<string name="scores_name">Nombre</string>
+	<string name="scores_moves">Cantidad de muevos</string>
+	<string name="scores_status">Estatus</string>
+	<string name="scores_won">ganado</string>
+	<string name="scores_lost">perdido</string>
+	
+	<string name="end_win">¡Ganó!</string>
+	<string name="end_lose">¡Falló!</string>
+	<string name="end_new_game">Nuevo</string>
+	<string name="end_undo">Cancelar</string>
+	<string name="end_move">%1$d movimientos hechos durante %2$d s.</string>
+	
+	<string name="scores_time">Tiempo</string>
+	<string name="end_publish">Publicar</string>
+	<string name="prompt_text">Escriba su nombre aquí:</string>
+	<string name="prompt_save">Guardar</string>
+	<string name="prompt_cancel">Cancelar</string>
+	<string name="scores_edit_profile">Editar el perfil</string>
+	<string name="scores_update">Renovar</string>
+	
+	<string name="scores_loading">Cargando&#8230;</string>
+	
+	<string name="menu_single_player">Juego solitario</string>
+	<string name="menu_bt_game">Juego Bluetooth</string>
+
+	<string name="rate_this_app">Valorar esta aplicación</string>
+
+    <string name="yes">"Sí"</string>
+    <string name="no">"No"</string>
+
+    <string name="bluetooth_not_discoverable">"Hacer visible el dispositivo"</string>
+    <string name="bluetooth_is_discoverable">"Visible para dispositivos Bluetooth cercanos (%1$s)"</string>
+    <string name="bluetooth_only_visible_to_paired_devices">"Solo visible para dispositivos sincronizados"</string>
+    <string name="bluetooth_is_disconnect_question">"¿Desconectar %1$s?"</string>
+    <string name="bluetooth_connected">"Conectado"</string>
+    <string name="bluetooth_disconnected">"Desconectada"</string>
+    <string name="bluetooth_connecting">"Estableciendo conexión…"</string>
+    <string name="bluetooth_no_devices_found">"No hay dispositivos Bluetooth cercanos."</string>
+    <string name="device_picker">"Seleccionar dispositivo Bluetooth"</string>
+    <string name="bluetooth_connection_dialog_text">"¿Quieres conectarte a %1$s?"</string>
+    <string name="bluetooth_connecting_error_message">"No se ha podido establecer conexión con %1$s."</string>
+    <string name="bluetooth_search_for_devices">"Actualizar"</string>
+    <string name="bluetooth_preference_paired_devices">"Dispositivos sincronizados"</string>
+    <string name="bluetooth_preference_found_devices">"Dispositivos disponibles"</string>
+	<string name="application_info_label">"Información de la aplicación"</string>
+	<string name="version_text">"versión %1$s"</string>
+	<string name="device_feedback">Dar tu opinión</string>
+
+
+	<string name="share">"Compartir"</string>
+
+
+	<string name="bt_message_your_turn">Su turno&#8230;</string>
+	<string name="bt_message_opponents_turn">Turno del adversario&#8230;</string>
+	
+</resources>

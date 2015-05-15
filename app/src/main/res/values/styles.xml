@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE resources>
+<resources>
+	<color name="custom_color">#4f4f4f</color>
+	<style name="EndTheme" parent="android:Theme.Panel">
+    	<item name="android:windowBackground">@color/custom_color</item>
+    	<item name="android:colorBackground">@color/custom_color</item>
+	</style>
+</resources>

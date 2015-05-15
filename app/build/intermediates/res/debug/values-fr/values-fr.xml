@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:ns1="urn:oasis:names:tc:xliff:document:1.2">
+    <!-- From: file:/E:/AndroidStudioProjects/LinkFiveDots/app/src/main/res/values-fr/strings.xml -->
+    <eat-comment/>
+    <string name="app_name">Combiner Cinq Points</string>
+    <string name="application_info_label">"Informations sur l\'application"</string>
+    <string name="bluetooth_connected">"Connecté"</string>
+    <string name="bluetooth_connecting">"Connexion…"</string>
+    <string name="bluetooth_connecting_error_message">"Impossible de se connecter à \"%1$s\"."</string>
+    <string name="bluetooth_connection_dialog_text">"Voulez-vous vous connecter à \"%1$s\" ?"</string>
+    <string name="bluetooth_disconnected">"Déconnecté"</string>
+    <string name="bluetooth_is_disconnect_question">"Déconnecter l\'appareil \"%1$s\" ?"</string>
+    <string name="bluetooth_is_discoverable">"Visible par tous appareils Bluetooth à proximité (%1$s)"</string>
+    <string name="bluetooth_no_devices_found">"Aucun appareil Bluetooth détecté."</string>
+    <string name="bluetooth_not_discoverable">"Permettre l\'identification de l\'appareil"</string>
+    <string name="bluetooth_only_visible_to_paired_devices">"Visible uniquement par les appareils associés"</string>
+    <string name="bluetooth_preference_found_devices">"Appareils"</string>
+    <string name="bluetooth_preference_paired_devices">"Périphériques associés"</string>
+    <string name="bluetooth_search_for_devices">"Actualiser"</string>
+    <string name="bt_message_opponents_turn">Votre action…</string>
+    <string name="bt_message_your_turn">Action du joueur…</string>
+    <!-- From: file:/E:/AndroidStudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.3.0/res/values-fr/common_strings.xml -->
+    <eat-comment/>
+    <string msgid="473679118463211576" name="common_android_wear_notification_needs_update_text">"Une application nécessite une mise à jour du Bios de l\'application Android Wear."</string>
+    <string msgid="3046420540094071256" name="common_android_wear_update_text">"Cette application ne fonctionnera pas tant que vous n\'aurez pas mis à jour l\'application Android Wear."</string>
+    <string msgid="1366439133145190222" name="common_android_wear_update_title">"Mettre à jour Android Wear"</string>
+    <string msgid="4181637455539816337" name="common_google_play_services_enable_button">"Activer services Google Play"</string>
+    <string msgid="7627896071867667758" name="common_google_play_services_enable_text">"Cette application ne fonctionnera pas tant que vous n\'aurez pas activé les services Google Play."</string>
+    <string msgid="529078775174559253" name="common_google_play_services_enable_title">"Activer les services Google Play"</string>
+    <string msgid="2443362625939284971" name="common_google_play_services_error_notification_requested_by_msg">"Notification issue de l\'application \"<ns1:g id="APP_NAME">%1$s</ns1:g>\""</string>
+    <string msgid="8515591849428043265" name="common_google_play_services_install_button">"Installer services Google Play"</string>
+    <string msgid="8685301130651051380" name="common_google_play_services_install_text_phone">"Cette application ne fonctionnera pas sans les services Google Play, qui ne sont pas installés sur votre téléphone."</string>
+    <string msgid="1589957570365247855" name="common_google_play_services_install_text_tablet">"Cette application ne fonctionnera pas sans les services Google Play, qui ne sont pas installés sur votre tablette."</string>
+    <string msgid="26645092511305524" name="common_google_play_services_install_title">"Installer les services Google Play"</string>
+    <string msgid="4983316348021735578" name="common_google_play_services_invalid_account_text">"Le compte indiqué n\'existe pas sur cet appareil. Veuillez sélectionner un autre compte."</string>
+    <string msgid="1066672360770936753" name="common_google_play_services_invalid_account_title">"Compte erroné"</string>
+    <string msgid="2583358409598976717" name="common_google_play_services_needs_enabling_title">"Une application demande l\'activation des services Google Play."</string>
+    <string msgid="9038847255613537209" name="common_google_play_services_network_error_text">"Vous devez disposer d\'une connexion de données pour utiliser les services Google Play."</string>
+    <string msgid="3827284619958211114" name="common_google_play_services_network_error_title">"Erreur réseau"</string>
+    <string msgid="8120534356798772974" name="common_google_play_services_notification_needs_installation_title">"Une application demande l\'installation des services Google Play."</string>
+    <string msgid="1388129345631079938" name="common_google_play_services_notification_needs_update_title">"Une application demande la mise à jour des services Google Play."</string>
+    <string msgid="1852570676146674985" name="common_google_play_services_notification_ticker">"Erreur liée aux services Google Play"</string>
+    <string msgid="5194079840165204725" name="common_google_play_services_sign_in_failed_text">"Erreur lors de la connexion au compte indiqué. Veuillez en sélectionner un autre."</string>
+    <string msgid="8164948898147532159" name="common_google_play_services_sign_in_failed_title">"Échec de la connexion"</string>
+    <string msgid="4762332809710093730" name="common_google_play_services_unknown_issue">"Problème inconnu avec les services Google Play."</string>
+    <string msgid="3542578567569488671" name="common_google_play_services_unsupported_text">"Les services Google Play, dont dépendent certaines de vos applications, ne sont pas compatibles avec votre appareil. Veuillez contacter le fabricant pour obtenir de l\'aide."</string>
+    <string msgid="6334768798839376943" name="common_google_play_services_unsupported_title">"Services Google Play"</string>
+    <string msgid="8932944190611227642" name="common_google_play_services_update_button">"Mettre à jour"</string>
+    <string msgid="448354684997260580" name="common_google_play_services_update_text">"Cette application ne fonctionnera pas tant que vous n\'aurez pas mis à jour les services Google Play."</string>
+    <string msgid="6006316683626838685" name="common_google_play_services_update_title">"Mettre à jour les services Google Play"</string>
+    <string msgid="411506735369601515" name="common_open_on_phone">"Ouvrir sur le téléphone"</string>
+    <string msgid="9071884888741449141" name="common_signin_button_text">"Connexion"</string>
+    <string msgid="2429381841831957106" name="common_signin_button_text_long">"Se connecter avec Google"</string>
+    <string msgid="5000919058582214855" name="commono_google_play_services_api_unavailable_text">"Cette application nécessite un ou plusieurs services Google Play qui ne sont pas disponibles actuellement. Veuillez contacter le développeur pour obtenir de l\'aide."</string>
+    <!-- From: file:/E:/AndroidStudioProjects/LinkFiveDots/app/src/main/res/values-fr/strings.xml -->
+    <eat-comment/>
+    <string name="device_feedback">Envoyer commentaires</string>
+    <string name="device_picker">"Sélectionner un appareil Bluetooth"</string>
+    <string name="end_lose">Vous avez échoué!</string>
+    <string name="end_move">%1$d déplacements effectués pendant %2$d s.</string>
+    <string name="end_new_game">Nouveau</string>
+    <string name="end_publish">Publier</string>
+    <string name="end_undo">Annuler</string>
+    <string name="end_win">Vous avez gagné!</string>
+    <string name="how_to_text">\tSoyez le premier à aligner cinq points, horizontalement, verticalement ou en diagonale. Android déplace les points bleus, vous, les points rouges. Les points rouges et bleus sont placés tour à tour sur les intersections. Vous jouez en premier.\n\n\tFaites glisser l’écran pour déplacer la grille.\n\tAgrandissez ou réduisez l’écran pour ajuster la taille de la grille.\n\tUtilisez le menu pour redémarrer le jeu, annulez le dernier coup, regardez les scores des jeux ou vérifiez comment jouer.\n\tAppuyez sur le bouton \"Rechercher\" pour masquer/afficher des flèches autour du point joué le dernier coup.</string>
+    <string name="how_to_title">Comment jouer</string>
+    <string name="menu_bt_game">Jeu En Réseau Par Bluetooth</string>
+    <string name="menu_single_player">Jeu Solo</string>
+    <string name="no">"Non"</string>
+    <string name="prompt_cancel">Annuler</string>
+    <string name="prompt_save">Enregistrer</string>
+    <string name="prompt_text">Tapez votre nom ici:</string>
+    <string name="rate_this_app">Noter cette application</string>
+    <string name="scores_edit_profile">Modifier le profil</string>
+    <string name="scores_loading">Chargement…</string>
+    <string name="scores_lost">perdu</string>
+    <string name="scores_moves">Nombre de coups</string>
+    <string name="scores_name">Nom</string>
+    <string name="scores_no_internet">Pas d’accés à internet</string>
+    <string name="scores_number">#</string>
+    <string name="scores_status">Statut</string>
+    <string name="scores_time">Durée</string>
+    <string name="scores_title">Les scores</string>
+    <string name="scores_update">Actualiser</string>
+    <string name="scores_won">gagné</string>
+    <string name="share">"Partager"</string>
+    <string name="version_text">"version %1$s"</string>
+    <string name="yes">"Oui"</string>
+</resources>

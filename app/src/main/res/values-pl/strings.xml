@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Połącz pięć kropek</string>
+    
+	<string name="how_to_title">Jak grać</string>
+	<string name="how_to_text">\tBądź pierwszy połączywszy pięć kropek w linię prostą: poziomo, pionowo lub ukośnie. Android gra niebieskimi kropkami, grasz czerwonymi kropkami. Czerwone i niebieskie kropki rozmieszczają się po kolei na skrzyżwaniach lini. Pierwszy ruch należy do Ciebie.\n\n\tPrzeciągnij po ekranie, aby przenieść siatkę.\n\tSkaluj ekran, aby powiększyć lub zmniejszyć rozmiar siatki.\n\tUżyj menu, aby ponownie uruchomić grę, cofnąć ostatni ruch, zobaczyć wyniki lub jak grać.\n\tNaciśnij przycisk \"Szukaj\", aby ukryć/pokazać strzałki wokoło kropki ostatniego ruchu.</string>
+	
+	<string name="scores_title">Wyniki</string>
+	<string name="scores_no_internet">Brak dostępu do internetu</string>
+	<string name="scores_number">#</string>
+	<string name="scores_name">Imię</string>
+	<string name="scores_moves">Liczba ruchów</string>
+	<string name="scores_status">Stan</string>
+	<string name="scores_won">wygrana</string>
+	<string name="scores_lost">przegrana</string>
+	
+	<string name="end_win">Wygrałeś!</string>
+	<string name="end_lose">Przegrałeś!</string>
+	<string name="end_new_game">Nowa</string>
+	<string name="end_undo">Cofnij</string>
+	<string name="end_move">%1$d ruchów zrobiono przez %2$d s.</string>
+	
+	<string name="scores_time">Czas</string>
+	<string name="end_publish">Opublikuj</string>
+	<string name="prompt_text">Wpisz swoję imię tutaj:</string>
+	<string name="prompt_save">Zapisz</string>
+	<string name="prompt_cancel">Anuluj</string>
+	<string name="scores_edit_profile">Edytuj profil</string>
+	<string name="scores_update">Actualizuj</string>
+	
+	<string name="scores_loading">Ładowanie&#8230;</string>
+	
+	<string name="menu_single_player">Pojedyncza Gra</string>
+	<string name="menu_bt_game">Bluetooth Gra</string>
+
+	<string name="rate_this_app">Oceń tę aplikację</string>
+
+    <string name="yes">"Tak"</string>
+    <string name="no">"Nie"</string>
+	
+    <string name="bluetooth_not_discoverable">"Zezwalaj na wykrywanie urządzenia"</string>
+    <string name="bluetooth_is_discoverable">"Widoczne dla wszystkich urządzeń Bluetooth (%1$s)"</string>
+    <string name="bluetooth_only_visible_to_paired_devices">"Widoczne tylko dla urządzeń sparowanych"</string>
+    <string name="bluetooth_is_disconnect_question">"Odłączyć urządzenie „%1$s”?"</string>
+    <string name="bluetooth_connected">"Połączony"</string>
+    <string name="bluetooth_disconnected">"Rozłączona"</string>
+    <string name="bluetooth_connecting">"Łączenie…"</string>
+    <string name="bluetooth_no_devices_found">"Brak urządzeń Bluetooth w pobliżu"</string>
+    <string name="device_picker">"Wybierz urządzenie Bluetooth"</string>
+    <string name="bluetooth_connection_dialog_text">"Czy chcesz nawiązać połączenie z urządzeniem „%1$s”?"</string>
+    <string name="bluetooth_connecting_error_message">"Nie udało się nawiązać połączenia z „%1$s”."</string>
+    <string name="bluetooth_search_for_devices">"Odśwież"</string>
+    <string name="bluetooth_preference_paired_devices">"Powiązane urządzenia"</string>
+    <string name="bluetooth_preference_found_devices">"Dostępne urządzenia"</string>
+	<string name="application_info_label">"Informacje o aplikacji"</string>
+	<string name="version_text">"wersja %1$s"</string>
+	<string name="device_feedback">Prześlij opinię</string>
+
+
+	<string name="share">"Udostępnij"</string>
+
+
+	<string name="bt_message_your_turn">Wasz ruch, postaw kropkę&#8230;</string>
+	<string name="bt_message_opponents_turn">Ruch rywala, czekaj&#8230;</string>
+	
+</resources>

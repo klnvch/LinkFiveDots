@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Соедини пять точек</string>
+    
+	<string name="how_to_title">Как играть</string>
+	<string name="how_to_text">\tБудьте первыми соединив пять точек в прямую линию горизонтально, вертикально или диагонально. Андроид играет синими точками, Вы играете красными точками. Красные и синие точки ставятся по очереди на пересечениях линий. Первый ход Ваш.\n\n\tПеретяните экран, чтобы передвинуть игровое поле.\n\tРастяните экран, чтобы увеличить или уменьшить размер клеток.\n\tИспользуйте меню, чтобы начать новую игру, отменить последний ход, посмотреть очки или информацию как играть.\n\tНажмите на кнопку \"Поиск\", чтобы спрятать/показать стрелочки вокруг точки последнего хода.</string>
+	
+	<string name="scores_title">Очки</string>
+	<string name="scores_no_internet">Нет доступа к интернету</string>
+	<string name="scores_number">№</string>
+	<string name="scores_name">Имя</string>
+	<string name="scores_moves">Количество ходов</string>
+	<string name="scores_status">Статус</string>
+	<string name="scores_won">выиграна</string>
+	<string name="scores_lost">проиграна</string>
+	
+	<string name="end_win">Вы выиграли!</string>
+	<string name="end_lose">Вы проиграли!</string>
+	<string name="end_new_game">Новая</string>
+	<string name="end_undo">Отменить</string>
+	<string name="end_move">%1$d ходов сделано за %2$d с.</string>
+	
+	<string name="scores_time">Время</string>
+	<string name="end_publish">Опубликовать</string>
+	<string name="prompt_text">Введите своё имя здесь:</string>
+	<string name="prompt_save">Сохранить</string>
+	<string name="prompt_cancel">Отменить</string>
+	<string name="scores_edit_profile">Изменить профиль</string>
+	<string name="scores_update">Обновить</string>
+	
+	<string name="scores_loading">Загрузка&#8230;</string>
+
+	<string name="menu_single_player">Одиночная игра</string>
+	<string name="menu_bt_game">Bluetooth игра</string>
+
+	<string name="rate_this_app">Оценить приложение</string>
+
+    <string name="yes">"Да"</string>
+    <string name="no">"Нет"</string>
+
+    <string name="bluetooth_not_discoverable">"Сделать устройство видимым"</string>
+    <string name="bluetooth_is_discoverable">"Виден другим Bluetooth-устройствам: %1$s"</string>
+    <string name="bluetooth_only_visible_to_paired_devices">"Доступно только для подключенных устройств"</string>
+    <string name="bluetooth_is_disconnect_question">"Отключить \"%1$s\"?"</string>
+    <string name="bluetooth_connected">"Подключено"</string>
+    <string name="bluetooth_disconnected">"Отключено"</string>
+    <string name="bluetooth_connecting">"Подключение…"</string>
+    <string name="bluetooth_no_devices_found">"Устройства Bluetooth не найдены."</string>
+    <string name="device_picker">"Выбрать устройство Bluetooth"</string>
+    <string name="bluetooth_connection_dialog_text">"Подключиться к устройству \"%1$s\"?"</string>
+    <string name="bluetooth_connecting_error_message">"Не удалось подключиться к \"%1$s\"."</string>
+    <string name="bluetooth_search_for_devices">"Обновить"</string>
+    <string name="bluetooth_preference_paired_devices">"Подключенные устройства"</string>
+    <string name="bluetooth_preference_found_devices">"Доступные устройства"</string>
+	<string name="application_info_label">"О приложении"</string>
+	<string name="version_text">"Версия %1$s"</string>
+	<string name="device_feedback">Отправить отзыв</string>
+
+
+	<string name="share">"Отправить"</string>
+
+
+	<string name="bt_message_your_turn">Ваш ход, поставте точку&#8230;</string>
+	<string name="bt_message_opponents_turn">Ход соперника, подождите&#8230;</string>
+	
+</resources>

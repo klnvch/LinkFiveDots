@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Fünf Punkte Verbinden</string>
+    
+	<string name="how_to_title">Wie man spielt</string>
+	<string name="how_to_text">\tSeien Sie der Erste, der es schafft, fünf Punkte in einer geraden Linie horizontal, vertikal oder diagonal zu verbinden. Android zeichnet blaue Punkte, Sie zeichnen rote Punkte. Rote und blaue Punkte sind nacheinander auf Linie Kreuzungen zu platzieren. Sie bewegen sich zuerst.\n\n\tZiehen Sie den Bildschirm, um das Spielfeld zu bewegen.\n\tSkalieren Sie das Bild, um Feldern zu vergrößern oder zu verkleinern.\n\tBenutzen Sie das Menü, um das Spiel neu zu starten, rückgängig zu machen, das Spielergebnis zu sehen oder sehen, wie man spielt.\n\tDrücken Sie Suchen, um Pfeile um den Punkt des letzten Zuges auszublenden/einzublenden.</string>
+	
+	<string name="scores_title">Spielergebnis</string>
+	<string name="scores_no_internet">Kein Internetzugang</string>
+	<string name="scores_number">#</string>
+	<string name="scores_name">Name</string>
+	<string name="scores_moves">Anzahl der Züge</string>
+	<string name="scores_status">Status</string>
+	<string name="scores_won">gewonnen</string>
+	<string name="scores_lost">verloren</string>
+	
+	<string name="end_win">Sie haben gewonnen!</string>
+	<string name="end_lose">Sie haben verloren!</string>
+	<string name="end_new_game">Neues</string>
+	<string name="end_undo">Rückgängig</string>
+	<string name="end_move">%1$d Male bewegt für %2$d S.</string>
+	
+	<string name="scores_time">Zeit</string>
+	<string name="end_publish">Veröffentlichen</string>
+	<string name="prompt_text">Geben Sie Ihren Namen hier:</string>
+	<string name="prompt_save">Speichern</string>
+	<string name="prompt_cancel">Schließen</string>
+	<string name="scores_edit_profile">Profil erstellen</string>
+	<string name="scores_update">Aktualisieren</string>
+	
+	<string name="scores_loading">Lädt&#8230;</string>
+	
+	<string name="menu_single_player">Einzelspieler</string>
+	<string name="menu_bt_game">Bluetooth Mehrspieler</string>
+
+	<string name="rate_this_app">App bewerten</string>
+
+    <string name="yes">"Ja"</string>
+    <string name="no">"Nein"</string>
+
+    <string name="bluetooth_not_discoverable">"Gerät sichtbar machen"</string>
+    <string name="bluetooth_is_discoverable">"Sichtbar für alle Bluetooth-Geräte in der Nähe (%1$s)"</string>
+    <string name="bluetooth_only_visible_to_paired_devices">"Nur sichtbar für Partnergeräte"</string>
+    <string name="bluetooth_is_disconnect_question">"Verbindung mit \"%1$s\" trennen?"</string>
+    <string name="bluetooth_connected">"Verbunden"</string>
+    <string name="bluetooth_disconnected">"Nicht verbunden"</string>
+    <string name="bluetooth_connecting">"Verbindung wird hergestellt…"</string>
+    <string name="bluetooth_no_devices_found">"Kein Bluetooth-Gerät in der Nähe gefunden"</string>
+    <string name="device_picker">"Bluetooth-Gerät auswählen"</string>
+    <string name="bluetooth_connection_dialog_text">"Möchten Sie eine Verbindung mit \"%1$s\" herstellen?"</string>
+    <string name="bluetooth_connecting_error_message">"Keine Verbindung zu \"%1$s\" möglich"</string>
+    <string name="bluetooth_search_for_devices">"Aktualisieren"</string>
+    <string name="bluetooth_preference_paired_devices">"Pairing-Geräte"</string>
+    <string name="bluetooth_preference_found_devices">"Verfügbar"</string>
+	<string name="application_info_label">"App-Info"</string>
+	<string name="version_text">"Version %1$s"</string>
+	<string name="device_feedback">Feedback senden</string>
+
+
+	<string name="share">"Teilen"</string>
+
+
+	<string name="bt_message_your_turn">Ihre Umdrehung&#8230;</string>
+	<string name="bt_message_opponents_turn">Spieler Umdrehung&#8230;</string>
+	
+</resources>
