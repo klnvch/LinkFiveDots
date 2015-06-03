@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:ns1="urn:oasis:names:tc:xliff:document:1.2">
-    <!-- From: file:/E:/AndroidStudioProjects/LinkFiveDots/app/src/main/res/values/colors.xml -->
+    <!-- From: file:/home/anton/StudioProjects/LinkFiveDots/app/src/main/res/values/colors.xml -->
     <eat-comment/>
     <color name="black">#000000</color>
-    <!-- From: file:/E:/AndroidStudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.3.0/res/values/common_colors.xml -->
+    <!-- From: file:/home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.3.0/res/values/common_colors.xml -->
     <eat-comment/>
     <color name="common_action_bar_splitter">#d2d2d2</color>
     <color name="common_signin_btn_dark_text_default">@android:color/white</color>
@@ -15,12 +15,12 @@
     <color name="common_signin_btn_light_text_disabled">#FFAAAAAA</color>
     <color name="common_signin_btn_light_text_focused">#FF737373</color>
     <color name="common_signin_btn_light_text_pressed">@android:color/white</color>
-    <!-- From: file:/E:/AndroidStudioProjects/LinkFiveDots/app/src/main/res/values/styles.xml -->
+    <!-- From: file:/home/anton/StudioProjects/LinkFiveDots/app/src/main/res/values/styles.xml -->
     <eat-comment/>
     <color name="custom_color">#4f4f4f</color>
     <declare-styleable name="AdsAttrs"><attr format="string" name="adSize"/><attr format="string" name="adSizes"/><attr format="string" name="adUnitId"/></declare-styleable>
     <declare-styleable name="LoadingImageView"><attr format="enum" name="imageAspectRatioAdjust"><enum name="none" value="0"/><enum name="adjust_width" value="1"/><enum name="adjust_height" value="2"/></attr><attr format="float" name="imageAspectRatio"/><attr format="boolean" name="circleCrop"/></declare-styleable>
-    <!-- From: file:/E:/AndroidStudioProjects/LinkFiveDots/app/src/main/res/values/dimens.xml -->
+    <!-- From: file:/home/anton/StudioProjects/LinkFiveDots/app/src/main/res/values/dimens.xml -->
     <eat-comment/>
     <dimen name="bt_text_size">14sp</dimen>
     <dimen name="btn_corner_radius">2dp</dimen>
@@ -32,13 +32,13 @@
     <dimen name="plus_one_button_margin">16dp</dimen>
     <dimen name="separator_width">2dp</dimen>
     <dimen name="text_size_help_content">20sp</dimen>
-    <!-- From: file:/E:/AndroidStudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.3.0/res/values/version.xml -->
+    <!-- From: file:/home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.3.0/res/values/version.xml -->
     <eat-comment/>
     <integer name="google_play_services_version">7327000</integer>
-    <!-- From: file:/E:/AndroidStudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-ads/7.3.0/res/values/admob_strings.xml -->
+    <!-- From: file:/home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-ads/7.3.0/res/values/admob_strings.xml -->
     <eat-comment/>
     <string name="accept">Accept</string>
-    <!-- From: file:/E:/AndroidStudioProjects/LinkFiveDots/app/src/main/res/values/strings.xml -->
+    <!-- From: file:/home/anton/StudioProjects/LinkFiveDots/app/src/main/res/values/strings.xml -->
     <eat-comment/>
     <string name="app_name">Link Five Dots</string>
     <string name="application_info_label">App info</string>
@@ -58,7 +58,7 @@
     <string name="bluetooth_search_for_devices">Refresh</string>
     <string name="bt_message_opponents_turn">Opponent\'s move, wait…</string>
     <string name="bt_message_your_turn">Your move, put a dot…</string>
-    <!-- From: file:/E:/AndroidStudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.3.0/res/values/common_strings.xml -->
+    <!-- From: file:/home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.3.0/res/values/common_strings.xml -->
     <eat-comment/>
     <string name="common_android_wear_notification_needs_update_text">An application requires an update to the Android Wear app.</string>
     <string name="common_android_wear_update_text">This app won\'t run unless you update the Android Wear app.</string>
@@ -92,12 +92,12 @@
     <string name="common_signin_button_text_long">Sign in with Google</string>
     <string name="commono_google_play_services_api_unavailable_text">This app requires one or more Google Play services that are not currently
 available. Please contact the developer for assistance.</string>
-    <!-- From: file:/E:/AndroidStudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-ads/7.3.0/res/values/admob_strings.xml -->
+    <!-- From: file:/home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-ads/7.3.0/res/values/admob_strings.xml -->
     <eat-comment/>
     <string name="create_calendar_message">Allow Ad to create a calendar event?</string>
     <string name="create_calendar_title">Create calendar event</string>
     <string name="decline">Decline</string>
-    <!-- From: file:/E:/AndroidStudioProjects/LinkFiveDots/app/src/main/res/values/strings.xml -->
+    <!-- From: file:/home/anton/StudioProjects/LinkFiveDots/app/src/main/res/values/strings.xml -->
     <eat-comment/>
     <string name="device_feedback">Send feedback</string>
     <string name="device_picker">Choose Bluetooth device</string>
@@ -129,21 +129,21 @@ available. Please contact the developer for assistance.</string>
     <string name="scores_update">Refresh</string>
     <string name="scores_won">won</string>
     <string name="share">Share</string>
-    <!-- From: file:/E:/AndroidStudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-ads/7.3.0/res/values/admob_strings.xml -->
+    <!-- From: file:/home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-ads/7.3.0/res/values/admob_strings.xml -->
     <eat-comment/>
     <string name="store_picture_message">"Allow Ad to store image in Picture gallery?"</string>
     <string name="store_picture_title">Save image</string>
-    <!-- From: file:/E:/AndroidStudioProjects/LinkFiveDots/app/src/main/res/values/strings.xml -->
+    <!-- From: file:/home/anton/StudioProjects/LinkFiveDots/app/src/main/res/values/strings.xml -->
     <eat-comment/>
     <string name="version_text">version %1$s</string>
     <string name="yes">"Yes"</string>
-    <!-- From: file:/E:/AndroidStudioProjects/LinkFiveDots/app/src/main/res/values/styles.xml -->
+    <!-- From: file:/home/anton/StudioProjects/LinkFiveDots/app/src/main/res/values/styles.xml -->
     <eat-comment/>
     <style name="EndTheme" parent="android:Theme.Panel">
     	<item name="android:windowBackground">@color/custom_color</item>
     	<item name="android:colorBackground">@color/custom_color</item>
 	</style>
-    <!-- From: file:/E:/AndroidStudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-ads/7.3.0/res/values/admob_iap_style.xml -->
+    <!-- From: file:/home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-ads/7.3.0/res/values/admob_iap_style.xml -->
     <eat-comment/>
     <style name="Theme.IAPTheme" parent="android:Theme">
     <item name="android:windowIsTranslucent">true</item>

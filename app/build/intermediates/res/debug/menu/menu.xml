@@ -17,4 +17,4 @@
 			android:icon="@android:drawable/ic_menu_search"
 			android:title="@android:string/search_go" />
 	</group>
-</menu><!-- From: file:/E:/AndroidStudioProjects/LinkFiveDots/app/src/main/res/menu/menu.xml -->
+</menu><!-- From: file:/home/anton/StudioProjects/LinkFiveDots/app/src/main/res/menu/menu.xml -->

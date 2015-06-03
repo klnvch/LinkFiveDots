@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:ns1="urn:oasis:names:tc:xliff:document:1.2">
-    <!-- From: file:/E:/AndroidStudioProjects/LinkFiveDots/app/src/main/res/values-ru/strings.xml -->
+    <!-- From: file:/home/anton/StudioProjects/LinkFiveDots/app/src/main/res/values-ru/strings.xml -->
     <eat-comment/>
     <string name="app_name">Соедини пять точек</string>
     <string name="application_info_label">"О приложении"</string>
@@ -19,7 +19,7 @@
     <string name="bluetooth_search_for_devices">"Обновить"</string>
     <string name="bt_message_opponents_turn">Ход соперника, подождите…</string>
     <string name="bt_message_your_turn">Ваш ход, поставте точку…</string>
-    <!-- From: file:/E:/AndroidStudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.3.0/res/values-ru/common_strings.xml -->
+    <!-- From: file:/home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.3.0/res/values-ru/common_strings.xml -->
     <eat-comment/>
     <string msgid="473679118463211576" name="common_android_wear_notification_needs_update_text">"Требуется обновить приложение Android Wear."</string>
     <string msgid="3046420540094071256" name="common_android_wear_update_text">"Для работы этого приложения требуется обновить Android Wear."</string>
@@ -52,7 +52,7 @@
     <string msgid="9071884888741449141" name="common_signin_button_text">"Войти"</string>
     <string msgid="2429381841831957106" name="common_signin_button_text_long">"Войти в аккаунт Google"</string>
     <string msgid="5000919058582214855" name="commono_google_play_services_api_unavailable_text">"Сервисы Google Play, необходимые для работы приложения, сейчас недоступны. Обратитесь за помощью к разработчику."</string>
-    <!-- From: file:/E:/AndroidStudioProjects/LinkFiveDots/app/src/main/res/values-ru/strings.xml -->
+    <!-- From: file:/home/anton/StudioProjects/LinkFiveDots/app/src/main/res/values-ru/strings.xml -->
     <eat-comment/>
     <string name="device_feedback">Отправить отзыв</string>
     <string name="device_picker">"Выбрать устройство Bluetooth"</string>

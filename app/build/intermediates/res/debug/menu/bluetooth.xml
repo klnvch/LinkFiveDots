@@ -4,4 +4,4 @@
         android:showAsAction="ifRoom"
         android:icon="@android:drawable/ic_popup_sync"
         android:title="@string/bluetooth_search_for_devices" />
-</menu><!-- From: file:/E:/AndroidStudioProjects/LinkFiveDots/app/src/main/res/menu/bluetooth.xml -->
+</menu><!-- From: file:/home/anton/StudioProjects/LinkFiveDots/app/src/main/res/menu/bluetooth.xml -->

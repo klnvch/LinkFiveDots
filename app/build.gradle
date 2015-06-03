@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 22
-    buildToolsVersion "22.0.1"
+    buildToolsVersion "23 rc1"
 
     defaultConfig {
         applicationId "by.klnvch.link5dots"
@@ -30,7 +30,7 @@ android {
 }
 
 dependencies {
-    compile 'com.google.android.gms:play-services-plus:7.3.0'
-    compile 'com.google.android.gms:play-services-analytics:7.3.0'
-    compile 'com.google.android.gms:play-services-ads:7.3.0'
+    compile 'com.google.android.gms:play-services-plus:7.5.0'
+    compile 'com.google.android.gms:play-services-analytics:7.5.0'
+    compile 'com.google.android.gms:play-services-ads:7.5.0'
 }

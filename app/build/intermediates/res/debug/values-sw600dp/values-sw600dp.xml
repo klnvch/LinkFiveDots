@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- From: file:/E:/AndroidStudioProjects/LinkFiveDots/app/src/main/res/values-sw600dp/dimens.xml -->
+    <!-- From: file:/home/anton/StudioProjects/LinkFiveDots/app/src/main/res/values-sw600dp/dimens.xml -->
     <eat-comment/>
     <dimen name="bt_text_size">21sp</dimen>
     <dimen name="btn_corner_radius">3dp</dimen>

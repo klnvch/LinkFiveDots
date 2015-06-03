@@ -7,4 +7,4 @@
     android:textSize="@dimen/bt_text_size"
     android:singleLine="true"
     android:background="@drawable/btn_selector"
-/><!-- From: file:/E:/AndroidStudioProjects/LinkFiveDots/app/src/main/res/layout/device_name.xml -->
+/><!-- From: file:/home/anton/StudioProjects/LinkFiveDots/app/src/main/res/layout/device_name.xml -->

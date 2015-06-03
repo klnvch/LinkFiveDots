@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:ns1="urn:oasis:names:tc:xliff:document:1.2">
-    <!-- From: file:/E:/AndroidStudioProjects/LinkFiveDots/app/src/main/res/values-it/strings.xml -->
+    <!-- From: file:/home/anton/StudioProjects/LinkFiveDots/app/src/main/res/values-it/strings.xml -->
     <eat-comment/>
     <string name="app_name">Collega cinque punti</string>
     <string name="application_info_label">"Informazioni applicazione"</string>
@@ -19,7 +19,7 @@
     <string name="bluetooth_search_for_devices">"Aggiorna"</string>
     <string name="bt_message_opponents_turn">Opponent\'s move, wait…</string>
     <string name="bt_message_your_turn">Your move, put a dot…</string>
-    <!-- From: file:/E:/AndroidStudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.3.0/res/values-it/common_strings.xml -->
+    <!-- From: file:/home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.3.0/res/values-it/common_strings.xml -->
     <eat-comment/>
     <string msgid="473679118463211576" name="common_android_wear_notification_needs_update_text">"Un\'applicazione richiede l\'aggiornamento dell\'app Android Wear."</string>
     <string msgid="3046420540094071256" name="common_android_wear_update_text">"Questa app funzionerà solo dopo avere aggiornato Android Wear."</string>
@@ -52,7 +52,7 @@
     <string msgid="9071884888741449141" name="common_signin_button_text">"Accedi"</string>
     <string msgid="2429381841831957106" name="common_signin_button_text_long">"Accedi con Google"</string>
     <string msgid="5000919058582214855" name="commono_google_play_services_api_unavailable_text">"Questa app richiede uno o più servizi di Google Play che non sono attualmente disponibili. Contatta lo sviluppatore per ricevere assistenza."</string>
-    <!-- From: file:/E:/AndroidStudioProjects/LinkFiveDots/app/src/main/res/values-it/strings.xml -->
+    <!-- From: file:/home/anton/StudioProjects/LinkFiveDots/app/src/main/res/values-it/strings.xml -->
     <eat-comment/>
     <string name="device_feedback">Invia feedback</string>
     <string name="device_picker">"Scegli il dispositivo Bluetooth"</string>

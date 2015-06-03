@@ -12,4 +12,4 @@
             android:right="@dimen/btn_padding_horizontal"
             android:bottom="@dimen/btn_padding_vertical" />
     </shape>
-</inset><!-- From: file:/E:/AndroidStudioProjects/LinkFiveDots/app/src/main/res/drawable/btn_normal.xml -->
+</inset><!-- From: file:/home/anton/StudioProjects/LinkFiveDots/app/src/main/res/drawable/btn_normal.xml -->
