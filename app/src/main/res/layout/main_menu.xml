@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE LinearLayout>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:ads="http://schemas.android.com/apk/res-auto"
@@ -33,10 +32,10 @@
                 android:background="@drawable/btn_selector"/>
 		
 			<Button 
-		    	android:id="@+id/main_menu_bluetooth_game"
+		    	android:id="@+id/main_menu_multi_player"
 		    	android:layout_width="fill_parent"
 		    	android:layout_height="wrap_content"
-		    	android:text="@string/menu_bt_game"
+		    	android:text="Multiplayer Game"
                 android:textColor="@color/black"
                 android:textStyle="bold"
                 android:textSize="@dimen/btn_text_size"

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:scrollbars="vertical"
+        android:background="@drawable/paper_tiled">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:padding="@dimen/btn_table_padding">
+
+            <Button
+                android:id="@+id/multi_player_bluetooth"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Bluetooth"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:textSize="@dimen/btn_text_size"
+                android:drawableLeft="@drawable/ic_bluetooth_black_48dp"
+                android:background="@drawable/btn_selector"/>
+
+            <Button
+                android:id="@+id/multi_player_lan"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Local network"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:textSize="@dimen/btn_text_size"
+                android:drawableLeft="@drawable/ic_bluetooth_black_48dp"
+                android:background="@drawable/btn_selector"/>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/adView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        ads:adUnitId="@string/banner_ad_unit_id"
+        ads:adSize="BANNER"
+        />
+
+</LinearLayout>

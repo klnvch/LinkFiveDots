@@ -11,6 +11,9 @@
     <screenName name="by.klnvch.link5dots.MainMenuActivity">
         MainMenu
     </screenName>
+    <screenName name="by.klnvch.link5dots.MultiPlayerMenuActivity">
+        MainMenu
+    </screenName>
     <screenName name="by.klnvch.link5dots.MainActivity">
         Main
     </screenName>
