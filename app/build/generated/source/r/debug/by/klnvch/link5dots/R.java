@@ -142,12 +142,12 @@ containing a value of this type.
         public static final int redlinehor=0x7f020030;
     }
     public static final class id {
-        public static final int TableLayout111=0x7f0c001b;
+        public static final int TableLayout111=0x7f0c001f;
         public static final int adView=0x7f0c000f;
         public static final int adjust_height=0x7f0c0000;
         public static final int adjust_width=0x7f0c0001;
-        public static final int bt_menu_refresh=0x7f0c001c;
-        public static final int game_view=0x7f0c001a;
+        public static final int bt_menu_refresh=0x7f0c0020;
+        public static final int game_view=0x7f0c001e;
         public static final int label_available_devices=0x7f0c000b;
         public static final int label_no_device_found=0x7f0c000d;
         public static final int label_paired_devices=0x7f0c0008;
@@ -156,20 +156,24 @@ containing a value of this type.
         public static final int layout_visibility=0x7f0c0003;
         public static final int list_available_devices=0x7f0c000e;
         public static final int list_paired_devices=0x7f0c0009;
-        public static final int main_menu_bluetooth_game=0x7f0c0016;
+        public static final int main_menu_bluetooth_game=0x7f0c001a;
         public static final int main_menu_how_to=0x7f0c0019;
         public static final int main_menu_info=0x7f0c0018;
+        public static final int main_menu_multi_player=0x7f0c0016;
         public static final int main_menu_scores=0x7f0c0017;
         public static final int main_menu_single_player=0x7f0c0015;
-        public static final int menu_new_game=0x7f0c001e;
-        public static final int menu_search=0x7f0c001f;
-        public static final int menu_undo=0x7f0c001d;
+        public static final int menu_new_game=0x7f0c0022;
+        public static final int menu_search=0x7f0c0023;
+        public static final int menu_undo=0x7f0c0021;
+        public static final int multi_player_bluetooth=0x7f0c001b;
+        public static final int multi_player_lan=0x7f0c001c;
         public static final int none=0x7f0c0002;
         public static final int plus_one_button=0x7f0c0011;
         public static final int progressBar=0x7f0c000c;
         public static final int rate_this_app=0x7f0c0012;
-        public static final int scores_edit=0x7f0c0020;
-        public static final int scores_update=0x7f0c0021;
+        public static final int register=0x7f0c001d;
+        public static final int scores_edit=0x7f0c0024;
+        public static final int scores_update=0x7f0c0025;
         public static final int send_feedback=0x7f0c0013;
         public static final int separator=0x7f0c0006;
         public static final int set_visibility=0x7f0c0004;
@@ -186,8 +190,10 @@ containing a value of this type.
         public static final int howto=0x7f030002;
         public static final int info_activity=0x7f030003;
         public static final int main_menu=0x7f030004;
-        public static final int play=0x7f030005;
-        public static final int scores=0x7f030006;
+        public static final int multiplayer_menu=0x7f030005;
+        public static final int nsd=0x7f030006;
+        public static final int play=0x7f030007;
+        public static final int scores=0x7f030008;
     }
     public static final class menu {
         public static final int bluetooth=0x7f0b0000;

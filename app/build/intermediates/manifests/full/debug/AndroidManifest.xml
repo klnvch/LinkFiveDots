@@ -40,10 +40,15 @@
             android:parentActivityName="by.klnvch.link5dots.MainMenuActivity" >
         </activity>
         <activity
+            android:name="by.klnvch.link5dots.MultiPlayerMenuActivity"
+            android:label="Multiplayer"
+            android:parentActivityName="by.klnvch.link5dots.MainMenuActivity" >
+        </activity>
+        <activity
             android:name="by.klnvch.link5dots.bluetooth.DevicePickerActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/app_name"
-            android:parentActivityName="by.klnvch.link5dots.MainMenuActivity" >
+            android:parentActivityName="by.klnvch.link5dots.MultiPlayerMenuActivity" >
         </activity>
         <activity
             android:name="by.klnvch.link5dots.bluetooth.BluetoothActivity"
