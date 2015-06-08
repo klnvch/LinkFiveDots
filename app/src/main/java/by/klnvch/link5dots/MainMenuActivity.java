@@ -54,7 +54,7 @@ public class MainMenuActivity extends Activity implements OnClickListener{
                 Intent i1 = new Intent(this, MainActivity.class);
                 startActivity(i1);
                 break;
-            case R.id.main_menu_bluetooth_game:
+            case R.id.main_menu_multi_player:
                 Intent i2 = new Intent(this, MultiPlayerMenuActivity.class);
                 startActivity(i2);
                 break;

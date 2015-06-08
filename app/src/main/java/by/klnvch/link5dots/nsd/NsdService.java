@@ -13,11 +13,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
-import android.support.annotation.Nullable;
 import android.util.Log;
 
 import java.net.Socket;
-import java.util.UUID;
 
 import by.klnvch.link5dots.R;
 
@@ -28,12 +26,6 @@ public class NsdService extends Service implements
     private static final String TAG = "NsdService";
 
     public static final String BLUETOOTH_GAME_VIEW_PREFERENCES = "BLUETOOTH_GAME_VIEW_PREFERENCES";
-
-    // Name for the SDP record when creating server socket
-    public static final String NAME_SECURE = "BluetoothChatSecure";
-
-    // Unique UUID for this application
-    public static final UUID UUID_SECURE = UUID.fromString("fa87c0d0-afac-11de-8a39-0800200c9a66");
 
     // Member fields
     private Handler mHandler;

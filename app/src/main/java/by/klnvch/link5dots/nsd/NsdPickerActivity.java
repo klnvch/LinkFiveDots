@@ -1,18 +1,11 @@
 package by.klnvch.link5dots.nsd;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.BroadcastReceiver;
 import android.content.ComponentName;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.ServiceConnection;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
@@ -21,22 +14,14 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.lang.ref.WeakReference;
-import java.util.Set;
 
 import by.klnvch.link5dots.R;
 
 public class NsdPickerActivity extends Activity{
-
-    private static final int BT_REQUEST_DISCOVERABLE = 1;
-
-    private static final String BT_DISCOVERABLE_TIME_FINISH = "BT_DISCOVERABLE_TIME_FINISH";
 
     private ProgressDialog progressDialog = null;
 
@@ -64,6 +49,9 @@ public class NsdPickerActivity extends Activity{
     private static final int MESSAGE_STATE_CHANGE = 1;
     public static final int MESSAGE_DEVICE_NAME = 4;
     private static final int MESSAGE_TOAST = 5;
+
+    public static final int MESSAGE_SERVICE_REGISTERED = 11;
+
     public static final String DEVICE_NAME = "device_name";
     public static final String TOAST = "toast";
     // The Handler that gets information back from the BluetoothService
@@ -187,22 +175,6 @@ public class NsdPickerActivity extends Activity{
     }
 
     @Override
-    protected void onActivityResult(int requestCode, final int resultCode, Intent data) {
-        switch (requestCode){
-            case BT_REQUEST_DISCOVERABLE:
-                if(resultCode > 0){
-                    SharedPreferences prefs = getPreferences(MODE_PRIVATE);
-                    SharedPreferences.Editor editor = prefs.edit();
-                    long finishTime = System.currentTimeMillis() + resultCode*1000;
-                    editor.putLong(BT_DISCOVERABLE_TIME_FINISH, finishTime);
-                    editor.apply();
-                    setVisibilityTimer(resultCode);
-                }
-                break;
-        }
-    }
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
         MenuInflater inflater = getMenuInflater();
@@ -223,28 +195,5 @@ public class NsdPickerActivity extends Activity{
         }
 
         return false;
-    }
-
-    private CountDownTimer countDownTimer = null;
-    private void setVisibilityTimer(int timeSeconds){
-        if(countDownTimer == null) {
-            final TextView visibilityInfo = (TextView) findViewById(R.id.visibility_info);
-            countDownTimer = new CountDownTimer(timeSeconds * 1000, 1000) {
-                @Override
-                public void onTick(long millisUntilFinished) {
-                    millisUntilFinished = millisUntilFinished / 1000;
-                    int min = (int) (millisUntilFinished / 60);
-                    int sec = (int) (millisUntilFinished % 60);
-                    String time = String.format("%d:%02d", min, sec);
-                    visibilityInfo.setText(getString(R.string.bluetooth_is_discoverable, time));
-                }
-
-                @Override
-                public void onFinish() {
-                    visibilityInfo.setText(R.string.bluetooth_only_visible_to_paired_devices);
-                    countDownTimer = null;
-                }
-            }.start();
-        }
     }
 }

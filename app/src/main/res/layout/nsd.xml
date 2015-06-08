@@ -27,7 +27,7 @@
             android:id="@+id/visibility_info"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/bluetooth_only_visible_to_paired_devices"
+            android:text="Not registered"
             android:textColor="@color/black"
             android:textSize="@dimen/bt_text_size"/>
 
