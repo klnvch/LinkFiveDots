@@ -1,6 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <string name="app_name">Link Five Dots</string>
 
     <string name="banner_ad_unit_id" translatable="false">ca-app-pub-9653730523387780/5316470559</string>
@@ -33,8 +32,8 @@
 	
 	<string name="scores_loading">Loading&#8230;</string>
 	
-	<string name="menu_single_player">Single Player Game</string>
-	<string name="menu_bt_game">Bluetooth Game</string>
+	<string name="menu_single_player">Single Player</string>
+	<string name="menu_multi_player">Multiplayer</string>
 
     <string name="rate_this_app">Rate this app</string>
 

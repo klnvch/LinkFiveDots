@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Collega cinque punti</string>
+
+
     
 	<string name="how_to_title">Come giocare</string>
 	<string name="how_to_text">\tSii primo per collegare cinque punti in linea diritta orizzontalmente, verticalmente oppure diagonalmente. Android gioca per i punti blu, il giocatore per quelli rossi. I punti blu e rossi si mettono seguendo il proprio turno sul incrocio delle linee. La prima mossa e` la tua.\n\n\tTraina lo schermo per spostare campo di gioco.\n\tDistendi lo schermo per  ingrossare o diminuire le misure delle cellule.\n\tUsa il menu per cominciare un gioco nuovo, revocare l`ultima mossa, per vedere il punteggio del gioco ed informazioni di come dovrebbe gioccare.\n\tPremi il pulsante \"Ricerca\" per nascondere o fare vedere delle lancette intorno al punto della mossa ultima.</string>
@@ -30,8 +32,8 @@
 	
 	<string name="scores_loading">Caricamento in corso&#8230;</string>
 	
-	<string name="menu_single_player">Single Player Game</string>
-	<string name="menu_bt_game">Bluetooth Game</string>
+	<string name="menu_single_player">Giocatore Singolo</string>
+	<string name="menu_multi_player">Multiplayer</string>
 
 	<string name="rate_this_app">Valuta questa app</string>
 

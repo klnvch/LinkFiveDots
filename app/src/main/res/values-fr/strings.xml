@@ -1,6 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Combiner Cinq Points</string>
+
+
     
 	<string name="how_to_title">Comment jouer</string>
 	<string name="how_to_text">\tSoyez le premier à aligner cinq points, horizontalement, verticalement ou en diagonale. Android déplace les points bleus, vous, les points rouges. Les points rouges et bleus sont placés tour à tour sur les intersections. Vous jouez en premier.\n\n\tFaites glisser l’écran pour déplacer la grille.\n\tAgrandissez ou réduisez l’écran pour ajuster la taille de la grille.\n\tUtilisez le menu pour redémarrer le jeu, annulez le dernier coup, regardez les scores des jeux ou vérifiez comment jouer.\n\tAppuyez sur le bouton \"Rechercher\" pour masquer/afficher des flèches autour du point joué le dernier coup.</string>
@@ -30,8 +32,8 @@
 	
 	<string name="scores_loading">Chargement&#8230;</string>
 	
-	<string name="menu_single_player">Jeu Solo</string>
-	<string name="menu_bt_game">Jeu En Réseau Par Bluetooth</string>
+	<string name="menu_single_player">Seul Joueur</string>
+	<string name="menu_multi_player">Multijoueur</string>
 
 	<string name="rate_this_app">Noter cette application</string>
 

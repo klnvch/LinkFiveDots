@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Połącz pięć kropek</string>
+
+
     
 	<string name="how_to_title">Jak grać</string>
 	<string name="how_to_text">\tBądź pierwszy połączywszy pięć kropek w linię prostą: poziomo, pionowo lub ukośnie. Android gra niebieskimi kropkami, grasz czerwonymi kropkami. Czerwone i niebieskie kropki rozmieszczają się po kolei na skrzyżwaniach lini. Pierwszy ruch należy do Ciebie.\n\n\tPrzeciągnij po ekranie, aby przenieść siatkę.\n\tSkaluj ekran, aby powiększyć lub zmniejszyć rozmiar siatki.\n\tUżyj menu, aby ponownie uruchomić grę, cofnąć ostatni ruch, zobaczyć wyniki lub jak grać.\n\tNaciśnij przycisk \"Szukaj\", aby ukryć/pokazać strzałki wokoło kropki ostatniego ruchu.</string>
@@ -30,8 +32,8 @@
 	
 	<string name="scores_loading">Ładowanie&#8230;</string>
 	
-	<string name="menu_single_player">Pojedyncza Gra</string>
-	<string name="menu_bt_game">Bluetooth Gra</string>
+	<string name="menu_single_player">Jeden Gracz</string>
+	<string name="menu_multi_player">Multiplayer</string>
 
 	<string name="rate_this_app">Oceń tę aplikację</string>
 
