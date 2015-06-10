@@ -39,7 +39,7 @@
 
         <activity
             android:name=".MultiPlayerMenuActivity"
-            android:label="Multiplayer"
+            android:label="@string/menu_multi_player"
             android:parentActivityName=".MainMenuActivity">
         </activity>
 

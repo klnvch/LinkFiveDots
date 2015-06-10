@@ -34,6 +34,7 @@
 	
 	<string name="menu_single_player">Seul Joueur</string>
 	<string name="menu_multi_player">Multijoueur</string>
+	<string name="menu_local_network">Réseau Local</string>
 
 	<string name="rate_this_app">Noter cette application</string>
 
@@ -50,6 +51,7 @@
     <string name="bluetooth_no_devices_found">"Aucun appareil Bluetooth détecté."</string>
     <string name="device_picker">"Sélectionner un appareil Bluetooth"</string>
     <string name="bluetooth_connection_dialog_text">"Voulez-vous vous connecter à \"%1$s\" ?"</string>
+    <string name="bluetooth_settings">"Bluetooth"</string>
     <string name="bluetooth_connecting_error_message">"Impossible de se connecter à \"%1$s\"."</string>
     <string name="bluetooth_search_for_devices">"Actualiser"</string>
     <string name="bluetooth_preference_paired_devices">"Périphériques associés"</string>

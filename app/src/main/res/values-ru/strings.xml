@@ -34,6 +34,7 @@
 
 	<string name="menu_single_player">Один игрок</string>
 	<string name="menu_multi_player">Мультиплеер</string>
+	<string name="menu_local_network">Локальная Сеть</string>
 
 	<string name="rate_this_app">Оценить приложение</string>
 
@@ -50,6 +51,7 @@
     <string name="bluetooth_no_devices_found">"Устройства Bluetooth не найдены."</string>
     <string name="device_picker">"Выбрать устройство Bluetooth"</string>
     <string name="bluetooth_connection_dialog_text">"Подключиться к устройству \"%1$s\"?"</string>
+	<string name="bluetooth_settings">"Bluetooth"</string>
     <string name="bluetooth_connecting_error_message">"Не удалось подключиться к \"%1$s\"."</string>
     <string name="bluetooth_search_for_devices">"Обновить"</string>
     <string name="bluetooth_preference_paired_devices">"Подключенные устройства"</string>

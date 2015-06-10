@@ -34,6 +34,7 @@
 	
 	<string name="menu_single_player">Адзін гулец</string>
 	<string name="menu_multi_player">Мультыплэер</string>
+	<string name="menu_local_network">Лакальная Сетка</string>
 
 	<string name="rate_this_app">Ацаніць гэтую праграму</string>
 
@@ -50,6 +51,7 @@
     <string name="bluetooth_no_devices_found">"Адсутнасць прылад Bluetooth паблізу"</string>
     <string name="device_picker">"Выбраць прыладу Bluetooth"</string>
     <string name="bluetooth_connection_dialog_text">"Падключыцца да прылады „%1$s”?"</string>
+    <string name="bluetooth_settings">"Bluetooth"</string>
     <string name="bluetooth_connecting_error_message">"Не атрымалася падключыцца да „%1$s”."</string>
     <string name="bluetooth_search_for_devices">"Абнавіць"</string>
     <string name="bluetooth_preference_paired_devices">"Спараныя прылады"</string>

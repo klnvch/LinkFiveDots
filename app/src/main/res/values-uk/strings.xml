@@ -34,6 +34,7 @@
 	
 	<string name="menu_single_player">Один гравець</string>
 	<string name="menu_multi_player">Мультиплеер</string>
+	<string name="menu_local_network">Локальна Мережа</string>
 
 	<string name="rate_this_app">Оцінити цю програму</string>
 
@@ -50,6 +51,7 @@
     <string name="bluetooth_no_devices_found">"Пристрої Bluetooth поблизу не знайдено."</string>
     <string name="device_picker">"Виберіть пристрій Bluetooth"</string>
     <string name="bluetooth_connection_dialog_text">"Підключитися до пристрою \"%1$s\"?"</string>
+    <string name="bluetooth_settings">"Bluetooth"</string>
     <string name="bluetooth_connecting_error_message">"Не вдалося з’єднатися з пристроєм \"%1$s\"."</string>
     <string name="bluetooth_search_for_devices">"Оновити"</string>
     <string name="bluetooth_preference_paired_devices">"Спарені пристрої"</string>

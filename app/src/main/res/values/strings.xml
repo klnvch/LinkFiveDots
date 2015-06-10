@@ -34,6 +34,7 @@
 	
 	<string name="menu_single_player">Single Player</string>
 	<string name="menu_multi_player">Multiplayer</string>
+    <string name="menu_local_network">Local Area Network</string>
 
     <string name="rate_this_app">Rate this app</string>
 
@@ -62,6 +63,8 @@
     <string name="device_picker">Choose Bluetooth device</string>
     <!-- 368 Bluetooth connection permission Alert Activity text [CHAR LIMIT=none]-->
     <string name="bluetooth_connection_dialog_text">"Do you want to connect to \u0022%1$s\u0022?"</string>
+    <!-- 1118 Used as title on second screen after selecting Bluetooth settings -->
+    <string name="bluetooth_settings">Bluetooth</string>
     <!-- 1174 Message for the error dialog when BT connecting operation fails generically. -->
     <string name="bluetooth_connecting_error_message">Couldn\'t connect to \u0022%1$s\u0022.</string>
     <!-- 1179 Bluetooth settings: The title of the action button that initiates a search for nearby devices [CHAR LIMIT=20] -->

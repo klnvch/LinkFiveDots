@@ -103,7 +103,7 @@ ADDED from /home/anton/StudioProjects/LinkFiveDots/app/src/main/AndroidManifest.
 activity#by.klnvch.link5dots.MultiPlayerMenuActivity
 ADDED from /home/anton/StudioProjects/LinkFiveDots/app/src/main/AndroidManifest.xml:40:9-44:20
 	android:label
-		ADDED from /home/anton/StudioProjects/LinkFiveDots/app/src/main/AndroidManifest.xml:42:13-40
+		ADDED from /home/anton/StudioProjects/LinkFiveDots/app/src/main/AndroidManifest.xml:42:13-54
 	android:parentActivityName
 		ADDED from /home/anton/StudioProjects/LinkFiveDots/app/src/main/AndroidManifest.xml:43:13-59
 	android:name
