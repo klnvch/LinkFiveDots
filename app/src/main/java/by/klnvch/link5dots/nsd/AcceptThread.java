@@ -34,7 +34,7 @@ public class AcceptThread extends Thread{
             try {
                 socket = mServerSocket.accept();
             } catch (Exception e) {
-                Log.e(TAG, "accept() failed", e);
+                Log.d(TAG, "accept() failed");
                 break;
             }
 

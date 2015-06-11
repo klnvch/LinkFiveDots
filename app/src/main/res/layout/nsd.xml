@@ -13,18 +13,20 @@
         android:layout_alignParentTop="true"
         android:gravity="center">
 
-        <Button
+        <ToggleButton
             android:id="@+id/register"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Register"
+            android:textOn="Unregister"
+            android:textOff="Register"
             android:textColor="@color/black"
             android:textStyle="bold"
             android:textSize="@dimen/btn_text_size"
+            android:checked="false"
             android:background="@drawable/btn_selector"/>
 
         <TextView
-            android:id="@+id/visibility_info"
+            android:id="@+id/registration_status"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Not registered"

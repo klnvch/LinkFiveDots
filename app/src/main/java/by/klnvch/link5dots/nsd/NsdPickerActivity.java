@@ -14,8 +14,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import java.lang.ref.WeakReference;
 
@@ -24,6 +25,8 @@ import by.klnvch.link5dots.R;
 public class NsdPickerActivity extends Activity{
 
     private ProgressDialog progressDialog = null;
+    private ToggleButton registerButton;
+    private TextView registrationStatus;
 
     private NsdService mNsdService;
     private boolean isBound;
@@ -38,6 +41,8 @@ public class NsdPickerActivity extends Activity{
                     progressDialog = ProgressDialog.show(NsdPickerActivity.this, null, getString(R.string.bluetooth_connecting), true, false, null);
                 }
             }
+            //
+            setRegisterButton(mNsdService.getServerState());
         }
 
         public void onServiceDisconnected(ComponentName name) {
@@ -50,7 +55,7 @@ public class NsdPickerActivity extends Activity{
     public static final int MESSAGE_DEVICE_NAME = 4;
     private static final int MESSAGE_TOAST = 5;
 
-    public static final int MESSAGE_SERVICE_REGISTERED = 11;
+    public static final int MESSAGE_SERVER_STATE_CHANGE = 101;
 
     public static final String DEVICE_NAME = "device_name";
     public static final String TOAST = "toast";
@@ -67,6 +72,9 @@ public class NsdPickerActivity extends Activity{
             NsdPickerActivity activity = mActivity.get();
             if (activity != null) {
                 switch (msg.what) {
+                    case MESSAGE_SERVER_STATE_CHANGE:
+                        activity.setRegisterButton(msg.arg1);
+                        break;
                     case MESSAGE_STATE_CHANGE:
                         switch (msg.arg1) {
                             case NsdService.STATE_CONNECTING:
@@ -109,13 +117,18 @@ public class NsdPickerActivity extends Activity{
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         // Initialize the button to perform device discovery
-        final Button registerButton = (Button) findViewById(R.id.register);
+        registerButton = (ToggleButton) findViewById(R.id.register);
         registerButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                mNsdService.registerService();
+                if (registerButton.isChecked()) {
+                    mNsdService.registerService();
+                } else {
+                    mNsdService.unRegisterService();
+                }
             }
         });
-
+        //
+        registrationStatus = (TextView) findViewById(R.id.registration_status);
         //
         doDiscovery();
     }
@@ -172,6 +185,31 @@ public class NsdPickerActivity extends Activity{
         findViewById(R.id.label_no_device_found).setVisibility(View.GONE);
         findViewById(R.id.list_available_devices).setVisibility(View.VISIBLE);
         findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
+    }
+
+    private void setRegisterButton(int state) {
+        switch (state) {
+            case NsdService.STATE_UNREGISTERED:
+                registerButton.setChecked(false);
+                registerButton.setEnabled(true);
+                registrationStatus.setText("Unregistered");
+                break;
+            case NsdService.STATE_REGISTERING:
+                registerButton.setChecked(false);
+                registerButton.setEnabled(false);
+                registrationStatus.setText("Registering...");
+                break;
+            case NsdService.STATE_REGISTERED:
+                registerButton.setChecked(true);
+                registerButton.setEnabled(true);
+                registrationStatus.setText("Registered as " + mNsdService.getServiceName());
+                break;
+            case NsdService.STATE_UNREGISTERING:
+                registerButton.setChecked(true);
+                registerButton.setEnabled(false);
+                registrationStatus.setText("Un registering...");
+                break;
+        }
     }
 
     @Override

@@ -35,6 +35,12 @@ public class NsdService extends Service implements
     private int mState;
 
     // Constants that indicate the current connection state
+    public static final int STATE_UNREGISTERED = 100;
+    public static final int STATE_REGISTERING = 101;
+    public static final int STATE_REGISTERED = 102;
+    public static final int STATE_UNREGISTERING = 103;
+
+
     public static final int STATE_NONE = 0;       // we're doing nothing
     public static final int STATE_LISTEN = 1;     // now listening for incoming connections
     public static final int STATE_CONNECTING = 2; // now initiating an outgoing connection
@@ -48,6 +54,7 @@ public class NsdService extends Service implements
     private NsdManager mNsdManager;
     private int mPort = -1;
     private NsdServiceInfo mService;
+    private int mServerState;
 
     // Binder given to clients
     private final IBinder mBinder = new LocalBinder();
@@ -77,12 +84,15 @@ public class NsdService extends Service implements
         mNsdManager = (NsdManager)getSystemService(Context.NSD_SERVICE);
         //
         mState = STATE_NONE;
+        mServerState = STATE_UNREGISTERED;
         start();
     }
 
     @Override
     public void onDestroy() {
         stop();
+        mNsdManager.unregisterService(this);
+        mNsdManager.stopServiceDiscovery(this);
     }
 
     public void setHandler(Handler handler) {
@@ -100,6 +110,15 @@ public class NsdService extends Service implements
             mHandler.obtainMessage(NsdActivity.MESSAGE_STATE_CHANGE, state, -1).sendToTarget();
         }
     }
+
+    private synchronized void setServerState(int state) {
+        mServerState = state;
+
+        if(mHandler != null) {
+            mHandler.obtainMessage(NsdPickerActivity.MESSAGE_SERVER_STATE_CHANGE, state, -1).sendToTarget();
+        }
+    }
+
     /**
      * Return the current connection state. */
     public synchronized int getState() {
@@ -276,22 +295,26 @@ public class NsdService extends Service implements
 
     @Override
     public void onRegistrationFailed(NsdServiceInfo nsdServiceInfo, int i) {
-        Log.d(TAG, "onRegistrationFailed");
+        setServerState(STATE_UNREGISTERED);
+        Log.d(TAG, "onRegistrationFailed: " + i);
     }
 
     @Override
     public void onUnregistrationFailed(NsdServiceInfo nsdServiceInfo, int i) {
-        Log.d(TAG, "onUnregistrationFailed");
+        setServerState(STATE_UNREGISTERED);
+        Log.d(TAG, "onUnRegistrationFailed: " + i);
     }
 
     @Override
     public void onServiceRegistered(NsdServiceInfo nsdServiceInfo) {
+        setServerState(STATE_REGISTERED);
         mServiceName = nsdServiceInfo.getServiceName();
-        Log.d(TAG, "onServiceRegistered");
+        Log.d(TAG, "onServiceRegistered: " + nsdServiceInfo);
     }
 
     @Override
     public void onServiceUnregistered(NsdServiceInfo nsdServiceInfo) {
+        setServerState(STATE_UNREGISTERED);
         Log.d(TAG, "onServiceUnregistered");
     }
 
@@ -363,8 +386,18 @@ public class NsdService extends Service implements
         this.mPort = port;
     }
 
+    public String getServiceName() {
+        return mServiceName;
+    }
+
+    public int getServerState() {
+        return mServerState;
+    }
+
     public void registerService() {
         if (mPort > -1) {
+            setServerState(STATE_REGISTERING);
+
             NsdServiceInfo serviceInfo = new NsdServiceInfo();
             serviceInfo.setPort(mPort);
             serviceInfo.setServiceName(mServiceName);
@@ -377,6 +410,7 @@ public class NsdService extends Service implements
     }
 
     public void unRegisterService() {
+        setServerState(STATE_UNREGISTERING);
         mNsdManager.unregisterService(this);
     }
 
