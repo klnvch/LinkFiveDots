@@ -56,6 +56,7 @@ public class NsdPickerActivity extends Activity{
     private static final int MESSAGE_TOAST = 5;
 
     public static final int MESSAGE_SERVER_STATE_CHANGE = 101;
+    public static final int MESSAGE_CLIENT_STATE_CHANGE = 102;
 
     public static final String DEVICE_NAME = "device_name";
     public static final String TOAST = "toast";
@@ -74,6 +75,8 @@ public class NsdPickerActivity extends Activity{
                 switch (msg.what) {
                     case MESSAGE_SERVER_STATE_CHANGE:
                         activity.setRegisterButton(msg.arg1);
+                        break;
+                    case MESSAGE_CLIENT_STATE_CHANGE:
                         break;
                     case MESSAGE_STATE_CHANGE:
                         switch (msg.arg1) {
@@ -127,10 +130,14 @@ public class NsdPickerActivity extends Activity{
                 }
             }
         });
+        findViewById(R.id.scan).findViewById(R.id.scan).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                doDiscovery();
+            }
+        });
         //
         registrationStatus = (TextView) findViewById(R.id.registration_status);
-        //
-        doDiscovery();
     }
 
     @Override
@@ -178,13 +185,13 @@ public class NsdPickerActivity extends Activity{
         super.onDestroy();
     }
 
-    /**
-     * Start device discover with the BluetoothAdapter
-     */
+
     private void doDiscovery() {
         findViewById(R.id.label_no_device_found).setVisibility(View.GONE);
         findViewById(R.id.list_available_devices).setVisibility(View.VISIBLE);
         findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
+        //
+        mNsdService.discoverServices();
     }
 
     private void setRegisterButton(int state) {

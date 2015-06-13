@@ -16,6 +16,8 @@ import android.os.Message;
 import android.util.Log;
 
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 
 import by.klnvch.link5dots.R;
 
@@ -40,6 +42,9 @@ public class NsdService extends Service implements
     public static final int STATE_REGISTERED = 102;
     public static final int STATE_UNREGISTERING = 103;
 
+    public static final int STATE_DISCOVERING = 200;
+    public static final int STATE_IDLE = 201;
+
 
     public static final int STATE_NONE = 0;       // we're doing nothing
     public static final int STATE_LISTEN = 1;     // now listening for incoming connections
@@ -53,8 +58,9 @@ public class NsdService extends Service implements
     private String mServiceName = SERVICE_NAME;
     private NsdManager mNsdManager;
     private int mPort = -1;
-    private NsdServiceInfo mService;
-    private int mServerState;
+    private int mServerState = STATE_UNREGISTERED;
+    private int mClientState = STATE_IDLE;
+    private List<NsdServiceInfo> mServices = new ArrayList<>();
 
     // Binder given to clients
     private final IBinder mBinder = new LocalBinder();
@@ -84,7 +90,6 @@ public class NsdService extends Service implements
         mNsdManager = (NsdManager)getSystemService(Context.NSD_SERVICE);
         //
         mState = STATE_NONE;
-        mServerState = STATE_UNREGISTERED;
         start();
     }
 
@@ -116,6 +121,14 @@ public class NsdService extends Service implements
 
         if(mHandler != null) {
             mHandler.obtainMessage(NsdPickerActivity.MESSAGE_SERVER_STATE_CHANGE, state, -1).sendToTarget();
+        }
+    }
+
+    private synchronized void setClientState(int state) {
+        mClientState = state;
+
+        if (mHandler != null) {
+            mHandler.obtainMessage(NsdPickerActivity.MESSAGE_CLIENT_STATE_CHANGE, state, -1).sendToTarget();
         }
     }
 
@@ -207,15 +220,6 @@ public class NsdService extends Service implements
         editor.apply();
     }
 
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    public String getDeviceName(){
-        if(mService != null){
-            return mService.getServiceName();
-        }else{
-            return "";
-        }
-    }
-
     /**
      * Stop all threads
      */
@@ -261,7 +265,7 @@ public class NsdService extends Service implements
         Message msg = mHandler.obtainMessage(NsdActivity.MESSAGE_TOAST);
         Bundle bundle = new Bundle();
         bundle.putInt(NsdPickerActivity.TOAST, R.string.bluetooth_connecting_error_message);
-        bundle.putString(NsdPickerActivity.DEVICE_NAME, mService.getServiceName());
+        bundle.putString(NsdPickerActivity.DEVICE_NAME, "mService.getServiceName()");
         msg.setData(bundle);
         mHandler.sendMessage(msg);
 
@@ -357,9 +361,7 @@ public class NsdService extends Service implements
     @Override
     public void onServiceLost(NsdServiceInfo nsdServiceInfo) {
         Log.e(TAG, "service lost" + nsdServiceInfo);
-        if (mService == nsdServiceInfo) {
-            nsdServiceInfo = null;
-        }
+        mServices.remove(nsdServiceInfo);
     }
 
     ////////////////////////////////////////////////////////////////
@@ -377,7 +379,7 @@ public class NsdService extends Service implements
             Log.d(TAG, "Same IP.");
             return;
         }
-        mService = nsdServiceInfo;
+        mServices.add(nsdServiceInfo);
     }
 
     // new functions
@@ -392,6 +394,10 @@ public class NsdService extends Service implements
 
     public int getServerState() {
         return mServerState;
+    }
+
+    public int getClientState() {
+        return mClientState;
     }
 
     public void registerService() {
@@ -415,10 +421,13 @@ public class NsdService extends Service implements
     }
 
     public void discoverServices() {
+        setClientState(STATE_DISCOVERING);
+        mServices.clear();
         mNsdManager.discoverServices(SERVICE_TYPE, NsdManager.PROTOCOL_DNS_SD, this);
     }
 
     public void stopDiscovery() {
+        setClientState(STATE_IDLE);
         mNsdManager.stopServiceDiscovery(this);
     }
 }
