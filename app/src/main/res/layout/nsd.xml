@@ -49,11 +49,12 @@
         android:orientation="vertical"
         android:layout_below="@id/separator">
 
-        <Button
+        <ToggleButton
             android:id="@+id/scan"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Scan"
+            android:textOn="Stop Scan"
+            android:textOff="Start Scan"
             android:textColor="@color/black"
             android:textStyle="bold"
             android:textSize="@dimen/btn_text_size"
@@ -71,7 +72,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
-                android:text="@string/bluetooth_preference_found_devices"
+                android:text="Available services"
                 android:textStyle="bold"
                 android:textColor="@color/black"
                 android:textSize="@dimen/bt_text_size"/>
@@ -97,7 +98,7 @@
                 android:visibility="gone"/>
 
             <ListView
-                android:id="@+id/list_available_devices"
+                android:id="@+id/list_services"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_alignParentBottom="true"

@@ -15,6 +15,8 @@ import android.widget.Toast;
 
 public class MainMenuActivity extends Activity implements OnClickListener{
 
+    private AdView mAdView;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -30,7 +32,7 @@ public class MainMenuActivity extends Activity implements OnClickListener{
         //((MyApplication) getApplication()).getTracker();
 
         // ads
-        AdView mAdView = (AdView) findViewById(R.id.adView);
+        mAdView = (AdView) findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
 	}
@@ -42,9 +44,33 @@ public class MainMenuActivity extends Activity implements OnClickListener{
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        if (mAdView != null) {
+            mAdView.resume();
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        if (mAdView != null) {
+            mAdView.pause();
+        }
+        super.onPause();
+    }
+
+    @Override
     protected void onStop() {
         super.onStop();
         //GoogleAnalytics.getInstance(this).reportActivityStop(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (mAdView != null) {
+            mAdView.destroy();
+        }
+        super.onDestroy();
     }
 
     public void onClick(View v) {

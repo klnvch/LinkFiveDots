@@ -8,30 +8,29 @@ import android.util.Log;
 import java.io.IOException;
 import java.net.Socket;
 
+@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 public class ConnectThread extends Thread{
     private static final String TAG = "ConnectThread";
 
-    private final Socket mSocket;
+    private Socket mSocket;
 
     private final NsdService mNsdService;
+    private final NsdServiceInfo mNsdServiceInfo;
 
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    public ConnectThread(NsdService mNsdService, NsdServiceInfo serviceInfo) {
+    public ConnectThread(NsdService mNsdService, NsdServiceInfo mNsdServiceInfo) {
         this.mNsdService = mNsdService;
-
-        Socket tmp = null;
-
-        try {
-            tmp = new Socket(serviceInfo.getHost(), serviceInfo.getPort());
-        } catch (IOException e) {
-            Log.e(TAG, "create() failed", e);
-        }
-        mSocket = tmp;
+        this.mNsdServiceInfo = mNsdServiceInfo;
     }
 
     public void run() {
         Log.i(TAG, "BEGIN mConnectThread");
         setName(TAG);
+
+        try {
+            mSocket = new Socket(mNsdServiceInfo.getHost(), mNsdServiceInfo.getPort());
+        } catch (IOException e) {
+            Log.e(TAG, "create() failed", e);
+        }
 
         // Reset the ConnectThread because we're done
         synchronized (mNsdService) {

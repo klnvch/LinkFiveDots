@@ -25,6 +25,8 @@ public class MultiPlayerMenuActivity extends Activity implements View.OnClickLis
     private static final int CHOOSE_BT_DEVICE = 4;
     private static final int CHOOSE_NSD_SERVICE = 5;
 
+    private AdView mAdView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,9 +36,33 @@ public class MultiPlayerMenuActivity extends Activity implements View.OnClickLis
         findViewById(R.id.multi_player_lan).setOnClickListener(this);
 
         // ads
-        AdView mAdView = (AdView) findViewById(R.id.adView);
+        mAdView = (AdView) findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (mAdView != null) {
+            mAdView.resume();
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        if (mAdView != null) {
+            mAdView.pause();
+        }
+        super.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (mAdView != null) {
+            mAdView.destroy();
+        }
+        super.onDestroy();
     }
 
     @Override

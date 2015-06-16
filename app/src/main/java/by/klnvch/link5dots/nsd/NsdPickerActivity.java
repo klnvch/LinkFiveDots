@@ -1,10 +1,13 @@
 package by.klnvch.link5dots.nsd;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.net.nsd.NsdServiceInfo;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -14,6 +17,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -22,11 +27,15 @@ import java.lang.ref.WeakReference;
 
 import by.klnvch.link5dots.R;
 
+@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 public class NsdPickerActivity extends Activity{
 
     private ProgressDialog progressDialog = null;
     private ToggleButton registerButton;
+    private ToggleButton scanButton;
     private TextView registrationStatus;
+    private View progressBar;
+    private ServiceListAdapter mServicesListAdapter;
 
     private NsdService mNsdService;
     private boolean isBound;
@@ -43,6 +52,8 @@ public class NsdPickerActivity extends Activity{
             }
             //
             setRegisterButton(mNsdService.getServerState());
+            setScanButton(mNsdService.getClientState());
+            updateServicesList();
         }
 
         public void onServiceDisconnected(ComponentName name) {
@@ -57,6 +68,8 @@ public class NsdPickerActivity extends Activity{
 
     public static final int MESSAGE_SERVER_STATE_CHANGE = 101;
     public static final int MESSAGE_CLIENT_STATE_CHANGE = 102;
+
+    public static final int MESSAGE_SERVICES_LIST_UPDATED = 300;
 
     public static final String DEVICE_NAME = "device_name";
     public static final String TOAST = "toast";
@@ -77,6 +90,10 @@ public class NsdPickerActivity extends Activity{
                         activity.setRegisterButton(msg.arg1);
                         break;
                     case MESSAGE_CLIENT_STATE_CHANGE:
+                        activity.setScanButton(msg.arg1);
+                        break;
+                    case MESSAGE_SERVICES_LIST_UPDATED:
+                        activity.updateServicesList();
                         break;
                     case MESSAGE_STATE_CHANGE:
                         switch (msg.arg1) {
@@ -96,7 +113,7 @@ public class NsdPickerActivity extends Activity{
                         String mConnectedDeviceName = msg.getData().getString(DEVICE_NAME);
                         Toast.makeText(activity.getApplicationContext(),
                                 activity.getString(R.string.bluetooth_connected, mConnectedDeviceName), Toast.LENGTH_SHORT).show();
-                        activity.startActivity(new Intent(activity, NsdService.class));
+                        activity.startActivity(new Intent(activity, NsdActivity.class));
                         break;
                     case MESSAGE_TOAST:
                         int msgId = msg.getData().getInt(TOAST);
@@ -130,14 +147,32 @@ public class NsdPickerActivity extends Activity{
                 }
             }
         });
-        findViewById(R.id.scan).findViewById(R.id.scan).setOnClickListener(new View.OnClickListener() {
+        scanButton = (ToggleButton) findViewById(R.id.scan);
+        scanButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                doDiscovery();
+                if (scanButton.isChecked()) {
+                    mNsdService.discoverServices();
+                } else {
+                    mNsdService.stopDiscovery();
+                }
             }
         });
         //
         registrationStatus = (TextView) findViewById(R.id.registration_status);
+        progressBar = findViewById(R.id.progressBar);
+        //
+        mServicesListAdapter = new ServiceListAdapter(this);
+        ListView servicesList = (ListView) findViewById(R.id.list_services);
+        servicesList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+                NsdServiceInfo nsdServiceInfo = (NsdServiceInfo)adapterView.getItemAtPosition(i);
+                mNsdService.connect(nsdServiceInfo);
+            }
+        });
+        servicesList.setAdapter(mServicesListAdapter);
     }
 
     @Override
@@ -209,7 +244,7 @@ public class NsdPickerActivity extends Activity{
             case NsdService.STATE_REGISTERED:
                 registerButton.setChecked(true);
                 registerButton.setEnabled(true);
-                registrationStatus.setText("Registered as " + mNsdService.getServiceName());
+                registrationStatus.setText("Registered as \"" + mNsdService.getServiceName() + "\"");
                 break;
             case NsdService.STATE_UNREGISTERING:
                 registerButton.setChecked(true);
@@ -217,6 +252,25 @@ public class NsdPickerActivity extends Activity{
                 registrationStatus.setText("Un registering...");
                 break;
         }
+    }
+
+    private void setScanButton(int state) {
+        switch (state) {
+            case NsdService.STATE_IDLE:
+                scanButton.setChecked(false);
+                progressBar.setVisibility(View.INVISIBLE);
+                break;
+            case NsdService.STATE_DISCOVERING:
+                scanButton.setChecked(true);
+                progressBar.setVisibility(View.VISIBLE);
+                break;
+        }
+    }
+
+    private void updateServicesList(){
+        mServicesListAdapter.clear();
+        mServicesListAdapter.addAll(mNsdService.getServices());
+        mServicesListAdapter.notifyDataSetChanged();
     }
 
     @Override

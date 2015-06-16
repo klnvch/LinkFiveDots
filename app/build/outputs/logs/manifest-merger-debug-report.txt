@@ -1,6 +1,6 @@
 -- Merging decision tree log ---
 manifest
-ADDED from /home/anton/StudioProjects/LinkFiveDots/app/src/main/AndroidManifest.xml:2:1-92:12
+ADDED from /home/anton/StudioProjects/LinkFiveDots/app/src/main/AndroidManifest.xml:2:1-99:12
 	package
 		ADDED from /home/anton/StudioProjects/LinkFiveDots/app/src/main/AndroidManifest.xml:4:5-34
 		INJECTED from /home/anton/StudioProjects/LinkFiveDots/app/src/main/AndroidManifest.xml
@@ -36,7 +36,7 @@ ADDED from /home/anton/StudioProjects/LinkFiveDots/app/src/main/AndroidManifest.
 	android:name
 		ADDED from /home/anton/StudioProjects/LinkFiveDots/app/src/main/AndroidManifest.xml:9:22-71
 application
-ADDED from /home/anton/StudioProjects/LinkFiveDots/app/src/main/AndroidManifest.xml:11:5-91:19
+ADDED from /home/anton/StudioProjects/LinkFiveDots/app/src/main/AndroidManifest.xml:11:5-98:19
 MERGED from [com.google.android.gms:play-services-plus:7.5.0] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-plus/7.5.0/AndroidManifest.xml:19:5-20
 MERGED from [com.google.android.gms:play-services-base:7.5.0] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.5.0/AndroidManifest.xml:20:5-24:19
 MERGED from [com.android.support:support-v4:22.0.0] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.0.0/AndroidManifest.xml:22:5-20
@@ -138,44 +138,54 @@ ADDED from /home/anton/StudioProjects/LinkFiveDots/app/src/main/AndroidManifest.
 		ADDED from /home/anton/StudioProjects/LinkFiveDots/app/src/main/AndroidManifest.xml:64:13-63
 	android:name
 		ADDED from /home/anton/StudioProjects/LinkFiveDots/app/src/main/AndroidManifest.xml:61:13-56
-activity#by.klnvch.link5dots.ScoresActivity
+activity#by.klnvch.link5dots.nsd.NsdActivity
 ADDED from /home/anton/StudioProjects/LinkFiveDots/app/src/main/AndroidManifest.xml:67:9-72:20
-	android:screenOrientation
-		ADDED from /home/anton/StudioProjects/LinkFiveDots/app/src/main/AndroidManifest.xml:71:13-50
 	android:label
-		ADDED from /home/anton/StudioProjects/LinkFiveDots/app/src/main/AndroidManifest.xml:69:13-49
+		ADDED from /home/anton/StudioProjects/LinkFiveDots/app/src/main/AndroidManifest.xml:69:13-45
 	android:parentActivityName
-		ADDED from /home/anton/StudioProjects/LinkFiveDots/app/src/main/AndroidManifest.xml:70:13-59
+		ADDED from /home/anton/StudioProjects/LinkFiveDots/app/src/main/AndroidManifest.xml:70:13-73
+	android:configChanges
+		ADDED from /home/anton/StudioProjects/LinkFiveDots/app/src/main/AndroidManifest.xml:71:13-63
 	android:name
-		ADDED from /home/anton/StudioProjects/LinkFiveDots/app/src/main/AndroidManifest.xml:68:13-43
-activity#by.klnvch.link5dots.HowToActivity
-ADDED from /home/anton/StudioProjects/LinkFiveDots/app/src/main/AndroidManifest.xml:74:9-78:20
+		ADDED from /home/anton/StudioProjects/LinkFiveDots/app/src/main/AndroidManifest.xml:68:13-44
+activity#by.klnvch.link5dots.ScoresActivity
+ADDED from /home/anton/StudioProjects/LinkFiveDots/app/src/main/AndroidManifest.xml:74:9-79:20
+	android:screenOrientation
+		ADDED from /home/anton/StudioProjects/LinkFiveDots/app/src/main/AndroidManifest.xml:78:13-50
 	android:label
 		ADDED from /home/anton/StudioProjects/LinkFiveDots/app/src/main/AndroidManifest.xml:76:13-49
 	android:parentActivityName
 		ADDED from /home/anton/StudioProjects/LinkFiveDots/app/src/main/AndroidManifest.xml:77:13-59
 	android:name
-		ADDED from /home/anton/StudioProjects/LinkFiveDots/app/src/main/AndroidManifest.xml:75:13-42
-activity#by.klnvch.link5dots.InfoActivity
-ADDED from /home/anton/StudioProjects/LinkFiveDots/app/src/main/AndroidManifest.xml:80:9-85:20
+		ADDED from /home/anton/StudioProjects/LinkFiveDots/app/src/main/AndroidManifest.xml:75:13-43
+activity#by.klnvch.link5dots.HowToActivity
+ADDED from /home/anton/StudioProjects/LinkFiveDots/app/src/main/AndroidManifest.xml:81:9-85:20
 	android:label
-		ADDED from /home/anton/StudioProjects/LinkFiveDots/app/src/main/AndroidManifest.xml:82:13-59
+		ADDED from /home/anton/StudioProjects/LinkFiveDots/app/src/main/AndroidManifest.xml:83:13-49
 	android:parentActivityName
-		ADDED from /home/anton/StudioProjects/LinkFiveDots/app/src/main/AndroidManifest.xml:84:13-55
-	android:launchMode
-		ADDED from /home/anton/StudioProjects/LinkFiveDots/app/src/main/AndroidManifest.xml:83:13-42
+		ADDED from /home/anton/StudioProjects/LinkFiveDots/app/src/main/AndroidManifest.xml:84:13-59
 	android:name
-		ADDED from /home/anton/StudioProjects/LinkFiveDots/app/src/main/AndroidManifest.xml:81:13-41
+		ADDED from /home/anton/StudioProjects/LinkFiveDots/app/src/main/AndroidManifest.xml:82:13-42
+activity#by.klnvch.link5dots.InfoActivity
+ADDED from /home/anton/StudioProjects/LinkFiveDots/app/src/main/AndroidManifest.xml:87:9-92:20
+	android:label
+		ADDED from /home/anton/StudioProjects/LinkFiveDots/app/src/main/AndroidManifest.xml:89:13-59
+	android:parentActivityName
+		ADDED from /home/anton/StudioProjects/LinkFiveDots/app/src/main/AndroidManifest.xml:91:13-55
+	android:launchMode
+		ADDED from /home/anton/StudioProjects/LinkFiveDots/app/src/main/AndroidManifest.xml:90:13-42
+	android:name
+		ADDED from /home/anton/StudioProjects/LinkFiveDots/app/src/main/AndroidManifest.xml:88:13-41
 meta-data#com.google.android.gms.version
-ADDED from /home/anton/StudioProjects/LinkFiveDots/app/src/main/AndroidManifest.xml:88:9-89:69
+ADDED from /home/anton/StudioProjects/LinkFiveDots/app/src/main/AndroidManifest.xml:95:9-96:69
 MERGED from [com.google.android.gms:play-services-base:7.5.0] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.5.0/AndroidManifest.xml:21:9-23:69
 MERGED from [com.google.android.gms:play-services-base:7.5.0] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.5.0/AndroidManifest.xml:21:9-23:69
 MERGED from [com.google.android.gms:play-services-base:7.5.0] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.5.0/AndroidManifest.xml:21:9-23:69
 MERGED from [com.google.android.gms:play-services-base:7.5.0] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.5.0/AndroidManifest.xml:21:9-23:69
 	android:value
-		ADDED from /home/anton/StudioProjects/LinkFiveDots/app/src/main/AndroidManifest.xml:89:13-66
+		ADDED from /home/anton/StudioProjects/LinkFiveDots/app/src/main/AndroidManifest.xml:96:13-66
 	android:name
-		ADDED from /home/anton/StudioProjects/LinkFiveDots/app/src/main/AndroidManifest.xml:88:20-65
+		ADDED from /home/anton/StudioProjects/LinkFiveDots/app/src/main/AndroidManifest.xml:95:20-65
 uses-sdk
 INJECTED from /home/anton/StudioProjects/LinkFiveDots/app/src/main/AndroidManifest.xml reason: use-sdk injection requested
 MERGED from [com.google.android.gms:play-services-plus:7.5.0] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-plus/7.5.0/AndroidManifest.xml:18:5-42

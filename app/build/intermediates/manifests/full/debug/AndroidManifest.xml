@@ -64,6 +64,12 @@
             android:parentActivityName="by.klnvch.link5dots.bluetooth.DevicePickerActivity" >
         </activity>
         <activity
+            android:name="by.klnvch.link5dots.nsd.NsdActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:label="@string/app_name"
+            android:parentActivityName="by.klnvch.link5dots.bluetooth.DevicePickerActivity" >
+        </activity>
+        <activity
             android:name="by.klnvch.link5dots.ScoresActivity"
             android:label="@string/scores_title"
             android:parentActivityName="by.klnvch.link5dots.MainMenuActivity"
