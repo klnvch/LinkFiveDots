@@ -22,13 +22,11 @@ import by.klnvch.link5dots.Offset;
 import by.klnvch.link5dots.R;
 
 public class NsdActivity extends Activity{
-    // Message types sent from the BluetoothService Handler
     public static final int MESSAGE_STATE_CHANGE = 1;
     public static final int MESSAGE_READ = 2;
     public static final int MESSAGE_WRITE = 3;
     public static final int MESSAGE_TOAST = 5;
 
-    // Key names received from the BluetoothService Handler
     public static final String TOAST = "toast";
 
     private GameView view;
@@ -119,9 +117,9 @@ public class NsdActivity extends Activity{
 
     @Override
     public void onBackPressed() {
-        if(mNsdService != null && mNsdService.getState() == NsdService.STATE_CONNECTED){
+        if(mNsdService != null && mNsdService.getState() == NsdService.STATE_CONNECTED) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setMessage(getString(R.string.bluetooth_is_disconnect_question, "?"));
+            builder.setMessage(getString(R.string.bluetooth_is_disconnect_question, ""));
             builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener(){
                 public void onClick(DialogInterface dialog, int which) {
                     mNsdService.stop();
@@ -132,7 +130,7 @@ public class NsdActivity extends Activity{
             builder.setNegativeButton(R.string.no, null);
             AlertDialog alertDialog = builder.create();
             alertDialog.show();
-        }else {
+        } else {
             super.onBackPressed();
         }
     }
@@ -161,7 +159,6 @@ public class NsdActivity extends Activity{
 
         // Check that there's actually something to send
         if (message.length() > 0) {
-            // Get the message bytes and tell the BluetoothChatService to write
             byte[] send = message.getBytes();
             mNsdService.write(send);
 
@@ -191,7 +188,6 @@ public class NsdActivity extends Activity{
         }
     }
 
-    // The Handler that gets information back from the BluetoothService
     private static class MHandler extends Handler {
         private final WeakReference<NsdActivity> mActivity;
 

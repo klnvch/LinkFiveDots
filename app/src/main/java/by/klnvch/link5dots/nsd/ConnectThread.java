@@ -29,23 +29,23 @@ public class ConnectThread extends Thread{
         try {
             mSocket = new Socket(mNsdServiceInfo.getHost(), mNsdServiceInfo.getPort());
         } catch (IOException e) {
-            Log.e(TAG, "create() failed", e);
+            Log.e(TAG, "socket creation failed: " + e.getMessage());
         }
 
-        // Reset the ConnectThread because we're done
-        synchronized (mNsdService) {
-            mNsdService.resetConnectThread();
+        if (mSocket != null) {
+            mNsdService.connected(mSocket);
+        } else {
+            mNsdService.connectionFailed(mNsdServiceInfo);
         }
-
-        // Start the connected thread
-        mNsdService.connected(mSocket);
     }
 
     public void cancel() {
-        try {
-            mSocket.close();
-        } catch (IOException e) {
-            Log.e(TAG, "close() of connect socket failed", e);
+        if (mSocket != null) {
+            try {
+                mSocket.close();
+            } catch (IOException e) {
+                Log.e(TAG, "closing socket failed " + e.getMessage());
+            }
         }
     }
 }

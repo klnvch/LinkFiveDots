@@ -2,6 +2,13 @@
 <items version="2" >
 
     <item
+        jar="/home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-plus/7.5.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.0 rc2"
+        sha1="272bc5d7063f24bc3a33ea1d318cde8f31f5ec4c">
+        <dex dex="/home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/pre-dexed/debug/classes-8b64f452769308729d3a1ef4b60ec5ef27eb7096.jar" />
+    </item>
+    <item
         jar="/home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.5.0/jars/classes.jar"
         jumboMode="false"
         revision="23.0.0 rc2"
@@ -23,20 +30,6 @@
         <dex dex="/home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/pre-dexed/debug/support-annotations-22.0.0-83744856db27f17a3f2cb36dd31c5a4328c75799.jar" />
     </item>
     <item
-        jar="/home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-plus/7.5.0/jars/classes.jar"
-        jumboMode="false"
-        revision="23.0.0 rc2"
-        sha1="272bc5d7063f24bc3a33ea1d318cde8f31f5ec4c">
-        <dex dex="/home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/pre-dexed/debug/classes-8b64f452769308729d3a1ef4b60ec5ef27eb7096.jar" />
-    </item>
-    <item
-        jar="/home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.0.0/jars/libs/internal_impl-22.0.0.jar"
-        jumboMode="false"
-        revision="23.0.0 rc2"
-        sha1="b5b92f469d515a13d778900f6d50c03d12f35504">
-        <dex dex="/home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/pre-dexed/debug/internal_impl-22.0.0-76c4b3194816837a9779cde20331dc37959073dc.jar" />
-    </item>
-    <item
         jar="/home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-analytics/7.5.0/jars/classes.jar"
         jumboMode="false"
         revision="23.0.0 rc2"
@@ -49,6 +42,13 @@
         revision="23.0.0 rc2"
         sha1="29ebc7e04d877062317c8cc0e68b20f0c1fcda66">
         <dex dex="/home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/pre-dexed/debug/classes-10ff2d90cc436a6e9c94554792daf8aa3b57e067.jar" />
+    </item>
+    <item
+        jar="/home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.0.0/jars/libs/internal_impl-22.0.0.jar"
+        jumboMode="false"
+        revision="23.0.0 rc2"
+        sha1="b5b92f469d515a13d778900f6d50c03d12f35504">
+        <dex dex="/home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/pre-dexed/debug/internal_impl-22.0.0-76c4b3194816837a9779cde20331dc37959073dc.jar" />
     </item>
 
 </items>

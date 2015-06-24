@@ -40,6 +40,7 @@
 
     <string name="yes">"Так"</string>
     <string name="no">"Ні"</string>
+	<string name="create">"Створити"</string>
 
     <string name="bluetooth_not_discoverable">"Зробити пристрій видимим"</string>
     <string name="bluetooth_is_discoverable">"Видимий для всіх пристроїв Bluetooth неподалік (%1$s)"</string>
@@ -51,6 +52,7 @@
     <string name="bluetooth_no_devices_found">"Пристрої Bluetooth поблизу не знайдено."</string>
     <string name="device_picker">"Виберіть пристрій Bluetooth"</string>
     <string name="bluetooth_connection_dialog_text">"Підключитися до пристрою \"%1$s\"?"</string>
+    <string name="cancel">"Скасувати"</string>
     <string name="bluetooth_settings">"Bluetooth"</string>
     <string name="bluetooth_connecting_error_message">"Не вдалося з’єднатися з пристроєм \"%1$s\"."</string>
     <string name="bluetooth_search_for_devices">"Оновити"</string>

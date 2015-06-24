@@ -30,7 +30,7 @@ public class AcceptThread extends Thread{
 
         Socket socket;
 
-        while (mNsdService.getState() != NsdService.STATE_CONNECTED) {
+        while (!mServerSocket.isClosed()) {
             try {
                 socket = mServerSocket.accept();
             } catch (Exception e) {
@@ -53,13 +53,14 @@ public class AcceptThread extends Thread{
                             try {
                                 socket.close();
                             } catch (IOException e) {
-                                Log.e(TAG, "Could not close unwanted socket", e);
+                                Log.e(TAG, "close failed: " + e.getMessage());
                             }
                             break;
                     }
                 }
             }
         }
+        Log.d(TAG, "accept thread finished");
     }
     public void cancel() {
         try {

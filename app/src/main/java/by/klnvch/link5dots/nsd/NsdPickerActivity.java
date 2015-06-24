@@ -155,6 +155,7 @@ public class NsdPickerActivity extends Activity{
                     mNsdService.discoverServices();
                 } else {
                     mNsdService.stopDiscovery();
+                    mServicesListAdapter.clear();
                 }
             }
         });
@@ -274,20 +275,9 @@ public class NsdPickerActivity extends Activity{
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.bluetooth, menu);
-        return true;
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch(item.getItemId()){
-            case R.id.bt_menu_refresh:
-                doDiscovery();
-                return true;
             case android.R.id.home:
                 onBackPressed();
                 return true;

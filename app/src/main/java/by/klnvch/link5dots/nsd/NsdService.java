@@ -18,7 +18,6 @@ import android.util.Log;
 import java.net.Socket;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import by.klnvch.link5dots.R;
@@ -32,7 +31,7 @@ public class NsdService extends Service {
 
     // Member fields
     private Handler mHandler;
-    private AcceptThread mSecureAcceptThread;
+    private AcceptThread mAcceptThread;
     private ConnectThread mConnectThread;
     private ConnectedThread mConnectedThread;
     private int mState;
@@ -91,6 +90,9 @@ public class NsdService extends Service {
     public void onCreate() {
         mNsdManager = (NsdManager)getSystemService(Context.NSD_SERVICE);
         //
+        mAcceptThread = new AcceptThread(this);
+        mAcceptThread.start();
+        //
         mState = STATE_NONE;
         start();
     }
@@ -98,8 +100,14 @@ public class NsdService extends Service {
     @Override
     public void onDestroy() {
         stop();
-        mNsdManager.unregisterService(mRegistrationListener);
-        mNsdManager.stopServiceDiscovery(mDiscoveryListener);
+        if (mServerState == STATE_REGISTERED) {
+            mNsdManager.unregisterService(mRegistrationListener);
+        }
+        if (mClientState == STATE_DISCOVERING) {
+            mNsdManager.stopServiceDiscovery(mDiscoveryListener);
+        }
+        //
+        mAcceptThread.cancel();
     }
 
     public void setHandler(Handler handler) {
@@ -157,11 +165,6 @@ public class NsdService extends Service {
         }
 
         setState(STATE_LISTEN);
-
-        if (mSecureAcceptThread == null) {
-            mSecureAcceptThread = new AcceptThread(this);
-            mSecureAcceptThread.start();
-        }
     }
 
     public synchronized void connect(NsdServiceInfo serviceInfo) {
@@ -200,12 +203,6 @@ public class NsdService extends Service {
             mConnectedThread = null;
         }
 
-        // Cancel the accept thread because we only want to connect to one device
-        if (mSecureAcceptThread != null) {
-            mSecureAcceptThread.cancel();
-            mSecureAcceptThread = null;
-        }
-
         // Start the thread to manage the connection and perform transmissions
         mConnectedThread = new ConnectedThread(this, socket);
         mConnectedThread.start();
@@ -237,10 +234,6 @@ public class NsdService extends Service {
             mConnectedThread = null;
         }
 
-        if (mSecureAcceptThread != null) {
-            mSecureAcceptThread.cancel();
-            mSecureAcceptThread = null;
-        }
         setState(STATE_NONE);
     }
     /**
@@ -262,12 +255,12 @@ public class NsdService extends Service {
     /**
      * Indicate that the connection attempt failed and notify the UI Activity.
      */
-    public void connectionFailed(NsdServiceInfo device) {
+    public void connectionFailed(NsdServiceInfo nsdServiceInfo) {
         // Send a failure message back to the Activity
         Message msg = mHandler.obtainMessage(NsdActivity.MESSAGE_TOAST);
         Bundle bundle = new Bundle();
         bundle.putInt(NsdPickerActivity.TOAST, R.string.bluetooth_connecting_error_message);
-        bundle.putString(NsdPickerActivity.DEVICE_NAME, "mService.getServiceName()");
+        bundle.putString(NsdPickerActivity.DEVICE_NAME, nsdServiceInfo.getServiceName());
         msg.setData(bundle);
         mHandler.sendMessage(msg);
 
@@ -287,10 +280,6 @@ public class NsdService extends Service {
 
         // Start the service over to restart listening mode
         NsdService.this.start();
-    }
-
-    public void resetConnectThread(){
-        mConnectedThread = null;
     }
 
     public void sendMessage(int what, int arg1, int arg2, Object obj){

@@ -40,6 +40,7 @@
 
     <string name="yes">"Tak"</string>
     <string name="no">"Nie"</string>
+	<string name="create">"Utwórz"</string>
 	
     <string name="bluetooth_not_discoverable">"Zezwalaj na wykrywanie urządzenia"</string>
     <string name="bluetooth_is_discoverable">"Widoczne dla wszystkich urządzeń Bluetooth (%1$s)"</string>
@@ -51,6 +52,7 @@
     <string name="bluetooth_no_devices_found">"Brak urządzeń Bluetooth w pobliżu"</string>
     <string name="device_picker">"Wybierz urządzenie Bluetooth"</string>
     <string name="bluetooth_connection_dialog_text">"Czy chcesz nawiązać połączenie z urządzeniem „%1$s”?"</string>
+    <string name="cancel">"Anuluj"</string>
 	<string name="bluetooth_settings">"Bluetooth"</string>
     <string name="bluetooth_connecting_error_message">"Nie udało się nawiązać połączenia z „%1$s”."</string>
     <string name="bluetooth_search_for_devices">"Odśwież"</string>

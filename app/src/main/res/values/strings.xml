@@ -42,6 +42,8 @@
     <string name="yes">"Yes"</string>
     <!-- 21 Strings for Dialog no button -->
     <string name="no">"No"</string>
+    <!-- 23 Strings for Dialog create button -->
+    <string name="create">Create</string>
 
     <!-- Bluetooth settings screen, Discoverable checkbox summary text -->
     <string name="bluetooth_not_discoverable">Make device discoverable</string>
@@ -63,6 +65,8 @@
     <string name="device_picker">Choose Bluetooth device</string>
     <!-- 368 Bluetooth connection permission Alert Activity text [CHAR LIMIT=none]-->
     <string name="bluetooth_connection_dialog_text">"Do you want to connect to \u0022%1$s\u0022?"</string>
+    <!-- 605 Button label for generic cancel action [CHAR LIMIT=20] -->
+    <string name="cancel">Cancel</string>
     <!-- 1118 Used as title on second screen after selecting Bluetooth settings -->
     <string name="bluetooth_settings">Bluetooth</string>
     <!-- 1174 Message for the error dialog when BT connecting operation fails generically. -->

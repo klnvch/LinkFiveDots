@@ -46,12 +46,16 @@ public class ConnectedThread extends Thread{
                 bytes = mmInStream.read(buffer);
 
                 // Send the obtained bytes to the UI Activity
-                mNsdService.sendMessage(NsdActivity.MESSAGE_READ, bytes, -1, buffer);
+                if (bytes == -1) {
+                    Log.e(TAG, "InputStream read -1");
+                    mNsdService.connectionLost();
+                    break;
+                } else {
+                    mNsdService.sendMessage(NsdActivity.MESSAGE_READ, bytes, -1, buffer);
+                }
             } catch (IOException e) {
-                Log.e(TAG, "disconnected", e);
+                Log.e(TAG, "InputStream read: " + e.getMessage());
                 mNsdService.connectionLost();
-                // Start the service over to restart listening mode
-                mNsdService.start();
                 break;
             }
         }
