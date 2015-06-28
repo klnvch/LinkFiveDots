@@ -58,12 +58,13 @@
     <string name="bluetooth_search_for_devices">"Actualiser"</string>
     <string name="bluetooth_preference_paired_devices">"Périphériques associés"</string>
     <string name="bluetooth_preference_found_devices">"Appareils"</string>
+	<string name="apn_not_set">"Non défini"</string>
+	<string name="apn_name">"Nom:"</string>
 	<string name="application_info_label">"Informations sur l\'application"</string>
 	<string name="version_text">"version %1$s"</string>
 	<string name="device_feedback">Envoyer commentaires</string>
-
-
 	<string name="share">"Partager"</string>
+	<string name="search_menu">"Rechercher"</string>
 
 
 	<string name="bt_message_your_turn">Action du joueur&#8230;</string>

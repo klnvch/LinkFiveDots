@@ -121,7 +121,7 @@ ADDED from /home/anton/StudioProjects/LinkFiveDots/app/src/main/AndroidManifest.
 activity#by.klnvch.link5dots.nsd.NsdPickerActivity
 ADDED from /home/anton/StudioProjects/LinkFiveDots/app/src/main/AndroidManifest.xml:53:9-58:20
 	android:label
-		ADDED from /home/anton/StudioProjects/LinkFiveDots/app/src/main/AndroidManifest.xml:55:13-45
+		ADDED from /home/anton/StudioProjects/LinkFiveDots/app/src/main/AndroidManifest.xml:55:13-55
 	android:parentActivityName
 		ADDED from /home/anton/StudioProjects/LinkFiveDots/app/src/main/AndroidManifest.xml:56:13-66
 	android:configChanges

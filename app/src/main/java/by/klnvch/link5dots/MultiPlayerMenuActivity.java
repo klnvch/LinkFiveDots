@@ -1,7 +1,6 @@
 package by.klnvch.link5dots;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -33,7 +32,11 @@ public class MultiPlayerMenuActivity extends Activity implements View.OnClickLis
         setContentView(R.layout.multiplayer_menu);
 
         findViewById(R.id.multi_player_bluetooth).setOnClickListener(this);
-        findViewById(R.id.multi_player_lan).setOnClickListener(this);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            findViewById(R.id.multi_player_lan).setOnClickListener(this);
+        } else {
+            findViewById(R.id.multi_player_lan).setVisibility(View.GONE);
+        }
 
         // ads
         mAdView = (AdView) findViewById(R.id.adView);
@@ -94,20 +97,10 @@ public class MultiPlayerMenuActivity extends Activity implements View.OnClickLis
                 }
                 break;
             case R.id.multi_player_lan:
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                    Intent intent = new Intent(this, NsdPickerActivity.class);
-                    startActivityForResult(intent, CHOOSE_NSD_SERVICE);
+                Intent intent = new Intent(this, NsdPickerActivity.class);
+                startActivityForResult(intent, CHOOSE_NSD_SERVICE);
 
-                    startService(new Intent(this, NsdService.class));
-                } else {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                    builder.setCancelable(false);
-                    builder.setTitle("Error");
-                    builder.setMessage("Your have old device");
-                    builder.setPositiveButton(android.R.string.ok, null);
-                    AlertDialog alertDialog = builder.create();
-                    alertDialog.show();
-                }
+                startService(new Intent(this, NsdService.class));
                 break;
         }
     }

@@ -58,12 +58,13 @@
     <string name="bluetooth_search_for_devices">"Абнавіць"</string>
     <string name="bluetooth_preference_paired_devices">"Спараныя прылады"</string>
     <string name="bluetooth_preference_found_devices">"Даступныя прылады"</string>
+	<string name="apn_not_set">Не устаноўлена</string>
+	<string name="apn_name">Назва:</string>
 	<string name="application_info_label">"Пра праграму"</string>
 	<string name="version_text">"версія %1$s"</string>
 	<string name="device_feedback">Адаслаць водгук</string>
-
-
 	<string name="share">"Падзяліцца"</string>
+	<string name="search_menu">"Шукай"</string>
 
 
 	<string name="bt_message_your_turn">Ваш рух, пастаўце кропку&#8230;</string>

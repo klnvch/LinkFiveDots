@@ -55,7 +55,8 @@ public class NsdService extends Service {
     private static final String SERVICE_NAME = "Link Five Dots";
     public static final String SERVICE_TYPE = "_http._tcp.";
 
-    private String mServiceName = null;
+    private NsdServiceInfo mRegistrationNsdServiceInfo = null;
+    private NsdServiceInfo mConnectedNsdServiceInfo = null;
     private NsdManager mNsdManager;
     private int mPort = -1;
     private int mServerState = STATE_UNREGISTERED;
@@ -189,7 +190,8 @@ public class NsdService extends Service {
         setState(STATE_CONNECTING);
     }
 
-    synchronized void connected(Socket socket) {
+    synchronized void connected(Socket socket, NsdServiceInfo nsdServiceInfo) {
+        this.mConnectedNsdServiceInfo = nsdServiceInfo;
 
         // Cancel the thread that completed the connection
         if (mConnectThread != null){
@@ -292,28 +294,28 @@ public class NsdService extends Service {
         @Override
         public void onRegistrationFailed(NsdServiceInfo nsdServiceInfo, int i) {
             setServerState(STATE_UNREGISTERED);
-            mServiceName = null;
+            mRegistrationNsdServiceInfo = null;
             Log.d(TAG, "onRegistrationFailed: " + i);
         }
 
         @Override
         public void onUnregistrationFailed(NsdServiceInfo nsdServiceInfo, int i) {
             setServerState(STATE_UNREGISTERED);
-            mServiceName = null;
+            mRegistrationNsdServiceInfo = null;
             Log.d(TAG, "onUnRegistrationFailed: " + i);
         }
 
         @Override
         public void onServiceRegistered(NsdServiceInfo nsdServiceInfo) {
             setServerState(STATE_REGISTERED);
-            mServiceName = nsdServiceInfo.getServiceName();
+            mRegistrationNsdServiceInfo = nsdServiceInfo;
             Log.d(TAG, "onServiceRegistered: " + nsdServiceInfo);
         }
 
         @Override
         public void onServiceUnregistered(NsdServiceInfo nsdServiceInfo) {
             setServerState(STATE_UNREGISTERED);
-            mServiceName = null;
+            mRegistrationNsdServiceInfo = null;
             Log.d(TAG, "onServiceUnregistered");
         }
     };
@@ -349,8 +351,9 @@ public class NsdService extends Service {
             Log.d(TAG, "Service discovery success" + nsdServiceInfo);
             if (!nsdServiceInfo.getServiceType().equals(SERVICE_TYPE)) {
                 Log.d(TAG, "Unknown Service Type: " + nsdServiceInfo.getServiceType());
-            } else if (mServiceName != null && nsdServiceInfo.getServiceName().equals(mServiceName)) {
-                Log.d(TAG, "Same machine: " + mServiceName);
+            } else if (mRegistrationNsdServiceInfo != null && nsdServiceInfo.getServiceName()
+                    .equals(mRegistrationNsdServiceInfo.getServiceName())) {
+                Log.d(TAG, "Same machine: " + mRegistrationNsdServiceInfo.getServiceName());
             } else if (nsdServiceInfo.getServiceName().contains(SERVICE_NAME)){
                 mNsdManager.resolveService(nsdServiceInfo, mResolveListener);
             }
@@ -377,7 +380,8 @@ public class NsdService extends Service {
         public void onServiceResolved(NsdServiceInfo nsdServiceInfo) {
             Log.e(TAG, "Resolve Succeeded. " + nsdServiceInfo);
 
-            if (mServiceName != null && nsdServiceInfo.getServiceName().equals(mServiceName)) {
+            if (mRegistrationNsdServiceInfo != null && nsdServiceInfo.getServiceName()
+                    .equals(mRegistrationNsdServiceInfo.getServiceName())) {
                 Log.d(TAG, "Same IP.");
                 return;
             }
@@ -394,7 +398,15 @@ public class NsdService extends Service {
     }
 
     public String getServiceName() {
-        return mServiceName;
+        return mRegistrationNsdServiceInfo.getServiceName();
+    }
+
+    public NsdServiceInfo getRegistrationNsdServiceInfo() {
+        return this.mRegistrationNsdServiceInfo;
+    }
+
+    public String getConnectedServiceName() {
+        return mConnectedNsdServiceInfo.getServiceName();
     }
 
     public Collection<NsdServiceInfo> getServices() {

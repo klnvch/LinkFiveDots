@@ -58,12 +58,13 @@
     <string name="bluetooth_search_for_devices">"Actualizar"</string>
     <string name="bluetooth_preference_paired_devices">"Dispositivos sincronizados"</string>
     <string name="bluetooth_preference_found_devices">"Dispositivos disponibles"</string>
+	<string name="apn_not_set">"No definido"</string>
+	<string name="apn_name">"Nombre:"</string>
 	<string name="application_info_label">"Información de la aplicación"</string>
 	<string name="version_text">"versión %1$s"</string>
 	<string name="device_feedback">Dar tu opinión</string>
-
-
 	<string name="share">"Compartir"</string>
+	<string name="search_menu">"Buscar"</string>
 
 
 	<string name="bt_message_your_turn">Su turno&#8230;</string>

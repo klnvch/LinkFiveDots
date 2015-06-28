@@ -58,12 +58,13 @@
     <string name="bluetooth_search_for_devices">"Обновить"</string>
     <string name="bluetooth_preference_paired_devices">"Подключенные устройства"</string>
     <string name="bluetooth_preference_found_devices">"Доступные устройства"</string>
+	<string name="apn_not_set">"Не задано"</string>
+	<string name="apn_name">"Имя:"</string>
 	<string name="application_info_label">"О приложении"</string>
 	<string name="version_text">"Версия %1$s"</string>
 	<string name="device_feedback">Отправить отзыв</string>
-
-
 	<string name="share">"Отправить"</string>
+	<string name="search_menu">"Поиск"</string>
 
 
 	<string name="bt_message_your_turn">Ваш ход, поставте точку&#8230;</string>

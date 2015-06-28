@@ -33,7 +33,7 @@ public class ConnectThread extends Thread{
         }
 
         if (mSocket != null) {
-            mNsdService.connected(mSocket);
+            mNsdService.connected(mSocket, mNsdServiceInfo);
         } else {
             mNsdService.connectionFailed(mNsdServiceInfo);
         }

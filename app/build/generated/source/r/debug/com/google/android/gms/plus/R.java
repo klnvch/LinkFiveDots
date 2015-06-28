@@ -73,9 +73,9 @@ public final class R {
 		public static final int gtm_analytics = 0x7f050000;
 	}
 	public static final class string {
-		public static final int accept = 0x7f060053;
-		public static final int auth_google_play_services_client_facebook_display_name = 0x7f060054;
-		public static final int auth_google_play_services_client_google_display_name = 0x7f060055;
+		public static final int accept = 0x7f060059;
+		public static final int auth_google_play_services_client_facebook_display_name = 0x7f06005a;
+		public static final int auth_google_play_services_client_google_display_name = 0x7f06005b;
 		public static final int common_android_wear_notification_needs_update_text = 0x7f060000;
 		public static final int common_android_wear_update_text = 0x7f060001;
 		public static final int common_android_wear_update_title = 0x7f060002;
@@ -108,11 +108,11 @@ public final class R {
 		public static final int common_open_on_phone = 0x7f06001d;
 		public static final int common_signin_button_text = 0x7f06001e;
 		public static final int common_signin_button_text_long = 0x7f06001f;
-		public static final int create_calendar_message = 0x7f060057;
-		public static final int create_calendar_title = 0x7f060058;
-		public static final int decline = 0x7f060059;
-		public static final int store_picture_message = 0x7f06005a;
-		public static final int store_picture_title = 0x7f06005b;
+		public static final int create_calendar_message = 0x7f06005d;
+		public static final int create_calendar_title = 0x7f06005e;
+		public static final int decline = 0x7f06005f;
+		public static final int store_picture_message = 0x7f060060;
+		public static final int store_picture_title = 0x7f060061;
 	}
 	public static final class style {
 		public static final int Theme_IAPTheme = 0x7f0a0001;

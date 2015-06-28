@@ -78,6 +78,11 @@
     <!-- 1205 Bluetooth settings: The sub heading for available devices during and after scanning. [CHAR LIMIT=40] -->
     <string name="bluetooth_preference_found_devices">Available devices</string>
 
+    <!-- 2355 Edit access point label summary text when no value has been set -->
+    <string name="apn_not_set">Not set</string>
+    <!-- 2357 Edit access point labels: A label the user can give to the APN to allow him to differentiate it from the others -->
+    <string name="apn_name">Name:</string>
+
     <!-- 2842 Manage applications, individual application info screen title. For example, if they click on "Browser" in "Manage applications", the title of the next screen will be this -->
     <string name="application_info_label">App info</string>
     <!-- 3022 Manage applications, version string displayed in app snippet -->
@@ -88,6 +93,9 @@
 
     <!-- 4314 ActionBar action to share the current selection [CHAR LIMIT=10] -->
     <string name="share">Share</string>
+
+    <!-- 5597 Text used as a search hint into the search box -->
+    <string name="search_menu">Search</string>
 
 	
 	<string name="bt_message_your_turn">Your move, put a dot&#8230;</string>

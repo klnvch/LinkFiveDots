@@ -119,7 +119,7 @@ public class NsdActivity extends Activity{
     public void onBackPressed() {
         if(mNsdService != null && mNsdService.getState() == NsdService.STATE_CONNECTED) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setMessage(getString(R.string.bluetooth_is_disconnect_question, ""));
+            builder.setMessage(getString(R.string.bluetooth_is_disconnect_question, mNsdService.getConnectedServiceName()));
             builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener(){
                 public void onClick(DialogInterface dialog, int which) {
                     mNsdService.stop();

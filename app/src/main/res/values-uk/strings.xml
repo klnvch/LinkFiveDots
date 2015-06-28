@@ -58,12 +58,13 @@
     <string name="bluetooth_search_for_devices">"Оновити"</string>
     <string name="bluetooth_preference_paired_devices">"Спарені пристрої"</string>
     <string name="bluetooth_preference_found_devices">"Доступні пристрої"</string>
+	<string name="apn_not_set">"Не встановлено"</string>
+	<string name="apn_name">"Назва:"</string>
 	<string name="application_info_label">"Про додаток"</string>
 	<string name="version_text">"версія %1$s"</string>
 	<string name="device_feedback">Надіслати відгук</string>
-
-
 	<string name="share">"Поділитися"</string>
+	<string name="search_menu">"Пошук"</string>
 
 
 	<string name="bt_message_your_turn">Твій крок, постав точку&#8230;</string>

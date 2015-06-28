@@ -12,8 +12,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
@@ -33,7 +31,9 @@ public class NsdPickerActivity extends Activity{
     private ProgressDialog progressDialog = null;
     private ToggleButton registerButton;
     private ToggleButton scanButton;
-    private TextView registrationStatus;
+    private TextView registrationStatusValue;
+    private View registrationStatus;
+    private View registrationProgress;
     private View progressBar;
     private ServiceListAdapter mServicesListAdapter;
 
@@ -160,7 +160,10 @@ public class NsdPickerActivity extends Activity{
             }
         });
         //
-        registrationStatus = (TextView) findViewById(R.id.registration_status);
+        registrationStatusValue = (TextView) findViewById(R.id.registration_status_value);
+        registrationStatus = findViewById(R.id.registration_status);
+        registrationProgress = findViewById(R.id.registration_progress);
+
         progressBar = findViewById(R.id.progressBar);
         //
         mServicesListAdapter = new ServiceListAdapter(this);
@@ -221,36 +224,39 @@ public class NsdPickerActivity extends Activity{
         super.onDestroy();
     }
 
-
-    private void doDiscovery() {
-        findViewById(R.id.label_no_device_found).setVisibility(View.GONE);
-        findViewById(R.id.list_available_devices).setVisibility(View.VISIBLE);
-        findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
-        //
-        mNsdService.discoverServices();
-    }
-
     private void setRegisterButton(int state) {
         switch (state) {
             case NsdService.STATE_UNREGISTERED:
                 registerButton.setChecked(false);
                 registerButton.setEnabled(true);
-                registrationStatus.setText("Unregistered");
+
+                registrationStatusValue.setText(R.string.apn_not_set);
+                registrationStatus.setVisibility(View.VISIBLE);
+                registrationProgress.setVisibility(View.INVISIBLE);
                 break;
             case NsdService.STATE_REGISTERING:
                 registerButton.setChecked(false);
                 registerButton.setEnabled(false);
-                registrationStatus.setText("Registering...");
+
+                registrationStatusValue.setText(R.string.apn_not_set);
+                registrationStatus.setVisibility(View.INVISIBLE);
+                registrationProgress.setVisibility(View.VISIBLE);
                 break;
             case NsdService.STATE_REGISTERED:
                 registerButton.setChecked(true);
                 registerButton.setEnabled(true);
-                registrationStatus.setText("Registered as \"" + mNsdService.getServiceName() + "\"");
+
+                registrationStatusValue.setText(mNsdService.getServiceName());
+                registrationStatus.setVisibility(View.VISIBLE);
+                registrationProgress.setVisibility(View.INVISIBLE);
                 break;
             case NsdService.STATE_UNREGISTERING:
                 registerButton.setChecked(true);
                 registerButton.setEnabled(false);
-                registrationStatus.setText("Un registering...");
+
+                registrationStatusValue.setText(R.string.apn_not_set);
+                registrationStatus.setVisibility(View.INVISIBLE);
+                registrationProgress.setVisibility(View.VISIBLE);
                 break;
         }
     }

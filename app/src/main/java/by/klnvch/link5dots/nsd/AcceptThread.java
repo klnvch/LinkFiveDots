@@ -45,7 +45,7 @@ public class AcceptThread extends Thread{
                         case NsdService.STATE_LISTEN:
                         case NsdService.STATE_CONNECTING:
                             // Situation normal. Start the connected thread.
-                            mNsdService.connected(socket);
+                            mNsdService.connected(socket, mNsdService.getRegistrationNsdServiceInfo());
                             break;
                         case NsdService.STATE_NONE:
                         case NsdService.STATE_CONNECTED:
