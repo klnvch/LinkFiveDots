@@ -34,6 +34,7 @@
 	
 	<string name="menu_single_player">Single Player</string>
 	<string name="menu_multi_player">Multiplayer</string>
+    <string name="two_players">Two players</string>
     <string name="menu_local_network">Local Area Network</string>
 
     <string name="rate_this_app">Rate this app</string>

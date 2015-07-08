@@ -33,7 +33,9 @@ public class MainMenuActivity extends Activity implements OnClickListener{
 
         // ads
         mAdView = (AdView) findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder().build();
+        AdRequest adRequest = new AdRequest.Builder().
+                addTestDevice("EA3A211E9E56D12855FE8A22E4EB356C").
+                build();
         mAdView.loadAd(adRequest);
 	}
 

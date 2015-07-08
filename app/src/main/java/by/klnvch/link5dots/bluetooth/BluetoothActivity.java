@@ -70,8 +70,12 @@ public class BluetoothActivity extends Activity{
 
 		view.setOnGameEventListener(new GameView.OnGameEventListener() {
             @Override
-            public void onUserMoveDone(Offset dot) {
-                sendMessage(dot.toString());
+            public void onMoveDone(Offset currentDot, Offset previousDot) {
+                // set user dot
+                currentDot.setType(Offset.USER);
+                view.setDot(currentDot);
+                //
+                sendMessage(currentDot.toString());
                 setTitle(R.string.bt_message_opponents_turn);
             }
             @Override
@@ -229,10 +233,12 @@ public class BluetoothActivity extends Activity{
  	            	byte[] readBuf = (byte[])msg.obj;
  	            	// construct a string from the valid bytes in the buffer
  	            	String readMessage = new String(readBuf, 0, msg.arg1);
- 	            	if(readMessage.equals(MESSAGE_CLOSE_END_ACTIVITY)){
+ 	            	if(readMessage.equals(MESSAGE_CLOSE_END_ACTIVITY)) {
  	            		activity.view.resetGame();
- 	            	}else{
- 	            		activity.view.setOpponentDot(Offset.parseString(readMessage));
+ 	            	} else {
+                        Offset offset = Offset.parseString(readMessage);
+                        offset.setType(Offset.OPPONENT);
+ 	            		activity.view.setDot(offset);
  	            		activity.setTitle(R.string.bt_message_your_turn);
  	            	}
  	                break;

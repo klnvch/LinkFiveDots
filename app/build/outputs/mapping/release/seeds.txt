@@ -117,6 +117,9 @@ by.klnvch.link5dots.MainActivity: MainActivity()
 by.klnvch.link5dots.MainMenuActivity
 by.klnvch.link5dots.MainMenuActivity: MainMenuActivity()
 by.klnvch.link5dots.MainMenuActivity: void onClick(android.view.View)
+by.klnvch.link5dots.MultiPlayerMenuActivity
+by.klnvch.link5dots.MultiPlayerMenuActivity: MultiPlayerMenuActivity()
+by.klnvch.link5dots.MultiPlayerMenuActivity: void onClick(android.view.View)
 by.klnvch.link5dots.MyApplication
 by.klnvch.link5dots.MyApplication: MyApplication()
 by.klnvch.link5dots.R$attr: int adSize
@@ -187,10 +190,13 @@ by.klnvch.link5dots.R$drawable: int ic_android_black_48dp
 by.klnvch.link5dots.R$drawable: int ic_bluetooth_black_48dp
 by.klnvch.link5dots.R$drawable: int ic_help_black_48dp
 by.klnvch.link5dots.R$drawable: int ic_info_black_48dp
+by.klnvch.link5dots.R$drawable: int ic_people_black_48dp
+by.klnvch.link5dots.R$drawable: int ic_person_black_48dp
 by.klnvch.link5dots.R$drawable: int ic_plusone_medium_off_client
 by.klnvch.link5dots.R$drawable: int ic_plusone_small_off_client
 by.klnvch.link5dots.R$drawable: int ic_plusone_standard_off_client
 by.klnvch.link5dots.R$drawable: int ic_plusone_tall_off_client
+by.klnvch.link5dots.R$drawable: int ic_router_black_48dp
 by.klnvch.link5dots.R$drawable: int ic_star_black_48dp
 by.klnvch.link5dots.R$drawable: int icon
 by.klnvch.link5dots.R$drawable: int paper
@@ -212,18 +218,27 @@ by.klnvch.link5dots.R$id: int layout_paired_devices
 by.klnvch.link5dots.R$id: int layout_visibility
 by.klnvch.link5dots.R$id: int list_available_devices
 by.klnvch.link5dots.R$id: int list_paired_devices
-by.klnvch.link5dots.R$id: int main_menu_bluetooth_game
+by.klnvch.link5dots.R$id: int list_services
 by.klnvch.link5dots.R$id: int main_menu_how_to
 by.klnvch.link5dots.R$id: int main_menu_info
+by.klnvch.link5dots.R$id: int main_menu_multi_player
 by.klnvch.link5dots.R$id: int main_menu_scores
 by.klnvch.link5dots.R$id: int main_menu_single_player
 by.klnvch.link5dots.R$id: int menu_new_game
 by.klnvch.link5dots.R$id: int menu_search
 by.klnvch.link5dots.R$id: int menu_undo
+by.klnvch.link5dots.R$id: int multi_player_bluetooth
+by.klnvch.link5dots.R$id: int multi_player_lan
 by.klnvch.link5dots.R$id: int none
 by.klnvch.link5dots.R$id: int plus_one_button
 by.klnvch.link5dots.R$id: int progressBar
 by.klnvch.link5dots.R$id: int rate_this_app
+by.klnvch.link5dots.R$id: int register
+by.klnvch.link5dots.R$id: int registration_progress
+by.klnvch.link5dots.R$id: int registration_status
+by.klnvch.link5dots.R$id: int registration_status_label
+by.klnvch.link5dots.R$id: int registration_status_value
+by.klnvch.link5dots.R$id: int scan
 by.klnvch.link5dots.R$id: int scores_edit
 by.klnvch.link5dots.R$id: int scores_update
 by.klnvch.link5dots.R$id: int send_feedback
@@ -238,6 +253,8 @@ by.klnvch.link5dots.R$layout: int device_name
 by.klnvch.link5dots.R$layout: int howto
 by.klnvch.link5dots.R$layout: int info_activity
 by.klnvch.link5dots.R$layout: int main_menu
+by.klnvch.link5dots.R$layout: int multiplayer_menu
+by.klnvch.link5dots.R$layout: int nsd
 by.klnvch.link5dots.R$layout: int play
 by.klnvch.link5dots.R$layout: int scores
 by.klnvch.link5dots.R$menu: int bluetooth
@@ -245,8 +262,12 @@ by.klnvch.link5dots.R$menu: int menu
 by.klnvch.link5dots.R$menu: int scoresmenu
 by.klnvch.link5dots.R$raw: int gtm_analytics
 by.klnvch.link5dots.R$string: int accept
+by.klnvch.link5dots.R$string: int apn_name
+by.klnvch.link5dots.R$string: int apn_not_set
 by.klnvch.link5dots.R$string: int app_name
 by.klnvch.link5dots.R$string: int application_info_label
+by.klnvch.link5dots.R$string: int auth_google_play_services_client_facebook_display_name
+by.klnvch.link5dots.R$string: int auth_google_play_services_client_google_display_name
 by.klnvch.link5dots.R$string: int banner_ad_unit_id
 by.klnvch.link5dots.R$string: int bluetooth_connected
 by.klnvch.link5dots.R$string: int bluetooth_connecting
@@ -261,11 +282,14 @@ by.klnvch.link5dots.R$string: int bluetooth_only_visible_to_paired_devices
 by.klnvch.link5dots.R$string: int bluetooth_preference_found_devices
 by.klnvch.link5dots.R$string: int bluetooth_preference_paired_devices
 by.klnvch.link5dots.R$string: int bluetooth_search_for_devices
+by.klnvch.link5dots.R$string: int bluetooth_settings
 by.klnvch.link5dots.R$string: int bt_message_opponents_turn
 by.klnvch.link5dots.R$string: int bt_message_your_turn
+by.klnvch.link5dots.R$string: int cancel
 by.klnvch.link5dots.R$string: int common_android_wear_notification_needs_update_text
 by.klnvch.link5dots.R$string: int common_android_wear_update_text
 by.klnvch.link5dots.R$string: int common_android_wear_update_title
+by.klnvch.link5dots.R$string: int common_google_play_services_api_unavailable_text
 by.klnvch.link5dots.R$string: int common_google_play_services_enable_button
 by.klnvch.link5dots.R$string: int common_google_play_services_enable_text
 by.klnvch.link5dots.R$string: int common_google_play_services_enable_title
@@ -279,7 +303,6 @@ by.klnvch.link5dots.R$string: int common_google_play_services_invalid_account_ti
 by.klnvch.link5dots.R$string: int common_google_play_services_needs_enabling_title
 by.klnvch.link5dots.R$string: int common_google_play_services_network_error_text
 by.klnvch.link5dots.R$string: int common_google_play_services_network_error_title
-by.klnvch.link5dots.R$string: int common_google_play_services_notification_needs_installation_title
 by.klnvch.link5dots.R$string: int common_google_play_services_notification_needs_update_title
 by.klnvch.link5dots.R$string: int common_google_play_services_notification_ticker
 by.klnvch.link5dots.R$string: int common_google_play_services_sign_in_failed_text
@@ -290,10 +313,12 @@ by.klnvch.link5dots.R$string: int common_google_play_services_unsupported_title
 by.klnvch.link5dots.R$string: int common_google_play_services_update_button
 by.klnvch.link5dots.R$string: int common_google_play_services_update_text
 by.klnvch.link5dots.R$string: int common_google_play_services_update_title
+by.klnvch.link5dots.R$string: int common_google_play_services_updating_text
+by.klnvch.link5dots.R$string: int common_google_play_services_updating_title
 by.klnvch.link5dots.R$string: int common_open_on_phone
 by.klnvch.link5dots.R$string: int common_signin_button_text
 by.klnvch.link5dots.R$string: int common_signin_button_text_long
-by.klnvch.link5dots.R$string: int commono_google_play_services_api_unavailable_text
+by.klnvch.link5dots.R$string: int create
 by.klnvch.link5dots.R$string: int create_calendar_message
 by.klnvch.link5dots.R$string: int create_calendar_title
 by.klnvch.link5dots.R$string: int decline
@@ -307,7 +332,8 @@ by.klnvch.link5dots.R$string: int end_undo
 by.klnvch.link5dots.R$string: int end_win
 by.klnvch.link5dots.R$string: int how_to_text
 by.klnvch.link5dots.R$string: int how_to_title
-by.klnvch.link5dots.R$string: int menu_bt_game
+by.klnvch.link5dots.R$string: int menu_local_network
+by.klnvch.link5dots.R$string: int menu_multi_player
 by.klnvch.link5dots.R$string: int menu_single_player
 by.klnvch.link5dots.R$string: int no
 by.klnvch.link5dots.R$string: int prompt_cancel
@@ -326,6 +352,7 @@ by.klnvch.link5dots.R$string: int scores_time
 by.klnvch.link5dots.R$string: int scores_title
 by.klnvch.link5dots.R$string: int scores_update
 by.klnvch.link5dots.R$string: int scores_won
+by.klnvch.link5dots.R$string: int search_menu
 by.klnvch.link5dots.R$string: int share
 by.klnvch.link5dots.R$string: int store_picture_message
 by.klnvch.link5dots.R$string: int store_picture_title
@@ -350,6 +377,12 @@ by.klnvch.link5dots.bluetooth.BluetoothService
 by.klnvch.link5dots.bluetooth.BluetoothService: BluetoothService()
 by.klnvch.link5dots.bluetooth.DevicePickerActivity
 by.klnvch.link5dots.bluetooth.DevicePickerActivity: DevicePickerActivity()
+by.klnvch.link5dots.nsd.NsdActivity
+by.klnvch.link5dots.nsd.NsdActivity: NsdActivity()
+by.klnvch.link5dots.nsd.NsdPickerActivity
+by.klnvch.link5dots.nsd.NsdPickerActivity: NsdPickerActivity()
+by.klnvch.link5dots.nsd.NsdService
+by.klnvch.link5dots.nsd.NsdService: NsdService()
 com.google.ads.AdRequest$ErrorCode: com.google.ads.AdRequest$ErrorCode[] values()
 com.google.ads.AdRequest$ErrorCode: com.google.ads.AdRequest$ErrorCode valueOf(java.lang.String)
 com.google.ads.AdRequest$Gender: com.google.ads.AdRequest$Gender[] values()
@@ -408,9 +441,12 @@ com.google.android.gms.R$id: int none
 com.google.android.gms.R$integer: int google_play_services_version
 com.google.android.gms.R$raw: int gtm_analytics
 com.google.android.gms.R$string: int accept
+com.google.android.gms.R$string: int auth_google_play_services_client_facebook_display_name
+com.google.android.gms.R$string: int auth_google_play_services_client_google_display_name
 com.google.android.gms.R$string: int common_android_wear_notification_needs_update_text
 com.google.android.gms.R$string: int common_android_wear_update_text
 com.google.android.gms.R$string: int common_android_wear_update_title
+com.google.android.gms.R$string: int common_google_play_services_api_unavailable_text
 com.google.android.gms.R$string: int common_google_play_services_enable_button
 com.google.android.gms.R$string: int common_google_play_services_enable_text
 com.google.android.gms.R$string: int common_google_play_services_enable_title
@@ -424,7 +460,6 @@ com.google.android.gms.R$string: int common_google_play_services_invalid_account
 com.google.android.gms.R$string: int common_google_play_services_needs_enabling_title
 com.google.android.gms.R$string: int common_google_play_services_network_error_text
 com.google.android.gms.R$string: int common_google_play_services_network_error_title
-com.google.android.gms.R$string: int common_google_play_services_notification_needs_installation_title
 com.google.android.gms.R$string: int common_google_play_services_notification_needs_update_title
 com.google.android.gms.R$string: int common_google_play_services_notification_ticker
 com.google.android.gms.R$string: int common_google_play_services_sign_in_failed_text
@@ -435,10 +470,11 @@ com.google.android.gms.R$string: int common_google_play_services_unsupported_tit
 com.google.android.gms.R$string: int common_google_play_services_update_button
 com.google.android.gms.R$string: int common_google_play_services_update_text
 com.google.android.gms.R$string: int common_google_play_services_update_title
+com.google.android.gms.R$string: int common_google_play_services_updating_text
+com.google.android.gms.R$string: int common_google_play_services_updating_title
 com.google.android.gms.R$string: int common_open_on_phone
 com.google.android.gms.R$string: int common_signin_button_text
 com.google.android.gms.R$string: int common_signin_button_text_long
-com.google.android.gms.R$string: int commono_google_play_services_api_unavailable_text
 com.google.android.gms.R$string: int create_calendar_message
 com.google.android.gms.R$string: int create_calendar_title
 com.google.android.gms.R$string: int decline
@@ -523,9 +559,12 @@ com.google.android.gms.ads.R$id: int none
 com.google.android.gms.ads.R$integer: int google_play_services_version
 com.google.android.gms.ads.R$raw: int gtm_analytics
 com.google.android.gms.ads.R$string: int accept
+com.google.android.gms.ads.R$string: int auth_google_play_services_client_facebook_display_name
+com.google.android.gms.ads.R$string: int auth_google_play_services_client_google_display_name
 com.google.android.gms.ads.R$string: int common_android_wear_notification_needs_update_text
 com.google.android.gms.ads.R$string: int common_android_wear_update_text
 com.google.android.gms.ads.R$string: int common_android_wear_update_title
+com.google.android.gms.ads.R$string: int common_google_play_services_api_unavailable_text
 com.google.android.gms.ads.R$string: int common_google_play_services_enable_button
 com.google.android.gms.ads.R$string: int common_google_play_services_enable_text
 com.google.android.gms.ads.R$string: int common_google_play_services_enable_title
@@ -539,7 +578,6 @@ com.google.android.gms.ads.R$string: int common_google_play_services_invalid_acc
 com.google.android.gms.ads.R$string: int common_google_play_services_needs_enabling_title
 com.google.android.gms.ads.R$string: int common_google_play_services_network_error_text
 com.google.android.gms.ads.R$string: int common_google_play_services_network_error_title
-com.google.android.gms.ads.R$string: int common_google_play_services_notification_needs_installation_title
 com.google.android.gms.ads.R$string: int common_google_play_services_notification_needs_update_title
 com.google.android.gms.ads.R$string: int common_google_play_services_notification_ticker
 com.google.android.gms.ads.R$string: int common_google_play_services_sign_in_failed_text
@@ -550,10 +588,11 @@ com.google.android.gms.ads.R$string: int common_google_play_services_unsupported
 com.google.android.gms.ads.R$string: int common_google_play_services_update_button
 com.google.android.gms.ads.R$string: int common_google_play_services_update_text
 com.google.android.gms.ads.R$string: int common_google_play_services_update_title
+com.google.android.gms.ads.R$string: int common_google_play_services_updating_text
+com.google.android.gms.ads.R$string: int common_google_play_services_updating_title
 com.google.android.gms.ads.R$string: int common_open_on_phone
 com.google.android.gms.ads.R$string: int common_signin_button_text
 com.google.android.gms.ads.R$string: int common_signin_button_text_long
-com.google.android.gms.ads.R$string: int commono_google_play_services_api_unavailable_text
 com.google.android.gms.ads.R$string: int create_calendar_message
 com.google.android.gms.ads.R$string: int create_calendar_title
 com.google.android.gms.ads.R$string: int decline
@@ -580,19 +619,54 @@ com.google.android.gms.ads.doubleclick.PublisherAdView: void setAdUnitId(java.la
 com.google.android.gms.ads.doubleclick.PublisherAdView: void setAppEventListener(com.google.android.gms.ads.doubleclick.AppEventListener)
 com.google.android.gms.ads.doubleclick.PublisherAdView: void setOnCustomRenderedAdLoadedListener(com.google.android.gms.ads.doubleclick.OnCustomRenderedAdLoadedListener)
 com.google.android.gms.ads.doubleclick.PublisherAdView: java.lang.String getMediationAdapterClassName()
+com.google.android.gms.ads.formats.NativeAdView: void setNativeAd(com.google.android.gms.ads.formats.NativeAd)
+com.google.android.gms.ads.formats.NativeAppInstallAdView: void setHeadlineView(android.view.View)
+com.google.android.gms.ads.formats.NativeAppInstallAdView: void setCallToActionView(android.view.View)
+com.google.android.gms.ads.formats.NativeAppInstallAdView: void setIconView(android.view.View)
+com.google.android.gms.ads.formats.NativeAppInstallAdView: void setBodyView(android.view.View)
+com.google.android.gms.ads.formats.NativeAppInstallAdView: void setStoreView(android.view.View)
+com.google.android.gms.ads.formats.NativeAppInstallAdView: void setPriceView(android.view.View)
+com.google.android.gms.ads.formats.NativeAppInstallAdView: void setImageView(android.view.View)
+com.google.android.gms.ads.formats.NativeAppInstallAdView: void setStarRatingView(android.view.View)
+com.google.android.gms.ads.formats.NativeAppInstallAdView: android.view.View getHeadlineView()
+com.google.android.gms.ads.formats.NativeAppInstallAdView: android.view.View getCallToActionView()
+com.google.android.gms.ads.formats.NativeAppInstallAdView: android.view.View getIconView()
+com.google.android.gms.ads.formats.NativeAppInstallAdView: android.view.View getBodyView()
+com.google.android.gms.ads.formats.NativeAppInstallAdView: android.view.View getStoreView()
+com.google.android.gms.ads.formats.NativeAppInstallAdView: android.view.View getPriceView()
+com.google.android.gms.ads.formats.NativeAppInstallAdView: android.view.View getImageView()
+com.google.android.gms.ads.formats.NativeAppInstallAdView: android.view.View getStarRatingView()
+com.google.android.gms.ads.formats.NativeContentAdView: void setHeadlineView(android.view.View)
+com.google.android.gms.ads.formats.NativeContentAdView: void setBodyView(android.view.View)
+com.google.android.gms.ads.formats.NativeContentAdView: void setCallToActionView(android.view.View)
+com.google.android.gms.ads.formats.NativeContentAdView: void setAdvertiserView(android.view.View)
+com.google.android.gms.ads.formats.NativeContentAdView: void setImageView(android.view.View)
+com.google.android.gms.ads.formats.NativeContentAdView: void setLogoView(android.view.View)
+com.google.android.gms.ads.formats.NativeContentAdView: android.view.View getHeadlineView()
+com.google.android.gms.ads.formats.NativeContentAdView: android.view.View getBodyView()
+com.google.android.gms.ads.formats.NativeContentAdView: android.view.View getCallToActionView()
+com.google.android.gms.ads.formats.NativeContentAdView: android.view.View getAdvertiserView()
+com.google.android.gms.ads.formats.NativeContentAdView: android.view.View getImageView()
+com.google.android.gms.ads.formats.NativeContentAdView: android.view.View getLogoView()
 com.google.android.gms.ads.internal.InterstitialAdParameterParcel
-com.google.android.gms.ads.internal.InterstitialAdParameterParcel: com.google.android.gms.ads.internal.zze CREATOR
+com.google.android.gms.ads.internal.InterstitialAdParameterParcel: com.google.android.gms.ads.internal.zzk CREATOR
 com.google.android.gms.ads.internal.client.AdRequestParcel
-com.google.android.gms.ads.internal.client.AdRequestParcel: com.google.android.gms.ads.internal.client.zze CREATOR
+com.google.android.gms.ads.internal.client.AdRequestParcel: com.google.android.gms.ads.internal.client.zzf CREATOR
 com.google.android.gms.ads.internal.client.AdSizeParcel
-com.google.android.gms.ads.internal.client.AdSizeParcel: com.google.android.gms.ads.internal.client.zzg CREATOR
+com.google.android.gms.ads.internal.client.AdSizeParcel: com.google.android.gms.ads.internal.client.zzh CREATOR
+com.google.android.gms.ads.internal.client.MobileAdsSettingsParcel
+com.google.android.gms.ads.internal.client.MobileAdsSettingsParcel: com.google.android.gms.ads.internal.client.zzad CREATOR
 com.google.android.gms.ads.internal.client.SearchAdRequestParcel
-com.google.android.gms.ads.internal.client.SearchAdRequestParcel: com.google.android.gms.ads.internal.client.zzx CREATOR
+com.google.android.gms.ads.internal.client.SearchAdRequestParcel: com.google.android.gms.ads.internal.client.zzae CREATOR
+com.google.android.gms.ads.internal.formats.NativeAdOptionsParcel
+com.google.android.gms.ads.internal.formats.NativeAdOptionsParcel: com.google.android.gms.ads.internal.formats.zzh CREATOR
 com.google.android.gms.ads.internal.overlay.AdLauncherIntentInfoParcel
 com.google.android.gms.ads.internal.overlay.AdLauncherIntentInfoParcel: com.google.android.gms.ads.internal.overlay.zzb CREATOR
 com.google.android.gms.ads.internal.overlay.AdOverlayInfoParcel
 com.google.android.gms.ads.internal.overlay.AdOverlayInfoParcel: com.google.android.gms.ads.internal.overlay.zze CREATOR
-com.google.android.gms.ads.internal.overlay.zzg: void setBackgroundColor(int)
+com.google.android.gms.ads.internal.overlay.zzi: void setVideoPath(java.lang.String)
+com.google.android.gms.ads.internal.overlay.zzi: void setVideoURI(android.net.Uri)
+com.google.android.gms.ads.internal.overlay.zzi: int getCurrentPosition()
 com.google.android.gms.ads.internal.purchase.GInAppPurchaseManagerInfoParcel
 com.google.android.gms.ads.internal.purchase.GInAppPurchaseManagerInfoParcel: com.google.android.gms.ads.internal.purchase.zza CREATOR
 com.google.android.gms.ads.internal.request.AdRequestInfoParcel
@@ -603,8 +677,14 @@ com.google.android.gms.ads.internal.request.LargeParcelTeleporter
 com.google.android.gms.ads.internal.request.LargeParcelTeleporter: android.os.Parcelable$Creator CREATOR
 com.google.android.gms.ads.internal.request.StringParcel
 com.google.android.gms.ads.internal.request.StringParcel: android.os.Parcelable$Creator CREATOR
+com.google.android.gms.ads.internal.reward.client.RewardedVideoAdRequestParcel
+com.google.android.gms.ads.internal.reward.client.RewardedVideoAdRequestParcel: com.google.android.gms.ads.internal.reward.client.zzh CREATOR
+com.google.android.gms.ads.internal.reward.mediation.client.RewardItemParcel
+com.google.android.gms.ads.internal.reward.mediation.client.RewardItemParcel: com.google.android.gms.ads.internal.reward.mediation.client.zzc CREATOR
 com.google.android.gms.ads.internal.util.client.VersionInfoParcel
 com.google.android.gms.ads.internal.util.client.VersionInfoParcel: com.google.android.gms.ads.internal.util.client.zzc CREATOR
+com.google.android.gms.ads.purchase.InAppPurchaseActivity
+com.google.android.gms.ads.purchase.InAppPurchaseActivity: InAppPurchaseActivity()
 com.google.android.gms.ads.search.SearchAdView: com.google.android.gms.ads.AdListener getAdListener()
 com.google.android.gms.ads.search.SearchAdView: com.google.android.gms.ads.AdSize getAdSize()
 com.google.android.gms.ads.search.SearchAdView: java.lang.String getAdUnitId()
@@ -665,9 +745,12 @@ com.google.android.gms.analytics.R$id: int none
 com.google.android.gms.analytics.R$integer: int google_play_services_version
 com.google.android.gms.analytics.R$raw: int gtm_analytics
 com.google.android.gms.analytics.R$string: int accept
+com.google.android.gms.analytics.R$string: int auth_google_play_services_client_facebook_display_name
+com.google.android.gms.analytics.R$string: int auth_google_play_services_client_google_display_name
 com.google.android.gms.analytics.R$string: int common_android_wear_notification_needs_update_text
 com.google.android.gms.analytics.R$string: int common_android_wear_update_text
 com.google.android.gms.analytics.R$string: int common_android_wear_update_title
+com.google.android.gms.analytics.R$string: int common_google_play_services_api_unavailable_text
 com.google.android.gms.analytics.R$string: int common_google_play_services_enable_button
 com.google.android.gms.analytics.R$string: int common_google_play_services_enable_text
 com.google.android.gms.analytics.R$string: int common_google_play_services_enable_title
@@ -681,7 +764,6 @@ com.google.android.gms.analytics.R$string: int common_google_play_services_inval
 com.google.android.gms.analytics.R$string: int common_google_play_services_needs_enabling_title
 com.google.android.gms.analytics.R$string: int common_google_play_services_network_error_text
 com.google.android.gms.analytics.R$string: int common_google_play_services_network_error_title
-com.google.android.gms.analytics.R$string: int common_google_play_services_notification_needs_installation_title
 com.google.android.gms.analytics.R$string: int common_google_play_services_notification_needs_update_title
 com.google.android.gms.analytics.R$string: int common_google_play_services_notification_ticker
 com.google.android.gms.analytics.R$string: int common_google_play_services_sign_in_failed_text
@@ -692,10 +774,11 @@ com.google.android.gms.analytics.R$string: int common_google_play_services_unsup
 com.google.android.gms.analytics.R$string: int common_google_play_services_update_button
 com.google.android.gms.analytics.R$string: int common_google_play_services_update_text
 com.google.android.gms.analytics.R$string: int common_google_play_services_update_title
+com.google.android.gms.analytics.R$string: int common_google_play_services_updating_text
+com.google.android.gms.analytics.R$string: int common_google_play_services_updating_title
 com.google.android.gms.analytics.R$string: int common_open_on_phone
 com.google.android.gms.analytics.R$string: int common_signin_button_text
 com.google.android.gms.analytics.R$string: int common_signin_button_text_long
-com.google.android.gms.analytics.R$string: int commono_google_play_services_api_unavailable_text
 com.google.android.gms.analytics.R$string: int create_calendar_message
 com.google.android.gms.analytics.R$string: int create_calendar_title
 com.google.android.gms.analytics.R$string: int decline
@@ -712,18 +795,32 @@ com.google.android.gms.analytics.R$styleable: int LoadingImageView_imageAspectRa
 com.google.android.gms.analytics.R$styleable: int LoadingImageView_imageAspectRatioAdjust
 com.google.android.gms.analytics.internal.Command
 com.google.android.gms.analytics.internal.Command: android.os.Parcelable$Creator CREATOR
-com.google.android.gms.analytics.internal.zzl: com.google.android.gms.analytics.internal.zzl[] values()
-com.google.android.gms.analytics.internal.zzl: com.google.android.gms.analytics.internal.zzl valueOf(java.lang.String)
-com.google.android.gms.analytics.internal.zzn: com.google.android.gms.analytics.internal.zzn[] values()
-com.google.android.gms.analytics.internal.zzn: com.google.android.gms.analytics.internal.zzn valueOf(java.lang.String)
+com.google.android.gms.analytics.internal.zzm: com.google.android.gms.analytics.internal.zzm[] values()
+com.google.android.gms.analytics.internal.zzm: com.google.android.gms.analytics.internal.zzm valueOf(java.lang.String)
+com.google.android.gms.analytics.internal.zzo: com.google.android.gms.analytics.internal.zzo[] values()
+com.google.android.gms.analytics.internal.zzo: com.google.android.gms.analytics.internal.zzo valueOf(java.lang.String)
 com.google.android.gms.auth.AccountChangeEvent
-com.google.android.gms.auth.AccountChangeEvent: com.google.android.gms.auth.AccountChangeEventCreator CREATOR
+com.google.android.gms.auth.AccountChangeEvent: android.os.Parcelable$Creator CREATOR
 com.google.android.gms.auth.AccountChangeEventsRequest
-com.google.android.gms.auth.AccountChangeEventsRequest: com.google.android.gms.auth.AccountChangeEventsRequestCreator CREATOR
+com.google.android.gms.auth.AccountChangeEventsRequest: android.os.Parcelable$Creator CREATOR
 com.google.android.gms.auth.AccountChangeEventsResponse
-com.google.android.gms.auth.AccountChangeEventsResponse: com.google.android.gms.auth.AccountChangeEventsResponseCreator CREATOR
+com.google.android.gms.auth.AccountChangeEventsResponse: android.os.Parcelable$Creator CREATOR
+com.google.android.gms.auth.api.credentials.Credential
+com.google.android.gms.auth.api.credentials.Credential: android.os.Parcelable$Creator CREATOR
+com.google.android.gms.auth.api.credentials.CredentialRequest
+com.google.android.gms.auth.api.credentials.CredentialRequest: android.os.Parcelable$Creator CREATOR
+com.google.android.gms.auth.api.credentials.IdToken
+com.google.android.gms.auth.api.credentials.IdToken: android.os.Parcelable$Creator CREATOR
+com.google.android.gms.auth.api.credentials.internal.DeleteRequest
+com.google.android.gms.auth.api.credentials.internal.DeleteRequest: android.os.Parcelable$Creator CREATOR
+com.google.android.gms.auth.api.credentials.internal.SaveRequest
+com.google.android.gms.auth.api.credentials.internal.SaveRequest: android.os.Parcelable$Creator CREATOR
+com.google.android.gms.auth.api.proxy.ProxyRequest
+com.google.android.gms.auth.api.proxy.ProxyRequest: android.os.Parcelable$Creator CREATOR
+com.google.android.gms.auth.api.proxy.ProxyResponse
+com.google.android.gms.auth.api.proxy.ProxyResponse: android.os.Parcelable$Creator CREATOR
 com.google.android.gms.common.ConnectionResult
-com.google.android.gms.common.ConnectionResult: com.google.android.gms.common.ConnectionResultCreator CREATOR
+com.google.android.gms.common.ConnectionResult: android.os.Parcelable$Creator CREATOR
 com.google.android.gms.common.SignInButton: void setSize(int)
 com.google.android.gms.common.SignInButton: void setColorScheme(int)
 com.google.android.gms.common.SignInButton: void setOnClickListener(android.view.View$OnClickListener)
@@ -731,7 +828,7 @@ com.google.android.gms.common.SignInButton: void setEnabled(boolean)
 com.google.android.gms.common.api.Scope
 com.google.android.gms.common.api.Scope: android.os.Parcelable$Creator CREATOR
 com.google.android.gms.common.api.Status
-com.google.android.gms.common.api.Status: com.google.android.gms.common.api.StatusCreator CREATOR
+com.google.android.gms.common.api.Status: android.os.Parcelable$Creator CREATOR
 com.google.android.gms.common.data.BitmapTeleporter
 com.google.android.gms.common.data.BitmapTeleporter: android.os.Parcelable$Creator CREATOR
 com.google.android.gms.common.data.DataHolder
@@ -775,20 +872,22 @@ com.google.android.gms.common.server.response.SafeParcelResponse
 com.google.android.gms.common.server.response.SafeParcelResponse: com.google.android.gms.common.server.response.zze CREATOR
 com.google.android.gms.common.stats.ConnectionEvent
 com.google.android.gms.common.stats.ConnectionEvent: android.os.Parcelable$Creator CREATOR
-com.google.android.gms.internal.zza: com.google.android.gms.internal.zza[] values()
-com.google.android.gms.internal.zza: com.google.android.gms.internal.zza valueOf(java.lang.String)
-com.google.android.gms.internal.zzb: com.google.android.gms.internal.zzb[] values()
-com.google.android.gms.internal.zzb: com.google.android.gms.internal.zzb valueOf(java.lang.String)
-com.google.android.gms.internal.zzgg: android.webkit.WebView getWebView()
-com.google.android.gms.internal.zzgg: void setContext(android.content.Context)
-com.google.android.gms.internal.zzgg: int getRequestedOrientation()
-com.google.android.gms.internal.zzgg: void setRequestedOrientation(int)
-com.google.android.gms.internal.zzha: com.google.android.gms.internal.zzha[] values()
-com.google.android.gms.internal.zzha: com.google.android.gms.internal.zzha valueOf(java.lang.String)
-com.google.android.gms.internal.zzmp$zza$zza: com.google.android.gms.internal.zzmp$zza$zza[] values()
-com.google.android.gms.internal.zzmp$zza$zza: com.google.android.gms.internal.zzmp$zza$zza valueOf(java.lang.String)
-com.google.android.gms.internal.zzmy$zza: com.google.android.gms.internal.zzmy$zza[] values()
-com.google.android.gms.internal.zzmy$zza: com.google.android.gms.internal.zzmy$zza valueOf(java.lang.String)
+com.google.android.gms.internal.zzad: com.google.android.gms.internal.zzad[] values()
+com.google.android.gms.internal.zzad: com.google.android.gms.internal.zzad valueOf(java.lang.String)
+com.google.android.gms.internal.zzae: com.google.android.gms.internal.zzae[] values()
+com.google.android.gms.internal.zzae: com.google.android.gms.internal.zzae valueOf(java.lang.String)
+com.google.android.gms.internal.zzig: android.webkit.WebView getWebView()
+com.google.android.gms.internal.zzig: void setContext(android.content.Context)
+com.google.android.gms.internal.zzig: int getRequestedOrientation()
+com.google.android.gms.internal.zzig: void setRequestedOrientation(int)
+com.google.android.gms.internal.zzjr: com.google.android.gms.internal.zzjr[] values()
+com.google.android.gms.internal.zzjr: com.google.android.gms.internal.zzjr valueOf(java.lang.String)
+com.google.android.gms.internal.zzk$zza: com.google.android.gms.internal.zzk$zza[] values()
+com.google.android.gms.internal.zzk$zza: com.google.android.gms.internal.zzk$zza valueOf(java.lang.String)
+com.google.android.gms.internal.zzqe$zza$zza: com.google.android.gms.internal.zzqe$zza$zza[] values()
+com.google.android.gms.internal.zzqe$zza$zza: com.google.android.gms.internal.zzqe$zza$zza valueOf(java.lang.String)
+com.google.android.gms.internal.zzqn$zza: com.google.android.gms.internal.zzqn$zza[] values()
+com.google.android.gms.internal.zzqn$zza: com.google.android.gms.internal.zzqn$zza valueOf(java.lang.String)
 com.google.android.gms.playlog.internal.LogEvent
 com.google.android.gms.playlog.internal.LogEvent: com.google.android.gms.playlog.internal.zzc CREATOR
 com.google.android.gms.playlog.internal.PlayLoggerContext
@@ -799,6 +898,7 @@ com.google.android.gms.plus.PlusOneButton: PlusOneButton(android.content.Context
 com.google.android.gms.plus.PlusOneButton: void setOnPlusOneClickListener(com.google.android.gms.plus.PlusOneButton$OnPlusOneClickListener)
 com.google.android.gms.plus.PlusOneButton: void setAnnotation(int)
 com.google.android.gms.plus.PlusOneButton: void setSize(int)
+com.google.android.gms.plus.PlusOneButton: void setIntent(android.content.Intent)
 com.google.android.gms.plus.R$attr: int adSize
 com.google.android.gms.plus.R$attr: int adSizes
 com.google.android.gms.plus.R$attr: int adUnitId
@@ -853,9 +953,12 @@ com.google.android.gms.plus.R$id: int none
 com.google.android.gms.plus.R$integer: int google_play_services_version
 com.google.android.gms.plus.R$raw: int gtm_analytics
 com.google.android.gms.plus.R$string: int accept
+com.google.android.gms.plus.R$string: int auth_google_play_services_client_facebook_display_name
+com.google.android.gms.plus.R$string: int auth_google_play_services_client_google_display_name
 com.google.android.gms.plus.R$string: int common_android_wear_notification_needs_update_text
 com.google.android.gms.plus.R$string: int common_android_wear_update_text
 com.google.android.gms.plus.R$string: int common_android_wear_update_title
+com.google.android.gms.plus.R$string: int common_google_play_services_api_unavailable_text
 com.google.android.gms.plus.R$string: int common_google_play_services_enable_button
 com.google.android.gms.plus.R$string: int common_google_play_services_enable_text
 com.google.android.gms.plus.R$string: int common_google_play_services_enable_title
@@ -869,7 +972,6 @@ com.google.android.gms.plus.R$string: int common_google_play_services_invalid_ac
 com.google.android.gms.plus.R$string: int common_google_play_services_needs_enabling_title
 com.google.android.gms.plus.R$string: int common_google_play_services_network_error_text
 com.google.android.gms.plus.R$string: int common_google_play_services_network_error_title
-com.google.android.gms.plus.R$string: int common_google_play_services_notification_needs_installation_title
 com.google.android.gms.plus.R$string: int common_google_play_services_notification_needs_update_title
 com.google.android.gms.plus.R$string: int common_google_play_services_notification_ticker
 com.google.android.gms.plus.R$string: int common_google_play_services_sign_in_failed_text
@@ -880,10 +982,11 @@ com.google.android.gms.plus.R$string: int common_google_play_services_unsupporte
 com.google.android.gms.plus.R$string: int common_google_play_services_update_button
 com.google.android.gms.plus.R$string: int common_google_play_services_update_text
 com.google.android.gms.plus.R$string: int common_google_play_services_update_title
+com.google.android.gms.plus.R$string: int common_google_play_services_updating_text
+com.google.android.gms.plus.R$string: int common_google_play_services_updating_title
 com.google.android.gms.plus.R$string: int common_open_on_phone
 com.google.android.gms.plus.R$string: int common_signin_button_text
 com.google.android.gms.plus.R$string: int common_signin_button_text_long
-com.google.android.gms.plus.R$string: int commono_google_play_services_api_unavailable_text
 com.google.android.gms.plus.R$string: int create_calendar_message
 com.google.android.gms.plus.R$string: int create_calendar_title
 com.google.android.gms.plus.R$string: int decline

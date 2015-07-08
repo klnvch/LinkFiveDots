@@ -31,6 +31,7 @@ public class MultiPlayerMenuActivity extends Activity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.multiplayer_menu);
 
+        findViewById(R.id.multi_player_two_players).setOnClickListener(this);
         findViewById(R.id.multi_player_bluetooth).setOnClickListener(this);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             findViewById(R.id.multi_player_lan).setOnClickListener(this);
@@ -40,7 +41,9 @@ public class MultiPlayerMenuActivity extends Activity implements View.OnClickLis
 
         // ads
         mAdView = (AdView) findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder().build();
+        AdRequest adRequest = new AdRequest.Builder()
+                .addTestDevice("EA3A211E9E56D12855FE8A22E4EB356C")
+                .build();
         mAdView.loadAd(adRequest);
     }
 
@@ -71,6 +74,10 @@ public class MultiPlayerMenuActivity extends Activity implements View.OnClickLis
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
+            case R.id.multi_player_two_players:
+                Intent twoPlayersIntent = new Intent(this, TwoPlayersActivity.class);
+                startActivity(twoPlayersIntent);
+                break;
             case R.id.multi_player_bluetooth:
                 // Get local Bluetooth adapter
                 BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();

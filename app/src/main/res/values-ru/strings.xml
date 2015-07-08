@@ -34,6 +34,7 @@
 
 	<string name="menu_single_player">Один игрок</string>
 	<string name="menu_multi_player">Мультиплеер</string>
+	<string name="two_players">Два игрока</string>
 	<string name="menu_local_network">Локальная Сеть</string>
 
 	<string name="rate_this_app">Оценить приложение</string>

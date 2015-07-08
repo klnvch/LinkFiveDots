@@ -145,12 +145,12 @@ containing a value of this type.
         public static final int redlinehor=0x7f020033;
     }
     public static final class id {
-        public static final int TableLayout111=0x7f0c0024;
+        public static final int TableLayout111=0x7f0c0025;
         public static final int adView=0x7f0c000f;
         public static final int adjust_height=0x7f0c0000;
         public static final int adjust_width=0x7f0c0001;
-        public static final int bt_menu_refresh=0x7f0c0025;
-        public static final int game_view=0x7f0c0023;
+        public static final int bt_menu_refresh=0x7f0c0026;
+        public static final int game_view=0x7f0c0024;
         public static final int label_available_devices=0x7f0c000b;
         public static final int label_no_device_found=0x7f0c000d;
         public static final int label_paired_devices=0x7f0c0008;
@@ -159,29 +159,30 @@ containing a value of this type.
         public static final int layout_visibility=0x7f0c0003;
         public static final int list_available_devices=0x7f0c000e;
         public static final int list_paired_devices=0x7f0c0009;
-        public static final int list_services=0x7f0c0022;
+        public static final int list_services=0x7f0c0023;
         public static final int main_menu_how_to=0x7f0c0019;
         public static final int main_menu_info=0x7f0c0018;
         public static final int main_menu_multi_player=0x7f0c0016;
         public static final int main_menu_scores=0x7f0c0017;
         public static final int main_menu_single_player=0x7f0c0015;
-        public static final int menu_new_game=0x7f0c0027;
-        public static final int menu_search=0x7f0c0028;
-        public static final int menu_undo=0x7f0c0026;
-        public static final int multi_player_bluetooth=0x7f0c001a;
-        public static final int multi_player_lan=0x7f0c001b;
+        public static final int menu_new_game=0x7f0c0028;
+        public static final int menu_search=0x7f0c0029;
+        public static final int menu_undo=0x7f0c0027;
+        public static final int multi_player_bluetooth=0x7f0c001b;
+        public static final int multi_player_lan=0x7f0c001c;
+        public static final int multi_player_two_players=0x7f0c001a;
         public static final int none=0x7f0c0002;
         public static final int plus_one_button=0x7f0c0011;
         public static final int progressBar=0x7f0c000c;
         public static final int rate_this_app=0x7f0c0012;
-        public static final int register=0x7f0c001c;
-        public static final int registration_progress=0x7f0c0020;
-        public static final int registration_status=0x7f0c001d;
-        public static final int registration_status_label=0x7f0c001e;
-        public static final int registration_status_value=0x7f0c001f;
-        public static final int scan=0x7f0c0021;
-        public static final int scores_edit=0x7f0c0029;
-        public static final int scores_update=0x7f0c002a;
+        public static final int register=0x7f0c001d;
+        public static final int registration_progress=0x7f0c0021;
+        public static final int registration_status=0x7f0c001e;
+        public static final int registration_status_label=0x7f0c001f;
+        public static final int registration_status_value=0x7f0c0020;
+        public static final int scan=0x7f0c0022;
+        public static final int scores_edit=0x7f0c002a;
+        public static final int scores_update=0x7f0c002b;
         public static final int send_feedback=0x7f0c0013;
         public static final int separator=0x7f0c0006;
         public static final int set_visibility=0x7f0c0004;
@@ -304,12 +305,12 @@ containing a value of this type.
         public static final int scores_update=0x7f060052;
         public static final int scores_won=0x7f060053;
         public static final int search_menu=0x7f060054;
-        public static final int search_settings=0x7f060058;
         public static final int share=0x7f060055;
         public static final int store_picture_message=0x7f060060;
         public static final int store_picture_title=0x7f060061;
-        public static final int version_text=0x7f060056;
-        public static final int yes=0x7f060057;
+        public static final int two_players=0x7f060056;
+        public static final int version_text=0x7f060057;
+        public static final int yes=0x7f060058;
     }
     public static final class style {
         public static final int EndTheme=0x7f0a0000;

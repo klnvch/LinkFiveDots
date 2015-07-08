@@ -78,7 +78,7 @@ class Game {
             editor.putLong(HIGH_SCORE, -1);
         }
 		//
-		editor.commit();
+		editor.apply();
 	}
 	public void reset() {
 		
@@ -105,40 +105,26 @@ class Game {
 			
 		}
 	}
-	/*
-	 * dot can be from user side
-	 *                 bot side
-	 *                 bluetooth side
-	 *                 
-	 * returns true if set of dot was successful
-	 */
-	public boolean setDot(int x, int y, int type){
-		
-		//returns true if the dot is in bound
-		//                           empty
-		//                it is not the end of the game          
-		if(isInBound(x, y) && net[x][y].getType()==Offset.EMPTY && winningLine == null){
-			
-			// the next dot can not be of the same owner
-			Offset theLastDot = getLastDot();
-			if(theLastDot != null && theLastDot.getType() == type)	return false;
-			
-			if(getNumberOfMoves() == 0){//it is the first move, start stop watch
-				startTime = System.currentTimeMillis()/1000;
-			}
-			if(type == Offset.USER){
-				movesDone++;
-			}
-			net[x][y].changeStatus(type, getNumberOfMoves());
-			winningLine = isOver();
-			
-			if(winningLine != null){
-				prepareScore();
-			}
-			
-			return true;
+
+	public void setDot(int x, int y, int type){
+
+        Offset theLastDot = getLastDot();
+        if (!checkCorrectness(x, y) || (theLastDot != null && theLastDot.getType() == type)) {
+            throw new IllegalStateException();
+        }
+
+        if(getNumberOfMoves() == 0){//it is the first move, start stop watch
+			startTime = System.currentTimeMillis() / 1000;
 		}
-		return false;
+		if(type == Offset.USER){
+			movesDone++;
+		}
+		net[x][y].changeStatus(type, getNumberOfMoves());
+		winningLine = isOver();
+			
+		if(winningLine != null){
+			prepareScore();
+		}
 	}
 	private int getNumberOfMoves(){
 		Offset offset = getLastDot();
@@ -147,11 +133,9 @@ class Game {
 		}
 		return 0;
 	}
-    /*
-	public int getMovesDone(){
-		return movesDone;
-	}
-	*/
+    public boolean checkCorrectness(int x, int y) {
+        return isInBound(x, y) && net[x][y].getType() == Offset.EMPTY && winningLine == null;
+    }
 	private boolean isInBound(int x,int y) {
 		return x>=0 && y>=0 && x<n && y<m;
 	}
@@ -163,8 +147,12 @@ class Game {
 		ArrayList<Offset> result = new ArrayList<>();
 		result.add(dot);
 		
-		for (int k = 1; (k < 5)&&isInBound(x+dx*k, y+dy*k)&&net[x+dx*k][y+dy*k].getType()==dot.getType(); k++) result.add(net[x+dx*k][y+dy*k]);
-		for (int k = 1; (k < 5)&&isInBound(x-dx*k, y-dy*k)&&net[x-dx*k][y-dy*k].getType()==dot.getType(); k++) result.add(0, net[x-dx*k][y-dy*k]);
+		for (int k = 1; (k < 5)&&isInBound(x+dx*k, y+dy*k)&&net[x+dx*k][y+dy*k].getType()==dot.getType(); k++) {
+            result.add(net[x+dx*k][y+dy*k]);
+        }
+		for (int k = 1; (k < 5)&&isInBound(x-dx*k, y-dy*k)&&net[x-dx*k][y-dy*k].getType()==dot.getType(); k++){
+            result.add(0, net[x-dx*k][y-dy*k]);
+        }
 		
 		return result;
 	}

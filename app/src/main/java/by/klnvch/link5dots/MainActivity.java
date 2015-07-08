@@ -16,7 +16,6 @@ import com.google.android.gms.analytics.Tracker;
 public class MainActivity extends Activity {
 	
 	private GameView view;
-	private Bot bot;
     private AlertDialog alertDialog = null;
 	
 	@Override
@@ -28,13 +27,18 @@ public class MainActivity extends Activity {
 		//restore view
 		view = (GameView)findViewById(R.id.game_view);
 
-        bot = new Bot(view.getPointerToNet());
-
         view.setOnGameEventListener(new GameView.OnGameEventListener() {
             @Override
-            public void onUserMoveDone(Offset dot) {
-                Offset botDot = bot.findAnswer();
-                view.setOpponentDot(botDot);
+            public void onMoveDone(Offset currentDot, Offset previousDot) {
+                if (previousDot == null || previousDot.getType() == Offset.OPPONENT) {
+                    // set user dot
+                    currentDot.setType(Offset.USER);
+                    view.setDot(currentDot);
+                    // set bot dot
+                    Offset botDot = Bot.findAnswer(view.getCopyOfNet());
+                    botDot.setType(Offset.OPPONENT);
+                    view.setDot(botDot);
+                }
             }
 
             @Override

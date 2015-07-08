@@ -2,88 +2,76 @@ package by.klnvch.link5dots;
 
 import java.util.ArrayList;
 
-class Bot{
-	
-	//pointer to game logic
-	//net should not be modified here
-	private final Offset[][] net;
-	private final int n = 20;
-	private final int m = 20;
+class Bot {
+
+	private static final int N = 20;
+	private static final int M = 20;
 	
 	//temporary table for dots rate
-	private final int[][] net1;
-	private final int[][] net2;
+	private static final int[][] net1 = new int[N][M];
+	private static final int[][] net2 = new int[N][M];
 	
 	//masks
-	private int[][] masks = null;
-	
-	public Bot(Offset[][] net){
-		this.net = net;
-		
-		net1 = new int[n][m];
-		net2 = new int[n][m];
-		
-		//generate masks
-		masks = new int[35][];		
-		// 0 - empty, 1 - my, 2 - not my, 3 - any
-		//my wins - 100%
-		masks[0] = new int[]{1,1,1,1,1,3,3,3,3};
-		masks[1] = new int[]{3,1,1,1,1,1,3,3,3};
-		masks[2] = new int[]{3,3,1,1,1,1,1,3,3};
-		masks[3] = new int[]{3,3,3,1,1,1,1,1,3};
-		masks[4] = new int[]{3,3,3,3,1,1,1,1,1};
-		//my is near win - 99%
-		masks[5] = new int[]{0,1,1,1,1,0,3,3,3};
-		masks[6] = new int[]{3,0,1,1,1,1,0,3,3};
-		masks[7] = new int[]{3,3,0,1,1,1,1,0,3};
-		masks[8] = new int[]{3,3,3,0,1,1,1,1,0};
-		//my is beaten - 30%
-		masks[13] = new int[]{2,1,1,1,1,0,3,3,3};
-		masks[14] = new int[]{3,2,1,1,1,1,0,3,3};
-		masks[15] = new int[]{3,3,2,1,1,1,1,0,3};
-		masks[16] = new int[]{3,3,3,2,1,1,1,1,0};
-		
-		masks[17] = new int[]{3,3,3,0,1,1,1,1,2};
-		masks[18] = new int[]{3,3,0,1,1,1,1,2,3};
-		masks[19] = new int[]{3,0,1,1,1,1,2,3,3};
-		masks[20] = new int[]{0,1,1,1,1,2,3,3,3};
-		
-		masks[21] = new int[]{1,1,1,0,1,0,0,3,3};
-		masks[22] = new int[]{3,3,0,0,1,0,1,1,1};
-		//my is beaten - 15%
-		masks[23] = new int[]{3,2,1,1,1,0,0,3,3};
-		masks[24] = new int[]{2,1,1,0,1,0,3,3,3};
-		masks[25] = new int[]{2,1,0,1,1,0,3,3,3};
-		masks[26] = new int[]{1,1,0,0,1,3,3,3,3};
-		masks[27] = new int[]{1,0,1,0,1,3,3,3,3};
-		masks[28] = new int[]{1,0,0,1,1,3,3,3,3};
-		
-		masks[29] = new int[]{3,3,0,0,1,1,1,2,3};
-		masks[30] = new int[]{3,3,3,0,1,0,1,1,2};
-		masks[31] = new int[]{3,3,3,0,1,1,0,1,2};
-		masks[32] = new int[]{3,3,3,3,1,0,0,1,1};
-		masks[33] = new int[]{3,3,3,3,1,0,1,0,1};
-		masks[34] = new int[]{3,3,3,3,1,1,0,0,1};
-		//my can't win - 0%
-		masks[9]  = new int[]{2,3,3,3,1,2,3,3,3};
-		masks[10] = new int[]{3,2,3,3,1,3,2,3,3};
-		masks[11] = new int[]{3,3,2,3,1,3,3,2,3};
-		masks[12] = new int[]{3,3,3,2,1,3,3,3,2};
-	}
+	private static int[][] masks = new int[][]{
+            // 0 - empty, 1 - my, 2 - not my, 3 - any
+            //my wins - 100%
+            new int[]{1,1,1,1,1,3,3,3,3},
+            new int[]{3,1,1,1,1,1,3,3,3},
+            new int[]{3,3,1,1,1,1,1,3,3},
+            new int[]{3,3,3,1,1,1,1,1,3},
+            new int[]{3,3,3,3,1,1,1,1,1},
+            //my is near win - 99%
+            new int[]{0,1,1,1,1,0,3,3,3},
+            new int[]{3,0,1,1,1,1,0,3,3},
+            new int[]{3,3,0,1,1,1,1,0,3},
+            new int[]{3,3,3,0,1,1,1,1,0},
+            //my can't win - 0%
+            new int[]{2,3,3,3,1,2,3,3,3},
+            new int[]{3,2,3,3,1,3,2,3,3},
+            new int[]{3,3,2,3,1,3,3,2,3},
+            new int[]{3,3,3,2,1,3,3,3,2},
+            //my is beaten - 30%
+            new int[]{2,1,1,1,1,0,3,3,3},
+            new int[]{3,2,1,1,1,1,0,3,3},
+            new int[]{3,3,2,1,1,1,1,0,3},
+            new int[]{3,3,3,2,1,1,1,1,0},
 
-	public Offset findAnswer(){
+            new int[]{3,3,3,0,1,1,1,1,2},
+            new int[]{3,3,0,1,1,1,1,2,3},
+            new int[]{3,0,1,1,1,1,2,3,3},
+            new int[]{0,1,1,1,1,2,3,3,3},
+
+            new int[]{1,1,1,0,1,0,0,3,3},
+            new int[]{3,3,0,0,1,0,1,1,1},
+            //my is beaten - 15%
+            new int[]{3,2,1,1,1,0,0,3,3},
+            new int[]{2,1,1,0,1,0,3,3,3},
+            new int[]{2,1,0,1,1,0,3,3,3},
+            new int[]{1,1,0,0,1,3,3,3,3},
+            new int[]{1,0,1,0,1,3,3,3,3},
+            new int[]{1,0,0,1,1,3,3,3,3},
+
+            new int[]{3,3,0,0,1,1,1,2,3},
+            new int[]{3,3,3,0,1,0,1,1,2},
+            new int[]{3,3,3,0,1,1,0,1,2},
+            new int[]{3,3,3,3,1,0,0,1,1},
+            new int[]{3,3,3,3,1,0,1,0,1},
+            new int[]{3,3,3,3,1,1,0,0,1}
+	};
+
+	public static Offset findAnswer(Offset[][] net){
 		
 		float maxUserRate = -1;
 		ArrayList<Offset> listUser = new ArrayList<>();
 		float maxBotRate = -1;
 		ArrayList<Offset> listBot = new ArrayList<>();
 		
-		for (int i = 0; i < n; i++) {
-			for (int j = 0; j < m; j++) {
+		for (int i = 0; i < N; i++) {
+			for (int j = 0; j < M; j++) {
 				if(net[i][j].getType()==Offset.EMPTY){
-					float userRate = getDotRate(net[i][j], Offset.USER);
+					float userRate = getDotRate(net, net[i][j], Offset.USER);
 					net1[i][j] = (int)userRate;
-					float botRate = getDotRate(net[i][j], Offset.OPPONENT);
+					float botRate = getDotRate(net, net[i][j], Offset.OPPONENT);
 					net2[i][j] = (int)botRate;
 					
 					//user rates
@@ -144,7 +132,7 @@ class Bot{
 		
 		//density checking
 		for (Offset off : resultList) {
-			int temp = getDensity(off.getX(), off.getY());
+			int temp = getDensity(net, off.getX(), off.getY());
 			if(temp > max){
 				max = temp;
 				result = off;
@@ -156,14 +144,14 @@ class Bot{
 	}
 	
 	
-	private float getDotRate(Offset dot, int type){
+	private static float getDotRate(Offset[][] net, Offset dot, int type){
 		
 		int[] array2 = new int[4];
 		//
-		array2[0] = (int)getDotRateInLine(dot, type, 1, 0);
-		array2[1] = (int)getDotRateInLine(dot, type, 1, 1);
-		array2[2] = (int)getDotRateInLine(dot, type, 0, 1);
-		array2[3] = (int)getDotRateInLine(dot, type, -1, 1);
+		array2[0] = (int)getDotRateInLine(net, dot, type, 1, 0);
+		array2[1] = (int)getDotRateInLine(net, dot, type, 1, 1);
+		array2[2] = (int)getDotRateInLine(net, dot, type, 0, 1);
+		array2[3] = (int)getDotRateInLine(net, dot, type, -1, 1);
 		
 		//it is only one dot or building a line is not impossible
 		if(array2[0]<=10 && array2[1]<=10 && array2[2]<=10 && array2[3]<=10){
@@ -187,7 +175,7 @@ class Bot{
 		return array2[0] + array2[1] + array2[2] + array2[3];
 	}
 	
-	private int getDensity(int x, int y){
+	private static int getDensity(Offset[][] net, int x, int y){
 		
 		int result = 0;
 		
@@ -210,11 +198,11 @@ class Bot{
 		return result;
 	}
 	
-	private boolean isInBound(int x,int y) {
-		return x>=0 && y>=0 && x<n && y<m;
+	private static boolean isInBound(int x,int y) {
+		return x >= 0 && y >= 0 && x < N && y < M;
 	}
 	
-	private float getDotRateInLine(Offset dot, int type, int dx, int dy) {
+	private static float getDotRateInLine(Offset[][] net, Offset dot, int type, int dx, int dy) {
 		
 		int x = dot.getX();
 		int y = dot.getY();
@@ -248,6 +236,7 @@ class Bot{
 				if(array[i+j]==type){//the same type, increase count
 					++count;
 				}else if(array[i+j]==Offset.EMPTY){//empty, do not increase
+
 				}else{//there is something bad
 					count = 0;
 					break;
@@ -268,7 +257,7 @@ class Bot{
 	 * check line in masks array and if it matches return line rate
 	 * in the other case return -1.0f
 	 */
-	private float checkMasks(int[] line, int type){
+	private static float checkMasks(int[] line, int type){
 		
 		
 		for(int i=0; i!=5; ++i){
@@ -299,7 +288,7 @@ class Bot{
 	 * 
 	 * if line satisfy to mask return true
 	 */
-	private boolean checkMasks(int[] line, int[] mask, int type){
+	private static boolean checkMasks(int[] line, int[] mask, int type){
 		//type - my dots number
 		for(int i=0; i!=9; ++i){
 			switch(mask[i]){
@@ -323,15 +312,15 @@ class Bot{
     @Override
     public String toString() {
     	String result = "";
-    	for (int i = 0; i < n; i++) {
-			for (int j = 0; j < m; j++) {
+    	for (int i = 0; i < N; i++) {
+			for (int j = 0; j < M; j++) {
 				result += net1[i][j] + " ";
 			}
 			result += "\n";
     	}
     	result += "\n";
-    	for (int i = 0; i < n; i++) {
-			for (int j = 0; j < m; j++) {
+    	for (int i = 0; i < N; i++) {
+			for (int j = 0; j < M; j++) {
 				result += net2[i][j] + " ";
 			}
 			result += "\n";

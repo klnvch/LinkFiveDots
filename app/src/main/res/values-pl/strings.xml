@@ -34,6 +34,7 @@
 	
 	<string name="menu_single_player">Jeden Gracz</string>
 	<string name="menu_multi_player">Multiplayer</string>
+	<string name="two_players">Dwa gracza</string>
 	<string name="menu_local_network">Sieć Lokalna</string>
 
 	<string name="rate_this_app">Oceń tę aplikację</string>

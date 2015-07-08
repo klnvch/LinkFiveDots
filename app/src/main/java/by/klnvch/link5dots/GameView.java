@@ -19,7 +19,9 @@ import android.view.View;
 import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.ScaleGestureDetector.SimpleOnScaleGestureListener;
 
-public class GameView extends View{
+public class GameView extends View {
+
+	private static final String TAG = "GameView";
 
 	/**
 	 * Displacement of the left top corner of the bitmap from the left top corner of the screen
@@ -78,9 +80,9 @@ public class GameView extends View{
 	private Game game;
     private OnGameEventListener listener;
 
-    public abstract static class OnGameEventListener{
-        public abstract void onUserMoveDone(Offset dot);
-        public abstract void onGameEnd(HighScore highScore);
+    public interface OnGameEventListener{
+        void onMoveDone(Offset currentDot, Offset previousDot);
+        void onGameEnd(HighScore highScore);
     }
 		
 	public GameView(Context context) {
@@ -259,8 +261,15 @@ public class GameView extends View{
 		invalidate();
 	}
 
-	public Offset[][] getPointerToNet(){
-		return game.net;
+	public Offset[][] getCopyOfNet(){
+        Offset[][] copyNet = new Offset[game.net.length][];
+        for (int i=0; i!=game.net.length; ++i) {
+            copyNet[i] = new Offset[game.net[i].length];
+            for (int j=0; j!=game.net[i].length; ++j) {
+                copyNet[i][j] = game.net[i][j].copy();
+            }
+        }
+		return copyNet;
 	}
 	/**
 	 * Finds nearest horizontal line from 20 possible lines
@@ -291,10 +300,9 @@ public class GameView extends View{
 		}
 		return result;
 	}
-	public void setOpponentDot(Offset dot){
+	public void setDot(Offset dot){
 		
-		boolean res = game.setDot(dot.getX(), dot.getY(), Offset.OPPONENT);
-		if(!res)	return;
+		game.setDot(dot.getX(), dot.getY(), dot.getType());
 		invalidate();
 		
         //
@@ -309,7 +317,7 @@ public class GameView extends View{
                 if(listener != null){
                     listener.onGameEnd(highScore);
                 }else{
-                    Log.e("GameView", "listener is null");
+                    Log.e(TAG, "listener is null");
                 }
             }
         }
@@ -482,7 +490,7 @@ public class GameView extends View{
 		editor.putFloat("m6", arr[6]);
 		editor.putFloat("m7", arr[7]);
 		editor.putFloat("m8", arr[8]);
-		editor.commit();
+		editor.apply();
 	}
 	private class GestureListener extends SimpleOnGestureListener {
 		
@@ -516,17 +524,17 @@ public class GameView extends View{
 			if(game.isOver() == null){
 				int xl = findTapedVerLine(e.getX());
 				int yl = findTapedHorLine(e.getY());
-				boolean res = game.setDot(xl, yl, Offset.USER);
+				boolean res = game.checkCorrectness(xl, yl);
 				if(!res){
 					return true;
 				}
 				
 				invalidate();
 
-                if(listener != null){
-                    listener.onUserMoveDone(new Offset(xl, yl));
-                }else{
-                    Log.e("GameView", "listener is null");
+                if(listener != null) {
+                    listener.onMoveDone(new Offset(xl, yl), game.getLastDot());
+                } else {
+                    Log.e(TAG, "listener is null");
                 }
 				
 		        //
@@ -537,7 +545,7 @@ public class GameView extends View{
                     if(listener != null){
                         listener.onGameEnd(highScore);
                     }else{
-                        Log.e("GameView", "listener is null");
+                        Log.e(TAG, "listener is null");
                     }
 				}
 			}

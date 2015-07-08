@@ -1,6 +1,6 @@
 package by.klnvch.link5dots;
 
-public class Offset{
+public class Offset {
 	
 	private final int x;
 	private final int y;
@@ -10,8 +10,6 @@ public class Offset{
 	public static final int EMPTY = 1;
 	public static final int USER = 2;
 	public static final int OPPONENT = 4;
-	
-	public static final String THE_DOT = "the_dot";
 	
 	public Offset(int x, int y){
 		this.x = x;
@@ -31,15 +29,14 @@ public class Offset{
 	public int getType() {
 		return type;
 	}
+	public void setType(int type) {
+		this.type = type;
+	}
 	public int getNumber() {
 		return number;
 	}
 	@Override
 	public String toString() {
-		return x + "," + y;
-	}
-	
-	public static String toString(int x, int y){
 		return x + "," + y;
 	}
 	
@@ -49,4 +46,11 @@ public class Offset{
 		int y = Integer.parseInt(tokens[1]);
 		return new Offset(x, y);
 	}
+
+    public Offset copy(){
+        Offset offset = new Offset(x,y);
+        offset.type = type;
+        offset.number = number;
+        return offset;
+    }
 }
