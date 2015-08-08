@@ -27,4 +27,9 @@ public class SettingsUtils {
             }
         }
     }
+
+    public static String getUserName(Context context) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        return prefs.getString(USER_NAME, null);
+    }
 }

@@ -6,6 +6,7 @@
 
 
 	<string name="greetings">Hallo, %1$s!</string>
+	<string name="android">Android</string>
 	<string name="how_to_title">Wie man spielt</string>
 	<string name="how_to_text">\tSeien Sie der Erste, der es schafft, fünf Punkte in einer geraden Linie horizontal, vertikal oder diagonal zu verbinden. Android zeichnet blaue Punkte, Sie zeichnen rote Punkte. Rote und blaue Punkte sind nacheinander auf Linie Kreuzungen zu platzieren. Sie bewegen sich zuerst.\n\n\tZiehen Sie den Bildschirm, um das Spielfeld zu bewegen.\n\tSkalieren Sie das Bild, um Feldern zu vergrößern oder zu verkleinern.\n\tBenutzen Sie das Menü, um das Spiel neu zu starten, rückgängig zu machen, das Spielergebnis zu sehen oder sehen, wie man spielt.\n\tDrücken Sie Suchen, um Pfeile um den Punkt des letzten Zuges auszublenden/einzublenden.</string>
 	

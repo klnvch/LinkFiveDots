@@ -52,7 +52,7 @@ public class MainMenuActivity extends AppCompatActivity implements OnClickListen
             showUsernameDialog();
             prefs.edit().putBoolean(SettingsUtils.FIRST_RUN, false).apply();
         }
-        String username = prefs.getString(SettingsUtils.USER_NAME, null);
+        String username = SettingsUtils.getUserName(this);
         TextView tvHelloUser = (TextView) findViewById(R.id.hello_user);
         if (username != null) {
             tvHelloUser.setText(getString(R.string.greetings, username));

@@ -6,6 +6,7 @@
 
 
 	<string name="greetings">Salut, %1$s!</string>
+	<string name="android">Android</string>
 	<string name="how_to_title">Comment jouer</string>
 	<string name="how_to_text">\tSoyez le premier à aligner cinq points, horizontalement, verticalement ou en diagonale. Android déplace les points bleus, vous, les points rouges. Les points rouges et bleus sont placés tour à tour sur les intersections. Vous jouez en premier.\n\n\tFaites glisser l’écran pour déplacer la grille.\n\tAgrandissez ou réduisez l’écran pour ajuster la taille de la grille.\n\tUtilisez le menu pour redémarrer le jeu, annulez le dernier coup, regardez les scores des jeux ou vérifiez comment jouer.\n\tAppuyez sur le bouton \"Rechercher\" pour masquer/afficher des flèches autour du point joué le dernier coup.</string>
 	

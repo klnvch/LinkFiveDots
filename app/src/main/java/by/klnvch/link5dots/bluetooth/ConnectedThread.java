@@ -11,12 +11,12 @@ import java.io.OutputStream;
  * This thread runs during a connection with a remote device.
  * It handles all incoming and outgoing transmissions.
  */
-class ConnectedThread extends Thread{
+class ConnectedThread extends Thread {
     private static final String TAG = "ConnectedThread";
 
-    private final BluetoothSocket mmSocket;
-    private final InputStream mmInStream;
-    private final OutputStream mmOutStream;
+    private final BluetoothSocket mSocket;
+    private final InputStream mInStream;
+    private final OutputStream mOutStream;
 
     private final BluetoothService mBluetoothService;
 
@@ -24,7 +24,7 @@ class ConnectedThread extends Thread{
         Log.d(TAG, "create ConnectedThread");
         this.mBluetoothService = mBluetoothService;
 
-        mmSocket = socket;
+        mSocket = socket;
         InputStream tmpIn = null;
         OutputStream tmpOut = null;
 
@@ -36,9 +36,10 @@ class ConnectedThread extends Thread{
             Log.e(TAG, "temp sockets not created", e);
         }
 
-        mmInStream = tmpIn;
-        mmOutStream = tmpOut;
+        mInStream = tmpIn;
+        mOutStream = tmpOut;
     }
+
     public void run() {
         Log.i(TAG, "BEGIN mConnectedThread");
         byte[] buffer = new byte[1024];
@@ -48,7 +49,7 @@ class ConnectedThread extends Thread{
         while (true) {
             try {
                 // Read from the InputStream
-                bytes = mmInStream.read(buffer);
+                bytes = mInStream.read(buffer);
 
                 // Send the obtained bytes to the UI Activity
                 mBluetoothService.sendMessage(BluetoothActivity.MESSAGE_READ, bytes, -1, buffer);
@@ -61,13 +62,15 @@ class ConnectedThread extends Thread{
             }
         }
     }
+
     /**
      * Write to the connected OutStream.
-     * @param buffer  The bytes to write
+     *
+     * @param buffer The bytes to write
      */
     public void write(byte[] buffer) {
         try {
-            mmOutStream.write(buffer);
+            mOutStream.write(buffer);
 
             // Share the sent message back to the UI Activity
             mBluetoothService.sendMessage(BluetoothActivity.MESSAGE_WRITE, -1, -1, buffer);
@@ -78,7 +81,7 @@ class ConnectedThread extends Thread{
 
     public void cancel() {
         try {
-            mmSocket.close();
+            mSocket.close();
         } catch (IOException e) {
             Log.e(TAG, "close() of connect socket failed", e);
         }

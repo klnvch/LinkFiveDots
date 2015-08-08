@@ -6,6 +6,7 @@
     <string name="banner_ad_unit_id" translatable="false">ca-app-pub-9653730523387780/5316470559</string>
 
     <string name="greetings">Hi, %1$s!</string>
+    <string name="android">Android</string>
     <string name="how_to_title">How To Play</string>
     <string name="how_to_text">\tBe the first to link five dots in a straight line horizontally, vertically or diagonally. Android plays blue dots, you play red dots. Red and blue dots are put in turn on the line intersections. The first move is yours.\n\n\tDrag the screen to move the grid.\n\tScale the screen to enlarge or reduce grid size.\n\tUse menu to restart the game, undo last move, see game scores or see how to play.\n\tPress \"Search\" button to hide/show arrows around the last move dot.</string>
 	

@@ -8,10 +8,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
+
+import by.klnvch.link5dots.settings.SettingsUtils;
 
 public class MainActivity extends AppCompatActivity {
 	
@@ -21,8 +24,7 @@ public class MainActivity extends AppCompatActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-		setContentView(R.layout.play);
+		setContentView(R.layout.game_board);
 		
 		//restore view
 		view = (GameView)findViewById(R.id.game_view);
@@ -47,7 +49,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        ((MyApp)getApplication()).getTracker();
+        String username = SettingsUtils.getUserName(this);
+        if (username != null) {
+            TextView tvUsername = (TextView)findViewById(R.id.user_name);
+            tvUsername.setText(username);
+        }
+
+        ((MyApp) getApplication()).getTracker();
 	}
 
     @Override

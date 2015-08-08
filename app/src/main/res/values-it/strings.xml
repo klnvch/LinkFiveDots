@@ -6,6 +6,7 @@
 
 
 	<string name="greetings">Ciao, %1$s!</string>
+	<string name="android">Android</string>
 	<string name="how_to_title">Come giocare</string>
 	<string name="how_to_text">\tSii primo per collegare cinque punti in linea diritta orizzontalmente, verticalmente oppure diagonalmente. Android gioca per i punti blu, il giocatore per quelli rossi. I punti blu e rossi si mettono seguendo il proprio turno sul incrocio delle linee. La prima mossa e` la tua.\n\n\tTraina lo schermo per spostare campo di gioco.\n\tDistendi lo schermo per  ingrossare o diminuire le misure delle cellule.\n\tUsa il menu per cominciare un gioco nuovo, revocare l`ultima mossa, per vedere il punteggio del gioco ed informazioni di come dovrebbe gioccare.\n\tPremi il pulsante \"Ricerca\" per nascondere o fare vedere delle lancette intorno al punto della mossa ultima.</string>
 	

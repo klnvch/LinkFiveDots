@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 
 public class TwoPlayersActivity extends AppCompatActivity  {
 
@@ -16,8 +17,7 @@ public class TwoPlayersActivity extends AppCompatActivity  {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        setContentView(R.layout.play);
+        setContentView(R.layout.game_board);
 
         view = (GameView)findViewById(R.id.game_view);
 
@@ -39,6 +39,8 @@ public class TwoPlayersActivity extends AppCompatActivity  {
                 showAlertDialog(highScore);
             }
         });
+
+        findViewById(R.id.game_info).setVisibility(View.GONE);
     }
 
     @Override

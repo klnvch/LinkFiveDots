@@ -11,11 +11,12 @@
 
     <android.support.v7.widget.CardView
         xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/game_info"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="top|end"
         card_view:cardCornerRadius="4dp"
-        card_view:cardElevation="16dp"
+        card_view:cardElevation="8dp"
         card_view:cardBackgroundColor="#FFFFFFFF">
 
         <LinearLayout
@@ -25,18 +26,20 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/user_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Anton"
+                android:text="@string/device_info_default"
                 android:gravity="center"
                 android:drawableStart="@drawable/red_dot"
                 android:drawableLeft="@drawable/red_dot"/>
 
             <TextView
+                android:id="@+id/opponent_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="Android"
+                android:text="@string/android"
                 android:drawableStart="@drawable/blue_dot"
                 android:drawableLeft="@drawable/blue_dot"/>
 

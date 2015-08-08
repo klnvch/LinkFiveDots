@@ -6,6 +6,7 @@
 
 
 	<string name="greetings">¡Hola, %1$s!</string>
+	<string name="android">Android</string>
 	<string name="how_to_title">Cómo Jugar</string>
 	<string name="how_to_text">\tSea el primero en juntar cinco puntos en la forma de una línea recta de modo horizontal, vertical o diagonal. El Android posiciona los azules, mientras Usted los puntos rojos. A los puntos de ambos colores los meten en turno sobre las intersecciones de las líneas. Su turno es inicial.\n\n\tArrastre Ud. la pantalla para mover el campo de juego.\n\tEstire Ud. la pantalla para aumentar o disminuir el tamaño de las células.\n\tUtilice Ud. el menú para reiniciar el juego, deshacer el último movimiento, mirar las cuentas y la información sobre el juego.\n\tAprete Ud. el botón \"Buscar\" para esconder/mostrar las flechas alrededor del punto del movimiento último.</string>
 	

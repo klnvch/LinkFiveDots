@@ -349,7 +349,7 @@ public class GameView extends View {
 		
 		if(paperSize *newScale >= h || paperSize *newScale >= w || scaleFactor>1.0f){
 			
-			//scale play ground
+			//scale game_board ground
 			matrix.postScale(scaleFactor, scaleFactor, px, py);
 			updateScale(newScale);
 			basePoint.x += (1-scaleFactor)*(px- basePoint.x);

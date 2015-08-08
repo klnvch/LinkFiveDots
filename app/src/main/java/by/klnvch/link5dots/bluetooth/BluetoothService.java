@@ -1,7 +1,5 @@
 package by.klnvch.link5dots.bluetooth;
 
-import java.util.UUID;
-
 import android.app.Service;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
@@ -13,6 +11,8 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 
+import java.util.UUID;
+
 import by.klnvch.link5dots.R;
 
 /**
@@ -21,7 +21,7 @@ import by.klnvch.link5dots.R;
  * incoming connections, a thread for connecting with a device, and a
  * thread for performing data transmissions when connected.
  */
-public class BluetoothService extends Service{
+public class BluetoothService extends Service {
 
     public static final String BLUETOOTH_GAME_VIEW_PREFERENCES = "BLUETOOTH_GAME_VIEW_PREFERENCES";
 
@@ -30,7 +30,13 @@ public class BluetoothService extends Service{
 
     // Unique UUID for this application
     public static final UUID UUID_SECURE = UUID.fromString("fa87c0d0-afac-11de-8a39-0800200c9a66");
-
+    // Constants that indicate the current connection state
+    public static final int STATE_NONE = 0;       // we're doing nothing
+    public static final int STATE_LISTEN = 1;     // now listening for incoming connections
+    public static final int STATE_CONNECTING = 2; // now initiating an outgoing connection
+    public static final int STATE_CONNECTED = 3;  // now connected to a remote device
+    // Binder given to clients
+    private final IBinder mBinder = new LocalBinder();
     // Member fields
     private Handler mHandler;
     private AcceptThread mSecureAcceptThread;
@@ -38,24 +44,6 @@ public class BluetoothService extends Service{
     private ConnectedThread mConnectedThread;
     private int mState;
     private BluetoothDevice device = null;
-
-    // Constants that indicate the current connection state
-    public static final int STATE_NONE = 0;       // we're doing nothing
-    public static final int STATE_LISTEN = 1;     // now listening for incoming connections
-    public static final int STATE_CONNECTING = 2; // now initiating an outgoing connection
-    public static final int STATE_CONNECTED = 3;  // now connected to a remote device
-
-    // Binder given to clients
-    private final IBinder mBinder = new LocalBinder();
-    /**
-     * Class used for the client Binder.  Because we know this service always
-     * runs in the same process as its clients, we don't need to deal with IPC.
-     */
-    public class LocalBinder extends Binder {
-        BluetoothService getService() {
-            return BluetoothService.this;
-        }
-    }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -80,43 +68,50 @@ public class BluetoothService extends Service{
 
     /**
      * Constructor. Prepares a new BluetoothChat session.
-     * @param handler  A Handler to send messages back to the UI Activity
+     *
+     * @param handler A Handler to send messages back to the UI Activity
      */
     public void setHandler(Handler handler) {
         this.mHandler = handler;
     }
+
+    /**
+     * Return the current connection state.
+     */
+    public synchronized int getState() {
+        return mState;
+    }
+
     /**
      * Set the current state of the chat connection
-     * @param state  An integer defining the current connection state
+     *
+     * @param state An integer defining the current connection state
      */
     private synchronized void setState(int state) {
         mState = state;
 
         // Give the new state to the Handler so the UI Activity can update
-        if(mHandler != null) {
+        if (mHandler != null) {
             mHandler.obtainMessage(BluetoothActivity.MESSAGE_STATE_CHANGE, state, -1).sendToTarget();
         }
     }
-    /**
-     * Return the current connection state. */
-    public synchronized int getState() {
-        return mState;
-    }
+
     /**
      * Start the chat service. Specifically start AcceptThread to begin a
-     * session in listening (server) mode. Called by the Activity onResume() */
+     * session in listening (server) mode. Called by the Activity onResume()
+     */
     public synchronized void start() {
 
         // Cancel any thread attempting to make a connection
         if (mConnectThread != null) {
-        	mConnectThread.cancel(); 
-        	mConnectThread = null;
+            mConnectThread.cancel();
+            mConnectThread = null;
         }
 
         // Cancel any thread currently running a connection
-        if (mConnectedThread != null){
-        	mConnectedThread.cancel();
-        	mConnectedThread = null;
+        if (mConnectedThread != null) {
+            mConnectedThread.cancel();
+            mConnectedThread = null;
         }
 
         setState(STATE_LISTEN);
@@ -127,24 +122,26 @@ public class BluetoothService extends Service{
             mSecureAcceptThread.start();
         }
     }
+
     /**
      * Start the ConnectThread to initiate a connection to a remote device.
-     * @param device  The BluetoothDevice to connect
+     *
+     * @param device The BluetoothDevice to connect
      */
     public synchronized void connect(BluetoothDevice device) {
 
         // Cancel any thread attempting to make a connection
-        if (mState == STATE_CONNECTING){
-            if (mConnectThread != null){
-            	mConnectThread.cancel();
-            	mConnectThread = null;
+        if (mState == STATE_CONNECTING) {
+            if (mConnectThread != null) {
+                mConnectThread.cancel();
+                mConnectThread = null;
             }
         }
 
         // Cancel any thread currently running a connection
-        if (mConnectedThread != null){
-        	mConnectedThread.cancel();
-        	mConnectedThread = null;
+        if (mConnectedThread != null) {
+            mConnectedThread.cancel();
+            mConnectedThread = null;
         }
 
         // Start the thread to connect with the given device
@@ -152,17 +149,19 @@ public class BluetoothService extends Service{
         mConnectThread.start();
         setState(STATE_CONNECTING);
     }
+
     /**
      * Start the ConnectedThread to begin managing a Bluetooth connection
-     * @param socket  The BluetoothSocket on which the connection was made
-     * @param device  The BluetoothDevice that has been connected
+     *
+     * @param socket The BluetoothSocket on which the connection was made
+     * @param device The BluetoothDevice that has been connected
      */
     synchronized void connected(BluetoothSocket socket, BluetoothDevice device) {
 
         this.device = device;
 
         // Cancel the thread that completed the connection
-        if (mConnectThread != null){
+        if (mConnectThread != null) {
             //mConnectThread.cancel();
             mConnectThread = null;
         }
@@ -195,10 +194,10 @@ public class BluetoothService extends Service{
         editor.apply();
     }
 
-    public String getDeviceName(){
-        if(device != null){
+    public String getDeviceName() {
+        if (device != null) {
             return device.getName();
-        }else{
+        } else {
             return "";
         }
     }
@@ -224,8 +223,10 @@ public class BluetoothService extends Service{
         }
         setState(STATE_NONE);
     }
+
     /**
      * Write to the ConnectedThread in an not synchronized manner
+     *
      * @param out The bytes to write
      * @see ConnectedThread#write(byte[])
      */
@@ -240,6 +241,7 @@ public class BluetoothService extends Service{
         // Perform the write not synchronized
         r.write(out);
     }
+
     /**
      * Indicate that the connection attempt failed and notify the UI Activity.
      */
@@ -255,6 +257,7 @@ public class BluetoothService extends Service{
         // Start the service over to restart listening mode
         BluetoothService.this.start();
     }
+
     /**
      * Indicate that the connection was lost and notify the UI Activity.
      */
@@ -270,11 +273,21 @@ public class BluetoothService extends Service{
         BluetoothService.this.start();
     }
 
-    public void resetConnectThread(){
+    public void resetConnectThread() {
         mConnectedThread = null;
     }
 
-    public void sendMessage(int what, int arg1, int arg2, Object obj){
+    public void sendMessage(int what, int arg1, int arg2, Object obj) {
         mHandler.obtainMessage(what, arg1, arg2, obj).sendToTarget();
+    }
+
+    /**
+     * Class used for the client Binder.  Because we know this service always
+     * runs in the same process as its clients, we don't need to deal with IPC.
+     */
+    public class LocalBinder extends Binder {
+        BluetoothService getService() {
+            return BluetoothService.this;
+        }
     }
 }

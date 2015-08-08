@@ -16,7 +16,7 @@ public class InfoActivity extends AppCompatActivity {
 
     // The request code must be 0 or greater.
     private static final int PLUS_ONE_REQUEST_CODE = 0;
-    private static final String URL = "https://play.google.com/store/apps/details?id=by.klnvch.link5dots";
+    private static final String URL = "https://game_board.google.com/store/apps/details?id=by.klnvch.link5dots";
 
 
     private PlusOneButton mPlusOneButton;
@@ -67,7 +67,7 @@ public class InfoActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent sendIntent = new Intent();
                 sendIntent.setAction(Intent.ACTION_SEND);
-                sendIntent.putExtra(Intent.EXTRA_TEXT, "https://play.google.com/store/apps/details?id=" + getPackageName());
+                sendIntent.putExtra(Intent.EXTRA_TEXT, "https://game_board.google.com/store/apps/details?id=" + getPackageName());
                 sendIntent.setType("text/plain");
                 startActivity(sendIntent);
             }

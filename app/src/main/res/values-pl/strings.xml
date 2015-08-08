@@ -6,6 +6,7 @@
 
 
 	<string name="greetings">Cześć, %1$s!</string>
+	<string name="android">Android</string>
 	<string name="how_to_title">Jak grać</string>
 	<string name="how_to_text">\tBądź pierwszy połączywszy pięć kropek w linię prostą: poziomo, pionowo lub ukośnie. Android gra niebieskimi kropkami, grasz czerwonymi kropkami. Czerwone i niebieskie kropki rozmieszczają się po kolei na skrzyżwaniach lini. Pierwszy ruch należy do Ciebie.\n\n\tPrzeciągnij po ekranie, aby przenieść siatkę.\n\tSkaluj ekran, aby powiększyć lub zmniejszyć rozmiar siatki.\n\tUżyj menu, aby ponownie uruchomić grę, cofnąć ostatni ruch, zobaczyć wyniki lub jak grać.\n\tNaciśnij przycisk \"Szukaj\", aby ukryć/pokazać strzałki wokoło kropki ostatniego ruchu.</string>
 	

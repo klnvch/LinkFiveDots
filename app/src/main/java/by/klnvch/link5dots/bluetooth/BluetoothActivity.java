@@ -14,12 +14,14 @@ import android.os.Message;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import by.klnvch.link5dots.GameView;
 import by.klnvch.link5dots.HighScore;
 import by.klnvch.link5dots.Offset;
 import by.klnvch.link5dots.R;
+import by.klnvch.link5dots.settings.SettingsUtils;
 
 /**
  * This is the main Activity that displays the current chat session.
@@ -59,9 +61,7 @@ public class BluetoothActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // Set up the window layout
-        setContentView(R.layout.play);
+        setContentView(R.layout.game_board);
 
         setTitle(R.string.bt_message_your_turn);
 
@@ -83,6 +83,12 @@ public class BluetoothActivity extends AppCompatActivity {
                 showEndAlertDialog(highScore);
             }
         });
+
+        String username = SettingsUtils.getUserName(this);
+        if (username != null) {
+            TextView tvUsername = (TextView)findViewById(R.id.user_name);
+            tvUsername.setText(username);
+        }
     }
 
     @Override

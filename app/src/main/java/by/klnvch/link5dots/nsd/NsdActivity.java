@@ -12,6 +12,7 @@ import android.os.Message;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.lang.ref.WeakReference;
@@ -20,6 +21,7 @@ import by.klnvch.link5dots.GameView;
 import by.klnvch.link5dots.HighScore;
 import by.klnvch.link5dots.Offset;
 import by.klnvch.link5dots.R;
+import by.klnvch.link5dots.settings.SettingsUtils;
 
 public class NsdActivity extends AppCompatActivity {
     public static final int MESSAGE_STATE_CHANGE = 1;
@@ -53,9 +55,7 @@ public class NsdActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // Set up the window layout
-        setContentView(R.layout.play);
+        setContentView(R.layout.game_board);
 
         setTitle(R.string.bt_message_your_turn);
 
@@ -77,6 +77,12 @@ public class NsdActivity extends AppCompatActivity {
                 showEndAlertDialog(highScore);
             }
         });
+
+        String username = SettingsUtils.getUserName(this);
+        if (username != null) {
+            TextView tvUsername = (TextView)findViewById(R.id.user_name);
+            tvUsername.setText(username);
+        }
     }
 
     @Override
