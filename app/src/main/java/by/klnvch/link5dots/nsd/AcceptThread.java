@@ -7,7 +7,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 
-public class AcceptThread extends Thread{
+class AcceptThread extends Thread{
     private static final String TAG = "AcceptThread";
 
     private final ServerSocket mServerSocket;

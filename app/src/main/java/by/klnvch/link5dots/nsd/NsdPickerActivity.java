@@ -1,7 +1,6 @@
 package by.klnvch.link5dots.nsd;
 
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.Intent;
@@ -12,6 +11,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
+import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
@@ -26,7 +26,7 @@ import java.lang.ref.WeakReference;
 import by.klnvch.link5dots.R;
 
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-public class NsdPickerActivity extends Activity{
+public class NsdPickerActivity extends AppCompatActivity {
 
     private ProgressDialog progressDialog = null;
     private ToggleButton registerButton;
@@ -132,7 +132,7 @@ public class NsdPickerActivity extends Activity{
         setContentView(R.layout.nsd);
 
         // Set result CANCELED in case the user backs out
-        setResult(Activity.RESULT_CANCELED);
+        setResult(RESULT_CANCELED);
         //
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
@@ -217,11 +217,6 @@ public class NsdPickerActivity extends Activity{
             unbindService(mConnection);
             isBound = false;
         }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
     }
 
     private void setRegisterButton(int state) {

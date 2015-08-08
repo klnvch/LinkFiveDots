@@ -1,9 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Fünf Punkte Verbinden</string>
+	<string name="language">Deutsch</string>
 
 
-    
+
+	<string name="greetings">Hallo, %1$s!</string>
 	<string name="how_to_title">Wie man spielt</string>
 	<string name="how_to_text">\tSeien Sie der Erste, der es schafft, fünf Punkte in einer geraden Linie horizontal, vertikal oder diagonal zu verbinden. Android zeichnet blaue Punkte, Sie zeichnen rote Punkte. Rote und blaue Punkte sind nacheinander auf Linie Kreuzungen zu platzieren. Sie bewegen sich zuerst.\n\n\tZiehen Sie den Bildschirm, um das Spielfeld zu bewegen.\n\tSkalieren Sie das Bild, um Feldern zu vergrößern oder zu verkleinern.\n\tBenutzen Sie das Menü, um das Spiel neu zu starten, rückgängig zu machen, das Spielergebnis zu sehen oder sehen, wie man spielt.\n\tDrücken Sie Suchen, um Pfeile um den Punkt des letzten Zuges auszublenden/einzublenden.</string>
 	
@@ -42,6 +44,7 @@
     <string name="yes">"Ja"</string>
     <string name="no">"Nein"</string>
 	<string name="create">"Erstellen"</string>
+    <string name="device_info_default">"Unbekannt"</string>
 
     <string name="bluetooth_not_discoverable">"Gerät sichtbar machen"</string>
     <string name="bluetooth_is_discoverable">"Sichtbar für alle Bluetooth-Geräte in der Nähe (%1$s)"</string>
@@ -54,6 +57,8 @@
     <string name="device_picker">"Bluetooth-Gerät auswählen"</string>
     <string name="bluetooth_connection_dialog_text">"Möchten Sie eine Verbindung mit \"%1$s\" herstellen?"</string>
     <string name="cancel">"Abbrechen"</string>
+    <string name="okay">"OK"</string>
+	<string name="settings_label">"Einstellungen"</string>
     <string name="bluetooth_settings">"Bluetooth"</string>
     <string name="bluetooth_connecting_error_message">"Keine Verbindung zu \"%1$s\" möglich"</string>
     <string name="bluetooth_search_for_devices">"Aktualisieren"</string>
@@ -61,9 +66,11 @@
     <string name="bluetooth_preference_found_devices">"Verfügbar"</string>
 	<string name="apn_not_set">"Nicht definiert"</string>
 	<string name="apn_name">"Name:"</string>
+    <string name="apn_user">"Nutzername"</string>
 	<string name="application_info_label">"App-Info"</string>
 	<string name="version_text">"Version %1$s"</string>
 	<string name="device_feedback">Feedback senden</string>
+	<string name="phone_language" msgid="8870144109924299673">"Sprache"</string>
 	<string name="share">"Teilen"</string>
     <string name="search_menu">"Suchen"</string>
 

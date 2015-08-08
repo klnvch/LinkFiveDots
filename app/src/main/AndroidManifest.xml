@@ -9,11 +9,12 @@
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
 
     <application
-        android:icon="@drawable/icon"
+        android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:allowBackup="true"
         android:supportsRtl="true"
-        android:name=".MyApplication">
+        android:theme="@style/AppTheme"
+        android:name=".MyApp">
 
         <service android:name=".bluetooth.BluetoothService"/>
         <service android:name=".nsd.NsdService"/>
@@ -24,7 +25,8 @@
 
         <activity
             android:name=".MainMenuActivity"
-            android:label="@string/app_name">
+            android:label="@string/app_name"
+            android:configChanges="locale">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -34,70 +36,107 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
-            android:parentActivityName=".MainMenuActivity">
+            android:configChanges="locale">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainMenuActivity" />
         </activity>
 
         <activity
             android:name=".MultiPlayerMenuActivity"
             android:label="@string/menu_multi_player"
-            android:parentActivityName=".MainMenuActivity">
+            android:configChanges="locale">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainMenuActivity" />
         </activity>
 
         <activity
             android:name=".TwoPlayersActivity"
-            android:label="Two players"
-            android:parentActivityName=".MultiPlayerMenuActivity"/>
+            android:label="@string/two_players"
+            android:configChanges="locale">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MultiPlayerMenuActivity" />
+        </activity>
 
         <activity
             android:name=".bluetooth.DevicePickerActivity"
             android:label="@string/app_name"
-            android:parentActivityName=".MultiPlayerMenuActivity"
-            android:configChanges="orientation|keyboardHidden">
+            android:configChanges="orientation|keyboardHidden|locale">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MultiPlayerMenuActivity" />
         </activity>
 
         <activity
             android:name=".nsd.NsdPickerActivity"
             android:label="@string/menu_local_network"
-            android:parentActivityName=".MultiPlayerMenuActivity"
-            android:configChanges="orientation|keyboardHidden">
+            android:configChanges="orientation|keyboardHidden|locale">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MultiPlayerMenuActivity" />
         </activity>
 
         <activity
             android:name=".bluetooth.BluetoothActivity"
             android:label="@string/app_name"
-            android:parentActivityName=".bluetooth.DevicePickerActivity"
-            android:configChanges="orientation|keyboardHidden">
+            android:configChanges="orientation|keyboardHidden|locale">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".bluetooth.DevicePickerActivity" />
         </activity>
 
         <activity
             android:name=".nsd.NsdActivity"
             android:label="@string/app_name"
-            android:parentActivityName=".bluetooth.DevicePickerActivity"
-            android:configChanges="orientation|keyboardHidden">
+            android:configChanges="orientation|keyboardHidden|locale">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".bluetooth.DevicePickerActivity" />
         </activity>
 
         <activity
             android:name=".ScoresActivity"
             android:label="@string/scores_title"
-            android:parentActivityName=".MainMenuActivity"
-            android:screenOrientation="landscape">
+            android:screenOrientation="sensorLandscape"
+            android:configChanges="locale">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainMenuActivity" />
         </activity>
 
         <activity
             android:name=".HowToActivity"
             android:label="@string/how_to_title"
-            android:parentActivityName=".MainMenuActivity">
+            android:configChanges="locale">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainMenuActivity" />
         </activity>
 
         <activity
-            android:name=".InfoActivity"
+            android:name=".settings.InfoActivity"
             android:label="@string/application_info_label"
             android:launchMode="standard"
-            android:parentActivityName=".MainActivity">
+            android:configChanges="locale">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".settings.SettingsActivity" />
+        </activity>
+
+        <activity
+            android:name=".settings.SettingsActivity"
+            android:label="@string/settings_label"
+            android:configChanges="locale">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainMenuActivity" />
         </activity>
 
 
-        <meta-data android:name="com.google.android.gms.version"
+        <meta-data
+            android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
         
     </application>

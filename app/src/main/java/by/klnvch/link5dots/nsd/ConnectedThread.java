@@ -7,7 +7,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 
-public class ConnectedThread extends Thread{
+class ConnectedThread extends Thread{
     private static final String TAG = "ConnectedThread";
 
     private final Socket mSocket;

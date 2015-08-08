@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="by.klnvch.link5dots"
-    android:versionCode="17"
-    android:versionName="3.2.0" >
+    android:versionCode="19"
+    android:versionName="3.4.0" >
 
     <uses-sdk
         android:minSdkVersion="9"
@@ -14,11 +14,12 @@
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
 
     <application
-        android:name="by.klnvch.link5dots.MyApplication"
+        android:name="by.klnvch.link5dots.MyApp"
         android:allowBackup="true"
-        android:icon="@drawable/icon"
+        android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:supportsRtl="true" >
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme" >
         <service android:name="by.klnvch.link5dots.bluetooth.BluetoothService" />
         <service android:name="by.klnvch.link5dots.nsd.NsdService" />
 
@@ -28,6 +29,7 @@
             android:theme="@android:style/Theme.Translucent" />
         <activity
             android:name="by.klnvch.link5dots.MainMenuActivity"
+            android:configChanges="locale"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -37,58 +39,93 @@
         </activity>
         <activity
             android:name="by.klnvch.link5dots.MainActivity"
-            android:label="@string/app_name"
-            android:parentActivityName="by.klnvch.link5dots.MainMenuActivity" >
+            android:configChanges="locale"
+            android:label="@string/app_name" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainMenuActivity" />
         </activity>
         <activity
             android:name="by.klnvch.link5dots.MultiPlayerMenuActivity"
-            android:label="@string/menu_multi_player"
-            android:parentActivityName="by.klnvch.link5dots.MainMenuActivity" >
+            android:configChanges="locale"
+            android:label="@string/menu_multi_player" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainMenuActivity" />
         </activity>
         <activity
             android:name="by.klnvch.link5dots.TwoPlayersActivity"
-            android:label="Two players"
-            android:parentActivityName="by.klnvch.link5dots.MultiPlayerMenuActivity" />
+            android:configChanges="locale"
+            android:label="@string/two_players" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MultiPlayerMenuActivity" />
+        </activity>
         <activity
             android:name="by.klnvch.link5dots.bluetooth.DevicePickerActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:label="@string/app_name"
-            android:parentActivityName="by.klnvch.link5dots.MultiPlayerMenuActivity" >
+            android:configChanges="orientation|keyboardHidden|locale"
+            android:label="@string/app_name" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MultiPlayerMenuActivity" />
         </activity>
         <activity
             android:name="by.klnvch.link5dots.nsd.NsdPickerActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:label="@string/menu_local_network"
-            android:parentActivityName="by.klnvch.link5dots.MultiPlayerMenuActivity" >
+            android:configChanges="orientation|keyboardHidden|locale"
+            android:label="@string/menu_local_network" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MultiPlayerMenuActivity" />
         </activity>
         <activity
             android:name="by.klnvch.link5dots.bluetooth.BluetoothActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:label="@string/app_name"
-            android:parentActivityName="by.klnvch.link5dots.bluetooth.DevicePickerActivity" >
+            android:configChanges="orientation|keyboardHidden|locale"
+            android:label="@string/app_name" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".bluetooth.DevicePickerActivity" />
         </activity>
         <activity
             android:name="by.klnvch.link5dots.nsd.NsdActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:label="@string/app_name"
-            android:parentActivityName="by.klnvch.link5dots.bluetooth.DevicePickerActivity" >
+            android:configChanges="orientation|keyboardHidden|locale"
+            android:label="@string/app_name" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".bluetooth.DevicePickerActivity" />
         </activity>
         <activity
             android:name="by.klnvch.link5dots.ScoresActivity"
+            android:configChanges="locale"
             android:label="@string/scores_title"
-            android:parentActivityName="by.klnvch.link5dots.MainMenuActivity"
-            android:screenOrientation="landscape" >
+            android:screenOrientation="sensorLandscape" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainMenuActivity" />
         </activity>
         <activity
             android:name="by.klnvch.link5dots.HowToActivity"
-            android:label="@string/how_to_title"
-            android:parentActivityName="by.klnvch.link5dots.MainMenuActivity" >
+            android:configChanges="locale"
+            android:label="@string/how_to_title" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainMenuActivity" />
         </activity>
         <activity
-            android:name="by.klnvch.link5dots.InfoActivity"
+            android:name="by.klnvch.link5dots.settings.InfoActivity"
+            android:configChanges="locale"
             android:label="@string/application_info_label"
-            android:launchMode="standard"
-            android:parentActivityName="by.klnvch.link5dots.MainActivity" >
+            android:launchMode="standard" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".settings.SettingsActivity" />
+        </activity>
+        <activity
+            android:name="by.klnvch.link5dots.settings.SettingsActivity"
+            android:configChanges="locale"
+            android:label="@string/settings_label" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainMenuActivity" />
         </activity>
 
         <meta-data

@@ -1,7 +1,5 @@
 package by.klnvch.link5dots.bluetooth;
 
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -18,6 +16,8 @@ import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -36,7 +36,7 @@ import java.util.Set;
 
 import by.klnvch.link5dots.R;
 
-public class DevicePickerActivity extends Activity {
+public class DevicePickerActivity extends AppCompatActivity {
 
     private static final int BT_REQUEST_DISCOVERABLE = 1;
 
@@ -120,7 +120,7 @@ public class DevicePickerActivity extends Activity {
         setContentView(R.layout.bluetooth);
 
         // Set result CANCELED in case the user backs out
-        setResult(Activity.RESULT_CANCELED);
+        setResult(RESULT_CANCELED);
         //
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
@@ -130,7 +130,7 @@ public class DevicePickerActivity extends Activity {
             public void onClick(View v) {
                 // Ensure this device is discoverable by others
                 final BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-                if (mBluetoothAdapter.getScanMode() != BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE){
+                if (mBluetoothAdapter.getScanMode() != BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE) {
                     Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
                     discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 120);
                     startActivityForResult(discoverableIntent, BT_REQUEST_DISCOVERABLE);

@@ -1,7 +1,5 @@
 package by.klnvch.link5dots.nsd;
 
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -11,6 +9,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -21,7 +21,7 @@ import by.klnvch.link5dots.HighScore;
 import by.klnvch.link5dots.Offset;
 import by.klnvch.link5dots.R;
 
-public class NsdActivity extends Activity{
+public class NsdActivity extends AppCompatActivity {
     public static final int MESSAGE_STATE_CHANGE = 1;
     public static final int MESSAGE_READ = 2;
     public static final int MESSAGE_WRITE = 3;

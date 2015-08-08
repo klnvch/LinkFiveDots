@@ -1,7 +1,6 @@
 package by.klnvch.link5dots.nsd;
 
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.Context;
 import android.net.nsd.NsdServiceInfo;
 import android.os.Build;
@@ -14,7 +13,7 @@ import android.widget.TextView;
 import by.klnvch.link5dots.R;
 
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-public class ServiceListAdapter extends ArrayAdapter<NsdServiceInfo>{
+class ServiceListAdapter extends ArrayAdapter<NsdServiceInfo>{
 
     public ServiceListAdapter(Context context){
         super(context, R.layout.device_name);
@@ -24,7 +23,7 @@ public class ServiceListAdapter extends ArrayAdapter<NsdServiceInfo>{
     public View getView(int position, View convertView, ViewGroup parent) {
         NsdServiceInfo service = getItem(position);
 
-        LayoutInflater mInflater = (LayoutInflater)getContext().getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater mInflater = (LayoutInflater)getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         if (convertView == null) {
             convertView = mInflater.inflate(R.layout.device_name, parent, false);
         }

@@ -10,6 +10,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.PointF;
+import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -107,8 +108,8 @@ public class GameView extends View {
 		
 		// load bitmaps. why do we need matrix?
 		background = BitmapFactory.decodeResource(getResources(), R.drawable.background);
-		userDot = BitmapFactory.decodeResource(getResources(), R.drawable.reddot);
-		botDot = BitmapFactory.decodeResource(getResources(), R.drawable.bluedot);
+		userDot = BitmapFactory.decodeResource(getResources(), R.drawable.red_dot);
+		botDot = BitmapFactory.decodeResource(getResources(), R.drawable.blue_dot);
 		Matrix rotateMatrix = new Matrix();
 		rotateMatrix.postRotate(90.0f);
 		userHorLine = BitmapFactory.decodeResource(getResources(), R.drawable.redlinehor);
@@ -242,8 +243,9 @@ public class GameView extends View {
 		
 		super.onDraw(canvas);
 	}
+
 	@Override
-	public boolean onTouchEvent(MotionEvent event) {
+	public boolean onTouchEvent(@NonNull MotionEvent event) {
 		gestureDetector.onTouchEvent(event);
 		scaleGestureDetector.onTouchEvent(event);
 		return true;
@@ -252,8 +254,8 @@ public class GameView extends View {
 		hideArrows = !hideArrows;
 		invalidate();
 	}
-	public void undoLastMove(){
-		game.undo();
+	public void undoLastMove(int moves){
+		game.undo(moves);
 		invalidate();
 	}
 	public void resetGame(){

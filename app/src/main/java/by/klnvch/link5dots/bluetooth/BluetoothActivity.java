@@ -2,8 +2,6 @@ package by.klnvch.link5dots.bluetooth;
 
 import java.lang.ref.WeakReference;
 
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -13,6 +11,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -24,7 +24,7 @@ import by.klnvch.link5dots.R;
 /**
  * This is the main Activity that displays the current chat session.
  */
-public class BluetoothActivity extends Activity{
+public class BluetoothActivity extends AppCompatActivity {
 
     // Message types sent from the BluetoothService Handler
     public static final int MESSAGE_STATE_CHANGE = 1;

@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Połącz pięć kropek</string>
+	<string name="language">Polski</string>
 
 
-    
+
+	<string name="greetings">Cześć, %1$s!</string>
 	<string name="how_to_title">Jak grać</string>
 	<string name="how_to_text">\tBądź pierwszy połączywszy pięć kropek w linię prostą: poziomo, pionowo lub ukośnie. Android gra niebieskimi kropkami, grasz czerwonymi kropkami. Czerwone i niebieskie kropki rozmieszczają się po kolei na skrzyżwaniach lini. Pierwszy ruch należy do Ciebie.\n\n\tPrzeciągnij po ekranie, aby przenieść siatkę.\n\tSkaluj ekran, aby powiększyć lub zmniejszyć rozmiar siatki.\n\tUżyj menu, aby ponownie uruchomić grę, cofnąć ostatni ruch, zobaczyć wyniki lub jak grać.\n\tNaciśnij przycisk \"Szukaj\", aby ukryć/pokazać strzałki wokoło kropki ostatniego ruchu.</string>
 	
@@ -42,6 +44,7 @@
     <string name="yes">"Tak"</string>
     <string name="no">"Nie"</string>
 	<string name="create">"Utwórz"</string>
+    <string name="device_info_default">"Nieznane"</string>
 	
     <string name="bluetooth_not_discoverable">"Zezwalaj na wykrywanie urządzenia"</string>
     <string name="bluetooth_is_discoverable">"Widoczne dla wszystkich urządzeń Bluetooth (%1$s)"</string>
@@ -54,6 +57,8 @@
     <string name="device_picker">"Wybierz urządzenie Bluetooth"</string>
     <string name="bluetooth_connection_dialog_text">"Czy chcesz nawiązać połączenie z urządzeniem „%1$s”?"</string>
     <string name="cancel">"Anuluj"</string>
+    <string name="okay">"OK"</string>
+    <string name="settings_label">"Ustawienia"</string>
 	<string name="bluetooth_settings">"Bluetooth"</string>
     <string name="bluetooth_connecting_error_message">"Nie udało się nawiązać połączenia z „%1$s”."</string>
     <string name="bluetooth_search_for_devices">"Odśwież"</string>
@@ -61,9 +66,11 @@
     <string name="bluetooth_preference_found_devices">"Dostępne urządzenia"</string>
 	<string name="apn_not_set">"Nie ustawiono"</string>
 	<string name="apn_name">"Nazwa:"</string>
+    <string name="apn_user">"Nazwa użytkownika"</string>
 	<string name="application_info_label">"Informacje o aplikacji"</string>
 	<string name="version_text">"wersja %1$s"</string>
 	<string name="device_feedback">Prześlij opinię</string>
+	<string name="phone_language">"Język"</string>
 	<string name="share">"Udostępnij"</string>
 	<string name="search_menu">"Szukaj"</string>
 

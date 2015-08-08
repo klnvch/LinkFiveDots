@@ -1,20 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE menu>
-<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+<menu
+	xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" >
 
-	<group>
-		<item android:id="@+id/menu_undo"
-			android:orderInCategory="4"
-			android:icon="@android:drawable/ic_menu_close_clear_cancel"
-			android:title="@string/end_undo" />
-		<item android:id="@+id/menu_new_game"
-			android:orderInCategory="3"
-			android:icon="@android:drawable/ic_menu_rotate"
-			android:title="@string/end_new_game" />
-		<item android:id="@+id/menu_search"
-		    android:showAsAction="ifRoom"
-			android:orderInCategory="5"
-			android:icon="@android:drawable/ic_menu_search"
-			android:title="@android:string/search_go" />
-	</group>
+    <item
+        android:id="@+id/menu_undo"
+        android:icon="@android:drawable/ic_menu_close_clear_cancel"
+        android:title="@string/end_undo" />
+
+    <item
+        android:id="@+id/menu_new_game"
+		android:icon="@android:drawable/ic_menu_rotate"
+		android:title="@string/end_new_game" />
+
+    <item
+        android:id="@+id/menu_search"
+		android:icon="@android:drawable/ic_menu_search"
+		android:title="@android:string/search_go"
+        app:showAsAction="always"/>
 </menu>

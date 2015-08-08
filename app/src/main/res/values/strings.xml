@@ -1,39 +1,41 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Link Five Dots</string>
+    <string name="language">English</string>
 
     <string name="banner_ad_unit_id" translatable="false">ca-app-pub-9653730523387780/5316470559</string>
-    
-	<string name="how_to_title">How To Play</string>
-	<string name="how_to_text">\tBe the first to link five dots in a straight line horizontally, vertically or diagonally. Android plays blue dots, you play red dots. Red and blue dots are put in turn on the line intersections. The first move is yours.\n\n\tDrag the screen to move the grid.\n\tScale the screen to enlarge or reduce grid size.\n\tUse menu to restart the game, undo last move, see game scores or see how to play.\n\tPress \"Search\" button to hide/show arrows around the last move dot.</string>
+
+    <string name="greetings">Hi, %1$s!</string>
+    <string name="how_to_title">How To Play</string>
+    <string name="how_to_text">\tBe the first to link five dots in a straight line horizontally, vertically or diagonally. Android plays blue dots, you play red dots. Red and blue dots are put in turn on the line intersections. The first move is yours.\n\n\tDrag the screen to move the grid.\n\tScale the screen to enlarge or reduce grid size.\n\tUse menu to restart the game, undo last move, see game scores or see how to play.\n\tPress \"Search\" button to hide/show arrows around the last move dot.</string>
 	
-	<string name="scores_title">Scores</string>
-	<string name="scores_no_internet">No internet access</string>
-	<string name="scores_number">#</string>
-	<string name="scores_name">Name</string>
-	<string name="scores_moves">Number of moves</string>
-	<string name="scores_status">Status</string>
-	<string name="scores_won">won</string>
-	<string name="scores_lost">lost</string>
+    <string name="scores_title">Scores</string>
+    <string name="scores_no_internet">No internet access</string>
+    <string name="scores_number">#</string>
+    <string name="scores_name">Name</string>
+    <string name="scores_moves">Number of moves</string>
+    <string name="scores_status">Status</string>
+    <string name="scores_won">won</string>
+    <string name="scores_lost">lost</string>
 	
-	<string name="end_win">You’ve won!</string>
-	<string name="end_lose">You’ve failed!</string>
-	<string name="end_new_game">New</string>
-	<string name="end_undo">Undo</string>
-	<string name="end_move">%1$d moves done for %2$d s.</string>
+    <string name="end_win">You’ve won!</string>
+    <string name="end_lose">You’ve failed!</string>
+    <string name="end_new_game">New</string>
+    <string name="end_undo">Undo</string>
+    <string name="end_move">%1$d moves done for %2$d s.</string>
 	
-	<string name="scores_time">Time</string>
-	<string name="end_publish">Publish</string>
-	<string name="prompt_text">Type your name here:</string>
-	<string name="prompt_save">Save</string>
-	<string name="prompt_cancel">Cancel</string>
-	<string name="scores_edit_profile">Edit profile</string>
-	<string name="scores_update">Refresh</string>
+    <string name="scores_time">Time</string>
+    <string name="end_publish">Publish</string>
+    <string name="prompt_text">Type your name here:</string>
+    <string name="prompt_save">Save</string>
+    <string name="prompt_cancel">Cancel</string>
+    <string name="scores_edit_profile">Edit profile</string>
+    <string name="scores_update">Refresh</string>
 	
-	<string name="scores_loading">Loading&#8230;</string>
+    <string name="scores_loading">Loading&#8230;</string>
 	
-	<string name="menu_single_player">Single Player</string>
-	<string name="menu_multi_player">Multiplayer</string>
+    <string name="menu_single_player">Single Player</string>
+    <string name="menu_multi_player">Multiplayer</string>
     <string name="two_players">Two players</string>
     <string name="menu_local_network">Local Area Network</string>
 
@@ -45,6 +47,8 @@
     <string name="no">"No"</string>
     <!-- 23 Strings for Dialog create button -->
     <string name="create">Create</string>
+    <!-- 33 Device Info screen. Used for a status item's value when the proper value is not known -->
+    <string name="device_info_default">Unknown</string>
 
     <!-- Bluetooth settings screen, Discoverable checkbox summary text -->
     <string name="bluetooth_not_discoverable">Make device discoverable</string>
@@ -68,6 +72,10 @@
     <string name="bluetooth_connection_dialog_text">"Do you want to connect to \u0022%1$s\u0022?"</string>
     <!-- 605 Button label for generic cancel action [CHAR LIMIT=20] -->
     <string name="cancel">Cancel</string>
+    <!-- 614 Button label for generic OK action [CHAR LIMIT=20] -->
+    <string name="okay">OK</string>
+    <!-- 628 Title of the Settings activity shown within the application itself. -->
+    <string name="settings_label">Settings</string>
     <!-- 1118 Used as title on second screen after selecting Bluetooth settings -->
     <string name="bluetooth_settings">Bluetooth</string>
     <!-- 1174 Message for the error dialog when BT connecting operation fails generically. -->
@@ -83,6 +91,8 @@
     <string name="apn_not_set">Not set</string>
     <!-- 2357 Edit access point labels: A label the user can give to the APN to allow him to differentiate it from the others -->
     <string name="apn_name">Name:</string>
+    <!-- Edit access point labels: The username that will be used when conencting to this APN-->
+    <string name="apn_user">Username</string>
 
     <!-- 2842 Manage applications, individual application info screen title. For example, if they click on "Browser" in "Manage applications", the title of the next screen will be this -->
     <string name="application_info_label">App info</string>
@@ -90,6 +100,9 @@
     <string name="version_text">version %1$s</string>
     <!-- [CHAR LIMIT=35] Feedback on the device -->
     <string name="device_feedback">Send feedback</string>
+
+    <!-- 3200 On Text & language settings screen, setting option name. title of the setting to take the user to a screen to select the locale. -->
+    <string name="phone_language">Language</string>
 
 
     <!-- 4314 ActionBar action to share the current selection [CHAR LIMIT=10] -->
@@ -99,7 +112,7 @@
     <string name="search_menu">Search</string>
 
 	
-	<string name="bt_message_your_turn">Your move, put a dot&#8230;</string>
-	<string name="bt_message_opponents_turn">Opponent\'s move, wait&#8230;</string>
-	
+    <string name="bt_message_your_turn">Your move, put a dot&#8230;</string>
+    <string name="bt_message_opponents_turn">Opponent\'s move, wait&#8230;</string>
+
 </resources>

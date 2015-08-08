@@ -1,11 +1,11 @@
 package by.klnvch.link5dots;
 
-import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.google.android.gms.ads.AdRequest;
@@ -16,7 +16,7 @@ import by.klnvch.link5dots.bluetooth.DevicePickerActivity;
 import by.klnvch.link5dots.nsd.NsdPickerActivity;
 import by.klnvch.link5dots.nsd.NsdService;
 
-public class MultiPlayerMenuActivity extends Activity implements View.OnClickListener{
+public class MultiPlayerMenuActivity extends AppCompatActivity implements View.OnClickListener{
 
     private static final String IS_BLUETOOTH_ENABLED = "IS_BLUETOOTH_ENABLED";
 
@@ -116,7 +116,7 @@ public class MultiPlayerMenuActivity extends Activity implements View.OnClickLis
         switch (requestCode) {
             case REQUEST_ENABLE_BT:
                 // When the request to enable Bluetooth returns
-                if (resultCode == Activity.RESULT_OK) {
+                if (resultCode == RESULT_OK) {
                     Intent i2 = new Intent(this, DevicePickerActivity.class);
                     startActivityForResult(i2, CHOOSE_BT_DEVICE);
                     // start Bluetooth service

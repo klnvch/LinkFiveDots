@@ -12,7 +12,7 @@ class Bot {
 	private static final int[][] net2 = new int[N][M];
 	
 	//masks
-	private static int[][] masks = new int[][]{
+	private static final int[][] masks = new int[][]{
             // 0 - empty, 1 - my, 2 - not my, 3 - any
             //my wins - 100%
             new int[]{1,1,1,1,1,3,3,3,3},

@@ -1,10 +1,10 @@
 package by.klnvch.link5dots;
 
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -13,7 +13,7 @@ import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 
-public class MainActivity extends Activity {
+public class MainActivity extends AppCompatActivity {
 	
 	private GameView view;
     private AlertDialog alertDialog = null;
@@ -47,7 +47,7 @@ public class MainActivity extends Activity {
             }
         });
 
-        ((MyApplication)getApplication()).getTracker();
+        ((MyApp)getApplication()).getTracker();
 	}
 
     @Override
@@ -145,9 +145,9 @@ public class MainActivity extends Activity {
     }
 
     private void undoLastMove(){
-        view.undoLastMove();
+        view.undoLastMove(2);
         //
-        Tracker tracker = ((MyApplication)getApplication()).getTracker();
+        Tracker tracker = ((MyApp)getApplication()).getTracker();
         tracker.send(new HitBuilders.EventBuilder()
                 .setCategory("Main")
                 .setAction("Undo")
@@ -157,7 +157,7 @@ public class MainActivity extends Activity {
     private void newGame(){
         view.resetGame();
         //
-        Tracker tracker = ((MyApplication)getApplication()).getTracker();
+        Tracker tracker = ((MyApp)getApplication()).getTracker();
         tracker.send(new HitBuilders.EventBuilder()
                 .setCategory("Main")
                 .setAction("New")
@@ -173,7 +173,7 @@ public class MainActivity extends Activity {
         i.putExtras(data);
         startActivity(i);
         //
-        Tracker tracker = ((MyApplication)getApplication()).getTracker();
+        Tracker tracker = ((MyApp)getApplication()).getTracker();
         tracker.send(new HitBuilders.EventBuilder()
                 .setCategory("Main")
                 .setAction("Publish")
@@ -183,7 +183,7 @@ public class MainActivity extends Activity {
     private void searchLastMove(){
         view.switchHideArrow();
         //
-        Tracker tracker = ((MyApplication)getApplication()).getTracker();
+        Tracker tracker = ((MyApp)getApplication()).getTracker();
         tracker.send(new HitBuilders.EventBuilder()
                 .setCategory("Main")
                 .setAction("Search")

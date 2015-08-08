@@ -110,7 +110,7 @@ class Game {
 
         Offset theLastDot = getLastDot();
         if (!checkCorrectness(x, y) || (theLastDot != null && theLastDot.getType() == type)) {
-            throw new IllegalStateException();
+            return;
         }
 
         if(getNumberOfMoves() == 0){//it is the first move, start stop watch
@@ -202,24 +202,13 @@ class Game {
 			return winningLine;
 		}
 	}
-	public void undo() {
+	public void undo(int moves) {
 		
-		//works if first last dot is users
-		//in case of the end of the game
-		
-		Offset d1 = getLastDot();
-		if(d1 != null){
-			
-			if(d1.getType() == Offset.OPPONENT){
-				d1.changeStatus(Offset.EMPTY, -1);
-			
-				Offset d2 = getLastDot();
-				if(d2 != null){
-					d2.changeStatus(Offset.EMPTY, -1);
-				}
-			}else if(d1.getType() == Offset.USER){
-				d1.changeStatus(Offset.EMPTY, -1);
-			}
+		for (int i=0; i!= moves; ++i) {
+			Offset d = getLastDot();
+            if (d != null) {
+                d.changeStatus(Offset.EMPTY, -1);
+            }
 		}
 			
 		winningLine = null;

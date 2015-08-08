@@ -1,6 +1,5 @@
 package by.klnvch.link5dots.bluetooth;
 
-import android.app.Activity;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -20,7 +19,7 @@ class DeviceListAdapter extends ArrayAdapter<BluetoothDevice>{
     public View getView(int position, View convertView, ViewGroup parent) {
         BluetoothDevice device = getItem(position);
 
-        LayoutInflater mInflater = (LayoutInflater)getContext().getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater mInflater = (LayoutInflater)getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         if (convertView == null) {
             convertView = mInflater.inflate(R.layout.device_name, parent, false);
         }

@@ -1,2 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<merger version="3"><dataSet config="22.0.0"><source path="/home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.0.0/assets"/></dataSet><dataSet config="main"><source path="/home/anton/StudioProjects/LinkFiveDots/app/src/main/assets"/></dataSet><dataSet config="release"><source path="/home/anton/StudioProjects/LinkFiveDots/app/src/release/assets"/></dataSet></merger>

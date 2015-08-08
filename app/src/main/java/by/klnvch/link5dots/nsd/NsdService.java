@@ -53,7 +53,7 @@ public class NsdService extends Service {
 
     // new constants and fields
     private static final String SERVICE_NAME = "Link Five Dots";
-    public static final String SERVICE_TYPE = "_http._tcp.";
+    private static final String SERVICE_TYPE = "_http._tcp.";
 
     private NsdServiceInfo mRegistrationNsdServiceInfo = null;
     private NsdServiceInfo mConnectedNsdServiceInfo = null;
@@ -61,7 +61,7 @@ public class NsdService extends Service {
     private int mPort = -1;
     private int mServerState = STATE_UNREGISTERED;
     private int mClientState = STATE_IDLE;
-    private Map<String, NsdServiceInfo> mServices = new HashMap<>();
+    private final Map<String, NsdServiceInfo> mServices = new HashMap<>();
 
 
     // Binder given to clients
@@ -290,7 +290,7 @@ public class NsdService extends Service {
 
     /// new overrides
 
-    private NsdManager.RegistrationListener mRegistrationListener = new NsdManager.RegistrationListener() {
+    private final NsdManager.RegistrationListener mRegistrationListener = new NsdManager.RegistrationListener() {
         @Override
         public void onRegistrationFailed(NsdServiceInfo nsdServiceInfo, int i) {
             setServerState(STATE_UNREGISTERED);
@@ -323,7 +323,7 @@ public class NsdService extends Service {
     //////////////////////////////////////////////////////
 
 
-    private NsdManager.DiscoveryListener mDiscoveryListener = new NsdManager.DiscoveryListener() {
+    private final NsdManager.DiscoveryListener mDiscoveryListener = new NsdManager.DiscoveryListener() {
         @Override
         public void onStartDiscoveryFailed(String s, int i) {
             Log.e(TAG, "Discovery failed: Error code:" + i);
@@ -370,7 +370,7 @@ public class NsdService extends Service {
 
     ////////////////////////////////////////////////////////////////
 
-    private NsdManager.ResolveListener mResolveListener = new NsdManager.ResolveListener() {
+    private final NsdManager.ResolveListener mResolveListener = new NsdManager.ResolveListener() {
         @Override
         public void onResolveFailed(NsdServiceInfo nsdServiceInfo, int i) {
             Log.e(TAG, "Resolve failed" + i);

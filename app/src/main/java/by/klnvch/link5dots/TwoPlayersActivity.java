@@ -1,14 +1,14 @@
 package by.klnvch.link5dots;
 
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
-public class TwoPlayersActivity extends Activity{
+public class TwoPlayersActivity extends AppCompatActivity  {
 
     private GameView view;
     private AlertDialog alertDialog = null;
@@ -109,7 +109,7 @@ public class TwoPlayersActivity extends Activity{
     }
 
     private void undoLastMove(){
-        view.undoLastMove();
+        view.undoLastMove(1);
     }
 
     private void newGame(){
