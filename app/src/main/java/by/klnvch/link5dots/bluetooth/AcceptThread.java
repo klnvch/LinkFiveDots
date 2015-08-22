@@ -27,10 +27,11 @@ class AcceptThread extends Thread{
             BluetoothAdapter mAdapter = BluetoothAdapter.getDefaultAdapter();
             tmp = mAdapter.listenUsingRfcommWithServiceRecord(BluetoothService.NAME_SECURE, BluetoothService.UUID_SECURE);
         } catch (IOException e) {
-            Log.e(TAG, "listen() failed", e);
+            Log.e(TAG, "constructor: " + e.getMessage());
         }
         mmServerSocket = tmp;
     }
+
     public void run() {
         setName(TAG);
 
@@ -43,7 +44,7 @@ class AcceptThread extends Thread{
                 // successful connection or an exception
                 socket = mmServerSocket.accept();
             } catch (Exception e) {
-                Log.e(TAG, "accept() failed", e);
+                Log.e(TAG, "run: " + e.getMessage());
                 break;
             }
 
@@ -62,7 +63,7 @@ class AcceptThread extends Thread{
                             try {
                                 socket.close();
                             } catch (IOException e) {
-                                Log.e(TAG, "Could not close unwanted socket", e);
+                                Log.e(TAG, "run: " + e.getMessage());
                             }
                             break;
                     }
@@ -74,7 +75,7 @@ class AcceptThread extends Thread{
         try {
             mmServerSocket.close();
         } catch (IOException e) {
-            Log.e(TAG, "close() of server failed", e);
+            Log.e(TAG, "cancel: " + e.getMessage());
         }
     }
 }

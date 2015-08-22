@@ -27,11 +27,7 @@
 	
 	<string name="scores_time">Час</string>
 	<string name="end_publish">Апублікаваць</string>
-	<string name="prompt_text">Впішыце сваё імя:</string>
-	<string name="prompt_save">Захаваць</string>
-	<string name="prompt_cancel">Скасаваць</string>
 	<string name="scores_edit_profile">Рэдагаваць прафайл</string>
-	<string name="scores_update">Абнавіць</string>
 	
 	<string name="scores_loading">Загрузка&#8230;</string>
 	
@@ -45,6 +41,7 @@
     <string name="yes">"Так"</string>
     <string name="no">"Не"</string>
 	<string name="create">"Стварыць"</string>
+	<string name="device_info_default">"Невядомы"</string>
 
     <string name="bluetooth_not_discoverable">Зрабіць прыладу бачнай</string>
     <string name="bluetooth_is_discoverable">"Бачна для ўсіх прылад Bluetooth (%1$s)"</string>

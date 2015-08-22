@@ -2,18 +2,81 @@
 <items version="2" >
 
     <item
-        jar="/home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.android.support/cardview-v7/22.2.1/jars/classes.jar"
+        jar="/home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-analytics/7.8.0/jars/classes.jar"
         jumboMode="false"
-        revision="23.0.0 rc3"
-        sha1="e1fa5e1123997a55e3ed65b44892993ff4b58cfe">
-        <dex dex="/home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/pre-dexed/debug/classes-5ffa18dbc1fc0a05f2610b27331c6b1ea415ccd7.jar" />
+        revision="23.0.0"
+        sha1="0124ce31248c0e8acfa2b28283c6d1a4d76e73d2">
+        <dex dex="/home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/pre-dexed/debug/classes-21b478ef7cec343fbafa14274fedf7396a974208.jar" />
     </item>
     <item
-        jar="/home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.android.support/design/22.2.1/jars/classes.jar"
+        jar="/home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-ads/7.8.0/jars/classes.jar"
         jumboMode="false"
-        revision="23.0.0 rc3"
-        sha1="1821601ddbec5ff125653097812823388700af74">
-        <dex dex="/home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/pre-dexed/debug/classes-20cf5e676853e660920c3c048ef7c90d0c0bbe96.jar" />
+        revision="23.0.0"
+        sha1="1ff30fa49c07a08c3035d7218a3efebf5680d522">
+        <dex dex="/home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/pre-dexed/debug/classes-45fda880f03854b896a416073f0db86182f671a4.jar" />
+    </item>
+    <item
+        jar="/home/anton/Android/Sdk/extras/android/m2repository/com/android/support/support-annotations/23.0.0/support-annotations-23.0.0.jar"
+        jumboMode="false"
+        revision="23.0.0"
+        sha1="990e7f98a7bad86a40b1f0bcfeb039023afd0839">
+        <dex dex="/home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/pre-dexed/debug/support-annotations-23.0.0-4ac2fcc54f83471caf8123028882596d4527d34d.jar" />
+    </item>
+    <item
+        jar="/home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-appindexing/7.8.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.0"
+        sha1="e23ea11124bb700eeddd4ab7aa848c615f493850">
+        <dex dex="/home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/pre-dexed/debug/classes-2a1917fdf274098ee24ef7bf6af37a38a7b096d3.jar" />
+    </item>
+    <item
+        jar="/home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.android.support/support-v4/23.0.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.0"
+        sha1="8413c27b45b7fe61dca4a98159f65e2cee215f5a">
+        <dex dex="/home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/pre-dexed/debug/classes-1a86e0968ff4b32e7662e3308a7d3469b7288c21.jar" />
+    </item>
+    <item
+        jar="/home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-plus/7.8.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.0"
+        sha1="2491ae1b2a848af1f4f0c795f3117c1bd6a1989f">
+        <dex dex="/home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/pre-dexed/debug/classes-83bf183645645960942eec0915f5741208e6874f.jar" />
+    </item>
+    <item
+        jar="/home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.android.support/design/23.0.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.0"
+        sha1="8a5238e4bdcd6568b82db669d41817de670586b8">
+        <dex dex="/home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/pre-dexed/debug/classes-64d5a447ca9e6a37980795bcc3097eebea77ff9d.jar" />
+    </item>
+    <item
+        jar="/home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.android.support/cardview-v7/23.0.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.0"
+        sha1="1ccbc26be2c465c622a48310e8092241b01abe80">
+        <dex dex="/home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/pre-dexed/debug/classes-265c739b68deb0a2528177abab85965a5894548c.jar" />
+    </item>
+    <item
+        jar="/home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.8.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.0"
+        sha1="c0c912d58c9468b1f9d9769c8975afdf2c85d681">
+        <dex dex="/home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/pre-dexed/debug/classes-a876fb30594da4acaca1a326135c75b0e158c619.jar" />
+    </item>
+    <item
+        jar="/home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.0.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.0"
+        sha1="4fcf0b1879f8caf497c073e1432d398e9e2988c1">
+        <dex dex="/home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/pre-dexed/debug/classes-4ba3c16371678e7ddbdf4f1878cb320b8066dd28.jar" />
+    </item>
+    <item
+        jar="/home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.android.support/support-v4/23.0.0/jars/libs/internal_impl-23.0.0.jar"
+        jumboMode="false"
+        revision="23.0.0"
+        sha1="8bd336eeae661e8311330284897ee07f8ebaa297">
+        <dex dex="/home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/pre-dexed/debug/internal_impl-23.0.0-bcbbbe2ef466d8cd945f6672f26b0d6b2d120397.jar" />
     </item>
 
 </items>

@@ -12,7 +12,7 @@ import by.klnvch.link5dots.R;
 
 public class SettingsActivity extends AppCompatActivity {
 
-    private SharedPreferences.OnSharedPreferenceChangeListener listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+    private final SharedPreferences.OnSharedPreferenceChangeListener listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
             if (s.equals(SettingsUtils.APP_LANGUAGE)) {

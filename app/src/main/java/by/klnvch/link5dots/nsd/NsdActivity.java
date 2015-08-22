@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
@@ -35,16 +36,27 @@ public class NsdActivity extends AppCompatActivity {
     private AlertDialog alertDialog = null;
 
     private static final String MESSAGE_CLOSE_END_ACTIVITY = "CLOSE_END_ACTIVITY";
+    private static final String MESSAGE_USERNAME = "MESSAGE_USERNAME";
+    private static final String PREFERENCE_OPPONENT_USERNAME = "PREFERENCE_OPPONENT_USERNAME";
 
     private final MHandler mHandler = new MHandler(this);
 
     private NsdService mNsdService;
+
+    private String userName = "";
+    private String enemyName = "";
 
     private final ServiceConnection mConnection = new ServiceConnection() {
         public void onServiceConnected(ComponentName name, IBinder service) {
             NsdService.LocalBinder binder = (NsdService.LocalBinder) service;
             mNsdService = binder.getService();
             mNsdService.setHandler(mHandler);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    sendMessage(MESSAGE_USERNAME + userName);
+                }
+            }, 1000);
         }
 
         public void onServiceDisconnected(ComponentName name) {
@@ -78,11 +90,13 @@ public class NsdActivity extends AppCompatActivity {
             }
         });
 
-        String username = SettingsUtils.getUserName(this);
-        if (username != null) {
+        userName = SettingsUtils.getUserName(this);
+        if (userName != null) {
             TextView tvUsername = (TextView)findViewById(R.id.user_name);
-            tvUsername.setText(username);
+            tvUsername.setText(userName);
         }
+        TextView tvOpponentName = (TextView)findViewById(R.id.opponent_name);
+        tvOpponentName.setText("-");
     }
 
     @Override
@@ -91,6 +105,14 @@ public class NsdActivity extends AppCompatActivity {
         // Bind to LocalService
         Intent intent = new Intent(this, NsdService.class);
         bindService(intent, mConnection, 0);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        enemyName = savedInstanceState.getString(PREFERENCE_OPPONENT_USERNAME);
+        TextView tvOpponentName = (TextView)findViewById(R.id.opponent_name);
+        tvOpponentName.setText(enemyName);
     }
 
     @Override
@@ -123,6 +145,12 @@ public class NsdActivity extends AppCompatActivity {
             unbindService(mConnection);
             mNsdService = null;
         }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putString(PREFERENCE_OPPONENT_USERNAME, enemyName);
+        super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -233,6 +261,10 @@ public class NsdActivity extends AppCompatActivity {
                         String readMessage = new String(readBuf, 0, msg.arg1);
                         if (readMessage.equals(MESSAGE_CLOSE_END_ACTIVITY)) {
                             activity.view.resetGame();
+                        } else if (readMessage.startsWith(MESSAGE_USERNAME)) {
+                            activity.enemyName = readMessage.replace(MESSAGE_USERNAME, "");
+                            TextView opponentName = (TextView)activity.findViewById(R.id.opponent_name);
+                            opponentName.setText(activity.enemyName);
                         } else {
                             Offset offset = Offset.parseString(readMessage);
                             offset.setType(Offset.OPPONENT);

@@ -1,13 +1,12 @@
 package by.klnvch.link5dots;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.net.URLEncoder;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -25,6 +24,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.Settings.Secure;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -40,7 +40,6 @@ public class ScoresActivity extends AppCompatActivity {
     private static final String USER_NAME = "USER_NAME";
     private static final String IS_USER_NAME_CHANGED = "IS_USER_NAME_CHANGED";
     private static final String IS_FIRST_RUN = "IS_FIRST_RUN";
-    private final HttpClient client = new DefaultHttpClient();
     private AdView mAdView;
     private ProgressDialog progressDialog = null;
     private String deviceId;
@@ -254,22 +253,24 @@ public class ScoresActivity extends AppCompatActivity {
     }
 
     private class AskForName extends AsyncTask<Integer, Integer, String> {
+
+        private static final String TAG = "AskForName";
+
         @Override
         protected String doInBackground(Integer... params) {
             try {
-                final String url = "http://link5dotsscores.appspot.com/get_user_name?id=" + deviceId;
 
-                HttpGet get = new HttpGet(url);
-                HttpResponse response = client.execute(get);
+                URL url = new URL("http://link5dotsscores.appspot.com/get_user_name?id=" + deviceId);
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.connect();
+                int response = conn.getResponseCode();
 
-                int statusCode = response.getStatusLine().getStatusCode();
-
-                if (statusCode == 200) {
-                    HttpEntity entity = response.getEntity();
-                    return EntityUtils.toString(entity);
+                if (response == 200) {
+                    InputStream is = conn.getInputStream();
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+                    return reader.readLine();
                 } else {
-                    //String reason = response.getStatusLine().getReasonPhrase();
-                    //drawMessage(statusCode + " - " + reason);
+                    Log.e(TAG, conn.getResponseMessage());
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -308,18 +309,15 @@ public class ScoresActivity extends AppCompatActivity {
             try {
                 if (usernameHasChanged) {
 
-                    final String url = "http://link5dotsscores.appspot.com/update_high_scores?id=" + deviceId + "&newname=" + username;
+                    URL url = new URL("http://link5dotsscores.appspot.com/update_high_scores?id=" + deviceId + "&newname=" + username);
+                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                    conn.connect();
+                    int responseCode = conn.getResponseCode();
 
-                    HttpGet get = new HttpGet(url);
-                    HttpResponse response = client.execute(get);
-
-                    int statusCode = response.getStatusLine().getStatusCode();
-
-                    if (statusCode == 200) {
+                    if (responseCode == 200) {
                         usernameHasChanged = false;
                     } else {
-                        //String reason = response.getStatusLine().getReasonPhrase();
-                        //drawMessage(statusCode + " - " + reason);
+                        Log.e("DoInternetJob", conn.getResponseMessage());
                     }
 
                 }
@@ -346,19 +344,18 @@ public class ScoresActivity extends AppCompatActivity {
 
                     fullUrl.append(URLEncoder.encode(jsonobject.toString(), "UTF-8"));
 
-                    HttpGet get = new HttpGet(fullUrl.toString());
-                    HttpResponse response = client.execute(get);
-
-                    int statusCode = response.getStatusLine().getStatusCode();
-
-                    if (statusCode == 200) {
+                    URL url = new URL(fullUrl.toString());
+                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                    conn.connect();
+                    int response = conn.getResponseCode();
+                    if (response == 200) {
+                        Log.i("DoInternetJob", "published successfully");
                     } else {
-                        //String reason = response.getStatusLine().getReasonPhrase();
-                        //drawMessage(statusCode + " - " + reason);
+                        Log.e("DoInternetJob", conn.getResponseMessage());
                     }
                 }
             } catch (Exception e) {
-                //drawMessage(e.getMessage());
+                Log.e("DoInternetJob", e.getMessage());
             }
 
             //**************************************************************************************
@@ -366,25 +363,23 @@ public class ScoresActivity extends AppCompatActivity {
             //**************************************************************************************
             try {
 
-                final String url = "http://link5dotsscores.appspot.com/query_high_scores";
+                URL url = new URL("http://link5dotsscores.appspot.com/query_high_scores");
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.connect();
+                int response = conn.getResponseCode();
 
-                HttpGet get = new HttpGet(url);
-                HttpResponse response = client.execute(get);
-
-                int statusCode = response.getStatusLine().getStatusCode();
-
-                if (statusCode == 200) {
-                    HttpEntity entity = response.getEntity();
-                    String json = EntityUtils.toString(entity);
+                if (response == 200) {
+                    InputStream is = conn.getInputStream();
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+                    String json = reader.readLine();
                     if (json.length() != 0) {
                         return new JSONArray(json);
                     }
                 } else {
-                    //String reason = response.getStatusLine().getReasonPhrase();
-                    //drawMessage(statusCode + " - " + reason);
+                    Log.e("DoInternetJob", conn.getResponseMessage());
                 }
             } catch (Exception e) {
-                //drawMessage(e.getMessage());
+                Log.e("DoInternetJob", e.getMessage());
             }
             return null;
         }

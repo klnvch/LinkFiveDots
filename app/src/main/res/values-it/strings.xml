@@ -27,11 +27,7 @@
 	
 	<string name="scores_time">Tempo</string>
 	<string name="end_publish">Pubblicare</string>
-	<string name="prompt_text">Digitare il proprio nome qui:</string>
-	<string name="prompt_save">Salvare</string>
-	<string name="prompt_cancel">Annullare</string>
 	<string name="scores_edit_profile">Modificare il profilo</string>
-	<string name="scores_update">Aggiornare</string>
 	
 	<string name="scores_loading">Caricamento in corso&#8230;</string>
 	

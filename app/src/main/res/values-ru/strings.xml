@@ -27,11 +27,7 @@
 	
 	<string name="scores_time">Время</string>
 	<string name="end_publish">Опубликовать</string>
-	<string name="prompt_text">Введите своё имя здесь:</string>
-	<string name="prompt_save">Сохранить</string>
-	<string name="prompt_cancel">Отменить</string>
 	<string name="scores_edit_profile">Изменить профиль</string>
-	<string name="scores_update">Обновить</string>
 	
 	<string name="scores_loading">Загрузка&#8230;</string>
 

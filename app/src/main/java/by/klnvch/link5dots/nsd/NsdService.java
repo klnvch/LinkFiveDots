@@ -35,6 +35,7 @@ public class NsdService extends Service {
     private ConnectThread mConnectThread;
     private ConnectedThread mConnectedThread;
     private int mState;
+    private boolean mResolveListenerInUse = false;
 
     // Constants that indicate the current connection state
     public static final int STATE_UNREGISTERED = 100;
@@ -355,7 +356,10 @@ public class NsdService extends Service {
                     .equals(mRegistrationNsdServiceInfo.getServiceName())) {
                 Log.d(TAG, "Same machine: " + mRegistrationNsdServiceInfo.getServiceName());
             } else if (nsdServiceInfo.getServiceName().contains(SERVICE_NAME)){
-                mNsdManager.resolveService(nsdServiceInfo, mResolveListener);
+                if (!mResolveListenerInUse) {
+                    mResolveListenerInUse = true;
+                    mNsdManager.resolveService(nsdServiceInfo, mResolveListener);
+                }
             }
         }
 
@@ -374,6 +378,8 @@ public class NsdService extends Service {
         @Override
         public void onResolveFailed(NsdServiceInfo nsdServiceInfo, int i) {
             Log.e(TAG, "Resolve failed" + i);
+            //
+            mResolveListenerInUse = false;
         }
 
         @Override
@@ -388,6 +394,8 @@ public class NsdService extends Service {
             mServices.put(nsdServiceInfo.getServiceName(), nsdServiceInfo);
             //
             mHandler.obtainMessage(NsdPickerActivity.MESSAGE_SERVICES_LIST_UPDATED).sendToTarget();
+            //
+            mResolveListenerInUse = false;
         }
     };
 

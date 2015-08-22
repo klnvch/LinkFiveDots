@@ -41,7 +41,7 @@ class ConnectedThread extends Thread {
     }
 
     public void run() {
-        Log.i(TAG, "BEGIN mConnectedThread");
+        Log.i(TAG, "run");
         byte[] buffer = new byte[1024];
         int bytes;
 
@@ -54,7 +54,7 @@ class ConnectedThread extends Thread {
                 // Send the obtained bytes to the UI Activity
                 mBluetoothService.sendMessage(BluetoothActivity.MESSAGE_READ, bytes, -1, buffer);
             } catch (IOException e) {
-                Log.e(TAG, "disconnected", e);
+                Log.e(TAG, "run: " + e.getMessage());
                 mBluetoothService.connectionLost();
                 // Start the service over to restart listening mode
                 mBluetoothService.start();
@@ -75,7 +75,7 @@ class ConnectedThread extends Thread {
             // Share the sent message back to the UI Activity
             mBluetoothService.sendMessage(BluetoothActivity.MESSAGE_WRITE, -1, -1, buffer);
         } catch (IOException e) {
-            Log.e(TAG, "Exception during write", e);
+            Log.e(TAG, "write: " + e.getMessage());
         }
     }
 
@@ -83,7 +83,7 @@ class ConnectedThread extends Thread {
         try {
             mSocket.close();
         } catch (IOException e) {
-            Log.e(TAG, "close() of connect socket failed", e);
+            Log.e(TAG, "cancel: " + e.getMessage());
         }
     }
 }

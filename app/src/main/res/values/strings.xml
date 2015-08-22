@@ -27,11 +27,7 @@
 	
     <string name="scores_time">Time</string>
     <string name="end_publish">Publish</string>
-    <string name="prompt_text">Type your name here:</string>
-    <string name="prompt_save">Save</string>
-    <string name="prompt_cancel">Cancel</string>
     <string name="scores_edit_profile">Edit profile</string>
-    <string name="scores_update">Refresh</string>
 	
     <string name="scores_loading">Loading&#8230;</string>
 	
@@ -92,7 +88,7 @@
     <string name="apn_not_set">Not set</string>
     <!-- 2357 Edit access point labels: A label the user can give to the APN to allow him to differentiate it from the others -->
     <string name="apn_name">Name:</string>
-    <!-- Edit access point labels: The username that will be used when conencting to this APN-->
+    <!-- Edit access point labels: The username that will be used when connecting to this APN-->
     <string name="apn_user">Username</string>
 
     <!-- 2842 Manage applications, individual application info screen title. For example, if they click on "Browser" in "Manage applications", the title of the next screen will be this -->

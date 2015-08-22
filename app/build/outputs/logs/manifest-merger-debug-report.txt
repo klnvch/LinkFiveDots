@@ -15,16 +15,16 @@ ADDED from /home/anton/StudioProjects/LinkFiveDots/app/src/main/AndroidManifest.
 		INJECTED from /home/anton/StudioProjects/LinkFiveDots/app/src/main/AndroidManifest.xml
 uses-permission#android.permission.INTERNET
 ADDED from /home/anton/StudioProjects/LinkFiveDots/app/src/main/AndroidManifest.xml:6:5-66
-MERGED from [com.google.android.gms:play-services-analytics:7.5.0] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-analytics/7.5.0/AndroidManifest.xml:21:5-67
-MERGED from [com.google.android.gms:play-services-ads:7.5.0] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-ads/7.5.0/AndroidManifest.xml:20:5-66
-MERGED from [com.google.android.gms:play-services-analytics:7.5.0] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-analytics/7.5.0/AndroidManifest.xml:21:5-67
+MERGED from [com.google.android.gms:play-services-analytics:7.8.0] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-analytics/7.8.0/AndroidManifest.xml:21:5-67
+MERGED from [com.google.android.gms:play-services-ads:7.8.0] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-ads/7.8.0/AndroidManifest.xml:20:5-66
+MERGED from [com.google.android.gms:play-services-analytics:7.8.0] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-analytics/7.8.0/AndroidManifest.xml:21:5-67
 	android:name
 		ADDED from /home/anton/StudioProjects/LinkFiveDots/app/src/main/AndroidManifest.xml:6:22-64
 uses-permission#android.permission.ACCESS_NETWORK_STATE
 ADDED from /home/anton/StudioProjects/LinkFiveDots/app/src/main/AndroidManifest.xml:7:5-78
-MERGED from [com.google.android.gms:play-services-analytics:7.5.0] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-analytics/7.5.0/AndroidManifest.xml:22:5-79
-MERGED from [com.google.android.gms:play-services-ads:7.5.0] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-ads/7.5.0/AndroidManifest.xml:21:5-78
-MERGED from [com.google.android.gms:play-services-analytics:7.5.0] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-analytics/7.5.0/AndroidManifest.xml:22:5-79
+MERGED from [com.google.android.gms:play-services-analytics:7.8.0] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-analytics/7.8.0/AndroidManifest.xml:22:5-79
+MERGED from [com.google.android.gms:play-services-ads:7.8.0] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-ads/7.8.0/AndroidManifest.xml:21:5-78
+MERGED from [com.google.android.gms:play-services-analytics:7.8.0] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-analytics/7.8.0/AndroidManifest.xml:22:5-79
 	android:name
 		ADDED from /home/anton/StudioProjects/LinkFiveDots/app/src/main/AndroidManifest.xml:7:22-76
 uses-permission#android.permission.BLUETOOTH
@@ -37,25 +37,28 @@ ADDED from /home/anton/StudioProjects/LinkFiveDots/app/src/main/AndroidManifest.
 		ADDED from /home/anton/StudioProjects/LinkFiveDots/app/src/main/AndroidManifest.xml:9:22-71
 application
 ADDED from /home/anton/StudioProjects/LinkFiveDots/app/src/main/AndroidManifest.xml:11:5-142:19
-MERGED from [com.android.support:appcompat-v7:22.2.1] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/22.2.1/AndroidManifest.xml:22:5-20
-MERGED from [com.android.support:support-v4:22.2.1] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.2.1/AndroidManifest.xml:22:5-20
-MERGED from [com.android.support:design:22.2.1] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.android.support/design/22.2.1/AndroidManifest.xml:22:5-20
-MERGED from [com.android.support:appcompat-v7:22.2.1] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/22.2.1/AndroidManifest.xml:22:5-20
-MERGED from [com.android.support:support-v4:22.2.1] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.2.1/AndroidManifest.xml:22:5-20
-MERGED from [com.android.support:support-v4:22.2.1] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.2.1/AndroidManifest.xml:22:5-20
-MERGED from [com.android.support:cardview-v7:22.2.1] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.android.support/cardview-v7/22.2.1/AndroidManifest.xml:22:5-20
-MERGED from [com.google.android.gms:play-services-plus:7.5.0] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-plus/7.5.0/AndroidManifest.xml:19:5-20
-MERGED from [com.google.android.gms:play-services-base:7.5.0] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.5.0/AndroidManifest.xml:20:5-24:19
-MERGED from [com.android.support:support-v4:22.2.1] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.2.1/AndroidManifest.xml:22:5-20
-MERGED from [com.google.android.gms:play-services-analytics:7.5.0] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-analytics/7.5.0/AndroidManifest.xml:24:5-20
-MERGED from [com.google.android.gms:play-services-base:7.5.0] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.5.0/AndroidManifest.xml:20:5-24:19
-MERGED from [com.android.support:support-v4:22.2.1] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.2.1/AndroidManifest.xml:22:5-20
-MERGED from [com.google.android.gms:play-services-ads:7.5.0] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-ads/7.5.0/AndroidManifest.xml:24:5-32:19
-MERGED from [com.google.android.gms:play-services-base:7.5.0] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.5.0/AndroidManifest.xml:20:5-24:19
-MERGED from [com.android.support:support-v4:22.2.1] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.2.1/AndroidManifest.xml:22:5-20
-MERGED from [com.google.android.gms:play-services-analytics:7.5.0] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-analytics/7.5.0/AndroidManifest.xml:24:5-20
-MERGED from [com.google.android.gms:play-services-base:7.5.0] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.5.0/AndroidManifest.xml:20:5-24:19
-MERGED from [com.android.support:support-v4:22.2.1] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.2.1/AndroidManifest.xml:22:5-20
+MERGED from [com.android.support:appcompat-v7:23.0.0] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.0.0/AndroidManifest.xml:22:5-20
+MERGED from [com.android.support:support-v4:23.0.0] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.android.support/support-v4/23.0.0/AndroidManifest.xml:22:5-20
+MERGED from [com.android.support:design:23.0.0] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.android.support/design/23.0.0/AndroidManifest.xml:22:5-20
+MERGED from [com.android.support:appcompat-v7:23.0.0] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.0.0/AndroidManifest.xml:22:5-20
+MERGED from [com.android.support:support-v4:23.0.0] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.android.support/support-v4/23.0.0/AndroidManifest.xml:22:5-20
+MERGED from [com.android.support:support-v4:23.0.0] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.android.support/support-v4/23.0.0/AndroidManifest.xml:22:5-20
+MERGED from [com.android.support:cardview-v7:23.0.0] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.android.support/cardview-v7/23.0.0/AndroidManifest.xml:22:5-20
+MERGED from [com.google.android.gms:play-services-plus:7.8.0] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-plus/7.8.0/AndroidManifest.xml:19:5-20
+MERGED from [com.google.android.gms:play-services-base:7.8.0] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.8.0/AndroidManifest.xml:20:5-24:19
+MERGED from [com.android.support:support-v4:23.0.0] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.android.support/support-v4/23.0.0/AndroidManifest.xml:22:5-20
+MERGED from [com.google.android.gms:play-services-analytics:7.8.0] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-analytics/7.8.0/AndroidManifest.xml:24:5-20
+MERGED from [com.google.android.gms:play-services-base:7.8.0] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.8.0/AndroidManifest.xml:20:5-24:19
+MERGED from [com.android.support:support-v4:23.0.0] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.android.support/support-v4/23.0.0/AndroidManifest.xml:22:5-20
+MERGED from [com.google.android.gms:play-services-ads:7.8.0] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-ads/7.8.0/AndroidManifest.xml:24:5-32:19
+MERGED from [com.google.android.gms:play-services-base:7.8.0] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.8.0/AndroidManifest.xml:20:5-24:19
+MERGED from [com.android.support:support-v4:23.0.0] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.android.support/support-v4/23.0.0/AndroidManifest.xml:22:5-20
+MERGED from [com.google.android.gms:play-services-analytics:7.8.0] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-analytics/7.8.0/AndroidManifest.xml:24:5-20
+MERGED from [com.google.android.gms:play-services-base:7.8.0] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.8.0/AndroidManifest.xml:20:5-24:19
+MERGED from [com.android.support:support-v4:23.0.0] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.android.support/support-v4/23.0.0/AndroidManifest.xml:22:5-20
+MERGED from [com.google.android.gms:play-services-appindexing:7.8.0] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-appindexing/7.8.0/AndroidManifest.xml:19:5-20
+MERGED from [com.google.android.gms:play-services-base:7.8.0] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.8.0/AndroidManifest.xml:20:5-24:19
+MERGED from [com.android.support:support-v4:23.0.0] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.android.support/support-v4/23.0.0/AndroidManifest.xml:22:5-20
 	android:label
 		ADDED from /home/anton/StudioProjects/LinkFiveDots/app/src/main/AndroidManifest.xml:13:9-41
 	android:supportsRtl
@@ -78,7 +81,7 @@ ADDED from /home/anton/StudioProjects/LinkFiveDots/app/src/main/AndroidManifest.
 		ADDED from /home/anton/StudioProjects/LinkFiveDots/app/src/main/AndroidManifest.xml:20:18-48
 activity#com.google.android.gms.ads.AdActivity
 ADDED from /home/anton/StudioProjects/LinkFiveDots/app/src/main/AndroidManifest.xml:22:9-24:64
-MERGED from [com.google.android.gms:play-services-ads:7.5.0] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-ads/7.5.0/AndroidManifest.xml:26:9-29:64
+MERGED from [com.google.android.gms:play-services-ads:7.8.0] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-ads/7.8.0/AndroidManifest.xml:26:9-29:64
 	android:configChanges
 		ADDED from /home/anton/StudioProjects/LinkFiveDots/app/src/main/AndroidManifest.xml:23:13-122
 	android:theme
@@ -203,35 +206,39 @@ ADDED from /home/anton/StudioProjects/LinkFiveDots/app/src/main/AndroidManifest.
 		ADDED from /home/anton/StudioProjects/LinkFiveDots/app/src/main/AndroidManifest.xml:129:13-54
 meta-data#com.google.android.gms.version
 ADDED from /home/anton/StudioProjects/LinkFiveDots/app/src/main/AndroidManifest.xml:138:9-140:69
-MERGED from [com.google.android.gms:play-services-base:7.5.0] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.5.0/AndroidManifest.xml:21:9-23:69
-MERGED from [com.google.android.gms:play-services-base:7.5.0] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.5.0/AndroidManifest.xml:21:9-23:69
-MERGED from [com.google.android.gms:play-services-base:7.5.0] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.5.0/AndroidManifest.xml:21:9-23:69
-MERGED from [com.google.android.gms:play-services-base:7.5.0] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.5.0/AndroidManifest.xml:21:9-23:69
+MERGED from [com.google.android.gms:play-services-base:7.8.0] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.8.0/AndroidManifest.xml:21:9-23:69
+MERGED from [com.google.android.gms:play-services-base:7.8.0] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.8.0/AndroidManifest.xml:21:9-23:69
+MERGED from [com.google.android.gms:play-services-base:7.8.0] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.8.0/AndroidManifest.xml:21:9-23:69
+MERGED from [com.google.android.gms:play-services-base:7.8.0] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.8.0/AndroidManifest.xml:21:9-23:69
+MERGED from [com.google.android.gms:play-services-base:7.8.0] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.8.0/AndroidManifest.xml:21:9-23:69
 	android:value
 		ADDED from /home/anton/StudioProjects/LinkFiveDots/app/src/main/AndroidManifest.xml:140:13-66
 	android:name
 		ADDED from /home/anton/StudioProjects/LinkFiveDots/app/src/main/AndroidManifest.xml:139:13-58
 uses-sdk
 INJECTED from /home/anton/StudioProjects/LinkFiveDots/app/src/main/AndroidManifest.xml reason: use-sdk injection requested
-MERGED from [com.android.support:appcompat-v7:22.2.1] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/22.2.1/AndroidManifest.xml:20:5-43
-MERGED from [com.android.support:support-v4:22.2.1] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.2.1/AndroidManifest.xml:20:5-43
-MERGED from [com.android.support:design:22.2.1] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.android.support/design/22.2.1/AndroidManifest.xml:20:5-43
-MERGED from [com.android.support:appcompat-v7:22.2.1] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/22.2.1/AndroidManifest.xml:20:5-43
-MERGED from [com.android.support:support-v4:22.2.1] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.2.1/AndroidManifest.xml:20:5-43
-MERGED from [com.android.support:support-v4:22.2.1] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.2.1/AndroidManifest.xml:20:5-43
-MERGED from [com.android.support:cardview-v7:22.2.1] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.android.support/cardview-v7/22.2.1/AndroidManifest.xml:20:5-43
-MERGED from [com.google.android.gms:play-services-plus:7.5.0] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-plus/7.5.0/AndroidManifest.xml:18:5-42
-MERGED from [com.google.android.gms:play-services-base:7.5.0] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.5.0/AndroidManifest.xml:18:5-42
-MERGED from [com.android.support:support-v4:22.2.1] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.2.1/AndroidManifest.xml:20:5-43
-MERGED from [com.google.android.gms:play-services-analytics:7.5.0] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-analytics/7.5.0/AndroidManifest.xml:18:5-42
-MERGED from [com.google.android.gms:play-services-base:7.5.0] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.5.0/AndroidManifest.xml:18:5-42
-MERGED from [com.android.support:support-v4:22.2.1] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.2.1/AndroidManifest.xml:20:5-43
-MERGED from [com.google.android.gms:play-services-ads:7.5.0] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-ads/7.5.0/AndroidManifest.xml:23:5-42
-MERGED from [com.google.android.gms:play-services-base:7.5.0] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.5.0/AndroidManifest.xml:18:5-42
-MERGED from [com.android.support:support-v4:22.2.1] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.2.1/AndroidManifest.xml:20:5-43
-MERGED from [com.google.android.gms:play-services-analytics:7.5.0] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-analytics/7.5.0/AndroidManifest.xml:18:5-42
-MERGED from [com.google.android.gms:play-services-base:7.5.0] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.5.0/AndroidManifest.xml:18:5-42
-MERGED from [com.android.support:support-v4:22.2.1] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.2.1/AndroidManifest.xml:20:5-43
+MERGED from [com.android.support:appcompat-v7:23.0.0] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.0.0/AndroidManifest.xml:20:5-43
+MERGED from [com.android.support:support-v4:23.0.0] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.android.support/support-v4/23.0.0/AndroidManifest.xml:20:5-43
+MERGED from [com.android.support:design:23.0.0] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.android.support/design/23.0.0/AndroidManifest.xml:20:5-43
+MERGED from [com.android.support:appcompat-v7:23.0.0] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.0.0/AndroidManifest.xml:20:5-43
+MERGED from [com.android.support:support-v4:23.0.0] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.android.support/support-v4/23.0.0/AndroidManifest.xml:20:5-43
+MERGED from [com.android.support:support-v4:23.0.0] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.android.support/support-v4/23.0.0/AndroidManifest.xml:20:5-43
+MERGED from [com.android.support:cardview-v7:23.0.0] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.android.support/cardview-v7/23.0.0/AndroidManifest.xml:20:5-43
+MERGED from [com.google.android.gms:play-services-plus:7.8.0] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-plus/7.8.0/AndroidManifest.xml:18:5-42
+MERGED from [com.google.android.gms:play-services-base:7.8.0] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.8.0/AndroidManifest.xml:18:5-42
+MERGED from [com.android.support:support-v4:23.0.0] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.android.support/support-v4/23.0.0/AndroidManifest.xml:20:5-43
+MERGED from [com.google.android.gms:play-services-analytics:7.8.0] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-analytics/7.8.0/AndroidManifest.xml:18:5-42
+MERGED from [com.google.android.gms:play-services-base:7.8.0] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.8.0/AndroidManifest.xml:18:5-42
+MERGED from [com.android.support:support-v4:23.0.0] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.android.support/support-v4/23.0.0/AndroidManifest.xml:20:5-43
+MERGED from [com.google.android.gms:play-services-ads:7.8.0] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-ads/7.8.0/AndroidManifest.xml:23:5-42
+MERGED from [com.google.android.gms:play-services-base:7.8.0] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.8.0/AndroidManifest.xml:18:5-42
+MERGED from [com.android.support:support-v4:23.0.0] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.android.support/support-v4/23.0.0/AndroidManifest.xml:20:5-43
+MERGED from [com.google.android.gms:play-services-analytics:7.8.0] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-analytics/7.8.0/AndroidManifest.xml:18:5-42
+MERGED from [com.google.android.gms:play-services-base:7.8.0] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.8.0/AndroidManifest.xml:18:5-42
+MERGED from [com.android.support:support-v4:23.0.0] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.android.support/support-v4/23.0.0/AndroidManifest.xml:20:5-43
+MERGED from [com.google.android.gms:play-services-appindexing:7.8.0] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-appindexing/7.8.0/AndroidManifest.xml:18:5-42
+MERGED from [com.google.android.gms:play-services-base:7.8.0] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.8.0/AndroidManifest.xml:18:5-42
+MERGED from [com.android.support:support-v4:23.0.0] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.android.support/support-v4/23.0.0/AndroidManifest.xml:20:5-43
 	android:targetSdkVersion
 		INJECTED from /home/anton/StudioProjects/LinkFiveDots/app/src/main/AndroidManifest.xml
 		INJECTED from /home/anton/StudioProjects/LinkFiveDots/app/src/main/AndroidManifest.xml
@@ -239,8 +246,8 @@ MERGED from [com.android.support:support-v4:22.2.1] /home/anton/StudioProjects/L
 		INJECTED from /home/anton/StudioProjects/LinkFiveDots/app/src/main/AndroidManifest.xml
 		INJECTED from /home/anton/StudioProjects/LinkFiveDots/app/src/main/AndroidManifest.xml
 activity#com.google.android.gms.ads.purchase.InAppPurchaseActivity
-ADDED from [com.google.android.gms:play-services-ads:7.5.0] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-ads/7.5.0/AndroidManifest.xml:30:9-31:52
+ADDED from [com.google.android.gms:play-services-ads:7.8.0] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-ads/7.8.0/AndroidManifest.xml:30:9-31:52
 	android:theme
-		ADDED from [com.google.android.gms:play-services-ads:7.5.0] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-ads/7.5.0/AndroidManifest.xml:31:13-50
+		ADDED from [com.google.android.gms:play-services-ads:7.8.0] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-ads/7.8.0/AndroidManifest.xml:31:13-50
 	android:name
-		ADDED from [com.google.android.gms:play-services-ads:7.5.0] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-ads/7.5.0/AndroidManifest.xml:30:19-91
+		ADDED from [com.google.android.gms:play-services-ads:7.8.0] /home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-ads/7.8.0/AndroidManifest.xml:30:19-91
