@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="http://schemas.android.com/apk/res/android">
+    <string name="app_name">اتصال پنج نقطه</string>
+    <string name="language">فارسی</string>
+
+
+
+    <string name="greetings">"سلام <xliff:g id="USER_NAME">%1$s</xliff:g>!"</string>
+    <string name="android">اندروید</string>
+    <string name="how_to_title">یادگیری بازی</string>
+    <string name="how_to_text">
+        \t
+        شما باید اولین نفری باشید که پنج نقطه در یک راستا به صورت افقی یا عمودی و یا قطری می سازد. یازی اندروید با نقاط ابی بازی می کند و شما با نقاط قرمز بازی خواهید کرد. نقاط قرمز و ابی به نوبت در خط تقاطع قرار داده می شوند. اولین نوبت از ان شماست.
+        \n\n\t
+        شما می توانید با کشیدن صفحه به فضای سفید بروید.
+        \n\t
+        با تغییر سایز می تواند صفحه بازی را کوچک یا بزرگ نمایید.
+        \n\t
+        با استفاده از منیو می توانید بازی را مجدد اغاز نمایید و یا حرکت خود را پس بگیرید.
+        \n\t
+        با انتخاب دکمه ی جستجو می توانید پنهان یا پیدا شدن پیکان را برای حرکت اخر نمایش دهید.
+    </string>
+
+    <string name="scores_title">منابع</string>
+    <string name="scores_no_internet">اینترنت قطع شده است</string>
+    <string name="scores_number">#</string>
+    <string name="scores_name">نام</string>
+    <string name="scores_moves">تعداد جابه جایی</string>
+    <string name="scores_status">وضعیت</string>
+    <string name="scores_won">برنده</string>
+    <string name="scores_lost">بازنده</string>
+
+    <string name="end_win">شما برنده هستید!</string>
+    <string name="end_lose">شما باخته اید!</string>
+    <string name="end_new_game">جدید</string>
+    <string name="end_undo">بازگشت</string>
+    <string name="end_move">" <xliff:g id="MOVES">%1$d</xliff:g> حرکت انجام شده است در <xliff:g id="TIME">%2$d</xliff:g>  ثانیه"</string>
+
+    <string name="scores_time">زمان</string>
+    <string name="end_publish">نشر</string>
+
+    <string name="scores_loading">…در حال بار گذاری </string>
+
+    <string name="menu_single_player">بازی انفرادی</string>
+    <string name="menu_multi_player">بازی دو فرد</string>
+    <string name="two_players">دو نفر</string>
+    <string name="menu_local_network">شبکه ی محلی</string>
+
+    <string name="rate_this_app">امتیاز بدهید به بازی</string>
+
+    <string name="yes">"بله"</string>
+    <string name="no">"خیر"</string>
+    <string name="create">"ایجاد"</string>
+    <string name="device_info_default">"ناشناس"</string>
+
+    <string name="bluetooth_not_discoverable">"دستگاه قابل شناسایی شود"</string>
+    <string name="bluetooth_is_discoverable">"قابل مشاهده برای تمام دستگاه‌های بلوتوث اطراف (<xliff:g id="DISCOVERABLE_TIME_PERIOD">%1$s</xliff:g>)"</string>
+    <string name="bluetooth_only_visible_to_paired_devices">"فقط برای دستگاه‌های مرتبط شده قابل مشاهده است"</string>
+    <string name="bluetooth_is_disconnect_question">"ارتباط <xliff:g id="DEVICE_NAME">%1$s</xliff:g> قطع شود؟"</string>
+    <string name="bluetooth_connected">"متصل"</string>
+    <string name="bluetooth_disconnected">"اتصال قطع شد"</string>
+    <string name="bluetooth_connecting">"در حال اتصال…"</string>
+    <string name="bluetooth_no_devices_found">"هیچ دستگاه بلوتوثی در این اطراف پیدا نشد."</string>
+    <string name="device_picker">"انتخاب دستگاه بلوتوث"</string>
+    <string name="bluetooth_connection_dialog_text">"آیا می‌خواهید به \"<xliff:g id="DEVICE_NAME">%1$s</xliff:g>\" وصل شوید؟"</string>
+    <string name="cancel">"لغو"</string>
+    <string name="okay">"تأیید"</string>
+    <string name="settings_label">"تنظیمات"</string>
+    <string name="bluetooth_settings">"بلوتوث"</string>
+    <string name="bluetooth_connecting_error_message">"اتصال به <xliff:g id="DEVICE_NAME">%1$s</xliff:g> ممکن نیست."</string>
+    <string name="bluetooth_search_for_devices">"بازخوانی"</string>
+    <string name="bluetooth_preference_paired_devices">"دستگاه‌های جفت شده"</string>
+    <string name="bluetooth_preference_found_devices">"دستگاه‌های در دسترس"</string>
+    <string name="apn_not_set">"تنظیم نشده است"</string>
+    <string name="apn_name">"نام"</string>
+    <string name="apn_user">"نام کاربری"</string>
+    <string name="application_info_label">"اطلاعات برنامه"</string>
+    <string name="version_text">"نسخه <xliff:g id="VERSION_NUM">%1$s</xliff:g>"</string>
+    <string name="device_feedback">"ارسال بازخورد درباره این دستگاه"</string>
+    <string name="phone_language">"زبان"</string>
+    <string name="share">"به اشتراک بگذارید"</string>
+    <string name="search_menu">"جستجو"</string>
+
+
+    <string name="bt_message_your_turn">…نوبت شماست. نقطه بگذارید </string>
+    <string name="bt_message_opponents_turn">…صبر کنید. نوبت حریف</string>
+</resources>

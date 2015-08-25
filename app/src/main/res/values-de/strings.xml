@@ -27,9 +27,8 @@
 	
 	<string name="scores_time">Zeit</string>
 	<string name="end_publish">Veröffentlichen</string>
-	<string name="scores_edit_profile">Profil erstellen</string>
 	
-	<string name="scores_loading">Lädt&#8230;</string>
+	<string name="scores_loading">Lädt…</string>
 	
 	<string name="menu_single_player">Einzelspieler</string>
 	<string name="menu_multi_player">Mehrspieler</string>
@@ -67,12 +66,11 @@
 	<string name="application_info_label">"App-Info"</string>
 	<string name="version_text">"Version %1$s"</string>
 	<string name="device_feedback">Feedback senden</string>
-	<string name="phone_language" msgid="8870144109924299673">"Sprache"</string>
+	<string name="phone_language">"Sprache"</string>
 	<string name="share">"Teilen"</string>
     <string name="search_menu">"Suchen"</string>
 
 
-	<string name="bt_message_your_turn">Ihre Umdrehung&#8230;</string>
-	<string name="bt_message_opponents_turn">Spieler Umdrehung&#8230;</string>
-	
+	<string name="bt_message_your_turn">Ihre Umdrehung…</string>
+	<string name="bt_message_opponents_turn">Spieler Umdrehung…</string>
 </resources>

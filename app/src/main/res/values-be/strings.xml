@@ -27,7 +27,6 @@
 	
 	<string name="scores_time">Час</string>
 	<string name="end_publish">Апублікаваць</string>
-	<string name="scores_edit_profile">Рэдагаваць прафайл</string>
 	
 	<string name="scores_loading">Загрузка&#8230;</string>
 	
@@ -44,7 +43,7 @@
 	<string name="device_info_default">"Невядомы"</string>
 
     <string name="bluetooth_not_discoverable">Зрабіць прыладу бачнай</string>
-    <string name="bluetooth_is_discoverable">"Бачна для ўсіх прылад Bluetooth (%1$s)"</string>
+    <string name="bluetooth_is_discoverable">"Бачна для ўсіх прылад Bluetooth (%1$с.)"</string>
     <string name="bluetooth_only_visible_to_paired_devices">"Бачна толькі для спараных прылад"</string>
     <string name="bluetooth_is_disconnect_question">"Адключыць прыладу „%1$s”?"</string>
     <string name="bluetooth_connected">"Падключана"</string>

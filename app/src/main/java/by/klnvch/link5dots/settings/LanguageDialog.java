@@ -25,6 +25,7 @@ public class LanguageDialog extends DialogFragment {
     private static final String LANGUAGE_PL = "pl";
     private static final String LANGUAGE_RU = "ru";
     private static final String LANGUAGE_UK = "uk";
+    private static final String LANGUAGE_FA = "fa";
 
     @NonNull
     @Override
@@ -61,6 +62,9 @@ public class LanguageDialog extends DialogFragment {
             case LANGUAGE_UK:
                 currentItem = 8;
                 break;
+            case LANGUAGE_FA:
+                currentItem = 9;
+                break;
             default:
                 currentItem = 1;
                 break;
@@ -94,6 +98,9 @@ public class LanguageDialog extends DialogFragment {
                         break;
                     case 8:
                         language = LANGUAGE_UK;
+                        break;
+                    case 9:
+                        language = LANGUAGE_FA;
                         break;
                     default:
                         language = LANGUAGE_EN;

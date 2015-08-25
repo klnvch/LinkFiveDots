@@ -191,9 +191,6 @@ public class ScoresActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch (item.getItemId()) {
-            case R.id.scores_edit:
-                showAlertDialog();
-                return true;
             case R.id.scores_update:
 
                 launchProgressDialog();

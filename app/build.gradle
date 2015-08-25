@@ -1,17 +1,17 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 23
+    compileSdkVersion 22
     buildToolsVersion "23.0.0"
 
     defaultConfig {
         applicationId "by.klnvch.link5dots"
         minSdkVersion 9
-        targetSdkVersion 23
-        versionCode 19
-        versionName "3.4.0"
+        targetSdkVersion 22
+        versionCode 20
+        versionName "3.5.0"
 
-        resConfigs "en", "be", "de", "es", "fr", "it", "pl", "ru", "uk"
+        resConfigs "en", "be", "de", "es", "fr", "it", "pl", "ru", "uk", "fa"
     }
 
     compileOptions {
@@ -30,11 +30,11 @@ android {
 }
 
 dependencies {
-    compile 'com.android.support:appcompat-v7:23.0.0'
-    compile 'com.android.support:design:23.0.0'
-    compile 'com.android.support:cardview-v7:23.0.0'
+    compile 'com.android.support:appcompat-v7:22.2.1'
+    compile 'com.android.support:design:22.2.1'
+    compile 'com.android.support:cardview-v7:22.2.1'
     compile 'com.google.android.gms:play-services-plus:7.8.0'
     compile 'com.google.android.gms:play-services-analytics:7.8.0'
     compile 'com.google.android.gms:play-services-ads:7.8.0'
-    compile 'com.android.support:support-annotations:23.0.0'
+    compile 'com.android.support:support-annotations:22.2.1'
 }

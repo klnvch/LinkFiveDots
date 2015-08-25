@@ -8,7 +8,19 @@
     <string name="greetings">Hi, %1$s!</string>
     <string name="android">Android</string>
     <string name="how_to_title">How To Play</string>
-    <string name="how_to_text">\tBe the first to link five dots in a straight line horizontally, vertically or diagonally. Android plays blue dots, you play red dots. Red and blue dots are put in turn on the line intersections. The first move is yours.\n\n\tDrag the screen to move the grid.\n\tScale the screen to enlarge or reduce grid size.\n\tUse menu to restart the game, undo last move, see game scores or see how to play.\n\tPress \"Search\" button to hide/show arrows around the last move dot.</string>
+    <string name="how_to_text">
+        \t
+        Be the first to link five dots in a straight line horizontally, vertically or diagonally.
+        Android plays blue dots, you play red dots. Red and blue dots are put in turn on the line
+        intersections. The first move is yours.
+        \n\n\t
+        Drag the screen to move the grid.
+        \n\t
+        Scale the screen to enlarge or reduce grid size.
+        \n\t
+        Use menu to restart the game, undo last move, see game scores or see how to play.
+        \n\t
+        Press \"Search\" button to hide/show arrows around the last move dot.</string>
 	
     <string name="scores_title">Scores</string>
     <string name="scores_no_internet">No internet access</string>
@@ -27,9 +39,8 @@
 	
     <string name="scores_time">Time</string>
     <string name="end_publish">Publish</string>
-    <string name="scores_edit_profile">Edit profile</string>
 	
-    <string name="scores_loading">Loading&#8230;</string>
+    <string name="scores_loading">Loading…</string>
 	
     <string name="menu_single_player">Single Player</string>
     <string name="menu_multi_player">Multiplayer</string>
@@ -95,7 +106,7 @@
     <string name="application_info_label">App info</string>
     <!-- 3022 Manage applications, version string displayed in app snippet -->
     <string name="version_text">version %1$s</string>
-    <!-- [CHAR LIMIT=35] Feedback on the device -->
+    <!-- 5947 [CHAR LIMIT=35] Feedback on the device -->
     <string name="device_feedback">Send feedback</string>
 
     <!-- 3200 On Text & language settings screen, setting option name. title of the setting to take the user to a screen to select the locale. -->
@@ -109,7 +120,7 @@
     <string name="search_menu">Search</string>
 
 	
-    <string name="bt_message_your_turn">Your move, put a dot&#8230;</string>
-    <string name="bt_message_opponents_turn">Opponent\'s move, wait&#8230;</string>
+    <string name="bt_message_your_turn">Your move, put a dot…</string>
+    <string name="bt_message_opponents_turn">Opponent\'s move, wait…</string>
 
 </resources>
