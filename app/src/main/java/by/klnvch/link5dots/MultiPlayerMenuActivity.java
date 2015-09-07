@@ -15,6 +15,7 @@ import by.klnvch.link5dots.bluetooth.BluetoothService;
 import by.klnvch.link5dots.bluetooth.DevicePickerActivity;
 import by.klnvch.link5dots.nsd.NsdPickerActivity;
 import by.klnvch.link5dots.nsd.NsdService;
+import by.klnvch.link5dots.online.OnlineActivity;
 
 public class MultiPlayerMenuActivity extends AppCompatActivity implements View.OnClickListener{
 
@@ -38,6 +39,7 @@ public class MultiPlayerMenuActivity extends AppCompatActivity implements View.O
         } else {
             findViewById(R.id.multi_player_lan).setVisibility(View.GONE);
         }
+        findViewById(R.id.multi_player_online).setOnClickListener(this);
 
         // ads
         mAdView = (AdView) findViewById(R.id.adView);
@@ -108,6 +110,10 @@ public class MultiPlayerMenuActivity extends AppCompatActivity implements View.O
                 startActivityForResult(intent, CHOOSE_NSD_SERVICE);
 
                 startService(new Intent(this, NsdService.class));
+                break;
+            case R.id.multi_player_online:
+                Intent intent1 = new Intent(this, OnlineActivity.class);
+                startActivity(intent1);
                 break;
         }
     }

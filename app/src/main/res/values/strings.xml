@@ -123,4 +123,33 @@
     <string name="bt_message_your_turn">Your move, put a dot…</string>
     <string name="bt_message_opponents_turn">Opponent\'s move, wait…</string>
 
+
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="next_turn_">Next turn</string>
+    <string name="welcome">Welcome to the Skeleton, the game!  This is network-only, so you&amp;apos;ll need to log in to play!</string>
+    <string name="sign_out">Sign Out</string>
+    <string name="match_instructions">Type in a new word for the data in this game, then hit done.</string>
+    <string name="quick_match">Quick match</string>
+    <string name="continue_str">Continue</string>
+    <string name="guesser_prompt">This has not been set.</string>
+    <string name="clear">Clear</string>
+    <string name="done">Done</string>
+    <string name="leave">Leave</string>
+    <string name="finish">Finish</string>
+    <string name="welcome_to_our_skeleton_app_">Welcome to our skeleton app!</string>
+    <string name="check_games">Check games</string>
+    <string name="start_match">Start Match</string>
+    <string name="turn_counter">Turn counter</string>
+    <string name="signin_other_error">There was an issue with sign in.  Please try again later.</string>
+
+    <string name="status_multiplayer_error_not_trusted_tester">Anyone you invite must be a trusted tester</string>
+    <string name="match_error_already_rematched">This rematch has already been started!</string>
+    <string name="client_reconnect_required">Games client reconnect required</string>
+    <string name="network_error_operation_failed">Network error: Operation failed</string>
+    <string name="internal_error">Internal error</string>
+    <string name="unexpected_status">Unexpected status</string>
+    <string name="match_error_inactive_match">This match is inactive.</string>
+    <string name='match_error_locally_modified'>This match has locally-modified data.  This operation cannot be performed until the match is sent to the server.</string>
+
 </resources>

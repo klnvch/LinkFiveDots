@@ -3,4 +3,28 @@
     <style name="AppTheme" parent="@style/Theme.AppCompat.Light.DarkActionBar">
         <item name="android:windowBackground">@null</item>
     </style>>
+
+
+
+
+
+
+    <style name="HelpText">
+        <item name="android:textSize">@dimen/font_size_medium</item>
+        <item name="android:lineSpacingMultiplier">1.2</item>
+    </style>
+
+    <style name="HelpText.Caption">
+        <item name="android:textSize">@dimen/font_size_small</item>
+    </style>
+
+    <style name="HelpText.Heading">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">@dimen/font_size_large</item>
+        <item name="android:lineSpacingMultiplier">1.0</item>
+    </style>
+
+    <style name="GuessWordText" parent="@android:style/TextAppearance">
+        <item name="android:textSize">20sp</item>
+    </style>
 </resources>

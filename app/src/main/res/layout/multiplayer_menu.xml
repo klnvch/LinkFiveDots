@@ -57,6 +57,18 @@
                 android:drawableStart="@drawable/ic_router_black_48dp"
                 android:background="@drawable/btn_selector"/>
 
+            <Button
+                android:id="@+id/multi_player_online"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Online"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:textSize="@dimen/btn_text_size"
+                android:drawableLeft="@drawable/ic_router_black_48dp"
+                android:drawableStart="@drawable/ic_router_black_48dp"
+                android:background="@drawable/btn_selector"/>
+
         </LinearLayout>
 
     </ScrollView>
