@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
             tvUsername.setText(username);
         }
 
-        ((MyApp) getApplication()).getTracker();
+        ((App) getApplication()).getTracker();
 	}
 
     @Override
@@ -155,7 +155,7 @@ public class MainActivity extends AppCompatActivity {
     private void undoLastMove(){
         view.undoLastMove(2);
         //
-        Tracker tracker = ((MyApp)getApplication()).getTracker();
+        Tracker tracker = ((App)getApplication()).getTracker();
         tracker.send(new HitBuilders.EventBuilder()
                 .setCategory("Main")
                 .setAction("Undo")
@@ -165,7 +165,7 @@ public class MainActivity extends AppCompatActivity {
     private void newGame(){
         view.resetGame();
         //
-        Tracker tracker = ((MyApp)getApplication()).getTracker();
+        Tracker tracker = ((App)getApplication()).getTracker();
         tracker.send(new HitBuilders.EventBuilder()
                 .setCategory("Main")
                 .setAction("New")
@@ -181,7 +181,7 @@ public class MainActivity extends AppCompatActivity {
         i.putExtras(data);
         startActivity(i);
         //
-        Tracker tracker = ((MyApp)getApplication()).getTracker();
+        Tracker tracker = ((App)getApplication()).getTracker();
         tracker.send(new HitBuilders.EventBuilder()
                 .setCategory("Main")
                 .setAction("Publish")
@@ -191,7 +191,7 @@ public class MainActivity extends AppCompatActivity {
     private void searchLastMove(){
         view.switchHideArrow();
         //
-        Tracker tracker = ((MyApp)getApplication()).getTracker();
+        Tracker tracker = ((App)getApplication()).getTracker();
         tracker.send(new HitBuilders.EventBuilder()
                 .setCategory("Main")
                 .setAction("Search")

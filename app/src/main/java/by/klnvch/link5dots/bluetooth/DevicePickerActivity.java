@@ -18,6 +18,7 @@ import android.os.IBinder;
 import android.os.Message;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -38,6 +39,8 @@ import by.klnvch.link5dots.R;
 
 public class DevicePickerActivity extends AppCompatActivity {
 
+    private static final String TAG = "DevicePickerActivity";
+
     private static final int BT_REQUEST_DISCOVERABLE = 1;
 
     private static final String BT_DISCOVERABLE_TIME_FINISH = "BT_DISCOVERABLE_TIME_FINISH";
@@ -46,6 +49,8 @@ public class DevicePickerActivity extends AppCompatActivity {
 
     private BluetoothService mBluetoothService;
     private boolean isBound;
+
+    private BluetoothAdapter mBluetoothAdapter;
 
     private final ServiceConnection mConnection = new ServiceConnection() {
         public void onServiceConnected(ComponentName name, IBinder service) {
@@ -116,6 +121,15 @@ public class DevicePickerActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        if (mBluetoothAdapter == null) {
+            setContentView(R.layout.bluetooth_error);
+            setResult(RESULT_CANCELED);
+            Log.e(TAG, "bluetooth adapter is null");
+            return;
+        }
+
         // Setup the window
         setContentView(R.layout.bluetooth);
 
@@ -129,7 +143,6 @@ public class DevicePickerActivity extends AppCompatActivity {
         visibilityButton.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 // Ensure this device is discoverable by others
-                final BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
                 if (mBluetoothAdapter.getScanMode() != BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE) {
                     Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
                     discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 120);
@@ -169,18 +182,19 @@ public class DevicePickerActivity extends AppCompatActivity {
             }
         }
         //
-        BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        if(bluetoothAdapter.getScanMode() == BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE){
-            SharedPreferences prefs = getPreferences(MODE_PRIVATE);
-            long finishTime = prefs.getLong(BT_DISCOVERABLE_TIME_FINISH, -1);
-            long currentTime = System.currentTimeMillis();
-            if(finishTime != -1 && finishTime > currentTime){
-                int interval = (int)((finishTime - currentTime) / 1000);
-                setVisibilityTimer(interval);
+        if (mBluetoothAdapter != null) {
+            if (mBluetoothAdapter.getScanMode() == BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE) {
+                SharedPreferences prefs = getPreferences(MODE_PRIVATE);
+                long finishTime = prefs.getLong(BT_DISCOVERABLE_TIME_FINISH, -1);
+                long currentTime = System.currentTimeMillis();
+                if (finishTime != -1 && finishTime > currentTime) {
+                    int interval = (int) ((finishTime - currentTime) / 1000);
+                    setVisibilityTimer(interval);
+                }
             }
+            //
+            setTitle(mBluetoothAdapter.getName());
         }
-        //
-        setTitle(bluetoothAdapter.getName());
     }
 
     @Override
@@ -207,12 +221,12 @@ public class DevicePickerActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
 
-        // Make sure we're not doing discovery anymore
-        BluetoothAdapter mBtAdapter = BluetoothAdapter.getDefaultAdapter();
-        mBtAdapter.cancelDiscovery();
-
-        // Unregister broadcast listeners
-        this.unregisterReceiver(mReceiver);
+        if (mBluetoothAdapter != null) {
+            // Make sure we're not doing discovery anymore
+            mBluetoothAdapter.cancelDiscovery();
+            // Unregister broadcast listeners
+            unregisterReceiver(mReceiver);
+        }
     }
 
     /**
@@ -224,9 +238,8 @@ public class DevicePickerActivity extends AppCompatActivity {
         findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
 
         // If we're already discovering, stop it
-        BluetoothAdapter mBtAdapter = BluetoothAdapter.getDefaultAdapter();
-        if (mBtAdapter.isDiscovering()) {
-            mBtAdapter.cancelDiscovery();
+        if (mBluetoothAdapter.isDiscovering()) {
+            mBluetoothAdapter.cancelDiscovery();
         }
 
         // reset list view
@@ -238,11 +251,11 @@ public class DevicePickerActivity extends AppCompatActivity {
         newDevicesListView.setOnItemClickListener(mDeviceClickListener);
 
         // Request discover from BluetoothAdapter
-        mBtAdapter.startDiscovery();
+        mBluetoothAdapter.startDiscovery();
 
         // init bonded devices
         // Get a set of currently paired devices
-        Set<BluetoothDevice> pairedDevices = mBtAdapter.getBondedDevices();
+        Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
 
         // If there are paired devices, add each one to the ArrayAdapter
         DeviceListAdapter mPairedDevicesArrayAdapter = new DeviceListAdapter(this);
@@ -263,8 +276,7 @@ public class DevicePickerActivity extends AppCompatActivity {
     private final OnItemClickListener mDeviceClickListener = new OnItemClickListener() {
         public void onItemClick(AdapterView<?> av, View v, int position, long id) {
             // Cancel discovery because it's costly and we're about to connect
-            BluetoothAdapter mBtAdapter = BluetoothAdapter.getDefaultAdapter();
-            mBtAdapter.cancelDiscovery();
+            mBluetoothAdapter.cancelDiscovery();
 
             final BluetoothDevice device = (BluetoothDevice)av.getItemAtPosition(position);
 
@@ -336,10 +348,12 @@ public class DevicePickerActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.bluetooth, menu);
-        return true;
+        if (mBluetoothAdapter != null) {
+            MenuInflater inflater = getMenuInflater();
+            inflater.inflate(R.menu.bluetooth, menu);
+            return true;
+        }
+        return false;
     }
 
     @Override

@@ -15,14 +15,13 @@ import by.klnvch.link5dots.bluetooth.BluetoothService;
 import by.klnvch.link5dots.bluetooth.DevicePickerActivity;
 import by.klnvch.link5dots.nsd.NsdPickerActivity;
 import by.klnvch.link5dots.nsd.NsdService;
-import by.klnvch.link5dots.online.OnlineActivity;
 
-public class MultiPlayerMenuActivity extends AppCompatActivity implements View.OnClickListener{
+public class MultiPlayerMenuActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final String IS_BLUETOOTH_ENABLED = "IS_BLUETOOTH_ENABLED";
 
-    private static final int REQUEST_ENABLE_BT = 3;
-    private static final int CHOOSE_BT_DEVICE = 4;
+    private static final int REQUEST_ENABLE_BLUETOOTH = 3;
+    private static final int PICK_BLUETOOTH_DEVICE = 4;
     private static final int CHOOSE_NSD_SERVICE = 5;
 
     private AdView mAdView;
@@ -33,20 +32,29 @@ public class MultiPlayerMenuActivity extends AppCompatActivity implements View.O
         setContentView(R.layout.multiplayer_menu);
 
         findViewById(R.id.multi_player_two_players).setOnClickListener(this);
-        findViewById(R.id.multi_player_bluetooth).setOnClickListener(this);
+        if (BluetoothAdapter.getDefaultAdapter() != null) {
+            findViewById(R.id.multi_player_bluetooth).setOnClickListener(this);
+        } else {
+            findViewById(R.id.multi_player_bluetooth).setVisibility(View.INVISIBLE);
+        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             findViewById(R.id.multi_player_lan).setOnClickListener(this);
         } else {
-            findViewById(R.id.multi_player_lan).setVisibility(View.GONE);
+            findViewById(R.id.multi_player_lan).setVisibility(View.INVISIBLE);
         }
         findViewById(R.id.multi_player_online).setOnClickListener(this);
 
         // ads
+        // NullPointerException (@by.klnvch.link5dots.MainMenuActivity:onCreate:73) {main}
+        // allow people to remove ads
         mAdView = (AdView) findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder()
-                .addTestDevice("EA3A211E9E56D12855FE8A22E4EB356C")
-                .build();
-        mAdView.loadAd(adRequest);
+        if (mAdView != null) {
+            AdRequest adRequest = new AdRequest.Builder()
+                    .addTestDevice(App.DEVICE_ID_1)
+                    .addTestDevice(App.DEVICE_ID_2)
+                    .build();
+            mAdView.loadAd(adRequest);
+        }
     }
 
     @Override
@@ -90,13 +98,13 @@ public class MultiPlayerMenuActivity extends AppCompatActivity implements View.O
                     if (!mBluetoothAdapter.isEnabled()) {
                         // enable bluetooth
                         Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                        startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
+                        startActivityForResult(enableIntent, REQUEST_ENABLE_BLUETOOTH);
                         // remember
                         editor.putBoolean(IS_BLUETOOTH_ENABLED, false);
                     } else {
                         // launch bluetooth device chooser
-                        Intent i2 = new Intent(this, DevicePickerActivity.class);
-                        startActivityForResult(i2, CHOOSE_BT_DEVICE);
+                        Intent pickerIntent = new Intent(this, DevicePickerActivity.class);
+                        startActivityForResult(pickerIntent, PICK_BLUETOOTH_DEVICE);
                         // remember
                         editor.putBoolean(IS_BLUETOOTH_ENABLED, true);
                         // start Bluetooth service
@@ -108,31 +116,30 @@ public class MultiPlayerMenuActivity extends AppCompatActivity implements View.O
             case R.id.multi_player_lan:
                 Intent intent = new Intent(this, NsdPickerActivity.class);
                 startActivityForResult(intent, CHOOSE_NSD_SERVICE);
-
                 startService(new Intent(this, NsdService.class));
                 break;
-            case R.id.multi_player_online:
-                Intent intent1 = new Intent(this, OnlineActivity.class);
-                startActivity(intent1);
-                break;
+            //case R.id.multi_player_online:
+            //Intent intent1 = new Intent(this, OnlinePickerActivity.class);
+            //startActivity(intent1);
+            //break;
         }
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
-            case REQUEST_ENABLE_BT:
+            case REQUEST_ENABLE_BLUETOOTH:
                 // When the request to enable Bluetooth returns
                 if (resultCode == RESULT_OK) {
                     Intent i2 = new Intent(this, DevicePickerActivity.class);
-                    startActivityForResult(i2, CHOOSE_BT_DEVICE);
+                    startActivityForResult(i2, PICK_BLUETOOTH_DEVICE);
                     // start Bluetooth service
                     startService(new Intent(this, BluetoothService.class));
                 }
                 break;
-            case CHOOSE_BT_DEVICE:
+            case PICK_BLUETOOTH_DEVICE:
                 // bluetooth game finished, make an order
                 SharedPreferences prefs = getPreferences(MODE_PRIVATE);
-                if(!prefs.getBoolean(IS_BLUETOOTH_ENABLED, false)){
+                if (!prefs.getBoolean(IS_BLUETOOTH_ENABLED, false)) {
                     BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
                     mBluetoothAdapter.disable();
                 }

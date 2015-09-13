@@ -25,10 +25,25 @@ import by.klnvch.link5dots.R;
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 public class NsdService extends Service {
 
-    private static final String TAG = "NsdService";
-
     public static final String BLUETOOTH_GAME_VIEW_PREFERENCES = "BLUETOOTH_GAME_VIEW_PREFERENCES";
-
+    // Constants that indicate the current connection state
+    public static final int STATE_UNREGISTERED = 100;
+    public static final int STATE_REGISTERING = 101;
+    public static final int STATE_REGISTERED = 102;
+    public static final int STATE_UNREGISTERING = 103;
+    public static final int STATE_DISCOVERING = 200;
+    public static final int STATE_IDLE = 201;
+    public static final int STATE_NONE = 0;       // we're doing nothing
+    public static final int STATE_LISTEN = 1;     // now listening for incoming connections
+    public static final int STATE_CONNECTING = 2; // now initiating an outgoing connection
+    public static final int STATE_CONNECTED = 3;  // now connected to a remote device
+    private static final String TAG = "NsdService";
+    // new constants and fields
+    private static final String SERVICE_NAME = "Link Five Dots";
+    private static final String SERVICE_TYPE = "_http._tcp.";
+    private final Map<String, NsdServiceInfo> mServices = new HashMap<>();
+    // Binder given to clients
+    private final IBinder mBinder = new LocalBinder();
     // Member fields
     private Handler mHandler;
     private AcceptThread mAcceptThread;
@@ -36,47 +51,15 @@ public class NsdService extends Service {
     private ConnectedThread mConnectedThread;
     private int mState;
     private boolean mResolveListenerInUse = false;
-
-    // Constants that indicate the current connection state
-    public static final int STATE_UNREGISTERED = 100;
-    public static final int STATE_REGISTERING = 101;
-    public static final int STATE_REGISTERED = 102;
-    public static final int STATE_UNREGISTERING = 103;
-
-    public static final int STATE_DISCOVERING = 200;
-    public static final int STATE_IDLE = 201;
-
-
-    public static final int STATE_NONE = 0;       // we're doing nothing
-    public static final int STATE_LISTEN = 1;     // now listening for incoming connections
-    public static final int STATE_CONNECTING = 2; // now initiating an outgoing connection
-    public static final int STATE_CONNECTED = 3;  // now connected to a remote device
-
-    // new constants and fields
-    private static final String SERVICE_NAME = "Link Five Dots";
-    private static final String SERVICE_TYPE = "_http._tcp.";
-
+    private NsdManager.RegistrationListener mRegistrationListener;
+    private NsdManager.DiscoveryListener mDiscoveryListener;
+    private NsdManager.ResolveListener mResolveListener;
     private NsdServiceInfo mRegistrationNsdServiceInfo = null;
     private NsdServiceInfo mConnectedNsdServiceInfo = null;
     private NsdManager mNsdManager;
     private int mPort = -1;
     private int mServerState = STATE_UNREGISTERED;
     private int mClientState = STATE_IDLE;
-    private final Map<String, NsdServiceInfo> mServices = new HashMap<>();
-
-
-    // Binder given to clients
-    private final IBinder mBinder = new LocalBinder();
-
-    /**
-     * Class used for the client Binder.  Because we know this service always
-     * runs in the same process as its clients, we don't need to deal with IPC.
-     */
-    public class LocalBinder extends Binder {
-        NsdService getService() {
-            return NsdService.this;
-        }
-    }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -90,7 +73,120 @@ public class NsdService extends Service {
 
     @Override
     public void onCreate() {
-        mNsdManager = (NsdManager)getSystemService(Context.NSD_SERVICE);
+
+        // NoClassDefFoundError (@by.klnvch.link5dots.nsd.NsdService:<init>:294) {main}
+        try {
+            Class.forName("android.net.nsd.NsdManager");
+        } catch (ClassNotFoundException e) {
+            Log.e(TAG, e.getMessage());
+            stopSelf();
+            return;
+        }
+
+        mRegistrationListener = new NsdManager.RegistrationListener() {
+            @Override
+            public void onRegistrationFailed(NsdServiceInfo nsdServiceInfo, int i) {
+                setServerState(STATE_UNREGISTERED);
+                mRegistrationNsdServiceInfo = null;
+                Log.d(TAG, "onRegistrationFailed: " + i);
+            }
+
+            @Override
+            public void onUnregistrationFailed(NsdServiceInfo nsdServiceInfo, int i) {
+                setServerState(STATE_UNREGISTERED);
+                mRegistrationNsdServiceInfo = null;
+                Log.d(TAG, "onUnRegistrationFailed: " + i);
+            }
+
+            @Override
+            public void onServiceRegistered(NsdServiceInfo nsdServiceInfo) {
+                setServerState(STATE_REGISTERED);
+                mRegistrationNsdServiceInfo = nsdServiceInfo;
+                Log.d(TAG, "onServiceRegistered: " + nsdServiceInfo);
+            }
+
+            @Override
+            public void onServiceUnregistered(NsdServiceInfo nsdServiceInfo) {
+                setServerState(STATE_UNREGISTERED);
+                mRegistrationNsdServiceInfo = null;
+                Log.d(TAG, "onServiceUnregistered");
+            }
+        };
+        //
+        mDiscoveryListener = new NsdManager.DiscoveryListener() {
+            @Override
+            public void onStartDiscoveryFailed(String s, int i) {
+                Log.e(TAG, "Discovery failed: Error code:" + i);
+                mNsdManager.stopServiceDiscovery(this);
+            }
+
+            @Override
+            public void onStopDiscoveryFailed(String s, int i) {
+                Log.e(TAG, "Discovery failed: Error code:" + i);
+                mNsdManager.stopServiceDiscovery(this);
+            }
+
+            @Override
+            public void onDiscoveryStarted(String s) {
+                Log.d(TAG, "onDiscoveryStarted");
+            }
+
+            @Override
+            public void onDiscoveryStopped(String s) {
+                Log.i(TAG, "Discovery stopped: " + s);
+            }
+
+            @Override
+            public void onServiceFound(NsdServiceInfo nsdServiceInfo) {
+                Log.d(TAG, "Service discovery success" + nsdServiceInfo);
+                if (!nsdServiceInfo.getServiceType().equals(SERVICE_TYPE)) {
+                    Log.d(TAG, "Unknown Service Type: " + nsdServiceInfo.getServiceType());
+                } else if (mRegistrationNsdServiceInfo != null && nsdServiceInfo.getServiceName()
+                        .equals(mRegistrationNsdServiceInfo.getServiceName())) {
+                    Log.d(TAG, "Same machine: " + mRegistrationNsdServiceInfo.getServiceName());
+                } else if (nsdServiceInfo.getServiceName().contains(SERVICE_NAME)) {
+                    if (!mResolveListenerInUse) {
+                        mResolveListenerInUse = true;
+                        mNsdManager.resolveService(nsdServiceInfo, mResolveListener);
+                    }
+                }
+            }
+
+            @Override
+            public void onServiceLost(NsdServiceInfo nsdServiceInfo) {
+                Log.e(TAG, "service lost" + nsdServiceInfo);
+                mServices.remove(nsdServiceInfo.getServiceName());
+                //
+                mHandler.obtainMessage(NsdPickerActivity.MESSAGE_SERVICES_LIST_UPDATED).sendToTarget();
+            }
+        };
+        //
+        mResolveListener = new NsdManager.ResolveListener() {
+            @Override
+            public void onResolveFailed(NsdServiceInfo nsdServiceInfo, int i) {
+                Log.e(TAG, "Resolve failed" + i);
+                //
+                mResolveListenerInUse = false;
+            }
+
+            @Override
+            public void onServiceResolved(NsdServiceInfo nsdServiceInfo) {
+                Log.e(TAG, "Resolve Succeeded. " + nsdServiceInfo);
+
+                if (mRegistrationNsdServiceInfo != null && nsdServiceInfo.getServiceName()
+                        .equals(mRegistrationNsdServiceInfo.getServiceName())) {
+                    Log.d(TAG, "Same IP.");
+                    return;
+                }
+                mServices.put(nsdServiceInfo.getServiceName(), nsdServiceInfo);
+                //
+                mHandler.obtainMessage(NsdPickerActivity.MESSAGE_SERVICES_LIST_UPDATED).sendToTarget();
+                //
+                mResolveListenerInUse = false;
+            }
+        };
+        //
+        mNsdManager = (NsdManager) getSystemService(Context.NSD_SERVICE);
         //
         mAcceptThread = new AcceptThread(this);
         mAcceptThread.start();
@@ -109,49 +205,40 @@ public class NsdService extends Service {
             mNsdManager.stopServiceDiscovery(mDiscoveryListener);
         }
         //
-        mAcceptThread.cancel();
+        if (mAcceptThread != null) {
+            mAcceptThread.cancel();
+        }
     }
 
     public void setHandler(Handler handler) {
         this.mHandler = handler;
     }
+
+    /**
+     * Return the current connection state.
+     */
+    public synchronized int getState() {
+        return mState;
+    }
+
     /**
      * Set the current state of the chat connection
-     * @param state  An integer defining the current connection state
+     *
+     * @param state An integer defining the current connection state
      */
     private synchronized void setState(int state) {
         mState = state;
 
         // Give the new state to the Handler so the UI Activity can update
-        if(mHandler != null) {
+        if (mHandler != null) {
             mHandler.obtainMessage(NsdActivity.MESSAGE_STATE_CHANGE, state, -1).sendToTarget();
         }
     }
 
-    private synchronized void setServerState(int state) {
-        mServerState = state;
-
-        if(mHandler != null) {
-            mHandler.obtainMessage(NsdPickerActivity.MESSAGE_SERVER_STATE_CHANGE, state, -1).sendToTarget();
-        }
-    }
-
-    private synchronized void setClientState(int state) {
-        mClientState = state;
-
-        if (mHandler != null) {
-            mHandler.obtainMessage(NsdPickerActivity.MESSAGE_CLIENT_STATE_CHANGE, state, -1).sendToTarget();
-        }
-    }
-
-    /**
-     * Return the current connection state. */
-    public synchronized int getState() {
-        return mState;
-    }
     /**
      * Start the chat service. Specifically start AcceptThread to begin a
-     * session in listening (server) mode. Called by the Activity onResume() */
+     * session in listening (server) mode. Called by the Activity onResume()
+     */
     public synchronized void start() {
 
         // Cancel any thread attempting to make a connection
@@ -161,7 +248,7 @@ public class NsdService extends Service {
         }
 
         // Cancel any thread currently running a connection
-        if (mConnectedThread != null){
+        if (mConnectedThread != null) {
             mConnectedThread.cancel();
             mConnectedThread = null;
         }
@@ -172,15 +259,15 @@ public class NsdService extends Service {
     public synchronized void connect(NsdServiceInfo serviceInfo) {
 
         // Cancel any thread attempting to make a connection
-        if (mState == STATE_CONNECTING){
-            if (mConnectThread != null){
+        if (mState == STATE_CONNECTING) {
+            if (mConnectThread != null) {
                 mConnectThread.cancel();
                 mConnectThread = null;
             }
         }
 
         // Cancel any thread currently running a connection
-        if (mConnectedThread != null){
+        if (mConnectedThread != null) {
             mConnectedThread.cancel();
             mConnectedThread = null;
         }
@@ -195,7 +282,7 @@ public class NsdService extends Service {
         this.mConnectedNsdServiceInfo = nsdServiceInfo;
 
         // Cancel the thread that completed the connection
-        if (mConnectThread != null){
+        if (mConnectThread != null) {
             //mConnectThread.cancel();
             mConnectThread = null;
         }
@@ -239,8 +326,10 @@ public class NsdService extends Service {
 
         setState(STATE_NONE);
     }
+
     /**
      * Write to the ConnectedThread in an not synchronized manner
+     *
      * @param out The bytes to write
      * @see ConnectedThread#write(byte[])
      */
@@ -255,6 +344,7 @@ public class NsdService extends Service {
         // Perform the write not synchronized
         r.write(out);
     }
+
     /**
      * Indicate that the connection attempt failed and notify the UI Activity.
      */
@@ -270,6 +360,7 @@ public class NsdService extends Service {
         // Start the service over to restart listening mode
         NsdService.this.start();
     }
+
     /**
      * Indicate that the connection was lost and notify the UI Activity.
      */
@@ -285,121 +376,9 @@ public class NsdService extends Service {
         NsdService.this.start();
     }
 
-    public void sendMessage(int what, int arg1, int arg2, Object obj){
+    public void sendMessage(int what, int arg1, int arg2, Object obj) {
         mHandler.obtainMessage(what, arg1, arg2, obj).sendToTarget();
     }
-
-    /// new overrides
-
-    private final NsdManager.RegistrationListener mRegistrationListener = new NsdManager.RegistrationListener() {
-        @Override
-        public void onRegistrationFailed(NsdServiceInfo nsdServiceInfo, int i) {
-            setServerState(STATE_UNREGISTERED);
-            mRegistrationNsdServiceInfo = null;
-            Log.d(TAG, "onRegistrationFailed: " + i);
-        }
-
-        @Override
-        public void onUnregistrationFailed(NsdServiceInfo nsdServiceInfo, int i) {
-            setServerState(STATE_UNREGISTERED);
-            mRegistrationNsdServiceInfo = null;
-            Log.d(TAG, "onUnRegistrationFailed: " + i);
-        }
-
-        @Override
-        public void onServiceRegistered(NsdServiceInfo nsdServiceInfo) {
-            setServerState(STATE_REGISTERED);
-            mRegistrationNsdServiceInfo = nsdServiceInfo;
-            Log.d(TAG, "onServiceRegistered: " + nsdServiceInfo);
-        }
-
-        @Override
-        public void onServiceUnregistered(NsdServiceInfo nsdServiceInfo) {
-            setServerState(STATE_UNREGISTERED);
-            mRegistrationNsdServiceInfo = null;
-            Log.d(TAG, "onServiceUnregistered");
-        }
-    };
-
-    //////////////////////////////////////////////////////
-
-
-    private final NsdManager.DiscoveryListener mDiscoveryListener = new NsdManager.DiscoveryListener() {
-        @Override
-        public void onStartDiscoveryFailed(String s, int i) {
-            Log.e(TAG, "Discovery failed: Error code:" + i);
-            mNsdManager.stopServiceDiscovery(this);
-        }
-
-        @Override
-        public void onStopDiscoveryFailed(String s, int i) {
-            Log.e(TAG, "Discovery failed: Error code:" + i);
-            mNsdManager.stopServiceDiscovery(this);
-        }
-
-        @Override
-        public void onDiscoveryStarted(String s) {
-            Log.d(TAG, "onDiscoveryStarted");
-        }
-
-        @Override
-        public void onDiscoveryStopped(String s) {
-            Log.i(TAG, "Discovery stopped: " + s);
-        }
-
-        @Override
-        public void onServiceFound(NsdServiceInfo nsdServiceInfo) {
-            Log.d(TAG, "Service discovery success" + nsdServiceInfo);
-            if (!nsdServiceInfo.getServiceType().equals(SERVICE_TYPE)) {
-                Log.d(TAG, "Unknown Service Type: " + nsdServiceInfo.getServiceType());
-            } else if (mRegistrationNsdServiceInfo != null && nsdServiceInfo.getServiceName()
-                    .equals(mRegistrationNsdServiceInfo.getServiceName())) {
-                Log.d(TAG, "Same machine: " + mRegistrationNsdServiceInfo.getServiceName());
-            } else if (nsdServiceInfo.getServiceName().contains(SERVICE_NAME)){
-                if (!mResolveListenerInUse) {
-                    mResolveListenerInUse = true;
-                    mNsdManager.resolveService(nsdServiceInfo, mResolveListener);
-                }
-            }
-        }
-
-        @Override
-        public void onServiceLost(NsdServiceInfo nsdServiceInfo) {
-            Log.e(TAG, "service lost" + nsdServiceInfo);
-            mServices.remove(nsdServiceInfo.getServiceName());
-            //
-            mHandler.obtainMessage(NsdPickerActivity.MESSAGE_SERVICES_LIST_UPDATED).sendToTarget();
-        }
-    };
-
-    ////////////////////////////////////////////////////////////////
-
-    private final NsdManager.ResolveListener mResolveListener = new NsdManager.ResolveListener() {
-        @Override
-        public void onResolveFailed(NsdServiceInfo nsdServiceInfo, int i) {
-            Log.e(TAG, "Resolve failed" + i);
-            //
-            mResolveListenerInUse = false;
-        }
-
-        @Override
-        public void onServiceResolved(NsdServiceInfo nsdServiceInfo) {
-            Log.e(TAG, "Resolve Succeeded. " + nsdServiceInfo);
-
-            if (mRegistrationNsdServiceInfo != null && nsdServiceInfo.getServiceName()
-                    .equals(mRegistrationNsdServiceInfo.getServiceName())) {
-                Log.d(TAG, "Same IP.");
-                return;
-            }
-            mServices.put(nsdServiceInfo.getServiceName(), nsdServiceInfo);
-            //
-            mHandler.obtainMessage(NsdPickerActivity.MESSAGE_SERVICES_LIST_UPDATED).sendToTarget();
-            //
-            mResolveListenerInUse = false;
-        }
-    };
-
-    // new functions
 
     public void setLocalPort(int port) {
         this.mPort = port;
@@ -413,6 +392,8 @@ public class NsdService extends Service {
         return this.mRegistrationNsdServiceInfo;
     }
 
+    // new functions
+
     public String getConnectedServiceName() {
         return mConnectedNsdServiceInfo.getServiceName();
     }
@@ -425,8 +406,24 @@ public class NsdService extends Service {
         return mServerState;
     }
 
+    private synchronized void setServerState(int state) {
+        mServerState = state;
+
+        if (mHandler != null) {
+            mHandler.obtainMessage(NsdPickerActivity.MESSAGE_SERVER_STATE_CHANGE, state, -1).sendToTarget();
+        }
+    }
+
     public int getClientState() {
         return mClientState;
+    }
+
+    private synchronized void setClientState(int state) {
+        mClientState = state;
+
+        if (mHandler != null) {
+            mHandler.obtainMessage(NsdPickerActivity.MESSAGE_CLIENT_STATE_CHANGE, state, -1).sendToTarget();
+        }
     }
 
     public void registerService() {
@@ -458,5 +455,15 @@ public class NsdService extends Service {
     public void stopDiscovery() {
         setClientState(STATE_IDLE);
         mNsdManager.stopServiceDiscovery(mDiscoveryListener);
+    }
+
+    /**
+     * Class used for the client Binder.  Because we know this service always
+     * runs in the same process as its clients, we don't need to deal with IPC.
+     */
+    public class LocalBinder extends Binder {
+        NsdService getService() {
+            return NsdService.this;
+        }
     }
 }

@@ -14,15 +14,13 @@ import org.json.JSONObject;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnCancelListener;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.Settings.Secure;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -41,7 +39,7 @@ public class ScoresActivity extends AppCompatActivity {
     private static final String IS_USER_NAME_CHANGED = "IS_USER_NAME_CHANGED";
     private static final String IS_FIRST_RUN = "IS_FIRST_RUN";
     private AdView mAdView;
-    private ProgressDialog progressDialog = null;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
     private String deviceId;
     private String username;
     private boolean usernameHasChanged;
@@ -59,20 +57,34 @@ public class ScoresActivity extends AppCompatActivity {
         SharedPreferences prefs = getPreferences(MODE_PRIVATE);
         username = prefs.getString(USER_NAME, getString(android.R.string.unknownName));
         usernameHasChanged = prefs.getBoolean(IS_USER_NAME_CHANGED, false);
-        theFirstRun = prefs.getBoolean(IS_FIRST_RUN, true)
-        ;
-        // prepare ad
+        theFirstRun = prefs.getBoolean(IS_FIRST_RUN, true);
+
+        mSwipeRefreshLayout = (SwipeRefreshLayout)findViewById(R.id.swipe_refresh_layout);
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mSwipeRefreshLayout.setRefreshing(true);
+                doInternetJob = new DoInternetJob().execute(100);
+            }
+        });
+
+        // ads
+        // NullPointerException (@by.klnvch.link5dots.MainMenuActivity:onCreate:73) {main}
+        // allow people to remove ads
         mAdView = (AdView) findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder()
-                .addTestDevice("EA3A211E9E56D12855FE8A22E4EB356C")
-                .build();
-        mAdView.loadAd(adRequest);
+        if (mAdView != null) {
+            AdRequest adRequest = new AdRequest.Builder()
+                    .addTestDevice(App.DEVICE_ID_1)
+                    .addTestDevice(App.DEVICE_ID_2)
+                    .build();
+            mAdView.loadAd(adRequest);
+        }
 
         //set device id
         deviceId = Secure.getString(getContentResolver(), Secure.ANDROID_ID);
 
         // do Internet job
-        launchProgressDialog();
+        mSwipeRefreshLayout.setRefreshing(true);
         if (theFirstRun) {
             askForName = new AskForName().execute(0);
         } else {
@@ -101,6 +113,14 @@ public class ScoresActivity extends AppCompatActivity {
         if (mAdView != null) {
             mAdView.destroy();
         }
+
+        if (askForName != null) {
+            askForName.cancel(true);
+        }
+        if (doInternetJob != null) {
+            doInternetJob.cancel(true);
+        }
+
         SharedPreferences prefs = getPreferences(MODE_PRIVATE);
         Editor editor = prefs.edit();
         editor.putString(USER_NAME, username);
@@ -192,8 +212,7 @@ public class ScoresActivity extends AppCompatActivity {
 
         switch (item.getItemId()) {
             case R.id.scores_update:
-
-                launchProgressDialog();
+                mSwipeRefreshLayout.setRefreshing(true);
                 doInternetJob = new DoInternetJob().execute(100);
                 return true;
         }
@@ -216,7 +235,7 @@ public class ScoresActivity extends AppCompatActivity {
                 } else {
                     username = tempUserName;
                     theFirstRun = false;
-                    launchProgressDialog();
+                    mSwipeRefreshLayout.setRefreshing(true);
                     doInternetJob = new DoInternetJob().execute(100);
                 }
             }
@@ -225,26 +244,9 @@ public class ScoresActivity extends AppCompatActivity {
             public void onNothingChanged() {
                 if (theFirstRun) {
                     theFirstRun = false;
-                    launchProgressDialog();
+                    mSwipeRefreshLayout.setRefreshing(true);
                     doInternetJob = new DoInternetJob().execute(100);
                 }
-            }
-        });
-    }
-
-    private void launchProgressDialog() {
-        progressDialog = ProgressDialog.show(ScoresActivity.this, "", getString(R.string.scores_loading));
-        progressDialog.setCancelable(true);
-        progressDialog.setOnCancelListener(new OnCancelListener() {
-
-            public void onCancel(DialogInterface dialog) {
-                if (askForName != null) {
-                    askForName.cancel(true);
-                }
-                if (doInternetJob != null) {
-                    doInternetJob.cancel(true);
-                }
-                ScoresActivity.this.onBackPressed();
             }
         });
     }
@@ -270,7 +272,7 @@ public class ScoresActivity extends AppCompatActivity {
                     Log.e(TAG, conn.getResponseMessage());
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                Log.e(TAG, e.getMessage());
             }
             return null;
         }
@@ -281,22 +283,27 @@ public class ScoresActivity extends AppCompatActivity {
 
                 public void run() {
 
-                    progressDialog.dismiss();
+                    mSwipeRefreshLayout.setRefreshing(false);
 
                     if (result != null && !result.equals("")) {
                         username = result;
                         theFirstRun = false;
-                        launchProgressDialog();
-                        doInternetJob = new DoInternetJob().execute(100);
+                        mSwipeRefreshLayout.setRefreshing(true);
+                        new DoInternetJob().execute(100);
                     } else {
                         showAlertDialog();
                     }
                 }
             });
+
+            askForName = null;
         }
     }
 
     private class DoInternetJob extends AsyncTask<Integer, Integer, JSONArray> {
+
+        private static final String TAG = "DoInternetJob";
+
         @Override
         protected JSONArray doInBackground(Integer... params) {
 
@@ -314,12 +321,12 @@ public class ScoresActivity extends AppCompatActivity {
                     if (responseCode == 200) {
                         usernameHasChanged = false;
                     } else {
-                        Log.e("DoInternetJob", conn.getResponseMessage());
+                        Log.e(TAG, conn.getResponseMessage());
                     }
 
                 }
             } catch (Exception e) {
-                //drawMessage(e.getMessage());
+                Log.e(TAG, e.getMessage());
             }
 
             //**************************************************************************************************
@@ -346,13 +353,13 @@ public class ScoresActivity extends AppCompatActivity {
                     conn.connect();
                     int response = conn.getResponseCode();
                     if (response == 200) {
-                        Log.i("DoInternetJob", "published successfully");
+                        Log.i(TAG, "published successfully");
                     } else {
-                        Log.e("DoInternetJob", conn.getResponseMessage());
+                        Log.e(TAG, conn.getResponseMessage());
                     }
                 }
             } catch (Exception e) {
-                Log.e("DoInternetJob", e.getMessage());
+                Log.e(TAG, e.getMessage());
             }
 
             //**************************************************************************************
@@ -373,10 +380,10 @@ public class ScoresActivity extends AppCompatActivity {
                         return new JSONArray(json);
                     }
                 } else {
-                    Log.e("DoInternetJob", conn.getResponseMessage());
+                    Log.e(TAG, conn.getResponseMessage());
                 }
             } catch (Exception e) {
-                Log.e("DoInternetJob", e.getMessage());
+                Log.e(TAG, e.getMessage());
             }
             return null;
         }
@@ -391,13 +398,15 @@ public class ScoresActivity extends AppCompatActivity {
                             updateRows(result);
                         }
                     } catch (Exception e) {
-                        //drawMessage(e.getMessage());
+                        Log.e(TAG, e.getMessage());
                     } finally {
-                        progressDialog.dismiss();
+                        mSwipeRefreshLayout.setRefreshing(false);
                     }
 
                 }
             });
+
+            doInternetJob = null;
         }
     }
 }

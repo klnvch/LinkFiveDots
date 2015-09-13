@@ -77,7 +77,7 @@
         android:id="@+id/adView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        ads:adUnitId="@string/banner_ad_unit_id"
-        ads:adSize="BANNER"/>
+        ads:adSize="BANNER"
+        ads:adUnitId="@string/banner_ad_unit_id"/>
 
 </LinearLayout>

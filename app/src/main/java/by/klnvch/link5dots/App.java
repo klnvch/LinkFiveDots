@@ -3,17 +3,22 @@ package by.klnvch.link5dots;
 import android.app.Application;
 import android.content.res.Configuration;
 
+import com.google.android.gms.analytics.ExceptionReporter;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Logger;
 import com.google.android.gms.analytics.Tracker;
 
 import by.klnvch.link5dots.settings.SettingsUtils;
 
-public class MyApp extends Application {
+public class App extends Application {
 
-    private Tracker tracker = null;
+    public static final String DEVICE_ID_1 = "EA3A211E9E56D12855FE8A22E4EB356C";
+    public static final String DEVICE_ID_2 = "EC37D6EC9A0387B1FC01F6EE89C228FC";
+    public static final String AD_UNIT_ID = "ca-app-pub-9653730523387780/5316470559";
 
-    public MyApp() {
+    private Tracker mTracker = null;
+
+    public App() {
         super();
     }
 
@@ -34,17 +39,21 @@ public class MyApp extends Application {
 
     public synchronized Tracker getTracker() {
 
-        if (tracker == null){
+        if (mTracker == null) {
             GoogleAnalytics analytics = GoogleAnalytics.getInstance(this);
             GoogleAnalytics.getInstance(this).getLogger().setLogLevel(Logger.LogLevel.VERBOSE);
-            tracker = analytics.newTracker(R.xml.tracker);
-            tracker.enableAutoActivityTracking(true);
-            tracker.enableExceptionReporting(true);
+            mTracker = analytics.newTracker(R.xml.tracker);
+            mTracker.enableAutoActivityTracking(true);
+            mTracker.enableExceptionReporting(true);
             if (BuildConfig.DEBUG) {
                 analytics.setDryRun(true);
             }
+
+            ExceptionReporter reporter = new ExceptionReporter(mTracker, Thread.getDefaultUncaughtExceptionHandler(), this);
+            reporter.setExceptionParser(new AnalyticsExceptionParser(this, null));
+            Thread.setDefaultUncaughtExceptionHandler(reporter);
         }
 
-        return tracker;
+        return mTracker;
     }
 }

@@ -1,6 +1,7 @@
 package by.klnvch.link5dots.bluetooth;
 
 import android.app.Service;
+import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
@@ -10,6 +11,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
+import android.util.Log;
 
 import java.util.UUID;
 
@@ -22,6 +24,8 @@ import by.klnvch.link5dots.R;
  * thread for performing data transmissions when connected.
  */
 public class BluetoothService extends Service {
+
+    private static final String TAG = "BluetoothService";
 
     public static final String BLUETOOTH_GAME_VIEW_PREFERENCES = "BLUETOOTH_GAME_VIEW_PREFERENCES";
 
@@ -57,6 +61,13 @@ public class BluetoothService extends Service {
 
     @Override
     public void onCreate() {
+
+        if (BluetoothAdapter.getDefaultAdapter() == null) {
+            Log.e(TAG, "bluetooth adapter is null");
+            stopSelf();
+            return;
+        }
+
         mState = STATE_NONE;
         start();
     }

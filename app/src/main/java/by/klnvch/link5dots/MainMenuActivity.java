@@ -1,6 +1,7 @@
 package by.klnvch.link5dots;
 
 import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 
 import android.content.Context;
@@ -63,14 +64,19 @@ public class MainMenuActivity extends AppCompatActivity implements OnClickListen
 
 
         // analytics
-        //((MyApp) getApplication()).getTracker();
+        //((App) getApplication()).getTracker();
 
         // ads
+        // NullPointerException (@by.klnvch.link5dots.MainMenuActivity:onCreate:73) {main}
+        // allow people to remove ads
         mAdView = (AdView) findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder().
-                addTestDevice("EA3A211E9E56D12855FE8A22E4EB356C").
-                build();
-        mAdView.loadAd(adRequest);
+        if (mAdView != null) {
+            AdRequest adRequest = new AdRequest.Builder()
+                    .addTestDevice(App.DEVICE_ID_1)
+                    .addTestDevice(App.DEVICE_ID_2)
+                    .build();
+            mAdView.loadAd(adRequest);
+        }
 	}
 
     @Override
