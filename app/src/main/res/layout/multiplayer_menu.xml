@@ -67,7 +67,8 @@
                 android:textSize="@dimen/btn_text_size"
                 android:drawableLeft="@drawable/ic_router_black_48dp"
                 android:drawableStart="@drawable/ic_router_black_48dp"
-                android:background="@drawable/btn_selector"/>
+                android:background="@drawable/btn_selector"
+                android:visibility="gone"/>
 
         </LinearLayout>
 

@@ -286,7 +286,9 @@ public class DevicePickerActivity extends AppCompatActivity {
                 builder.setMessage(getString(R.string.bluetooth_connection_dialog_text, device.getName()));
                 builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener(){
                     public void onClick(DialogInterface dialog, int which) {
-                        mBluetoothService.connect(device);
+                        if(mBluetoothService != null) {
+                            mBluetoothService.connect(device);
+                        }
                     }
                 });
                 builder.setNegativeButton(R.string.no, null);
