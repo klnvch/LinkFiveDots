@@ -51,18 +51,6 @@ public class MainMenuActivity extends AppCompatActivity implements OnClickListen
             showUsernameDialog();
             prefs.edit().putBoolean(SettingsUtils.FIRST_RUN, false).apply();
         }
-        String username = SettingsUtils.getUserName(this);
-        TextView tvHelloUser = (TextView) findViewById(R.id.hello_user);
-        if (username != null) {
-            tvHelloUser.setText(getString(R.string.greetings, username));
-            tvHelloUser.setVisibility(View.VISIBLE);
-        } else {
-            tvHelloUser.setVisibility(View.GONE);
-        }
-
-
-        // analytics
-        //((App) getApplication()).getTracker();
 
         // ads
         // NullPointerException (@by.klnvch.link5dots.MainMenuActivity:onCreate:73) {main}
@@ -75,6 +63,15 @@ public class MainMenuActivity extends AppCompatActivity implements OnClickListen
         super.onResume();
         if (mAdView != null) {
             mAdView.resume();
+        }
+        //
+        String username = SettingsUtils.getUserName(this, null);
+        TextView tvHelloUser = (TextView) findViewById(R.id.hello_user);
+        if (username != null) {
+            tvHelloUser.setText(getString(R.string.greetings, username));
+            tvHelloUser.setVisibility(View.VISIBLE);
+        } else {
+            tvHelloUser.setVisibility(View.GONE);
         }
     }
 

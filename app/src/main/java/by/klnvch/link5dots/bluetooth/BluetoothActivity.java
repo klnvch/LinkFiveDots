@@ -96,7 +96,7 @@ public class BluetoothActivity extends AppCompatActivity {
             }
         });
 
-        userName = SettingsUtils.getUserName(this);
+        userName = SettingsUtils.getUserName(this, null);
         if (userName != null) {
             TextView tvUsername = (TextView)findViewById(R.id.user_name);
             tvUsername.setText(userName);

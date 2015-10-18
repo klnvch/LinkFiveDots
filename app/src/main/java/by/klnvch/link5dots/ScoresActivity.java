@@ -9,6 +9,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.Locale;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -16,8 +17,6 @@ import org.json.JSONObject;
 
 import com.google.android.gms.ads.AdView;
 
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -33,21 +32,15 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.TableRow.LayoutParams;
 
+import by.klnvch.link5dots.settings.SettingsUtils;
 import by.klnvch.link5dots.settings.UsernameDialog;
 
 public class ScoresActivity extends AppCompatActivity {
 
-    private static final String USER_NAME = "USER_NAME";
-    private static final String IS_USER_NAME_CHANGED = "IS_USER_NAME_CHANGED";
-    private static final String IS_FIRST_RUN = "IS_FIRST_RUN";
     private AdView mAdView;
     private SwipeRefreshLayout mSwipeRefreshLayout;
-    private String deviceId;
-    private String username;
-    private boolean usernameHasChanged;
-    private boolean theFirstRun;
-    private AsyncTask<Integer, Integer, String> askForName = null;
-    private AsyncTask<Integer, Integer, JSONArray> doInternetJob = null;
+    private AsyncTask<Void, Void, String> askForNameTask = null;
+    private AsyncTask<Boolean, Void, JSONArray> doInternetJobTask = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,34 +48,21 @@ public class ScoresActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.scores);
 
-        //restore data
-        SharedPreferences prefs = getPreferences(MODE_PRIVATE);
-        username = prefs.getString(USER_NAME, getString(android.R.string.unknownName));
-        usernameHasChanged = prefs.getBoolean(IS_USER_NAME_CHANGED, false);
-        theFirstRun = prefs.getBoolean(IS_FIRST_RUN, true);
-
-        mSwipeRefreshLayout = (SwipeRefreshLayout)findViewById(R.id.swipe_refresh_layout);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                mSwipeRefreshLayout.setRefreshing(true);
-                doInternetJob = new DoInternetJob().execute(100);
+                if (doInternetJobTask == null) {
+                    doInternetJobTask = new DoInternetJob().execute(false);
+                }
             }
         });
 
         // ads
         mAdView = App.initAds(this);
 
-        //set device id
-        deviceId = Secure.getString(getContentResolver(), Secure.ANDROID_ID);
-
-        // do Internet job
-        mSwipeRefreshLayout.setRefreshing(true);
-        if (theFirstRun) {
-            askForName = new AskForName().execute(0);
-        } else {
-            doInternetJob = new DoInternetJob().execute(100);
-        }
+        // check name
+        askForNameTask = new AskForName().execute();
     }
 
     @Override
@@ -107,24 +87,19 @@ public class ScoresActivity extends AppCompatActivity {
             mAdView.destroy();
         }
 
-        if (askForName != null) {
-            askForName.cancel(true);
+        if (askForNameTask != null) {
+            askForNameTask.cancel(true);
         }
-        if (doInternetJob != null) {
-            doInternetJob.cancel(true);
+        if (doInternetJobTask != null) {
+            doInternetJobTask.cancel(true);
         }
-
-        SharedPreferences prefs = getPreferences(MODE_PRIVATE);
-        Editor editor = prefs.edit();
-        editor.putString(USER_NAME, username);
-        editor.putBoolean(IS_USER_NAME_CHANGED, usernameHasChanged);
-        editor.putBoolean(IS_FIRST_RUN, theFirstRun);
-        editor.apply();
 
         super.onDestroy();
     }
 
     private void updateRows(JSONArray result) throws JSONException {
+
+        final String deviceId = Secure.getString(getContentResolver(), Secure.ANDROID_ID);
 
         TableLayout tl = (TableLayout) findViewById(R.id.TableLayout111);
 
@@ -133,7 +108,7 @@ public class ScoresActivity extends AppCompatActivity {
         for (int j = 0; j < result.length(); j++) {
             HighScore highScore = new HighScore(result.getJSONObject(j));
 
-            int color;
+            final int color;
             if (deviceId.equals(highScore.getId())) {
                 color = Color.RED;
             } else {
@@ -145,7 +120,7 @@ public class ScoresActivity extends AppCompatActivity {
             TextView t0 = new TextView(this);
             t0.setLayoutParams(new LayoutParams(-1, LayoutParams.WRAP_CONTENT, 0.1f));
             t0.setWidth(0);
-            t0.setText(Integer.toString(j + 1) + ".");
+            t0.setText(String.format(Locale.getDefault(), "%d.", j + 1));
             t0.setTextColor(color);
             tr.addView(t0);
 
@@ -159,14 +134,14 @@ public class ScoresActivity extends AppCompatActivity {
             TextView t2 = new TextView(this);
             t2.setLayoutParams(new LayoutParams(-1, LayoutParams.WRAP_CONTENT, 0.3f));
             t2.setWidth(0);
-            t2.setText(Long.toString(highScore.getScore()));
+            t2.setText(String.format(Locale.getDefault(), "%d", highScore.getScore()));
             t2.setTextColor(color);
             tr.addView(t2);
 
             TextView t3 = new TextView(this);
             t3.setLayoutParams(new LayoutParams(-1, LayoutParams.WRAP_CONTENT, 0.2f));
             t3.setWidth(0);
-            t3.setText(Long.toString(highScore.getTime()));
+            t3.setText(String.format(Locale.getDefault(), "%d", highScore.getTime()));
             t3.setTextColor(color);
             tr.addView(t3);
 
@@ -181,7 +156,7 @@ public class ScoresActivity extends AppCompatActivity {
                     t4.setText(R.string.scores_lost);
                     break;
                 default:
-                    t4.setText("internal error");
+                    t4.setText("");
                     break;
             }
             t4.setTextColor(color);
@@ -205,8 +180,9 @@ public class ScoresActivity extends AppCompatActivity {
 
         switch (item.getItemId()) {
             case R.id.scores_update:
-                mSwipeRefreshLayout.setRefreshing(true);
-                doInternetJob = new DoInternetJob().execute(100);
+                if (doInternetJobTask == null) {
+                    doInternetJobTask = new DoInternetJob().execute(false);
+                }
                 return true;
         }
         return false;
@@ -215,43 +191,36 @@ public class ScoresActivity extends AppCompatActivity {
     private void showAlertDialog() {
 
         UsernameDialog dialog = new UsernameDialog();
-        dialog.show(getSupportFragmentManager(), null);
+        getSupportFragmentManager()
+                .beginTransaction()
+                .add(dialog, UsernameDialog.TAG)
+                .commitAllowingStateLoss();
         dialog.setOnUsernameChangeListener(new UsernameDialog.OnUsernameChangListener() {
             @Override
-            public void onUsernameChanged(String tempUserName) {
-                tempUserName = tempUserName.replace(" ", "");
-                if (!theFirstRun) {
-                    if (!tempUserName.equals(username)) {
-                        username = tempUserName;
-                        usernameHasChanged = true;
-                    }
-                } else {
-                    username = tempUserName;
-                    theFirstRun = false;
-                    mSwipeRefreshLayout.setRefreshing(true);
-                    doInternetJob = new DoInternetJob().execute(100);
-                }
+            public void onUsernameChanged(String newUserName) {
+                doInternetJobTask = new DoInternetJob().execute(true);
             }
 
             @Override
             public void onNothingChanged() {
-                if (theFirstRun) {
-                    theFirstRun = false;
-                    mSwipeRefreshLayout.setRefreshing(true);
-                    doInternetJob = new DoInternetJob().execute(100);
-                }
+                doInternetJobTask = new DoInternetJob().execute(true);
             }
         });
     }
 
-    private class AskForName extends AsyncTask<Integer, Integer, String> {
+    private class AskForName extends AsyncTask<Void, Void, String> {
 
         private static final String TAG = "AskForName";
 
         @Override
-        protected String doInBackground(Integer... params) {
-            try {
+        protected void onPreExecute() {
+            mSwipeRefreshLayout.setRefreshing(true);
+        }
 
+        @Override
+        protected String doInBackground(Void... params) {
+            try {
+                final String deviceId = Secure.getString(getContentResolver(), Secure.ANDROID_ID);
                 URL url = new URL("http://link5dotsscores.appspot.com/get_user_name?id=" + deviceId);
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.connect();
@@ -271,49 +240,69 @@ public class ScoresActivity extends AppCompatActivity {
         }
 
         @Override
-        protected void onPostExecute(final String result) {
-            runOnUiThread(new Runnable() {
+        protected void onPostExecute(String result) {
+            mSwipeRefreshLayout.setRefreshing(false);
 
-                public void run() {
+            final String username = SettingsUtils.getUserName(ScoresActivity.this, null);
 
-                    mSwipeRefreshLayout.setRefreshing(false);
+            if (result != null && !result.isEmpty()) {
+                // there is some name in database
 
-                    if (result != null && !result.equals("")) {
-                        username = result;
-                        theFirstRun = false;
-                        mSwipeRefreshLayout.setRefreshing(true);
-                        new DoInternetJob().execute(100);
-                    } else {
-                        showAlertDialog();
-                    }
+                if (username == null) {
+                    // username not stored locally, save it
+                    SettingsUtils.setUserName(ScoresActivity.this, result);
+                    doInternetJobTask = new DoInternetJob().execute(false);
+                } else if (username.equals(result)) {
+                    // username remotely and locally are the same just go on
+                    doInternetJobTask = new DoInternetJob().execute(false);
+                } else {
+                    // username remotely and locally are different, change it remotely
+                    doInternetJobTask = new DoInternetJob().execute(true);
                 }
-            });
 
-            askForName = null;
+
+            } else {
+                // there is no name in database or some network error
+                if (username == null) {
+                    // we need username
+                    showAlertDialog();
+                } else {
+                    // store username remotely
+                    doInternetJobTask = new DoInternetJob().execute(true);
+                }
+            }
+
+            askForNameTask = null;
         }
     }
 
-    private class DoInternetJob extends AsyncTask<Integer, Integer, JSONArray> {
+    private class DoInternetJob extends AsyncTask<Boolean, Void, JSONArray> {
 
         private static final String TAG = "DoInternetJob";
 
         @Override
-        protected JSONArray doInBackground(Integer... params) {
+        protected void onPreExecute() {
+            mSwipeRefreshLayout.setRefreshing(true);
+        }
+
+        @Override
+        protected JSONArray doInBackground(Boolean... params) {
+
+            final boolean usernameHasChanged = params[0];
 
             //**************************************************************************************************
             // try to update user name in the data store
             //**************************************************************************************************
             try {
                 if (usernameHasChanged) {
-
+                    final String deviceId = Secure.getString(getContentResolver(), Secure.ANDROID_ID);
+                    final String username = SettingsUtils.getUserName(ScoresActivity.this, getString(R.string.device_info_default));
                     URL url = new URL("http://link5dotsscores.appspot.com/update_high_scores?id=" + deviceId + "&newname=" + username);
                     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                     conn.connect();
                     int responseCode = conn.getResponseCode();
 
-                    if (responseCode == 200) {
-                        usernameHasChanged = false;
-                    } else {
+                    if (responseCode != 200) {
                         Log.e(TAG, conn.getResponseMessage());
                     }
 
@@ -328,6 +317,8 @@ public class ScoresActivity extends AppCompatActivity {
             try {
                 Bundle bundle = getIntent().getExtras();
                 if (bundle != null) {
+                    final String deviceId = Secure.getString(getContentResolver(), Secure.ANDROID_ID);
+                    String username = SettingsUtils.getUserName(ScoresActivity.this, getString(R.string.device_info_default));
                     long gameStatus = getIntent().getExtras().getLong(HighScore.GAME_STATUS);
                     long numberOfMoves = getIntent().getExtras().getLong(HighScore.NUMBER_OF_MOVES);
                     long timeElapsed = getIntent().getExtras().getLong(HighScore.ELAPSED_TIME);
@@ -393,23 +384,17 @@ public class ScoresActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(final JSONArray result) {
-            runOnUiThread(new Runnable() {
+            mSwipeRefreshLayout.setRefreshing(false);
 
-                public void run() {
-                    try {
-                        if (result != null) {
-                            updateRows(result);
-                        }
-                    } catch (Exception e) {
-                        Log.e(TAG, e.getMessage());
-                    } finally {
-                        mSwipeRefreshLayout.setRefreshing(false);
-                    }
-
+            try {
+                if (result != null) {
+                    updateRows(result);
                 }
-            });
+            } catch (Exception e) {
+                Log.e(TAG, e.getMessage());
+            }
 
-            doInternetJob = null;
+            doInternetJobTask = null;
         }
     }
 }

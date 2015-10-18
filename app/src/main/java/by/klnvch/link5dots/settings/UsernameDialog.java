@@ -2,9 +2,7 @@ package by.klnvch.link5dots.settings;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
@@ -15,6 +13,8 @@ import android.widget.TextView;
 import by.klnvch.link5dots.R;
 
 public class UsernameDialog extends DialogFragment {
+
+    public static final String TAG = "UsernameDialog";
 
     private OnUsernameChangListener listener = null;
 
@@ -27,8 +27,8 @@ public class UsernameDialog extends DialogFragment {
 
         View v = View.inflate(getActivity(), R.layout.username, null);
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        String username = prefs.getString(SettingsUtils.USER_NAME, getString(R.string.device_info_default));
+        String username
+                = SettingsUtils.getUserName(getContext(), getString(R.string.device_info_default));
         TextView tvUsername = (TextView) v.findViewById(R.id.username);
         tvUsername.setText(username);
 
@@ -40,8 +40,7 @@ public class UsernameDialog extends DialogFragment {
                 EditText editText = (EditText) getDialog().findViewById(R.id.username);
                 String username = editText.getText().toString().trim();
                 if (!username.isEmpty()) {
-                    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-                    prefs.edit().putString(SettingsUtils.USER_NAME, username).apply();
+                    SettingsUtils.setUserName(getContext(), username);
                     //
                     if (listener != null) {
                         listener.onUsernameChanged(username);
@@ -59,7 +58,24 @@ public class UsernameDialog extends DialogFragment {
             }
         });
 
+        builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                if (listener != null) {
+                    listener.onNothingChanged();
+                }
+            }
+        });
+
         return builder.create();
+    }
+
+    @Override
+    public void onCancel(DialogInterface dialog) {
+        if (listener != null) {
+            listener.onNothingChanged();
+        }
+        super.onCancel(dialog);
     }
 
     public void setOnUsernameChangeListener(OnUsernameChangListener listener) {

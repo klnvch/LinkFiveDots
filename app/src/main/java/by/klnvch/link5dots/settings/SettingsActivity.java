@@ -31,8 +31,7 @@ public class SettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.settings);
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        String username = prefs.getString(SettingsUtils.USER_NAME, getString(R.string.device_info_default));
+        String username = SettingsUtils.getUserName(this, getString(R.string.device_info_default));
         TextView tvUsername = (TextView) findViewById(R.id.username_details);
         tvUsername.setText(username);
 

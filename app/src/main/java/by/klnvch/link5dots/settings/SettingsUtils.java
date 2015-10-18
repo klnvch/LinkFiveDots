@@ -28,8 +28,22 @@ public class SettingsUtils {
         }
     }
 
-    public static String getUserName(Context context) {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        return prefs.getString(USER_NAME, null);
+    /**
+     * get stored user name
+     * @param context current context
+     * @return user name or null
+     */
+    public static String getUserName(Context context, String defaultValue) {
+        return PreferenceManager
+                .getDefaultSharedPreferences(context)
+                .getString(USER_NAME, defaultValue);
+    }
+
+    public static void setUserName(Context context, String username) {
+        PreferenceManager
+                .getDefaultSharedPreferences(context)
+                .edit()
+                .putString(USER_NAME, username)
+                .apply();
     }
 }

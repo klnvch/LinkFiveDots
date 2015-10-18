@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        String username = SettingsUtils.getUserName(this);
+        String username = SettingsUtils.getUserName(this, null);
         if (username != null) {
             TextView tvUsername = (TextView)findViewById(R.id.user_name);
             tvUsername.setText(username);
