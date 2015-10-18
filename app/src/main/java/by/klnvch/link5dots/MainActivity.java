@@ -31,14 +31,14 @@ public class MainActivity extends AppCompatActivity {
 
         view.setOnGameEventListener(new GameView.OnGameEventListener() {
             @Override
-            public void onMoveDone(Offset currentDot, Offset previousDot) {
-                if (previousDot == null || previousDot.getType() == Offset.OPPONENT) {
+            public void onMoveDone(Dot currentDot, Dot previousDot) {
+                if (previousDot == null || previousDot.getType() == Dot.OPPONENT) {
                     // set user dot
-                    currentDot.setType(Offset.USER);
+                    currentDot.setType(Dot.USER);
                     view.setDot(currentDot);
                     // set bot dot
-                    Offset botDot = Bot.findAnswer(view.getCopyOfNet());
-                    botDot.setType(Offset.OPPONENT);
+                    Dot botDot = Bot.findAnswer(view.getCopyOfNet());
+                    botDot.setType(Dot.OPPONENT);
                     view.setDot(botDot);
                 }
             }

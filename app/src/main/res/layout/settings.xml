@@ -25,7 +25,7 @@
             android:paddingBottom="4dp"
             android:paddingLeft="8dp"
             android:paddingRight="8dp"
-            android:src="@drawable/ic_account_circle_black_48dp"
+            android:src="@drawable/ic_mood_48dp"
             android:contentDescription="@string/apn_user"/>
 
         <LinearLayout
@@ -75,7 +75,7 @@
             android:paddingBottom="4dp"
             android:paddingLeft="8dp"
             android:paddingRight="8dp"
-            android:src="@drawable/ic_language_black_48dp"
+            android:src="@drawable/ic_language_48dp"
             android:contentDescription="@string/phone_language"/>
 
         <LinearLayout
@@ -125,7 +125,7 @@
             android:paddingBottom="4dp"
             android:paddingLeft="8dp"
             android:paddingRight="8dp"
-            android:src="@drawable/ic_info_black_48dp"
+            android:src="@drawable/ic_info_48dp"
             android:contentDescription="@string/application_info_label"/>
 
         <TextView

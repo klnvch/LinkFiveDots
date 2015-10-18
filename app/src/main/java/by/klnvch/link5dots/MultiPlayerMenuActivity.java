@@ -8,13 +8,13 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
-import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 
 import by.klnvch.link5dots.bluetooth.BluetoothService;
 import by.klnvch.link5dots.bluetooth.DevicePickerActivity;
 import by.klnvch.link5dots.nsd.NsdPickerActivity;
 import by.klnvch.link5dots.nsd.NsdService;
+import by.klnvch.link5dots.online.OnlinePickerActivity;
 
 public class MultiPlayerMenuActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -45,16 +45,7 @@ public class MultiPlayerMenuActivity extends AppCompatActivity implements View.O
         findViewById(R.id.multi_player_online).setOnClickListener(this);
 
         // ads
-        // NullPointerException (@by.klnvch.link5dots.MainMenuActivity:onCreate:73) {main}
-        // allow people to remove ads
-        mAdView = (AdView) findViewById(R.id.adView);
-        if (mAdView != null) {
-            AdRequest adRequest = new AdRequest.Builder()
-                    .addTestDevice(App.DEVICE_ID_1)
-                    .addTestDevice(App.DEVICE_ID_2)
-                    .build();
-            mAdView.loadAd(adRequest);
-        }
+        mAdView = App.initAds(this);
     }
 
     @Override
@@ -118,10 +109,10 @@ public class MultiPlayerMenuActivity extends AppCompatActivity implements View.O
                 startActivityForResult(intent, CHOOSE_NSD_SERVICE);
                 startService(new Intent(this, NsdService.class));
                 break;
-            //case R.id.multi_player_online:
-            //Intent intent1 = new Intent(this, OnlinePickerActivity.class);
-            //startActivity(intent1);
-            //break;
+            case R.id.multi_player_online:
+                Intent intent1 = new Intent(this, OnlinePickerActivity.class);
+                startActivity(intent1);
+                break;
         }
     }
 

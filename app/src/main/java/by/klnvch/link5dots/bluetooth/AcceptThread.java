@@ -12,10 +12,10 @@ import java.io.IOException;
  * like a server-side client. It runs until a connection is accepted
  * (or until cancelled).
  */
-class AcceptThread extends Thread{
+class AcceptThread extends Thread {
     private static final String TAG = "AcceptThread";
     // The local server socket
-    private final BluetoothServerSocket mmServerSocket;
+    private final BluetoothServerSocket mServerSocket;
     private final BluetoothService mBluetoothService;
 
     public AcceptThread(BluetoothService mBluetoothService) {
@@ -29,7 +29,7 @@ class AcceptThread extends Thread{
         } catch (IOException e) {
             Log.e(TAG, "constructor: " + e.getMessage());
         }
-        mmServerSocket = tmp;
+        mServerSocket = tmp;
     }
 
     public void run() {
@@ -42,7 +42,7 @@ class AcceptThread extends Thread{
             try {
                 // This is a blocking call and will only return on a
                 // successful connection or an exception
-                socket = mmServerSocket.accept();
+                socket = mServerSocket.accept();
             } catch (Exception e) {
                 Log.e(TAG, "run: " + e.getMessage());
                 break;
@@ -71,9 +71,12 @@ class AcceptThread extends Thread{
             }
         }
     }
+
     public void cancel() {
         try {
-            mmServerSocket.close();
+            if (mServerSocket != null) {
+                mServerSocket.close();
+            }
         } catch (IOException e) {
             Log.e(TAG, "cancel: " + e.getMessage());
         }

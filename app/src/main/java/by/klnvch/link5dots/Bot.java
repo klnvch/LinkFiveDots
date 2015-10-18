@@ -59,19 +59,19 @@ class Bot {
             new int[]{3,3,3,3,1,1,0,0,1}
 	};
 
-	public static Offset findAnswer(Offset[][] net){
+	public static Dot findAnswer(Dot[][] net){
 		
 		float maxUserRate = -1;
-		ArrayList<Offset> listUser = new ArrayList<>();
+		ArrayList<Dot> listUser = new ArrayList<>();
 		float maxBotRate = -1;
-		ArrayList<Offset> listBot = new ArrayList<>();
+		ArrayList<Dot> listBot = new ArrayList<>();
 		
 		for (int i = 0; i < N; i++) {
 			for (int j = 0; j < M; j++) {
-				if(net[i][j].getType()==Offset.EMPTY){
-					float userRate = getDotRate(net, net[i][j], Offset.USER);
+				if(net[i][j].getType()== Dot.EMPTY){
+					float userRate = getDotRate(net, net[i][j], Dot.USER);
 					net1[i][j] = (int)userRate;
-					float botRate = getDotRate(net, net[i][j], Offset.OPPONENT);
+					float botRate = getDotRate(net, net[i][j], Dot.OPPONENT);
 					net2[i][j] = (int)botRate;
 					
 					//user rates
@@ -99,39 +99,39 @@ class Bot {
 		}
 		
 		float max = -1;
-		ArrayList<Offset> resultList = new ArrayList<>();
+		ArrayList<Dot> resultList = new ArrayList<>();
 		
 		if(maxBotRate >= maxUserRate){
 			
-			for (Offset offset : listBot) {
-				if(max == net1[offset.getX()][offset.getY()]){
-                    resultList.add(offset);
-				}else if(max < net1[offset.getX()][offset.getY()]){
-					max = net1[offset.getX()][offset.getY()];
+			for (Dot dot : listBot) {
+				if(max == net1[dot.getX()][dot.getY()]){
+                    resultList.add(dot);
+				}else if(max < net1[dot.getX()][dot.getY()]){
+					max = net1[dot.getX()][dot.getY()];
                     resultList.clear();
-                    resultList.add(offset);
+                    resultList.add(dot);
 				}
 			}
 			
 		}else{
 			
-			for (Offset offset : listUser) {
-				if(max == net2[offset.getX()][offset.getY()]){
-                    resultList.add(offset);
-				}else if(max < net2[offset.getX()][offset.getY()]){
-					max = net2[offset.getX()][offset.getY()];
+			for (Dot dot : listUser) {
+				if(max == net2[dot.getX()][dot.getY()]){
+                    resultList.add(dot);
+				}else if(max < net2[dot.getX()][dot.getY()]){
+					max = net2[dot.getX()][dot.getY()];
                     resultList.clear();
-                    resultList.add(offset);
+                    resultList.add(dot);
 				}
 			}
 			
 		}
 		
-		Offset result = null;
+		Dot result = null;
 		max = -1;
 		
 		//density checking
-		for (Offset off : resultList) {
+		for (Dot off : resultList) {
 			int temp = getDensity(net, off.getX(), off.getY());
 			if(temp > max){
 				max = temp;
@@ -144,7 +144,7 @@ class Bot {
 	}
 	
 	
-	private static float getDotRate(Offset[][] net, Offset dot, int type){
+	private static float getDotRate(Dot[][] net, Dot dot, int type){
 		
 		int[] array2 = new int[4];
 		//
@@ -175,13 +175,13 @@ class Bot {
 		return array2[0] + array2[1] + array2[2] + array2[3];
 	}
 	
-	private static int getDensity(Offset[][] net, int x, int y){
+	private static int getDensity(Dot[][] net, int x, int y){
 		
 		int result = 0;
 		
 		for(int i=-4;i!=5;++i){
 			for(int j=-4;j!=5;++j){
-				if(isInBound(x+i, y+j) && net[x+i][y+j].getType()==Offset.USER){
+				if(isInBound(x+i, y+j) && net[x+i][y+j].getType()== Dot.USER){
 					if(i>3||i<-3||j>3||j<-3){
 						result += 1;
 					}else if(i>2||i<-2||j>2||j<-2){
@@ -202,7 +202,7 @@ class Bot {
 		return x >= 0 && y >= 0 && x < N && y < M;
 	}
 	
-	private static float getDotRateInLine(Offset[][] net, Offset dot, int type, int dx, int dy) {
+	private static float getDotRateInLine(Dot[][] net, Dot dot, int type, int dx, int dy) {
 		
 		int x = dot.getX();
 		int y = dot.getY();
@@ -235,7 +235,7 @@ class Bot {
 			for(int j=0;j!=5;++j){
 				if(array[i+j]==type){//the same type, increase count
 					++count;
-				}else if(array[i+j]==Offset.EMPTY){//empty, do not increase
+				}else if(array[i+j]== Dot.EMPTY){//empty, do not increase
 
 				}else{//there is something bad
 					count = 0;
@@ -293,13 +293,13 @@ class Bot {
 		for(int i=0; i!=9; ++i){
 			switch(mask[i]){
 				case 0:
-					if(line[i] != Offset.EMPTY)	return false;
+					if(line[i] != Dot.EMPTY)	return false;
 					break;
 				case 1:
 					if(line[i] != type)	return false;
 					break;
 				case 2:
-					if(line[i] == Offset.EMPTY || line[i] == type)	return false;
+					if(line[i] == Dot.EMPTY || line[i] == type)	return false;
 					break;
 				case 3:
 					break;

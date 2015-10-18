@@ -1,6 +1,5 @@
 package by.klnvch.link5dots;
 
-import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 
 import android.content.Context;
@@ -26,15 +25,15 @@ public class MainMenuActivity extends AppCompatActivity implements OnClickListen
 
     private AdView mAdView;
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.main_menu);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.main_menu);
 		
-		findViewById(R.id.main_menu_single_player).setOnClickListener(this);
-		findViewById(R.id.main_menu_multi_player).setOnClickListener(this);
-		findViewById(R.id.main_menu_scores).setOnClickListener(this);
-		findViewById(R.id.main_menu_how_to).setOnClickListener(this);
+        findViewById(R.id.main_menu_single_player).setOnClickListener(this);
+        findViewById(R.id.main_menu_multi_player).setOnClickListener(this);
+        findViewById(R.id.main_menu_scores).setOnClickListener(this);
+        findViewById(R.id.main_menu_how_to).setOnClickListener(this);
         findViewById(R.id.main_menu_settings).setOnClickListener(this);
 
         findViewById(R.id.hello_user).setOnLongClickListener(new View.OnLongClickListener() {
@@ -68,15 +67,8 @@ public class MainMenuActivity extends AppCompatActivity implements OnClickListen
         // ads
         // NullPointerException (@by.klnvch.link5dots.MainMenuActivity:onCreate:73) {main}
         // allow people to remove ads
-        mAdView = (AdView) findViewById(R.id.adView);
-        if (mAdView != null) {
-            AdRequest adRequest = new AdRequest.Builder()
-                    .addTestDevice(App.DEVICE_ID_1)
-                    .addTestDevice(App.DEVICE_ID_2)
-                    .build();
-            mAdView.loadAd(adRequest);
-        }
-	}
+        mAdView = App.initAds(this);
+    }
 
     @Override
     protected void onResume() {
@@ -105,7 +97,7 @@ public class MainMenuActivity extends AppCompatActivity implements OnClickListen
     @Override
     public void onClick(View v) {
 		
-		switch (v.getId()) {
+        switch (v.getId()) {
             case R.id.main_menu_single_player:
                 Intent i1 = new Intent(this, MainActivity.class);
                 startActivity(i1);
@@ -132,8 +124,8 @@ public class MainMenuActivity extends AppCompatActivity implements OnClickListen
                 Intent i5 = new Intent(this, SettingsActivity.class);
                 startActivityForResult(i5, SETTINGS_REQUEST_CODE);
                 break;
-		}
-	}
+        }
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

@@ -23,13 +23,13 @@ public class TwoPlayersActivity extends AppCompatActivity  {
 
         view.setOnGameEventListener(new GameView.OnGameEventListener() {
             @Override
-            public void onMoveDone(Offset currentDot, Offset previousDot) {
-                if (previousDot == null || previousDot.getType() == Offset.OPPONENT) {
+            public void onMoveDone(Dot currentDot, Dot previousDot) {
+                if (previousDot == null || previousDot.getType() == Dot.OPPONENT) {
                     // set user dot
-                    currentDot.setType(Offset.USER);
+                    currentDot.setType(Dot.USER);
                     view.setDot(currentDot);
                 } else {
-                    currentDot.setType(Offset.OPPONENT);
+                    currentDot.setType(Dot.OPPONENT);
                     view.setDot(currentDot);
                 }
             }

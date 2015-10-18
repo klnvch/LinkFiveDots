@@ -1,10 +1,12 @@
 package by.klnvch.link5dots.settings;
 
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -13,6 +15,8 @@ import com.google.android.gms.plus.PlusOneButton;
 import by.klnvch.link5dots.R;
 
 public class InfoActivity extends AppCompatActivity {
+
+    private static final String TAG = "InfoActivity";
 
     // The request code must be 0 or greater.
     private static final int PLUS_ONE_REQUEST_CODE = 0;
@@ -33,7 +37,7 @@ public class InfoActivity extends AppCompatActivity {
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
-        TextView versionTextView = (TextView)findViewById(R.id.version);
+        TextView versionTextView = (TextView) findViewById(R.id.version);
         versionTextView.setText(getString(R.string.version_text, versionName));
 
         // init plus button
@@ -57,7 +61,11 @@ public class InfoActivity extends AppCompatActivity {
                 intent.setType("message/rfc822");
                 intent.setData(Uri.parse("mailto:link5dots@gmail.com"));
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
+                try {
+                    startActivity(Intent.createChooser(intent, getString(R.string.device_feedback)));
+                } catch (ActivityNotFoundException e) {
+                    Log.e(TAG, e.getMessage());
+                }
             }
         });
 

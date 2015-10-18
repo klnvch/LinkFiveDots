@@ -20,7 +20,7 @@ import android.widget.Toast;
 
 import by.klnvch.link5dots.GameView;
 import by.klnvch.link5dots.HighScore;
-import by.klnvch.link5dots.Offset;
+import by.klnvch.link5dots.Dot;
 import by.klnvch.link5dots.R;
 import by.klnvch.link5dots.settings.SettingsUtils;
 
@@ -82,9 +82,9 @@ public class BluetoothActivity extends AppCompatActivity {
 
         view.setOnGameEventListener(new GameView.OnGameEventListener() {
             @Override
-            public void onMoveDone(Offset currentDot, Offset previousDot) {
+            public void onMoveDone(Dot currentDot, Dot previousDot) {
                 // set user dot
-                currentDot.setType(Offset.USER);
+                currentDot.setType(Dot.USER);
                 view.setDot(currentDot);
                 //
                 sendMessage(currentDot.toString());
@@ -274,9 +274,9 @@ public class BluetoothActivity extends AppCompatActivity {
                             TextView opponentName = (TextView)activity.findViewById(R.id.opponent_name);
                             opponentName.setText(activity.enemyName);
                         } else {
-                            Offset offset = Offset.parseString(readMessage);
-                            offset.setType(Offset.OPPONENT);
-                            activity.view.setDot(offset);
+                            Dot dot = Dot.parseString(readMessage);
+                            dot.setType(Dot.OPPONENT);
+                            activity.view.setDot(dot);
                             activity.setTitle(R.string.bt_message_your_turn);
                         }
                         break;

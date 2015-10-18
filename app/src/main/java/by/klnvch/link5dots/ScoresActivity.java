@@ -1,9 +1,12 @@
 package by.klnvch.link5dots;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 
@@ -11,7 +14,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 
 import android.content.SharedPreferences;
@@ -69,16 +71,7 @@ public class ScoresActivity extends AppCompatActivity {
         });
 
         // ads
-        // NullPointerException (@by.klnvch.link5dots.MainMenuActivity:onCreate:73) {main}
-        // allow people to remove ads
-        mAdView = (AdView) findViewById(R.id.adView);
-        if (mAdView != null) {
-            AdRequest adRequest = new AdRequest.Builder()
-                    .addTestDevice(App.DEVICE_ID_1)
-                    .addTestDevice(App.DEVICE_ID_2)
-                    .build();
-            mAdView.loadAd(adRequest);
-        }
+        mAdView = App.initAds(this);
 
         //set device id
         deviceId = Secure.getString(getContentResolver(), Secure.ANDROID_ID);
@@ -335,9 +328,9 @@ public class ScoresActivity extends AppCompatActivity {
             try {
                 Bundle bundle = getIntent().getExtras();
                 if (bundle != null) {
-                    long gameStatus = getIntent().getExtras().getLong("GAME_STATUS");
-                    long numberOfMoves = getIntent().getExtras().getLong("NUMBER_OF_MOVES");
-                    long timeElapsed = getIntent().getExtras().getLong("ELAPSED_TIME");
+                    long gameStatus = getIntent().getExtras().getLong(HighScore.GAME_STATUS);
+                    long numberOfMoves = getIntent().getExtras().getLong(HighScore.NUMBER_OF_MOVES);
+                    long timeElapsed = getIntent().getExtras().getLong(HighScore.ELAPSED_TIME);
 
                     HighScore score = new HighScore(deviceId, username, numberOfMoves, timeElapsed, gameStatus);
 
@@ -359,7 +352,17 @@ public class ScoresActivity extends AppCompatActivity {
                     }
                 }
             } catch (Exception e) {
-                Log.e(TAG, e.getMessage());
+                if (e instanceof UnsupportedEncodingException) {
+                    Log.e(TAG, e.getMessage());
+                } else if (e instanceof MalformedURLException) {
+                    Log.e(TAG, e.getMessage());
+                } else if (e instanceof IOException) {
+                    Log.e(TAG, e.getMessage());
+                } else if (e instanceof JSONException) {
+                    Log.e(TAG, e.getMessage());
+                } else {
+                    Log.e(TAG, e.getMessage());
+                }
             }
 
             //**************************************************************************************

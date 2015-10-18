@@ -37,8 +37,8 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/btn_selector"
-                    android:drawableLeft="@drawable/ic_android_black_48dp"
-                    android:drawableStart="@drawable/ic_android_black_48dp"
+                    android:drawableLeft="@drawable/ic_android_48dp"
+                    android:drawableStart="@drawable/ic_android_48dp"
                     android:text="@string/menu_single_player"
                     android:textColor="@color/black"
                     android:textSize="@dimen/btn_text_size"
@@ -49,8 +49,8 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/btn_selector"
-                    android:drawableLeft="@drawable/ic_person_black_48dp"
-                    android:drawableStart="@drawable/ic_person_black_48dp"
+                    android:drawableLeft="@drawable/ic_person_48dp"
+                    android:drawableStart="@drawable/ic_person_48dp"
                     android:text="@string/menu_multi_player"
                     android:textColor="@color/black"
                     android:textSize="@dimen/btn_text_size"
@@ -64,8 +64,8 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/btn_selector"
-                    android:drawableLeft="@drawable/ic_star_black_48dp"
-                    android:drawableStart="@drawable/ic_star_black_48dp"
+                    android:drawableLeft="@drawable/ic_star_48dp"
+                    android:drawableStart="@drawable/ic_star_48dp"
                     android:text="@string/scores_title"
                     android:textColor="@color/black"
                     android:textSize="@dimen/btn_text_size"
@@ -82,7 +82,7 @@
                         android:layout_weight="1"
                         android:background="@drawable/btn_selector"
                         android:contentDescription="@string/settings_label"
-                        android:src="@drawable/ic_settings_black_48dp" />
+                        android:src="@drawable/ic_settings_48dp" />
 
                     <ImageButton
                         android:id="@+id/main_menu_how_to"
@@ -91,7 +91,7 @@
                         android:layout_weight="1"
                         android:background="@drawable/btn_selector"
                         android:contentDescription="@string/how_to_title"
-                        android:src="@drawable/ic_help_black_48dp" />
+                        android:src="@drawable/ic_help_48dp" />
 
                 </LinearLayout>
             </TableRow>

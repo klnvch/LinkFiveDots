@@ -6,7 +6,7 @@ import com.google.android.gms.analytics.StandardExceptionParser;
 
 import java.util.Collection;
 
-public class AnalyticsExceptionParser extends StandardExceptionParser {
+class AnalyticsExceptionParser extends StandardExceptionParser {
 
     public AnalyticsExceptionParser(Context context, Collection<String> additionalPackages) {
         super(context, additionalPackages);

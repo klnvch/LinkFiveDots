@@ -82,7 +82,7 @@ public class GameView extends View {
     private OnGameEventListener listener;
 
     public interface OnGameEventListener{
-        void onMoveDone(Offset currentDot, Offset previousDot);
+        void onMoveDone(Dot currentDot, Dot previousDot);
         void onGameEnd(HighScore highScore);
     }
 		
@@ -136,7 +136,7 @@ public class GameView extends View {
 		}
 		//
 		matrix = new Matrix();
-		this.game = new Game();
+		this.game = new Game("host", "guest");
 	}
 	public void setOnGameEventListener(OnGameEventListener listener){
 		this.listener = listener;
@@ -191,19 +191,19 @@ public class GameView extends View {
 			for(int j=0; j!= GRID_SIZE; ++j){
 				float dX = basePoint.x + arr1[i]*scale - dotSize *scale/2.0f;
 				float dY = basePoint.y + arr1[j]*scale - dotSize *scale/2.0f;
-				if(game.net[i][j].getType() == Offset.USER){
+				if(game.net[i][j].getType() == Dot.USER){
 					canvas.drawBitmap(scaledUserDot, dX, dY, null);
 				}
-				if(game.net[i][j].getType() == Offset.OPPONENT){
+				if(game.net[i][j].getType() == Dot.OPPONENT){
 					canvas.drawBitmap(scaledBotDot, dX, dY, null);
 				}
 			}
 		}
 		// Draw dots winning line
-		ArrayList<Offset> winningLine = game.isOver();
+		ArrayList<Dot> winningLine = game.isOver();
 		if(winningLine != null){
-			Offset firstDot = winningLine.get(0);
-			Offset lastDot = winningLine.get(winningLine.size()-1);
+			Dot firstDot = winningLine.get(0);
+			Dot lastDot = winningLine.get(winningLine.size()-1);
 		
 			float x1 = basePoint.x + arr1[firstDot.getX()]*scale;
 			float y1 = basePoint.y + arr1[firstDot.getY()]*scale;
@@ -232,7 +232,7 @@ public class GameView extends View {
 		
 		// Draw four arrows
 		
-		Offset lastDot = game.getLastDot();
+		Dot lastDot = game.getLastDot();
 		
 		if(lastDot != null && !hideArrows){
 			float dX = basePoint.x + arr1[lastDot.getX()]*scale - (arrowsSize *scale)/2.0f;
@@ -263,10 +263,10 @@ public class GameView extends View {
 		invalidate();
 	}
 
-	public Offset[][] getCopyOfNet(){
-        Offset[][] copyNet = new Offset[game.net.length][];
+	public Dot[][] getCopyOfNet(){
+        Dot[][] copyNet = new Dot[game.net.length][];
         for (int i=0; i!=game.net.length; ++i) {
-            copyNet[i] = new Offset[game.net[i].length];
+            copyNet[i] = new Dot[game.net[i].length];
             for (int j=0; j!=game.net[i].length; ++j) {
                 copyNet[i][j] = game.net[i][j].copy();
             }
@@ -302,7 +302,7 @@ public class GameView extends View {
 		}
 		return result;
 	}
-	public void setDot(Offset dot){
+	public void setDot(Dot dot){
 		
 		game.setDot(dot.getX(), dot.getY(), dot.getType());
 		invalidate();
@@ -371,10 +371,10 @@ public class GameView extends View {
 		scaledArrow = Bitmap.createScaledBitmap(arrows, (int)(arrowsSize *scale), (int)(arrowsSize *scale), true);
 	}
 	private void updateLinesBitmaps(){
-		ArrayList<Offset> winningLine = game.isOver();
+		ArrayList<Dot> winningLine = game.isOver();
 		if(winningLine != null){
-			Offset firstDot = winningLine.get(0);
-			Offset lastDot = winningLine.get(winningLine.size()-1);
+			Dot firstDot = winningLine.get(0);
+			Dot lastDot = winningLine.get(winningLine.size()-1);
 		
 			float x1 = basePoint.x + arr1[firstDot.getX()]*scale;
 			float y1 = basePoint.y + arr1[firstDot.getY()]*scale;
@@ -382,25 +382,25 @@ public class GameView extends View {
 			float y2 = basePoint.y + arr1[lastDot.getY()]*scale;
 			
 			if(y1==y2){//horizontal line
-				if(firstDot.getType() == Offset.USER){
+				if(firstDot.getType() == Dot.USER){
 					newline = Bitmap.createScaledBitmap(userHorLine, (int)(lineLength *scale), (int)(lineThickness *scale), true);
 				}else{
 					newline = Bitmap.createScaledBitmap(botHorLine, (int)(lineLength *scale), (int)(lineThickness *scale), true);
 				}
 			}else if(x1==x2){//vertical line
-				if(firstDot.getType() == Offset.USER){
+				if(firstDot.getType() == Dot.USER){
 					newline = Bitmap.createScaledBitmap(userVerLine, (int)(lineThickness *scale), (int)(lineLength *scale), true);
 				}else{
 					newline = Bitmap.createScaledBitmap(botVerLine, (int)(lineThickness *scale), (int)(lineLength *scale), true);
 				}
 			}else if(x1>x2){//diagonal left to right
-				if(firstDot.getType() == Offset.USER){
+				if(firstDot.getType() == Dot.USER){
 					newline = Bitmap.createScaledBitmap(userDiagonal1Line, (int)(lineLength *scale), (int)(lineLength *scale), true);
 				}else{
 					newline = Bitmap.createScaledBitmap(botDiagonal1Line, (int)(lineLength *scale), (int)(lineLength *scale), true);
 				}
 			}else if(x2>x1){//diagonal right to left
-				if(firstDot.getType() == Offset.USER){
+				if(firstDot.getType() == Dot.USER){
 					newline = Bitmap.createScaledBitmap(userDiagonal2Line, (int)(lineLength *scale), (int)(lineLength *scale), true);
 				}else{
 					newline = Bitmap.createScaledBitmap(botDiagonal2Line, (int)(lineLength *scale), (int)(lineLength *scale), true);
@@ -534,7 +534,7 @@ public class GameView extends View {
 				invalidate();
 
                 if(listener != null) {
-                    listener.onMoveDone(new Offset(xl, yl), game.getLastDot());
+                    listener.onMoveDone(new Dot(xl, yl), game.getLastDot());
                 } else {
                     Log.e(TAG, "listener is null");
                 }
