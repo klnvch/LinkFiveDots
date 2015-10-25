@@ -159,14 +159,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainMenuActivity" />
         </activity>
-<!--
-        <activity
-            android:name=".online.OnlinePickerActivity"
-            android:label="Online">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MultiPlayerMenuActivity" />
-        </activity>
--->
+
     </application>
 </manifest>

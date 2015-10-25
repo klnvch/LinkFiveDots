@@ -8,8 +8,8 @@ android {
         applicationId "by.klnvch.link5dots"
         minSdkVersion 9
         targetSdkVersion 23
-        versionCode 22
-        versionName "3.5.3"
+        versionCode 23
+        versionName "3.5.4"
 
         resConfigs "en", "be", "de", "es", "fr", "it", "pl", "ru", "uk", "fa"
     }
