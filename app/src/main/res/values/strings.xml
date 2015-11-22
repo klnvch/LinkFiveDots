@@ -21,7 +21,7 @@
         Use menu to restart the game, undo last move, see game scores or see how to play.
         \n\t
         Press \"Search\" button to hide/show arrows around the last move dot.</string>
-	
+
     <string name="scores_title">Scores</string>
     <string name="scores_no_internet">No internet access</string>
     <string name="scores_number">#</string>
@@ -30,18 +30,18 @@
     <string name="scores_status">Status</string>
     <string name="scores_won">won</string>
     <string name="scores_lost">lost</string>
-	
+
     <string name="end_win">You’ve won!</string>
     <string name="end_lose">You’ve failed!</string>
     <string name="end_new_game">New</string>
     <string name="end_undo">Undo</string>
     <string name="end_move">%1$d moves done for %2$d s.</string>
-	
+
     <string name="scores_time">Time</string>
     <string name="end_publish">Publish</string>
-	
+
     <string name="scores_loading">Loading…</string>
-	
+
     <string name="menu_single_player">Single Player</string>
     <string name="menu_multi_player">Multiplayer</string>
     <string name="two_players">Two players</string>
@@ -119,7 +119,7 @@
     <!-- 5597 Text used as a search hint into the search box -->
     <string name="search_menu">Search</string>
 
-	
+
     <string name="bt_message_your_turn">Your move, put a dot…</string>
     <string name="bt_message_opponents_turn">Opponent\'s move, wait…</string>
 
@@ -154,5 +154,13 @@
 
     <string name="nsd_error" translatable="false">DNS-Based Service Discovery is only available since Android 4.1.</string>
     <string name="bluetooth_error" translatable="false">Bluetooth is not supported by your device.</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="sign_in_failed">Failed to sign in. Please check your network connection and try again.</string>
+    <string name="app_misconfigured">The application is incorrectly configured. Check that the package name and signing certificate match the client ID created in Developer Console. Also, if the application is not yet published, check that the account you are trying to sign in with is listed as a tester account. See logs for more information.</string>
+    <string name="license_failed">License check failed.</string>
+    <string name="unknown_error">Unknown error.</string>
 
 </resources>
