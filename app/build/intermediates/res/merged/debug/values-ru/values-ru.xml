@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:ns1="urn:oasis:names:tc:xliff:document:1.2">
+    <string msgid="4600421777120114993" name="abc_action_bar_home_description">"Перейти на главный экран"</string>
+    <string msgid="1397052879051804371" name="abc_action_bar_home_description_format">"%1$s, %2$s"</string>
+    <string msgid="6623331958280229229" name="abc_action_bar_home_subtitle_description_format">"%1$s, %2$s, %3$s"</string>
+    <string msgid="1594238315039666878" name="abc_action_bar_up_description">"Перейти вверх"</string>
+    <string msgid="3588849162933574182" name="abc_action_menu_overflow_description">"Другие параметры"</string>
+    <string msgid="4076576682505996667" name="abc_action_mode_done">"Готово"</string>
+    <string msgid="7468859129482906941" name="abc_activity_chooser_view_see_all">"Показать все"</string>
+    <string msgid="2031811694353399454" name="abc_activitychooserview_choose_application">"Выбрать приложение"</string>
+    <string msgid="121134116657445385" name="abc_capital_off">"ОТКЛ."</string>
+    <string msgid="3405795526292276155" name="abc_capital_on">"ВКЛ."</string>
+    <string msgid="7723749260725869598" name="abc_search_hint">"Поиск"</string>
+    <string msgid="3691816814315814921" name="abc_searchview_description_clear">"Удалить запрос"</string>
+    <string msgid="2550479030709304392" name="abc_searchview_description_query">"Поисковый запрос"</string>
+    <string msgid="8264924765203268293" name="abc_searchview_description_search">"Поиск"</string>
+    <string msgid="8928215447528550784" name="abc_searchview_description_submit">"Отправить запрос"</string>
+    <string msgid="893419373245838918" name="abc_searchview_description_voice">"Голосовой поиск"</string>
+    <string msgid="3421042268587513524" name="abc_shareactionprovider_share_with">"Открыть доступ"</string>
+    <string msgid="7165123711973476752" name="abc_shareactionprovider_share_with_application">"Открыть доступ пользователю %s"</string>
+    <string msgid="1603543279005712093" name="abc_toolbar_collapse_description">"Свернуть"</string>
+    <string name="android">Андроид</string>
+    <string name="apn_name">"Имя:"</string>
+    <string name="apn_not_set">"Не задано"</string>
+    <string name="apn_user">"Имя пользователя"</string>
+    <string name="app_name">Соедини пять точек</string>
+    <string name="application_info_label">"О приложении"</string>
+    <string name="bluetooth_connected">"Подключено"</string>
+    <string name="bluetooth_connecting">"Подключение…"</string>
+    <string name="bluetooth_connecting_error_message">"Не удалось подключиться к \"%1$s\"."</string>
+    <string name="bluetooth_connection_dialog_text">"Подключиться к устройству \"%1$s\"?"</string>
+    <string name="bluetooth_disconnected">"Отключено"</string>
+    <string name="bluetooth_is_disconnect_question">"Отключить \"%1$s\"?"</string>
+    <string name="bluetooth_is_discoverable">"Виден другим Bluetooth-устройствам: %1$s"</string>
+    <string name="bluetooth_no_devices_found">"Устройства Bluetooth не найдены."</string>
+    <string name="bluetooth_not_discoverable">"Сделать устройство видимым"</string>
+    <string name="bluetooth_only_visible_to_paired_devices">"Доступно только для подключенных устройств"</string>
+    <string name="bluetooth_preference_found_devices">"Доступные устройства"</string>
+    <string name="bluetooth_preference_paired_devices">"Подключенные устройства"</string>
+    <string name="bluetooth_search_for_devices">"Обновить"</string>
+    <string name="bluetooth_settings">"Bluetooth"</string>
+    <string name="bt_message_opponents_turn">Ход соперника, подождите…</string>
+    <string name="bt_message_your_turn">Ваш ход, поставте точку…</string>
+    <string name="cancel">"Отмена"</string>
+    <string msgid="6428604800157361567" name="common_android_wear_notification_needs_update_text">"Чтобы продолжить работу с приложением \"<ns1:g id="APP_NAME">%1$s</ns1:g>\", обновите Android Wear"</string>
+    <string msgid="2453027084525739603" name="common_android_wear_update_text">"Чтобы запустить приложение \"<ns1:g id="APP_NAME">%1$s</ns1:g>\", обновите Android Wear."</string>
+    <string msgid="1366439133145190222" name="common_android_wear_update_title">"Обновить Android Wear"</string>
+    <string msgid="6534628256897874213" name="common_google_play_services_api_unavailable_text">"Сервисы Google Play, необходимые для работы с приложением \"<ns1:g id="APP_NAME">%1$s</ns1:g>\", недоступны. Свяжитесь с его разработчиком."</string>
+    <string msgid="4181637455539816337" name="common_google_play_services_enable_button">"Включить"</string>
+    <string msgid="4896236883690196080" name="common_google_play_services_enable_text">"Чтобы запустить приложение \"<ns1:g id="APP_NAME">%1$s</ns1:g>\", включите сервисы Google Play."</string>
+    <string msgid="529078775174559253" name="common_google_play_services_enable_title">"Включите Сервисы Google Play"</string>
+    <string msgid="2443362625939284971" name="common_google_play_services_error_notification_requested_by_msg">"Источник запроса: <ns1:g id="APP_NAME">%1$s</ns1:g>"</string>
+    <string msgid="8515591849428043265" name="common_google_play_services_install_button">"Установить"</string>
+    <string msgid="8836325110837822534" name="common_google_play_services_install_text_phone">"Для работы с приложением \"<ns1:g id="APP_NAME">%1$s</ns1:g>\" требуются сервисы Google Play, не установленные на вашем телефоне."</string>
+    <string msgid="542176290824754127" name="common_google_play_services_install_text_tablet">"Для работы с приложением \"<ns1:g id="APP_NAME">%1$s</ns1:g>\" требуются сервисы Google Play, не установленные на вашем планшете."</string>
+    <string msgid="26645092511305524" name="common_google_play_services_install_title">"Установите Сервисы Google Play"</string>
+    <string msgid="4983316348021735578" name="common_google_play_services_invalid_account_text">"Этого аккаунта нет на устройстве. Выберите другой."</string>
+    <string msgid="1066672360770936753" name="common_google_play_services_invalid_account_title">"Недействительный аккаунт"</string>
+    <string msgid="2583358409598976717" name="common_google_play_services_needs_enabling_title">"Для работы приложения требуется включить сервисы Google Play"</string>
+    <string msgid="9038847255613537209" name="common_google_play_services_network_error_text">"Для работы с Google Play требуется подключение к сети."</string>
+    <string msgid="3827284619958211114" name="common_google_play_services_network_error_title">"Ошибка сети"</string>
+    <string msgid="1388129345631079938" name="common_google_play_services_notification_needs_update_title">"Для работы приложения требуется обновить сервисы Google Play"</string>
+    <string msgid="1852570676146674985" name="common_google_play_services_notification_ticker">"Ошибка сервисов Google Play"</string>
+    <string msgid="5194079840165204725" name="common_google_play_services_sign_in_failed_text">"При входе в указанный аккаунт произошла ошибка. Выберите другой аккаунт."</string>
+    <string msgid="8164948898147532159" name="common_google_play_services_sign_in_failed_title">"Ошибка входа"</string>
+    <string msgid="4762332809710093730" name="common_google_play_services_unknown_issue">"Неизвестная ошибка с Сервисами Google Play."</string>
+    <string msgid="7682982632307307938" name="common_google_play_services_unsupported_text">"Сервисы Google Play, необходимые для работы с приложением \"<ns1:g id="APP_NAME">%1$s</ns1:g>\", не поддерживаются на вашем устройстве. Обратитесь к его производителю."</string>
+    <string msgid="6334768798839376943" name="common_google_play_services_unsupported_title">"Сервисы Google Play"</string>
+    <string msgid="8932944190611227642" name="common_google_play_services_update_button">"Обновить"</string>
+    <string msgid="5709479369299147668" name="common_google_play_services_update_text">"Чтобы запустить приложение \"<ns1:g id="APP_NAME">%1$s</ns1:g>\", обновите сервисы Google Play."</string>
+    <string msgid="6006316683626838685" name="common_google_play_services_update_title">"Обновите Сервисы Google Play"</string>
+    <string msgid="2201289642219771610" name="common_google_play_services_updating_text">"Сервисы Google Play, необходимые для работы с приложением \"<ns1:g id="APP_NAME">%1$s</ns1:g>\", в настоящий момент обновляются."</string>
+    <string msgid="815008177440683245" name="common_google_play_services_updating_title">"Обновление сервисов Google Play…"</string>
+    <string msgid="411506735369601515" name="common_open_on_phone">"Открыть на телефоне"</string>
+    <string msgid="3156914698180786012" name="common_signin_button_text">"Войти"</string>
+    <string msgid="1483290677806110088" name="common_signin_button_text_long">"Войти через аккаунт Google"</string>
+    <string name="create">"Создать"</string>
+    <string name="device_feedback">Отправить отзыв</string>
+    <string name="device_info_default">"Неизвестно"</string>
+    <string name="device_picker">"Выбрать устройство Bluetooth"</string>
+    <string name="end_lose">Вы проиграли!</string>
+    <string name="end_move">%1$d ходов сделано за %2$d с.</string>
+    <string name="end_new_game">Новая</string>
+    <string name="end_publish">Опубликовать</string>
+    <string name="end_undo">Отменить</string>
+    <string name="end_win">Вы выиграли!</string>
+    <string name="greetings">Привет, %1$s!</string>
+    <string name="how_to_text">\tБудьте первыми соединив пять точек в прямую линию горизонтально, вертикально или диагонально. Андроид играет синими точками, Вы играете красными точками. Красные и синие точки ставятся по очереди на пересечениях линий. Первый ход Ваш.\n\n\tПеретяните экран, чтобы передвинуть игровое поле.\n\tРастяните экран, чтобы увеличить или уменьшить размер клеток.\n\tИспользуйте меню, чтобы начать новую игру, отменить последний ход, посмотреть очки или информацию как играть.\n\tНажмите на кнопку \"Поиск\", чтобы спрятать/показать стрелочки вокруг точки последнего хода.</string>
+    <string name="how_to_title">Как играть</string>
+    <string name="language">Русский</string>
+    <string name="menu_local_network">Локальная Сеть</string>
+    <string name="menu_multi_player">Мультиплеер</string>
+    <string name="menu_single_player">Один игрок</string>
+    <string name="no">"Нет"</string>
+    <string name="okay">"ОК"</string>
+    <string name="phone_language">"Язык"</string>
+    <string name="rate_this_app">Оценить приложение</string>
+    <string name="scores_loading">Загрузка…</string>
+    <string name="scores_lost">проиграна</string>
+    <string name="scores_moves">Количество ходов</string>
+    <string name="scores_name">Имя</string>
+    <string name="scores_no_internet">Нет доступа к интернету</string>
+    <string name="scores_number">№</string>
+    <string name="scores_status">Статус</string>
+    <string name="scores_time">Время</string>
+    <string name="scores_title">Очки</string>
+    <string name="scores_won">выиграна</string>
+    <string name="search_menu">"Поиск"</string>
+    <string name="settings_label">"Настройки"</string>
+    <string name="share">"Отправить"</string>
+    <string msgid="2869576371154716097" name="status_bar_notification_info_overflow">">999"</string>
+    <string name="two_players">Два игрока</string>
+    <string name="version_text">"Версия %1$s"</string>
+    <string name="yes">"Да"</string>
+</resources>

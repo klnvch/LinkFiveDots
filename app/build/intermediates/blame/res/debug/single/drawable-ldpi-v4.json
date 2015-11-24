@@ -1,0 +1,50 @@
+[
+    {
+        "merged": "/home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/res/merged/debug/drawable-ldpi-v4/ic_settings_48dp.png",
+        "source": "/home/anton/StudioProjects/LinkFiveDots/app/build/generated/res/pngs/debug/drawable-ldpi/ic_settings_48dp.png"
+    },
+    {
+        "merged": "/home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/res/merged/debug/drawable-ldpi-v4/ic_star_48dp.png",
+        "source": "/home/anton/StudioProjects/LinkFiveDots/app/build/generated/res/pngs/debug/drawable-ldpi/ic_star_48dp.png"
+    },
+    {
+        "merged": "/home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/res/merged/debug/drawable-ldpi-v4/ic_android_48dp.png",
+        "source": "/home/anton/StudioProjects/LinkFiveDots/app/build/generated/res/pngs/debug/drawable-ldpi/ic_android_48dp.png"
+    },
+    {
+        "merged": "/home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/res/merged/debug/drawable-ldpi-v4/ic_person_48dp.png",
+        "source": "/home/anton/StudioProjects/LinkFiveDots/app/build/generated/res/pngs/debug/drawable-ldpi/ic_person_48dp.png"
+    },
+    {
+        "merged": "/home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/res/merged/debug/drawable-ldpi-v4/ic_info_48dp.png",
+        "source": "/home/anton/StudioProjects/LinkFiveDots/app/build/generated/res/pngs/debug/drawable-ldpi/ic_info_48dp.png"
+    },
+    {
+        "merged": "/home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/res/merged/debug/drawable-ldpi-v4/ic_public_48dp.png",
+        "source": "/home/anton/StudioProjects/LinkFiveDots/app/build/generated/res/pngs/debug/drawable-ldpi/ic_public_48dp.png"
+    },
+    {
+        "merged": "/home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/res/merged/debug/drawable-ldpi-v4/ic_bluetooth_48dp.png",
+        "source": "/home/anton/StudioProjects/LinkFiveDots/app/build/generated/res/pngs/debug/drawable-ldpi/ic_bluetooth_48dp.png"
+    },
+    {
+        "merged": "/home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/res/merged/debug/drawable-ldpi-v4/ic_people_48dp.png",
+        "source": "/home/anton/StudioProjects/LinkFiveDots/app/build/generated/res/pngs/debug/drawable-ldpi/ic_people_48dp.png"
+    },
+    {
+        "merged": "/home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/res/merged/debug/drawable-ldpi-v4/ic_language_48dp.png",
+        "source": "/home/anton/StudioProjects/LinkFiveDots/app/build/generated/res/pngs/debug/drawable-ldpi/ic_language_48dp.png"
+    },
+    {
+        "merged": "/home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/res/merged/debug/drawable-ldpi-v4/ic_router_48dp.png",
+        "source": "/home/anton/StudioProjects/LinkFiveDots/app/build/generated/res/pngs/debug/drawable-ldpi/ic_router_48dp.png"
+    },
+    {
+        "merged": "/home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/res/merged/debug/drawable-ldpi-v4/ic_help_48dp.png",
+        "source": "/home/anton/StudioProjects/LinkFiveDots/app/build/generated/res/pngs/debug/drawable-ldpi/ic_help_48dp.png"
+    },
+    {
+        "merged": "/home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/res/merged/debug/drawable-ldpi-v4/ic_mood_48dp.png",
+        "source": "/home/anton/StudioProjects/LinkFiveDots/app/build/generated/res/pngs/debug/drawable-ldpi/ic_mood_48dp.png"
+    }
+]

@@ -1,0 +1,50 @@
+[
+    {
+        "merged": "/home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/res/merged/debug/drawable-anydpi-v21/ic_info_48dp.xml",
+        "source": "/home/anton/StudioProjects/LinkFiveDots/app/build/generated/res/pngs/debug/drawable-anydpi-v21/ic_info_48dp.xml"
+    },
+    {
+        "merged": "/home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/res/merged/debug/drawable-anydpi-v21/ic_mood_48dp.xml",
+        "source": "/home/anton/StudioProjects/LinkFiveDots/app/build/generated/res/pngs/debug/drawable-anydpi-v21/ic_mood_48dp.xml"
+    },
+    {
+        "merged": "/home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/res/merged/debug/drawable-anydpi-v21/ic_android_48dp.xml",
+        "source": "/home/anton/StudioProjects/LinkFiveDots/app/build/generated/res/pngs/debug/drawable-anydpi-v21/ic_android_48dp.xml"
+    },
+    {
+        "merged": "/home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/res/merged/debug/drawable-anydpi-v21/ic_help_48dp.xml",
+        "source": "/home/anton/StudioProjects/LinkFiveDots/app/build/generated/res/pngs/debug/drawable-anydpi-v21/ic_help_48dp.xml"
+    },
+    {
+        "merged": "/home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/res/merged/debug/drawable-anydpi-v21/ic_language_48dp.xml",
+        "source": "/home/anton/StudioProjects/LinkFiveDots/app/build/generated/res/pngs/debug/drawable-anydpi-v21/ic_language_48dp.xml"
+    },
+    {
+        "merged": "/home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/res/merged/debug/drawable-anydpi-v21/ic_router_48dp.xml",
+        "source": "/home/anton/StudioProjects/LinkFiveDots/app/build/generated/res/pngs/debug/drawable-anydpi-v21/ic_router_48dp.xml"
+    },
+    {
+        "merged": "/home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/res/merged/debug/drawable-anydpi-v21/ic_settings_48dp.xml",
+        "source": "/home/anton/StudioProjects/LinkFiveDots/app/build/generated/res/pngs/debug/drawable-anydpi-v21/ic_settings_48dp.xml"
+    },
+    {
+        "merged": "/home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/res/merged/debug/drawable-anydpi-v21/ic_public_48dp.xml",
+        "source": "/home/anton/StudioProjects/LinkFiveDots/app/build/generated/res/pngs/debug/drawable-anydpi-v21/ic_public_48dp.xml"
+    },
+    {
+        "merged": "/home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/res/merged/debug/drawable-anydpi-v21/ic_person_48dp.xml",
+        "source": "/home/anton/StudioProjects/LinkFiveDots/app/build/generated/res/pngs/debug/drawable-anydpi-v21/ic_person_48dp.xml"
+    },
+    {
+        "merged": "/home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/res/merged/debug/drawable-anydpi-v21/ic_bluetooth_48dp.xml",
+        "source": "/home/anton/StudioProjects/LinkFiveDots/app/build/generated/res/pngs/debug/drawable-anydpi-v21/ic_bluetooth_48dp.xml"
+    },
+    {
+        "merged": "/home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/res/merged/debug/drawable-anydpi-v21/ic_star_48dp.xml",
+        "source": "/home/anton/StudioProjects/LinkFiveDots/app/build/generated/res/pngs/debug/drawable-anydpi-v21/ic_star_48dp.xml"
+    },
+    {
+        "merged": "/home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/res/merged/debug/drawable-anydpi-v21/ic_people_48dp.xml",
+        "source": "/home/anton/StudioProjects/LinkFiveDots/app/build/generated/res/pngs/debug/drawable-anydpi-v21/ic_people_48dp.xml"
+    }
+]

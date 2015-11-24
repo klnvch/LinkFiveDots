@@ -1,0 +1,14 @@
+[
+    {
+        "merged": "/home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/res/merged/debug/menu/scores_menu.xml",
+        "source": "/home/anton/StudioProjects/LinkFiveDots/app/src/main/res/menu/scores_menu.xml"
+    },
+    {
+        "merged": "/home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/res/merged/debug/menu/menu.xml",
+        "source": "/home/anton/StudioProjects/LinkFiveDots/app/src/main/res/menu/menu.xml"
+    },
+    {
+        "merged": "/home/anton/StudioProjects/LinkFiveDots/app/build/intermediates/res/merged/debug/menu/bluetooth.xml",
+        "source": "/home/anton/StudioProjects/LinkFiveDots/app/src/main/res/menu/bluetooth.xml"
+    }
+]
