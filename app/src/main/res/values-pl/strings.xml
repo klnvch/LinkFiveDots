@@ -64,6 +64,7 @@
 	<string name="apn_name">"Nazwa:"</string>
     <string name="apn_user">"Nazwa użytkownika"</string>
 	<string name="application_info_label">"Informacje o aplikacji"</string>
+	<string name="master_clear_progress_text">"Zaczekaj…"</string>
 	<string name="version_text">"wersja %1$s"</string>
 	<string name="device_feedback">Prześlij opinię</string>
 	<string name="phone_language">"Język"</string>
@@ -71,7 +72,7 @@
 	<string name="search_menu">"Szukaj"</string>
 
 
-	<string name="bt_message_your_turn">Wasz ruch, postaw kropkę&#8230;</string>
-	<string name="bt_message_opponents_turn">Ruch rywala, czekaj&#8230;</string>
+	<string name="bt_message_your_turn">Wasz ruch, postaw kropkę…</string>
+	<string name="bt_message_opponents_turn">Ruch rywala, czekaj…</string>
 	
 </resources>

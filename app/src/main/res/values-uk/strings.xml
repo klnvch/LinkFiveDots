@@ -64,6 +64,7 @@
 	<string name="apn_name">"Назва:"</string>
     <string name="apn_user">"Ім’я користувача"</string>
 	<string name="application_info_label">"Про додаток"</string>
+	<string name="master_clear_progress_text">"Зачекайте…"</string>
 	<string name="version_text">"версія %1$s"</string>
 	<string name="device_feedback">Надіслати відгук</string>
 	<string name="phone_language">"Мова"</string>
@@ -71,7 +72,7 @@
 	<string name="search_menu">"Пошук"</string>
 
 
-	<string name="bt_message_your_turn">Твій крок, постав точку&#8230;</string>
-	<string name="bt_message_opponents_turn">Хід опонента, зачекайте&#8230;</string>
+	<string name="bt_message_your_turn">Твій крок, постав точку…</string>
+	<string name="bt_message_opponents_turn">Хід опонента, зачекайте…</string>
 	
 </resources>

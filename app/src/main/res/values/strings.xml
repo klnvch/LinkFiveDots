@@ -104,6 +104,8 @@
 
     <!-- 2842 Manage applications, individual application info screen title. For example, if they click on "Browser" in "Manage applications", the title of the next screen will be this -->
     <string name="application_info_label">App info</string>
+    <!-- 2692 Master clear progress screen text [CHAR LIMIT=75] -->
+    <string name="master_clear_progress_text">Please wait…</string>
     <!-- 3022 Manage applications, version string displayed in app snippet -->
     <string name="version_text">version %1$s</string>
     <!-- 5947 [CHAR LIMIT=35] Feedback on the device -->
@@ -122,6 +124,8 @@
 
     <string name="bt_message_your_turn">Your move, put a dot…</string>
     <string name="bt_message_opponents_turn">Opponent\'s move, wait…</string>
+
+    <!-- garbage is below-->
 
 
     <string name="action_settings">Settings</string>
@@ -156,11 +160,30 @@
     <string name="bluetooth_error" translatable="false">Bluetooth is not supported by your device.</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 
     <string name="sign_in_failed">Failed to sign in. Please check your network connection and try again.</string>
     <string name="app_misconfigured">The application is incorrectly configured. Check that the package name and signing certificate match the client ID created in Developer Console. Also, if the application is not yet published, check that the account you are trying to sign in with is listed as a tester account. See logs for more information.</string>
     <string name="license_failed">License check failed.</string>
     <string name="unknown_error">Unknown error.</string>
+
+    <string name="signing_out">Signing out</string>
+    <string name="game_blurb">A sample game that tests your ability to click a button. Can you click faster than your friends? Only one way to find out! To play this game with friends, you must sign in with Google.</string>
+    <string name="single_player">Single Player</string>
+    <string name="single_player_explanation">Get some practice!</string>
+    <string name="quick_game">Quick game</string>
+    <string name="invite_players">Invite players</string>
+    <string name="show_invitations">Show invitations</string>
+    <string name="quick_game_explanation">Challenge a random opponent.</string>
+    <string name="invite_players_explanation">Invite friends to play a game.</string>
+    <string name="see_invitations_explanation">See who is inviting you right now.</string>
+    <string name="inv_popup_text">Incoming invitation!</string>
+    <string name="accept_popup_invite">Accept!</string>
+    <string name="instructions">Click the button as fast as you can!</string>
+    <string name="dismiss">Dismiss</string>
+    <string name="your_score">Your score:</string>
+    <string name="error">Error</string>
+    <string name="game_problem">An error occurred while starting the game. Please try again.</string>
+    <string name="click_me">Click me!</string>
+    <string name="is_inviting_you">is challenging you to a game!</string>
 
 </resources>

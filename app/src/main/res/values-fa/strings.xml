@@ -75,6 +75,7 @@
     <string name="apn_name">"نام"</string>
     <string name="apn_user">"نام کاربری"</string>
     <string name="application_info_label">"اطلاعات برنامه"</string>
+    <string name="master_clear_progress_text">"لطفاً صبر کنید…"</string>
     <string name="version_text">"نسخه <xliff:g id="VERSION_NUM">%1$s</xliff:g>"</string>
     <string name="device_feedback">"ارسال بازخورد درباره این دستگاه"</string>
     <string name="phone_language">"زبان"</string>

@@ -64,6 +64,7 @@
 	<string name="apn_name">Назва:</string>
     <string name="apn_user">"Імя карыстальніка"</string>
 	<string name="application_info_label">"Пра праграму"</string>
+	<string name="master_clear_progress_text">"Пачакайце…"</string>
 	<string name="version_text">"версія %1$s"</string>
 	<string name="device_feedback">Адаслаць водгук</string>
 	<string name="phone_language">"Мова"</string>

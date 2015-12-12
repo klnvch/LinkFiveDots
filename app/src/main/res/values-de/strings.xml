@@ -64,6 +64,7 @@
 	<string name="apn_name">"Name:"</string>
     <string name="apn_user">"Nutzername"</string>
 	<string name="application_info_label">"App-Info"</string>
+	<string name="master_clear_progress_text">"Bitte warten…"</string>
 	<string name="version_text">"Version %1$s"</string>
 	<string name="device_feedback">Feedback senden</string>
 	<string name="phone_language">"Sprache"</string>

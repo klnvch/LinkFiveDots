@@ -64,6 +64,7 @@
 	<string name="apn_name">"Имя:"</string>
     <string name="apn_user">"Имя пользователя"</string>
 	<string name="application_info_label">"О приложении"</string>
+	<string name="master_clear_progress_text">"Подождите…"</string>
 	<string name="version_text">"Версия %1$s"</string>
 	<string name="device_feedback">Отправить отзыв</string>
 	<string name="phone_language">"Язык"</string>
@@ -71,7 +72,7 @@
 	<string name="search_menu">"Поиск"</string>
 
 
-	<string name="bt_message_your_turn">Ваш ход, поставте точку&#8230;</string>
-	<string name="bt_message_opponents_turn">Ход соперника, подождите&#8230;</string>
+	<string name="bt_message_your_turn">Ваш ход, поставте точку…</string>
+	<string name="bt_message_opponents_turn">Ход соперника, подождите…</string>
 	
 </resources>

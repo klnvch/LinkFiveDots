@@ -64,6 +64,7 @@
 	<string name="apn_name">"Nombre:"</string>
     <string name="apn_user">"Nombre de usuario"</string>
 	<string name="application_info_label">"Información de la aplicación"</string>
+	<string name="master_clear_progress_text">"Espera…"</string>
 	<string name="version_text">"versión %1$s"</string>
 	<string name="device_feedback">Dar tu opinión</string>
 	<string name="phone_language">"Idioma"</string>
@@ -71,7 +72,7 @@
 	<string name="search_menu">"Buscar"</string>
 
 
-	<string name="bt_message_your_turn">Su turno&#8230;</string>
-	<string name="bt_message_opponents_turn">Turno del adversario&#8230;</string>
+	<string name="bt_message_your_turn">Su turno…</string>
+	<string name="bt_message_opponents_turn">Turno del adversario…</string>
 	
 </resources>

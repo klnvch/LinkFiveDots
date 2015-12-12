@@ -1,0 +1,124 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/paper_tiled"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <!-- SIGN-IN SCREEN -->
+    <com.google.android.gms.common.SignInButton
+        android:id="@+id/button_sign_in"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:visibility="gone" />
+
+    <!-- MAIN SCREEN -->
+    <LinearLayout
+        android:id="@+id/screen_main"
+        style="@style/LLScreen">
+
+        <Button
+            android:id="@+id/button_quick_game"
+            style="@style/ButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/ic_shuffle_black_48dp"
+            android:drawableStart="@drawable/ic_shuffle_black_48dp"
+            android:text="@string/quick_game" />
+
+        <Button
+            android:id="@+id/button_invite_players"
+            style="@style/ButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/ic_person_add_black_48dp"
+            android:drawableStart="@drawable/ic_person_add_black_48dp"
+            android:text="@string/invite_players" />
+
+        <Button
+            android:id="@+id/button_show_invitations"
+            style="@style/ButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/ic_email_black_48dp"
+            android:drawableStart="@drawable/ic_email_black_48dp"
+            android:text="@string/show_invitations" />
+
+    </LinearLayout>
+
+    <!-- INVITATION POPUP -->
+    <LinearLayout
+        android:id="@+id/invitation_popup"
+        style="@style/InvPopup">
+
+        <TextView
+            android:id="@+id/incoming_invitation_text"
+            style="@style/InvPopupText" />
+
+        <Button
+            android:id="@+id/button_accept_popup_invitation"
+            style="@style/InvPopupButton"
+            android:text="@string/accept_popup_invite" />
+    </LinearLayout>
+
+    <!-- "PLEASE WAIT" SCREEN -->
+    <LinearLayout
+        android:id="@+id/screen_wait"
+        style="@style/LLScreen">
+
+        <TextView
+            style="@style/Blurb"
+            android:text="@string/master_clear_progress_text" />
+
+        <ProgressBar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    <!-- GAMEPLAY SCREEN -->
+    <LinearLayout
+        android:id="@+id/screen_game"
+        style="@style/LLScreen">
+
+        <TextView
+            android:id="@+id/instructions"
+            style="@style/Instructions"
+            android:text="@string/instructions" />
+
+        <TextView
+            android:id="@+id/my_score"
+            style="@style/ScoreDisplay" />
+
+        <Button
+            android:id="@+id/button_click_me"
+            style="@style/GameButton"
+            android:layout_marginBottom="20dp"
+            android:text="@string/click_me" />
+
+        <TextView
+            android:id="@+id/countdown"
+            style="@style/FigureLabel" />
+
+        <LinearLayout style="@style/ScoresBox">
+
+            <TextView
+                android:id="@+id/score0"
+                style="@style/ScoreText" />
+
+            <TextView
+                android:id="@+id/score1"
+                style="@style/ScoreText" />
+
+            <TextView
+                android:id="@+id/score2"
+                style="@style/ScoreText" />
+
+            <TextView
+                android:id="@+id/score3"
+                style="@style/ScoreText" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>
