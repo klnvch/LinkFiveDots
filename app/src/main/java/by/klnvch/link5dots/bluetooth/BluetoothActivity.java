@@ -47,7 +47,7 @@ public class BluetoothActivity extends AppCompatActivity {
 
     private final MHandler mHandler = new MHandler(this);
 
-    private BluetoothService mBluetoothService;
+    private BluetoothService mService;
 
     private String userName = "";
     private String enemyName = "";
@@ -55,8 +55,8 @@ public class BluetoothActivity extends AppCompatActivity {
     private final ServiceConnection mConnection = new ServiceConnection() {
         public void onServiceConnected(ComponentName name, IBinder service) {
             BluetoothService.LocalBinder binder = (BluetoothService.LocalBinder) service;
-            mBluetoothService = binder.getService();
-            mBluetoothService.setHandler(mHandler);
+            mService = binder.getService();
+            mService.setHandler(mHandler);
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -66,7 +66,7 @@ public class BluetoothActivity extends AppCompatActivity {
         }
 
         public void onServiceDisconnected(ComponentName name) {
-            mBluetoothService = null;
+            mService = null;
         }
     };
 
@@ -108,9 +108,7 @@ public class BluetoothActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-        // Bind to LocalService
-        Intent intent = new Intent(this, BluetoothService.class);
-        bindService(intent, mConnection, 0);
+        bindService(new Intent(this, BluetoothService.class), mConnection, 0);
     }
 
     @Override
@@ -146,10 +144,9 @@ public class BluetoothActivity extends AppCompatActivity {
         if(alertDialog != null){
             alertDialog.cancel();
         }
-        // Unbind from the service
-        if (mBluetoothService != null) {
+        if (mService != null) {
             unbindService(mConnection);
-            mBluetoothService = null;
+            mService = null;
         }
     }
 
@@ -161,20 +158,19 @@ public class BluetoothActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if(mBluetoothService != null && mBluetoothService.getState() == BluetoothService.STATE_CONNECTED){
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setMessage(getString(R.string.bluetooth_is_disconnect_question, mBluetoothService.getDeviceName()));
-            builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener(){
-                public void onClick(DialogInterface dialog, int which) {
-                    mBluetoothService.stop();
-                    mBluetoothService.start();
-                    finish();
-                }
-            });
-            builder.setNegativeButton(R.string.no, null);
-            AlertDialog alertDialog = builder.create();
-            alertDialog.show();
-        }else {
+        if(mService != null && mService.getState() == BluetoothService.STATE_CONNECTED){
+            new AlertDialog.Builder(this)
+                    .setMessage(getString(R.string.bluetooth_is_disconnect_question, mService.getDeviceName()))
+                    .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener(){
+                        public void onClick(DialogInterface dialog, int which) {
+                            mService.stop();
+                            mService.start();
+                            finish();
+                        }
+                    })
+                    .setNegativeButton(R.string.no, null)
+                    .show();
+        } else {
             super.onBackPressed();
         }
     }
@@ -196,7 +192,7 @@ public class BluetoothActivity extends AppCompatActivity {
      */
     private void sendMessage(String message) {
         // Check that we're actually connected before trying anything
-        if (mBluetoothService == null || mBluetoothService.getState() != BluetoothService.STATE_CONNECTED) {
+        if (mService == null || mService.getState() != BluetoothService.STATE_CONNECTED) {
             Toast.makeText(this, R.string.bluetooth_disconnected, Toast.LENGTH_SHORT).show();
             return;
         }
@@ -205,7 +201,7 @@ public class BluetoothActivity extends AppCompatActivity {
         if (message.length() > 0) {
             // Get the message bytes and tell the BluetoothChatService to write
             byte[] send = message.getBytes();
-            mBluetoothService.write(send);
+            mService.write(send);
 
         }
     }

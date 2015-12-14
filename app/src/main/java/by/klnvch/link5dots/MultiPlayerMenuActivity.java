@@ -15,14 +15,16 @@ import by.klnvch.link5dots.bluetooth.DevicePickerActivity;
 import by.klnvch.link5dots.nsd.NsdPickerActivity;
 import by.klnvch.link5dots.nsd.NsdService;
 import by.klnvch.link5dots.online.OnlinePickerActivity;
+import by.klnvch.link5dots.online.OnlineService;
 
 public class MultiPlayerMenuActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final String IS_BLUETOOTH_ENABLED = "IS_BLUETOOTH_ENABLED";
 
-    private static final int REQUEST_ENABLE_BLUETOOTH = 3;
-    private static final int PICK_BLUETOOTH_DEVICE = 4;
-    private static final int CHOOSE_NSD_SERVICE = 5;
+    private static final int RC_ENABLE_BLUETOOTH = 3;
+    private static final int RC_BLUETOOTH_GAME = 4;
+    private static final int RC_NSD_GAME = 5;
+    private static final int RC_ONLINE_GAME = 6;
 
     private AdView mAdView;
 
@@ -89,13 +91,13 @@ public class MultiPlayerMenuActivity extends AppCompatActivity implements View.O
                     if (!mBluetoothAdapter.isEnabled()) {
                         // enable bluetooth
                         Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                        startActivityForResult(enableIntent, REQUEST_ENABLE_BLUETOOTH);
+                        startActivityForResult(enableIntent, RC_ENABLE_BLUETOOTH);
                         // remember
                         editor.putBoolean(IS_BLUETOOTH_ENABLED, false);
                     } else {
                         // launch bluetooth device chooser
                         Intent pickerIntent = new Intent(this, DevicePickerActivity.class);
-                        startActivityForResult(pickerIntent, PICK_BLUETOOTH_DEVICE);
+                        startActivityForResult(pickerIntent, RC_BLUETOOTH_GAME);
                         // remember
                         editor.putBoolean(IS_BLUETOOTH_ENABLED, true);
                         // start Bluetooth service
@@ -105,29 +107,28 @@ public class MultiPlayerMenuActivity extends AppCompatActivity implements View.O
                 }
                 break;
             case R.id.multi_player_lan:
-                Intent intent = new Intent(this, NsdPickerActivity.class);
-                startActivityForResult(intent, CHOOSE_NSD_SERVICE);
+                startActivityForResult(new Intent(this, NsdPickerActivity.class), RC_NSD_GAME);
                 startService(new Intent(this, NsdService.class));
                 break;
             case R.id.multi_player_online:
-                Intent intent1 = new Intent(this, OnlinePickerActivity.class);
-                startActivity(intent1);
+                startActivityForResult(new Intent(this, OnlinePickerActivity.class), RC_ONLINE_GAME);
+                startService(new Intent(this, OnlineService.class));
                 break;
         }
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
-            case REQUEST_ENABLE_BLUETOOTH:
+            case RC_ENABLE_BLUETOOTH:
                 // When the request to enable Bluetooth returns
                 if (resultCode == RESULT_OK) {
                     Intent i2 = new Intent(this, DevicePickerActivity.class);
-                    startActivityForResult(i2, PICK_BLUETOOTH_DEVICE);
+                    startActivityForResult(i2, RC_BLUETOOTH_GAME);
                     // start Bluetooth service
                     startService(new Intent(this, BluetoothService.class));
                 }
                 break;
-            case PICK_BLUETOOTH_DEVICE:
+            case RC_BLUETOOTH_GAME:
                 // bluetooth game finished, make an order
                 SharedPreferences prefs = getPreferences(MODE_PRIVATE);
                 if (!prefs.getBoolean(IS_BLUETOOTH_ENABLED, false)) {
@@ -137,8 +138,11 @@ public class MultiPlayerMenuActivity extends AppCompatActivity implements View.O
                 // stop Bluetooth service
                 stopService(new Intent(this, BluetoothService.class));
                 break;
-            case CHOOSE_NSD_SERVICE:
+            case RC_NSD_GAME:
                 stopService(new Intent(this, NsdService.class));
+                break;
+            case RC_ONLINE_GAME:
+                stopService(new Intent(this, OnlineService.class));
                 break;
         }
     }

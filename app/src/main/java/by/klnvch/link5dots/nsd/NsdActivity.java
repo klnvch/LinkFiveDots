@@ -41,7 +41,7 @@ public class NsdActivity extends AppCompatActivity {
 
     private final MHandler mHandler = new MHandler(this);
 
-    private NsdService mNsdService;
+    private NsdService mService;
 
     private String userName = "";
     private String enemyName = "";
@@ -49,8 +49,8 @@ public class NsdActivity extends AppCompatActivity {
     private final ServiceConnection mConnection = new ServiceConnection() {
         public void onServiceConnected(ComponentName name, IBinder service) {
             NsdService.LocalBinder binder = (NsdService.LocalBinder) service;
-            mNsdService = binder.getService();
-            mNsdService.setHandler(mHandler);
+            mService = binder.getService();
+            mService.setHandler(mHandler);
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -60,7 +60,7 @@ public class NsdActivity extends AppCompatActivity {
         }
 
         public void onServiceDisconnected(ComponentName name) {
-            mNsdService = null;
+            mService = null;
         }
     };
 
@@ -102,9 +102,7 @@ public class NsdActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-        // Bind to LocalService
-        Intent intent = new Intent(this, NsdService.class);
-        bindService(intent, mConnection, 0);
+        bindService(new Intent(this, NsdService.class), mConnection, 0);
     }
 
     @Override
@@ -140,10 +138,9 @@ public class NsdActivity extends AppCompatActivity {
         if(alertDialog != null){
             alertDialog.cancel();
         }
-        // Unbind from the service
-        if (mNsdService != null) {
+        if (mService != null) {
             unbindService(mConnection);
-            mNsdService = null;
+            mService = null;
         }
     }
 
@@ -155,19 +152,18 @@ public class NsdActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if(mNsdService != null && mNsdService.getState() == NsdService.STATE_CONNECTED) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setMessage(getString(R.string.bluetooth_is_disconnect_question, mNsdService.getConnectedServiceName()));
-            builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener(){
-                public void onClick(DialogInterface dialog, int which) {
-                    mNsdService.stop();
-                    mNsdService.start();
-                    finish();
-                }
-            });
-            builder.setNegativeButton(R.string.no, null);
-            AlertDialog alertDialog = builder.create();
-            alertDialog.show();
+        if(mService != null && mService.getState() == NsdService.STATE_CONNECTED) {
+            new AlertDialog.Builder(this)
+                    .setMessage(getString(R.string.bluetooth_is_disconnect_question, mService.getConnectedServiceName()))
+                    .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener(){
+                        public void onClick(DialogInterface dialog, int which) {
+                            mService.stop();
+                            mService.start();
+                            finish();
+                        }
+                    })
+                    .setNegativeButton(R.string.no, null)
+                    .show();
         } else {
             super.onBackPressed();
         }
@@ -190,7 +186,7 @@ public class NsdActivity extends AppCompatActivity {
      */
     private void sendMessage(String message) {
         // Check that we're actually connected before trying anything
-        if (mNsdService == null || mNsdService.getState() != NsdService.STATE_CONNECTED) {
+        if (mService == null || mService.getState() != NsdService.STATE_CONNECTED) {
             Toast.makeText(this, R.string.bluetooth_disconnected, Toast.LENGTH_SHORT).show();
             return;
         }
@@ -198,7 +194,7 @@ public class NsdActivity extends AppCompatActivity {
         // Check that there's actually something to send
         if (message.length() > 0) {
             byte[] send = message.getBytes();
-            mNsdService.write(send);
+            mService.write(send);
 
         }
     }
