@@ -25,7 +25,6 @@
 
         <service android:name=".bluetooth.BluetoothService" />
         <service android:name=".nsd.NsdService" />
-        <service android:name=".online.OnlineService" />
 
         <activity
             android:name="com.google.android.gms.ads.AdActivity"
@@ -88,7 +87,7 @@
         </activity>
 
         <activity
-            android:name=".online.OnlinePickerActivity"
+            android:name=".online.OnlineGameActivity"
             android:configChanges="orientation|keyboardHidden|locale"
             android:label="Online">
             <meta-data
@@ -120,7 +119,7 @@
             android:label="Online">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".online.OnlinePickerActivity" />
+                android:value=".online.OnlineGameActivity" />
         </activity>
 
         <activity

@@ -14,9 +14,7 @@ import by.klnvch.link5dots.bluetooth.BluetoothService;
 import by.klnvch.link5dots.bluetooth.DevicePickerActivity;
 import by.klnvch.link5dots.nsd.NsdPickerActivity;
 import by.klnvch.link5dots.nsd.NsdService;
-import by.klnvch.link5dots.online.OnlinePickerActivity;
-import by.klnvch.link5dots.online.OnlineService;
-
+import by.klnvch.link5dots.online.OnlineGameActivity;
 public class MultiPlayerMenuActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final String IS_BLUETOOTH_ENABLED = "IS_BLUETOOTH_ENABLED";
@@ -24,7 +22,6 @@ public class MultiPlayerMenuActivity extends AppCompatActivity implements View.O
     private static final int RC_ENABLE_BLUETOOTH = 3;
     private static final int RC_BLUETOOTH_GAME = 4;
     private static final int RC_NSD_GAME = 5;
-    private static final int RC_ONLINE_GAME = 6;
 
     private AdView mAdView;
 
@@ -111,8 +108,7 @@ public class MultiPlayerMenuActivity extends AppCompatActivity implements View.O
                 startService(new Intent(this, NsdService.class));
                 break;
             case R.id.multi_player_online:
-                startActivityForResult(new Intent(this, OnlinePickerActivity.class), RC_ONLINE_GAME);
-                startService(new Intent(this, OnlineService.class));
+                startActivity(new Intent(this, OnlineGameActivity.class));
                 break;
         }
     }
@@ -140,9 +136,6 @@ public class MultiPlayerMenuActivity extends AppCompatActivity implements View.O
                 break;
             case RC_NSD_GAME:
                 stopService(new Intent(this, NsdService.class));
-                break;
-            case RC_ONLINE_GAME:
-                stopService(new Intent(this, OnlineService.class));
                 break;
         }
     }

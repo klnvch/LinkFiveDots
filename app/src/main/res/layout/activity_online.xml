@@ -52,21 +52,6 @@
 
     </LinearLayout>
 
-    <!-- INVITATION POPUP -->
-    <LinearLayout
-        android:id="@+id/invitation_popup"
-        style="@style/InvPopup">
-
-        <TextView
-            android:id="@+id/incoming_invitation_text"
-            style="@style/InvPopupText" />
-
-        <Button
-            android:id="@+id/button_accept_popup_invitation"
-            style="@style/InvPopupButton"
-            android:text="@string/accept_popup_invite" />
-    </LinearLayout>
-
     <!-- "PLEASE WAIT" SCREEN -->
     <LinearLayout
         android:id="@+id/screen_wait"
@@ -85,5 +70,10 @@
             android:layout_height="wrap_content" />
 
     </LinearLayout>
+
+    <include
+        android:id="@+id/game_view"
+        layout="@layout/game_board"
+        android:visibility="gone" />
 
 </LinearLayout>
