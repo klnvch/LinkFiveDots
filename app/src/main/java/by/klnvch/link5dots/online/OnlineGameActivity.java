@@ -1,23 +1,30 @@
 package by.klnvch.link5dots.online;
 
 import android.app.Activity;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.DialogFragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.games.Games;
+import com.google.android.gms.games.GamesActivityResultCodes;
 import com.google.android.gms.games.multiplayer.Invitation;
 import com.google.android.gms.games.multiplayer.Multiplayer;
 import com.google.android.gms.games.multiplayer.OnInvitationReceivedListener;
-import com.google.android.gms.games.multiplayer.Participant;
 import com.google.android.gms.games.multiplayer.realtime.RealTimeMessage;
 import com.google.android.gms.games.multiplayer.realtime.RealTimeMessageReceivedListener;
 import com.google.android.gms.games.multiplayer.realtime.Room;
@@ -27,11 +34,13 @@ import com.google.android.gms.games.multiplayer.realtime.RoomUpdateListener;
 import com.google.android.gms.plus.Plus;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
+import by.klnvch.link5dots.Dot;
+import by.klnvch.link5dots.GameView;
+import by.klnvch.link5dots.HighScore;
 import by.klnvch.link5dots.R;
+import by.klnvch.link5dots.settings.SettingsUtils;
 
 public class OnlineGameActivity extends AppCompatActivity implements
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
@@ -41,36 +50,47 @@ public class OnlineGameActivity extends AppCompatActivity implements
 
     private static final String TAG = "OnlineGame";
 
-    private static final int RC_SIGN_IN = 9001;
+    private static final String STATE_RESOLVING_ERROR = "resolving_error";
+
+    private static final int REQUEST_RESOLVE_ERROR = 1001;
+    private static final int RC_DUMMY = 1002;
     private final static int RC_SELECT_PLAYERS = 10000;
     private final static int RC_INVITATION_INBOX = 10001;
     private final static int RC_WAITING_ROOM = 10002;
 
+    private GameView view;
+    private int currentScreen = R.id.screen_wait;
+
     private boolean isLeaving = false;
 
-
-    private final Map<String, Integer> mParticipantScore = new HashMap<>();
-    // Client used to interact with Google APIs.
     private GoogleApiClient mGoogleApiClient;
-    // Are we currently resolving a connection failure?
-    private boolean mResolvingConnectionFailure = false;
+    private boolean mResolvingError = false;
     // Has the user clicked the sign-in button?
     private boolean mSignInClicked = false;
-    // Set to true to automatically start the sign in flow when the Activity starts.
-    // Set to false to require the user to click the button in order to sign in.
     private boolean mAutoStartSignInFlow = true;
-    // The participants in the currently active game
-    private ArrayList<Participant> mParticipants = null;
-    // My participant ID in the currently active game
-    private String mMyId = null;
 
     private RetainedFragment mFragment;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_online);
+
+        view = (GameView)findViewById(R.id.game_view);
+
+        view.setOnGameEventListener(new GameView.OnGameEventListener() {
+            @Override
+            public void onMoveDone(Dot currentDot, Dot previousDot) {
+                currentDot.setType(Dot.USER);
+                view.setDot(currentDot);
+                sendMessage(Protocol.createDotMessage(currentDot));
+            }
+
+            @Override
+            public void onGameEnd(HighScore highScore) {
+
+            }
+        });
 
         findViewById(R.id.button_invite_players).setOnClickListener(this);
         findViewById(R.id.button_quick_game).setOnClickListener(this);
@@ -83,13 +103,49 @@ public class OnlineGameActivity extends AppCompatActivity implements
             getSupportFragmentManager().beginTransaction().add(mFragment, "fragment").commit();
         }
 
-        // Create the Google Api Client with access to Plus and Games
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .addApi(Plus.API).addScope(Plus.SCOPE_PLUS_LOGIN)
                 .addApi(Games.API).addScope(Games.SCOPE_GAMES)
                 .build();
+
+        mResolvingError = savedInstanceState != null
+                && savedInstanceState.getBoolean(STATE_RESOLVING_ERROR, false);
+
+        String username = SettingsUtils.getUserName(this, getString(R.string.device_info_default));
+        TextView tvUsername = (TextView)findViewById(R.id.user_name);
+        tvUsername.setText(username);
+
+        view.restore(savedInstanceState);
+        view.invalidate();
+        view.isOver();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        view.save(outState);
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(STATE_RESOLVING_ERROR, mResolvingError);
+    }
+
+    @Override
+    public void onBackPressed() {
+        switch (currentScreen) {
+            case R.id.screen_game_board:
+                new AlertDialog.Builder(this)
+                        .setMessage(getString(R.string.bluetooth_is_disconnect_question, "unknown"))
+                        .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener(){
+                            public void onClick(DialogInterface dialog, int which) {
+                                leave();
+                            }
+                        })
+                        .setNegativeButton(R.string.no, null)
+                        .show();
+                break;
+            default:
+                super.onBackPressed();
+        }
     }
 
     @Override
@@ -103,10 +159,12 @@ public class OnlineGameActivity extends AppCompatActivity implements
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.sign_out:
-                mSignInClicked = false;
-                Games.signOut(mGoogleApiClient);
-                mGoogleApiClient.disconnect();
-                switchToScreen(R.id.button_sign_in);
+                if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
+                    mSignInClicked = false;
+                    Games.signOut(mGoogleApiClient);
+                    mGoogleApiClient.disconnect();
+                    switchToScreen(R.id.screen_sign_in);
+                }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -115,7 +173,6 @@ public class OnlineGameActivity extends AppCompatActivity implements
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
         switch (requestCode) {
             case RC_WAITING_ROOM:
                 switch (resultCode) {
@@ -123,7 +180,7 @@ public class OnlineGameActivity extends AppCompatActivity implements
                         // TODO: be happy
                         break;
                     default:
-                        leaveRoom();
+                        leave();
                         switchToScreen(R.id.screen_wait);
                         break;
                 }
@@ -138,7 +195,7 @@ public class OnlineGameActivity extends AppCompatActivity implements
                         }
                         break;
                     default:
-                        switchToScreen(R.id.screen_main);
+                        switchToScreen(R.id.screen_menu);
                 }
                 break;
             case RC_INVITATION_INBOX:
@@ -146,15 +203,33 @@ public class OnlineGameActivity extends AppCompatActivity implements
                 // ready to accept the selected invitation:
                 handleInvitationInboxResult(resultCode, data);
                 break;
-            case RC_SIGN_IN:
-                Log.d(TAG, "onActivityResult with requestCode == RC_SIGN_IN, responseCode="
-                        + resultCode + ", intent=" + data);
+            case REQUEST_RESOLVE_ERROR:
                 mSignInClicked = false;
-                mResolvingConnectionFailure = false;
-                if (resultCode == RESULT_OK) {
-                    mGoogleApiClient.connect();
-                } else {
-                    BaseGameUtils.showActivityResultError(this, requestCode, resultCode, R.string.signin_other_error);
+                mResolvingError = false;
+                switchToScreen(R.id.screen_sign_in);
+
+                switch (resultCode) {
+                    case RESULT_OK:
+                        if (!mGoogleApiClient.isConnecting() && !mGoogleApiClient.isConnected()) {
+                            mGoogleApiClient.connect();
+                        }
+                        break;
+                    case GamesActivityResultCodes.RESULT_APP_MISCONFIGURED:
+
+                        break;
+                    case GamesActivityResultCodes.RESULT_SIGN_IN_FAILED:
+                        new AlertDialog.Builder(this)
+                                .setMessage(R.string.sign_in_failed)
+                                .setPositiveButton(R.string.okay, null)
+                                .show();
+                        break;
+                    case GamesActivityResultCodes.RESULT_LICENSE_FAILED:
+
+                        break;
+                    default:
+                        final int errorCode = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this);
+                        GoogleApiAvailability.getInstance().showErrorDialogFragment(this, errorCode, RC_DUMMY);
+
                 }
                 break;
         }
@@ -195,9 +270,17 @@ public class OnlineGameActivity extends AppCompatActivity implements
             mGoogleApiClient.connect();
             switchToScreen(R.id.screen_wait);
         } else {
-            switchToScreen(R.id.screen_main);
+            switchToScreen(R.id.screen_menu);
         }
         super.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        if (mGoogleApiClient.isConnected()) {
+            mGoogleApiClient.disconnect();
+        }
+        super.onStop();
     }
 
     @Override
@@ -216,7 +299,7 @@ public class OnlineGameActivity extends AppCompatActivity implements
         switchToMainScreen();
 
         if (isLeaving) {
-            leaveRoom();
+            leave();
             isLeaving = false;
         }
     }
@@ -228,63 +311,64 @@ public class OnlineGameActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        Log.d(TAG, "onConnectionFailed() called, result: " + connectionResult);
+    public void onConnectionFailed(@NonNull ConnectionResult result) {
+        Log.d(TAG, "onConnectionFailed() called, result: " + result);
 
-        if (mResolvingConnectionFailure) {
-            Log.d(TAG, "onConnectionFailed() ignoring connection failure; already resolving.");
+        if (mResolvingError) {
             return;
+        } else if (result.hasResolution()) {
+            try {
+                mResolvingError = true;
+                result.startResolutionForResult(this, REQUEST_RESOLVE_ERROR);
+            } catch (IntentSender.SendIntentException e) {
+                mGoogleApiClient.connect();
+            }
+        } else {
+            showErrorDialog(result.getErrorCode());
+            mResolvingError = true;
         }
 
-        if (mSignInClicked || mAutoStartSignInFlow) {
-            mAutoStartSignInFlow = false;
-            mSignInClicked = false;
-            mResolvingConnectionFailure = BaseGameUtils.resolveConnectionFailure(this, mGoogleApiClient,
-                    connectionResult, RC_SIGN_IN, getString(R.string.signin_other_error));
-        }
-
-        switchToScreen(R.id.button_sign_in);
+        switchToScreen(R.id.screen_sign_in);
     }
 
-    /*
-     * COMMUNICATIONS SECTION. Methods that implement the game's network
-     * protocol.
-     */
+    private void showErrorDialog(int errorCode) {
+        ErrorDialogFragment dialogFragment = new ErrorDialogFragment();
+        Bundle args = new Bundle();
+        args.putInt("error_code", errorCode);
+        dialogFragment.setArguments(args);
+        dialogFragment.show(getSupportFragmentManager(), "error_dialog");
+    }
+
+    /* Called from ErrorDialogFragment when the dialog is dismissed. */
+    public void onDialogDismissed() {
+        mResolvingError = false;
+    }
 
     private void updateRoom(Room room) {
-        if (room != null) {
-            mParticipants = room.getParticipants();
-        }
+
     }
 
-    // Broadcast my score to everybody else.
-    private void broadcastScore(boolean finalScore) {
-
-        // Send to every other participant.
-        for (Participant p : mParticipants) {
-            if (p.getParticipantId().equals(mMyId))
-                continue;
-            if (p.getStatus() != Participant.STATUS_JOINED)
-                continue;
-            if (finalScore) {
-                //Games.RealTimeMultiplayer.sendReliableMessage(mGoogleApiClient, null, mMsgBuf, mRoomId, p.getParticipantId());
-            } else {
-                //Games.RealTimeMultiplayer.sendUnreliableMessage(mGoogleApiClient, mMsgBuf, mRoomId, p.getParticipantId());
-            }
-        }
+    private void sendMessage(byte[] messageData) {
+        Games.RealTimeMultiplayer.sendReliableMessage(mGoogleApiClient, mFragment, messageData, mFragment.getRoomId(), mFragment.getParticipantId2());
     }
 
     public void switchToScreen(int screenId) {
-        findViewById(R.id.screen_main).setVisibility(screenId == R.id.screen_main ? View.VISIBLE : View.GONE);
-        findViewById(R.id.button_sign_in).setVisibility(screenId == R.id.button_sign_in ? View.VISIBLE : View.GONE);
+        currentScreen = screenId;
+        findViewById(R.id.screen_menu).setVisibility(screenId == R.id.screen_menu ? View.VISIBLE : View.GONE);
+        findViewById(R.id.screen_sign_in).setVisibility(screenId == R.id.screen_sign_in ? View.VISIBLE : View.GONE);
         findViewById(R.id.screen_wait).setVisibility(screenId == R.id.screen_wait ? View.VISIBLE : View.GONE);
+        findViewById(R.id.screen_game_board).setVisibility(screenId == R.id.screen_game_board ? View.VISIBLE : View.INVISIBLE);
     }
 
     private void switchToMainScreen() {
         if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
-            switchToScreen(R.id.screen_main);
+            if (mFragment.getRoomId() != null) {
+                switchToScreen(R.id.screen_game_board);
+            } else {
+                switchToScreen(R.id.screen_menu);
+            }
         } else {
-            switchToScreen(R.id.button_sign_in);
+            switchToScreen(R.id.screen_sign_in);
         }
     }
 
@@ -328,9 +412,11 @@ public class OnlineGameActivity extends AppCompatActivity implements
         Games.RealTimeMultiplayer.join(mGoogleApiClient, roomConfig);
     }
 
-    public void leaveRoom() {
+    public void leave() {
         if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
-            Games.RealTimeMultiplayer.leave(mGoogleApiClient, mFragment, mFragment.getRoomId());
+            if (mFragment.getRoomId() != null) {
+                Games.RealTimeMultiplayer.leave(mGoogleApiClient, mFragment, mFragment.getRoomId());
+            }
         } else {
             isLeaving = true;
         }
@@ -374,12 +460,22 @@ public class OnlineGameActivity extends AppCompatActivity implements
 
     @Override
     public void onLeftRoom(int i, String s) {
-        switchToScreen(R.id.screen_main);
+        switchToScreen(R.id.screen_menu);
     }
 
     @Override
     public void onRoomConnected(int i, Room room) {
-        // TODO: be happy
+        switchToScreen(R.id.screen_game_board);
+        // set participants ids
+        String currentPlayerId = Games.Players.getCurrentPlayerId(mGoogleApiClient);
+        String currentParticipantId = room.getParticipantId(currentPlayerId);
+        ArrayList<String> participantIds = room.getParticipantIds();
+        participantIds.remove(currentParticipantId);
+        String opponentParticipantId = participantIds.get(0);
+        mFragment.setParticipantId1(currentParticipantId);
+        mFragment.setParticipantId2(opponentParticipantId);
+        // send player name
+        sendMessage(Protocol.createInitMessage(SettingsUtils.getUserName(this, getString(R.string.device_info_default))));
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -388,8 +484,6 @@ public class OnlineGameActivity extends AppCompatActivity implements
 
     @Override
     public void onConnectedToRoom(Room room) {
-        mParticipants = room.getParticipants();
-        mMyId = room.getParticipantId(Games.Players.getCurrentPlayerId(mGoogleApiClient));
     }
 
     @Override
@@ -449,27 +543,23 @@ public class OnlineGameActivity extends AppCompatActivity implements
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
-    public void onRealTimeMessageReceived(RealTimeMessage rtm) {
-        byte[] buf = rtm.getMessageData();
-        String sender = rtm.getSenderParticipantId();
-        Log.d(TAG, "Message received: " + (char) buf[0] + "/" + (int) buf[1]);
-
-        if (buf[0] == 'F' || buf[0] == 'U') {
-            // score update.
-            int existingScore = mParticipantScore.containsKey(sender) ?
-                    mParticipantScore.get(sender) : 0;
-            int thisScore = (int) buf[1];
-            if (thisScore > existingScore) {
-                // this check is necessary because packets may arrive out of
-                // order, so we
-                // should only ever consider the highest score we received, as
-                // we know in our
-                // game there is no way to lose points. If there was a way to
-                // lose points,
-                // we'd have to add a "serial number" to the packet.
-                mParticipantScore.put(sender, thisScore);
+    public void onRealTimeMessageReceived(RealTimeMessage message) {
+        byte[] messageData = message.getMessageData();
+        Protocol.parseMessage(messageData, new Protocol.OnParsedListener() {
+            @Override
+            public void onInitMessage(@NonNull String name) {
+                TextView tvOpponentName = (TextView) findViewById(R.id.opponent_name);
+                tvOpponentName.setText(name);
+                view.resetGame();
             }
-        }
+
+            @Override
+            public void onDotMessage(@NonNull Dot dot) {
+                dot.setType(Dot.OPPONENT);
+                view.setDot(dot);
+            }
+        });
+
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -484,5 +574,21 @@ public class OnlineGameActivity extends AppCompatActivity implements
     @Override
     public void onInvitationRemoved(String s) {
 
+    }
+
+    public static class ErrorDialogFragment extends DialogFragment {
+        public ErrorDialogFragment() { }
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            int errorCode = this.getArguments().getInt("error_code");
+            return GoogleApiAvailability.getInstance().getErrorDialog(getActivity(), errorCode,
+                    REQUEST_RESOLVE_ERROR);
+        }
+
+        @Override
+        public void onDismiss(DialogInterface dialog) {
+            ((OnlineGameActivity) getActivity()).onDialogDismissed();
+        }
     }
 }

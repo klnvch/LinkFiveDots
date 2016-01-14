@@ -5,6 +5,7 @@ import java.util.Random;
 
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.os.Bundle;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -64,8 +65,6 @@ public class Game {
         return hostName;
     }
 
-    //masks
-
     public void setHostName(String hostName) {
         this.hostName = hostName;
     }
@@ -102,6 +101,30 @@ public class Game {
         winningLine = isOver();
     }
 
+    public void restore(Bundle bundle) {
+        //
+        startTime = bundle.getLong(START_TIME, 0);
+        //
+        movesDone = bundle.getInt(MOVES_DONE, 0);
+        //restore dots table
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < M; j++) {
+                int type = bundle.getInt("dottype(" + Integer.toString(i) + "," + Integer.toString(j) + ")", Dot.EMPTY);
+                int number = bundle.getInt("dotnum(" + Integer.toString(i) + "," + Integer.toString(j) + ")", -1);
+
+                net[i][j].changeStatus(type, number);
+            }
+        }
+        //
+        final long currentScoreCode = bundle.getLong(HIGH_SCORE, -1);
+        if (currentScoreCode != -1) {
+            currentScore = new HighScore(currentScoreCode);
+        }
+
+        //other
+        winningLine = isOver();
+    }
+
     public void save(SharedPreferences pref) {
         Editor editor = pref.edit();
         //
@@ -123,6 +146,25 @@ public class Game {
         }
         //
         editor.apply();
+    }
+
+    public void save(Bundle bundle) {
+        bundle.putLong(START_TIME, startTime);
+        //
+        bundle.putInt(MOVES_DONE, movesDone);
+        //save info about dots
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < M; j++) {
+                bundle.putInt("dottype(" + Integer.toString(i) + "," + Integer.toString(j) + ")", net[i][j].getType());
+                bundle.putInt("dotnum(" + Integer.toString(i) + "," + Integer.toString(j) + ")", net[i][j].getNumber());
+            }
+        }
+        //
+        if (currentScore != null) {
+            bundle.putLong(HIGH_SCORE, currentScore.code());
+        } else {
+            bundle.putLong(HIGH_SCORE, -1);
+        }
     }
 
     public void reset() {

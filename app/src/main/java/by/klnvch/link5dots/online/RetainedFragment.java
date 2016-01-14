@@ -11,6 +11,7 @@ import com.google.android.gms.games.multiplayer.Invitation;
 import com.google.android.gms.games.multiplayer.OnInvitationReceivedListener;
 import com.google.android.gms.games.multiplayer.realtime.RealTimeMessage;
 import com.google.android.gms.games.multiplayer.realtime.RealTimeMessageReceivedListener;
+import com.google.android.gms.games.multiplayer.realtime.RealTimeMultiplayer;
 import com.google.android.gms.games.multiplayer.realtime.Room;
 import com.google.android.gms.games.multiplayer.realtime.RoomStatusUpdateListener;
 import com.google.android.gms.games.multiplayer.realtime.RoomUpdateListener;
@@ -21,7 +22,8 @@ public class RetainedFragment extends Fragment implements
         RoomUpdateListener,
         OnInvitationReceivedListener,
         RoomStatusUpdateListener,
-        RealTimeMessageReceivedListener {
+        RealTimeMessageReceivedListener,
+        RealTimeMultiplayer.ReliableMessageSentCallback {
 
     private static final String TAG = "OnlineGame";
 
@@ -31,6 +33,9 @@ public class RetainedFragment extends Fragment implements
     private RealTimeMessageReceivedListener mRealTimeMessageReceivedListener = null;
 
     private String mRoomId;
+
+    private String mParticipantId1; // current player
+    private String mParticipantId2; // opponent player
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -61,14 +66,45 @@ public class RetainedFragment extends Fragment implements
         return mRoomId;
     }
 
+    public String getParticipantId2() {
+        return mParticipantId2;
+    }
+
+    public void setParticipantId2(String participantId2) {
+        this.mParticipantId2 = participantId2;
+    }
+
+    public String getParticipantId1() {
+        return mParticipantId1;
+    }
+
+    public void setParticipantId1(String participantId1) {
+        this.mParticipantId1 = participantId1;
+    }
+
     @Override
     public void onRoomCreated(int statusCode, Room room) {
         Log.d(TAG, "onRoomCreated: " + statusCode + " - " + room);
-        if (statusCode == GamesStatusCodes.STATUS_OK) {
-            mRoomId = room.getRoomId();
-            if (mRoomUpdateListener != null) {
-                mRoomUpdateListener.onRoomCreated(statusCode, room);
-            }
+        switch (statusCode) {
+            case GamesStatusCodes.STATUS_OK:
+                mRoomId = room.getRoomId();
+                if (mRoomUpdateListener != null) {
+                    mRoomUpdateListener.onRoomCreated(statusCode, room);
+                }
+                break;
+            case GamesStatusCodes.STATUS_CLIENT_RECONNECT_REQUIRED:
+                Log.e(TAG, "The GoogleApiClient is in an inconsistent state and must reconnect to the service to resolve the issue. Further calls to the service using the current connection are unlikely to succeed.");
+                break;
+            case GamesStatusCodes.STATUS_REAL_TIME_CONNECTION_FAILED:
+                Log.e(TAG, "Failed to initialize the network connection for a real-time room.");
+                break;
+            case GamesStatusCodes.STATUS_MULTIPLAYER_DISABLED:
+                Log.e(TAG, "This game does not support multiplayer. This could occur if the linked app is not configured appropriately in the developer console.");
+                break;
+            case GamesStatusCodes.STATUS_INTERNAL_ERROR:
+                Log.e(TAG, "An unspecified error occurred; no more specific information is available. The device logs may provide additional data.");
+                break;
+
         }
     }
 
@@ -178,6 +214,8 @@ public class RetainedFragment extends Fragment implements
     public void onDisconnectedFromRoom(Room room) {
         Log.d(TAG, "onDisconnectedFromRoom: " + room);
         mRoomId = null;
+        mParticipantId1 = null;
+        mParticipantId2 = null;
         if (mRoomStatusUpdateListener != null) {
             mRoomStatusUpdateListener.onDisconnectedFromRoom(room);
         }
@@ -216,10 +254,23 @@ public class RetainedFragment extends Fragment implements
     }
 
     @Override
-    public void onRealTimeMessageReceived(RealTimeMessage realTimeMessage) {
-        Log.d(TAG, "onRealTimeMessageReceived: " + realTimeMessage);
+    public void onRealTimeMessageReceived(RealTimeMessage message) {
+        Log.d(TAG, "onRealTimeMessageReceived: " + message);
         if (mRealTimeMessageReceivedListener != null) {
-            mRealTimeMessageReceivedListener.onRealTimeMessageReceived(realTimeMessage);
+            mRealTimeMessageReceivedListener.onRealTimeMessageReceived(message);
+        }
+    }
+
+    @Override
+    public void onRealTimeMessageSent(int statusCode, int tokenId, String recipientParticipantId) {
+        Log.d(TAG, "onRealTimeMessageSent: " + statusCode + ", " + tokenId + ", " + recipientParticipantId);
+        switch (statusCode) {
+            case GamesStatusCodes.STATUS_OK:
+                break;
+            case GamesStatusCodes.STATUS_REAL_TIME_MESSAGE_SEND_FAILED:
+                break;
+            case GamesStatusCodes.STATUS_REAL_TIME_ROOM_NOT_JOINED:
+                break;
         }
     }
 }
