@@ -18,9 +18,9 @@ import android.widget.Toast;
 
 import java.lang.ref.WeakReference;
 
+import by.klnvch.link5dots.Dot;
 import by.klnvch.link5dots.GameView;
 import by.klnvch.link5dots.HighScore;
-import by.klnvch.link5dots.Dot;
 import by.klnvch.link5dots.R;
 import by.klnvch.link5dots.settings.SettingsUtils;
 
@@ -72,7 +72,7 @@ public class NsdActivity extends AppCompatActivity {
         setTitle(R.string.bt_message_your_turn);
 
         // my initialization
-        view = (GameView)findViewById(R.id.game_view);
+        view = (GameView) findViewById(R.id.game_view);
 
         view.setOnGameEventListener(new GameView.OnGameEventListener() {
             @Override
@@ -84,6 +84,7 @@ public class NsdActivity extends AppCompatActivity {
                 sendMessage(currentDot.toString());
                 setTitle(R.string.bt_message_opponents_turn);
             }
+
             @Override
             public void onGameEnd(HighScore highScore) {
                 showEndAlertDialog(highScore);
@@ -92,10 +93,10 @@ public class NsdActivity extends AppCompatActivity {
 
         userName = SettingsUtils.getUserName(this, null);
         if (userName != null) {
-            TextView tvUsername = (TextView)findViewById(R.id.user_name);
+            TextView tvUsername = (TextView) findViewById(R.id.user_name);
             tvUsername.setText(userName);
         }
-        TextView tvOpponentName = (TextView)findViewById(R.id.opponent_name);
+        TextView tvOpponentName = (TextView) findViewById(R.id.opponent_name);
         tvOpponentName.setText("-");
     }
 
@@ -109,7 +110,7 @@ public class NsdActivity extends AppCompatActivity {
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         enemyName = savedInstanceState.getString(PREFERENCE_OPPONENT_USERNAME);
-        TextView tvOpponentName = (TextView)findViewById(R.id.opponent_name);
+        TextView tvOpponentName = (TextView) findViewById(R.id.opponent_name);
         tvOpponentName.setText(enemyName);
     }
 
@@ -135,7 +136,7 @@ public class NsdActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         //
-        if(alertDialog != null){
+        if (alertDialog != null) {
             alertDialog.cancel();
         }
         if (mService != null) {
@@ -152,10 +153,10 @@ public class NsdActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if(mService != null && mService.getState() == NsdService.STATE_CONNECTED) {
+        if (mService != null && mService.getState() == NsdService.STATE_CONNECTED) {
             new AlertDialog.Builder(this)
                     .setMessage(getString(R.string.bluetooth_is_disconnect_question, mService.getConnectedServiceName()))
-                    .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener(){
+                    .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             mService.stop();
                             mService.start();
@@ -182,7 +183,8 @@ public class NsdActivity extends AppCompatActivity {
 
     /**
      * Sends a message.
-     * @param message  A string of text to send.
+     *
+     * @param message A string of text to send.
      */
     private void sendMessage(String message) {
         // Check that we're actually connected before trying anything
@@ -199,8 +201,8 @@ public class NsdActivity extends AppCompatActivity {
         }
     }
 
-    private void showEndAlertDialog(HighScore highScore){
-        if(alertDialog == null || !alertDialog.isShowing()) {
+    private void showEndAlertDialog(HighScore highScore) {
+        if (alertDialog == null || !alertDialog.isShowing()) {
 
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setCancelable(false);
@@ -252,14 +254,14 @@ public class NsdActivity extends AppCompatActivity {
                     case MESSAGE_WRITE:
                         break;
                     case MESSAGE_READ:
-                        byte[] readBuf = (byte[])msg.obj;
+                        byte[] readBuf = (byte[]) msg.obj;
                         // construct a string from the valid bytes in the buffer
                         String readMessage = new String(readBuf, 0, msg.arg1);
                         if (readMessage.equals(MESSAGE_CLOSE_END_ACTIVITY)) {
                             activity.view.resetGame();
                         } else if (readMessage.startsWith(MESSAGE_USERNAME)) {
                             activity.enemyName = readMessage.replace(MESSAGE_USERNAME, "");
-                            TextView opponentName = (TextView)activity.findViewById(R.id.opponent_name);
+                            TextView opponentName = (TextView) activity.findViewById(R.id.opponent_name);
                             opponentName.setText(activity.enemyName);
                         } else {
                             Dot dot = Dot.parseString(readMessage);

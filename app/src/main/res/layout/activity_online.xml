@@ -15,8 +15,8 @@
             android:id="@+id/button_sign_in"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="30dp"
-            android:visibility="gone" />
+            android:layout_gravity="center"
+            android:padding="30dp" />
 
     </FrameLayout>
 

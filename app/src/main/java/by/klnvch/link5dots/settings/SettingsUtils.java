@@ -30,6 +30,7 @@ public class SettingsUtils {
 
     /**
      * get stored user name
+     *
      * @param context current context
      * @return user name or null
      */

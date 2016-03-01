@@ -26,11 +26,11 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.AdapterView.OnItemClickListener;
 
 import java.lang.ref.WeakReference;
 import java.util.Set;
@@ -57,8 +57,8 @@ public class DevicePickerActivity extends AppCompatActivity {
             BluetoothService.LocalBinder binder = (BluetoothService.LocalBinder) service;
             mBluetoothService = binder.getService();
             mBluetoothService.setHandler(mHandler);
-            if(mBluetoothService != null && mBluetoothService.getState() == BluetoothService.STATE_CONNECTING){
-                if(progressDialog == null){
+            if (mBluetoothService != null && mBluetoothService.getState() == BluetoothService.STATE_CONNECTING) {
+                if (progressDialog == null) {
                     progressDialog = ProgressDialog.show(DevicePickerActivity.this, null, getString(R.string.bluetooth_connecting), true, false, null);
                 }
             }
@@ -75,6 +75,7 @@ public class DevicePickerActivity extends AppCompatActivity {
     private static final int MESSAGE_TOAST = 5;
     public static final String DEVICE_NAME = "device_name";
     public static final String TOAST = "toast";
+
     // The Handler that gets information back from the BluetoothService
     private static class MHandler extends Handler {
         private final WeakReference<DevicePickerActivity> mActivity;
@@ -94,7 +95,7 @@ public class DevicePickerActivity extends AppCompatActivity {
                                 activity.progressDialog = ProgressDialog.show(activity, null, activity.getString(R.string.bluetooth_connecting), true, false, null);
                                 break;
                             default:
-                                if(activity.progressDialog != null){
+                                if (activity.progressDialog != null) {
                                     activity.progressDialog.cancel();
                                     activity.progressDialog = null;
                                 }
@@ -176,8 +177,8 @@ public class DevicePickerActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         //
-        if(mBluetoothService != null && mBluetoothService.getState() == BluetoothService.STATE_CONNECTING){
-            if(progressDialog == null){
+        if (mBluetoothService != null && mBluetoothService.getState() == BluetoothService.STATE_CONNECTING) {
+            if (progressDialog == null) {
                 progressDialog = ProgressDialog.show(this, null, getString(R.string.bluetooth_connecting), true, false, null);
             }
         }
@@ -201,7 +202,7 @@ public class DevicePickerActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         //
-        if(progressDialog != null){
+        if (progressDialog != null) {
             progressDialog.cancel();
             progressDialog = null;
         }
@@ -278,15 +279,15 @@ public class DevicePickerActivity extends AppCompatActivity {
             // Cancel discovery because it's costly and we're about to connect
             mBluetoothAdapter.cancelDiscovery();
 
-            final BluetoothDevice device = (BluetoothDevice)av.getItemAtPosition(position);
+            final BluetoothDevice device = (BluetoothDevice) av.getItemAtPosition(position);
 
             try {
                 // Attempt to connect to the device
                 AlertDialog.Builder builder = new AlertDialog.Builder(DevicePickerActivity.this);
                 builder.setMessage(getString(R.string.bluetooth_connection_dialog_text, device.getName()));
-                builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener(){
+                builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        if(mBluetoothService != null) {
+                        if (mBluetoothService != null) {
                             mBluetoothService.connect(device);
                         }
                     }
@@ -312,19 +313,19 @@ public class DevicePickerActivity extends AppCompatActivity {
             if (BluetoothDevice.ACTION_FOUND.equals(action)) {
                 // Get the BluetoothDevice object from the Intent
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                if(device.getBondState() != BluetoothDevice.BOND_BONDED) {
+                if (device.getBondState() != BluetoothDevice.BOND_BONDED) {
                     ListView newDevicesListView = (ListView) findViewById(R.id.list_available_devices);
                     DeviceListAdapter mNewDevicesArrayAdapter = (DeviceListAdapter) newDevicesListView.getAdapter();
                     mNewDevicesArrayAdapter.add(device);
                 }
-            // When discovery is finished, change the Activity title
+                // When discovery is finished, change the Activity title
             } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
                 findViewById(R.id.progressBar).setVisibility(View.GONE);
                 ListView newDevicesListView = (ListView) findViewById(R.id.list_available_devices);
-                if(newDevicesListView.getCount() == 0){
+                if (newDevicesListView.getCount() == 0) {
                     newDevicesListView.setVisibility(View.GONE);
                     findViewById(R.id.label_no_device_found).setVisibility(View.VISIBLE);
-                }else{
+                } else {
                     findViewById(R.id.label_no_device_found).setVisibility(View.GONE);
                     newDevicesListView.setVisibility(View.VISIBLE);
                 }
@@ -334,12 +335,12 @@ public class DevicePickerActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, final int resultCode, Intent data) {
-        switch (requestCode){
+        switch (requestCode) {
             case BT_REQUEST_DISCOVERABLE:
-                if(resultCode > 0){
+                if (resultCode > 0) {
                     SharedPreferences prefs = getPreferences(MODE_PRIVATE);
                     SharedPreferences.Editor editor = prefs.edit();
-                    long finishTime = System.currentTimeMillis() + resultCode*1000;
+                    long finishTime = System.currentTimeMillis() + resultCode * 1000;
                     editor.putLong(BT_DISCOVERABLE_TIME_FINISH, finishTime);
                     editor.apply();
                     setVisibilityTimer(resultCode);
@@ -361,7 +362,7 @@ public class DevicePickerActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        switch(item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.bt_menu_refresh:
                 doDiscovery();
                 return true;
@@ -374,8 +375,9 @@ public class DevicePickerActivity extends AppCompatActivity {
     }
 
     private CountDownTimer countDownTimer = null;
-    private void setVisibilityTimer(int timeSeconds){
-        if(countDownTimer == null) {
+
+    private void setVisibilityTimer(int timeSeconds) {
+        if (countDownTimer == null) {
             final TextView visibilityInfo = (TextView) findViewById(R.id.visibility_info);
             countDownTimer = new CountDownTimer(timeSeconds * 1000, 1000) {
                 @Override

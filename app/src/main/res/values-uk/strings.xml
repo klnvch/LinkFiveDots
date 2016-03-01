@@ -1,45 +1,44 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">З’єднай П’ять Точок</string>
-	<string name="language">Українська</string>
+    <string name="language">Українська</string>
 
 
+    <string name="greetings">Привіт, %1$s!</string>
+    <string name="android">Андроід</string>
+    <string name="how_to_title">Як грати</string>
+    <string name="how_to_text">\tЗ’єднайте першими п’ять точок по прямій горизонтально, вертикально чи по діагоналі. Андроїд грає синіми точками, ви граєте червоними точками. Червоні і сині точки розміщуються поперемінно на перетині ліній сітки. Перший крок за Вами.\n\n\tПеретягніть екран, щоб перемістити сітку.\n\tРозтягніть екран, щоб збільшити або зменшити розмір сітки.\n\tВикористовуйте меню, щоб перезапустити гру, скасувати останній хід, подивитися досягнення в іграх або подивитися, як грати.\n\tНатисніть кнопку \"Пошук\", щоб приховати / показати стрілки, що показують останній хід точкою.</string>
 
-	<string name="greetings">Привіт, %1$s!</string>
-	<string name="android">Андроід</string>
-	<string name="how_to_title">Як грати</string>
-	<string name="how_to_text">\tЗ’єднайте першими п’ять точок по прямій горизонтально, вертикально чи по діагоналі. Андроїд грає синіми точками, ви граєте червоними точками. Червоні і сині точки розміщуються поперемінно на перетині ліній сітки. Перший крок за Вами.\n\n\tПеретягніть екран, щоб перемістити сітку.\n\tРозтягніть екран, щоб збільшити або зменшити розмір сітки.\n\tВикористовуйте меню, щоб перезапустити гру, скасувати останній хід, подивитися досягнення в іграх або подивитися, як грати.\n\tНатисніть кнопку \"Пошук\", щоб приховати / показати стрілки, що показують останній хід точкою.</string>
-	
-	<string name="scores_title">Результати</string>
-	<string name="scores_no_internet">Відсутній доступ до Інтернету</string>
-	<string name="scores_number">#</string>
-	<string name="scores_name">Ім\'я</string>
-	<string name="scores_moves">Кількість ходів</string>
-	<string name="scores_status">Статус</string>
-	<string name="scores_won">виграно</string>
-	<string name="scores_lost">програно</string>
-	
-	<string name="end_win">Ви виграли!</string>
-	<string name="end_lose">Ви програли!</string>
-	<string name="end_new_game">Нова</string>
-	<string name="end_undo">Скасувати</string>
-	<string name="end_move">%1$d ходів зроблено за %2$d s.</string>
-	
-	<string name="scores_time">Час</string>
-	<string name="end_publish">Обублікувати</string>
-	
-	<string name="scores_loading">Завантаження&#8230;</string>
-	
-	<string name="menu_single_player">Один гравець</string>
-	<string name="menu_multi_player">Мультиплеер</string>
-	<string name="two_players">Два гравці</string>
-	<string name="menu_local_network">Локальна Мережа</string>
+    <string name="scores_title">Результати</string>
+    <string name="scores_no_internet">Відсутній доступ до Інтернету</string>
+    <string name="scores_number">#</string>
+    <string name="scores_name">Ім\'я</string>
+    <string name="scores_moves">Кількість ходів</string>
+    <string name="scores_status">Статус</string>
+    <string name="scores_won">виграно</string>
+    <string name="scores_lost">програно</string>
 
-	<string name="rate_this_app">Оцінити цю програму</string>
+    <string name="end_win">Ви виграли!</string>
+    <string name="end_lose">Ви програли!</string>
+    <string name="end_new_game">Нова</string>
+    <string name="end_undo">Скасувати</string>
+    <string name="end_move">%1$d ходів зроблено за %2$d s.</string>
+
+    <string name="scores_time">Час</string>
+    <string name="end_publish">Обублікувати</string>
+
+    <string name="scores_loading">Завантаження&#8230;</string>
+
+    <string name="menu_single_player">Один гравець</string>
+    <string name="menu_multi_player">Мультиплеер</string>
+    <string name="two_players">Два гравці</string>
+    <string name="menu_local_network">Локальна Мережа</string>
+
+    <string name="rate_this_app">Оцінити цю програму</string>
 
     <string name="yes">"Так"</string>
     <string name="no">"Ні"</string>
-	<string name="create">"Створити"</string>
+    <string name="create">"Створити"</string>
     <string name="device_info_default">"Невідомо"</string>
 
     <string name="bluetooth_not_discoverable">"Зробити пристрій видимим"</string>
@@ -60,19 +59,19 @@
     <string name="bluetooth_search_for_devices">"Оновити"</string>
     <string name="bluetooth_preference_paired_devices">"Спарені пристрої"</string>
     <string name="bluetooth_preference_found_devices">"Доступні пристрої"</string>
-	<string name="apn_not_set">"Не встановлено"</string>
-	<string name="apn_name">"Назва:"</string>
+    <string name="apn_not_set">"Не встановлено"</string>
+    <string name="apn_name">"Назва:"</string>
     <string name="apn_user">"Ім’я користувача"</string>
-	<string name="application_info_label">"Про додаток"</string>
-	<string name="master_clear_progress_text">"Зачекайте…"</string>
-	<string name="version_text">"версія %1$s"</string>
-	<string name="device_feedback">Надіслати відгук</string>
-	<string name="phone_language">"Мова"</string>
-	<string name="share">"Поділитися"</string>
-	<string name="search_menu">"Пошук"</string>
+    <string name="application_info_label">"Про додаток"</string>
+    <string name="master_clear_progress_text">"Зачекайте…"</string>
+    <string name="version_text">"версія %1$s"</string>
+    <string name="device_feedback">Надіслати відгук</string>
+    <string name="phone_language">"Мова"</string>
+    <string name="share">"Поділитися"</string>
+    <string name="search_menu">"Пошук"</string>
 
 
-	<string name="bt_message_your_turn">Твій крок, постав точку…</string>
-	<string name="bt_message_opponents_turn">Хід опонента, зачекайте…</string>
-	
+    <string name="bt_message_your_turn">Твій крок, постав точку…</string>
+    <string name="bt_message_opponents_turn">Хід опонента, зачекайте…</string>
+
 </resources>

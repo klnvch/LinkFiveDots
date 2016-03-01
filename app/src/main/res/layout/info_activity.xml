@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -13,7 +12,7 @@
         android:textSize="@dimen/bt_text_size"
         android:text="@string/app_name"
         android:textColor="@color/black"
-        android:textStyle="bold"/>
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/version"
@@ -21,10 +20,9 @@
         android:layout_height="wrap_content"
         android:textSize="@dimen/bt_text_size"
         android:text="@string/version_text"
-        android:textColor="@color/black"/>
+        android:textColor="@color/black" />
 
-    <com.google.android.gms.plus.PlusOneButton
-        xmlns:plus="http://schemas.android.com/apk/lib/com.google.android.gms.plus"
+    <com.google.android.gms.plus.PlusOneButton xmlns:plus="http://schemas.android.com/apk/lib/com.google.android.gms.plus"
         android:id="@+id/plus_one_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -42,7 +40,7 @@
         android:textColor="@color/black"
         android:textStyle="bold"
         android:textSize="@dimen/btn_text_size"
-        android:background="@drawable/btn_selector"/>
+        android:background="@drawable/btn_selector" />
 
     <Button
         android:id="@+id/send_feedback"
@@ -52,7 +50,7 @@
         android:textColor="@color/black"
         android:textStyle="bold"
         android:textSize="@dimen/btn_text_size"
-        android:background="@drawable/btn_selector"/>
+        android:background="@drawable/btn_selector" />
 
     <Button
         android:id="@+id/share"
@@ -62,6 +60,6 @@
         android:textColor="@color/black"
         android:textStyle="bold"
         android:textSize="@dimen/btn_text_size"
-        android:background="@drawable/btn_selector"/>
+        android:background="@drawable/btn_selector" />
 
 </LinearLayout>

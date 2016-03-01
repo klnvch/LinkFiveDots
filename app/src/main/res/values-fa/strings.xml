@@ -4,7 +4,6 @@
     <string name="language">فارسی</string>
 
 
-
     <string name="greetings">"سلام <xliff:g id="USER_NAME">%1$s</xliff:g>!"</string>
     <string name="android">اندروید</string>
     <string name="how_to_title">یادگیری بازی</string>

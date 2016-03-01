@@ -13,9 +13,9 @@ import android.widget.TextView;
 import by.klnvch.link5dots.R;
 
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-class ServiceListAdapter extends ArrayAdapter<NsdServiceInfo>{
+class ServiceListAdapter extends ArrayAdapter<NsdServiceInfo> {
 
-    public ServiceListAdapter(Context context){
+    public ServiceListAdapter(Context context) {
         super(context, R.layout.device_name);
     }
 
@@ -23,12 +23,12 @@ class ServiceListAdapter extends ArrayAdapter<NsdServiceInfo>{
     public View getView(int position, View convertView, ViewGroup parent) {
         NsdServiceInfo service = getItem(position);
 
-        LayoutInflater mInflater = (LayoutInflater)getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater mInflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         if (convertView == null) {
             convertView = mInflater.inflate(R.layout.device_name, parent, false);
         }
 
-        TextView textView = (TextView)convertView;
+        TextView textView = (TextView) convertView;
 
         textView.setText(service.getServiceName());
 

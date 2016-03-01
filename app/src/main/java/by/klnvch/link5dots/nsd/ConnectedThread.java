@@ -7,7 +7,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 
-class ConnectedThread extends Thread{
+class ConnectedThread extends Thread {
     private static final String TAG = "ConnectedThread";
 
     private final Socket mSocket;
@@ -34,6 +34,7 @@ class ConnectedThread extends Thread{
         mmInStream = tmpIn;
         mmOutStream = tmpOut;
     }
+
     public void run() {
         Log.i(TAG, "BEGIN mConnectedThread");
         byte[] buffer = new byte[1024];
@@ -60,9 +61,11 @@ class ConnectedThread extends Thread{
             }
         }
     }
+
     /**
      * Write to the connected OutStream.
-     * @param buffer  The bytes to write
+     *
+     * @param buffer The bytes to write
      */
     public void write(byte[] buffer) {
         try {

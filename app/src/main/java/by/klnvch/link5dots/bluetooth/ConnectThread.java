@@ -12,7 +12,7 @@ import java.io.IOException;
  * with a device. It runs straight through; the connection either
  * succeeds or fails.
  */
-class ConnectThread extends Thread{
+class ConnectThread extends Thread {
     private static final String TAG = "ConnectThread";
 
     private final BluetoothSocket mmSocket;

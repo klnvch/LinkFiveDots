@@ -15,6 +15,7 @@ import by.klnvch.link5dots.bluetooth.DevicePickerActivity;
 import by.klnvch.link5dots.nsd.NsdPickerActivity;
 import by.klnvch.link5dots.nsd.NsdService;
 import by.klnvch.link5dots.online.OnlineGameActivity;
+
 public class MultiPlayerMenuActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final String IS_BLUETOOTH_ENABLED = "IS_BLUETOOTH_ENABLED";

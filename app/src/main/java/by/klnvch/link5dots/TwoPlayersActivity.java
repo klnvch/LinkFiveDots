@@ -9,7 +9,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
-public class TwoPlayersActivity extends AppCompatActivity  {
+public class TwoPlayersActivity extends AppCompatActivity {
 
     private GameView view;
     private AlertDialog alertDialog = null;
@@ -19,7 +19,7 @@ public class TwoPlayersActivity extends AppCompatActivity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.game_board);
 
-        view = (GameView)findViewById(R.id.game_view);
+        view = (GameView) findViewById(R.id.game_view);
 
         view.setOnGameEventListener(new GameView.OnGameEventListener() {
             @Override
@@ -67,7 +67,7 @@ public class TwoPlayersActivity extends AppCompatActivity  {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        switch(item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.menu_undo:
                 undoLastMove();
                 return true;
@@ -87,8 +87,8 @@ public class TwoPlayersActivity extends AppCompatActivity  {
         return true;
     }
 
-    private void showAlertDialog(final HighScore highScore){
-        if(alertDialog == null || !alertDialog.isShowing()) {
+    private void showAlertDialog(final HighScore highScore) {
+        if (alertDialog == null || !alertDialog.isShowing()) {
 
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             String str = getString(R.string.end_move, highScore.getScore(), highScore.getTime());
@@ -110,15 +110,15 @@ public class TwoPlayersActivity extends AppCompatActivity  {
         }
     }
 
-    private void undoLastMove(){
+    private void undoLastMove() {
         view.undoLastMove(1);
     }
 
-    private void newGame(){
+    private void newGame() {
         view.resetGame();
     }
 
-    private void searchLastMove(){
+    private void searchLastMove() {
         view.switchHideArrow();
     }
 }

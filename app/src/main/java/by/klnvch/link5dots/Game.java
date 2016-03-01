@@ -1,8 +1,5 @@
 package by.klnvch.link5dots;
 
-import java.util.ArrayList;
-import java.util.Random;
-
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
@@ -10,6 +7,9 @@ import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Random;
 
 public class Game {
 
@@ -26,7 +26,6 @@ public class Game {
     private static final String GUEST_NAME = "GUEST_NAME";
     private static final String NET = "NET";
     private static final String TURN_COUNTER = "TURN_COUNTER";
-
 
 
     private static final int N = 20;

@@ -62,6 +62,7 @@ public class Protocol {
 
     public interface OnParsedListener {
         void onInitMessage(@NonNull String name);
+
         void onDotMessage(@NonNull Dot dot);
     }
 }

@@ -1,45 +1,44 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Combiner Cinq Points</string>
-	<string name="language">Français</string>
+    <string name="language">Français</string>
 
 
+    <string name="greetings">Salut, %1$s!</string>
+    <string name="android">Android</string>
+    <string name="how_to_title">Comment jouer</string>
+    <string name="how_to_text">\tSoyez le premier à aligner cinq points, horizontalement, verticalement ou en diagonale. Android déplace les points bleus, vous, les points rouges. Les points rouges et bleus sont placés tour à tour sur les intersections. Vous jouez en premier.\n\n\tFaites glisser l’écran pour déplacer la grille.\n\tAgrandissez ou réduisez l’écran pour ajuster la taille de la grille.\n\tUtilisez le menu pour redémarrer le jeu, annulez le dernier coup, regardez les scores des jeux ou vérifiez comment jouer.\n\tAppuyez sur le bouton \"Rechercher\" pour masquer/afficher des flèches autour du point joué le dernier coup.</string>
 
-	<string name="greetings">Salut, %1$s!</string>
-	<string name="android">Android</string>
-	<string name="how_to_title">Comment jouer</string>
-	<string name="how_to_text">\tSoyez le premier à aligner cinq points, horizontalement, verticalement ou en diagonale. Android déplace les points bleus, vous, les points rouges. Les points rouges et bleus sont placés tour à tour sur les intersections. Vous jouez en premier.\n\n\tFaites glisser l’écran pour déplacer la grille.\n\tAgrandissez ou réduisez l’écran pour ajuster la taille de la grille.\n\tUtilisez le menu pour redémarrer le jeu, annulez le dernier coup, regardez les scores des jeux ou vérifiez comment jouer.\n\tAppuyez sur le bouton \"Rechercher\" pour masquer/afficher des flèches autour du point joué le dernier coup.</string>
-	
-	<string name="scores_title">Les scores</string>
-	<string name="scores_no_internet">Pas d’accés à internet</string>
-	<string name="scores_number">#</string>
-	<string name="scores_name">Nom</string>
-	<string name="scores_moves">Nombre de coups</string>
-	<string name="scores_status">Statut</string>
-	<string name="scores_won">gagné</string>
-	<string name="scores_lost">perdu</string>
-	
-	<string name="end_win">Vous avez gagné!</string>
-	<string name="end_lose">Vous avez échoué!</string>
-	<string name="end_new_game">Nouveau</string>
-	<string name="end_undo">Annuler</string>
-	<string name="end_move">%1$d déplacements effectués pendant %2$d s.</string>
-	
-	<string name="scores_time">Durée</string>
-	<string name="end_publish">Publier</string>
-	
-	<string name="scores_loading">Chargement&#8230;</string>
-	
-	<string name="menu_single_player">Seul Joueur</string>
-	<string name="menu_multi_player">Multijoueur</string>
-	<string name="two_players">Deux joueurs</string>
-	<string name="menu_local_network">Réseau Local</string>
+    <string name="scores_title">Les scores</string>
+    <string name="scores_no_internet">Pas d’accés à internet</string>
+    <string name="scores_number">#</string>
+    <string name="scores_name">Nom</string>
+    <string name="scores_moves">Nombre de coups</string>
+    <string name="scores_status">Statut</string>
+    <string name="scores_won">gagné</string>
+    <string name="scores_lost">perdu</string>
 
-	<string name="rate_this_app">Noter cette application</string>
+    <string name="end_win">Vous avez gagné!</string>
+    <string name="end_lose">Vous avez échoué!</string>
+    <string name="end_new_game">Nouveau</string>
+    <string name="end_undo">Annuler</string>
+    <string name="end_move">%1$d déplacements effectués pendant %2$d s.</string>
+
+    <string name="scores_time">Durée</string>
+    <string name="end_publish">Publier</string>
+
+    <string name="scores_loading">Chargement&#8230;</string>
+
+    <string name="menu_single_player">Seul Joueur</string>
+    <string name="menu_multi_player">Multijoueur</string>
+    <string name="two_players">Deux joueurs</string>
+    <string name="menu_local_network">Réseau Local</string>
+
+    <string name="rate_this_app">Noter cette application</string>
 
     <string name="yes">"Oui"</string>
     <string name="no">"Non"</string>
-	<string name="create">"Créer"</string>
+    <string name="create">"Créer"</string>
     <string name="device_info_default">"Inconnu"</string>
 
     <string name="bluetooth_not_discoverable">"Permettre l\'identification de l\'appareil"</string>
@@ -53,26 +52,26 @@
     <string name="device_picker">"Sélectionner un appareil Bluetooth"</string>
     <string name="bluetooth_connection_dialog_text">"Voulez-vous vous connecter à \"%1$s\" ?"</string>
     <string name="cancel">"Annuler"</string>
-    <string name="okay" >"OK"</string>
+    <string name="okay">"OK"</string>
     <string name="settings_label">"Paramètres"</string>
     <string name="bluetooth_settings">"Bluetooth"</string>
     <string name="bluetooth_connecting_error_message">"Impossible de se connecter à \"%1$s\"."</string>
     <string name="bluetooth_search_for_devices">"Actualiser"</string>
     <string name="bluetooth_preference_paired_devices">"Périphériques associés"</string>
     <string name="bluetooth_preference_found_devices">"Appareils"</string>
-	<string name="apn_not_set">"Non défini"</string>
-	<string name="apn_name">"Nom:"</string>
+    <string name="apn_not_set">"Non défini"</string>
+    <string name="apn_name">"Nom:"</string>
     <string name="apn_user">"Nom d\'utilisateur"</string>
-	<string name="application_info_label">"Informations sur l\'application"</string>
-	<string name="master_clear_progress_text">"Veuillez patienter…"</string>
-	<string name="version_text">"version %1$s"</string>
-	<string name="device_feedback">Envoyer commentaires</string>
-	<string name="phone_language">"Langue"</string>
-	<string name="share">"Partager"</string>
-	<string name="search_menu">"Rechercher"</string>
+    <string name="application_info_label">"Informations sur l\'application"</string>
+    <string name="master_clear_progress_text">"Veuillez patienter…"</string>
+    <string name="version_text">"version %1$s"</string>
+    <string name="device_feedback">Envoyer commentaires</string>
+    <string name="phone_language">"Langue"</string>
+    <string name="share">"Partager"</string>
+    <string name="search_menu">"Rechercher"</string>
 
 
-	<string name="bt_message_your_turn">Action du joueur…</string>
-	<string name="bt_message_opponents_turn">Votre action…</string>
-	
+    <string name="bt_message_your_turn">Action du joueur…</string>
+    <string name="bt_message_opponents_turn">Votre action…</string>
+
 </resources>

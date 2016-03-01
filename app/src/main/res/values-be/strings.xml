@@ -1,46 +1,45 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Злучы Пяць Кропак</string>
-	<string name="language">Беларуская</string>
+    <string name="language">Беларуская</string>
 
 
+    <string name="greetings">Прывітаньне, %1$s!</string>
+    <string name="android">Андроід</string>
+    <string name="how_to_title">Як граць</string>
+    <string name="how_to_text">\tЗлучыце першымі пяць кропак у прамую лінію па гарызанталі, па вертыкалі або па дыяганалі. Андроід грае сінімі кропкамі, Вы чырвонымі. Чырвоныя і сінія кропкі ставяцца па чарзе на перакрыжаванні ліній. Першы рух Ваш.\n\n\tЦягніце па экране, каб перамясціць сетку.\n\tМаштабуйце экран, каб павялічыць ці паменшыць памер сеткі.\n\tУжыйце меню, каб перазапусціць гульню, скасаваць апошні рух, паглядзець вынікі гульні, або як граць.\n\tЦіскайце кнопку \"Шукаць\", каб схаваць / паказаць стрэлкі вакол кропкі апошняга руха.</string>
 
-	<string name="greetings">Прывітаньне, %1$s!</string>
-	<string name="android">Андроід</string>
-	<string name="how_to_title">Як граць</string>
-	<string name="how_to_text">\tЗлучыце першымі пяць кропак у прамую лінію па гарызанталі, па вертыкалі або па дыяганалі. Андроід грае сінімі кропкамі, Вы чырвонымі. Чырвоныя і сінія кропкі ставяцца па чарзе на перакрыжаванні ліній. Першы рух Ваш.\n\n\tЦягніце па экране, каб перамясціць сетку.\n\tМаштабуйце экран, каб павялічыць ці паменшыць памер сеткі.\n\tУжыйце меню, каб перазапусціць гульню, скасаваць апошні рух, паглядзець вынікі гульні, або як граць.\n\tЦіскайце кнопку \"Шукаць\", каб схаваць / паказаць стрэлкі вакол кропкі апошняга руха.</string>
-	
-	<string name="scores_title">Вынікі</string>
-	<string name="scores_no_internet">Няма інтэрнэту</string>
-	<string name="scores_number">#</string>
-	<string name="scores_name">Імя</string>
-	<string name="scores_moves">Кол-сьць рухаў</string>
-	<string name="scores_status">Статус</string>
-	<string name="scores_won">выграна</string>
-	<string name="scores_lost">прайграна</string>
-	
-	<string name="end_win">Вы выгралі!</string>
-	<string name="end_lose">Вы прайгралі!</string>
-	<string name="end_new_game">Новая</string>
-	<string name="end_undo">Скасаваць</string>
-	<string name="end_move">%1$d рухаў зроблена за %2$d s.</string>
-	
-	<string name="scores_time">Час</string>
-	<string name="end_publish">Апублікаваць</string>
-	
-	<string name="scores_loading">Загрузка&#8230;</string>
-	
-	<string name="menu_single_player">Адзін гулец</string>
-	<string name="menu_multi_player">Мультыплэер</string>
-	<string name="two_players">Два гульца</string>
-	<string name="menu_local_network">Лакальная Сетка</string>
+    <string name="scores_title">Вынікі</string>
+    <string name="scores_no_internet">Няма інтэрнэту</string>
+    <string name="scores_number">#</string>
+    <string name="scores_name">Імя</string>
+    <string name="scores_moves">Кол-сьць рухаў</string>
+    <string name="scores_status">Статус</string>
+    <string name="scores_won">выграна</string>
+    <string name="scores_lost">прайграна</string>
 
-	<string name="rate_this_app">Ацаніць гэтую праграму</string>
+    <string name="end_win">Вы выгралі!</string>
+    <string name="end_lose">Вы прайгралі!</string>
+    <string name="end_new_game">Новая</string>
+    <string name="end_undo">Скасаваць</string>
+    <string name="end_move">%1$d рухаў зроблена за %2$d s.</string>
+
+    <string name="scores_time">Час</string>
+    <string name="end_publish">Апублікаваць</string>
+
+    <string name="scores_loading">Загрузка&#8230;</string>
+
+    <string name="menu_single_player">Адзін гулец</string>
+    <string name="menu_multi_player">Мультыплэер</string>
+    <string name="two_players">Два гульца</string>
+    <string name="menu_local_network">Лакальная Сетка</string>
+
+    <string name="rate_this_app">Ацаніць гэтую праграму</string>
 
     <string name="yes">"Так"</string>
     <string name="no">"Не"</string>
-	<string name="create">"Стварыць"</string>
-	<string name="device_info_default">"Невядомы"</string>
+    <string name="create">"Стварыць"</string>
+    <string name="device_info_default">"Невядомы"</string>
 
     <string name="bluetooth_not_discoverable">Зрабіць прыладу бачнай</string>
     <string name="bluetooth_is_discoverable">"Бачна для ўсіх прылад Bluetooth (%1$s)"</string>
@@ -60,19 +59,19 @@
     <string name="bluetooth_search_for_devices">"Абнавіць"</string>
     <string name="bluetooth_preference_paired_devices">"Спараныя прылады"</string>
     <string name="bluetooth_preference_found_devices">"Даступныя прылады"</string>
-	<string name="apn_not_set">Не устаноўлена</string>
-	<string name="apn_name">Назва:</string>
+    <string name="apn_not_set">Не устаноўлена</string>
+    <string name="apn_name">Назва:</string>
     <string name="apn_user">"Імя карыстальніка"</string>
-	<string name="application_info_label">"Пра праграму"</string>
-	<string name="master_clear_progress_text">"Пачакайце…"</string>
-	<string name="version_text">"версія %1$s"</string>
-	<string name="device_feedback">Адаслаць водгук</string>
-	<string name="phone_language">"Мова"</string>
-	<string name="share">"Падзяліцца"</string>
-	<string name="search_menu">"Шукай"</string>
+    <string name="application_info_label">"Пра праграму"</string>
+    <string name="master_clear_progress_text">"Пачакайце…"</string>
+    <string name="version_text">"версія %1$s"</string>
+    <string name="device_feedback">Адаслаць водгук</string>
+    <string name="phone_language">"Мова"</string>
+    <string name="share">"Падзяліцца"</string>
+    <string name="search_menu">"Шукай"</string>
 
 
-	<string name="bt_message_your_turn">Ваш рух, пастаўце кропку&#8230;</string>
-	<string name="bt_message_opponents_turn">Рух праціўніка, пачакайце&#8230;</string>
-	
+    <string name="bt_message_your_turn">Ваш рух, пастаўце кропку&#8230;</string>
+    <string name="bt_message_opponents_turn">Рух праціўніка, пачакайце&#8230;</string>
+
 </resources>

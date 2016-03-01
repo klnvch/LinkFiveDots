@@ -5,6 +5,8 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
@@ -31,7 +33,6 @@ import com.google.android.gms.games.multiplayer.realtime.Room;
 import com.google.android.gms.games.multiplayer.realtime.RoomConfig;
 import com.google.android.gms.games.multiplayer.realtime.RoomStatusUpdateListener;
 import com.google.android.gms.games.multiplayer.realtime.RoomUpdateListener;
-import com.google.android.gms.plus.Plus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,8 +62,6 @@ public class OnlineGameActivity extends AppCompatActivity implements
     private GameView view;
     private int currentScreen = R.id.screen_wait;
 
-    private boolean isLeaving = false;
-
     private GoogleApiClient mGoogleApiClient;
     private boolean mResolvingError = false;
     // Has the user clicked the sign-in button?
@@ -76,7 +75,7 @@ public class OnlineGameActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_online);
 
-        view = (GameView)findViewById(R.id.game_view);
+        view = (GameView) findViewById(R.id.game_view);
 
         view.setOnGameEventListener(new GameView.OnGameEventListener() {
             @Override
@@ -106,15 +105,16 @@ public class OnlineGameActivity extends AppCompatActivity implements
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
-                .addApi(Plus.API).addScope(Plus.SCOPE_PLUS_LOGIN)
                 .addApi(Games.API).addScope(Games.SCOPE_GAMES)
                 .build();
 
-        mResolvingError = savedInstanceState != null
-                && savedInstanceState.getBoolean(STATE_RESOLVING_ERROR, false);
+        if (savedInstanceState != null) {
+            mResolvingError = savedInstanceState.getBoolean(STATE_RESOLVING_ERROR, false);
+            mAutoStartSignInFlow = savedInstanceState.getBoolean("mAutoStartSignInFlow", true);
+        }
 
         String username = SettingsUtils.getUserName(this, getString(R.string.device_info_default));
-        TextView tvUsername = (TextView)findViewById(R.id.user_name);
+        TextView tvUsername = (TextView) findViewById(R.id.user_name);
         tvUsername.setText(username);
 
         view.restore(savedInstanceState);
@@ -126,6 +126,7 @@ public class OnlineGameActivity extends AppCompatActivity implements
     protected void onSaveInstanceState(Bundle outState) {
         view.save(outState);
         super.onSaveInstanceState(outState);
+        outState.putBoolean("mAutoStartSignInFlow", mAutoStartSignInFlow);
         outState.putBoolean(STATE_RESOLVING_ERROR, mResolvingError);
     }
 
@@ -135,7 +136,7 @@ public class OnlineGameActivity extends AppCompatActivity implements
             case R.id.screen_game_board:
                 new AlertDialog.Builder(this)
                         .setMessage(getString(R.string.bluetooth_is_disconnect_question, "unknown"))
-                        .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener(){
+                        .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 leave();
                             }
@@ -161,6 +162,7 @@ public class OnlineGameActivity extends AppCompatActivity implements
             case R.id.sign_out:
                 if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
                     mSignInClicked = false;
+                    mAutoStartSignInFlow = false;
                     Games.signOut(mGoogleApiClient);
                     mGoogleApiClient.disconnect();
                     switchToScreen(R.id.screen_sign_in);
@@ -173,6 +175,7 @@ public class OnlineGameActivity extends AppCompatActivity implements
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d(TAG, "onActivityResult");
         switch (requestCode) {
             case RC_WAITING_ROOM:
                 switch (resultCode) {
@@ -219,7 +222,7 @@ public class OnlineGameActivity extends AppCompatActivity implements
                         break;
                     case GamesActivityResultCodes.RESULT_SIGN_IN_FAILED:
                         new AlertDialog.Builder(this)
-                                .setMessage(R.string.sign_in_failed)
+                                .setMessage(R.string.vpn_no_network)
                                 .setPositiveButton(R.string.okay, null)
                                 .show();
                         break;
@@ -266,13 +269,18 @@ public class OnlineGameActivity extends AppCompatActivity implements
 
     @Override
     public void onStart() {
+        super.onStart();
         if (!mGoogleApiClient.isConnected()) {
-            mGoogleApiClient.connect();
-            switchToScreen(R.id.screen_wait);
+            if (mAutoStartSignInFlow) {
+                mAutoStartSignInFlow = false;
+                mGoogleApiClient.connect();
+                switchToScreen(R.id.screen_wait);
+            } else {
+                switchToScreen(R.id.screen_sign_in);
+            }
         } else {
             switchToScreen(R.id.screen_menu);
         }
-        super.onStart();
     }
 
     @Override
@@ -287,6 +295,8 @@ public class OnlineGameActivity extends AppCompatActivity implements
     public void onConnected(Bundle connectionHint) {
         Log.d(TAG, "onConnected: " + connectionHint);
 
+        mAutoStartSignInFlow = true;
+
         Games.Invitations.registerInvitationListener(mGoogleApiClient, mFragment);
 
         if (connectionHint != null) {
@@ -297,11 +307,6 @@ public class OnlineGameActivity extends AppCompatActivity implements
             }
         }
         switchToMainScreen();
-
-        if (isLeaving) {
-            leave();
-            isLeaving = false;
-        }
     }
 
     @Override
@@ -416,9 +421,11 @@ public class OnlineGameActivity extends AppCompatActivity implements
         if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
             if (mFragment.getRoomId() != null) {
                 Games.RealTimeMultiplayer.leave(mGoogleApiClient, mFragment, mFragment.getRoomId());
+            } else {
+                Log.e(TAG, "trying to leave but no room id");
             }
         } else {
-            isLeaving = true;
+            Log.e(TAG, "trying to leave while disconnected");
         }
     }
 
@@ -428,10 +435,25 @@ public class OnlineGameActivity extends AppCompatActivity implements
             case R.id.button_sign_in:
                 mSignInClicked = true;
                 mGoogleApiClient.connect();
+                switchToScreen(R.id.screen_wait);
                 break;
             case R.id.button_quick_game:
                 quickGame();
                 switchToScreen(R.id.screen_wait);
+                // issue: waiting room disappears on orientation change
+                //if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+                //    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED);
+                //} else {
+                int currentOrientation = getResources().getConfiguration().orientation;
+                switch (currentOrientation) {
+                    case Configuration.ORIENTATION_LANDSCAPE:
+                        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+                        break;
+                    case Configuration.ORIENTATION_PORTRAIT:
+                        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                        break;
+                }
+                //}
                 break;
             case R.id.button_invite_players:
                 startActivityForResult(getSelectOpponentsIntent(), RC_SELECT_PLAYERS);
@@ -451,6 +473,8 @@ public class OnlineGameActivity extends AppCompatActivity implements
     @Override
     public void onRoomCreated(int i, Room room) {
         startActivityForResult(getWaitingRoomIntent(room), RC_WAITING_ROOM);
+        //
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
     }
 
     @Override
@@ -461,6 +485,8 @@ public class OnlineGameActivity extends AppCompatActivity implements
     @Override
     public void onLeftRoom(int i, String s) {
         switchToScreen(R.id.screen_menu);
+        //
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
     }
 
     @Override
@@ -577,7 +603,8 @@ public class OnlineGameActivity extends AppCompatActivity implements
     }
 
     public static class ErrorDialogFragment extends DialogFragment {
-        public ErrorDialogFragment() { }
+        public ErrorDialogFragment() {
+        }
 
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {

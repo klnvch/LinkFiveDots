@@ -84,6 +84,7 @@ public class UsernameDialog extends DialogFragment {
 
     public interface OnUsernameChangListener {
         void onUsernameChanged(String username);
+
         void onNothingChanged();
     }
 

@@ -17,17 +17,17 @@ import com.google.android.gms.analytics.Tracker;
 import by.klnvch.link5dots.settings.SettingsUtils;
 
 public class MainActivity extends AppCompatActivity {
-	
-	private GameView view;
+
+    private GameView view;
     private AlertDialog alertDialog = null;
-	
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-		setContentView(R.layout.game_board);
-		
-		//restore view
-		view = (GameView)findViewById(R.id.game_view);
+        setContentView(R.layout.game_board);
+
+        //restore view
+        view = (GameView) findViewById(R.id.game_view);
 
         view.setOnGameEventListener(new GameView.OnGameEventListener() {
             @Override
@@ -51,12 +51,12 @@ public class MainActivity extends AppCompatActivity {
 
         String username = SettingsUtils.getUserName(this, null);
         if (username != null) {
-            TextView tvUsername = (TextView)findViewById(R.id.user_name);
+            TextView tvUsername = (TextView) findViewById(R.id.user_name);
             tvUsername.setText(username);
         }
 
         ((App) getApplication()).getTracker();
-	}
+    }
 
     @Override
     protected void onStart() {
@@ -83,30 +83,30 @@ public class MainActivity extends AppCompatActivity {
         super.onStop();
         GoogleAnalytics.getInstance(this).reportActivityStop(this);
     }
-	
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.menu, menu);
-		return true;
-	}
-	
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		
-		switch(item.getItemId()){
-			case R.id.menu_undo:
-				undoLastMove();
-				return true;
-			case R.id.menu_new_game:
-				newGame();
-				return true;
-			case R.id.menu_search:
-				searchLastMove();
-				return true;
-		}
-		return false;
-	}
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.menu_undo:
+                undoLastMove();
+                return true;
+            case R.id.menu_new_game:
+                newGame();
+                return true;
+            case R.id.menu_search:
+                searchLastMove();
+                return true;
+        }
+        return false;
+    }
 
     @Override
     public boolean onSearchRequested() {
@@ -114,16 +114,16 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    private void showAlertDialog(final HighScore highScore){
-        if(alertDialog == null || !alertDialog.isShowing()){
+    private void showAlertDialog(final HighScore highScore) {
+        if (alertDialog == null || !alertDialog.isShowing()) {
             //final long gameStatus = data.getLong(GAME_STATUS);
             //final long numberOfMoves = data.getLong(NUMBER_OF_MOVES);
             //final long timeElapsed = data.getLong(ELAPSED_TIME);
 
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            if(highScore.getStatus() == HighScore.WON){
+            if (highScore.getStatus() == HighScore.WON) {
                 builder.setTitle(R.string.end_win);
-            }else{
+            } else {
                 builder.setTitle(R.string.end_lose);
             }
             String str = getString(R.string.end_move, highScore.getScore(), highScore.getTime());
@@ -151,27 +151,27 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void undoLastMove(){
+    private void undoLastMove() {
         view.undoLastMove(2);
         //
-        Tracker tracker = ((App)getApplication()).getTracker();
+        Tracker tracker = ((App) getApplication()).getTracker();
         tracker.send(new HitBuilders.EventBuilder()
                 .setCategory("Main")
                 .setAction("Undo")
                 .build());
     }
 
-    private void newGame(){
+    private void newGame() {
         view.resetGame();
         //
-        Tracker tracker = ((App)getApplication()).getTracker();
+        Tracker tracker = ((App) getApplication()).getTracker();
         tracker.send(new HitBuilders.EventBuilder()
                 .setCategory("Main")
                 .setAction("New")
                 .build());
     }
 
-    private void publishScore(HighScore highScore){
+    private void publishScore(HighScore highScore) {
         Intent i = new Intent(MainActivity.this, ScoresActivity.class);
         Bundle data = new Bundle();
         data.putLong(HighScore.GAME_STATUS, highScore.getStatus());
@@ -180,17 +180,17 @@ public class MainActivity extends AppCompatActivity {
         i.putExtras(data);
         startActivity(i);
         //
-        Tracker tracker = ((App)getApplication()).getTracker();
+        Tracker tracker = ((App) getApplication()).getTracker();
         tracker.send(new HitBuilders.EventBuilder()
                 .setCategory("Main")
                 .setAction("Publish")
                 .build());
     }
 
-    private void searchLastMove(){
+    private void searchLastMove() {
         view.switchHideArrow();
         //
-        Tracker tracker = ((App)getApplication()).getTracker();
+        Tracker tracker = ((App) getApplication()).getTracker();
         tracker.send(new HitBuilders.EventBuilder()
                 .setCategory("Main")
                 .setAction("Search")

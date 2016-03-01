@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="by.klnvch.link5dots" >
+    package="by.klnvch.link5dots">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -13,7 +13,7 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
         <meta-data
             android:name="com.google.android.gms.games.APP_ID"
             android:value="@string/app_id" />
@@ -31,7 +31,7 @@
         <activity
             android:name=".MainMenuActivity"
             android:configChanges="locale"
-            android:label="@string/app_name" >
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -41,7 +41,7 @@
         <activity
             android:name=".MainActivity"
             android:configChanges="locale"
-            android:label="@string/app_name" >
+            android:label="@string/app_name">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainMenuActivity" />
@@ -49,7 +49,7 @@
         <activity
             android:name=".MultiPlayerMenuActivity"
             android:configChanges="locale"
-            android:label="@string/menu_multi_player" >
+            android:label="@string/menu_multi_player">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainMenuActivity" />
@@ -57,7 +57,7 @@
         <activity
             android:name=".TwoPlayersActivity"
             android:configChanges="locale"
-            android:label="@string/two_players" >
+            android:label="@string/two_players">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MultiPlayerMenuActivity" />
@@ -65,7 +65,7 @@
         <activity
             android:name=".bluetooth.DevicePickerActivity"
             android:configChanges="orientation|keyboardHidden|locale"
-            android:label="@string/device_picker" >
+            android:label="@string/device_picker">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MultiPlayerMenuActivity" />
@@ -73,7 +73,7 @@
         <activity
             android:name=".nsd.NsdPickerActivity"
             android:configChanges="orientation|keyboardHidden|locale"
-            android:label="@string/menu_local_network" >
+            android:label="@string/menu_local_network">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MultiPlayerMenuActivity" />
@@ -81,7 +81,7 @@
         <activity
             android:name=".online.OnlineGameActivity"
             android:configChanges="orientation|keyboardHidden|locale"
-            android:label="Online" >
+            android:label="Online">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MultiPlayerMenuActivity" />
@@ -89,7 +89,7 @@
         <activity
             android:name=".bluetooth.BluetoothActivity"
             android:configChanges="orientation|keyboardHidden|locale"
-            android:label="@string/app_name" >
+            android:label="@string/app_name">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".bluetooth.DevicePickerActivity" />
@@ -97,7 +97,7 @@
         <activity
             android:name=".nsd.NsdActivity"
             android:configChanges="orientation|keyboardHidden|locale"
-            android:label="@string/app_name" >
+            android:label="@string/app_name">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".bluetooth.DevicePickerActivity" />
@@ -105,7 +105,7 @@
         <activity
             android:name=".online.OnlineActivity"
             android:configChanges="orientation|keyboardHidden|locale"
-            android:label="Online" >
+            android:label="Online">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".online.OnlineGameActivity" />
@@ -114,7 +114,7 @@
             android:name=".ScoresActivity"
             android:configChanges="locale"
             android:label="@string/scores_title"
-            android:screenOrientation="sensorLandscape" >
+            android:screenOrientation="sensorLandscape">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainMenuActivity" />
@@ -122,7 +122,7 @@
         <activity
             android:name=".HowToActivity"
             android:configChanges="locale"
-            android:label="@string/how_to_title" >
+            android:label="@string/how_to_title">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainMenuActivity" />
@@ -131,7 +131,7 @@
             android:name=".settings.InfoActivity"
             android:configChanges="locale"
             android:label="@string/application_info_label"
-            android:launchMode="standard" >
+            android:launchMode="standard">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".settings.SettingsActivity" />
@@ -139,7 +139,7 @@
         <activity
             android:name=".settings.SettingsActivity"
             android:configChanges="locale"
-            android:label="@string/settings_label" >
+            android:label="@string/settings_label">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainMenuActivity" />

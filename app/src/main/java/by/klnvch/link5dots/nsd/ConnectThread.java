@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.net.Socket;
 
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-class ConnectThread extends Thread{
+class ConnectThread extends Thread {
     private static final String TAG = "ConnectThread";
 
     private Socket mSocket;

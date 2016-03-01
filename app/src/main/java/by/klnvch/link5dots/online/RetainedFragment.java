@@ -122,6 +122,7 @@ public class RetainedFragment extends Fragment implements
     public void onLeftRoom(int statusCode, String roomId) {
         Log.d(TAG, "onLeftRoom: " + statusCode + " - " + roomId);
         if (statusCode == GamesStatusCodes.STATUS_OK) {
+            mRoomId = null;
             if (mRoomUpdateListener != null) {
                 mRoomUpdateListener.onLeftRoom(statusCode, roomId);
             }

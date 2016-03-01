@@ -1,45 +1,44 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Fünf Punkte Verbinden</string>
-	<string name="language">Deutsch</string>
+    <string name="language">Deutsch</string>
 
 
+    <string name="greetings">Hallo, %1$s!</string>
+    <string name="android">Android</string>
+    <string name="how_to_title">Wie man spielt</string>
+    <string name="how_to_text">\tSeien Sie der Erste, der es schafft, fünf Punkte in einer geraden Linie horizontal, vertikal oder diagonal zu verbinden. Android zeichnet blaue Punkte, Sie zeichnen rote Punkte. Rote und blaue Punkte sind nacheinander auf Linie Kreuzungen zu platzieren. Sie bewegen sich zuerst.\n\n\tZiehen Sie den Bildschirm, um das Spielfeld zu bewegen.\n\tSkalieren Sie das Bild, um Feldern zu vergrößern oder zu verkleinern.\n\tBenutzen Sie das Menü, um das Spiel neu zu starten, rückgängig zu machen, das Spielergebnis zu sehen oder sehen, wie man spielt.\n\tDrücken Sie Suchen, um Pfeile um den Punkt des letzten Zuges auszublenden/einzublenden.</string>
 
-	<string name="greetings">Hallo, %1$s!</string>
-	<string name="android">Android</string>
-	<string name="how_to_title">Wie man spielt</string>
-	<string name="how_to_text">\tSeien Sie der Erste, der es schafft, fünf Punkte in einer geraden Linie horizontal, vertikal oder diagonal zu verbinden. Android zeichnet blaue Punkte, Sie zeichnen rote Punkte. Rote und blaue Punkte sind nacheinander auf Linie Kreuzungen zu platzieren. Sie bewegen sich zuerst.\n\n\tZiehen Sie den Bildschirm, um das Spielfeld zu bewegen.\n\tSkalieren Sie das Bild, um Feldern zu vergrößern oder zu verkleinern.\n\tBenutzen Sie das Menü, um das Spiel neu zu starten, rückgängig zu machen, das Spielergebnis zu sehen oder sehen, wie man spielt.\n\tDrücken Sie Suchen, um Pfeile um den Punkt des letzten Zuges auszublenden/einzublenden.</string>
-	
-	<string name="scores_title">Spielergebnis</string>
-	<string name="scores_no_internet">Kein Internetzugang</string>
-	<string name="scores_number">#</string>
-	<string name="scores_name">Name</string>
-	<string name="scores_moves">Anzahl der Züge</string>
-	<string name="scores_status">Status</string>
-	<string name="scores_won">gewonnen</string>
-	<string name="scores_lost">verloren</string>
-	
-	<string name="end_win">Sie haben gewonnen!</string>
-	<string name="end_lose">Sie haben verloren!</string>
-	<string name="end_new_game">Neues</string>
-	<string name="end_undo">Rückgängig</string>
-	<string name="end_move">%1$d Male bewegt für %2$d S.</string>
-	
-	<string name="scores_time">Zeit</string>
-	<string name="end_publish">Veröffentlichen</string>
-	
-	<string name="scores_loading">Lädt…</string>
-	
-	<string name="menu_single_player">Einzelspieler</string>
-	<string name="menu_multi_player">Mehrspieler</string>
-	<string name="two_players">Zwei Spieler</string>
-	<string name="menu_local_network">Lokales Netzwerk</string>
+    <string name="scores_title">Spielergebnis</string>
+    <string name="scores_no_internet">Kein Internetzugang</string>
+    <string name="scores_number">#</string>
+    <string name="scores_name">Name</string>
+    <string name="scores_moves">Anzahl der Züge</string>
+    <string name="scores_status">Status</string>
+    <string name="scores_won">gewonnen</string>
+    <string name="scores_lost">verloren</string>
 
-	<string name="rate_this_app">App bewerten</string>
+    <string name="end_win">Sie haben gewonnen!</string>
+    <string name="end_lose">Sie haben verloren!</string>
+    <string name="end_new_game">Neues</string>
+    <string name="end_undo">Rückgängig</string>
+    <string name="end_move">%1$d Male bewegt für %2$d S.</string>
+
+    <string name="scores_time">Zeit</string>
+    <string name="end_publish">Veröffentlichen</string>
+
+    <string name="scores_loading">Lädt…</string>
+
+    <string name="menu_single_player">Einzelspieler</string>
+    <string name="menu_multi_player">Mehrspieler</string>
+    <string name="two_players">Zwei Spieler</string>
+    <string name="menu_local_network">Lokales Netzwerk</string>
+
+    <string name="rate_this_app">App bewerten</string>
 
     <string name="yes">"Ja"</string>
     <string name="no">"Nein"</string>
-	<string name="create">"Erstellen"</string>
+    <string name="create">"Erstellen"</string>
     <string name="device_info_default">"Unbekannt"</string>
 
     <string name="bluetooth_not_discoverable">"Gerät sichtbar machen"</string>
@@ -54,24 +53,24 @@
     <string name="bluetooth_connection_dialog_text">"Möchten Sie eine Verbindung mit \"%1$s\" herstellen?"</string>
     <string name="cancel">"Abbrechen"</string>
     <string name="okay">"OK"</string>
-	<string name="settings_label">"Einstellungen"</string>
+    <string name="settings_label">"Einstellungen"</string>
     <string name="bluetooth_settings">"Bluetooth"</string>
     <string name="bluetooth_connecting_error_message">"Keine Verbindung zu \"%1$s\" möglich"</string>
     <string name="bluetooth_search_for_devices">"Aktualisieren"</string>
     <string name="bluetooth_preference_paired_devices">"Pairing-Geräte"</string>
     <string name="bluetooth_preference_found_devices">"Verfügbar"</string>
-	<string name="apn_not_set">"Nicht definiert"</string>
-	<string name="apn_name">"Name:"</string>
+    <string name="apn_not_set">"Nicht definiert"</string>
+    <string name="apn_name">"Name:"</string>
     <string name="apn_user">"Nutzername"</string>
-	<string name="application_info_label">"App-Info"</string>
-	<string name="master_clear_progress_text">"Bitte warten…"</string>
-	<string name="version_text">"Version %1$s"</string>
-	<string name="device_feedback">Feedback senden</string>
-	<string name="phone_language">"Sprache"</string>
-	<string name="share">"Teilen"</string>
+    <string name="application_info_label">"App-Info"</string>
+    <string name="master_clear_progress_text">"Bitte warten…"</string>
+    <string name="version_text">"Version %1$s"</string>
+    <string name="device_feedback">Feedback senden</string>
+    <string name="phone_language">"Sprache"</string>
+    <string name="share">"Teilen"</string>
     <string name="search_menu">"Suchen"</string>
 
 
-	<string name="bt_message_your_turn">Ihre Umdrehung…</string>
-	<string name="bt_message_opponents_turn">Spieler Umdrehung…</string>
+    <string name="bt_message_your_turn">Ihre Umdrehung…</string>
+    <string name="bt_message_opponents_turn">Spieler Umdrehung…</string>
 </resources>

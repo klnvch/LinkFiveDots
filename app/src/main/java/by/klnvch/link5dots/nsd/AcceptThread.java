@@ -7,7 +7,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 
-class AcceptThread extends Thread{
+class AcceptThread extends Thread {
     private static final String TAG = "AcceptThread";
 
     private final ServerSocket mServerSocket;
@@ -25,6 +25,7 @@ class AcceptThread extends Thread{
         }
         mServerSocket = tmp;
     }
+
     public void run() {
         setName(TAG);
 
@@ -62,6 +63,7 @@ class AcceptThread extends Thread{
         }
         Log.d(TAG, "accept thread finished");
     }
+
     public void cancel() {
         try {
             mServerSocket.close();

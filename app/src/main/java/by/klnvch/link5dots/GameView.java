@@ -1,7 +1,5 @@
 package by.klnvch.link5dots;
 
-import java.util.ArrayList;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -15,11 +13,13 @@ import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.GestureDetector;
+import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
-import android.view.View;
-import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.ScaleGestureDetector.SimpleOnScaleGestureListener;
+import android.view.View;
+
+import java.util.ArrayList;
 
 public class GameView extends View {
 
@@ -42,7 +42,7 @@ public class GameView extends View {
     private float maxScale;
     /**
      * Used for displaying background
-     * <p/>
+     * <p>
      * onSizeChanged				translate
      * onScale						scale
      * correctMatrixAndBasePoint	translate

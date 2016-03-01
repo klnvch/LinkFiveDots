@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <style name="AppTheme" parent="@style/Theme.AppCompat.Light.DarkActionBar">
         <item name="android:windowBackground">@null</item>
     </style>
@@ -10,10 +11,6 @@
         <item name="android:textSize">@dimen/btn_text_size</item>
         <item name="android:textStyle">bold</item>
     </style>
-
-
-
-
 
 
     <color name="AccentColor">#cc0000</color>

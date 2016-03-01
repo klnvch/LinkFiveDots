@@ -10,8 +10,8 @@ import android.widget.TextView;
 
 import by.klnvch.link5dots.R;
 
-class DeviceListAdapter extends ArrayAdapter<BluetoothDevice>{
-    public DeviceListAdapter(Context context){
+class DeviceListAdapter extends ArrayAdapter<BluetoothDevice> {
+    public DeviceListAdapter(Context context) {
         super(context, R.layout.device_name);
     }
 
@@ -19,12 +19,12 @@ class DeviceListAdapter extends ArrayAdapter<BluetoothDevice>{
     public View getView(int position, View convertView, ViewGroup parent) {
         BluetoothDevice device = getItem(position);
 
-        LayoutInflater mInflater = (LayoutInflater)getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater mInflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         if (convertView == null) {
             convertView = mInflater.inflate(R.layout.device_name, parent, false);
         }
 
-        TextView textView = (TextView)convertView;
+        TextView textView = (TextView) convertView;
 
         textView.setText(device.getName());
 

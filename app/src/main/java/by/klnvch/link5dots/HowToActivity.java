@@ -1,9 +1,9 @@
 package by.klnvch.link5dots;
 
-import com.google.android.gms.ads.AdView;
-
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+
+import com.google.android.gms.ads.AdView;
 
 public class HowToActivity extends AppCompatActivity {
 

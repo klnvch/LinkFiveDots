@@ -1,7 +1,5 @@
 package by.klnvch.link5dots;
 
-import com.google.android.gms.ads.AdView;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -14,6 +12,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.gms.ads.AdView;
 
 import by.klnvch.link5dots.settings.SettingsActivity;
 import by.klnvch.link5dots.settings.SettingsUtils;
@@ -29,7 +29,7 @@ public class MainMenuActivity extends AppCompatActivity implements OnClickListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_menu);
-		
+
         findViewById(R.id.main_menu_single_player).setOnClickListener(this);
         findViewById(R.id.main_menu_multi_player).setOnClickListener(this);
         findViewById(R.id.main_menu_scores).setOnClickListener(this);
@@ -93,7 +93,7 @@ public class MainMenuActivity extends AppCompatActivity implements OnClickListen
 
     @Override
     public void onClick(View v) {
-		
+
         switch (v.getId()) {
             case R.id.main_menu_single_player:
                 Intent i1 = new Intent(this, MainActivity.class);
@@ -104,12 +104,12 @@ public class MainMenuActivity extends AppCompatActivity implements OnClickListen
                 startActivity(i2);
                 break;
             case R.id.main_menu_scores:
-                ConnectivityManager connectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+                ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
                 NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-                if(networkInfo != null && networkInfo.isConnected()){
+                if (networkInfo != null && networkInfo.isConnected()) {
                     Intent i3 = new Intent(this, ScoresActivity.class);
                     startActivity(i3);
-                }else{
+                } else {
                     Toast.makeText(this, R.string.scores_no_internet, Toast.LENGTH_SHORT).show();
                 }
                 break;
@@ -141,7 +141,7 @@ public class MainMenuActivity extends AppCompatActivity implements OnClickListen
         dialog.setOnUsernameChangeListener(new UsernameDialog.OnUsernameChangListener() {
             @Override
             public void onUsernameChanged(String username) {
-                TextView tvHelloUser = (TextView)findViewById(R.id.hello_user);
+                TextView tvHelloUser = (TextView) findViewById(R.id.hello_user);
                 tvHelloUser.setText(getString(R.string.greetings, username));
                 tvHelloUser.setVisibility(View.VISIBLE);
             }
