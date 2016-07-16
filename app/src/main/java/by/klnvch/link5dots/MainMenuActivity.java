@@ -13,8 +13,6 @@ import android.view.View.OnClickListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.ads.AdView;
-
 import by.klnvch.link5dots.settings.SettingsActivity;
 import by.klnvch.link5dots.settings.SettingsUtils;
 import by.klnvch.link5dots.settings.UsernameDialog;
@@ -22,8 +20,6 @@ import by.klnvch.link5dots.settings.UsernameDialog;
 public class MainMenuActivity extends AppCompatActivity implements OnClickListener {
 
     private static final int SETTINGS_REQUEST_CODE = 3;
-
-    private AdView mAdView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,20 +47,11 @@ public class MainMenuActivity extends AppCompatActivity implements OnClickListen
             showUsernameDialog();
             prefs.edit().putBoolean(SettingsUtils.FIRST_RUN, false).apply();
         }
-
-        // ads
-        // NullPointerException (@by.klnvch.link5dots.MainMenuActivity:onCreate:73) {main}
-        // allow people to remove ads
-        mAdView = App.initAds(this);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if (mAdView != null) {
-            mAdView.resume();
-        }
-        //
         String username = SettingsUtils.getUserName(this, null);
         TextView tvHelloUser = (TextView) findViewById(R.id.hello_user);
         if (username != null) {
@@ -73,22 +60,6 @@ public class MainMenuActivity extends AppCompatActivity implements OnClickListen
         } else {
             tvHelloUser.setVisibility(View.GONE);
         }
-    }
-
-    @Override
-    protected void onPause() {
-        if (mAdView != null) {
-            mAdView.pause();
-        }
-        super.onPause();
-    }
-
-    @Override
-    protected void onDestroy() {
-        if (mAdView != null) {
-            mAdView.destroy();
-        }
-        super.onDestroy();
     }
 
     @Override

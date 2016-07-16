@@ -8,14 +8,15 @@
         android:id="@+id/screen_sign_in"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"
-        android:background="@drawable/paper_tiled">
+        android:background="@drawable/paper_tiled"
+        android:visibility="gone">
 
         <com.google.android.gms.common.SignInButton
             android:id="@+id/button_sign_in"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:onClick="onClick"
             android:padding="30dp" />
 
     </FrameLayout>
@@ -26,11 +27,11 @@
         android:id="@+id/screen_menu"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="30dp"
+        android:background="@drawable/paper_tiled"
         android:gravity="center"
         android:orientation="vertical"
-        android:visibility="gone"
-        android:background="@drawable/paper_tiled">
+        android:padding="30dp"
+        android:visibility="gone">
 
         <Button
             android:id="@+id/button_quick_game"
@@ -39,6 +40,7 @@
             android:layout_height="wrap_content"
             android:drawableLeft="@drawable/ic_shuffle_black_48dp"
             android:drawableStart="@drawable/ic_shuffle_black_48dp"
+            android:onClick="onClick"
             android:text="@string/quick_game" />
 
         <Button
@@ -48,6 +50,7 @@
             android:layout_height="wrap_content"
             android:drawableLeft="@drawable/ic_person_add_black_48dp"
             android:drawableStart="@drawable/ic_person_add_black_48dp"
+            android:onClick="onClick"
             android:text="@string/invite_players" />
 
         <Button
@@ -57,6 +60,7 @@
             android:layout_height="wrap_content"
             android:drawableLeft="@drawable/ic_email_black_48dp"
             android:drawableStart="@drawable/ic_email_black_48dp"
+            android:onClick="onClick"
             android:text="@string/show_invitations" />
 
     </LinearLayout>
@@ -66,11 +70,11 @@
         android:id="@+id/screen_wait"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="30dp"
+        android:background="@drawable/paper_tiled"
         android:gravity="center"
         android:orientation="vertical"
-        android:visibility="visible"
-        android:background="@drawable/paper_tiled">
+        android:padding="30dp"
+        android:visibility="visible">
 
         <TextView
             style="@style/Blurb"

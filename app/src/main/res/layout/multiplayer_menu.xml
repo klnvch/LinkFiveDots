@@ -1,82 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:ads="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:background="@drawable/paper_tiled"
+    android:gravity="center"
     android:orientation="vertical"
-    android:background="@drawable/paper_tiled">
+    android:padding="@dimen/btn_table_padding">
 
-    <ScrollView
-        android:layout_width="fill_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:scrollbars="vertical">
-
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_height="wrap_content"
-            android:layout_width="fill_parent"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:padding="@dimen/btn_table_padding">
-
-            <Button
-                android:id="@+id/multi_player_two_players"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/two_players"
-                android:textColor="@color/black"
-                android:textStyle="bold"
-                android:textSize="@dimen/bt_text_size"
-                android:drawableLeft="@drawable/ic_people_48dp"
-                android:drawableStart="@drawable/ic_people_48dp"
-                android:background="@drawable/btn_selector" />
-
-            <Button
-                android:id="@+id/multi_player_bluetooth"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/bluetooth_settings"
-                android:textColor="@color/black"
-                android:textStyle="bold"
-                android:textSize="@dimen/btn_text_size"
-                android:drawableLeft="@drawable/ic_bluetooth_48dp"
-                android:drawableStart="@drawable/ic_bluetooth_48dp"
-                android:background="@drawable/btn_selector" />
-
-            <Button
-                android:id="@+id/multi_player_lan"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/menu_local_network"
-                android:textColor="@color/black"
-                android:textStyle="bold"
-                android:textSize="@dimen/btn_text_size"
-                android:drawableLeft="@drawable/ic_router_48dp"
-                android:drawableStart="@drawable/ic_router_48dp"
-                android:background="@drawable/btn_selector" />
-
-            <Button
-                android:id="@+id/multi_player_online"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:text="Online"
-                android:textColor="@color/black"
-                android:textStyle="bold"
-                android:textSize="@dimen/btn_text_size"
-                android:drawableLeft="@drawable/ic_public_48dp"
-                android:drawableStart="@drawable/ic_public_48dp"
-                android:background="@drawable/btn_selector" />
-
-        </LinearLayout>
-
-    </ScrollView>
-
-    <com.google.android.gms.ads.AdView
-        android:id="@+id/adView"
+    <Button
+        android:id="@+id/multi_player_two_players"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        ads:adSize="BANNER"
-        ads:adUnitId="@string/banner_ad_unit_id" />
+        android:background="@drawable/btn_selector"
+        android:drawableLeft="@drawable/ic_people_48dp"
+        android:drawableStart="@drawable/ic_people_48dp"
+        android:onClick="onClick"
+        android:text="@string/two_players"
+        android:textColor="@color/black"
+        android:textSize="@dimen/bt_text_size"
+        android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/multi_player_bluetooth"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/btn_selector"
+        android:drawableLeft="@drawable/ic_bluetooth_48dp"
+        android:drawableStart="@drawable/ic_bluetooth_48dp"
+        android:onClick="onClick"
+        android:text="@string/bluetooth_settings"
+        android:textColor="@color/black"
+        android:textSize="@dimen/btn_text_size"
+        android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/multi_player_lan"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/btn_selector"
+        android:drawableLeft="@drawable/ic_router_48dp"
+        android:drawableStart="@drawable/ic_router_48dp"
+        android:onClick="onClick"
+        android:text="@string/menu_local_network"
+        android:textColor="@color/black"
+        android:textSize="@dimen/btn_text_size"
+        android:textStyle="bold" />
+
+    <Button
+        android:visibility="invisible"
+        android:id="@+id/multi_player_online"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/btn_selector"
+        android:drawableLeft="@drawable/ic_public_48dp"
+        android:drawableStart="@drawable/ic_public_48dp"
+        android:onClick="onClick"
+        android:text="Online"
+        android:textColor="@color/black"
+        android:textSize="@dimen/btn_text_size"
+        android:textStyle="bold" />
 
 </LinearLayout>

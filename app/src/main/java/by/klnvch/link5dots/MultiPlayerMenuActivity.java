@@ -8,8 +8,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
-import com.google.android.gms.ads.AdView;
-
 import by.klnvch.link5dots.bluetooth.BluetoothService;
 import by.klnvch.link5dots.bluetooth.DevicePickerActivity;
 import by.klnvch.link5dots.nsd.NsdPickerActivity;
@@ -24,52 +22,17 @@ public class MultiPlayerMenuActivity extends AppCompatActivity implements View.O
     private static final int RC_BLUETOOTH_GAME = 4;
     private static final int RC_NSD_GAME = 5;
 
-    private AdView mAdView;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.multiplayer_menu);
 
-        findViewById(R.id.multi_player_two_players).setOnClickListener(this);
-        if (BluetoothAdapter.getDefaultAdapter() != null) {
-            findViewById(R.id.multi_player_bluetooth).setOnClickListener(this);
-        } else {
+        if (BluetoothAdapter.getDefaultAdapter() == null) {
             findViewById(R.id.multi_player_bluetooth).setVisibility(View.INVISIBLE);
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            findViewById(R.id.multi_player_lan).setOnClickListener(this);
-        } else {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
             findViewById(R.id.multi_player_lan).setVisibility(View.INVISIBLE);
         }
-        findViewById(R.id.multi_player_online).setOnClickListener(this);
-
-        // ads
-        mAdView = App.initAds(this);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (mAdView != null) {
-            mAdView.resume();
-        }
-    }
-
-    @Override
-    protected void onPause() {
-        if (mAdView != null) {
-            mAdView.pause();
-        }
-        super.onPause();
-    }
-
-    @Override
-    protected void onDestroy() {
-        if (mAdView != null) {
-            mAdView.destroy();
-        }
-        super.onDestroy();
     }
 
     @Override
@@ -109,7 +72,10 @@ public class MultiPlayerMenuActivity extends AppCompatActivity implements View.O
                 startService(new Intent(this, NsdService.class));
                 break;
             case R.id.multi_player_online:
-                startActivity(new Intent(this, OnlineGameActivity.class));
+                int orientation = getResources().getConfiguration().orientation;
+                Intent intent = new Intent(this, OnlineGameActivity.class);
+                intent.putExtra("orientation", orientation);
+                startActivity(intent);
                 break;
         }
     }

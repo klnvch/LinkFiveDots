@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="by.klnvch.link5dots">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+
+    <uses-permission
+        android:name="android.permission.WAKE_LOCK"
+        tools:node="remove" />
 
     <application
         android:name=".App"
@@ -24,10 +29,6 @@
         <service android:name=".bluetooth.BluetoothService" />
         <service android:name=".nsd.NsdService" />
 
-        <activity
-            android:name="com.google.android.gms.ads.AdActivity"
-            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
-            android:theme="@android:style/Theme.Translucent" />
         <activity
             android:name=".MainMenuActivity"
             android:configChanges="locale"
@@ -101,14 +102,6 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".bluetooth.DevicePickerActivity" />
-        </activity>
-        <activity
-            android:name=".online.OnlineActivity"
-            android:configChanges="orientation|keyboardHidden|locale"
-            android:label="Online">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".online.OnlineGameActivity" />
         </activity>
         <activity
             android:name=".ScoresActivity"

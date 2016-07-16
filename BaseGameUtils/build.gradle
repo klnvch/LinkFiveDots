@@ -1,0 +1,19 @@
+apply plugin: 'com.android.library'
+
+dependencies {
+    compile "com.android.support:appcompat-v7:24.0.0"
+    compile "com.android.support:support-v4:24.0.0"
+    compile "com.google.android.gms:play-services-games:9.2.1"
+    compile "com.google.android.gms:play-services-plus:9.2.1"
+}
+
+android {
+    compileSdkVersion 24
+    buildToolsVersion "24.0.0"
+
+    defaultConfig {
+        minSdkVersion 9
+        targetSdkVersion 24
+    }
+}
+

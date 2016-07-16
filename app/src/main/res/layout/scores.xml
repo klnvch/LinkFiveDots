@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:ads="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FF000000">
+    android:background="#FF000000"
+    android:orientation="vertical">
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh_layout"
@@ -19,54 +18,54 @@
             android:scrollbars="vertical">
 
             <LinearLayout
-                android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
                 <LinearLayout
-                    android:orientation="horizontal"
                     android:layout_width="fill_parent"
-                    android:layout_height="fill_parent">
+                    android:layout_height="fill_parent"
+                    android:orientation="horizontal">
 
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_weight="1"
                         android:text="@string/scores_number"
-                        android:textColor="#FFFF00"
                         android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:layout_weight="1"></TextView>
+                        android:textColor="#FFFF00" />
 
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_weight="4"
                         android:text="@string/scores_name"
-                        android:textColor="#FFFF00"
                         android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:layout_weight="4"></TextView>
+                        android:textColor="#FFFF00" />
 
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_weight="3"
                         android:text="@string/scores_moves"
-                        android:textColor="#FFFF00"
                         android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:layout_weight="3"></TextView>
+                        android:textColor="#FFFF00" />
 
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_weight="2"
                         android:text="@string/scores_time"
-                        android:textColor="#FFFF00"
                         android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:layout_weight="2"></TextView>
+                        android:textColor="#FFFF00" />
 
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_weight="3"
                         android:text="@string/scores_status"
-                        android:textColor="#FFFF00"
                         android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:layout_weight="3"></TextView>
+                        android:textColor="#FFFF00" />
                 </LinearLayout>
 
                 <TableLayout
@@ -79,12 +78,5 @@
         </ScrollView>
 
     </android.support.v4.widget.SwipeRefreshLayout>
-
-    <com.google.android.gms.ads.AdView
-        android:id="@+id/adView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        ads:adSize="BANNER"
-        ads:adUnitId="@string/banner_ad_unit_id" />
 
 </LinearLayout>

@@ -15,8 +15,6 @@ import android.widget.TableRow;
 import android.widget.TableRow.LayoutParams;
 import android.widget.TextView;
 
-import com.google.android.gms.ads.AdView;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -37,7 +35,6 @@ import by.klnvch.link5dots.settings.UsernameDialog;
 
 public class ScoresActivity extends AppCompatActivity {
 
-    private AdView mAdView;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private AsyncTask<Void, Void, String> askForNameTask = null;
     private AsyncTask<Boolean, Void, JSONArray> doInternetJobTask = null;
@@ -58,34 +55,12 @@ public class ScoresActivity extends AppCompatActivity {
             }
         });
 
-        // ads
-        mAdView = App.initAds(this);
-
         // check name
         askForNameTask = new AskForName().execute();
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        if (mAdView != null) {
-            mAdView.resume();
-        }
-    }
-
-    @Override
-    protected void onPause() {
-        if (mAdView != null) {
-            mAdView.pause();
-        }
-        super.onPause();
-    }
-
-    @Override
     protected void onDestroy() {
-        if (mAdView != null) {
-            mAdView.destroy();
-        }
 
         if (askForNameTask != null) {
             askForNameTask.cancel(true);
