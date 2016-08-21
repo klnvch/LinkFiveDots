@@ -29,6 +29,7 @@
             android:background="@drawable/btn_selector"
             android:drawableLeft="@drawable/ic_android_48dp"
             android:drawableStart="@drawable/ic_android_48dp"
+            android:onClick="onClick"
             android:text="@string/menu_single_player"
             android:textColor="@color/black"
             android:textSize="@dimen/btn_text_size"
@@ -41,6 +42,7 @@
             android:background="@drawable/btn_selector"
             android:drawableLeft="@drawable/ic_person_48dp"
             android:drawableStart="@drawable/ic_person_48dp"
+            android:onClick="onClick"
             android:text="@string/menu_multi_player"
             android:textColor="@color/black"
             android:textSize="@dimen/btn_text_size"
@@ -53,6 +55,7 @@
             android:background="@drawable/btn_selector"
             android:drawableLeft="@drawable/ic_star_48dp"
             android:drawableStart="@drawable/ic_star_48dp"
+            android:onClick="onClick"
             android:text="@string/scores_title"
             android:textColor="@color/black"
             android:textSize="@dimen/btn_text_size"
@@ -69,6 +72,7 @@
                 android:layout_weight="1"
                 android:background="@drawable/btn_selector"
                 android:contentDescription="@string/settings_label"
+                android:onClick="onClick"
                 android:src="@drawable/ic_settings_48dp" />
 
             <ImageButton
@@ -78,6 +82,7 @@
                 android:layout_weight="1"
                 android:background="@drawable/btn_selector"
                 android:contentDescription="@string/how_to_title"
+                android:onClick="onClick"
                 android:src="@drawable/ic_help_48dp" />
 
         </LinearLayout>

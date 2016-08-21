@@ -5,7 +5,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -26,11 +28,16 @@ public class MainMenuActivity extends AppCompatActivity implements OnClickListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_menu);
 
-        findViewById(R.id.main_menu_single_player).setOnClickListener(this);
-        findViewById(R.id.main_menu_multi_player).setOnClickListener(this);
-        findViewById(R.id.main_menu_scores).setOnClickListener(this);
-        findViewById(R.id.main_menu_how_to).setOnClickListener(this);
-        findViewById(R.id.main_menu_settings).setOnClickListener(this);
+        if (BuildConfig.DEBUG) {
+            StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
+                    .detectAll()
+                    .penaltyLog()
+                    .build());
+            StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
+                    .detectAll()
+                    .penaltyLog()
+                    .build());
+        }
 
         findViewById(R.id.hello_user).setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -41,25 +48,45 @@ public class MainMenuActivity extends AppCompatActivity implements OnClickListen
         });
 
         // check if first run
-        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        boolean isFirstRun = prefs.getBoolean(SettingsUtils.FIRST_RUN, true);
-        if (isFirstRun) {
-            showUsernameDialog();
-            prefs.edit().putBoolean(SettingsUtils.FIRST_RUN, false).apply();
-        }
+        new AsyncTask<Void, Void, Boolean>() {
+            private SharedPreferences prefs;
+
+            @Override
+            protected Boolean doInBackground(Void... voids) {
+                prefs = PreferenceManager.getDefaultSharedPreferences(MainMenuActivity.this);
+                return prefs.getBoolean(SettingsUtils.FIRST_RUN, true);
+            }
+
+            @Override
+            protected void onPostExecute(Boolean isFirstRun) {
+                if (isFirstRun) {
+                    showUsernameDialog();
+                    prefs.edit().putBoolean(SettingsUtils.FIRST_RUN, false).apply();
+                }
+            }
+        };
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        String username = SettingsUtils.getUserName(this, null);
-        TextView tvHelloUser = (TextView) findViewById(R.id.hello_user);
-        if (username != null) {
-            tvHelloUser.setText(getString(R.string.greetings, username));
-            tvHelloUser.setVisibility(View.VISIBLE);
-        } else {
-            tvHelloUser.setVisibility(View.GONE);
-        }
+        new AsyncTask<Void, Void, String>() {
+            @Override
+            protected String doInBackground(Void... voids) {
+                return SettingsUtils.getUserName(MainMenuActivity.this, null);
+            }
+
+            @Override
+            protected void onPostExecute(String username) {
+                TextView tvHelloUser = (TextView) findViewById(R.id.hello_user);
+                if (username != null) {
+                    tvHelloUser.setText(getString(R.string.greetings, username));
+                    tvHelloUser.setVisibility(View.VISIBLE);
+                } else {
+                    tvHelloUser.setVisibility(View.GONE);
+                }
+            }
+        };
     }
 
     @Override
@@ -67,30 +94,25 @@ public class MainMenuActivity extends AppCompatActivity implements OnClickListen
 
         switch (v.getId()) {
             case R.id.main_menu_single_player:
-                Intent i1 = new Intent(this, MainActivity.class);
-                startActivity(i1);
+                startActivity(new Intent(this, MainActivity.class));
                 break;
             case R.id.main_menu_multi_player:
-                Intent i2 = new Intent(this, MultiPlayerMenuActivity.class);
-                startActivity(i2);
+                startActivity(new Intent(this, MultiPlayerMenuActivity.class));
                 break;
             case R.id.main_menu_scores:
                 ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
                 NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
                 if (networkInfo != null && networkInfo.isConnected()) {
-                    Intent i3 = new Intent(this, ScoresActivity.class);
-                    startActivity(i3);
+                    startActivity(new Intent(this, ScoresActivity.class));
                 } else {
                     Toast.makeText(this, R.string.scores_no_internet, Toast.LENGTH_SHORT).show();
                 }
                 break;
             case R.id.main_menu_how_to:
-                Intent i4 = new Intent(this, HowToActivity.class);
-                startActivity(i4);
+                startActivity(new Intent(this, HowToActivity.class));
                 break;
             case R.id.main_menu_settings:
-                Intent i5 = new Intent(this, SettingsActivity.class);
-                startActivityForResult(i5, SETTINGS_REQUEST_CODE);
+                startActivityForResult(new Intent(this, SettingsActivity.class), SETTINGS_REQUEST_CODE);
                 break;
         }
     }
