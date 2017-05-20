@@ -1,7 +1,10 @@
 *.iml
 .gradle
 local.properties
-.idea
+.idea/*
 build
 gradle
-
+app/google-services.json
+keystore
+gradlew
+gradlew.bat

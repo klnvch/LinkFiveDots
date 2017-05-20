@@ -1,11 +1,30 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2017 klnvch
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 package by.klnvch.link5dots;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
@@ -13,20 +32,32 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.google.firebase.crash.FirebaseCrash;
+
+import by.klnvch.link5dots.scores.ScoresActivity;
+import by.klnvch.link5dots.settings.InfoActivity;
 import by.klnvch.link5dots.settings.SettingsActivity;
 import by.klnvch.link5dots.settings.SettingsUtils;
 import by.klnvch.link5dots.settings.UsernameDialog;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.annotations.Nullable;
+import io.reactivex.schedulers.Schedulers;
 
-public class MainMenuActivity extends AppCompatActivity implements OnClickListener {
+public class MainMenuActivity extends AppCompatActivity
+        implements OnClickListener, View.OnLongClickListener {
 
-    private static final int SETTINGS_REQUEST_CODE = 3;
+    private static final int RC_SETTINGS = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_menu);
+        setTitle(R.string.app_name);
+
+        FirebaseCrash.log("Activity created");
 
         if (BuildConfig.DEBUG) {
             StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
@@ -39,59 +70,27 @@ public class MainMenuActivity extends AppCompatActivity implements OnClickListen
                     .build());
         }
 
-        findViewById(R.id.hello_user).setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                showUsernameDialog();
-                return true;
-            }
-        });
+        findViewById(R.id.hello_user).setOnLongClickListener(this);
 
-        // check if first run
-        new AsyncTask<Void, Void, Boolean>() {
-            private SharedPreferences prefs;
+        Observable.fromCallable(this::isTheFirstRun)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this::checkTheFirstRun);
 
-            @Override
-            protected Boolean doInBackground(Void... voids) {
-                prefs = PreferenceManager.getDefaultSharedPreferences(MainMenuActivity.this);
-                return prefs.getBoolean(SettingsUtils.FIRST_RUN, true);
-            }
+        Observable.fromCallable(this::checkLanguage)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this::changeLanguage);
 
-            @Override
-            protected void onPostExecute(Boolean isFirstRun) {
-                if (isFirstRun) {
-                    showUsernameDialog();
-                    prefs.edit().putBoolean(SettingsUtils.FIRST_RUN, false).apply();
-                }
-            }
-        };
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        new AsyncTask<Void, Void, String>() {
-            @Override
-            protected String doInBackground(Void... voids) {
-                return SettingsUtils.getUserName(MainMenuActivity.this, null);
-            }
-
-            @Override
-            protected void onPostExecute(String username) {
-                TextView tvHelloUser = (TextView) findViewById(R.id.hello_user);
-                if (username != null) {
-                    tvHelloUser.setText(getString(R.string.greetings, username));
-                    tvHelloUser.setVisibility(View.VISIBLE);
-                } else {
-                    tvHelloUser.setVisibility(View.GONE);
-                }
-            }
-        };
+        Observable.fromCallable(this::getUserName)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .onErrorReturn(throwable -> "")
+                .subscribe(this::setUsername);
     }
 
     @Override
     public void onClick(View v) {
-
         switch (v.getId()) {
             case R.id.main_menu_single_player:
                 startActivity(new Intent(this, MainActivity.class));
@@ -100,19 +99,17 @@ public class MainMenuActivity extends AppCompatActivity implements OnClickListen
                 startActivity(new Intent(this, MultiPlayerMenuActivity.class));
                 break;
             case R.id.main_menu_scores:
-                ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-                NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-                if (networkInfo != null && networkInfo.isConnected()) {
-                    startActivity(new Intent(this, ScoresActivity.class));
-                } else {
-                    Toast.makeText(this, R.string.scores_no_internet, Toast.LENGTH_SHORT).show();
-                }
+                startActivity(new Intent(this, ScoresActivity.class));
                 break;
             case R.id.main_menu_how_to:
                 startActivity(new Intent(this, HowToActivity.class));
                 break;
+            case R.id.main_menu_about:
+                startActivity(new Intent(this, InfoActivity.class));
+                break;
             case R.id.main_menu_settings:
-                startActivityForResult(new Intent(this, SettingsActivity.class), SETTINGS_REQUEST_CODE);
+                startActivityForResult(new Intent(this, SettingsActivity.class),
+                        RC_SETTINGS);
                 break;
         }
     }
@@ -120,29 +117,69 @@ public class MainMenuActivity extends AppCompatActivity implements OnClickListen
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
-            case SETTINGS_REQUEST_CODE:
-                finish();
-                startActivity(getIntent());
+            case RC_SETTINGS:
+                recreate();
                 break;
+            default:
+                super.onActivityResult(requestCode, resultCode, data);
         }
-        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public boolean onLongClick(View v) {
+        switch (v.getId()) {
+            case R.id.hello_user:
+                showUsernameDialog();
+                return true;
+        }
+        return false;
     }
 
     private void showUsernameDialog() {
-        UsernameDialog dialog = new UsernameDialog();
-        dialog.show(getSupportFragmentManager(), null);
-        dialog.setOnUsernameChangeListener(new UsernameDialog.OnUsernameChangListener() {
-            @Override
-            public void onUsernameChanged(String username) {
-                TextView tvHelloUser = (TextView) findViewById(R.id.hello_user);
-                tvHelloUser.setText(getString(R.string.greetings, username));
-                tvHelloUser.setVisibility(View.VISIBLE);
-            }
+        new UsernameDialog()
+                .setOnUsernameChangeListener(this::setUsername)
+                .show(getSupportFragmentManager(), null);
+    }
 
-            @Override
-            public void onNothingChanged() {
+    private boolean isTheFirstRun() {
+        return PreferenceManager
+                .getDefaultSharedPreferences(this)
+                .getBoolean(SettingsUtils.FIRST_RUN, true);
+    }
 
-            }
-        });
+    private void checkTheFirstRun(boolean isTheFirstRun) {
+        if (isTheFirstRun) {
+            showUsernameDialog();
+            PreferenceManager
+                    .getDefaultSharedPreferences(this)
+                    .edit()
+                    .putBoolean(SettingsUtils.FIRST_RUN, false)
+                    .apply();
+        }
+    }
+
+    @Nullable
+    private String getUserName() {
+        return SettingsUtils.getUserNameOrNull(this);
+    }
+
+    private void setUsername(@NonNull String username) {
+        TextView tvHelloUser = findViewById(R.id.hello_user);
+        if (username.isEmpty()) {
+            tvHelloUser.setVisibility(View.GONE);
+        } else {
+            tvHelloUser.setVisibility(View.VISIBLE);
+            tvHelloUser.setText(getString(R.string.greetings, username));
+        }
+    }
+
+    private boolean checkLanguage() {
+        return SettingsUtils.checkLanguage(this);
+    }
+
+    private void changeLanguage(boolean isLanguageChanged) {
+        if (isLanguageChanged) {
+            recreate();
+        }
     }
 }

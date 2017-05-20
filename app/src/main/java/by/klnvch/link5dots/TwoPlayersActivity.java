@@ -1,44 +1,42 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2017 klnvch
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 package by.klnvch.link5dots;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.View;
 
-public class TwoPlayersActivity extends AppCompatActivity {
+import by.klnvch.link5dots.models.Dot;
+import by.klnvch.link5dots.models.HighScore;
 
-    private GameView view;
-    private AlertDialog alertDialog = null;
+public class TwoPlayersActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.game_board);
-
-        view = (GameView) findViewById(R.id.game_view);
-
-        view.setOnGameEventListener(new GameView.OnGameEventListener() {
-            @Override
-            public void onMoveDone(Dot currentDot, Dot previousDot) {
-                if (previousDot == null || previousDot.getType() == Dot.OPPONENT) {
-                    // set user dot
-                    currentDot.setType(Dot.USER);
-                    view.setDot(currentDot);
-                } else {
-                    currentDot.setType(Dot.OPPONENT);
-                    view.setDot(currentDot);
-                }
-            }
-
-            @Override
-            public void onGameEnd(HighScore highScore) {
-                showAlertDialog(highScore);
-            }
-        });
 
         findViewById(R.id.game_info).setVisibility(View.GONE);
     }
@@ -46,79 +44,41 @@ public class TwoPlayersActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        view.restore(getPreferences(MODE_PRIVATE));
-        view.invalidate();
-        view.isOver();
+        loadState();
     }
 
     @Override
     protected void onPause() {
+        saveState();
         super.onPause();
-        view.save(getPreferences(MODE_PRIVATE));
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu, menu);
-        return true;
+    protected void onGameFinished(@NonNull HighScore highScore) {
+        if (getSupportFragmentManager().findFragmentByTag(EndGameDialog.TAG) != null) return;
+
+        String msg = getString(R.string.end_move, highScore.getMoves(), highScore.getTime());
+
+        EndGameDialog.newInstance(msg)
+                .setOnNewGameListener(this::newGame)
+                .setOnUndoMoveListener(this::undoLastMove)
+                .show(getSupportFragmentManager(), EndGameDialog.TAG);
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        switch (item.getItemId()) {
-            case R.id.menu_undo:
-                undoLastMove();
-                return true;
-            case R.id.menu_new_game:
-                newGame();
-                return true;
-            case R.id.menu_search:
-                searchLastMove();
-                return true;
-        }
-        return false;
-    }
-
-    @Override
-    public boolean onSearchRequested() {
-        searchLastMove();
-        return true;
-    }
-
-    private void showAlertDialog(final HighScore highScore) {
-        if (alertDialog == null || !alertDialog.isShowing()) {
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            String str = getString(R.string.end_move, highScore.getScore(), highScore.getTime());
-            builder.setMessage(str);
-            builder.setPositiveButton(R.string.end_new_game, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    newGame();
-                }
-            });
-            builder.setNegativeButton(R.string.end_undo, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    undoLastMove();
-                }
-            });
-            alertDialog = builder.create();
-            alertDialog.show();
+    protected void onMoveDone(@NonNull Dot currentDot, @Nullable Dot previousDot) {
+        if (previousDot == null || previousDot.getType() == Dot.OPPONENT) {
+            // set user dot
+            currentDot.setType(Dot.USER);
+            mView.setDot(currentDot);
+        } else {
+            currentDot.setType(Dot.OPPONENT);
+            mView.setDot(currentDot);
         }
     }
 
-    private void undoLastMove() {
-        view.undoLastMove(1);
-    }
-
-    private void newGame() {
-        view.resetGame();
-    }
-
-    private void searchLastMove() {
-        view.switchHideArrow();
+    @Override
+    protected void undoLastMove() {
+        mView.undoLastMove(1);
     }
 }

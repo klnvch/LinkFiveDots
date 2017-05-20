@@ -1,71 +1,86 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2017 klnvch
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 package by.klnvch.link5dots.settings;
 
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
 
 import by.klnvch.link5dots.R;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.annotations.Nullable;
+import io.reactivex.schedulers.Schedulers;
 
-public class SettingsActivity extends AppCompatActivity {
-
-    private final SharedPreferences.OnSharedPreferenceChangeListener listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
-        @Override
-        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
-            if (s.equals(SettingsUtils.APP_LANGUAGE)) {
-                SettingsActivity.this.finish();
-                SettingsActivity.this.startActivity(getIntent());
-            } else if (s.equals(SettingsUtils.USER_NAME)) {
-                String username = sharedPreferences.getString(s, getString(R.string.device_info_default));
-                TextView tvUsername = (TextView) findViewById(R.id.username_details);
-                tvUsername.setText(username);
-            }
-        }
-    };
+public class SettingsActivity extends AppCompatActivity implements View.OnClickListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.settings);
-
-        String username = SettingsUtils.getUserName(this, getString(R.string.device_info_default));
-        TextView tvUsername = (TextView) findViewById(R.id.username_details);
-        tvUsername.setText(username);
-
-        findViewById(R.id.username).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                UsernameDialog dialog = new UsernameDialog();
-                dialog.show(getSupportFragmentManager(), null);
-            }
-        });
-
-        findViewById(R.id.language).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                LanguageDialog dialog = new LanguageDialog();
-                dialog.show(getSupportFragmentManager(), null);
-            }
-        });
-
-        findViewById(R.id.about).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(SettingsActivity.this, InfoActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(listener);
+        setTitle(R.string.settings_label);
     }
 
     @Override
-    protected void onDestroy() {
-        PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(listener);
+    protected void onStart() {
+        super.onStart();
+        Observable.fromCallable(this::getUserName)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this::setUsername);
+    }
 
-        super.onDestroy();
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.username:
+                new UsernameDialog()
+                        .setOnUsernameChangeListener(this::setUsername)
+                        .show(getSupportFragmentManager(), null);
+                break;
+            case R.id.language:
+                new LanguageDialog()
+                        .setOnLanguageChangedListener(this::changeLanguage)
+                        .show(getSupportFragmentManager(), null);
+                break;
+        }
+    }
+
+    @NonNull
+    private String getUserName() {
+        return SettingsUtils.getUserNameOrDefault(this);
+    }
+
+    private void setUsername(@Nullable String username) {
+        TextView tvUsername = findViewById(R.id.username_details);
+        tvUsername.setText(username);
+    }
+
+    private void changeLanguage() {
+        recreate();
     }
 }

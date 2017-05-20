@@ -1,3 +1,27 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2017 klnvch
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 package by.klnvch.link5dots;
 
 import android.bluetooth.BluetoothAdapter;
@@ -8,11 +32,11 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
-import by.klnvch.link5dots.bluetooth.BluetoothService;
-import by.klnvch.link5dots.bluetooth.DevicePickerActivity;
-import by.klnvch.link5dots.nsd.NsdPickerActivity;
-import by.klnvch.link5dots.nsd.NsdService;
-import by.klnvch.link5dots.online.OnlineGameActivity;
+import by.klnvch.link5dots.multiplayer.bluetooth.BluetoothService;
+import by.klnvch.link5dots.multiplayer.bluetooth.DevicePickerActivity;
+import by.klnvch.link5dots.multiplayer.nsd.NsdPickerActivity;
+import by.klnvch.link5dots.multiplayer.nsd.NsdService;
+import by.klnvch.link5dots.multiplayer.online.OnlineGameActivity;
 
 public class MultiPlayerMenuActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -26,6 +50,9 @@ public class MultiPlayerMenuActivity extends AppCompatActivity implements View.O
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.multiplayer_menu);
+        setTitle(R.string.menu_multi_player);
+
+        findViewById(R.id.multi_player_online).setVisibility(View.INVISIBLE);
 
         if (BluetoothAdapter.getDefaultAdapter() == null) {
             findViewById(R.id.multi_player_bluetooth).setVisibility(View.INVISIBLE);
@@ -39,8 +66,7 @@ public class MultiPlayerMenuActivity extends AppCompatActivity implements View.O
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.multi_player_two_players:
-                Intent twoPlayersIntent = new Intent(this, TwoPlayersActivity.class);
-                startActivity(twoPlayersIntent);
+                startActivity(new Intent(this, TwoPlayersActivity.class));
                 break;
             case R.id.multi_player_bluetooth:
                 // Get local Bluetooth adapter
@@ -51,14 +77,14 @@ public class MultiPlayerMenuActivity extends AppCompatActivity implements View.O
                     SharedPreferences.Editor editor = prefs.edit();
                     if (!mBluetoothAdapter.isEnabled()) {
                         // enable bluetooth
-                        Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                        startActivityForResult(enableIntent, RC_ENABLE_BLUETOOTH);
+                        Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                        startActivityForResult(intent, RC_ENABLE_BLUETOOTH);
                         // remember
                         editor.putBoolean(IS_BLUETOOTH_ENABLED, false);
                     } else {
                         // launch bluetooth device chooser
-                        Intent pickerIntent = new Intent(this, DevicePickerActivity.class);
-                        startActivityForResult(pickerIntent, RC_BLUETOOTH_GAME);
+                        Intent intent = new Intent(this, DevicePickerActivity.class);
+                        startActivityForResult(intent, RC_BLUETOOTH_GAME);
                         // remember
                         editor.putBoolean(IS_BLUETOOTH_ENABLED, true);
                         // start Bluetooth service
@@ -72,10 +98,7 @@ public class MultiPlayerMenuActivity extends AppCompatActivity implements View.O
                 startService(new Intent(this, NsdService.class));
                 break;
             case R.id.multi_player_online:
-                int orientation = getResources().getConfiguration().orientation;
-                Intent intent = new Intent(this, OnlineGameActivity.class);
-                intent.putExtra("orientation", orientation);
-                startActivity(intent);
+                startActivity(new Intent(this, OnlineGameActivity.class));
                 break;
         }
     }

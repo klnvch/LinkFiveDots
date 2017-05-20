@@ -1,18 +1,42 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ MIT License
+  ~
+  ~ Copyright (c) 2017 klnvch
+  ~
+  ~ Permission is hereby granted, free of charge, to any person obtaining a copy
+  ~ of this software and associated documentation files (the "Software"), to deal
+  ~ in the Software without restriction, including without limitation the rights
+  ~ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  ~ copies of the Software, and to permit persons to whom the Software is
+  ~ furnished to do so, subject to the following conditions:
+  ~
+  ~ The above copyright notice and this permission notice shall be included in all
+  ~ copies or substantial portions of the Software.
+  ~
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  ~ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  ~ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  ~ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  ~ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  ~ SOFTWARE.
+  -->
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/paper_tiled">
+    android:background="@drawable/paper_tiled"
+    android:orientation="vertical">
 
     <RelativeLayout
         android:id="@+id/username"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:background="@drawable/btn_selector"
         android:clickable="true"
-        android:focusable="true">
+        android:focusable="true"
+        android:onClick="onClick"
+        android:orientation="vertical">
 
         <ImageView
             android:id="@+id/username_icon"
@@ -20,22 +44,22 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:paddingTop="4dp"
+            android:contentDescription="@string/apn_user"
             android:paddingBottom="4dp"
             android:paddingLeft="8dp"
             android:paddingRight="8dp"
-            android:src="@drawable/ic_mood_48dp"
-            android:contentDescription="@string/apn_user" />
+            android:paddingTop="4dp"
+            android:src="@drawable/ic_mood_48dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:orientation="vertical"
+            android:layout_toEndOf="@+id/username_icon"
             android:layout_toRightOf="@+id/username_icon"
-            android:layout_toEndOf="@+id/username_icon">
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/username_title"
@@ -59,10 +83,11 @@
         android:id="@+id/language"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:background="@drawable/btn_selector"
         android:clickable="true"
-        android:focusable="true">
+        android:focusable="true"
+        android:onClick="onClick"
+        android:orientation="vertical">
 
         <ImageView
             android:id="@+id/language_icon"
@@ -70,22 +95,22 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:paddingTop="4dp"
+            android:contentDescription="@string/phone_language"
             android:paddingBottom="4dp"
             android:paddingLeft="8dp"
             android:paddingRight="8dp"
-            android:src="@drawable/ic_language_48dp"
-            android:contentDescription="@string/phone_language" />
+            android:paddingTop="4dp"
+            android:src="@drawable/ic_language_48dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:orientation="vertical"
+            android:layout_toEndOf="@+id/language_icon"
             android:layout_toRightOf="@+id/language_icon"
-            android:layout_toEndOf="@+id/language_icon">
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/language_title"
@@ -102,42 +127,6 @@
                 android:text="@string/language" />
 
         </LinearLayout>
-
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/about"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="@drawable/btn_selector"
-        android:clickable="true"
-        android:focusable="true">
-
-        <ImageView
-            android:id="@+id/info_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:paddingTop="4dp"
-            android:paddingBottom="4dp"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp"
-            android:src="@drawable/ic_info_48dp"
-            android:contentDescription="@string/application_info_label" />
-
-        <TextView
-            android:id="@+id/info_title"
-            style="@style/TextAppearance.AppCompat.Title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:text="@string/application_info_label"
-            android:layout_toRightOf="@+id/info_icon"
-            android:layout_toEndOf="@+id/info_icon" />
 
     </RelativeLayout>
 

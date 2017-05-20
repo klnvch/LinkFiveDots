@@ -1,91 +1,104 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2017 klnvch
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 package by.klnvch.link5dots.settings;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import by.klnvch.link5dots.R;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
-public class UsernameDialog extends DialogFragment {
+public class UsernameDialog extends DialogFragment implements DialogInterface.OnClickListener {
 
     public static final String TAG = "UsernameDialog";
 
-    private OnUsernameChangListener listener = null;
+    private OnUsernameChangedListener listener = null;
 
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setCancelable(false);
-
-        View v = View.inflate(getActivity(), R.layout.username, null);
-
-        String username
-                = SettingsUtils.getUserName(getContext(), getString(R.string.device_info_default));
-        TextView tvUsername = (TextView) v.findViewById(R.id.username);
-        tvUsername.setText(username);
-
-        builder.setView(v);
-
-        builder.setPositiveButton(R.string.okay, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                EditText editText = (EditText) getDialog().findViewById(R.id.username);
-                String username = editText.getText().toString().trim();
-                if (!username.isEmpty()) {
-                    SettingsUtils.setUserName(getContext(), username);
-                    //
-                    if (listener != null) {
-                        listener.onUsernameChanged(username);
-                    }
-                }
-            }
-        });
-
-        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                if (listener != null) {
-                    listener.onNothingChanged();
-                }
-            }
-        });
-
-        builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialog) {
-                if (listener != null) {
-                    listener.onNothingChanged();
-                }
-            }
-        });
-
-        return builder.create();
+        return new AlertDialog.Builder(getActivity())
+                .setCancelable(false)
+                .setPositiveButton(R.string.okay, this)
+                .setNegativeButton(R.string.cancel, null)
+                .setView(View.inflate(getActivity(), R.layout.username, null))
+                .create();
     }
 
     @Override
-    public void onCancel(DialogInterface dialog) {
-        if (listener != null) {
-            listener.onNothingChanged();
-        }
-        super.onCancel(dialog);
+    public void onStart() {
+        super.onStart();
+        Observable.fromCallable(this::getUserName)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this::setUsername);
     }
 
-    public void setOnUsernameChangeListener(OnUsernameChangListener listener) {
+    @NonNull
+    public UsernameDialog setOnUsernameChangeListener(@NonNull OnUsernameChangedListener listener) {
         this.listener = listener;
+        return this;
     }
 
-    public interface OnUsernameChangListener {
-        void onUsernameChanged(String username);
-
-        void onNothingChanged();
+    @Override
+    public void onClick(DialogInterface dialog, int which) {
+        EditText editText = getDialog().findViewById(R.id.username);
+        String username = editText.getText().toString().trim();
+        if (!username.isEmpty()) {
+            SettingsUtils.setUserName(getContext(), username);
+            if (listener != null) {
+                listener.onUsernameChanged(username);
+            }
+        }
     }
 
+    @NonNull
+    private String getUserName() {
+        return SettingsUtils.getUserNameOrDefault(getContext());
+    }
+
+    private void setUsername(@Nullable String username) {
+        if (getDialog() != null) {
+            EditText editText = getDialog().findViewById(R.id.username);
+            editText.setText(username);
+        } else {
+            Log.e(TAG, "getDialog() returns null");
+        }
+    }
+
+    public interface OnUsernameChangedListener {
+        void onUsernameChanged(@NonNull String username);
+    }
 }
