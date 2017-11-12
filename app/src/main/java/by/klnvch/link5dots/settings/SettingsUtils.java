@@ -25,16 +25,15 @@
 package by.klnvch.link5dots.settings;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import java.util.Locale;
 
 import by.klnvch.link5dots.R;
-import io.reactivex.annotations.NonNull;
 
 public class SettingsUtils {
 
@@ -42,16 +41,21 @@ public class SettingsUtils {
     static final String APP_LANGUAGE = "APP_LANGUAGE";
     private static final String USER_NAME = "USER_NAME";
 
-    public static void checkLanguage(@NonNull Context context) {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        String savedLanguage = prefs.getString(APP_LANGUAGE, null);
+    public static boolean checkLanguage(@NonNull Context context) {
+        String savedLanguage = PreferenceManager
+                .getDefaultSharedPreferences(context)
+                .getString(APP_LANGUAGE, null);
         if (savedLanguage != null) {
             Resources resources = context.getResources();
-            String currentLanguage = resources.getConfiguration().locale.getDisplayName();
+            String currentLanguage = resources.getConfiguration().locale.getLanguage();
             if (!savedLanguage.equals(currentLanguage)) {
                 changeLanguage(context, savedLanguage);
+                return true;
+            } else {
+                return false;
             }
         }
+        return false;
     }
 
     static void changeLanguage(@NonNull Context context, @NonNull String language) {
