@@ -1,10 +1,31 @@
-package by.klnvch.link5dots;
+/*
+ * MIT License
+ *
+ * Copyright (c) 2017 klnvch
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
+package by.klnvch.link5dots.models;
 
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.IgnoreExtraProperties;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,12 +33,8 @@ import java.util.Map;
 @IgnoreExtraProperties
 public class HighScore {
 
-    public static final long WON = 1;
-    public static final long LOST = 2;
-
-    public static final String GAME_STATUS = "GAME_STATUS";
-    public static final String NUMBER_OF_MOVES = "NUMBER_OF_MOVES";
-    public static final String ELAPSED_TIME = "ELAPSED_TIME";
+    public static final int WON = 1;
+    public static final int LOST = 2;
 
     private static final String USER_ID = "userId";
     private static final String ANDROID_ID = "androidId";
@@ -29,48 +46,26 @@ public class HighScore {
     private static final long L_4294 = 4294;
     private static final long L_967295 = 967295;
     private static final long L_1000000 = 1000000;
+
     private String userId;
     private String androidId;
     private String username;
     private long score;
     private long time;
-    private long status;
+    private int status;
 
     public HighScore() {
 
     }
 
-    public HighScore(String androidId, String username, long score, long time, long status) {
-
-        this.androidId = androidId;
-        this.username = username;
+    HighScore(long score, long time, long status) {
         this.score = score;
         this.time = time;
-        this.status = status;
-    }
-
-    public HighScore(long score, long time, long status) {
-
-        this.score = score;
-        this.time = time;
-        this.status = status;
-    }
-
-    public HighScore(long score) {
-
-        decode(score);
-    }
-
-    public String getUserId() {
-        return userId;
+        this.status = (int) status;
     }
 
     public void setUserId(String userId) {
         this.userId = userId;
-    }
-
-    public String getAndroidId() {
-        return androidId;
     }
 
     public void setAndroidId(String androidId) {
@@ -80,26 +75,11 @@ public class HighScore {
     public String getUserName() {
         return username;
     }
-    /*
-	public int compareTo(HighScore another) {
-		return (int)(this.code() - another.code());
-	}
-	*/
 
     public void setUserName(String userName) {
         this.username = userName;
     }
 
-    /*
-    public void setUserName(String username) {
-        this.username = username;
-    }
-    */
-    /*
-    public void setDeviceId(String deviceId) {
-		this.id = deviceId;
-	}
-	*/
     public long getScore() {
         return score;
     }
@@ -108,16 +88,8 @@ public class HighScore {
         return time;
     }
 
-    public long getStatus() {
+    public int getStatus() {
         return status;
-    }
-
-    public JSONObject toJSONObject() throws JSONException {
-        JSONObject result = new JSONObject();
-        result.put(ANDROID_ID, androidId);
-        result.put(USER_NAME, username);
-        result.put(SCORE, code());
-        return result;
     }
 
     //
@@ -132,7 +104,7 @@ public class HighScore {
     // 1 <= s1   <= 2000
     // 1 <= s2   <= 2000
     //
-    long code() {
+    private long code() {
 
         if (time < L_1) time = L_1;
         if (time > L_967295) time = L_967295;
@@ -171,7 +143,6 @@ public class HighScore {
         result.put(USER_NAME, username);
         result.put(SCORE, code());
         result.put(TIMESTAMP, System.currentTimeMillis());
-
         return result;
     }
 }

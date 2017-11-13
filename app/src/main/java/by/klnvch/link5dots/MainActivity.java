@@ -1,11 +1,35 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2017 klnvch
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 package by.klnvch.link5dots;
 
 import android.annotation.SuppressLint;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -13,86 +37,71 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-import com.google.android.gms.analytics.GoogleAnalytics;
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import by.klnvch.link5dots.models.Bot;
+import by.klnvch.link5dots.models.Dot;
+import by.klnvch.link5dots.models.Game;
+import by.klnvch.link5dots.models.GameViewState;
+import by.klnvch.link5dots.models.HighScore;
+import by.klnvch.link5dots.scores.ScoresActivity;
 import by.klnvch.link5dots.settings.SettingsUtils;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity {
 
-    private GameView view;
+    private static final String KEY_GAME_STATE = "KEY_GAME_STATE_V0";
+    private static final String KEY_VIEW_STATE = "KEY_VIEW_STATE_V0";
+
+    private GameView mView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.game_board);
+        setTitle(R.string.app_name);
 
-        //restore view
-        view = (GameView) findViewById(R.id.game_view);
+        mView = findViewById(R.id.game_view);
+        mView.setOnMoveDoneListener(this::onMoveDone);
+        mView.setOnGameEndListener(this::onGameFinished);
 
-        view.setOnGameEventListener(new GameView.OnGameEventListener() {
-            @Override
-            public void onMoveDone(Dot currentDot, Dot previousDot) {
-                if (previousDot == null || previousDot.getType() == Dot.OPPONENT) {
-                    // set user dot
-                    currentDot.setType(Dot.USER);
-                    view.setDot(currentDot);
-                    // set bot dot
-                    Dot botDot = Bot.findAnswer(view.getCopyOfNet());
-                    botDot.setType(Dot.OPPONENT);
-                    view.setDot(botDot);
-                }
-            }
+        Observable.fromCallable(this::getUserName)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this::setUsername);
 
-            @Override
-            public void onGameEnd(HighScore highScore) {
-                showAlertDialog(highScore);
-            }
-        });
-
-        String username = SettingsUtils.getUserName(this, null);
-        if (username != null) {
-            TextView tvUsername = (TextView) findViewById(R.id.user_name);
-            tvUsername.setText(username);
-        }
-
-        ((App) getApplication()).getTracker();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        GoogleAnalytics.getInstance(this).reportActivityStart(this);
-        //
         FirebaseAuth.getInstance().signInAnonymously();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        view.restore(getPreferences(MODE_PRIVATE));
-        view.invalidate();
-        view.isOver();
+
+        Observable.fromCallable(this::getGameState)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this::setGameState);
+
+        Observable.fromCallable(this::getViewState)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this::setViewState);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        view.save(getPreferences(MODE_PRIVATE));
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        GoogleAnalytics.getInstance(this).reportActivityStop(this);
+        getPreferences(MODE_PRIVATE).edit()
+                .putString(KEY_GAME_STATE, mView.getGameState().toJson())
+                .putString(KEY_VIEW_STATE, mView.getViewState().toJson())
+                .apply();
     }
 
     @Override
@@ -104,7 +113,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         switch (item.getItemId()) {
             case R.id.menu_undo:
                 undoLastMove();
@@ -125,75 +133,34 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    private void showAlertDialog(final HighScore highScore) {
-        //final long gameStatus = data.getLong(GAME_STATUS);
-        //final long numberOfMoves = data.getLong(NUMBER_OF_MOVES);
-        //final long timeElapsed = data.getLong(ELAPSED_TIME);
-
-        final String title;
-        if (highScore.getStatus() == HighScore.WON) {
-            title = getString(R.string.end_win);
-        } else {
-            title = getString(R.string.end_lose);
-        }
-        String str = getString(R.string.end_move, highScore.getScore(), highScore.getTime());
+    private void onGameFinished(@NonNull HighScore highScore) {
+        int title = highScore.getStatus() == HighScore.WON ? R.string.end_win : R.string.end_lose;
+        String msg = getString(R.string.end_move, highScore.getScore(), highScore.getTime());
 
         new AlertDialog.Builder(this)
                 .setTitle(title)
-                .setMessage(str)
-                .setPositiveButton(R.string.end_new_game, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        newGame();
-                    }
-                })
-                .setNeutralButton(R.string.scores_title, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        moveToScores();
-                    }
-                })
-                .setNegativeButton(R.string.end_undo, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        undoLastMove();
-                    }
-                })
+                .setMessage(msg)
+                .setPositiveButton(R.string.end_new_game, (dialog, which) -> newGame())
+                .setNeutralButton(R.string.scores_title, (dialog, which) -> moveToScores())
+                .setNegativeButton(R.string.end_undo, (dialog, which) -> undoLastMove())
                 .show();
     }
 
     private void undoLastMove() {
-        HighScore highScore = view.getHighScore();
-        if (highScore != null) publishScore(highScore);
-        view.undoLastMove(2);
-        //
-        Tracker tracker = ((App) getApplication()).getTracker();
-        tracker.send(new HitBuilders.EventBuilder()
-                .setCategory("Main")
-                .setAction("Undo")
-                .build());
+        mView.undoLastMove(2);
     }
 
     private void newGame() {
-        HighScore highScore = view.getHighScore();
-        if (highScore != null) publishScore(highScore);
-        view.resetGame();
-        //
-        Tracker tracker = ((App) getApplication()).getTracker();
-        tracker.send(new HitBuilders.EventBuilder()
-                .setCategory("Main")
-                .setAction("New")
-                .build());
+        mView.resetGame();
+        getPreferences(MODE_PRIVATE).edit()
+                .putString(KEY_GAME_STATE, null)
+                .apply();
     }
 
     private void moveToScores() {
+        HighScore highScore = mView.getHighScore();
+        if (highScore != null) publishScore(highScore);
         startActivity(new Intent(this, ScoresActivity.class));
-        //
-        Tracker tracker = ((App) getApplication()).getTracker();
-        tracker.send(new HitBuilders.EventBuilder()
-                .setCategory("Main")
-                .setAction("Scores")
-                .build());
     }
 
     @SuppressLint("HardwareIds")
@@ -205,28 +172,61 @@ public class MainActivity extends AppCompatActivity {
             highScore.setUserId(userId);
         }
         highScore.setAndroidId(Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID));
-        highScore.setUserName(SettingsUtils.getUserName(this, null));
+        highScore.setUserName(SettingsUtils.getUserNameOrNull(this));
 
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
         String key = mDatabase.child("high_scores").push().getKey();
         Map<String, Object> postValues = highScore.toMap();
         Map<String, Object> childUpdates = new HashMap<>();
         childUpdates.put("/high_scores/" + key, postValues);
-        mDatabase.updateChildren(childUpdates, new DatabaseReference.CompletionListener() {
-            @Override
-            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                //Log.d(TAG, databaseError.getMessage());
-            }
+        mDatabase.updateChildren(childUpdates, (databaseError, databaseReference) -> {
+            //Log.d(TAG, databaseError.getMessage());
         });
     }
 
     private void searchLastMove() {
-        view.switchHideArrow();
-        //
-        Tracker tracker = ((App) getApplication()).getTracker();
-        tracker.send(new HitBuilders.EventBuilder()
-                .setCategory("Main")
-                .setAction("Search")
-                .build());
+        mView.switchHideArrow();
+    }
+
+    private void onMoveDone(@NonNull Dot currentDot, @Nullable Dot previousDot) {
+        if (previousDot == null || previousDot.getType() == Dot.OPPONENT) {
+            // set user dot
+            currentDot.setType(Dot.USER);
+            mView.setDot(currentDot);
+            // set bot dot
+            Dot botDot = Bot.findAnswer(mView.getCopyOfNet());
+            botDot.setType(Dot.OPPONENT);
+            mView.setDot(botDot);
+        }
+    }
+
+    @NonNull
+    private String getUserName() {
+        return SettingsUtils.getUserNameOrDefault(this);
+    }
+
+    private void setUsername(@Nullable String username) {
+        TextView tvUsername = findViewById(R.id.user_name);
+        tvUsername.setText(username);
+    }
+
+    @NonNull
+    private Game getGameState() {
+        String jsonGameState = getPreferences(MODE_PRIVATE).getString(KEY_GAME_STATE, null);
+        return Game.fromJson(jsonGameState);
+    }
+
+    private void setGameState(@NonNull Game game) {
+        mView.setGameState(game);
+    }
+
+    @NonNull
+    private GameViewState getViewState() {
+        String jsonViewState = getPreferences(MODE_PRIVATE).getString(KEY_VIEW_STATE, null);
+        return GameViewState.fromJson(jsonViewState);
+    }
+
+    private void setViewState(@NonNull GameViewState viewState) {
+        mView.setViewState(viewState);
     }
 }

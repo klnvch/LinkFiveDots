@@ -1,8 +1,32 @@
-package by.klnvch.link5dots;
+/*
+ * MIT License
+ *
+ * Copyright (c) 2017 klnvch
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
+package by.klnvch.link5dots.models;
 
 import java.util.ArrayList;
 
-class Bot {
+public class Bot {
 
     private static final int N = 20;
     private static final int M = 20;
@@ -311,20 +335,20 @@ class Bot {
 
     @Override
     public String toString() {
-        String result = "";
+        StringBuilder result = new StringBuilder();
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < M; j++) {
-                result += net1[i][j] + " ";
+                result.append(net1[i][j]).append(" ");
             }
-            result += "\n";
+            result.append("\n");
         }
-        result += "\n";
+        result.append("\n");
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < M; j++) {
-                result += net2[i][j] + " ";
+                result.append(net2[i][j]).append(" ");
             }
-            result += "\n";
+            result.append("\n");
         }
-        return result;
+        return result.toString();
     }
 }
