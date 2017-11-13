@@ -31,10 +31,6 @@ import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -46,8 +42,6 @@ import java.util.Map;
 
 import by.klnvch.link5dots.models.Bot;
 import by.klnvch.link5dots.models.Dot;
-import by.klnvch.link5dots.models.Game;
-import by.klnvch.link5dots.models.GameViewState;
 import by.klnvch.link5dots.models.HighScore;
 import by.klnvch.link5dots.scores.ScoresActivity;
 import by.klnvch.link5dots.settings.SettingsUtils;
@@ -55,22 +49,11 @@ import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
-public class MainActivity extends AppCompatActivity {
-
-    private static final String KEY_GAME_STATE = "KEY_GAME_STATE_V0";
-    private static final String KEY_VIEW_STATE = "KEY_VIEW_STATE_V0";
-
-    private GameView mView;
+public class MainActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.game_board);
-        setTitle(R.string.app_name);
-
-        mView = findViewById(R.id.game_view);
-        mView.setOnMoveDoneListener(this::onMoveDone);
-        mView.setOnGameEndListener(this::onGameFinished);
 
         Observable.fromCallable(this::getUserName)
                 .subscribeOn(Schedulers.io())
@@ -80,60 +63,7 @@ public class MainActivity extends AppCompatActivity {
         FirebaseAuth.getInstance().signInAnonymously();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        Observable.fromCallable(this::getGameState)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::setGameState);
-
-        Observable.fromCallable(this::getViewState)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::setViewState);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        getPreferences(MODE_PRIVATE).edit()
-                .putString(KEY_GAME_STATE, mView.getGameState().toJson())
-                .putString(KEY_VIEW_STATE, mView.getViewState().toJson())
-                .apply();
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_undo:
-                undoLastMove();
-                return true;
-            case R.id.menu_new_game:
-                newGame();
-                return true;
-            case R.id.menu_search:
-                searchLastMove();
-                return true;
-        }
-        return false;
-    }
-
-    @Override
-    public boolean onSearchRequested() {
-        searchLastMove();
-        return true;
-    }
-
-    private void onGameFinished(@NonNull HighScore highScore) {
+    protected void onGameFinished(@NonNull HighScore highScore) {
         int title = highScore.getStatus() == HighScore.WON ? R.string.end_win : R.string.end_lose;
         String msg = getString(R.string.end_move, highScore.getScore(), highScore.getTime());
 
@@ -146,15 +76,20 @@ public class MainActivity extends AppCompatActivity {
                 .show();
     }
 
-    private void undoLastMove() {
-        mView.undoLastMove(2);
+    protected void onMoveDone(@NonNull Dot currentDot, @Nullable Dot previousDot) {
+        if (previousDot == null || previousDot.getType() == Dot.OPPONENT) {
+            // set user dot
+            currentDot.setType(Dot.USER);
+            mView.setDot(currentDot);
+            // set bot dot
+            Dot botDot = Bot.findAnswer(mView.getCopyOfNet());
+            botDot.setType(Dot.OPPONENT);
+            mView.setDot(botDot);
+        }
     }
 
-    private void newGame() {
-        mView.resetGame();
-        getPreferences(MODE_PRIVATE).edit()
-                .putString(KEY_GAME_STATE, null)
-                .apply();
+    protected void undoLastMove() {
+        mView.undoLastMove(2);
     }
 
     private void moveToScores() {
@@ -184,22 +119,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void searchLastMove() {
-        mView.switchHideArrow();
-    }
-
-    private void onMoveDone(@NonNull Dot currentDot, @Nullable Dot previousDot) {
-        if (previousDot == null || previousDot.getType() == Dot.OPPONENT) {
-            // set user dot
-            currentDot.setType(Dot.USER);
-            mView.setDot(currentDot);
-            // set bot dot
-            Dot botDot = Bot.findAnswer(mView.getCopyOfNet());
-            botDot.setType(Dot.OPPONENT);
-            mView.setDot(botDot);
-        }
-    }
-
     @NonNull
     private String getUserName() {
         return SettingsUtils.getUserNameOrDefault(this);
@@ -208,25 +127,5 @@ public class MainActivity extends AppCompatActivity {
     private void setUsername(@Nullable String username) {
         TextView tvUsername = findViewById(R.id.user_name);
         tvUsername.setText(username);
-    }
-
-    @NonNull
-    private Game getGameState() {
-        String jsonGameState = getPreferences(MODE_PRIVATE).getString(KEY_GAME_STATE, null);
-        return Game.fromJson(jsonGameState);
-    }
-
-    private void setGameState(@NonNull Game game) {
-        mView.setGameState(game);
-    }
-
-    @NonNull
-    private GameViewState getViewState() {
-        String jsonViewState = getPreferences(MODE_PRIVATE).getString(KEY_VIEW_STATE, null);
-        return GameViewState.fromJson(jsonViewState);
-    }
-
-    private void setViewState(@NonNull GameViewState viewState) {
-        mView.setViewState(viewState);
     }
 }

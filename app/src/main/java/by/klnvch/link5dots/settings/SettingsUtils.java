@@ -75,7 +75,7 @@ public class SettingsUtils {
     }
 
     @NonNull
-    static String getUserNameOrDefault(@NonNull Context context) {
+    public static String getUserNameOrDefault(@NonNull Context context) {
         return PreferenceManager
                 .getDefaultSharedPreferences(context)
                 .getString(USER_NAME, context.getString(R.string.device_info_default));
