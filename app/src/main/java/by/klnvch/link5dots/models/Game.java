@@ -195,17 +195,21 @@ public class Game {
     }
 
     public void undo(int moves) {
-
-        for (int i = 0; i != moves; ++i) {
+        if (moves > 0) {    // if moves == 1, game with two human
             Dot d = getLastDot();
             if (d != null) {
+                d.changeStatus(Dot.EMPTY, -1);
+            }
+        }
+        if (moves > 1) {    // if moves == 2, game with bot
+            Dot d = getLastDot();
+            if (d != null && d.getType() == Dot.USER) {
                 d.changeStatus(Dot.EMPTY, -1);
             }
         }
 
         winningLine = null;
         winningLine = isOver();
-
     }
 
     public HighScore getCurrentScore() {

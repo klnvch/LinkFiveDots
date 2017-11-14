@@ -30,7 +30,6 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AlertDialog;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -64,16 +63,16 @@ public class MainActivity extends BaseActivity {
     }
 
     protected void onGameFinished(@NonNull HighScore highScore) {
+        if (getSupportFragmentManager().findFragmentByTag(EndGameDialog.TAG) != null) return;
+
         int title = highScore.getStatus() == HighScore.WON ? R.string.end_win : R.string.end_lose;
         String msg = getString(R.string.end_move, highScore.getScore(), highScore.getTime());
 
-        new AlertDialog.Builder(this)
-                .setTitle(title)
-                .setMessage(msg)
-                .setPositiveButton(R.string.end_new_game, (dialog, which) -> newGame())
-                .setNeutralButton(R.string.scores_title, (dialog, which) -> moveToScores())
-                .setNegativeButton(R.string.end_undo, (dialog, which) -> undoLastMove())
-                .show();
+        EndGameDialog.newInstance(msg, title)
+                .setOnNewGameListener(this::newGame)
+                .setOnUndoMoveListener(this::undoLastMove)
+                .setOnScoreListener(this::moveToScores)
+                .show(getSupportFragmentManager(), EndGameDialog.TAG);
     }
 
     protected void onMoveDone(@NonNull Dot currentDot, @Nullable Dot previousDot) {
@@ -106,7 +105,8 @@ public class MainActivity extends BaseActivity {
             userId = mAuth.getCurrentUser().getUid();
             highScore.setUserId(userId);
         }
-        highScore.setAndroidId(Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID));
+        highScore.setAndroidId(Settings.Secure.getString(getContentResolver(),
+                Settings.Secure.ANDROID_ID));
         highScore.setUserName(SettingsUtils.getUserNameOrNull(this));
 
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();

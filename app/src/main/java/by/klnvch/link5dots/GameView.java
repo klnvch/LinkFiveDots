@@ -318,7 +318,7 @@ public class GameView extends View {
     public void setDot(Dot dot) {
         mGameState.setDot(dot.getX(), dot.getY(), dot.getType());
         invalidate();
-        isOver();
+        //isOver();
     }
 
     public void isOver() {

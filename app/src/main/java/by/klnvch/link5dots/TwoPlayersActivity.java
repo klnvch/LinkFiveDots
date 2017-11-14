@@ -27,7 +27,6 @@ package by.klnvch.link5dots;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AlertDialog;
 import android.view.View;
 
 import by.klnvch.link5dots.models.Dot;
@@ -43,13 +42,14 @@ public class TwoPlayersActivity extends BaseActivity {
     }
 
     protected void onGameFinished(@NonNull HighScore highScore) {
-        String str = getString(R.string.end_move, highScore.getScore(), highScore.getTime());
+        if (getSupportFragmentManager().findFragmentByTag(EndGameDialog.TAG) != null) return;
 
-        new AlertDialog.Builder(this)
-                .setMessage(str)
-                .setPositiveButton(R.string.end_new_game, (dialog, which) -> newGame())
-                .setNegativeButton(R.string.end_undo, (dialog, which) -> undoLastMove())
-                .show();
+        String msg = getString(R.string.end_move, highScore.getScore(), highScore.getTime());
+
+        EndGameDialog.newInstance(msg)
+                .setOnNewGameListener(this::newGame)
+                .setOnUndoMoveListener(this::undoLastMove)
+                .show(getSupportFragmentManager(), EndGameDialog.TAG);
     }
 
     protected void onMoveDone(@NonNull Dot currentDot, @Nullable Dot previousDot) {
