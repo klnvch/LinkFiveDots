@@ -45,6 +45,7 @@ import by.klnvch.link5dots.settings.SettingsUtils;
 import by.klnvch.link5dots.settings.UsernameDialog;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
 import io.reactivex.annotations.Nullable;
 import io.reactivex.schedulers.Schedulers;
 
@@ -87,6 +88,7 @@ public class MainMenuActivity extends AppCompatActivity
         Observable.fromCallable(this::getUserName)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+                .onErrorReturn(throwable -> "")
                 .subscribe(this::setUsername);
     }
 
@@ -170,12 +172,13 @@ public class MainMenuActivity extends AppCompatActivity
         return SettingsUtils.getUserNameOrNull(this);
     }
 
-    private void setUsername(@Nullable String username) {
+    private void setUsername(@NonNull String username) {
         TextView tvHelloUser = findViewById(R.id.hello_user);
-        if (username != null) {
-            tvHelloUser.setText(getString(R.string.greetings, username));
-        } else {
+        if (username.isEmpty()) {
             tvHelloUser.setVisibility(View.GONE);
+        } else {
+            tvHelloUser.setVisibility(View.VISIBLE);
+            tvHelloUser.setText(getString(R.string.greetings, username));
         }
     }
 
