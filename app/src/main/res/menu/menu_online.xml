@@ -22,10 +22,16 @@
   ~ SOFTWARE.
   -->
 
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@drawable/btn_selector"
-    android:singleLine="true"
-    android:textColor="@color/black"
-    android:textSize="@dimen/bt_text_size" />
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/menu_new_game"
+        android:icon="@android:drawable/ic_menu_rotate"
+        android:title="@string/end_new_game" />
+
+    <item
+        android:id="@+id/menu_search"
+        android:icon="@android:drawable/ic_menu_search"
+        android:title="@android:string/search_go"
+        app:showAsAction="always" />
+</menu>

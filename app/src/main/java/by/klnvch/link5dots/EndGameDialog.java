@@ -35,14 +35,19 @@ public class EndGameDialog extends DialogFragment implements DialogInterface.OnC
 
     public static final String TAG = "EndGameDialog";
 
+    private static final String KEY_TITLE = "KEY_TITLE";
+    private static final String KEY_MSG = "KEY_MSG";
+    private static final String KEY_CANCELABLE = "KEY_CANCELABLE";
+
     private OnNewGameListener listenerNew = null;
     private OnUndoMoveListener listenerUndo = null;
     private OnScoreListener listenerScore = null;
 
-    public static EndGameDialog newInstance(@NonNull String msg, int title) {
+    public static EndGameDialog newInstance(@NonNull String msg, int title, boolean isCancelable) {
         Bundle args = new Bundle();
-        args.putString("msg", msg);
-        args.putInt("title", title);
+        args.putString(KEY_MSG, msg);
+        args.putInt(KEY_TITLE, title);
+        args.putBoolean(KEY_CANCELABLE, isCancelable);
 
         EndGameDialog dialog = new EndGameDialog();
         dialog.setArguments(args);
@@ -51,7 +56,7 @@ public class EndGameDialog extends DialogFragment implements DialogInterface.OnC
 
     public static EndGameDialog newInstance(@NonNull String msg) {
         Bundle args = new Bundle();
-        args.putString("msg", msg);
+        args.putString(KEY_MSG, msg);
 
         EndGameDialog dialog = new EndGameDialog();
         dialog.setArguments(args);
@@ -61,16 +66,19 @@ public class EndGameDialog extends DialogFragment implements DialogInterface.OnC
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        String msg = getArguments().getString("msg");
-        int title = getArguments().getInt("title");
+        String msg = getArguments().getString(KEY_MSG);
+        int title = getArguments().getInt(KEY_TITLE);
+        boolean isCancelable = getArguments().getBoolean(KEY_CANCELABLE, true);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
-                .setTitle(title)
+                .setCancelable(isCancelable)
                 .setMessage(msg);
 
+        if (title != 0) builder.setTitle(title);
+
         if (listenerNew != null) builder.setPositiveButton(R.string.end_new_game, this);
-        if (listenerUndo != null) builder.setNeutralButton(R.string.scores_title, this);
-        if (listenerScore != null) builder.setNegativeButton(R.string.end_undo, this);
+        if (listenerUndo != null) builder.setNegativeButton(R.string.end_undo, this);
+        if (listenerScore != null) builder.setNeutralButton(R.string.scores_title, this);
 
         return builder.show();
     }

@@ -30,7 +30,6 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
@@ -44,9 +43,6 @@ import by.klnvch.link5dots.models.Dot;
 import by.klnvch.link5dots.models.HighScore;
 import by.klnvch.link5dots.scores.ScoresActivity;
 import by.klnvch.link5dots.settings.SettingsUtils;
-import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
 
 public class MainActivity extends BaseActivity {
 
@@ -54,27 +50,34 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Observable.fromCallable(this::getUserName)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::setUsername);
-
         FirebaseAuth.getInstance().signInAnonymously();
     }
 
-    protected void onGameFinished(@NonNull HighScore highScore) {
-        if (getSupportFragmentManager().findFragmentByTag(EndGameDialog.TAG) != null) return;
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadState();
+    }
 
+    @Override
+    protected void onPause() {
+        saveState();
+        super.onPause();
+    }
+
+    @Override
+    protected void onGameFinished(@NonNull HighScore highScore) {
         int title = highScore.getStatus() == HighScore.WON ? R.string.end_win : R.string.end_lose;
         String msg = getString(R.string.end_move, highScore.getScore(), highScore.getTime());
 
-        EndGameDialog.newInstance(msg, title)
+        EndGameDialog.newInstance(msg, title, true)
                 .setOnNewGameListener(this::newGame)
                 .setOnUndoMoveListener(this::undoLastMove)
                 .setOnScoreListener(this::moveToScores)
                 .show(getSupportFragmentManager(), EndGameDialog.TAG);
     }
 
+    @Override
     protected void onMoveDone(@NonNull Dot currentDot, @Nullable Dot previousDot) {
         if (previousDot == null || previousDot.getType() == Dot.OPPONENT) {
             // set user dot
@@ -87,6 +90,7 @@ public class MainActivity extends BaseActivity {
         }
     }
 
+    @Override
     protected void undoLastMove() {
         mView.undoLastMove(2);
     }
@@ -117,15 +121,5 @@ public class MainActivity extends BaseActivity {
         mDatabase.updateChildren(childUpdates, (databaseError, databaseReference) -> {
             //Log.d(TAG, databaseError.getMessage());
         });
-    }
-
-    @NonNull
-    private String getUserName() {
-        return SettingsUtils.getUserNameOrDefault(this);
-    }
-
-    private void setUsername(@Nullable String username) {
-        TextView tvUsername = findViewById(R.id.user_name);
-        tvUsername.setText(username);
     }
 }

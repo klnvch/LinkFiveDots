@@ -89,7 +89,7 @@ public class GameView extends View {
     private OnGameEndListener onGameEndListener;
     private Bitmap scaledBotDot;
     private Bitmap scaledUserDot;
-    private Bitmap newline;
+    private Bitmap mWinningLine;
     private Bitmap scaledArrow;
 
     public GameView(Context context) {
@@ -203,6 +203,7 @@ public class GameView extends View {
             }
         }
         // Draw dots winning line
+        isOver();
         ArrayList<Dot> winningLine = mGameState.isOver();
         if (winningLine != null) {
             Dot firstDot = winningLine.get(0);
@@ -228,7 +229,10 @@ public class GameView extends View {
             for (int i = 0; i != winningLine.size() - 1; ++i) {
                 float dX = mViewState.basePoint.x + arr1[winningLine.get(i).getX()] * mViewState.scale - shiftX;
                 float dY = mViewState.basePoint.y + arr1[winningLine.get(i).getY()] * mViewState.scale - shiftY;
-                canvas.drawBitmap(newline, dX, dY, null);
+                if (mWinningLine == null) {
+                    updateWinningLine();
+                }
+                canvas.drawBitmap(mWinningLine, dX, dY, null);
             }
         }
 
@@ -315,15 +319,13 @@ public class GameView extends View {
         return result;
     }
 
-    public void setDot(Dot dot) {
+    public void setDot(@NonNull Dot dot) {
         mGameState.setDot(dot.getX(), dot.getY(), dot.getType());
         invalidate();
-        //isOver();
     }
 
-    public void isOver() {
+    private void isOver() {
         if (mGameState.isOver() != null) {
-            updateLinesBitmaps();
             HighScore highScore = mGameState.getCurrentScore();
             if (highScore != null) {
                 if (onGameEndListener != null) {
@@ -382,11 +384,14 @@ public class GameView extends View {
 
         scaledBotDot = Bitmap.createScaledBitmap(botDot, (int) (dotSize * mViewState.scale), (int) (dotSize * mViewState.scale), true);
         scaledUserDot = Bitmap.createScaledBitmap(userDot, (int) (dotSize * mViewState.scale), (int) (dotSize * mViewState.scale), true);
-        updateLinesBitmaps();
+        updateWinningLine();
         scaledArrow = Bitmap.createScaledBitmap(arrows, (int) (arrowsSize * mViewState.scale), (int) (arrowsSize * mViewState.scale), true);
     }
 
-    private void updateLinesBitmaps() {
+    /**
+     * do it only when scaling or drawing
+     */
+    private void updateWinningLine() {
         ArrayList<Dot> winningLine = mGameState.isOver();
         if (winningLine != null) {
             Dot firstDot = winningLine.get(0);
@@ -399,27 +404,51 @@ public class GameView extends View {
 
             if (y1 == y2) {//horizontal line
                 if (firstDot.getType() == Dot.USER) {
-                    newline = Bitmap.createScaledBitmap(userHorLine, (int) (lineLength * mViewState.scale), (int) (lineThickness * mViewState.scale), true);
+                    mWinningLine = Bitmap.createScaledBitmap(userHorLine,
+                            (int) (lineLength * mViewState.scale),
+                            (int) (lineThickness * mViewState.scale),
+                            true);
                 } else {
-                    newline = Bitmap.createScaledBitmap(botHorLine, (int) (lineLength * mViewState.scale), (int) (lineThickness * mViewState.scale), true);
+                    mWinningLine = Bitmap.createScaledBitmap(botHorLine,
+                            (int) (lineLength * mViewState.scale),
+                            (int) (lineThickness * mViewState.scale),
+                            true);
                 }
             } else if (x1 == x2) {//vertical line
                 if (firstDot.getType() == Dot.USER) {
-                    newline = Bitmap.createScaledBitmap(userVerLine, (int) (lineThickness * mViewState.scale), (int) (lineLength * mViewState.scale), true);
+                    mWinningLine = Bitmap.createScaledBitmap(userVerLine,
+                            (int) (lineThickness * mViewState.scale),
+                            (int) (lineLength * mViewState.scale),
+                            true);
                 } else {
-                    newline = Bitmap.createScaledBitmap(botVerLine, (int) (lineThickness * mViewState.scale), (int) (lineLength * mViewState.scale), true);
+                    mWinningLine = Bitmap.createScaledBitmap(botVerLine,
+                            (int) (lineThickness * mViewState.scale),
+                            (int) (lineLength * mViewState.scale),
+                            true);
                 }
             } else if (x1 > x2) {//diagonal left to right
                 if (firstDot.getType() == Dot.USER) {
-                    newline = Bitmap.createScaledBitmap(userDiagonal1Line, (int) (lineLength * mViewState.scale), (int) (lineLength * mViewState.scale), true);
+                    mWinningLine = Bitmap.createScaledBitmap(userDiagonal1Line,
+                            (int) (lineLength * mViewState.scale),
+                            (int) (lineLength * mViewState.scale),
+                            true);
                 } else {
-                    newline = Bitmap.createScaledBitmap(botDiagonal1Line, (int) (lineLength * mViewState.scale), (int) (lineLength * mViewState.scale), true);
+                    mWinningLine = Bitmap.createScaledBitmap(botDiagonal1Line,
+                            (int) (lineLength * mViewState.scale),
+                            (int) (lineLength * mViewState.scale),
+                            true);
                 }
             } else if (x2 > x1) {//diagonal right to left
                 if (firstDot.getType() == Dot.USER) {
-                    newline = Bitmap.createScaledBitmap(userDiagonal2Line, (int) (lineLength * mViewState.scale), (int) (lineLength * mViewState.scale), true);
+                    mWinningLine = Bitmap.createScaledBitmap(userDiagonal2Line,
+                            (int) (lineLength * mViewState.scale),
+                            (int) (lineLength * mViewState.scale),
+                            true);
                 } else {
-                    newline = Bitmap.createScaledBitmap(botDiagonal2Line, (int) (lineLength * mViewState.scale), (int) (lineLength * mViewState.scale), true);
+                    mWinningLine = Bitmap.createScaledBitmap(botDiagonal2Line,
+                            (int) (lineLength * mViewState.scale),
+                            (int) (lineLength * mViewState.scale),
+                            true);
                 }
             }
         }
@@ -468,7 +497,6 @@ public class GameView extends View {
 
     public void setGameState(@NonNull Game game) {
         this.mGameState = game;
-        isOver();
         invalidate();
     }
 
@@ -528,24 +556,10 @@ public class GameView extends View {
                     return true;
                 }
 
-                invalidate();
-
                 if (onMoveDoneListener != null) {
                     onMoveDoneListener.onMoveDone(new Dot(xl, yl), mGameState.getLastDot());
                 } else {
                     Log.e(TAG, "listener is null");
-                }
-
-                //
-                if (mGameState.isOver() != null) {
-                    updateLinesBitmaps();
-                    HighScore highScore = mGameState.getCurrentScore();
-
-                    if (onGameEndListener != null) {
-                        onGameEndListener.onGameEnd(highScore);
-                    } else {
-                        Log.e(TAG, "listener is null");
-                    }
                 }
             }
             return true;

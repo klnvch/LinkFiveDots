@@ -1,29 +1,52 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ MIT License
+  ~
+  ~ Copyright (c) 2017 klnvch
+  ~
+  ~ Permission is hereby granted, free of charge, to any person obtaining a copy
+  ~ of this software and associated documentation files (the "Software"), to deal
+  ~ in the Software without restriction, including without limitation the rights
+  ~ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  ~ copies of the Software, and to permit persons to whom the Software is
+  ~ furnished to do so, subject to the following conditions:
+  ~
+  ~ The above copyright notice and this permission notice shall be included in all
+  ~ copies or substantial portions of the Software.
+  ~
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  ~ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  ~ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  ~ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  ~ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  ~ SOFTWARE.
+  -->
+
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="@dimen/btn_table_padding"
-    android:background="@drawable/paper_tiled">
+    android:background="@drawable/paper_tiled"
+    android:padding="@dimen/btn_table_padding">
 
     <LinearLayout
         android:id="@+id/layout_visibility"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:layout_alignParentTop="true"
-        android:gravity="center">
+        android:gravity="center"
+        android:orientation="vertical">
 
         <ToggleButton
             android:id="@+id/register"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textOn="@string/cancel"
-            android:textOff="@string/create"
-            android:textColor="@color/black"
-            android:textStyle="bold"
-            android:textSize="@dimen/btn_text_size"
+            android:background="@drawable/btn_selector"
             android:checked="false"
-            android:background="@drawable/btn_selector" />
+            android:textColor="@color/black"
+            android:textOff="@string/create"
+            android:textOn="@string/cancel"
+            android:textSize="@dimen/btn_text_size"
+            android:textStyle="bold" />
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -50,21 +73,21 @@
                     android:id="@+id/registration_status_value"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
                     android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
                     android:layout_marginLeft="8dp"
                     android:layout_marginRight="8dp"
+                    android:layout_toEndOf="@+id/registration_status_label"
+                    android:layout_toRightOf="@+id/registration_status_label"
                     android:text="@string/apn_not_set"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/bt_text_size"
-                    android:layout_toRightOf="@+id/registration_status_label"
-                    android:layout_toEndOf="@+id/registration_status_label" />
+                    android:textSize="@dimen/bt_text_size" />
 
             </RelativeLayout>
 
             <ProgressBar
-                style="?android:attr/progressBarStyleHorizontal"
                 android:id="@+id/registration_progress"
+                style="?android:attr/progressBarStyleHorizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:indeterminate="true"
@@ -85,20 +108,20 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentBottom="true"
-        android:orientation="vertical"
-        android:layout_below="@id/separator">
+        android:layout_below="@id/separator"
+        android:orientation="vertical">
 
         <ToggleButton
             android:id="@+id/scan"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textOn="@string/cancel"
-            android:textOff="@string/search_menu"
-            android:textColor="@color/black"
-            android:textStyle="bold"
-            android:textSize="@dimen/btn_text_size"
+            android:background="@drawable/btn_selector"
             android:checked="false"
-            android:background="@drawable/btn_selector" />
+            android:textColor="@color/black"
+            android:textOff="@string/search_menu"
+            android:textOn="@string/cancel"
+            android:textSize="@dimen/btn_text_size"
+            android:textStyle="bold" />
 
         <RelativeLayout
             android:id="@+id/layout_available_devices"
@@ -107,8 +130,8 @@
             android:layout_weight="1">
 
             <ProgressBar
-                style="?android:attr/progressBarStyleHorizontal"
                 android:id="@+id/progressBar"
+                style="?android:attr/progressBarStyleHorizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/label_available_devices"

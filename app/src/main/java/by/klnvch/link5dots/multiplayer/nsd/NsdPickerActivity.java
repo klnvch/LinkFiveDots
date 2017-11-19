@@ -1,4 +1,28 @@
-package by.klnvch.link5dots.nsd;
+/*
+ * MIT License
+ *
+ * Copyright (c) 2017 klnvch
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
+package by.klnvch.link5dots.multiplayer.nsd;
 
 import android.annotation.TargetApi;
 import android.app.ProgressDialog;
@@ -16,7 +40,6 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,6 +48,7 @@ import android.widget.ToggleButton;
 import java.lang.ref.WeakReference;
 
 import by.klnvch.link5dots.R;
+import by.klnvch.link5dots.multiplayer.MultiplayerService;
 
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 public class NsdPickerActivity extends AppCompatActivity {
@@ -38,6 +62,7 @@ public class NsdPickerActivity extends AppCompatActivity {
     private static final String TAG = "NsdPickerActivity";
     private static final int MESSAGE_STATE_CHANGE = 1;
     private static final int MESSAGE_TOAST = 5;
+
     private final MHandler mHandler = new MHandler(this);
     private ProgressDialog progressDialog = null;
     private ToggleButton registerButton;
@@ -48,10 +73,11 @@ public class NsdPickerActivity extends AppCompatActivity {
     private View progressBar;
     private ServiceListAdapter mServicesListAdapter;
     private NsdService mNsdService;
+
     private final ServiceConnection mConnection = new ServiceConnection() {
         public void onServiceConnected(ComponentName name, IBinder service) {
-            NsdService.LocalBinder binder = (NsdService.LocalBinder) service;
-            mNsdService = binder.getService();
+            MultiplayerService.LocalBinder binder = (MultiplayerService.LocalBinder) service;
+            mNsdService = (NsdService) binder.getService();
             mNsdService.setHandler(mHandler);
             if (mNsdService != null && mNsdService.getState() == NsdService.STATE_CONNECTING) {
                 if (progressDialog == null) {
@@ -73,8 +99,9 @@ public class NsdPickerActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTitle(R.string.menu_local_network);
 
-        // NoClassDefFoundError (@by.klnvch.link5dots.nsd.NsdService:<init>:294) {main}
+        // NoClassDefFoundError (@by.klnvch.link5dots.nsd_picker.NsdService:<init>:294) {main}
         try {
             Class.forName("android.net.nsd.NsdManager");
         } catch (ClassNotFoundException e) {
@@ -86,7 +113,7 @@ public class NsdPickerActivity extends AppCompatActivity {
 
 
         // Setup the window
-        setContentView(R.layout.nsd);
+        setContentView(R.layout.nsd_picker);
 
         // Set result CANCELED in case the user backs out
         setResult(RESULT_CANCELED);
@@ -94,44 +121,35 @@ public class NsdPickerActivity extends AppCompatActivity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         // Initialize the button to perform device discovery
-        registerButton = (ToggleButton) findViewById(R.id.register);
-        registerButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                if (registerButton.isChecked()) {
-                    mNsdService.registerService();
-                } else {
-                    mNsdService.unRegisterService();
-                }
+        registerButton = findViewById(R.id.register);
+        registerButton.setOnClickListener(v -> {
+            if (registerButton.isChecked()) {
+                mNsdService.registerService();
+            } else {
+                mNsdService.unRegisterService();
             }
         });
-        scanButton = (ToggleButton) findViewById(R.id.scan);
-        scanButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (scanButton.isChecked()) {
-                    mNsdService.discoverServices();
-                } else {
-                    mNsdService.stopDiscovery();
-                    mServicesListAdapter.clear();
-                }
+        scanButton = findViewById(R.id.scan);
+        scanButton.setOnClickListener(view -> {
+            if (scanButton.isChecked()) {
+                mNsdService.discoverServices();
+            } else {
+                mNsdService.stopDiscovery();
+                mServicesListAdapter.clear();
             }
         });
         //
-        registrationStatusValue = (TextView) findViewById(R.id.registration_status_value);
+        registrationStatusValue = findViewById(R.id.registration_status_value);
         registrationStatus = findViewById(R.id.registration_status);
         registrationProgress = findViewById(R.id.registration_progress);
 
         progressBar = findViewById(R.id.progressBar);
         //
         mServicesListAdapter = new ServiceListAdapter(this);
-        ListView servicesList = (ListView) findViewById(R.id.list_services);
-        servicesList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
-                NsdServiceInfo nsdServiceInfo = (NsdServiceInfo) adapterView.getItemAtPosition(i);
-                mNsdService.connect(nsdServiceInfo);
-            }
+        ListView servicesList = findViewById(R.id.list_services);
+        servicesList.setOnItemClickListener((adapterView, view, i, l) -> {
+            NsdServiceInfo nsdServiceInfo = (NsdServiceInfo) adapterView.getItemAtPosition(i);
+            mNsdService.connect(nsdServiceInfo);
         });
         servicesList.setAdapter(mServicesListAdapter);
     }
@@ -198,7 +216,11 @@ public class NsdPickerActivity extends AppCompatActivity {
                 registerButton.setChecked(true);
                 registerButton.setEnabled(true);
 
-                registrationStatusValue.setText(mNsdService.getServiceName());
+                if (mNsdService != null) {
+                    registrationStatusValue.setText(mNsdService.getServiceName());
+                } else {
+                    registrationStatusValue.setText(null);
+                }
                 registrationStatus.setVisibility(View.VISIBLE);
                 registrationProgress.setVisibility(View.INVISIBLE);
                 break;
@@ -234,13 +256,11 @@ public class NsdPickerActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         switch (item.getItemId()) {
             case android.R.id.home:
                 onBackPressed();
                 return true;
         }
-
         return false;
     }
 
@@ -248,7 +268,7 @@ public class NsdPickerActivity extends AppCompatActivity {
     private static class MHandler extends Handler {
         private final WeakReference<NsdPickerActivity> mActivity;
 
-        public MHandler(NsdPickerActivity activity) {
+        MHandler(NsdPickerActivity activity) {
             mActivity = new WeakReference<>(activity);
         }
 

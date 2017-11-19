@@ -31,21 +31,24 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import by.klnvch.link5dots.models.Dot;
 import by.klnvch.link5dots.models.Game;
 import by.klnvch.link5dots.models.GameViewState;
 import by.klnvch.link5dots.models.HighScore;
+import by.klnvch.link5dots.settings.SettingsUtils;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
-    private static final String KEY_GAME_STATE = "KEY_GAME_STATE_V0";
-    private static final String KEY_VIEW_STATE = "KEY_VIEW_STATE_V0";
+    protected static final String KEY_GAME_STATE = "KEY_GAME_STATE_V0";
+    protected static final String KEY_VIEW_STATE = "KEY_VIEW_STATE_V0";
 
     protected GameView mView;
+    protected String mUserName = "";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -56,42 +59,26 @@ public abstract class BaseActivity extends AppCompatActivity {
         mView = findViewById(R.id.game_view);
         mView.setOnMoveDoneListener(this::onMoveDone);
         mView.setOnGameEndListener(this::onGameFinished);
-    }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        Observable.fromCallable(this::getGameState)
+        Observable.fromCallable(this::getUserName)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::setGameState);
-
-        Observable.fromCallable(this::getViewState)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::setViewState);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        getPreferences(MODE_PRIVATE).edit()
-                .putString(KEY_GAME_STATE, mView.getGameState().toJson())
-                .putString(KEY_VIEW_STATE, mView.getViewState().toJson())
-                .apply();
+                .subscribe(this::setUsername);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu, menu);
+        inflater.inflate(R.menu.menu_offline, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
             case R.id.menu_undo:
                 undoLastMove();
                 return true;
@@ -111,9 +98,8 @@ public abstract class BaseActivity extends AppCompatActivity {
         return true;
     }
 
-    protected abstract void onGameFinished(@NonNull HighScore highScore);
-
-    protected abstract void undoLastMove();
+    protected void undoLastMove() {
+    }
 
     protected void newGame() {
         mView.resetGame();
@@ -127,6 +113,38 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     protected abstract void onMoveDone(@NonNull Dot currentDot, @Nullable Dot previousDot);
+
+    protected abstract void onGameFinished(@NonNull HighScore highScore);
+
+    protected void loadState() {
+        Observable.fromCallable(this::getGameState)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this::setGameState);
+
+        Observable.fromCallable(this::getViewState)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this::setViewState);
+    }
+
+    protected void saveState() {
+        getPreferences(MODE_PRIVATE).edit()
+                .putString(KEY_GAME_STATE, mView.getGameState().toJson())
+                .putString(KEY_VIEW_STATE, mView.getViewState().toJson())
+                .apply();
+    }
+
+    @NonNull
+    private String getUserName() {
+        return SettingsUtils.getUserNameOrDefault(this);
+    }
+
+    private void setUsername(@Nullable String name) {
+        mUserName = name;
+        TextView tvUsername = findViewById(R.id.user_name);
+        tvUsername.setText(mUserName);
+    }
 
     @NonNull
     private Game getGameState() {

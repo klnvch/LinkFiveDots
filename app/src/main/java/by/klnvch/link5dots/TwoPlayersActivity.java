@@ -41,6 +41,19 @@ public class TwoPlayersActivity extends BaseActivity {
         findViewById(R.id.game_info).setVisibility(View.GONE);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadState();
+    }
+
+    @Override
+    protected void onPause() {
+        saveState();
+        super.onPause();
+    }
+
+    @Override
     protected void onGameFinished(@NonNull HighScore highScore) {
         if (getSupportFragmentManager().findFragmentByTag(EndGameDialog.TAG) != null) return;
 
@@ -52,6 +65,7 @@ public class TwoPlayersActivity extends BaseActivity {
                 .show(getSupportFragmentManager(), EndGameDialog.TAG);
     }
 
+    @Override
     protected void onMoveDone(@NonNull Dot currentDot, @Nullable Dot previousDot) {
         if (previousDot == null || previousDot.getType() == Dot.OPPONENT) {
             // set user dot
@@ -63,6 +77,7 @@ public class TwoPlayersActivity extends BaseActivity {
         }
     }
 
+    @Override
     protected void undoLastMove() {
         mView.undoLastMove(1);
     }

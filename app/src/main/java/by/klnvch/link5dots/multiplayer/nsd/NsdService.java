@@ -1,18 +1,40 @@
-package by.klnvch.link5dots.nsd;
+/*
+ * MIT License
+ *
+ * Copyright (c) 2017 klnvch
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
+package by.klnvch.link5dots.multiplayer.nsd;
 
 import android.annotation.TargetApi;
-import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.nsd.NsdManager;
 import android.net.nsd.NsdServiceInfo;
-import android.os.Binder;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import java.net.Socket;
@@ -21,9 +43,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import by.klnvch.link5dots.R;
+import by.klnvch.link5dots.multiplayer.MultiplayerService;
 
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-public class NsdService extends Service {
+public class NsdService extends MultiplayerService {
 
     public static final String BLUETOOTH_GAME_VIEW_PREFERENCES = "BLUETOOTH_GAME_VIEW_PREFERENCES";
     // Constants that indicate the current connection state
@@ -33,23 +56,15 @@ public class NsdService extends Service {
     public static final int STATE_UNREGISTERING = 103;
     public static final int STATE_DISCOVERING = 200;
     public static final int STATE_IDLE = 201;
-    public static final int STATE_NONE = 0;       // we're doing nothing
-    public static final int STATE_LISTEN = 1;     // now listening for incoming connections
-    public static final int STATE_CONNECTING = 2; // now initiating an outgoing connection
-    public static final int STATE_CONNECTED = 3;  // now connected to a remote device
     private static final String TAG = "NsdService";
     // new constants and fields
     private static final String SERVICE_NAME = "Link Five Dots";
     private static final String SERVICE_TYPE = "_http._tcp.";
     private final Map<String, NsdServiceInfo> mServices = new HashMap<>();
-    // Binder given to clients
-    private final IBinder mBinder = new LocalBinder();
     // Member fields
-    private Handler mHandler;
     private AcceptThread mAcceptThread;
     private ConnectThread mConnectThread;
     private ConnectedThread mConnectedThread;
-    private int mState;
     private boolean mResolveListenerInUse = false;
     private NsdManager.RegistrationListener mRegistrationListener;
     private NsdManager.DiscoveryListener mDiscoveryListener;
@@ -74,7 +89,7 @@ public class NsdService extends Service {
     @Override
     public void onCreate() {
 
-        // NoClassDefFoundError (@by.klnvch.link5dots.nsd.NsdService:<init>:294) {main}
+        // NoClassDefFoundError (@by.klnvch.link5dots.nsd_picker.NsdService:<init>:294) {main}
         try {
             Class.forName("android.net.nsd.NsdManager");
         } catch (ClassNotFoundException e) {
@@ -210,17 +225,6 @@ public class NsdService extends Service {
         }
     }
 
-    public void setHandler(Handler handler) {
-        this.mHandler = handler;
-    }
-
-    /**
-     * Return the current connection state.
-     */
-    public synchronized int getState() {
-        return mState;
-    }
-
     /**
      * Set the current state of the chat connection
      *
@@ -239,20 +243,18 @@ public class NsdService extends Service {
      * Start the chat service. Specifically start AcceptThread to begin a
      * session in listening (server) mode. Called by the Activity onResume()
      */
+    @Override
     public synchronized void start() {
-
         // Cancel any thread attempting to make a connection
         if (mConnectThread != null) {
             mConnectThread.cancel();
             mConnectThread = null;
         }
-
         // Cancel any thread currently running a connection
         if (mConnectedThread != null) {
             mConnectedThread.cancel();
             mConnectedThread = null;
         }
-
         setState(STATE_LISTEN);
     }
 
@@ -312,18 +314,16 @@ public class NsdService extends Service {
     /**
      * Stop all threads
      */
+    @Override
     public synchronized void stop() {
-
         if (mConnectThread != null) {
             mConnectThread.cancel();
             mConnectThread = null;
         }
-
         if (mConnectedThread != null) {
             mConnectedThread.cancel();
             mConnectedThread = null;
         }
-
         setState(STATE_NONE);
     }
 
@@ -333,7 +333,8 @@ public class NsdService extends Service {
      * @param out The bytes to write
      * @see ConnectedThread#write(byte[])
      */
-    public void write(byte[] out) {
+    @Override
+    public void write(@NonNull byte[] out) {
         // Create temporary object
         ConnectedThread r;
         // Synchronize a copy of the ConnectedThread
@@ -394,7 +395,9 @@ public class NsdService extends Service {
 
     // new functions
 
-    public String getConnectedServiceName() {
+    @NonNull
+    @Override
+    public String getDestinationName() {
         return mConnectedNsdServiceInfo.getServiceName();
     }
 
@@ -455,11 +458,5 @@ public class NsdService extends Service {
     public void stopDiscovery() {
         setClientState(STATE_IDLE);
         mNsdManager.stopServiceDiscovery(mDiscoveryListener);
-    }
-
-    public class LocalBinder extends Binder {
-        NsdService getService() {
-            return NsdService.this;
-        }
     }
 }

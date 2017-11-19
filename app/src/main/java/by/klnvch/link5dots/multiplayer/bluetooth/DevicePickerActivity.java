@@ -1,4 +1,28 @@
-package by.klnvch.link5dots.bluetooth;
+/*
+ * MIT License
+ *
+ * Copyright (c) 2017 klnvch
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
+package by.klnvch.link5dots.multiplayer.bluetooth;
 
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
@@ -6,7 +30,6 @@ import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
@@ -23,7 +46,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -33,29 +55,59 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.lang.ref.WeakReference;
+import java.util.Locale;
 import java.util.Set;
 
 import by.klnvch.link5dots.R;
+import by.klnvch.link5dots.multiplayer.MultiplayerService;
 
 public class DevicePickerActivity extends AppCompatActivity {
 
+    public static final int MESSAGE_DEVICE_NAME = 4;
+    public static final String DEVICE_NAME = "device_name";
+    public static final String TOAST = "toast";
     private static final String TAG = "DevicePickerActivity";
-
     private static final int BT_REQUEST_DISCOVERABLE = 1;
-
     private static final String BT_DISCOVERABLE_TIME_FINISH = "BT_DISCOVERABLE_TIME_FINISH";
+    private static final int MESSAGE_STATE_CHANGE = 1;
+    private static final int MESSAGE_TOAST = 5;
+    private final MHandler mHandler = new MHandler(this);
+    // The BroadcastReceiver that listens for discovered devices and
+    // changes the title when discovery is finished
+    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
 
+            // When discovery finds a device
+            if (BluetoothDevice.ACTION_FOUND.equals(action)) {
+                // Get the BluetoothDevice object from the Intent
+                BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+                if (device.getBondState() != BluetoothDevice.BOND_BONDED) {
+                    ListView newDevicesListView = findViewById(R.id.list_available_devices);
+                    DeviceListAdapter mNewDevicesArrayAdapter = (DeviceListAdapter) newDevicesListView.getAdapter();
+                    mNewDevicesArrayAdapter.add(device);
+                }
+                // When discovery is finished, change the Activity title
+            } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
+                findViewById(R.id.progressBar).setVisibility(View.GONE);
+                ListView newDevicesListView = findViewById(R.id.list_available_devices);
+                if (newDevicesListView.getCount() == 0) {
+                    newDevicesListView.setVisibility(View.GONE);
+                    findViewById(R.id.label_no_device_found).setVisibility(View.VISIBLE);
+                } else {
+                    findViewById(R.id.label_no_device_found).setVisibility(View.GONE);
+                    newDevicesListView.setVisibility(View.VISIBLE);
+                }
+            }
+        }
+    };
     private ProgressDialog progressDialog = null;
-
     private BluetoothService mBluetoothService;
-    private boolean isBound;
-
-    private BluetoothAdapter mBluetoothAdapter;
-
     private final ServiceConnection mConnection = new ServiceConnection() {
         public void onServiceConnected(ComponentName name, IBinder service) {
-            BluetoothService.LocalBinder binder = (BluetoothService.LocalBinder) service;
-            mBluetoothService = binder.getService();
+            MultiplayerService.LocalBinder binder = (MultiplayerService.LocalBinder) service;
+            mBluetoothService = (BluetoothService) binder.getService();
             mBluetoothService.setHandler(mHandler);
             if (mBluetoothService != null && mBluetoothService.getState() == BluetoothService.STATE_CONNECTING) {
                 if (progressDialog == null) {
@@ -68,56 +120,35 @@ public class DevicePickerActivity extends AppCompatActivity {
             mBluetoothService = null;
         }
     };
+    private boolean isBound;
+    private BluetoothAdapter mBluetoothAdapter;
+    // The on-click listener for all devices in the ListViews
+    private final OnItemClickListener mDeviceClickListener = new OnItemClickListener() {
+        public void onItemClick(AdapterView<?> av, View v, int position, long id) {
+            // Cancel discovery because it's costly and we're about to connect
+            mBluetoothAdapter.cancelDiscovery();
 
-    private final MHandler mHandler = new MHandler(this);
-    private static final int MESSAGE_STATE_CHANGE = 1;
-    public static final int MESSAGE_DEVICE_NAME = 4;
-    private static final int MESSAGE_TOAST = 5;
-    public static final String DEVICE_NAME = "device_name";
-    public static final String TOAST = "toast";
+            final BluetoothDevice device = (BluetoothDevice) av.getItemAtPosition(position);
 
-    // The Handler that gets information back from the BluetoothService
-    private static class MHandler extends Handler {
-        private final WeakReference<DevicePickerActivity> mActivity;
-
-        public MHandler(DevicePickerActivity activity) {
-            mActivity = new WeakReference<>(activity);
-        }
-
-        @Override
-        public void handleMessage(Message msg) {
-            DevicePickerActivity activity = mActivity.get();
-            if (activity != null) {
-                switch (msg.what) {
-                    case MESSAGE_STATE_CHANGE:
-                        switch (msg.arg1) {
-                            case BluetoothService.STATE_CONNECTING:
-                                activity.progressDialog = ProgressDialog.show(activity, null, activity.getString(R.string.bluetooth_connecting), true, false, null);
-                                break;
-                            default:
-                                if (activity.progressDialog != null) {
-                                    activity.progressDialog.cancel();
-                                    activity.progressDialog = null;
-                                }
-                                break;
-                        }
-                        break;
-                    case MESSAGE_DEVICE_NAME:
-                        // save the connected device's name
-                        String mConnectedDeviceName = msg.getData().getString(DEVICE_NAME);
-                        Toast.makeText(activity.getApplicationContext(),
-                                activity.getString(R.string.bluetooth_connected, mConnectedDeviceName), Toast.LENGTH_SHORT).show();
-                        activity.startActivity(new Intent(activity, BluetoothActivity.class));
-                        break;
-                    case MESSAGE_TOAST:
-                        int msgId = msg.getData().getInt(TOAST);
-                        String deviceName = msg.getData().getString(DEVICE_NAME);
-                        Toast.makeText(activity.getApplicationContext(), activity.getString(msgId, deviceName), Toast.LENGTH_SHORT).show();
-                        break;
-                }
+            try {
+                // Attempt to connect to the device
+                AlertDialog.Builder builder = new AlertDialog.Builder(DevicePickerActivity.this);
+                builder.setMessage(getString(R.string.bluetooth_connection_dialog_text, device.getName()));
+                builder.setPositiveButton(R.string.yes, (dialog, which) -> {
+                    if (mBluetoothService != null) {
+                        mBluetoothService.connect(device);
+                    }
+                });
+                builder.setNegativeButton(R.string.no, null);
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+            } catch (Exception e) {
+                Toast.makeText(DevicePickerActivity.this, getString(R.string.bluetooth_connecting_error_message, device.getName()), Toast.LENGTH_SHORT).show();
+                mBluetoothService.stop();
             }
         }
-    }
+    };
+    private CountDownTimer countDownTimer = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -140,15 +171,13 @@ public class DevicePickerActivity extends AppCompatActivity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         // Initialize the button to perform device discovery
-        final Button visibilityButton = (Button) findViewById(R.id.set_visibility);
-        visibilityButton.setOnClickListener(new OnClickListener() {
-            public void onClick(View v) {
-                // Ensure this device is discoverable by others
-                if (mBluetoothAdapter.getScanMode() != BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE) {
-                    Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
-                    discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 120);
-                    startActivityForResult(discoverableIntent, BT_REQUEST_DISCOVERABLE);
-                }
+        final Button visibilityButton = findViewById(R.id.set_visibility);
+        visibilityButton.setOnClickListener(v -> {
+            // Ensure this device is discoverable by others
+            if (mBluetoothAdapter.getScanMode() != BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE) {
+                Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
+                discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 120);
+                startActivityForResult(discoverableIntent, BT_REQUEST_DISCOVERABLE);
             }
         });
 
@@ -247,7 +276,7 @@ public class DevicePickerActivity extends AppCompatActivity {
         // Initialize array adapter for newly discovered devices
         DeviceListAdapter mNewDevicesArrayAdapter = new DeviceListAdapter(this);
         // Find and set up the ListView for newly discovered devices
-        ListView newDevicesListView = (ListView) findViewById(R.id.list_available_devices);
+        ListView newDevicesListView = findViewById(R.id.list_available_devices);
         newDevicesListView.setAdapter(mNewDevicesArrayAdapter);
         newDevicesListView.setOnItemClickListener(mDeviceClickListener);
 
@@ -260,7 +289,7 @@ public class DevicePickerActivity extends AppCompatActivity {
 
         // If there are paired devices, add each one to the ArrayAdapter
         DeviceListAdapter mPairedDevicesArrayAdapter = new DeviceListAdapter(this);
-        ListView pairedListView = (ListView) findViewById(R.id.list_paired_devices);
+        ListView pairedListView = findViewById(R.id.list_paired_devices);
         pairedListView.setOnItemClickListener(mDeviceClickListener);
         pairedListView.setAdapter(mPairedDevicesArrayAdapter);
         if (pairedDevices.size() > 0) {
@@ -272,66 +301,6 @@ public class DevicePickerActivity extends AppCompatActivity {
             findViewById(R.id.layout_paired_devices).setVisibility(View.GONE);
         }
     }
-
-    // The on-click listener for all devices in the ListViews
-    private final OnItemClickListener mDeviceClickListener = new OnItemClickListener() {
-        public void onItemClick(AdapterView<?> av, View v, int position, long id) {
-            // Cancel discovery because it's costly and we're about to connect
-            mBluetoothAdapter.cancelDiscovery();
-
-            final BluetoothDevice device = (BluetoothDevice) av.getItemAtPosition(position);
-
-            try {
-                // Attempt to connect to the device
-                AlertDialog.Builder builder = new AlertDialog.Builder(DevicePickerActivity.this);
-                builder.setMessage(getString(R.string.bluetooth_connection_dialog_text, device.getName()));
-                builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        if (mBluetoothService != null) {
-                            mBluetoothService.connect(device);
-                        }
-                    }
-                });
-                builder.setNegativeButton(R.string.no, null);
-                AlertDialog alertDialog = builder.create();
-                alertDialog.show();
-            } catch (Exception e) {
-                Toast.makeText(DevicePickerActivity.this, getString(R.string.bluetooth_connecting_error_message, device.getName()), Toast.LENGTH_SHORT).show();
-                mBluetoothService.stop();
-            }
-        }
-    };
-
-    // The BroadcastReceiver that listens for discovered devices and
-    // changes the title when discovery is finished
-    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-
-            // When discovery finds a device
-            if (BluetoothDevice.ACTION_FOUND.equals(action)) {
-                // Get the BluetoothDevice object from the Intent
-                BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                if (device.getBondState() != BluetoothDevice.BOND_BONDED) {
-                    ListView newDevicesListView = (ListView) findViewById(R.id.list_available_devices);
-                    DeviceListAdapter mNewDevicesArrayAdapter = (DeviceListAdapter) newDevicesListView.getAdapter();
-                    mNewDevicesArrayAdapter.add(device);
-                }
-                // When discovery is finished, change the Activity title
-            } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
-                findViewById(R.id.progressBar).setVisibility(View.GONE);
-                ListView newDevicesListView = (ListView) findViewById(R.id.list_available_devices);
-                if (newDevicesListView.getCount() == 0) {
-                    newDevicesListView.setVisibility(View.GONE);
-                    findViewById(R.id.label_no_device_found).setVisibility(View.VISIBLE);
-                } else {
-                    findViewById(R.id.label_no_device_found).setVisibility(View.GONE);
-                    newDevicesListView.setVisibility(View.VISIBLE);
-                }
-            }
-        }
-    };
 
     @Override
     protected void onActivityResult(int requestCode, final int resultCode, Intent data) {
@@ -374,18 +343,16 @@ public class DevicePickerActivity extends AppCompatActivity {
         return false;
     }
 
-    private CountDownTimer countDownTimer = null;
-
     private void setVisibilityTimer(int timeSeconds) {
         if (countDownTimer == null) {
-            final TextView visibilityInfo = (TextView) findViewById(R.id.visibility_info);
+            final TextView visibilityInfo = findViewById(R.id.visibility_info);
             countDownTimer = new CountDownTimer(timeSeconds * 1000, 1000) {
                 @Override
                 public void onTick(long millisUntilFinished) {
                     millisUntilFinished = millisUntilFinished / 1000;
                     int min = (int) (millisUntilFinished / 60);
                     int sec = (int) (millisUntilFinished % 60);
-                    String time = String.format("%d:%02d", min, sec);
+                    String time = String.format(Locale.getDefault(), "%d:%02d", min, sec);
                     visibilityInfo.setText(getString(R.string.bluetooth_is_discoverable, time));
                 }
 
@@ -395,6 +362,49 @@ public class DevicePickerActivity extends AppCompatActivity {
                     countDownTimer = null;
                 }
             }.start();
+        }
+    }
+
+    // The Handler that gets information back from the BluetoothService
+    private static class MHandler extends Handler {
+        private final WeakReference<DevicePickerActivity> mActivity;
+
+        MHandler(DevicePickerActivity activity) {
+            mActivity = new WeakReference<>(activity);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            DevicePickerActivity activity = mActivity.get();
+            if (activity != null) {
+                switch (msg.what) {
+                    case MESSAGE_STATE_CHANGE:
+                        switch (msg.arg1) {
+                            case BluetoothService.STATE_CONNECTING:
+                                activity.progressDialog = ProgressDialog.show(activity, null, activity.getString(R.string.bluetooth_connecting), true, false, null);
+                                break;
+                            default:
+                                if (activity.progressDialog != null) {
+                                    activity.progressDialog.cancel();
+                                    activity.progressDialog = null;
+                                }
+                                break;
+                        }
+                        break;
+                    case MESSAGE_DEVICE_NAME:
+                        // save the connected device's name
+                        String mConnectedDeviceName = msg.getData().getString(DEVICE_NAME);
+                        Toast.makeText(activity.getApplicationContext(),
+                                activity.getString(R.string.bluetooth_connected, mConnectedDeviceName), Toast.LENGTH_SHORT).show();
+                        activity.startActivity(new Intent(activity, BluetoothActivity.class));
+                        break;
+                    case MESSAGE_TOAST:
+                        int msgId = msg.getData().getInt(TOAST);
+                        String deviceName = msg.getData().getString(DEVICE_NAME);
+                        Toast.makeText(activity.getApplicationContext(), activity.getString(msgId, deviceName), Toast.LENGTH_SHORT).show();
+                        break;
+                }
+            }
         }
     }
 }

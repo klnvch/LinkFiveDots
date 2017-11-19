@@ -32,11 +32,11 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
-import by.klnvch.link5dots.bluetooth.BluetoothService;
-import by.klnvch.link5dots.bluetooth.DevicePickerActivity;
-import by.klnvch.link5dots.nsd.NsdPickerActivity;
-import by.klnvch.link5dots.nsd.NsdService;
-import by.klnvch.link5dots.online.OnlineGameActivity;
+import by.klnvch.link5dots.multiplayer.bluetooth.BluetoothService;
+import by.klnvch.link5dots.multiplayer.bluetooth.DevicePickerActivity;
+import by.klnvch.link5dots.multiplayer.nsd.NsdPickerActivity;
+import by.klnvch.link5dots.multiplayer.nsd.NsdService;
+import by.klnvch.link5dots.multiplayer.online.OnlineGameActivity;
 
 public class MultiPlayerMenuActivity extends AppCompatActivity implements View.OnClickListener {
 
