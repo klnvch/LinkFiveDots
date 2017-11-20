@@ -27,11 +27,14 @@ package by.klnvch.link5dots.models;
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.IgnoreExtraProperties;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
 @IgnoreExtraProperties
-public class HighScore {
+public class HighScore implements Serializable {
+
+    public static final String TAG = "HighScore";
 
     public static final int WON = 1;
     public static final int LOST = 2;
