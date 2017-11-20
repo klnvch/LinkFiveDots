@@ -29,6 +29,7 @@ public class Dot {
     public static final int USER = 2;
     public static final int OPPONENT = 4;
     static final int EMPTY = 1;
+
     private final int x;
     private final int y;
     private int type = EMPTY;
@@ -37,13 +38,6 @@ public class Dot {
     public Dot(int x, int y) {
         this.x = x;
         this.y = y;
-    }
-
-    public static Dot parseString(String str) {
-        String[] tokens = str.split(",");
-        int x = Integer.parseInt(tokens[0]);
-        int y = Integer.parseInt(tokens[1]);
-        return new Dot(x, y);
     }
 
     public int getX() {
@@ -73,7 +67,7 @@ public class Dot {
 
     @Override
     public String toString() {
-        return x + "," + y;
+        return "(" + x + "," + y + ")";
     }
 
     public Dot copy() {

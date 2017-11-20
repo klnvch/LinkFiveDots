@@ -29,6 +29,9 @@ import android.support.annotation.NonNull;
 import by.klnvch.link5dots.multiplayer.MultiplayerActivity;
 
 public class BluetoothActivity extends MultiplayerActivity {
+
+    public static final String TAG = "BluetoothActivity";
+
     @NonNull
     @Override
     protected Class<?> getServiceClass() {

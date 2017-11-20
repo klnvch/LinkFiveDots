@@ -84,7 +84,7 @@ public class MainActivity extends BaseActivity {
             currentDot.setType(Dot.USER);
             mView.setDot(currentDot);
             // set bot dot
-            Dot botDot = Bot.findAnswer(mView.getCopyOfNet());
+            Dot botDot = Bot.findAnswer(mView.getGameState().getCopyOfNet());
             botDot.setType(Dot.OPPONENT);
             mView.setDot(botDot);
         }

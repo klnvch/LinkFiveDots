@@ -29,6 +29,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
+import android.graphics.PointF;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
@@ -54,16 +55,19 @@ public class GameView extends View {
      * number of lines vertical or horizontal
      */
     private final static int GRID_SIZE = 20;
+    private final float[] arr1 = new float[GRID_SIZE];
+    private final float[] dotLocations = new float[GRID_SIZE];
+    private final float[] arrowLocations = new float[GRID_SIZE];
+    private final Matrix mDrawMatrix = new Matrix();
     /**
      * The background bitmap is paper size pixels wide. This array contains positions of lines of number GRID_SIZE
      */
-    public float screenWidth;
-    public float screenHeight;
-    private float[] arr1;
-
-    private Bitmap background;          // paper
-    private Bitmap userDot;             // red dot
-    private Bitmap botDot;              // blue dot
+    private float screenWidth;
+    private float screenHeight;
+    private Bitmap mBitmapPaper;
+    private Bitmap mBitmapUserDot;             // red dot
+    private Bitmap mBitmapBotDot;              // blue dot
+    private Bitmap mBitmapArrows;
     private Bitmap userHorLine;
     private Bitmap userVerLine;
     private Bitmap userDiagonal1Line;
@@ -72,25 +76,19 @@ public class GameView extends View {
     private Bitmap botVerLine;
     private Bitmap botDiagonal1Line;
     private Bitmap botDiagonal2Line;
-    private Bitmap arrows;
-
-    private float dotSize;
-    private float arrowsSize;
     private float paperSize;
     private float lineLength;
     private float lineThickness;
-
     private GestureDetector gestureDetector;
     private ScaleGestureDetector scaleGestureDetector;
-
     private Game mGameState = new Game();
     private GameViewState mViewState = new GameViewState();
     private OnMoveDoneListener onMoveDoneListener;
     private OnGameEndListener onGameEndListener;
-    private Bitmap scaledBotDot;
-    private Bitmap scaledUserDot;
-    private Bitmap mWinningLine;
-    private Bitmap scaledArrow;
+    private Bitmap mWinningLine = null;
+    private float mWinningLineDX = 0;
+    private float mWinningLineDY = 0;
+    private boolean isEndGameSend = false;
 
     public GameView(Context context) {
         super(context);
@@ -108,6 +106,8 @@ public class GameView extends View {
     }
 
     private void initGameView(Context context) {
+        Log.d(TAG, "initGameView");
+
         setFocusable(true);
         setFocusableInTouchMode(true);
 
@@ -116,9 +116,9 @@ public class GameView extends View {
         scaleGestureDetector = new ScaleGestureDetector(context, new ScaleListener());
 
         // load bitmaps. why do we need matrix?
-        background = BitmapFactory.decodeResource(getResources(), R.drawable.background);
-        userDot = BitmapFactory.decodeResource(getResources(), R.drawable.red_dot);
-        botDot = BitmapFactory.decodeResource(getResources(), R.drawable.blue_dot);
+        mBitmapPaper = BitmapFactory.decodeResource(getResources(), R.drawable.background);
+        mBitmapUserDot = BitmapFactory.decodeResource(getResources(), R.drawable.red_dot);
+        mBitmapBotDot = BitmapFactory.decodeResource(getResources(), R.drawable.blue_dot);
         Matrix rotateMatrix = new Matrix();
         rotateMatrix.postRotate(90.0f);
         userHorLine = BitmapFactory.decodeResource(getResources(), R.drawable.redlinehor);
@@ -130,18 +130,19 @@ public class GameView extends View {
         botDiagonal1Line = BitmapFactory.decodeResource(getResources(), R.drawable.bluelinediag1);
         botDiagonal2Line = Bitmap.createBitmap(botDiagonal1Line, 0, 0, botDiagonal1Line.getWidth(), botDiagonal1Line.getHeight(), rotateMatrix, true);
 
-        arrows = BitmapFactory.decodeResource(getResources(), R.drawable.arrows);
+        mBitmapArrows = BitmapFactory.decodeResource(getResources(), R.drawable.arrows);
 
         // set bitmap sizes
-        dotSize = userDot.getWidth();
-        arrowsSize = arrows.getWidth();
-        paperSize = background.getWidth();
+        float dotSize = mBitmapUserDot.getWidth();
+        float arrowsSize = mBitmapArrows.getWidth();
+        paperSize = mBitmapPaper.getWidth();
         lineLength = userHorLine.getWidth();
         lineThickness = userHorLine.getHeight();
         //
-        arr1 = new float[GRID_SIZE];
         for (int i = 0; i != GRID_SIZE; ++i) {
             arr1[i] = paperSize / (2 * GRID_SIZE) + (i * paperSize) / GRID_SIZE;
+            dotLocations[i] = arr1[i] - dotSize / 2.0f;
+            arrowLocations[i] = arr1[i] - arrowsSize / 2.0f;
         }
     }
 
@@ -155,50 +156,35 @@ public class GameView extends View {
 
     @Override
     protected void onSizeChanged(int w, int h, int oldW, int oldH) {
-        //set base point if it is not set yet
-        if (screenWidth == 0 || screenHeight == 0) {//there is nothing to restore. it is the first run
-            //set width and height
-            screenWidth = w;
-            screenHeight = h;
-
-            float dx = (w - paperSize) / 2.0f;
-            float dy = (h - paperSize) / 2.0f;
-            mViewState.basePoint.set(dx, dy);
-            mViewState.matrix.postTranslate(dx, dy);
-
-            onScale(mViewState.scale, w / 2.0f, h / 2.0f);
-        } else {
-            //set base point and matrix if screen sizes have changed
-            float dx = (w - screenWidth) / 2.0f;
-            float dy = (h - screenHeight) / 2.0f;
-            mViewState.basePoint.x += dx;
-            mViewState.basePoint.y += dy;
-            mViewState.matrix.postTranslate(dx, dy);
-
-            //set new width and height
-            screenWidth = w;
-            screenHeight = h;
-
-            onScale(1.0f, w / 2.0f, h / 2.0f);
-        }
-        super.onSizeChanged(w, h, oldW, oldH);
+        Log.d(TAG, "onSizeChanged");
+        screenWidth = w;
+        screenHeight = h;
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
+        Log.d(TAG, "onDraw");
+        // validate basic parameters
+        if (mViewState == null || screenWidth <= 0 || screenHeight <= 0 || paperSize <= 0) {
+            Log.d(TAG, "onDraw: something is wrong");
+            return;
+        }
+        // correct paper whatever has happened
+        mViewState.correctParameters(screenWidth, screenHeight, paperSize);
+
         // Draw background
-        canvas.drawBitmap(background, mViewState.matrix, null);
+        canvas.drawBitmap(mBitmapPaper, mViewState.getMatrix(), null);
 
         // Draw dots
         for (int i = 0; i != GRID_SIZE; ++i) {
             for (int j = 0; j != GRID_SIZE; ++j) {
-                float dX = mViewState.basePoint.x + arr1[i] * mViewState.scale - dotSize * mViewState.scale / 2.0f;
-                float dY = mViewState.basePoint.y + arr1[j] * mViewState.scale - dotSize * mViewState.scale / 2.0f;
+                mViewState.copyMatrix(mDrawMatrix);
+                mDrawMatrix.preTranslate(dotLocations[i], dotLocations[j]);
                 if (mGameState.net[i][j].getType() == Dot.USER) {
-                    canvas.drawBitmap(scaledUserDot, dX, dY, null);
+                    canvas.drawBitmap(mBitmapUserDot, mDrawMatrix, null);
                 }
                 if (mGameState.net[i][j].getType() == Dot.OPPONENT) {
-                    canvas.drawBitmap(scaledBotDot, dX, dY, null);
+                    canvas.drawBitmap(mBitmapBotDot, mDrawMatrix, null);
                 }
             }
         }
@@ -206,42 +192,26 @@ public class GameView extends View {
         isOver();
         ArrayList<Dot> winningLine = mGameState.isOver();
         if (winningLine != null) {
-            Dot firstDot = winningLine.get(0);
-            Dot lastDot = winningLine.get(winningLine.size() - 1);
+            for (int lineId = 0; lineId != winningLine.size() - 1; ++lineId) {
+                int i = winningLine.get(lineId).getX();
+                int j = winningLine.get(lineId).getY();
 
-            float x1 = mViewState.basePoint.x + arr1[firstDot.getX()] * mViewState.scale;
-            float y1 = mViewState.basePoint.y + arr1[firstDot.getY()] * mViewState.scale;
-            float x2 = mViewState.basePoint.x + arr1[lastDot.getX()] * mViewState.scale;
-            float y2 = mViewState.basePoint.y + arr1[lastDot.getY()] * mViewState.scale;
-
-            float shiftX = 0.0f;
-            float shiftY = 0.0f;
-
-            if (y1 == y2) {//horizontal line
-                shiftY = lineThickness * mViewState.scale / 2.0f;
-            } else if (x1 == x2) {//vertical line
-                shiftX = lineThickness * mViewState.scale / 2.0f;
-            } else if (x1 > x2) {//diagonal left to right
-                shiftX = lineLength * mViewState.scale;
-            }// else if (x2 > x1) {//diagonal right to left
-            //}
-
-            for (int i = 0; i != winningLine.size() - 1; ++i) {
-                float dX = mViewState.basePoint.x + arr1[winningLine.get(i).getX()] * mViewState.scale - shiftX;
-                float dY = mViewState.basePoint.y + arr1[winningLine.get(i).getY()] * mViewState.scale - shiftY;
-                if (mWinningLine == null) {
-                    updateWinningLine();
-                }
-                canvas.drawBitmap(mWinningLine, dX, dY, null);
+                updateWinningLine();
+                mViewState.copyMatrix(mDrawMatrix);
+                mDrawMatrix.preTranslate(arr1[i] - mWinningLineDX, arr1[j] - mWinningLineDY);
+                canvas.drawBitmap(mWinningLine, mDrawMatrix, null);
             }
         }
 
         // Draw four arrows
         Dot lastDot = mGameState.getLastDot();
         if (lastDot != null && mViewState.isFocusVisible) {
-            float dX = mViewState.basePoint.x + arr1[lastDot.getX()] * mViewState.scale - (arrowsSize * mViewState.scale) / 2.0f;
-            float dY = mViewState.basePoint.y + arr1[lastDot.getY()] * mViewState.scale - (arrowsSize * mViewState.scale) / 2.0f;
-            canvas.drawBitmap(scaledArrow, dX, dY, null);
+            int i = lastDot.getX();
+            int j = lastDot.getY();
+
+            mViewState.copyMatrix(mDrawMatrix);
+            mDrawMatrix.preTranslate(arrowLocations[i], arrowLocations[j]);
+            canvas.drawBitmap(mBitmapArrows, mDrawMatrix, null);
         }
 
         super.onDraw(canvas);
@@ -267,50 +237,22 @@ public class GameView extends View {
     }
 
     public void undoLastMove(int moves) {
+        isEndGameSend = false;
         mGameState.undo(moves);
         invalidate();
     }
 
     public void resetGame() {
+        isEndGameSend = false;
         mGameState.reset();
         invalidate();
     }
 
-    public Dot[][] getCopyOfNet() {
-        Dot[][] copyNet = new Dot[mGameState.net.length][];
-        for (int i = 0; i != mGameState.net.length; ++i) {
-            copyNet[i] = new Dot[mGameState.net[i].length];
-            for (int j = 0; j != mGameState.net[i].length; ++j) {
-                copyNet[i][j] = mGameState.net[i][j].copy();
-            }
-        }
-        return copyNet;
-    }
-
-    /**
-     * Finds nearest horizontal line from 20 possible lines
-     *
-     * @param y - position on the screen
-     * @return line number
-     */
-    private int findTapedHorLine(float y) {
+    private int findClosestLine(float line) {
         int result = 0;
         float min = Float.MAX_VALUE;
         for (int i = 0; i != GRID_SIZE; ++i) {
-            float dist = Math.abs(y - mViewState.basePoint.y - arr1[i] * mViewState.scale);
-            if (min > dist) {
-                min = dist;
-                result = i;
-            }
-        }
-        return result;
-    }
-
-    private int findTapedVerLine(float x) {
-        int result = 0;
-        float min = Float.MAX_VALUE;
-        for (int i = 0; i != GRID_SIZE; ++i) {
-            float dist = Math.abs(x - mViewState.basePoint.x - arr1[i] * mViewState.scale);
+            float dist = Math.abs(line - arr1[i]);
             if (min > dist) {
                 min = dist;
                 result = i;
@@ -329,7 +271,10 @@ public class GameView extends View {
             HighScore highScore = mGameState.getCurrentScore();
             if (highScore != null) {
                 if (onGameEndListener != null) {
-                    onGameEndListener.onGameEnd(highScore);
+                    if (!isEndGameSend) {
+                        isEndGameSend = true;
+                        onGameEndListener.onGameEnd(highScore);
+                    }
                 } else {
                     Log.e(TAG, "listener is null");
                 }
@@ -341,152 +286,54 @@ public class GameView extends View {
         return mGameState.getCurrentScore();
     }
 
-    private void onScale(float scaleFactor, float px, float py) {
-
-        float newScale = mViewState.scale * scaleFactor;
-
-        //in case new scale < minimal possible scale < current scale, increase new scale
-        //check it in case if the image is less than screen
-        //it is necessary to align image to the screen borders in any case and minimize as much as possible
-        if (paperSize * newScale < screenHeight && paperSize * newScale < screenWidth) {
-            float minPosScale = Math.min(screenHeight / paperSize, screenWidth / paperSize);
-            if (minPosScale > newScale) {
-                newScale = minPosScale;
-                scaleFactor = newScale / mViewState.scale;
-            }
-            if (minPosScale > mViewState.maxScale) {
-                mViewState.maxScale = minPosScale;
-            }
-        }
-
-        //check if it is allowed to scale
-        if ((newScale < mViewState.minScale && scaleFactor < 1.0f) || (newScale > mViewState.maxScale && scaleFactor > 1.0f))
-            return;
-
-        if (paperSize * newScale >= screenHeight || paperSize * newScale >= screenWidth || scaleFactor > 1.0f) {
-
-            //scale game_board ground
-            mViewState.matrix.postScale(scaleFactor, scaleFactor, px, py);
-            updateScale(newScale);
-            mViewState.basePoint.x += (1 - scaleFactor) * (px - mViewState.basePoint.x);
-            mViewState.basePoint.y += (1 - scaleFactor) * (py - mViewState.basePoint.y);
-
-            //move it
-            //center x if the bitmap width is less than the screen width
-            correctMatrixAndBasePoint();
-
-            invalidate();
-        }
-    }
-
-    private void updateScale(float newScale) {
-        mViewState.scale = newScale;
-
-        scaledBotDot = Bitmap.createScaledBitmap(botDot, (int) (dotSize * mViewState.scale), (int) (dotSize * mViewState.scale), true);
-        scaledUserDot = Bitmap.createScaledBitmap(userDot, (int) (dotSize * mViewState.scale), (int) (dotSize * mViewState.scale), true);
-        updateWinningLine();
-        scaledArrow = Bitmap.createScaledBitmap(arrows, (int) (arrowsSize * mViewState.scale), (int) (arrowsSize * mViewState.scale), true);
-    }
-
     /**
      * do it only when scaling or drawing
      */
     private void updateWinningLine() {
+        Log.d(TAG, "updateWinningLine");
         ArrayList<Dot> winningLine = mGameState.isOver();
         if (winningLine != null) {
             Dot firstDot = winningLine.get(0);
             Dot lastDot = winningLine.get(winningLine.size() - 1);
 
-            float x1 = mViewState.basePoint.x + arr1[firstDot.getX()] * mViewState.scale;
-            float y1 = mViewState.basePoint.y + arr1[firstDot.getY()] * mViewState.scale;
-            float x2 = mViewState.basePoint.x + arr1[lastDot.getX()] * mViewState.scale;
-            float y2 = mViewState.basePoint.y + arr1[lastDot.getY()] * mViewState.scale;
+            float x1 = firstDot.getX();
+            float y1 = firstDot.getY();
+            float x2 = lastDot.getX();
+            float y2 = lastDot.getY();
 
             if (y1 == y2) {//horizontal line
                 if (firstDot.getType() == Dot.USER) {
-                    mWinningLine = Bitmap.createScaledBitmap(userHorLine,
-                            (int) (lineLength * mViewState.scale),
-                            (int) (lineThickness * mViewState.scale),
-                            true);
+                    mWinningLine = userHorLine;
                 } else {
-                    mWinningLine = Bitmap.createScaledBitmap(botHorLine,
-                            (int) (lineLength * mViewState.scale),
-                            (int) (lineThickness * mViewState.scale),
-                            true);
+                    mWinningLine = botHorLine;
                 }
+                mWinningLineDX = 0;
+                mWinningLineDY = lineThickness / 2.0f;
             } else if (x1 == x2) {//vertical line
                 if (firstDot.getType() == Dot.USER) {
-                    mWinningLine = Bitmap.createScaledBitmap(userVerLine,
-                            (int) (lineThickness * mViewState.scale),
-                            (int) (lineLength * mViewState.scale),
-                            true);
+                    mWinningLine = userVerLine;
                 } else {
-                    mWinningLine = Bitmap.createScaledBitmap(botVerLine,
-                            (int) (lineThickness * mViewState.scale),
-                            (int) (lineLength * mViewState.scale),
-                            true);
+                    mWinningLine = botVerLine;
                 }
+                mWinningLineDX = lineThickness / 2.0f;
+                mWinningLineDY = 0;
             } else if (x1 > x2) {//diagonal left to right
                 if (firstDot.getType() == Dot.USER) {
-                    mWinningLine = Bitmap.createScaledBitmap(userDiagonal1Line,
-                            (int) (lineLength * mViewState.scale),
-                            (int) (lineLength * mViewState.scale),
-                            true);
+                    mWinningLine = userDiagonal1Line;
                 } else {
-                    mWinningLine = Bitmap.createScaledBitmap(botDiagonal1Line,
-                            (int) (lineLength * mViewState.scale),
-                            (int) (lineLength * mViewState.scale),
-                            true);
+                    mWinningLine = botDiagonal1Line;
                 }
+                mWinningLineDX = lineLength;
+                mWinningLineDY = 0;
             } else if (x2 > x1) {//diagonal right to left
                 if (firstDot.getType() == Dot.USER) {
-                    mWinningLine = Bitmap.createScaledBitmap(userDiagonal2Line,
-                            (int) (lineLength * mViewState.scale),
-                            (int) (lineLength * mViewState.scale),
-                            true);
+                    mWinningLine = userDiagonal2Line;
                 } else {
-                    mWinningLine = Bitmap.createScaledBitmap(botDiagonal2Line,
-                            (int) (lineLength * mViewState.scale),
-                            (int) (lineLength * mViewState.scale),
-                            true);
+                    mWinningLine = botDiagonal2Line;
                 }
+                mWinningLineDX = 0;
+                mWinningLineDY = 0;
             }
-        }
-    }
-
-    private void correctMatrixAndBasePoint() {
-        if (paperSize * mViewState.scale <= screenWidth) {
-            float newBaseX = (screenWidth - paperSize * mViewState.scale) / 2.0f;
-            mViewState.matrix.postTranslate(newBaseX - mViewState.basePoint.x, 0);
-            mViewState.basePoint.x = newBaseX;
-        }
-        //move left if bitmap is too right
-        else if (mViewState.basePoint.x > 0.0f) {
-            mViewState.matrix.postTranslate(-mViewState.basePoint.x, 0);
-            mViewState.basePoint.x = 0.0f;
-        }
-        //move right if bitmap is too left
-        else if (screenWidth > mViewState.basePoint.x + paperSize * mViewState.scale) {
-            float dx = screenWidth - (mViewState.basePoint.x + paperSize * mViewState.scale);
-            mViewState.matrix.postTranslate(dx, 0);
-            mViewState.basePoint.x += dx;
-        }
-        //center y if the bitmap height is less than the screen height
-        if (paperSize * mViewState.scale <= screenHeight) {
-            float newBaseY = (screenHeight - paperSize * mViewState.scale) / 2.0f;
-            mViewState.matrix.postTranslate(0, newBaseY - mViewState.basePoint.y);
-            mViewState.basePoint.y = newBaseY;
-        }
-        //move up if bitmap is too low
-        else if (mViewState.basePoint.y > 0.0f) {
-            mViewState.matrix.postTranslate(0, -mViewState.basePoint.y);
-            mViewState.basePoint.y = 0.0f;
-        }
-        //move down if bitmap is too high
-        else if (screenHeight > mViewState.basePoint.y + paperSize * mViewState.scale) {
-            float dy = screenHeight - (mViewState.basePoint.y + paperSize * mViewState.scale);
-            mViewState.matrix.postTranslate(0, dy);
-            mViewState.basePoint.y += dy;
         }
     }
 
@@ -506,8 +353,9 @@ public class GameView extends View {
     }
 
     public void setViewState(@NonNull GameViewState viewState) {
+        Log.d(TAG, "setViewState");
+
         this.mViewState = viewState;
-        //updateScale(this.mViewState.scale);
         onSizeChanged((int) screenWidth, (int) screenHeight, (int) screenWidth, (int) screenHeight);
         invalidate();
     }
@@ -529,28 +377,17 @@ public class GameView extends View {
 
         @Override
         public boolean onScroll(MotionEvent e1, MotionEvent e2, float dx, float dy) {
-
-            float newBaseX = mViewState.basePoint.x - dx;
-            float newBaseY = mViewState.basePoint.y - dy;
-            //check if the new position of the bitmap is in the screen
-            if (newBaseX <= 0.0f && newBaseX + paperSize * mViewState.scale >= screenWidth) {
-                mViewState.basePoint.x = newBaseX;
-                mViewState.matrix.postTranslate(-dx, 0);
-            }
-            if (newBaseY <= 0.0f && newBaseY + paperSize * mViewState.scale >= screenHeight) {
-                mViewState.basePoint.y = newBaseY;
-                mViewState.matrix.postTranslate(0, -dy);
-            }
+            mViewState.translate(-dx, -dy);
             invalidate();
-
             return true;
         }
 
         @Override
         public boolean onSingleTapConfirmed(MotionEvent e) {
             if (mGameState.isOver() == null) {
-                int xl = findTapedVerLine(e.getX());
-                int yl = findTapedHorLine(e.getY());
+                PointF point = mViewState.invertMapPoint(e.getX(), e.getY());
+                int xl = findClosestLine(point.x);
+                int yl = findClosestLine(point.y);
                 boolean res = mGameState.checkCorrectness(xl, yl);
                 if (!res) {
                     return true;
@@ -570,7 +407,9 @@ public class GameView extends View {
         @Override
         public boolean onScale(ScaleGestureDetector detector) {
             if (detector.isInProgress()) {
-                GameView.this.onScale(detector.getScaleFactor(), detector.getFocusX(), detector.getFocusY());
+                mViewState.scale(detector.getScaleFactor(),
+                        detector.getFocusX(),
+                        detector.getFocusY());
             }
             return true;
         }

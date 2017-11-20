@@ -246,4 +246,16 @@ public class Game {
         }
         return result.toString();
     }
+
+    @NonNull
+    public Dot[][] getCopyOfNet() {
+        Dot[][] copyNet = new Dot[this.net.length][];
+        for (int i = 0; i != this.net.length; ++i) {
+            copyNet[i] = new Dot[this.net[i].length];
+            for (int j = 0; j != this.net[i].length; ++j) {
+                copyNet[i][j] = this.net[i][j].copy();
+            }
+        }
+        return copyNet;
+    }
 }

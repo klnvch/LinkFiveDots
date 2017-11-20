@@ -26,34 +26,22 @@ package by.klnvch.link5dots.models;
 
 import android.graphics.Matrix;
 import android.graphics.PointF;
+import android.graphics.RectF;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.google.gson.Gson;
 
 public class GameViewState {
 
+    private static final String TAG = "GameViewState";
+
+    private static final float MIN_SCALE = 0.2f;
+    private static final float MAX_SCALE = 3.0f;
+    private final transient Matrix matrix = new Matrix();
+    private final float[] matrixArray = new float[9];
     public boolean isFocusVisible = true;
-    /**
-     * Displacement of the left top corner of the bitmap from the left top corner of the screen
-     */
-    public PointF basePoint = new PointF();
-    /**
-     * Scale to apply to the base point and arr1 after scaling
-     */
-    public float minScale = 0.0f;
-    public float maxScale = 3.0f;
-    public float scale = 1.0f;
-    /**
-     * Used for displaying background
-     * <p>
-     * onSizeChanged				translate
-     * onScale						scale
-     * correctMatrixAndBasePoint	translate
-     * onScroll					translate
-     */
-    public transient Matrix matrix = new Matrix();
-    private float[] matrixArray = new float[9];
 
     @NonNull
     public static GameViewState fromJson(@Nullable String json) {
@@ -64,6 +52,91 @@ public class GameViewState {
         } else {
             return new GameViewState();
         }
+    }
+
+    private float getScale() {
+        matrix.getValues(matrixArray);
+        return matrixArray[Matrix.MSCALE_X];
+    }
+
+    public void translate(float dx, float dy) {
+        matrix.postTranslate(dx, dy);
+    }
+
+    public void scale(float s, float px, float py) {
+        matrix.postScale(s, s, px, py);
+    }
+
+    public void copyMatrix(@NonNull Matrix srcMatrix) {
+        srcMatrix.set(matrix);
+    }
+
+    @NonNull
+    public Matrix getMatrix() {
+        return matrix;
+    }
+
+    @NonNull
+    public PointF invertMapPoint(float x, float y) {
+        float[] result = new float[]{x, y};
+        Matrix inverseCopy = new Matrix();
+        if (matrix.invert(inverseCopy)) {
+            inverseCopy.mapPoints(result);
+        } else {
+            Log.d(TAG, "matrix inversion error");
+        }
+        return new PointF(result[0], result[1]);
+    }
+
+    public void correctParameters(float screenWidth, float screenHeight, float paperSize) {
+        //
+        // validate scale: minScale <= scale <= maxScale
+        //
+        if (getScale() < MIN_SCALE) {
+            float s = MIN_SCALE / getScale();
+            scale(s, screenWidth / 2.0f, screenHeight / 2.0f);
+            Log.d(TAG, "scale up to min");
+        }
+        if (getScale() > MAX_SCALE) {
+            float s = MAX_SCALE / getScale();
+            scale(s, screenWidth / 2.0f, screenHeight / 2.0f);
+            Log.d(TAG, "scale down to max");
+        }
+
+        RectF paperRect = new RectF(0, 0, paperSize, paperSize);
+        matrix.mapRect(paperRect);
+        //
+        // validate translate: if paper is less than screen, than center it
+        //
+        float dx = 0;
+        float dy = 0;
+        if (paperRect.width() < screenWidth) {
+            dx = screenWidth / 2.0f - paperRect.centerX();
+            Log.d(TAG, "translate to center width");
+        } else {
+            if (paperRect.left > 0) {
+                dx = -paperRect.left;
+                Log.d(TAG, "translate to the left corner");
+            }
+            if (paperRect.right < screenWidth) {
+                dx = screenWidth - paperRect.right;
+                Log.d(TAG, "translate to the right corner");
+            }
+        }
+        if (paperRect.height() < screenHeight) {
+            dy = screenHeight / 2.0f - paperRect.centerY();
+            Log.d(TAG, "translate to the center height");
+        } else {
+            if (paperRect.top > 0) {
+                dy = -paperRect.top;
+                Log.d(TAG, "translate to the top corner");
+            }
+            if (paperRect.bottom < screenHeight) {
+                dy = screenHeight - paperRect.bottom;
+                Log.d(TAG, "translate to the bottom corner");
+            }
+        }
+        translate(dx, dy);
     }
 
     @NonNull

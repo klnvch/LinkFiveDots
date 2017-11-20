@@ -29,6 +29,9 @@ import android.support.annotation.NonNull;
 import by.klnvch.link5dots.multiplayer.MultiplayerActivity;
 
 public class NsdActivity extends MultiplayerActivity {
+
+    public static final String TAG = "NsdActivity";
+
     @NonNull
     @Override
     protected Class<?> getServiceClass() {

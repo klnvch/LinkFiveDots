@@ -34,6 +34,7 @@ import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.widget.TextView;
@@ -50,6 +51,8 @@ import by.klnvch.link5dots.models.GameViewState;
 import by.klnvch.link5dots.models.HighScore;
 
 public abstract class MultiplayerActivity extends BaseActivity {
+
+    public static final String TAG = "MultiplayerActivity";
 
     public static final int MESSAGE_STATE_CHANGE = 1;
     public static final int MESSAGE_READ = 2;
@@ -87,12 +90,16 @@ public abstract class MultiplayerActivity extends BaseActivity {
 
         setTitle(R.string.bt_message_your_turn);
         setEnemyName("-");
+
+        Log.d(TAG, "onCreate");
     }
 
     @Override
     public void onStart() {
         super.onStart();
         bindService(new Intent(this, getServiceClass()), mConnection, 0);
+
+        Log.d(TAG, "onStart");
     }
 
     @Override
@@ -107,6 +114,18 @@ public abstract class MultiplayerActivity extends BaseActivity {
 
         String jsonViewState = savedInstanceState.getString(KEY_VIEW_STATE);
         mView.setViewState(GameViewState.fromJson(jsonViewState));
+
+        Log.d(TAG, "onRestoreInstanceState");
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putString(KEY_ENEMY_NAME, mEnemyName);
+        outState.putString(KEY_GAME_STATE, mView.getGameState().toJson());
+        outState.putString(KEY_VIEW_STATE, mView.getViewState().toJson());
+        super.onSaveInstanceState(outState);
+
+        Log.d(TAG, "onSaveInstanceState");
     }
 
     @Override
@@ -116,14 +135,8 @@ public abstract class MultiplayerActivity extends BaseActivity {
             unbindService(mConnection);
             mService = null;
         }
-    }
 
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        outState.putString(KEY_ENEMY_NAME, mEnemyName);
-        outState.putString(KEY_GAME_STATE, mView.getGameState().toJson());
-        outState.putString(KEY_VIEW_STATE, mView.getViewState().toJson());
-        super.onSaveInstanceState(outState);
+        Log.d(TAG, "onStop");
     }
 
     @Override
