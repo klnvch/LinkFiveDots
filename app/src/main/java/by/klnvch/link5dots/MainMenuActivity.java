@@ -24,10 +24,7 @@
 
 package by.klnvch.link5dots;
 
-import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
@@ -35,7 +32,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.firebase.crash.FirebaseCrash;
 
@@ -102,16 +98,7 @@ public class MainMenuActivity extends AppCompatActivity
                 startActivity(new Intent(this, MultiPlayerMenuActivity.class));
                 break;
             case R.id.main_menu_scores:
-                ConnectivityManager connectivityManager
-                        = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-                if (connectivityManager != null) {
-                    NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-                    if (networkInfo != null && networkInfo.isConnected()) {
-                        startActivity(new Intent(this, ScoresActivity.class));
-                    } else {
-                        Toast.makeText(this, R.string.scores_no_internet, Toast.LENGTH_SHORT).show();
-                    }
-                }
+                startActivity(new Intent(this, ScoresActivity.class));
                 break;
             case R.id.main_menu_how_to:
                 startActivity(new Intent(this, HowToActivity.class));

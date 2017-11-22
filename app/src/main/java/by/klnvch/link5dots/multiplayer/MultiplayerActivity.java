@@ -184,7 +184,7 @@ public abstract class MultiplayerActivity extends BaseActivity {
     @Override
     protected void onGameFinished(@NonNull HighScore highScore) {
         int title = highScore.getStatus() == HighScore.WON ? R.string.end_win : R.string.end_lose;
-        String msg = getString(R.string.end_move, highScore.getScore(), highScore.getTime());
+        String msg = getString(R.string.end_move, highScore.getMoves(), highScore.getTime());
 
         EndGameDialog.newInstance(msg, title, false)
                 .setOnNewGameListener(this::newGame)

@@ -24,14 +24,9 @@
 
 package by.klnvch.link5dots.models;
 
-import com.google.firebase.database.Exclude;
-import com.google.firebase.database.IgnoreExtraProperties;
-
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
 
-@IgnoreExtraProperties
+@SuppressWarnings({"unused"})
 public class HighScore implements Serializable {
 
     public static final String TAG = "HighScore";
@@ -39,11 +34,7 @@ public class HighScore implements Serializable {
     public static final int WON = 1;
     public static final int LOST = 2;
 
-    private static final String USER_ID = "userId";
-    private static final String ANDROID_ID = "androidId";
-    private static final String USER_NAME = "username";
-    private static final String SCORE = "score";
-    private static final String TIMESTAMP = "timestamp";
+    public static final String SCORE = "score";
     private static final long L_1 = 1;
     private static final long L_2000 = 2000;
     private static final long L_4294 = 4294;
@@ -54,21 +45,48 @@ public class HighScore implements Serializable {
     private String androidId;
     private String username;
     private long score;
+    private int moves;
     private long time;
     private int status;
+    private long timestamp;
 
     public HighScore() {
 
     }
 
-    HighScore(long score, long time, long status) {
-        this.score = score;
+    HighScore(int moves, long time, long status) {
+        this.moves = moves;
         this.time = time;
         this.status = (int) status;
+        this.timestamp = System.currentTimeMillis();
+    }
+
+    public long getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    public int getMoves() {
+        return moves;
+    }
+
+    public void setMoves(int moves) {
+        this.moves = moves;
+    }
+
+    public String getUserId() {
+        return userId;
     }
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public String getAndroidId() {
+        return androidId;
     }
 
     public void setAndroidId(String androidId) {
@@ -107,25 +125,28 @@ public class HighScore implements Serializable {
     // 1 <= s1   <= 2000
     // 1 <= s2   <= 2000
     //
-    private long code() {
+    public void code() {
+        final long tempTime;
+        if (time < L_1) tempTime = L_1;
+        else if (time > L_967295) tempTime = L_967295;
+        else tempTime = time;
 
-        if (time < L_1) time = L_1;
-        if (time > L_967295) time = L_967295;
-        if (score < L_1) score = L_1;
-        if (score > L_2000) score = L_2000;
+        final long tempMoves;
+        if (moves < L_1) tempMoves = L_1;
+        else if (moves > L_2000) tempMoves = L_2000;
+        else tempMoves = moves;
 
         if (status == WON) {
-            return score * L_1000000 + time;
+            score = tempMoves * L_1000000 + tempTime;
         } else {
-            return (L_4294 - score) * L_1000000 + time;
+            score = (L_4294 - tempMoves) * L_1000000 + tempTime;
         }
     }
-
+/*
     //Initialize: score
     //            time
     //            status
-    public void decode(long score) {
-
+    public void decode() {
         time = score % L_1000000;
 
         long temp = (score - time) / L_1000000;
@@ -137,15 +158,5 @@ public class HighScore implements Serializable {
             this.score = temp;
         }
     }
-
-    @Exclude
-    public Map<String, Object> toMap() {
-        HashMap<String, Object> result = new HashMap<>();
-        result.put(USER_ID, userId);
-        result.put(ANDROID_ID, androidId);
-        result.put(USER_NAME, username);
-        result.put(SCORE, code());
-        result.put(TIMESTAMP, System.currentTimeMillis());
-        return result;
-    }
+*/
 }
