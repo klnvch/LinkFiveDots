@@ -30,8 +30,6 @@ import android.provider.Settings
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
-import android.view.Menu
-import android.view.MenuItem
 import android.view.View
 import by.klnvch.link5dots.BuildConfig
 import by.klnvch.link5dots.R
@@ -49,37 +47,8 @@ import kotlinx.android.synthetic.main.activity_scores.*
 class ScoresActivity : AppCompatActivity() {
 
     private var mAuth: FirebaseAuth = FirebaseAuth.getInstance()
-    private var isConnected = false
-
-    private var mConnectionReference = FirebaseDatabase.getInstance()
-            .getReference(".info/connected")
 
     private var mFetchReference = FirebaseDatabase.getInstance().reference
-
-    private val mConnectionListener = object : ValueEventListener {
-        override fun onDataChange(snapshot: DataSnapshot) {
-            isConnected = snapshot.getValue(Boolean::class.java)!!
-            Log.d(TAG, "connected: " + isConnected)
-            if (isConnected) {
-                swipeRefreshLayout.isRefreshing = false
-                textNetworkError.visibility = View.GONE
-                recyclerView.visibility = View.VISIBLE
-
-                if (recyclerView.adapter == null) {
-                    sendData()
-                    updateData()
-                }
-            } else {
-                swipeRefreshLayout.isRefreshing = false
-                textNetworkError.visibility = View.VISIBLE
-                recyclerView.visibility = View.GONE
-            }
-        }
-
-        override fun onCancelled(error: DatabaseError) {
-            Log.d(TAG, "Listener was cancelled")
-        }
-    }
 
     private val mFetchListener = object : ValueEventListener {
         override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -105,7 +74,7 @@ class ScoresActivity : AppCompatActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this)
 
         swipeRefreshLayout.isRefreshing = true
-        swipeRefreshLayout.setOnRefreshListener { updateData() }
+        swipeRefreshLayout.setOnRefreshListener { swipeRefreshLayout.isRefreshing = false }
     }
 
     public override fun onStart() {
@@ -115,25 +84,8 @@ class ScoresActivity : AppCompatActivity() {
 
     public override fun onStop() {
         super.onStop()
-        mConnectionReference.removeEventListener(mConnectionListener)
         mFetchReference.removeEventListener(mFetchListener)
         mAuth.signOut()
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.scores_menu, menu)
-        return super.onCreateOptionsMenu(menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.scores_update -> {
-                if (mAuth.currentUser == null) connect()
-                else updateData()
-                return true
-            }
-        }
-        return false
     }
 
     private fun connect() {
@@ -143,7 +95,8 @@ class ScoresActivity : AppCompatActivity() {
     private fun onSignedIn(task: Task<AuthResult>) {
         Log.d(TAG, "onSignedIn:onComplete:" + task.isSuccessful)
         if (task.isSuccessful) {
-            mConnectionReference.addValueEventListener(mConnectionListener)
+            sendData()
+            updateData()
         } else {
             swipeRefreshLayout.isRefreshing = false
             textNetworkError.visibility = View.VISIBLE
@@ -152,7 +105,6 @@ class ScoresActivity : AppCompatActivity() {
     }
 
     private fun updateData() {
-        if (!isConnected) return
         Log.d(TAG, "updateData")
         //
         textNetworkError.visibility = View.GONE
