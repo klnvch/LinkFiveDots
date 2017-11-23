@@ -36,6 +36,7 @@ import android.widget.TextView;
 import com.google.firebase.crash.FirebaseCrash;
 
 import by.klnvch.link5dots.scores.ScoresActivity;
+import by.klnvch.link5dots.settings.InfoActivity;
 import by.klnvch.link5dots.settings.SettingsActivity;
 import by.klnvch.link5dots.settings.SettingsUtils;
 import by.klnvch.link5dots.settings.UsernameDialog;
@@ -103,9 +104,12 @@ public class MainMenuActivity extends AppCompatActivity
             case R.id.main_menu_how_to:
                 startActivity(new Intent(this, HowToActivity.class));
                 break;
+            case R.id.main_menu_about:
+                startActivity(new Intent(this, InfoActivity.class));
+                break;
             case R.id.main_menu_settings:
-                startActivityForResult(
-                        new Intent(this, SettingsActivity.class), RC_SETTINGS);
+                startActivityForResult(new Intent(this, SettingsActivity.class),
+                        RC_SETTINGS);
                 break;
         }
     }

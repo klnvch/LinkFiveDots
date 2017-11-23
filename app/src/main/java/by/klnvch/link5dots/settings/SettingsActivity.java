@@ -24,7 +24,6 @@
 
 package by.klnvch.link5dots.settings;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -67,9 +66,6 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
                 new LanguageDialog()
                         .setOnLanguageChangedListener(this::changeLanguage)
                         .show(getSupportFragmentManager(), null);
-                break;
-            case R.id.about:
-                startActivity(new Intent(this, InfoActivity.class));
                 break;
         }
     }

@@ -29,6 +29,13 @@
     android:gravity="center"
     android:orientation="vertical">
 
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:contentDescription="@string/apn_name"
+        android:src="@drawable/ic_launcher" />
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -44,16 +51,6 @@
         android:text="@string/version_text"
         android:textColor="@color/black"
         android:textSize="@dimen/bt_text_size" />
-
-    <com.google.android.gms.plus.PlusOneButton xmlns:plus="http://schemas.android.com/apk/lib/com.google.android.gms.plus"
-        android:id="@+id/plus_one_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginBottom="@dimen/plus_one_button_margin"
-        android:layout_marginTop="@dimen/plus_one_button_margin"
-        plus:annotation="inline"
-        plus:size="tall" />
 
     <Button
         android:id="@+id/github"

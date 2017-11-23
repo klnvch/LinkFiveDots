@@ -105,6 +105,16 @@
                     android:src="@drawable/ic_settings_48dp" />
 
                 <ImageButton
+                    android:id="@+id/main_menu_about"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/btn_selector"
+                    android:contentDescription="@string/application_info_label"
+                    android:onClick="onClick"
+                    android:src="@drawable/ic_info_48dp" />
+
+                <ImageButton
                     android:id="@+id/main_menu_how_to"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
