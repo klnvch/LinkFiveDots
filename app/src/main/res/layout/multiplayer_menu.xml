@@ -35,53 +35,33 @@
         android:id="@+id/multi_player_two_players"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/btn_selector"
         android:drawableLeft="@drawable/ic_people_48dp"
         android:drawableStart="@drawable/ic_people_48dp"
-        android:onClick="onClick"
-        android:text="@string/two_players"
-        android:textColor="@color/black"
-        android:textSize="@dimen/bt_text_size"
-        android:textStyle="bold" />
+        android:text="@string/two_players" />
 
     <Button
         android:id="@+id/multi_player_bluetooth"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/btn_selector"
         android:drawableLeft="@drawable/ic_bluetooth_48dp"
         android:drawableStart="@drawable/ic_bluetooth_48dp"
-        android:onClick="onClick"
-        android:text="@string/bluetooth_settings"
-        android:textColor="@color/black"
-        android:textSize="@dimen/btn_text_size"
-        android:textStyle="bold" />
+        android:text="@string/bluetooth_settings" />
 
     <Button
         android:id="@+id/multi_player_lan"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/btn_selector"
         android:drawableLeft="@drawable/ic_router_48dp"
         android:drawableStart="@drawable/ic_router_48dp"
-        android:onClick="onClick"
-        android:text="@string/menu_local_network"
-        android:textColor="@color/black"
-        android:textSize="@dimen/btn_text_size"
-        android:textStyle="bold" />
+        android:text="@string/menu_local_network" />
 
     <Button
         android:id="@+id/multi_player_online"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/btn_selector"
         android:drawableLeft="@drawable/ic_public_48dp"
         android:drawableStart="@drawable/ic_public_48dp"
-        android:onClick="onClick"
         android:text="@string/menu_online_game"
-        android:textColor="@color/black"
-        android:textSize="@dimen/btn_text_size"
-        android:textStyle="bold"
-        android:visibility="visible" />
+        android:visibility="invisible" />
 
 </LinearLayout>

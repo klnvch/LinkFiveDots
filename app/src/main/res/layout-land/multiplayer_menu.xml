@@ -23,6 +23,7 @@
   -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center"
@@ -41,28 +42,20 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@drawable/btn_selector"
             android:drawableLeft="@drawable/ic_people_48dp"
             android:drawableStart="@drawable/ic_people_48dp"
-            android:onClick="onClick"
             android:text="@string/two_players"
-            android:textColor="@color/black"
-            android:textSize="@dimen/bt_text_size"
-            android:textStyle="bold" />
+            tools:ignore="ButtonStyle" />
 
         <Button
             android:id="@+id/multi_player_bluetooth"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@drawable/btn_selector"
             android:drawableLeft="@drawable/ic_bluetooth_48dp"
             android:drawableStart="@drawable/ic_bluetooth_48dp"
-            android:onClick="onClick"
             android:text="@string/bluetooth_settings"
-            android:textColor="@color/black"
-            android:textSize="@dimen/btn_text_size"
-            android:textStyle="bold" />
+            tools:ignore="ButtonStyle" />
 
     </LinearLayout>
 
@@ -76,29 +69,21 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@drawable/btn_selector"
             android:drawableLeft="@drawable/ic_router_48dp"
             android:drawableStart="@drawable/ic_router_48dp"
-            android:onClick="onClick"
             android:text="@string/menu_local_network"
-            android:textColor="@color/black"
-            android:textSize="@dimen/btn_text_size"
-            android:textStyle="bold" />
+            tools:ignore="ButtonStyle" />
 
         <Button
             android:id="@+id/multi_player_online"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@drawable/btn_selector"
             android:drawableLeft="@drawable/ic_public_48dp"
             android:drawableStart="@drawable/ic_public_48dp"
-            android:onClick="onClick"
             android:text="@string/menu_online_game"
-            android:textColor="@color/black"
-            android:textSize="@dimen/btn_text_size"
-            android:textStyle="bold"
-            android:visibility="visible" />
+            android:visibility="invisible"
+            tools:ignore="ButtonStyle" />
 
     </LinearLayout>
 

@@ -23,19 +23,20 @@
   -->
 
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/paper_tiled"
     android:scrollbars="vertical">
 
-    <TableLayout
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:orientation="vertical"
         android:paddingBottom="@dimen/btn_table_padding"
         android:paddingLeft="@dimen/btn_table_padding"
-        android:paddingRight="@dimen/btn_table_padding"
-        android:stretchColumns="*">
+        android:paddingRight="@dimen/btn_table_padding">
 
         <TextView
             android:id="@+id/hello_user"
@@ -46,86 +47,71 @@
             android:paddingBottom="@dimen/btn_table_padding"
             android:text="" />
 
-        <TableRow>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
             <Button
                 android:id="@+id/main_menu_single_player"
-                android:layout_width="fill_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:background="@drawable/btn_selector"
+                android:layout_weight="1"
                 android:drawableLeft="@drawable/ic_android_48dp"
                 android:drawableStart="@drawable/ic_android_48dp"
-                android:onClick="onClick"
                 android:text="@string/menu_single_player"
-                android:textColor="@color/black"
-                android:textSize="@dimen/btn_text_size"
-                android:textStyle="bold" />
+                tools:ignore="ButtonStyle" />
 
             <Button
                 android:id="@+id/main_menu_multi_player"
-                android:layout_width="fill_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:background="@drawable/btn_selector"
+                android:layout_weight="1"
                 android:drawableLeft="@drawable/ic_person_48dp"
                 android:drawableStart="@drawable/ic_person_48dp"
-                android:onClick="onClick"
                 android:text="@string/menu_multi_player"
-                android:textColor="@color/black"
-                android:textSize="@dimen/btn_text_size"
-                android:textStyle="bold" />
-        </TableRow>
+                tools:ignore="ButtonStyle" />
+        </LinearLayout>
 
-        <TableRow>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
             <Button
                 android:id="@+id/main_menu_scores"
-                android:layout_width="fill_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:background="@drawable/btn_selector"
+                android:layout_weight="3"
                 android:drawableLeft="@drawable/ic_star_48dp"
                 android:drawableStart="@drawable/ic_star_48dp"
-                android:onClick="onClick"
-                android:text="@string/scores_title"
-                android:textColor="@color/black"
-                android:textSize="@dimen/btn_text_size"
-                android:textStyle="bold" />
+                android:text="@string/scores_title" />
 
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content">
+            <ImageButton
+                android:id="@+id/main_menu_settings"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:contentDescription="@string/settings_label"
+                android:src="@drawable/ic_settings_48dp" />
 
-                <ImageButton
-                    android:id="@+id/main_menu_settings"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@drawable/btn_selector"
-                    android:contentDescription="@string/settings_label"
-                    android:onClick="onClick"
-                    android:src="@drawable/ic_settings_48dp" />
+            <ImageButton
+                android:id="@+id/main_menu_about"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:contentDescription="@string/application_info_label"
+                android:src="@drawable/ic_info_48dp" />
 
-                <ImageButton
-                    android:id="@+id/main_menu_about"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@drawable/btn_selector"
-                    android:contentDescription="@string/application_info_label"
-                    android:onClick="onClick"
-                    android:src="@drawable/ic_info_48dp" />
+            <ImageButton
+                android:id="@+id/main_menu_how_to"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:contentDescription="@string/how_to_title"
+                android:src="@drawable/ic_help_48dp" />
 
-                <ImageButton
-                    android:id="@+id/main_menu_how_to"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@drawable/btn_selector"
-                    android:contentDescription="@string/how_to_title"
-                    android:onClick="onClick"
-                    android:src="@drawable/ic_help_48dp" />
-
-            </LinearLayout>
-        </TableRow>
-    </TableLayout>
+        </LinearLayout>
+    </LinearLayout>
 
 </ScrollView>
