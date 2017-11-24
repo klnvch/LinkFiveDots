@@ -40,13 +40,9 @@
             android:id="@+id/register"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/btn_selector"
             android:checked="false"
-            android:textColor="@color/black"
             android:textOff="@string/create"
-            android:textOn="@string/cancel"
-            android:textSize="@dimen/btn_text_size"
-            android:textStyle="bold" />
+            android:textOn="@string/cancel" />
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -115,13 +111,9 @@
             android:id="@+id/scan"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/btn_selector"
             android:checked="false"
-            android:textColor="@color/black"
             android:textOff="@string/search_menu"
-            android:textOn="@string/cancel"
-            android:textSize="@dimen/btn_text_size"
-            android:textStyle="bold" />
+            android:textOn="@string/cancel" />
 
         <RelativeLayout
             android:id="@+id/layout_available_devices"

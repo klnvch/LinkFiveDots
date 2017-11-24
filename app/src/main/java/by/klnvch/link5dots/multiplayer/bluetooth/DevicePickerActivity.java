@@ -49,7 +49,6 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -61,7 +60,7 @@ import java.util.Set;
 import by.klnvch.link5dots.R;
 import by.klnvch.link5dots.multiplayer.MultiplayerService;
 
-public class DevicePickerActivity extends AppCompatActivity {
+public class DevicePickerActivity extends AppCompatActivity implements View.OnClickListener {
 
     public static final int MESSAGE_DEVICE_NAME = 4;
     public static final String DEVICE_NAME = "device_name";
@@ -169,25 +168,11 @@ public class DevicePickerActivity extends AppCompatActivity {
         setResult(RESULT_CANCELED);
         //
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
-        // Initialize the button to perform device discovery
-        final Button visibilityButton = findViewById(R.id.set_visibility);
-        visibilityButton.setOnClickListener(v -> {
-            // Ensure this device is discoverable by others
-            if (mBluetoothAdapter.getScanMode() != BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE) {
-                Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
-                discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 120);
-                startActivityForResult(discoverableIntent, BT_REQUEST_DISCOVERABLE);
-            }
-        });
-
         //
         doDiscovery();
-
         // Register for broadcasts when a device is discovered
         IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
         this.registerReceiver(mReceiver, filter);
-
         // Register for broadcasts when discovery has finished
         filter = new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
         this.registerReceiver(mReceiver, filter);
@@ -330,7 +315,6 @@ public class DevicePickerActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         switch (item.getItemId()) {
             case R.id.bt_menu_refresh:
                 doDiscovery();
@@ -362,6 +346,20 @@ public class DevicePickerActivity extends AppCompatActivity {
                     countDownTimer = null;
                 }
             }.start();
+        }
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.set_visibility:
+                // Ensure this device is discoverable by others
+                if (mBluetoothAdapter.getScanMode() != BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE) {
+                    Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
+                    discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 120);
+                    startActivityForResult(discoverableIntent, BT_REQUEST_DISCOVERABLE);
+                }
+                break;
         }
     }
 
