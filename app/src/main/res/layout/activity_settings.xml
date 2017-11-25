@@ -23,13 +23,15 @@
   -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/paper_tiled"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context="by.klnvch.link5dots.settings.SettingsActivity">
 
     <RelativeLayout
-        android:id="@+id/username"
+        android:id="@+id/settings_username"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/btn_selector"
@@ -80,7 +82,7 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/language"
+        android:id="@+id/settings_language"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/btn_selector"
@@ -125,6 +127,57 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/language" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/settings_vibration"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/btn_selector"
+        android:clickable="true"
+        android:focusable="true"
+        android:onClick="onClick"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/vibration_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:contentDescription="@string/phone_language"
+            android:paddingBottom="4dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:paddingTop="4dp"
+            android:src="@drawable/ic_vibration_black_24dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@+id/vibration_icon"
+            android:layout_toRightOf="@+id/vibration_icon"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/vibration_title"
+                style="@style/TextAppearance.AppCompat.Title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/vibration" />
+
+            <TextView
+                android:id="@+id/vibration_details"
+                style="@style/TextAppearance.AppCompat.Caption"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/switch_on_text" />
 
         </LinearLayout>
 

@@ -1,4 +1,27 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ MIT License
+  ~
+  ~ Copyright (c) 2017 klnvch
+  ~
+  ~ Permission is hereby granted, free of charge, to any person obtaining a copy
+  ~ of this software and associated documentation files (the "Software"), to deal
+  ~ in the Software without restriction, including without limitation the rights
+  ~ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  ~ copies of the Software, and to permit persons to whom the Software is
+  ~ furnished to do so, subject to the following conditions:
+  ~
+  ~ The above copyright notice and this permission notice shall be included in all
+  ~ copies or substantial portions of the Software.
+  ~
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  ~ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  ~ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  ~ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  ~ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  ~ SOFTWARE.
+  -->
+
 <resources>
     <string name="app_name">Połącz pięć kropek</string>
     <string name="language">Polski</string>
@@ -34,12 +57,16 @@
     <string name="two_players">Dwa gracza</string>
     <string name="menu_local_network">Sieć Lokalna</string>
 
+    <string name="vibration">Wibracje</string>
     <string name="rate_this_app">Oceń tę aplikację</string>
 
     <string name="yes">"Tak"</string>
     <string name="no">"Nie"</string>
     <string name="create">"Utwórz"</string>
     <string name="device_info_default">"Nieznane"</string>
+
+    <string name="switch_on_text">"Wł."</string>
+    <string name="switch_off_text">"Wył."</string>
 
     <string name="bluetooth_not_discoverable">"Zezwalaj na wykrywanie urządzenia"</string>
     <string name="bluetooth_is_discoverable">"Widoczne dla wszystkich urządzeń Bluetooth (%1$s)"</string>

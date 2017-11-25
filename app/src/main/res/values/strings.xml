@@ -69,6 +69,7 @@
     <string name="menu_local_network">Local Area Network</string>
     <string name="menu_online_game">Online</string>
 
+    <string name="vibration">Vibration</string>
     <string name="rate_this_app">Rate this app</string>
     <string name="btn_github" translatable="false">GitHub</string>
 
@@ -81,21 +82,25 @@
     <!-- 33 Device Info screen. Used for a status item's value when the proper value is not known -->
     <string name="device_info_default">Unknown</string>
 
-    <!-- Bluetooth settings screen, Discoverable checkbox summary text -->
+    <!-- Switch On/Off  -->
+    <string name="switch_on_text">On</string>
+    <string name="switch_off_text">Off</string>
+
+    <!-- Bluetoactivity_settingsings screen, Discoverable checkbox summary text -->
     <string name="bluetooth_not_discoverable">Make device discoverable</string>
-    <!-- 233 Bluetooth settings screen, summary after selecting Discoverable check box [CHAR LIMIT=50] -->
+    <!-- 233 Bluetoactivity_settingsings screen, summary after selecting Discoverable check box [CHAR LIMIT=50] -->
     <string name="bluetooth_is_discoverable">Visible to all nearby Bluetooth devices (%1$s)</string>
-    <!-- 239 Bluetooth settings screen, summary text when not discoverable with paired devices [CHAR LIMIT=50] -->
+    <!-- 239 Bluetoactivity_settingsings screen, summary text when not discoverable with paired devices [CHAR LIMIT=50] -->
     <string name="bluetooth_only_visible_to_paired_devices">Only visible to paired devices</string>
     <!-- 275 Bluetooth Visibility disconnect question.  Asks the user if they wish to disconnect a paired bluetooth device.  [CHAR LIMIT=50] -->
     <string name="bluetooth_is_disconnect_question">"Disconnect \u0022%1$s\u0022?"</string>
-    <!-- 284 Bluetooth settings.  Message when connected to a device. [CHAR LIMIT=40] -->
+    <!-- 284 Bluetoactivity_settingsings.  Message when connected to a device. [CHAR LIMIT=40] -->
     <string name="bluetooth_connected">Connected</string>
-    <!-- 294 Bluetooth settings.  Message when a device is disconnected -->
+    <!-- 294 Bluetoactivity_settingsings.  Message when a device is disconnected -->
     <string name="bluetooth_disconnected">Disconnected</string>
-    <!-- 298 Bluetooth settings.  Message when connecting to a device -->
+    <!-- 298 Bluetoactivity_settingsings.  Message when connecting to a device -->
     <string name="bluetooth_connecting">Connecting\u2026</string>
-    <!-- 308 Bluetooth settings screen, text that appears when scanning for devices is finished and no nearby bluetooth device was found [CHAR LIMIT=40]-->
+    <!-- 308 Bluetoactivity_settingsings screen, text that appears when scanning for devices is finished and no nearby bluetooth device was found [CHAR LIMIT=40]-->
     <string name="bluetooth_no_devices_found">No nearby Bluetooth devices were found.</string>
     <!-- 319 Strings for BluetoothDevicePicker [CHAR LIMIT=40]-->
     <string name="device_picker">Choose Bluetooth device</string>
@@ -107,15 +112,15 @@
     <string name="okay">OK</string>
     <!-- 628 Title of the Settings activity shown within the application itself. -->
     <string name="settings_label">Settings</string>
-    <!-- 1118 Used as title on second screen after selecting Bluetooth settings -->
+    <!-- 1118 Used as title on second screen after selecting Bluetoactivity_settingsings -->
     <string name="bluetooth_settings">Bluetooth</string>
     <!-- 1174 Message for the error dialog when BT connecting operation fails generically. -->
     <string name="bluetooth_connecting_error_message">Couldn\'t connect to \u0022%1$s\u0022.</string>
-    <!-- 1179 Bluetooth settings: The title of the action button that initiates a search for nearby devices [CHAR LIMIT=20] -->
+    <!-- 1179 Bluetoactivity_settingsings: The title of the action button that initiates a search for nearby devices [CHAR LIMIT=20] -->
     <string name="bluetooth_search_for_devices">Refresh</string>
-    <!-- 1203 Bluetooth settings: The sub heading for devices which have already been paired with this device. [CHAR LIMIT=40] -->
+    <!-- 1203 Bluetoactivity_settingsings: The sub heading for devices which have already been paired with this device. [CHAR LIMIT=40] -->
     <string name="bluetooth_preference_paired_devices">Paired devices</string>
-    <!-- 1205 Bluetooth settings: The sub heading for available devices during and after scanning. [CHAR LIMIT=40] -->
+    <!-- 1205 Bluetoactivity_settingsings: The sub heading for available devices during and after scanning. [CHAR LIMIT=40] -->
     <string name="bluetooth_preference_found_devices">Available devices</string>
 
     <!-- 2355 Edit access point label summary text when no value has been set -->
@@ -134,7 +139,7 @@
     <!-- 5947 [CHAR LIMIT=35] Feedback on the device -->
     <string name="device_feedback">Send feedback</string>
 
-    <!-- 3200 On Text & language settings screen, setting option name. title of the setting to take the user to a screen to select the locale. -->
+    <!-- 3200 On Text & languactivity_settingsings screen, setting option name. title of the setting to take the user to a screen to select the locale. -->
     <string name="phone_language">Language</string>
 
 
