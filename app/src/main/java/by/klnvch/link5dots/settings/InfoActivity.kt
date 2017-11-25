@@ -58,7 +58,13 @@ class InfoActivity : AppCompatActivity(), View.OnClickListener {
     override fun onClick(v: View) {
         when (v.id) {
             R.id.github -> startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(GITHUB_LINK)))
-            R.id.rate_this_app -> startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(ANDROID_APP_LINK)))
+            R.id.rate_this_app -> {
+                try {
+                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(ANDROID_APP_LINK)))
+                } catch (e: ActivityNotFoundException) {
+                    Log.e(TAG, e.message)
+                }
+            }
             R.id.share -> startActivity(Intent(Intent.ACTION_SEND)
                     .putExtra(Intent.EXTRA_TEXT, WEB_PAGE_LINK)
                     .setType("text/plain"))

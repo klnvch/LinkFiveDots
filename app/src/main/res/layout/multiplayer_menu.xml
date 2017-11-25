@@ -23,13 +23,15 @@
   -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center"
     android:background="@drawable/paper_tiled"
     android:gravity="center"
     android:orientation="vertical"
-    android:padding="@dimen/btn_table_padding">
+    android:padding="@dimen/btn_table_padding"
+    tools:context="by.klnvch.link5dots.MultiPlayerMenuActivity">
 
     <Button
         android:id="@+id/multi_player_two_players"
@@ -37,6 +39,7 @@
         android:layout_height="wrap_content"
         android:drawableLeft="@drawable/ic_people_48dp"
         android:drawableStart="@drawable/ic_people_48dp"
+        android:onClick="onClick"
         android:text="@string/two_players" />
 
     <Button
@@ -45,6 +48,7 @@
         android:layout_height="wrap_content"
         android:drawableLeft="@drawable/ic_bluetooth_48dp"
         android:drawableStart="@drawable/ic_bluetooth_48dp"
+        android:onClick="onClick"
         android:text="@string/bluetooth_settings" />
 
     <Button
@@ -53,6 +57,7 @@
         android:layout_height="wrap_content"
         android:drawableLeft="@drawable/ic_router_48dp"
         android:drawableStart="@drawable/ic_router_48dp"
+        android:onClick="onClick"
         android:text="@string/menu_local_network" />
 
     <Button
@@ -61,6 +66,7 @@
         android:layout_height="wrap_content"
         android:drawableLeft="@drawable/ic_public_48dp"
         android:drawableStart="@drawable/ic_public_48dp"
+        android:onClick="onClick"
         android:text="@string/menu_online_game"
         android:visibility="invisible" />
 

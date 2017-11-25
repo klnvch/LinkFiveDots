@@ -23,10 +23,12 @@
   -->
 
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/paper_tiled"
-    android:scrollbars="vertical">
+    android:scrollbars="vertical"
+    tools:context="by.klnvch.link5dots.MainMenuActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -51,6 +53,7 @@
             android:layout_height="wrap_content"
             android:drawableLeft="@drawable/ic_android_48dp"
             android:drawableStart="@drawable/ic_android_48dp"
+            android:onClick="onClick"
             android:text="@string/menu_single_player" />
 
         <Button
@@ -59,6 +62,7 @@
             android:layout_height="wrap_content"
             android:drawableLeft="@drawable/ic_person_48dp"
             android:drawableStart="@drawable/ic_person_48dp"
+            android:onClick="onClick"
             android:text="@string/menu_multi_player" />
 
         <Button
@@ -67,6 +71,7 @@
             android:layout_height="wrap_content"
             android:drawableLeft="@drawable/ic_star_48dp"
             android:drawableStart="@drawable/ic_star_48dp"
+            android:onClick="onClick"
             android:text="@string/scores_title" />
 
         <LinearLayout
@@ -79,6 +84,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:contentDescription="@string/settings_label"
+                android:onClick="onClick"
                 android:src="@drawable/ic_settings_48dp" />
 
             <ImageButton
@@ -87,6 +93,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:contentDescription="@string/application_info_label"
+                android:onClick="onClick"
                 android:src="@drawable/ic_info_48dp" />
 
             <ImageButton
@@ -95,6 +102,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:contentDescription="@string/how_to_title"
+                android:onClick="onClick"
                 android:src="@drawable/ic_help_48dp" />
 
         </LinearLayout>

@@ -73,24 +73,18 @@ public class MultiPlayerMenuActivity extends AppCompatActivity implements View.O
                 BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
                 // If the adapter is null, then Bluetooth is not supported
                 if (mBluetoothAdapter != null) {
-                    SharedPreferences prefs = getPreferences(MODE_PRIVATE);
-                    SharedPreferences.Editor editor = prefs.edit();
-                    if (!mBluetoothAdapter.isEnabled()) {
+                    boolean isBluetoothEnabled = mBluetoothAdapter.isEnabled();
+                    if (isBluetoothEnabled) {
+                        startBluetoothActivity();
+                    } else {
                         // enable bluetooth
                         Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
                         startActivityForResult(intent, RC_ENABLE_BLUETOOTH);
-                        // remember
-                        editor.putBoolean(IS_BLUETOOTH_ENABLED, false);
-                    } else {
-                        // launch bluetooth device chooser
-                        Intent intent = new Intent(this, DevicePickerActivity.class);
-                        startActivityForResult(intent, RC_BLUETOOTH_GAME);
-                        // remember
-                        editor.putBoolean(IS_BLUETOOTH_ENABLED, true);
-                        // start Bluetooth service
-                        startService(new Intent(this, BluetoothService.class));
                     }
-                    editor.apply();
+                    getPreferences(MODE_PRIVATE)
+                            .edit()
+                            .putBoolean(IS_BLUETOOTH_ENABLED, isBluetoothEnabled)
+                            .apply();
                 }
                 break;
             case R.id.multi_player_lan:
@@ -103,15 +97,13 @@ public class MultiPlayerMenuActivity extends AppCompatActivity implements View.O
         }
     }
 
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case RC_ENABLE_BLUETOOTH:
                 // When the request to enable Bluetooth returns
                 if (resultCode == RESULT_OK) {
-                    Intent i2 = new Intent(this, DevicePickerActivity.class);
-                    startActivityForResult(i2, RC_BLUETOOTH_GAME);
-                    // start Bluetooth service
-                    startService(new Intent(this, BluetoothService.class));
+                    startBluetoothActivity();
                 }
                 break;
             case RC_BLUETOOTH_GAME:
@@ -128,5 +120,13 @@ public class MultiPlayerMenuActivity extends AppCompatActivity implements View.O
                 stopService(new Intent(this, NsdService.class));
                 break;
         }
+    }
+
+    private void startBluetoothActivity() {
+        // launch bluetooth device chooser
+        Intent i = new Intent(this, DevicePickerActivity.class);
+        startActivityForResult(i, RC_BLUETOOTH_GAME);
+        // start Bluetooth service
+        startService(new Intent(this, BluetoothService.class));
     }
 }
