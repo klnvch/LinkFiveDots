@@ -25,12 +25,14 @@
 package by.klnvch.link5dots.multiplayer;
 
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
+import android.os.Vibrator;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
@@ -49,6 +51,10 @@ import by.klnvch.link5dots.models.Dot;
 import by.klnvch.link5dots.models.Game;
 import by.klnvch.link5dots.models.GameViewState;
 import by.klnvch.link5dots.models.HighScore;
+import by.klnvch.link5dots.settings.SettingsUtils;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 public abstract class MultiplayerActivity extends BaseActivity {
 
@@ -80,6 +86,7 @@ public abstract class MultiplayerActivity extends BaseActivity {
         }
     };
     private String mEnemyName = "";
+    private boolean isVibrationEnabled = true;
 
     @NonNull
     protected abstract Class<?> getServiceClass();
@@ -98,6 +105,11 @@ public abstract class MultiplayerActivity extends BaseActivity {
     public void onStart() {
         super.onStart();
         bindService(new Intent(this, getServiceClass()), mConnection, 0);
+
+        Observable.fromCallable(this::getVibrationMode)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this::setVibrationMode);
 
         Log.d(TAG, "onStart");
     }
@@ -197,6 +209,14 @@ public abstract class MultiplayerActivity extends BaseActivity {
         tvOpponentName.setText(mEnemyName);
     }
 
+    private boolean getVibrationMode() {
+        return SettingsUtils.isVibrationEnabled(this);
+    }
+
+    private void setVibrationMode(boolean isVibrationEnabled) {
+        this.isVibrationEnabled = isVibrationEnabled;
+    }
+
     private void sendMessage(@NonNull GameMessage msg) {
         // Check that we're actually connected before trying anything
         if (mService == null || mService.getState() != MultiplayerService.STATE_CONNECTED) {
@@ -250,6 +270,14 @@ public abstract class MultiplayerActivity extends BaseActivity {
                                 dot.setType(Dot.OPPONENT);
                                 activity.mView.setDot(dot);
                                 activity.setTitle(R.string.bt_message_your_turn);
+
+                                if (activity.isVibrationEnabled) {
+                                    Vibrator v = (Vibrator) activity
+                                            .getSystemService(Context.VIBRATOR_SERVICE);
+                                    if (v != null) {
+                                        v.vibrate(SettingsUtils.VIBRATE_DURATION);
+                                    }
+                                }
                                 break;
                         }
                         break;

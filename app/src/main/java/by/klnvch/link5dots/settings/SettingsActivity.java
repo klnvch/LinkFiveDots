@@ -38,34 +38,47 @@ import io.reactivex.schedulers.Schedulers;
 
 public class SettingsActivity extends AppCompatActivity implements View.OnClickListener {
 
+    private boolean isVibrationEnabled = true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.settings);
+        setContentView(R.layout.activity_settings);
         setTitle(R.string.settings_label);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+
         Observable.fromCallable(this::getUserName)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::setUsername);
+
+        Observable.fromCallable(this::getVibrationMode)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this::setVibrationMode);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.username:
+            case R.id.settings_username:
                 new UsernameDialog()
                         .setOnUsernameChangeListener(this::setUsername)
                         .show(getSupportFragmentManager(), null);
                 break;
-            case R.id.language:
+            case R.id.settings_language:
                 new LanguageDialog()
                         .setOnLanguageChangedListener(this::changeLanguage)
                         .show(getSupportFragmentManager(), null);
+                break;
+            case R.id.settings_vibration:
+                isVibrationEnabled = !isVibrationEnabled;
+                SettingsUtils.setVibrationMode(this, isVibrationEnabled);
+                setVibrationMode(isVibrationEnabled);
                 break;
         }
     }
@@ -82,5 +95,19 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
 
     private void changeLanguage() {
         recreate();
+    }
+
+    private boolean getVibrationMode() {
+        isVibrationEnabled = SettingsUtils.isVibrationEnabled(this);
+        return isVibrationEnabled;
+    }
+
+    private void setVibrationMode(boolean isVibrationEnabled) {
+        TextView textView = findViewById(R.id.vibration_details);
+        if (isVibrationEnabled) {
+            textView.setText(R.string.switch_on_text);
+        } else {
+            textView.setText(R.string.switch_off_text);
+        }
     }
 }

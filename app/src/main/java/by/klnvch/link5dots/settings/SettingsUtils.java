@@ -40,6 +40,9 @@ public class SettingsUtils {
     public static final String FIRST_RUN = "FIRST_RUN";
     static final String APP_LANGUAGE = "APP_LANGUAGE";
     private static final String USER_NAME = "USER_NAME";
+    private static final String IS_VIBRATION_ENABLED = "IS_VIBRATION_ENABLED";
+
+    public static long VIBRATE_DURATION = 500;
 
     public static boolean checkLanguage(@NonNull Context context) {
         String savedLanguage = PreferenceManager
@@ -81,11 +84,25 @@ public class SettingsUtils {
                 .getString(USER_NAME, context.getString(R.string.device_info_default));
     }
 
-    static void setUserName(Context context, String username) {
+    static void setUserName(@NonNull Context context, @Nullable String username) {
         PreferenceManager
                 .getDefaultSharedPreferences(context)
                 .edit()
                 .putString(USER_NAME, username)
+                .apply();
+    }
+
+    public static boolean isVibrationEnabled(@NonNull Context context) {
+        return PreferenceManager
+                .getDefaultSharedPreferences(context)
+                .getBoolean(IS_VIBRATION_ENABLED, true);
+    }
+
+    static void setVibrationMode(@NonNull Context context, boolean isVibrationEnabled) {
+        PreferenceManager
+                .getDefaultSharedPreferences(context)
+                .edit()
+                .putBoolean(IS_VIBRATION_ENABLED, isVibrationEnabled)
                 .apply();
     }
 }
