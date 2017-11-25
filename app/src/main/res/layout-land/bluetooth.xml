@@ -23,10 +23,12 @@
   -->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/paper_tiled"
-    android:padding="@dimen/btn_table_padding">
+    android:padding="@dimen/btn_table_padding"
+    tools:context="by.klnvch.link5dots.multiplayer.bluetooth.DevicePickerActivity">
 
     <LinearLayout
         android:id="@+id/layout_visibility"
@@ -40,6 +42,7 @@
             android:id="@+id/set_visibility"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:onClick="onClick"
             android:text="@string/bluetooth_not_discoverable" />
 
         <TextView
