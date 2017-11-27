@@ -69,7 +69,8 @@
     <string name="menu_local_network">Local Area Network</string>
     <string name="menu_online_game">Online</string>
 
-    <string name="vibration">Vibration</string>
+    <string name="settings_vibration">Vibration</string>
+    <string name="settings_night_mode">Night mode</string>
     <string name="rate_this_app">Rate this app</string>
     <string name="btn_github" translatable="false">GitHub</string>
 
@@ -92,7 +93,7 @@
     <string name="bluetooth_is_discoverable">Visible to all nearby Bluetooth devices (%1$s)</string>
     <!-- 239 Bluetoactivity_settingsings screen, summary text when not discoverable with paired devices [CHAR LIMIT=50] -->
     <string name="bluetooth_only_visible_to_paired_devices">Only visible to paired devices</string>
-    <!-- 275 Bluetooth Visibility disconnect question.  Asks the user if they wish to disconnect a paired bluetooth device.  [CHAR LIMIT=50] -->
+    <!-- 275 Bluetooth Visibility disconnect question.  Asks the user if they wish to disconnect a paiactivity_bluetooth_pickerooth device.  [CHAR LIMIT=50] -->
     <string name="bluetooth_is_disconnect_question">"Disconnect \u0022%1$s\u0022?"</string>
     <!-- 284 Bluetoactivity_settingsings.  Message when connected to a device. [CHAR LIMIT=40] -->
     <string name="bluetooth_connected">Connected</string>
@@ -100,7 +101,7 @@
     <string name="bluetooth_disconnected">Disconnected</string>
     <!-- 298 Bluetoactivity_settingsings.  Message when connecting to a device -->
     <string name="bluetooth_connecting">Connecting\u2026</string>
-    <!-- 308 Bluetoactivity_settingsings screen, text that appears when scanning for devices is finished and no nearby bluetooth device was found [CHAR LIMIT=40]-->
+    <!-- 308 Bluetoactivity_settingsings screen, text that appears when scanning for devices is finished and no neaactivity_bluetooth_pickerooth device was found [CHAR LIMIT=40]-->
     <string name="bluetooth_no_devices_found">No nearby Bluetooth devices were found.</string>
     <!-- 319 Strings for BluetoothDevicePicker [CHAR LIMIT=40]-->
     <string name="device_picker">Choose Bluetooth device</string>

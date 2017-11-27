@@ -30,6 +30,7 @@ import android.content.res.Resources;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatDelegate;
 
 import java.util.Locale;
 
@@ -41,10 +42,13 @@ public class SettingsUtils {
     static final String APP_LANGUAGE = "APP_LANGUAGE";
     private static final String USER_NAME = "USER_NAME";
     private static final String IS_VIBRATION_ENABLED = "IS_VIBRATION_ENABLED";
+    private static final String NIGHT_MODE = "NIGHT_MODE";
 
     public static long VIBRATE_DURATION = 500;
 
-    public static boolean checkLanguage(@NonNull Context context) {
+    public static boolean checkConfiguration(@NonNull Context context) {
+        boolean isToBeRestated = false;
+        // check language
         String savedLanguage = PreferenceManager
                 .getDefaultSharedPreferences(context)
                 .getString(APP_LANGUAGE, null);
@@ -53,12 +57,19 @@ public class SettingsUtils {
             String currentLanguage = resources.getConfiguration().locale.getLanguage();
             if (!savedLanguage.equals(currentLanguage)) {
                 changeLanguage(context, savedLanguage);
-                return true;
+                isToBeRestated = true;
             } else {
-                return false;
+                isToBeRestated = false;
             }
         }
-        return false;
+        // check night mode
+        int nightMode = getNightMode(context);
+        if (nightMode != AppCompatDelegate.getDefaultNightMode()) {
+            AppCompatDelegate.setDefaultNightMode(nightMode);
+            isToBeRestated = true;
+        }
+        //
+        return isToBeRestated;
     }
 
     static void changeLanguage(@NonNull Context context, @NonNull String language) {
@@ -103,6 +114,20 @@ public class SettingsUtils {
                 .getDefaultSharedPreferences(context)
                 .edit()
                 .putBoolean(IS_VIBRATION_ENABLED, isVibrationEnabled)
+                .apply();
+    }
+
+    private static int getNightMode(@NonNull Context context) {
+        return PreferenceManager
+                .getDefaultSharedPreferences(context)
+                .getInt(NIGHT_MODE, AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+    }
+
+    static void setNightMode(@NonNull Context context, int nightMode) {
+        PreferenceManager
+                .getDefaultSharedPreferences(context)
+                .edit()
+                .putInt(NIGHT_MODE, nightMode)
                 .apply();
     }
 }

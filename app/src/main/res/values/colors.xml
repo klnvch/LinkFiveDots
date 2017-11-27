@@ -23,6 +23,7 @@
   -->
 
 <resources>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+    <color name="background_color">#FFFAFAFA</color>
+    <color name="foreground_color">#FF212121</color>
+    <color name="icon_color">#FF00838F</color>
 </resources>

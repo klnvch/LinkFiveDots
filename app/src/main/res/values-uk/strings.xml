@@ -57,7 +57,8 @@
     <string name="two_players">Два гравці</string>
     <string name="menu_local_network">Локальна Мережа</string>
 
-    <string name="vibration">Вібросигнал</string>
+    <string name="settings_vibration">Вібросигнал</string>
+    <string name="settings_night_mode">Нічний режим</string>
     <string name="rate_this_app">Оцінити цю програму</string>
 
     <string name="yes">"Так"</string>

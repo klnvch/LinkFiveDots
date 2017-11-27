@@ -27,5 +27,4 @@
     android:layout_height="wrap_content"
     android:background="@drawable/btn_selector"
     android:singleLine="true"
-    android:textColor="@color/black"
     android:textSize="@dimen/bt_text_size" />

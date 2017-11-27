@@ -40,7 +40,7 @@ class InfoActivity : AppCompatActivity(), View.OnClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.info_activity)
+        setContentView(R.layout.activity_info)
         setTitle(R.string.application_info_label)
 
         // set version

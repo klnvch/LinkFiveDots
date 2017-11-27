@@ -157,12 +157,12 @@ public class DevicePickerActivity extends AppCompatActivity implements View.OnCl
         if (mBluetoothAdapter == null) {
             setContentView(R.layout.bluetooth_error);
             setResult(RESULT_CANCELED);
-            Log.e(TAG, "bluetooth adapter is null");
+            Log.e(TAG, "activity_bluetooth_picker adapter is null");
             return;
         }
 
         // Setup the window
-        setContentView(R.layout.bluetooth);
+        setContentView(R.layout.activity_bluetooth_picker);
 
         // Set result CANCELED in case the user backs out
         setResult(RESULT_CANCELED);

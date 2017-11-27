@@ -1,34 +1,41 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ MIT License
+  ~
+  ~ Copyright (c) 2017 klnvch
+  ~
+  ~ Permission is hereby granted, free of charge, to any person obtaining a copy
+  ~ of this software and associated documentation files (the "Software"), to deal
+  ~ in the Software without restriction, including without limitation the rights
+  ~ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  ~ copies of the Software, and to permit persons to whom the Software is
+  ~ furnished to do so, subject to the following conditions:
+  ~
+  ~ The above copyright notice and this permission notice shall be included in all
+  ~ copies or substantial portions of the Software.
+  ~
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  ~ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  ~ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  ~ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  ~ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  ~ SOFTWARE.
+  -->
+
 <resources>
     <!-- buttons -->
     <dimen name="btn_inset">4dp</dimen>
     <dimen name="btn_corner_radius">2dp</dimen>
     <dimen name="btn_padding_horizontal">8dp</dimen>
     <dimen name="btn_padding_vertical">4dp</dimen>
-    <dimen name="btn_text_size">14sp</dimen>
+    <dimen name="btn_text_size">20sp</dimen>
 
     <dimen name="text_size_help_content">20sp</dimen>
 
     <!-- main menu layout-->
     <dimen name="btn_table_padding">20dp</dimen>
 
-    <!-- bluetooth layout -->
+    <!-- bluetooth picker layout -->
     <dimen name="separator_width">2dp</dimen>
     <dimen name="bt_text_size">14sp</dimen>
-
-    <!-- info layout -->
-    <dimen name="plus_one_button_margin">16dp</dimen>
-
-
-    <dimen name="activity_horizontal_margin">16dp</dimen>
-    <dimen name="activity_vertical_margin">16dp</dimen>
-    <dimen name="font_size_small">14sp</dimen>
-    <dimen name="font_size_medium">20sp</dimen>
-    <dimen name="font_size_large">32sp</dimen>
-
-    <dimen name="margin_small">8dp</dimen>
-    <dimen name="margin_medium">16dp</dimen>
-    <dimen name="margin_large">32dp</dimen>
-    <dimen name="margin_huge">64dp</dimen>
-
 </resources>

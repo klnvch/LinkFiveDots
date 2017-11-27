@@ -57,7 +57,8 @@
     <string name="two_players">Due giocatori</string>
     <string name="menu_local_network">Rete Locale</string>
 
-    <string name="vibration">Vibrazione</string>
+    <string name="settings_vibration">Vibrazione</string>
+    <string name="settings_night_mode">Modalità notturna</string>
     <string name="rate_this_app">Valuta questa app</string>
 
     <string name="yes">"Sì"</string>

@@ -54,7 +54,7 @@ public class MainMenuActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main_menu);
+        setContentView(R.layout.activity_main_menu);
         setTitle(R.string.app_name);
 
         FirebaseCrash.log("Activity created");
@@ -77,10 +77,10 @@ public class MainMenuActivity extends AppCompatActivity
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::checkTheFirstRun);
 
-        Observable.fromCallable(this::checkLanguage)
+        Observable.fromCallable(this::checkConfiguration)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::changeLanguage);
+                .subscribe(this::changeConfiguration);
 
         Observable.fromCallable(this::getUserName)
                 .subscribeOn(Schedulers.io())
@@ -173,11 +173,11 @@ public class MainMenuActivity extends AppCompatActivity
         }
     }
 
-    private boolean checkLanguage() {
-        return SettingsUtils.checkLanguage(this);
+    private boolean checkConfiguration() {
+        return SettingsUtils.checkConfiguration(this);
     }
 
-    private void changeLanguage(boolean isLanguageChanged) {
+    private void changeConfiguration(boolean isLanguageChanged) {
         if (isLanguageChanged) {
             recreate();
         }

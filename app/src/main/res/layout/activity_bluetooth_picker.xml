@@ -23,10 +23,12 @@
   -->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/paper_tiled"
-    android:padding="@dimen/btn_table_padding">
+    android:padding="@dimen/btn_table_padding"
+    tools:context="by.klnvch.link5dots.multiplayer.bluetooth.DevicePickerActivity">
 
     <LinearLayout
         android:id="@+id/layout_visibility"
@@ -36,60 +38,19 @@
         android:gravity="center"
         android:orientation="vertical">
 
-        <ToggleButton
-            android:id="@+id/register"
+        <Button
+            android:id="@+id/set_visibility"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:checked="false"
-            android:textOff="@string/create"
-            android:textOn="@string/cancel" />
+            android:onClick="onClick"
+            android:text="@string/bluetooth_not_discoverable" />
 
-        <FrameLayout
+        <TextView
+            android:id="@+id/visibility_info"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <RelativeLayout
-                android:id="@+id/registration_status"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:visibility="visible">
-
-                <TextView
-                    android:id="@+id/registration_status_label"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"
-                    android:text="@string/apn_name"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/bt_text_size" />
-
-                <TextView
-                    android:id="@+id/registration_status_value"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp"
-                    android:layout_toEndOf="@+id/registration_status_label"
-                    android:layout_toRightOf="@+id/registration_status_label"
-                    android:text="@string/apn_not_set"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/bt_text_size" />
-
-            </RelativeLayout>
-
-            <ProgressBar
-                android:id="@+id/registration_progress"
-                style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:indeterminate="true"
-                android:visibility="invisible" />
-
-        </FrameLayout>
+            android:layout_height="wrap_content"
+            android:text="@string/bluetooth_only_visible_to_paired_devices"
+            android:textSize="@dimen/bt_text_size" />
 
     </LinearLayout>
 
@@ -98,7 +59,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/separator_width"
         android:layout_below="@id/layout_visibility"
-        android:background="@color/black" />
+        android:background="@color/foreground_color" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -107,19 +68,45 @@
         android:layout_below="@id/separator"
         android:orientation="vertical">
 
-        <ToggleButton
-            android:id="@+id/scan"
+        <RelativeLayout
+            android:id="@+id/layout_paired_devices"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:checked="false"
-            android:textOff="@string/search_menu"
-            android:textOn="@string/cancel" />
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/label_paired_devices"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:text="@string/bluetooth_preference_paired_devices"
+                android:textSize="@dimen/bt_text_size"
+                android:textStyle="bold" />
+
+            <ListView
+                android:id="@+id/list_paired_devices"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentBottom="true"
+                android:layout_below="@id/label_paired_devices" />
+
+        </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/layout_available_devices"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="match_parent"
             android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/label_available_devices"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:text="@string/bluetooth_preference_found_devices"
+                android:textSize="@dimen/bt_text_size"
+                android:textStyle="bold" />
 
             <ProgressBar
                 android:id="@+id/progressBar"
@@ -130,8 +117,18 @@
                 android:indeterminate="true"
                 android:visibility="gone" />
 
+            <TextView
+                android:id="@+id/label_no_device_found"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/label_available_devices"
+                android:padding="@dimen/btn_table_padding"
+                android:text="@string/bluetooth_no_devices_found"
+                android:textSize="@dimen/bt_text_size"
+                android:visibility="gone" />
+
             <ListView
-                android:id="@+id/list_services"
+                android:id="@+id/list_available_devices"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_alignParentBottom="true"

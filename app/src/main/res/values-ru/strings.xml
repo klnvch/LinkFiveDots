@@ -57,7 +57,8 @@
     <string name="two_players">Два игрока</string>
     <string name="menu_local_network">Локальная Сеть</string>
 
-    <string name="vibration">Вибрация</string>
+    <string name="settings_vibration">Вибрация</string>
+    <string name="settings_night_mode">Ночной режим</string>
     <string name="rate_this_app">Оценить приложение</string>
 
     <string name="yes">"Да"</string>
