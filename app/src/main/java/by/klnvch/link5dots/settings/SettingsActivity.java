@@ -26,6 +26,7 @@ package by.klnvch.link5dots.settings;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatDelegate;
 import android.view.View;
 import android.widget.TextView;
 
@@ -38,13 +39,15 @@ import io.reactivex.schedulers.Schedulers;
 
 public class SettingsActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private boolean isVibrationEnabled = true;
+    private boolean mIsVibrationEnabled = true;
+    private boolean mIsNightMode = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
         setTitle(R.string.settings_label);
+        setNightMode(false);
     }
 
     @Override
@@ -76,9 +79,12 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
                         .show(getSupportFragmentManager(), null);
                 break;
             case R.id.settings_vibration:
-                isVibrationEnabled = !isVibrationEnabled;
-                SettingsUtils.setVibrationMode(this, isVibrationEnabled);
-                setVibrationMode(isVibrationEnabled);
+                mIsVibrationEnabled = !mIsVibrationEnabled;
+                setVibrationMode(mIsVibrationEnabled);
+                break;
+            case R.id.settings_night_mode:
+                mIsNightMode = !mIsNightMode;
+                setNightMode(mIsNightMode);
                 break;
         }
     }
@@ -98,16 +104,39 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private boolean getVibrationMode() {
-        isVibrationEnabled = SettingsUtils.isVibrationEnabled(this);
-        return isVibrationEnabled;
+        mIsVibrationEnabled = SettingsUtils.isVibrationEnabled(this);
+        return mIsVibrationEnabled;
     }
 
     private void setVibrationMode(boolean isVibrationEnabled) {
+        SettingsUtils.setVibrationMode(this, isVibrationEnabled);
+
         TextView textView = findViewById(R.id.vibration_details);
         if (isVibrationEnabled) {
             textView.setText(R.string.switch_on_text);
         } else {
             textView.setText(R.string.switch_off_text);
+        }
+    }
+
+    private void setNightMode(boolean change) {
+        int modeType = AppCompatDelegate.getDefaultNightMode();
+        if (change) {
+            if (modeType == AppCompatDelegate.MODE_NIGHT_YES) {
+                modeType = AppCompatDelegate.MODE_NIGHT_NO;
+            } else {
+                modeType = AppCompatDelegate.MODE_NIGHT_YES;
+            }
+            AppCompatDelegate.setDefaultNightMode(modeType);
+            getDelegate().applyDayNight();
+            SettingsUtils.setNightMode(this, modeType);
+        } else {
+            TextView textView = findViewById(R.id.details_night_mode);
+            if (modeType == AppCompatDelegate.MODE_NIGHT_YES) {
+                textView.setText(R.string.switch_on_text);
+            } else {
+                textView.setText(R.string.switch_off_text);
+            }
         }
     }
 }

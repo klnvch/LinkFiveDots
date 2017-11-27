@@ -49,7 +49,7 @@ public class MultiPlayerMenuActivity extends AppCompatActivity implements View.O
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.multiplayer_menu);
+        setContentView(R.layout.activity_multiplayer_menu);
         setTitle(R.string.menu_multi_player);
 
         findViewById(R.id.multi_player_online).setVisibility(View.INVISIBLE);

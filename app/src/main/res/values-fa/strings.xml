@@ -68,7 +68,8 @@
     <string name="two_players">دو نفر</string>
     <string name="menu_local_network">شبکه ی محلی</string>
 
-    <string name="vibration">لرزش</string>
+    <string name="settings_vibration">لرزش</string>
+    <string name="settings_night_mode">حالت شب</string>
     <string name="rate_this_app">امتیاز بدهید به بازی</string>
 
     <string name="yes">"بله"</string>
