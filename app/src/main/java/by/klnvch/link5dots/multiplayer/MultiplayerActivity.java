@@ -205,7 +205,7 @@ public abstract class MultiplayerActivity extends BaseActivity {
 
     private void setEnemyName(@Nullable String name) {
         mEnemyName = name;
-        TextView tvOpponentName = findViewById(R.id.opponent_name);
+        TextView tvOpponentName = findViewById(R.id.text_opponent_name);
         tvOpponentName.setText(mEnemyName);
     }
 

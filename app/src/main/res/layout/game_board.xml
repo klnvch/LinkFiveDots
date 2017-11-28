@@ -47,20 +47,18 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/user_name"
+                android:id="@+id/text_user_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:drawableLeft="@drawable/red_dot"
-                android:drawableStart="@drawable/red_dot"
+                android:drawablePadding="8dp"
                 android:gravity="center"
                 android:text="@string/device_info_default" />
 
             <TextView
-                android:id="@+id/opponent_name"
+                android:id="@+id/text_opponent_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:drawableLeft="@drawable/blue_dot"
-                android:drawableStart="@drawable/blue_dot"
+                android:drawablePadding="8dp"
                 android:gravity="center"
                 android:text="@string/android" />
 

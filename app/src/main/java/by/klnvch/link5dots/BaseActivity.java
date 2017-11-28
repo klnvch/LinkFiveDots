@@ -24,6 +24,8 @@
 
 package by.klnvch.link5dots;
 
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -59,6 +61,8 @@ public abstract class BaseActivity extends AppCompatActivity {
         mView = findViewById(R.id.game_view);
         mView.setOnMoveDoneListener(this::onMoveDone);
         mView.setOnGameEndListener(this::onGameFinished);
+
+        setDots();
 
         Observable.fromCallable(this::getUserName)
                 .subscribeOn(Schedulers.io())
@@ -142,8 +146,24 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     private void setUsername(@Nullable String name) {
         mUserName = name;
-        TextView tvUsername = findViewById(R.id.user_name);
+        TextView tvUsername = findViewById(R.id.text_user_name);
         tvUsername.setText(mUserName);
+    }
+
+    private void setDots() {
+        GradientDrawable gameDotUser = (GradientDrawable) getResources()
+                .getDrawable(R.drawable.game_dot);
+        gameDotUser.setColor(Color.RED);
+        TextView tvUserName = findViewById(R.id.text_user_name);
+        tvUserName.setCompoundDrawablesWithIntrinsicBounds(
+                gameDotUser, null, null, null);
+
+        GradientDrawable gameDotOpponent = (GradientDrawable) getResources()
+                .getDrawable(R.drawable.game_dot);
+        gameDotOpponent.setColor(Color.BLUE);
+        TextView tvOpponentName = findViewById(R.id.text_opponent_name);
+        tvOpponentName.setCompoundDrawablesWithIntrinsicBounds(
+                gameDotOpponent, null, null, null);
     }
 
     @NonNull
