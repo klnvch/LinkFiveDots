@@ -59,6 +59,8 @@
 
     <string name="settings_vibration">Vibration</string>
     <string name="settings_night_mode">Nacht-Modus</string>
+    <string name="settings_auto">"Automatisch"</string>
+    <string name="settings_system">"System"</string>
     <string name="rate_this_app">App bewerten</string>
 
     <string name="yes">"Ja"</string>

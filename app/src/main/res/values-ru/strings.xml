@@ -59,6 +59,8 @@
 
     <string name="settings_vibration">Вибрация</string>
     <string name="settings_night_mode">Ночной режим</string>
+    <string name="settings_auto">"Автонастройка"</string>
+    <string name="settings_system">"Система"</string>
     <string name="rate_this_app">Оценить приложение</string>
 
     <string name="yes">"Да"</string>

@@ -27,6 +27,7 @@ package by.klnvch.link5dots.settings;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -38,6 +39,8 @@ import io.reactivex.annotations.Nullable;
 import io.reactivex.schedulers.Schedulers;
 
 public class SettingsActivity extends AppCompatActivity implements View.OnClickListener {
+
+    private static final String TAG = "SettingsActivity";
 
     private boolean mIsVibrationEnabled = true;
     private boolean mIsNightMode = false;
@@ -122,21 +125,39 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
     private void setNightMode(boolean change) {
         int modeType = AppCompatDelegate.getDefaultNightMode();
         if (change) {
-            if (modeType == AppCompatDelegate.MODE_NIGHT_YES) {
-                modeType = AppCompatDelegate.MODE_NIGHT_NO;
-            } else {
-                modeType = AppCompatDelegate.MODE_NIGHT_YES;
+            switch (modeType) {
+                case AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM:
+                    modeType = AppCompatDelegate.MODE_NIGHT_AUTO;
+                    break;
+                case AppCompatDelegate.MODE_NIGHT_AUTO:
+                    modeType = AppCompatDelegate.MODE_NIGHT_NO;
+                    break;
+                case AppCompatDelegate.MODE_NIGHT_NO:
+                    modeType = AppCompatDelegate.MODE_NIGHT_YES;
+                    break;
+                case AppCompatDelegate.MODE_NIGHT_YES:
+                    modeType = AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM;
+                    break;
             }
             AppCompatDelegate.setDefaultNightMode(modeType);
             getDelegate().applyDayNight();
             SettingsUtils.setNightMode(this, modeType);
-        } else {
-            TextView textView = findViewById(R.id.details_night_mode);
-            if (modeType == AppCompatDelegate.MODE_NIGHT_YES) {
-                textView.setText(R.string.switch_on_text);
-            } else {
+        }
+        Log.d(TAG, "Night mode: " + modeType);
+        TextView textView = findViewById(R.id.details_night_mode);
+        switch (modeType) {
+            case AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM:
+                textView.setText(R.string.settings_system);
+                break;
+            case AppCompatDelegate.MODE_NIGHT_AUTO:
+                textView.setText(R.string.settings_auto);
+                break;
+            case AppCompatDelegate.MODE_NIGHT_NO:
                 textView.setText(R.string.switch_off_text);
-            }
+                break;
+            case AppCompatDelegate.MODE_NIGHT_YES:
+                textView.setText(R.string.switch_on_text);
+                break;
         }
     }
 }
