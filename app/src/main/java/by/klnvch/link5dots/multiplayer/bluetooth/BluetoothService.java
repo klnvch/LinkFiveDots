@@ -28,7 +28,6 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Message;
@@ -47,8 +46,6 @@ import by.klnvch.link5dots.multiplayer.MultiplayerService;
  * thread for performing data transmissions when connected.
  */
 public class BluetoothService extends MultiplayerService {
-
-    public static final String BLUETOOTH_GAME_VIEW_PREFERENCES = "BLUETOOTH_GAME_VIEW_PREFERENCES";
     // Name for the SDP record when creating server socket
     public static final String NAME_SECURE = "BluetoothChatSecure";
     // Unique UUID for this application
@@ -189,12 +186,6 @@ public class BluetoothService extends MultiplayerService {
         mHandler.obtainMessage(DevicePickerActivity.MESSAGE_DEVICE_NAME).sendToTarget();
 
         setState(STATE_CONNECTED);
-
-        // clean preferences
-        SharedPreferences prefs = getSharedPreferences(BLUETOOTH_GAME_VIEW_PREFERENCES, MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.clear();
-        editor.apply();
     }
 
     @NonNull

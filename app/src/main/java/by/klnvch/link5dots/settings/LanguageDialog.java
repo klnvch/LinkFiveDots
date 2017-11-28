@@ -27,7 +27,6 @@ package by.klnvch.link5dots.settings;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
@@ -127,12 +126,6 @@ public class LanguageDialog extends DialogFragment implements DialogInterface.On
             default:
                 language = LANGUAGE_EN;
         }
-        //
-        PreferenceManager
-                .getDefaultSharedPreferences(getActivity())
-                .edit()
-                .putString(SettingsUtils.APP_LANGUAGE, language)
-                .apply();
         //
         SettingsUtils.changeLanguage(getContext(), language);
         //

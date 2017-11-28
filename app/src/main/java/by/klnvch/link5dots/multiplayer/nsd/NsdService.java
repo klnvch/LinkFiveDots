@@ -27,7 +27,6 @@ package by.klnvch.link5dots.multiplayer.nsd;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.nsd.NsdManager;
 import android.net.nsd.NsdServiceInfo;
 import android.os.Build;
@@ -48,7 +47,6 @@ import by.klnvch.link5dots.multiplayer.MultiplayerService;
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 public class NsdService extends MultiplayerService {
 
-    public static final String BLUETOOTH_GAME_VIEW_PREFERENCES = "BLUETOOTH_GAME_VIEW_PREFERENCES";
     // Constants that indicate the current connection state
     public static final int STATE_UNREGISTERED = 100;
     public static final int STATE_REGISTERING = 101;
@@ -303,12 +301,6 @@ public class NsdService extends MultiplayerService {
         mHandler.obtainMessage(NsdPickerActivity.MESSAGE_DEVICE_NAME).sendToTarget();
 
         setState(STATE_CONNECTED);
-
-        // clean preferences
-        SharedPreferences prefs = getSharedPreferences(BLUETOOTH_GAME_VIEW_PREFERENCES, MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.clear();
-        editor.apply();
     }
 
     /**

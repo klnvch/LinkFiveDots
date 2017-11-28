@@ -89,6 +89,10 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
                 mIsNightMode = !mIsNightMode;
                 setNightMode(mIsNightMode);
                 break;
+            case R.id.settings_reset:
+                SettingsUtils.reset(this);
+                recreate();
+                break;
         }
     }
 

@@ -27,7 +27,6 @@ package by.klnvch.link5dots;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -142,19 +141,13 @@ public class MainMenuActivity extends AppCompatActivity
     }
 
     private boolean isTheFirstRun() {
-        return PreferenceManager
-                .getDefaultSharedPreferences(this)
-                .getBoolean(SettingsUtils.FIRST_RUN, true);
+        return SettingsUtils.isTheFirstRun(this);
     }
 
     private void checkTheFirstRun(boolean isTheFirstRun) {
         if (isTheFirstRun) {
             showUsernameDialog();
-            PreferenceManager
-                    .getDefaultSharedPreferences(this)
-                    .edit()
-                    .putBoolean(SettingsUtils.FIRST_RUN, false)
-                    .apply();
+            SettingsUtils.setTheFirstRun(this);
         }
     }
 
