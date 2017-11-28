@@ -71,6 +71,8 @@
 
     <string name="settings_vibration">Vibration</string>
     <string name="settings_night_mode">Night mode</string>
+    <string name="settings_auto">Auto</string>
+    <string name="settings_system">System</string>
     <string name="rate_this_app">Rate this app</string>
     <string name="btn_github" translatable="false">GitHub</string>
 

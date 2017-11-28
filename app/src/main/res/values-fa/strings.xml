@@ -70,6 +70,8 @@
 
     <string name="settings_vibration">لرزش</string>
     <string name="settings_night_mode">حالت شب</string>
+    <string name="settings_auto">"خودکار"</string>
+    <string name="settings_system">"سیستم"</string>
     <string name="rate_this_app">امتیاز بدهید به بازی</string>
 
     <string name="yes">"بله"</string>

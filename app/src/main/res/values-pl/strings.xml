@@ -59,6 +59,8 @@
 
     <string name="settings_vibration">Wibracje</string>
     <string name="settings_night_mode">Tryb nocny</string>
+    <string name="settings_auto">"Automatyczna"</string>
+    <string name="settings_system">"System"</string>
     <string name="rate_this_app">Oceń tę aplikację</string>
 
     <string name="yes">"Tak"</string>
