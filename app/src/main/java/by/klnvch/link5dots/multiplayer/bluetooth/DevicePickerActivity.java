@@ -33,7 +33,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -67,7 +66,7 @@ public class DevicePickerActivity extends AppCompatActivity implements View.OnCl
     public static final String TOAST = "toast";
     private static final String TAG = "DevicePickerActivity";
     private static final int BT_REQUEST_DISCOVERABLE = 1;
-    private static final String BT_DISCOVERABLE_TIME_FINISH = "BT_DISCOVERABLE_TIME_FINISH";
+    private static final String KEY_COUNTER_FINISH_TIME = "KEY_COUNTER_FINISH_TIME";
     private static final int MESSAGE_STATE_CHANGE = 1;
     private static final int MESSAGE_TOAST = 5;
     private final MHandler mHandler = new MHandler(this);
@@ -148,6 +147,7 @@ public class DevicePickerActivity extends AppCompatActivity implements View.OnCl
         }
     };
     private CountDownTimer countDownTimer = null;
+    private long mCounterFinishTime = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -176,6 +176,25 @@ public class DevicePickerActivity extends AppCompatActivity implements View.OnCl
         // Register for broadcasts when discovery has finished
         filter = new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
         this.registerReceiver(mReceiver, filter);
+
+        if (savedInstanceState != null) {
+            mCounterFinishTime = savedInstanceState.getLong(KEY_COUNTER_FINISH_TIME, -1);
+
+            if (mCounterFinishTime != -1) {
+                if (mBluetoothAdapter != null) {
+                    long currentTime = System.currentTimeMillis();
+                    if (mBluetoothAdapter.getScanMode() == BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE
+                            && mCounterFinishTime > currentTime) {
+                        int interval = (int) ((mCounterFinishTime - currentTime) / 1000);
+                        setVisibilityTimer(interval);
+                    } else {
+                        mCounterFinishTime = -1;
+                    }
+                    //
+                    setTitle(mBluetoothAdapter.getName());
+                }
+            }
+        }
     }
 
     @Override
@@ -196,20 +215,6 @@ public class DevicePickerActivity extends AppCompatActivity implements View.OnCl
                 progressDialog = ProgressDialog.show(this, null, getString(R.string.bluetooth_connecting), true, false, null);
             }
         }
-        //
-        if (mBluetoothAdapter != null) {
-            if (mBluetoothAdapter.getScanMode() == BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE) {
-                SharedPreferences prefs = getPreferences(MODE_PRIVATE);
-                long finishTime = prefs.getLong(BT_DISCOVERABLE_TIME_FINISH, -1);
-                long currentTime = System.currentTimeMillis();
-                if (finishTime != -1 && finishTime > currentTime) {
-                    int interval = (int) ((finishTime - currentTime) / 1000);
-                    setVisibilityTimer(interval);
-                }
-            }
-            //
-            setTitle(mBluetoothAdapter.getName());
-        }
     }
 
     @Override
@@ -220,6 +225,12 @@ public class DevicePickerActivity extends AppCompatActivity implements View.OnCl
             progressDialog.cancel();
             progressDialog = null;
         }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putLong(KEY_COUNTER_FINISH_TIME, mCounterFinishTime);
+        super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -292,11 +303,7 @@ public class DevicePickerActivity extends AppCompatActivity implements View.OnCl
         switch (requestCode) {
             case BT_REQUEST_DISCOVERABLE:
                 if (resultCode > 0) {
-                    SharedPreferences prefs = getPreferences(MODE_PRIVATE);
-                    SharedPreferences.Editor editor = prefs.edit();
-                    long finishTime = System.currentTimeMillis() + resultCode * 1000;
-                    editor.putLong(BT_DISCOVERABLE_TIME_FINISH, finishTime);
-                    editor.apply();
+                    mCounterFinishTime = System.currentTimeMillis() + resultCode * 1000;
                     setVisibilityTimer(resultCode);
                 }
                 break;
@@ -342,6 +349,7 @@ public class DevicePickerActivity extends AppCompatActivity implements View.OnCl
 
                 @Override
                 public void onFinish() {
+                    mCounterFinishTime = -1;
                     visibilityInfo.setText(R.string.bluetooth_only_visible_to_paired_devices);
                     countDownTimer = null;
                 }

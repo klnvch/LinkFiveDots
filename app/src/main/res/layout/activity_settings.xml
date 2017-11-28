@@ -148,7 +148,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:contentDescription="@string/phone_language"
+            android:contentDescription="@string/settings_vibration"
             android:paddingBottom="4dp"
             android:paddingLeft="32dp"
             android:paddingRight="32dp"
@@ -199,7 +199,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:contentDescription="@string/phone_language"
+            android:contentDescription="@string/settings_night_mode"
             android:paddingBottom="4dp"
             android:paddingLeft="32dp"
             android:paddingRight="32dp"
@@ -229,6 +229,57 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/switch_off_text" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/settings_reset"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/btn_selector"
+        android:clickable="true"
+        android:focusable="true"
+        android:onClick="onClick"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/icon_reset"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:contentDescription="@string/settings_reset"
+            android:paddingBottom="4dp"
+            android:paddingLeft="32dp"
+            android:paddingRight="32dp"
+            android:paddingTop="4dp"
+            android:src="@drawable/ic_delete_48dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@+id/icon_reset"
+            android:layout_toRightOf="@+id/icon_reset"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/title_reset"
+                style="@style/TextAppearance.AppCompat.Title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/settings_reset" />
+
+            <TextView
+                android:id="@+id/details_reset"
+                style="@style/TextAppearance.AppCompat.Caption"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="" />
 
         </LinearLayout>
 

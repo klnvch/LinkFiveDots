@@ -61,6 +61,7 @@
     <string name="settings_night_mode">Mode nuit</string>
     <string name="settings_auto">"Automatique"</string>
     <string name="settings_system">"Système"</string>
+    <string name="settings_reset">"Tout effacer"</string>
     <string name="rate_this_app">Noter cette application</string>
 
     <string name="yes">"Oui"</string>

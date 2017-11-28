@@ -26,7 +26,6 @@ package by.klnvch.link5dots;
 
 import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -40,11 +39,13 @@ import by.klnvch.link5dots.multiplayer.online.OnlineGameActivity;
 
 public class MultiPlayerMenuActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private static final String IS_BLUETOOTH_ENABLED = "IS_BLUETOOTH_ENABLED";
+    private static final String KEY_IS_BLUETOOTH_ENABLED = "KEY_IS_BLUETOOTH_ENABLED";
 
     private static final int RC_ENABLE_BLUETOOTH = 3;
     private static final int RC_BLUETOOTH_GAME = 4;
     private static final int RC_NSD_GAME = 5;
+
+    private boolean mIsBluetoothEnabled = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +61,16 @@ public class MultiPlayerMenuActivity extends AppCompatActivity implements View.O
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
             findViewById(R.id.multi_player_lan).setVisibility(View.INVISIBLE);
         }
+
+        if (savedInstanceState != null) {
+            mIsBluetoothEnabled = savedInstanceState.getBoolean(KEY_IS_BLUETOOTH_ENABLED);
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putBoolean(KEY_IS_BLUETOOTH_ENABLED, mIsBluetoothEnabled);
+        super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -73,18 +84,14 @@ public class MultiPlayerMenuActivity extends AppCompatActivity implements View.O
                 BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
                 // If the adapter is null, then Bluetooth is not supported
                 if (mBluetoothAdapter != null) {
-                    boolean isBluetoothEnabled = mBluetoothAdapter.isEnabled();
-                    if (isBluetoothEnabled) {
+                    mIsBluetoothEnabled = mBluetoothAdapter.isEnabled();
+                    if (mIsBluetoothEnabled) {
                         startBluetoothActivity();
                     } else {
                         // enable bluetooth
                         Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
                         startActivityForResult(intent, RC_ENABLE_BLUETOOTH);
                     }
-                    getPreferences(MODE_PRIVATE)
-                            .edit()
-                            .putBoolean(IS_BLUETOOTH_ENABLED, isBluetoothEnabled)
-                            .apply();
                 }
                 break;
             case R.id.multi_player_lan:
@@ -108,8 +115,7 @@ public class MultiPlayerMenuActivity extends AppCompatActivity implements View.O
                 break;
             case RC_BLUETOOTH_GAME:
                 // bluetooth game finished, make an order
-                SharedPreferences prefs = getPreferences(MODE_PRIVATE);
-                if (!prefs.getBoolean(IS_BLUETOOTH_ENABLED, false)) {
+                if (mIsBluetoothEnabled) {
                     BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
                     mBluetoothAdapter.disable();
                 }

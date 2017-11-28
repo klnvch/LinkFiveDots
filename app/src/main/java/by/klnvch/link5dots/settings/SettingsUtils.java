@@ -34,12 +34,14 @@ import android.support.v7.app.AppCompatDelegate;
 
 import java.util.Locale;
 
+import by.klnvch.link5dots.MainActivity;
 import by.klnvch.link5dots.R;
+import by.klnvch.link5dots.TwoPlayersActivity;
 
 public class SettingsUtils {
 
-    public static final String FIRST_RUN = "FIRST_RUN";
-    static final String APP_LANGUAGE = "APP_LANGUAGE";
+    private static final String FIRST_RUN = "FIRST_RUN";
+    private static final String APP_LANGUAGE = "APP_LANGUAGE";
     private static final String USER_NAME = "USER_NAME";
     private static final String IS_VIBRATION_ENABLED = "IS_VIBRATION_ENABLED";
     private static final String NIGHT_MODE = "NIGHT_MODE";
@@ -79,6 +81,26 @@ public class SettingsUtils {
         Configuration config = new Configuration(resources.getConfiguration());
         config.locale = locale;
         resources.updateConfiguration(config, resources.getDisplayMetrics());
+        //
+        PreferenceManager
+                .getDefaultSharedPreferences(context)
+                .edit()
+                .putString(SettingsUtils.APP_LANGUAGE, language)
+                .apply();
+    }
+
+    public static boolean isTheFirstRun(@NonNull Context context) {
+        return PreferenceManager
+                .getDefaultSharedPreferences(context)
+                .getBoolean(SettingsUtils.FIRST_RUN, true);
+    }
+
+    public static void setTheFirstRun(@NonNull Context context) {
+        PreferenceManager
+                .getDefaultSharedPreferences(context)
+                .edit()
+                .putBoolean(SettingsUtils.FIRST_RUN, false)
+                .apply();
     }
 
     @Nullable
@@ -129,5 +151,26 @@ public class SettingsUtils {
                 .edit()
                 .putInt(NIGHT_MODE, nightMode)
                 .apply();
+    }
+
+    static void reset(@NonNull Context context) {
+        // clear preferences
+        PreferenceManager.getDefaultSharedPreferences(context)
+                .edit().clear().apply();
+        context.getSharedPreferences(MainActivity.class.getName(), Context.MODE_PRIVATE)
+                .edit().clear().apply();
+        context.getSharedPreferences(TwoPlayersActivity.class.getName(), Context.MODE_PRIVATE)
+                .edit().clear().apply();
+
+        // clear night mode
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+
+        // clear language
+        Locale locale = Resources.getSystem().getConfiguration().locale;
+        Locale.setDefault(locale);
+        Resources resources = context.getResources();
+        Configuration config = new Configuration(resources.getConfiguration());
+        config.locale = locale;
+        resources.updateConfiguration(config, resources.getDisplayMetrics());
     }
 }

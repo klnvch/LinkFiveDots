@@ -61,6 +61,7 @@
     <string name="settings_night_mode">Modalità notturna</string>
     <string name="settings_auto">"Auto"</string>
     <string name="settings_system">"Sistema"</string>
+    <string name="settings_reset">"Cancella tutto"</string>
     <string name="rate_this_app">Valuta questa app</string>
 
     <string name="yes">"Sì"</string>
