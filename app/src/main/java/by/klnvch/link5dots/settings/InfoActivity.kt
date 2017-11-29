@@ -26,15 +26,14 @@ package by.klnvch.link5dots.settings
 
 import android.content.ActivityNotFoundException
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
-import android.widget.TextView
 
 import by.klnvch.link5dots.R
+import kotlinx.android.synthetic.main.activity_info.*
 
 class InfoActivity : AppCompatActivity(), View.OnClickListener {
 
@@ -44,31 +43,24 @@ class InfoActivity : AppCompatActivity(), View.OnClickListener {
         setTitle(R.string.application_info_label)
 
         // set version
-        var versionName = "?"
-        try {
-            versionName = packageManager.getPackageInfo(packageName, 0).versionName
-        } catch (e: PackageManager.NameNotFoundException) {
-            e.printStackTrace()
-        }
-
-        val versionTextView = findViewById<TextView>(R.id.version)
-        versionTextView.text = getString(R.string.version_text, versionName)
+        val versionName = packageManager.getPackageInfo(packageName, 0).versionName
+        textViewAppVersion.text = getString(R.string.version_text, versionName)
     }
 
     override fun onClick(v: View) {
         when (v.id) {
-            R.id.github -> startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(GITHUB_LINK)))
-            R.id.rate_this_app -> {
+            R.id.buttonInfoCode -> startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(GITHUB_LINK)))
+            R.id.buttonInfoRate -> {
                 try {
                     startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(ANDROID_APP_LINK)))
                 } catch (e: ActivityNotFoundException) {
                     Log.e(TAG, e.message)
                 }
             }
-            R.id.share -> startActivity(Intent(Intent.ACTION_SEND)
+            R.id.buttonInfoShare -> startActivity(Intent(Intent.ACTION_SEND)
                     .putExtra(Intent.EXTRA_TEXT, WEB_PAGE_LINK)
                     .setType("text/plain"))
-            R.id.send_feedback -> {
+            R.id.buttonInfoFeedback -> {
                 val feedBackIntent = Intent(Intent.ACTION_SENDTO)
                         .setType("message/rfc822")
                         .setData(Uri.parse("mailto:link5dots@gmail.com"))
