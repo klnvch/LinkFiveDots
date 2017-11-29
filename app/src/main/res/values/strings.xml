@@ -57,6 +57,7 @@
     <string name="end_new_game">New</string>
     <string name="end_undo">Undo</string>
     <string name="end_move">%1$d moves done for %2$d s.</string>
+    <string name="seed_hint" translatable="false">45664</string>
 
     <string name="scores_time">Time</string>
     <string name="end_publish">Publish</string>

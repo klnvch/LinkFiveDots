@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.settings;
+package by.klnvch.link5dots.dialogs;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -31,39 +31,42 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.EditText;
 
+import java.util.Random;
+
 import by.klnvch.link5dots.R;
-import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
+import by.klnvch.link5dots.utils.LinearCongruentialGenerator;
 
-public class UsernameDialog extends DialogFragment implements DialogInterface.OnClickListener {
+public class NewGameDialog extends DialogFragment implements DialogInterface.OnClickListener {
 
-    public static final String TAG = "UsernameDialog";
+    public static final String TAG = "NewGameDialog";
 
-    private OnUsernameChangedListener mListener = null;
+    private CheckBox mCheckBox;
+    private EditText mEditText;
+
+    private OnSeedNewGameListener mListener = null;
 
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+        View v = View.inflate(getActivity(), R.layout.dialog_new_game, null);
+
+        mCheckBox = v.findViewById(R.id.checkBoxSeed);
+        mEditText = v.findViewById(R.id.editTextSeed);
+
+        mCheckBox.setOnCheckedChangeListener((compoundButton, b) -> mEditText.setEnabled(b));
+        int seed = new Random().nextInt(LinearCongruentialGenerator.MAX_SEED);
+        String seedStr = Integer.toString(seed);
+        mEditText.setText(seedStr);
+
         return new AlertDialog.Builder(getContext())
                 .setCancelable(false)
                 .setPositiveButton(R.string.okay, this)
-                .setNegativeButton(R.string.cancel, null)
-                .setView(View.inflate(getActivity(), R.layout.username, null))
+                .setView(v)
                 .create();
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        Observable.fromCallable(this::getUserName)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::setUsername);
     }
 
     @Override
@@ -72,39 +75,29 @@ public class UsernameDialog extends DialogFragment implements DialogInterface.On
         super.onDestroy();
     }
 
+    @Override
+    public void onClick(DialogInterface dialogInterface, int i) {
+        switch (i) {
+            case DialogInterface.BUTTON_POSITIVE:
+                if (mCheckBox.isChecked()) {
+                    String seedStr = mEditText.getText().toString();
+                    Integer seed = Integer.parseInt(seedStr);
+                    seed %= LinearCongruentialGenerator.MAX_SEED;
+                    mListener.onSeedNewGame(seed);
+                } else {
+                    mListener.onSeedNewGame(null);
+                }
+                break;
+        }
+    }
+
     @NonNull
-    public UsernameDialog setOnUsernameChangeListener(@NonNull OnUsernameChangedListener listener) {
+    public NewGameDialog setOnSeedNewGameListener(OnSeedNewGameListener listener) {
         this.mListener = listener;
         return this;
     }
 
-    @Override
-    public void onClick(DialogInterface dialog, int which) {
-        EditText editText = getDialog().findViewById(R.id.username);
-        String username = editText.getText().toString().trim();
-        if (!username.isEmpty()) {
-            SettingsUtils.setUserName(getContext(), username);
-            if (mListener != null) {
-                mListener.onUsernameChanged(username);
-            }
-        }
-    }
-
-    @NonNull
-    private String getUserName() {
-        return SettingsUtils.getUserNameOrDefault(getContext());
-    }
-
-    private void setUsername(@Nullable String username) {
-        if (getDialog() != null) {
-            EditText editText = getDialog().findViewById(R.id.username);
-            editText.setText(username);
-        } else {
-            Log.e(TAG, "getDialog() returns null");
-        }
-    }
-
-    public interface OnUsernameChangedListener {
-        void onUsernameChanged(@NonNull String username);
+    public interface OnSeedNewGameListener {
+        void onSeedNewGame(@Nullable Integer seed);
     }
 }

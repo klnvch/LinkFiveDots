@@ -81,7 +81,7 @@ public class GameView extends View {
     private float lineThickness;
     private GestureDetector gestureDetector;
     private ScaleGestureDetector scaleGestureDetector;
-    private Game mGameState = new Game();
+    private Game mGameState = Game.generateGame(null);
     private GameViewState mViewState = new GameViewState();
     private OnMoveDoneListener onMoveDoneListener;
     private OnGameEndListener onGameEndListener;
@@ -242,9 +242,9 @@ public class GameView extends View {
         invalidate();
     }
 
-    public void resetGame() {
+    public void newGame(@Nullable Integer seed) {
         isEndGameSend = false;
-        mGameState.reset();
+        mGameState = Game.generateGame(seed);
         invalidate();
     }
 

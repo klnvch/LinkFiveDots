@@ -24,12 +24,16 @@
 
 package by.klnvch.link5dots.models;
 
+import android.graphics.Point;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import by.klnvch.link5dots.utils.LinearCongruentialGenerator;
 
 public class Game {
 
@@ -42,12 +46,36 @@ public class Game {
     private int movesDone = 0;
     private long startTime;
 
-    public Game() {
+    private Game() {
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < M; j++) {
                 net[i][j] = new Dot(i, j);
             }
         }
+    }
+
+    @NonNull
+    public static Game generateGame(@Nullable Integer seed) {
+        Game game = new Game();
+
+        if (seed != null) {
+            game.startTime = System.currentTimeMillis() / 1000;
+            game.movesDone = 3;
+
+            List<Point> points = LinearCongruentialGenerator.generateUniqueSixDots(seed);
+            for (int i = 0; i != points.size(); ++i) {
+                Point p = points.get(i);
+                int x = 8 + p.x;
+                int y = 8 + p.y;
+                if (i % 2 == 0) {
+                    game.net[x][y].changeStatus(Dot.USER, i);
+                } else {
+                    game.net[x][y].changeStatus(Dot.OPPONENT, i);
+                }
+            }
+        }
+
+        return game;
     }
 
     @NonNull
@@ -64,19 +92,6 @@ public class Game {
     @NonNull
     public String toJson() {
         return new Gson().toJson(this);
-    }
-
-    public void reset() {
-
-        for (int i = 0; i < N; i++) {
-            for (int j = 0; j < M; j++) {
-                net[i][j].changeStatus(Dot.EMPTY, -1);
-            }
-        }
-
-        movesDone = 0;
-
-        winningLine = null;
     }
 
     private void prepareScore() {

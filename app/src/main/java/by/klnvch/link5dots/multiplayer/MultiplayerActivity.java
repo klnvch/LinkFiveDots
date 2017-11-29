@@ -45,8 +45,8 @@ import android.widget.Toast;
 import java.lang.ref.WeakReference;
 
 import by.klnvch.link5dots.BaseActivity;
-import by.klnvch.link5dots.EndGameDialog;
 import by.klnvch.link5dots.R;
+import by.klnvch.link5dots.dialogs.EndGameDialog;
 import by.klnvch.link5dots.models.Dot;
 import by.klnvch.link5dots.models.Game;
 import by.klnvch.link5dots.models.GameViewState;
@@ -177,7 +177,7 @@ public abstract class MultiplayerActivity extends BaseActivity {
 
     @Override
     protected void newGame() {
-        mView.resetGame();
+        mView.newGame(null);
         sendMessage(new GameMessage(GameMessage.MSG_NEW_GAME));
     }
 
@@ -242,7 +242,7 @@ public abstract class MultiplayerActivity extends BaseActivity {
                         switch (msg.arg1) {
                             case MultiplayerService.STATE_CONNECTED:
                                 activity.setTitle(R.string.bluetooth_connected);
-                                activity.mView.resetGame();
+                                activity.mView.newGame(null);
                                 break;
                             case MultiplayerService.STATE_CONNECTING:
                                 activity.setTitle(R.string.bluetooth_connecting);
@@ -259,7 +259,7 @@ public abstract class MultiplayerActivity extends BaseActivity {
                         GameMessage gameMessage = GameMessage.fromBytes((byte[]) msg.obj, msg.arg1);
                         switch (gameMessage.getMsg()) {
                             case GameMessage.MSG_NEW_GAME:
-                                activity.mView.resetGame();
+                                activity.mView.newGame(null);
                                 break;
                             case GameMessage.MSG_USERNAME:
                                 String enemyName = (String) gameMessage.getObj();
