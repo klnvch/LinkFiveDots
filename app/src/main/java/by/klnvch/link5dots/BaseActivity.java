@@ -29,6 +29,7 @@ import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -50,8 +51,9 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected static final String KEY_GAME_STATE = "KEY_GAME_STATE_V1";
     protected static final String KEY_VIEW_STATE = "KEY_VIEW_STATE_V3";
 
-    protected GameView mView;
+    protected GameView mView = null;
     protected String mUserName = "";
+    private DialogFragment mDialogNewGame = null;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -79,6 +81,14 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onDestroy() {
+        mUserName = null;
+        mDialogNewGame = null;
+        mView = null;
+        super.onDestroy();
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
@@ -103,8 +113,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         return true;
     }
 
-    protected void undoLastMove() {
-    }
+    protected abstract void undoLastMove();
 
     protected void newGame() {
         getPreferences(MODE_PRIVATE).edit()
@@ -113,9 +122,10 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         mView.newGame(null);
 
-        new NewGameDialog()
-                .setOnSeedNewGameListener(seed -> mView.newGame(seed))
-                .show(getSupportFragmentManager(), NewGameDialog.TAG);
+        mDialogNewGame = null;
+        mDialogNewGame = new NewGameDialog()
+                .setOnSeedNewGameListener(mView::newGame);
+        mDialogNewGame.show(getSupportFragmentManager(), null);
     }
 
     private void searchLastMove() {

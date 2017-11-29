@@ -182,6 +182,11 @@ public abstract class MultiplayerActivity extends BaseActivity {
     }
 
     @Override
+    protected void undoLastMove() {
+
+    }
+
+    @Override
     protected void onMoveDone(@NonNull Dot currentDot, @Nullable Dot previousDot) {
         if (previousDot == null || previousDot.getType() == Dot.OPPONENT) {
             // set user dot
