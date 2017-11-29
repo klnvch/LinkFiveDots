@@ -46,7 +46,7 @@ public class LanguageDialog extends DialogFragment implements DialogInterface.On
     private static final String LANGUAGE_UK = "uk";
     private static final String LANGUAGE_FA = "fa";
 
-    private OnLanguageChangedListener listener;
+    private OnLanguageChangedListener mListener;
 
     @NonNull
     @Override
@@ -86,10 +86,16 @@ public class LanguageDialog extends DialogFragment implements DialogInterface.On
                 break;
         }
 
-        return new AlertDialog.Builder(getActivity())
+        return new AlertDialog.Builder(getContext())
                 .setCancelable(false)
                 .setSingleChoiceItems(R.array.languages, currentItem, this)
                 .create();
+    }
+
+    @Override
+    public void onDestroy() {
+        mListener = null;
+        super.onDestroy();
     }
 
     @Override
@@ -129,8 +135,8 @@ public class LanguageDialog extends DialogFragment implements DialogInterface.On
         //
         SettingsUtils.changeLanguage(getContext(), language);
         //
-        if (listener != null) {
-            listener.onLanguageChanged();
+        if (mListener != null) {
+            mListener.onLanguageChanged();
         }
         //
         dismiss();
@@ -138,7 +144,7 @@ public class LanguageDialog extends DialogFragment implements DialogInterface.On
 
     @NonNull
     public LanguageDialog setOnLanguageChangedListener(@NonNull OnLanguageChangedListener listener) {
-        this.listener = listener;
+        this.mListener = listener;
         return this;
     }
 

@@ -29,6 +29,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
 
+import by.klnvch.link5dots.dialogs.EndGameDialog;
 import by.klnvch.link5dots.models.Dot;
 import by.klnvch.link5dots.models.HighScore;
 
