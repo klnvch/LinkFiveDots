@@ -35,6 +35,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import by.klnvch.link5dots.dialogs.NewGameDialog;
 import by.klnvch.link5dots.models.Dot;
 import by.klnvch.link5dots.models.Game;
 import by.klnvch.link5dots.models.GameViewState;
@@ -106,10 +107,15 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     protected void newGame() {
-        mView.resetGame();
         getPreferences(MODE_PRIVATE).edit()
                 .putString(KEY_GAME_STATE, null)
                 .apply();
+
+        mView.newGame(null);
+
+        new NewGameDialog()
+                .setOnSeedNewGameListener(seed -> mView.newGame(seed))
+                .show(getSupportFragmentManager(), NewGameDialog.TAG);
     }
 
     private void searchLastMove() {
