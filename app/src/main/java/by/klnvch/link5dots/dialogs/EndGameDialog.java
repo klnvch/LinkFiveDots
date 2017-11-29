@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots;
+package by.klnvch.link5dots.dialogs;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -30,6 +30,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
+
+import by.klnvch.link5dots.R;
 
 public class EndGameDialog extends DialogFragment implements DialogInterface.OnClickListener {
 
@@ -39,9 +41,9 @@ public class EndGameDialog extends DialogFragment implements DialogInterface.OnC
     private static final String KEY_MSG = "KEY_MSG";
     private static final String KEY_CANCELABLE = "KEY_CANCELABLE";
 
-    private OnNewGameListener listenerNew = null;
-    private OnUndoMoveListener listenerUndo = null;
-    private OnScoreListener listenerScore = null;
+    private OnNewGameListener mListenerNew = null;
+    private OnUndoMoveListener mListenerUndo = null;
+    private OnScoreListener mListenerScore = null;
 
     public static EndGameDialog newInstance(@NonNull String msg, int title, boolean isCancelable) {
         Bundle args = new Bundle();
@@ -70,35 +72,43 @@ public class EndGameDialog extends DialogFragment implements DialogInterface.OnC
         int title = getArguments().getInt(KEY_TITLE);
         boolean isCancelable = getArguments().getBoolean(KEY_CANCELABLE, true);
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext())
                 .setCancelable(isCancelable)
                 .setMessage(msg);
 
         if (title != 0) builder.setTitle(title);
 
-        if (listenerNew != null) builder.setPositiveButton(R.string.end_new_game, this);
-        if (listenerUndo != null) builder.setNegativeButton(R.string.end_undo, this);
-        if (listenerScore != null) builder.setNeutralButton(R.string.scores_title, this);
+        if (mListenerNew != null) builder.setPositiveButton(R.string.end_new_game, this);
+        if (mListenerUndo != null) builder.setNegativeButton(R.string.end_undo, this);
+        if (mListenerScore != null) builder.setNeutralButton(R.string.scores_title, this);
 
         return builder.show();
+    }
+
+    @Override
+    public void onDestroy() {
+        mListenerNew = null;
+        mListenerUndo = null;
+        mListenerScore = null;
+        super.onDestroy();
     }
 
     @Override
     public void onClick(DialogInterface dialog, int which) {
         switch (which) {
             case DialogInterface.BUTTON_POSITIVE:
-                if (listenerNew != null) {
-                    listenerNew.onNewGame();
+                if (mListenerNew != null) {
+                    mListenerNew.onNewGame();
                 }
                 break;
             case DialogInterface.BUTTON_NEGATIVE:
-                if (listenerUndo != null) {
-                    listenerUndo.onUndoMove();
+                if (mListenerUndo != null) {
+                    mListenerUndo.onUndoMove();
                 }
                 break;
             case DialogInterface.BUTTON_NEUTRAL:
-                if (listenerScore != null) {
-                    listenerScore.onScore();
+                if (mListenerScore != null) {
+                    mListenerScore.onScore();
                 }
                 break;
         }
@@ -106,19 +116,19 @@ public class EndGameDialog extends DialogFragment implements DialogInterface.OnC
 
     @NonNull
     public EndGameDialog setOnNewGameListener(OnNewGameListener listenerNew) {
-        this.listenerNew = listenerNew;
+        this.mListenerNew = listenerNew;
         return this;
     }
 
     @NonNull
     public EndGameDialog setOnUndoMoveListener(OnUndoMoveListener listenerUndo) {
-        this.listenerUndo = listenerUndo;
+        this.mListenerUndo = listenerUndo;
         return this;
     }
 
     @NonNull
     public EndGameDialog setOnScoreListener(OnScoreListener listenerScore) {
-        this.listenerScore = listenerScore;
+        this.mListenerScore = listenerScore;
         return this;
     }
 
