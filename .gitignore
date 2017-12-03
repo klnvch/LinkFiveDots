@@ -1,9 +1,14 @@
 *.iml
 .gradle
-local.properties
-.idea/*
-build
+/local.properties
+.idea
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+
 gradle
+build
 app/google-services.json
 keystore
 gradlew
