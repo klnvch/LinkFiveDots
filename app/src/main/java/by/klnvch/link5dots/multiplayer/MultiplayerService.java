@@ -26,9 +26,13 @@ package by.klnvch.link5dots.multiplayer;
 
 import android.app.Service;
 import android.os.Binder;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.Message;
 import android.support.annotation.NonNull;
+
+import by.klnvch.link5dots.R;
 
 public abstract class MultiplayerService extends Service {
 
@@ -66,6 +70,25 @@ public abstract class MultiplayerService extends Service {
     public abstract void stop();
 
     public abstract void start();
+
+    public void sendMessage(int what, int arg1, int arg2, Object obj) {
+        mHandler.obtainMessage(what, arg1, arg2, obj).sendToTarget();
+    }
+
+    /**
+     * Indicate that the connection was lost and notify the UI Activity.
+     */
+    public void connectionLost() {
+        // Send a failure message back to the Activity
+        Message msg = mHandler.obtainMessage(MultiplayerActivity.MESSAGE_TOAST);
+        Bundle bundle = new Bundle();
+        bundle.putInt(MultiplayerActivity.TOAST, R.string.bluetooth_disconnected);
+        msg.setData(bundle);
+        mHandler.sendMessage(msg);
+
+        // Start the service over to restart listening mode
+        start();
+    }
 
     /**
      * Class used for the client Binder.  Because we know this service always

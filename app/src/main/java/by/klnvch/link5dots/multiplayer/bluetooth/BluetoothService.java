@@ -37,6 +37,7 @@ import android.util.Log;
 import java.util.UUID;
 
 import by.klnvch.link5dots.R;
+import by.klnvch.link5dots.multiplayer.ConnectedThread;
 import by.klnvch.link5dots.multiplayer.MultiplayerService;
 
 /**
@@ -224,6 +225,7 @@ public class BluetoothService extends MultiplayerService {
      * @param out The bytes to write
      * @see ConnectedThread#write(byte[])
      */
+    @Override
     public void write(@NonNull byte[] out) {
         // Create temporary object
         ConnectedThread r;
@@ -252,26 +254,7 @@ public class BluetoothService extends MultiplayerService {
         BluetoothService.this.start();
     }
 
-    /**
-     * Indicate that the connection was lost and notify the UI Activity.
-     */
-    public void connectionLost() {
-        // Send a failure message back to the Activity
-        Message msg = mHandler.obtainMessage(BluetoothActivity.MESSAGE_TOAST);
-        Bundle bundle = new Bundle();
-        bundle.putInt(BluetoothActivity.TOAST, R.string.bluetooth_disconnected);
-        msg.setData(bundle);
-        mHandler.sendMessage(msg);
-
-        // Start the service over to restart listening mode
-        BluetoothService.this.start();
-    }
-
     public void resetConnectThread() {
         mConnectedThread = null;
-    }
-
-    public void sendMessage(int what, int arg1, int arg2, Object obj) {
-        mHandler.obtainMessage(what, arg1, arg2, obj).sendToTarget();
     }
 }

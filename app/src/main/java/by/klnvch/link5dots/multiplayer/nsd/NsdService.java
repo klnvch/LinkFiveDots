@@ -42,6 +42,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import by.klnvch.link5dots.R;
+import by.klnvch.link5dots.multiplayer.ConnectedThread;
 import by.klnvch.link5dots.multiplayer.MultiplayerService;
 
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
@@ -352,25 +353,6 @@ public class NsdService extends MultiplayerService {
 
         // Start the service over to restart listening mode
         NsdService.this.start();
-    }
-
-    /**
-     * Indicate that the connection was lost and notify the UI Activity.
-     */
-    public void connectionLost() {
-        // Send a failure message back to the Activity
-        Message msg = mHandler.obtainMessage(NsdActivity.MESSAGE_TOAST);
-        Bundle bundle = new Bundle();
-        bundle.putInt(NsdActivity.TOAST, R.string.bluetooth_disconnected);
-        msg.setData(bundle);
-        mHandler.sendMessage(msg);
-
-        // Start the service over to restart listening mode
-        NsdService.this.start();
-    }
-
-    public void sendMessage(int what, int arg1, int arg2, Object obj) {
-        mHandler.obtainMessage(what, arg1, arg2, obj).sendToTarget();
     }
 
     public void setLocalPort(int port) {
