@@ -91,7 +91,6 @@
         android:text="@string/btn_github"
         app:layout_constraintBottom_toTopOf="@+id/buttonInfoRate"
         app:layout_constraintEnd_toStartOf="@+id/guidelineVertical"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
@@ -127,7 +126,6 @@
         android:onClick="onClick"
         android:text="@string/share"
         app:layout_constraintEnd_toStartOf="@+id/guidelineVertical"
-        app:layout_constraintHorizontal_bias="0.437"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/buttonInfoFeedback" />
 

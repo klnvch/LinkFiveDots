@@ -39,7 +39,7 @@
         android:padding="@dimen/btn_table_padding">
 
         <TextView
-            android:id="@+id/hello_user"
+            android:id="@+id/textViewGreeting"
             style="@style/TextAppearance.AppCompat.Headline"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
