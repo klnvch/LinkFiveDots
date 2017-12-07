@@ -103,11 +103,11 @@ public class SettingsUtils {
                 .apply();
     }
 
-    @Nullable
-    public static String getUserNameOrNull(@NonNull Context context) {
+    @NonNull
+    public static String getUserNameOrEmpty(@NonNull Context context) {
         return PreferenceManager
                 .getDefaultSharedPreferences(context)
-                .getString(USER_NAME, null);
+                .getString(USER_NAME, "");
     }
 
     @NonNull
