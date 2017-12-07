@@ -24,7 +24,6 @@
 
 package by.klnvch.link5dots.multiplayer;
 
-import android.bluetooth.BluetoothSocket;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -33,80 +32,50 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.ref.WeakReference;
-import java.net.Socket;
-
-import by.klnvch.link5dots.multiplayer.bluetooth.BluetoothService;
-import by.klnvch.link5dots.multiplayer.nsd.NsdService;
 
 /**
  * This thread runs during a connection with a remote device.
  * It handles all incoming and outgoing transmissions.
  */
-public class ConnectedThread extends Thread {
+public abstract class ConnectedThread<Socket> extends Thread {
     private static final String TAG = "ConnectedThread";
 
-    private final Object mSocket;
-    private final InputStream mInputStream;
-    private final OutputStream mOutputStream;
-
+    protected final Socket mSocket;
     private final MultiplayerService mService;
+    private final byte[] buffer = new byte[1024];
+    private InputStream mInputStream;
+    private OutputStream mOutputStream;
 
-    public ConnectedThread(@NonNull NsdService service, @NonNull Socket socket) {
-        Log.d(TAG, "create ConnectedThread");
+    public ConnectedThread(@NonNull MultiplayerService service, @NonNull Socket socket) {
         this.mService = service;
         this.mSocket = socket;
-
-        InputStream tmpIn = null;
-        OutputStream tmpOut = null;
-
-        try {
-            tmpIn = socket.getInputStream();
-            tmpOut = socket.getOutputStream();
-        } catch (IOException e) {
-            Log.e(TAG, "temp sockets not created", e);
-        }
-
-        this.mInputStream = tmpIn;
-        this.mOutputStream = tmpOut;
     }
 
-    public ConnectedThread(@NonNull BluetoothService service, @NonNull BluetoothSocket socket) {
-        Log.d(TAG, "create ConnectedThread");
-        this.mService = service;
-        this.mSocket = socket;
-
-        InputStream tmpIn = null;
-        OutputStream tmpOut = null;
-
-        try {
-            tmpIn = socket.getInputStream();
-            tmpOut = socket.getOutputStream();
-        } catch (IOException e) {
-            Log.e(TAG, "temp sockets not created", e);
-        }
-
-        this.mInputStream = tmpIn;
-        this.mOutputStream = tmpOut;
-    }
-
+    @Override
     public void run() {
         Log.i(TAG, "run");
-        byte[] buffer = new byte[1024];
-        int bytes;
+
+        try {
+            mInputStream = getInputStream();
+            mOutputStream = getOutputStream();
+        } catch (IOException e) {
+            Log.e(TAG, "temp sockets not created", e);
+        }
 
         // Keep listening to the InputStream while connected
         while (true) {
             try {
                 // Read from the InputStream
-                bytes = mInputStream.read(buffer);
+                int byteCount = mInputStream.read(buffer);
 
                 // Send the obtained bytes to the UI Activity
-                if (bytes == -1) {
+                if (byteCount == -1) {
                     Log.e(TAG, "InputStream read -1");
                     mService.connectionLost();
                     break;
                 } else {
-                    mService.sendMessage(MultiplayerActivity.MESSAGE_READ, bytes, -1, buffer);
+                    String msg = new String(buffer, 0, byteCount);
+                    mService.sendMsg(MultiplayerActivity.MESSAGE_READ, msg);
                 }
             } catch (IOException e) {
                 Log.e(TAG, "InputStream read: " + e.getMessage());
@@ -116,31 +85,33 @@ public class ConnectedThread extends Thread {
         }
     }
 
+    @NonNull
+    protected abstract InputStream getInputStream() throws IOException;
+
+    @NonNull
+    protected abstract OutputStream getOutputStream() throws IOException;
+
+    protected abstract void closeSocket() throws IOException;
+
     /**
      * Write to the connected OutStream.
      *
-     * @param buffer The bytes to write
+     * @param msg The bytes to write
      */
-    public void write(@NonNull byte[] buffer) {
+    void write(@NonNull String msg) {
         // NetworkOnMainThreadException - StrictMode$AndroidBlockGuardPolicy.onNetwork
-        new WriterTask(this).execute(buffer);
+        new WriterTask(this).execute(msg);
     }
 
     public void cancel() {
         try {
-            if (mSocket instanceof BluetoothSocket) {
-                ((BluetoothSocket) mSocket).close();
-            } else if (mSocket instanceof Socket) {
-                ((Socket) mSocket).close();
-            } else {
-                Log.e(TAG, "unknown socket");
-            }
+            closeSocket();
         } catch (IOException e) {
-            Log.e(TAG, "close() of connect socket failed", e);
+            Log.e(TAG, "close() of socket failed", e);
         }
     }
 
-    private static class WriterTask extends AsyncTask<byte[], Void, Boolean> {
+    private static class WriterTask extends AsyncTask<String, Void, Boolean> {
         private final WeakReference<ConnectedThread> mThreadRef;
 
         private WriterTask(@NonNull ConnectedThread thread) {
@@ -148,13 +119,12 @@ public class ConnectedThread extends Thread {
         }
 
         @Override
-        protected Boolean doInBackground(byte[]... params) {
+        protected Boolean doInBackground(String... params) {
             ConnectedThread thread = mThreadRef.get();
             if (thread != null) {
                 try {
-                    thread.mOutputStream.write(params[0]);
-                    thread.mService.sendMessage(MultiplayerActivity.MESSAGE_WRITE,
-                            -1, -1, params[0]);
+                    thread.mOutputStream.write(params[0].getBytes());
+                    thread.mService.sendMsg(MultiplayerActivity.MESSAGE_WRITE, params[0]);
                     return true;
                 } catch (IOException e) {
                     Log.e(TAG, "Exception during write", e);

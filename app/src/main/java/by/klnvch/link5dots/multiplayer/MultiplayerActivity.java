@@ -63,6 +63,7 @@ public abstract class MultiplayerActivity extends BaseActivity {
     public static final int MESSAGE_STATE_CHANGE = 1;
     public static final int MESSAGE_READ = 2;
     public static final int MESSAGE_WRITE = 3;
+    public static final int MESSAGE_DEVICE_NAME = 4;
     public static final int MESSAGE_TOAST = 5;
     public static final String TOAST = "toast";
     private static final String KEY_ENEMY_NAME = "KEY_ENEMY_NAME";
@@ -228,7 +229,7 @@ public abstract class MultiplayerActivity extends BaseActivity {
             Toast.makeText(this, R.string.bluetooth_disconnected, Toast.LENGTH_SHORT).show();
             return;
         }
-        mService.write(msg.toBytes());
+        mService.write(msg.toJson());
     }
 
     private static class MHandler extends Handler {
@@ -261,7 +262,7 @@ public abstract class MultiplayerActivity extends BaseActivity {
                     case MESSAGE_WRITE:
                         break;
                     case MESSAGE_READ:
-                        GameMessage gameMessage = GameMessage.fromBytes((byte[]) msg.obj, msg.arg1);
+                        GameMessage gameMessage = GameMessage.fromJson((String) msg.obj);
                         switch (gameMessage.getMsg()) {
                             case GameMessage.MSG_NEW_GAME:
                                 activity.mView.newGame(null);

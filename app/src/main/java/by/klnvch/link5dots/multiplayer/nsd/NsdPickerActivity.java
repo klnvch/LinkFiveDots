@@ -48,12 +48,12 @@ import android.widget.ToggleButton;
 import java.lang.ref.WeakReference;
 
 import by.klnvch.link5dots.R;
+import by.klnvch.link5dots.multiplayer.MultiplayerActivity;
 import by.klnvch.link5dots.multiplayer.MultiplayerService;
 
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 public class NsdPickerActivity extends AppCompatActivity {
 
-    public static final int MESSAGE_DEVICE_NAME = 4;
     public static final int MESSAGE_SERVER_STATE_CHANGE = 101;
     public static final int MESSAGE_CLIENT_STATE_CHANGE = 102;
     public static final int MESSAGE_SERVICES_LIST_UPDATED = 300;
@@ -299,7 +299,7 @@ public class NsdPickerActivity extends AppCompatActivity {
                                 break;
                         }
                         break;
-                    case MESSAGE_DEVICE_NAME:
+                    case MultiplayerActivity.MESSAGE_DEVICE_NAME:
                         // save the connected device's name
                         String mConnectedDeviceName = msg.getData().getString(DEVICE_NAME);
                         Toast.makeText(activity.getApplicationContext(),
