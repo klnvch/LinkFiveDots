@@ -60,6 +60,11 @@ android {
             applicationIdSuffix ".debug"
         }
     }
+
+    lintOptions {
+        checkReleaseBuilds false
+        abortOnError false
+    }
 }
 
 dependencies {
