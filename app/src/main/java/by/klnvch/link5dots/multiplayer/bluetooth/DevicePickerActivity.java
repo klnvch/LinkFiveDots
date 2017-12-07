@@ -57,11 +57,11 @@ import java.util.Locale;
 import java.util.Set;
 
 import by.klnvch.link5dots.R;
+import by.klnvch.link5dots.multiplayer.MultiplayerActivity;
 import by.klnvch.link5dots.multiplayer.MultiplayerService;
 
 public class DevicePickerActivity extends AppCompatActivity implements View.OnClickListener {
 
-    public static final int MESSAGE_DEVICE_NAME = 4;
     public static final String DEVICE_NAME = "device_name";
     public static final String TOAST = "toast";
     private static final String TAG = "DevicePickerActivity";
@@ -397,7 +397,7 @@ public class DevicePickerActivity extends AppCompatActivity implements View.OnCl
                                 break;
                         }
                         break;
-                    case MESSAGE_DEVICE_NAME:
+                    case MultiplayerActivity.MESSAGE_DEVICE_NAME:
                         // save the connected device's name
                         String mConnectedDeviceName = msg.getData().getString(DEVICE_NAME);
                         Toast.makeText(activity.getApplicationContext(),

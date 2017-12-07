@@ -31,7 +31,7 @@ import com.google.gson.Gson;
 
 import by.klnvch.link5dots.models.Dot;
 
-public class GameMessage {
+class GameMessage {
 
     static final int MSG_NEW_GAME = 1;
     static final int MSG_USERNAME = 2;
@@ -52,10 +52,9 @@ public class GameMessage {
     }
 
     @NonNull
-    static GameMessage fromBytes(@Nullable byte[] bytes, int byteCount) {
-        if (bytes == null) return new GameMessage(MSG_INVALID);
+    static GameMessage fromJson(@Nullable String json) {
+        if (json == null) return new GameMessage(MSG_INVALID);
 
-        String json = new String(bytes, 0, byteCount);
         GameMessage gameMessage = new Gson().fromJson(json, GameMessage.class);
         switch (gameMessage.msg) {
             case MSG_NEW_GAME:
@@ -72,7 +71,7 @@ public class GameMessage {
         return gameMessage;
     }
 
-    public int getMsg() {
+    int getMsg() {
         return msg;
     }
 
@@ -86,9 +85,8 @@ public class GameMessage {
     }
 
     @NonNull
-    byte[] toBytes() {
+    String toJson() {
         this.jsonObj = new Gson().toJson(obj);
-        String json = new Gson().toJson(this);
-        return json.getBytes();
+        return new Gson().toJson(this);
     }
 }

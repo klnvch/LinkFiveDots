@@ -26,13 +26,9 @@ package by.klnvch.link5dots.multiplayer.nsd;
 
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.content.Intent;
 import android.net.nsd.NsdManager;
 import android.net.nsd.NsdServiceInfo;
 import android.os.Build;
-import android.os.Bundle;
-import android.os.IBinder;
-import android.os.Message;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -41,12 +37,13 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import by.klnvch.link5dots.R;
+import by.klnvch.link5dots.multiplayer.AcceptThread;
+import by.klnvch.link5dots.multiplayer.ConnectThread;
 import by.klnvch.link5dots.multiplayer.ConnectedThread;
 import by.klnvch.link5dots.multiplayer.MultiplayerService;
 
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-public class NsdService extends MultiplayerService {
+public class NsdService extends MultiplayerService<Socket, NsdServiceInfo> {
 
     // Constants that indicate the current connection state
     public static final int STATE_UNREGISTERED = 100;
@@ -61,29 +58,15 @@ public class NsdService extends MultiplayerService {
     private static final String SERVICE_TYPE = "_http._tcp.";
     private final Map<String, NsdServiceInfo> mServices = new HashMap<>();
     // Member fields
-    private AcceptThread mAcceptThread;
-    private ConnectThread mConnectThread;
-    private ConnectedThread mConnectedThread;
     private boolean mResolveListenerInUse = false;
     private NsdManager.RegistrationListener mRegistrationListener;
     private NsdManager.DiscoveryListener mDiscoveryListener;
     private NsdManager.ResolveListener mResolveListener;
-    private NsdServiceInfo mRegistrationNsdServiceInfo = null;
-    private NsdServiceInfo mConnectedNsdServiceInfo = null;
+    private NsdServiceInfo mLocalNsdInfo = null;
     private NsdManager mNsdManager;
     private int mPort = -1;
     private int mServerState = STATE_UNREGISTERED;
     private int mClientState = STATE_IDLE;
-
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        return START_STICKY;
-    }
-
-    @Override
-    public IBinder onBind(Intent intent) {
-        return mBinder;
-    }
 
     @Override
     public void onCreate() {
@@ -101,28 +84,28 @@ public class NsdService extends MultiplayerService {
             @Override
             public void onRegistrationFailed(NsdServiceInfo nsdServiceInfo, int i) {
                 setServerState(STATE_UNREGISTERED);
-                mRegistrationNsdServiceInfo = null;
+                mLocalNsdInfo = null;
                 Log.d(TAG, "onRegistrationFailed: " + i);
             }
 
             @Override
             public void onUnregistrationFailed(NsdServiceInfo nsdServiceInfo, int i) {
                 setServerState(STATE_UNREGISTERED);
-                mRegistrationNsdServiceInfo = null;
+                mLocalNsdInfo = null;
                 Log.d(TAG, "onUnRegistrationFailed: " + i);
             }
 
             @Override
             public void onServiceRegistered(NsdServiceInfo nsdServiceInfo) {
                 setServerState(STATE_REGISTERED);
-                mRegistrationNsdServiceInfo = nsdServiceInfo;
+                mLocalNsdInfo = nsdServiceInfo;
                 Log.d(TAG, "onServiceRegistered: " + nsdServiceInfo);
             }
 
             @Override
             public void onServiceUnregistered(NsdServiceInfo nsdServiceInfo) {
                 setServerState(STATE_UNREGISTERED);
-                mRegistrationNsdServiceInfo = null;
+                mLocalNsdInfo = null;
                 Log.d(TAG, "onServiceUnregistered");
             }
         };
@@ -155,9 +138,9 @@ public class NsdService extends MultiplayerService {
                 Log.d(TAG, "Service discovery success" + nsdServiceInfo);
                 if (!nsdServiceInfo.getServiceType().equals(SERVICE_TYPE)) {
                     Log.d(TAG, "Unknown Service Type: " + nsdServiceInfo.getServiceType());
-                } else if (mRegistrationNsdServiceInfo != null && nsdServiceInfo.getServiceName()
-                        .equals(mRegistrationNsdServiceInfo.getServiceName())) {
-                    Log.d(TAG, "Same machine: " + mRegistrationNsdServiceInfo.getServiceName());
+                } else if (mLocalNsdInfo != null && nsdServiceInfo.getServiceName()
+                        .equals(mLocalNsdInfo.getServiceName())) {
+                    Log.d(TAG, "Same machine: " + mLocalNsdInfo.getServiceName());
                 } else if (nsdServiceInfo.getServiceName().contains(SERVICE_NAME)) {
                     if (!mResolveListenerInUse) {
                         mResolveListenerInUse = true;
@@ -171,7 +154,7 @@ public class NsdService extends MultiplayerService {
                 Log.e(TAG, "service lost" + nsdServiceInfo);
                 mServices.remove(nsdServiceInfo.getServiceName());
                 //
-                mHandler.obtainMessage(NsdPickerActivity.MESSAGE_SERVICES_LIST_UPDATED).sendToTarget();
+                sendMsg(NsdPickerActivity.MESSAGE_SERVICES_LIST_UPDATED);
             }
         };
         //
@@ -187,14 +170,14 @@ public class NsdService extends MultiplayerService {
             public void onServiceResolved(NsdServiceInfo nsdServiceInfo) {
                 Log.e(TAG, "Resolve Succeeded. " + nsdServiceInfo);
 
-                if (mRegistrationNsdServiceInfo != null && nsdServiceInfo.getServiceName()
-                        .equals(mRegistrationNsdServiceInfo.getServiceName())) {
+                if (mLocalNsdInfo != null && nsdServiceInfo.getServiceName()
+                        .equals(mLocalNsdInfo.getServiceName())) {
                     Log.d(TAG, "Same IP.");
                     return;
                 }
                 mServices.put(nsdServiceInfo.getServiceName(), nsdServiceInfo);
                 //
-                mHandler.obtainMessage(NsdPickerActivity.MESSAGE_SERVICES_LIST_UPDATED).sendToTarget();
+                sendMsg(NsdPickerActivity.MESSAGE_SERVICES_LIST_UPDATED);
                 //
                 mResolveListenerInUse = false;
             }
@@ -202,16 +185,14 @@ public class NsdService extends MultiplayerService {
         //
         mNsdManager = (NsdManager) getSystemService(Context.NSD_SERVICE);
         //
-        mAcceptThread = new AcceptThread(this);
-        mAcceptThread.start();
-        //
         mState = STATE_NONE;
         start();
     }
 
     @Override
     public void onDestroy() {
-        stop();
+        super.onDestroy(); // important
+
         if (mServerState == STATE_REGISTERED) {
             mNsdManager.unregisterService(mRegistrationListener);
         }
@@ -224,135 +205,22 @@ public class NsdService extends MultiplayerService {
         }
     }
 
-    /**
-     * Set the current state of the chat connection
-     *
-     * @param state An integer defining the current connection state
-     */
-    private synchronized void setState(int state) {
-        mState = state;
-
-        // Give the new state to the Handler so the UI Activity can update
-        if (mHandler != null) {
-            mHandler.obtainMessage(NsdActivity.MESSAGE_STATE_CHANGE, state, -1).sendToTarget();
-        }
-    }
-
-    /**
-     * Start the chat service. Specifically start AcceptThread to begin a
-     * session in listening (server) mode. Called by the Activity onResume()
-     */
+    @NonNull
     @Override
-    public synchronized void start() {
-        // Cancel any thread attempting to make a connection
-        if (mConnectThread != null) {
-            mConnectThread.cancel();
-            mConnectThread = null;
-        }
-        // Cancel any thread currently running a connection
-        if (mConnectedThread != null) {
-            mConnectedThread.cancel();
-            mConnectedThread = null;
-        }
-        setState(STATE_LISTEN);
+    protected AcceptThread createAcceptThread() {
+        return new NsdAcceptThread(this);
     }
 
-    public synchronized void connect(NsdServiceInfo serviceInfo) {
-
-        // Cancel any thread attempting to make a connection
-        if (mState == STATE_CONNECTING) {
-            if (mConnectThread != null) {
-                mConnectThread.cancel();
-                mConnectThread = null;
-            }
-        }
-
-        // Cancel any thread currently running a connection
-        if (mConnectedThread != null) {
-            mConnectedThread.cancel();
-            mConnectedThread = null;
-        }
-
-        // Start the thread to connect with the given device
-        mConnectThread = new ConnectThread(this, serviceInfo);
-        mConnectThread.start();
-        setState(STATE_CONNECTING);
-    }
-
-    synchronized void connected(Socket socket, NsdServiceInfo nsdServiceInfo) {
-        this.mConnectedNsdServiceInfo = nsdServiceInfo;
-
-        // Cancel the thread that completed the connection
-        if (mConnectThread != null) {
-            //mConnectThread.cancel();
-            mConnectThread = null;
-        }
-
-        // Cancel any thread currently running a connection
-        if (mConnectedThread != null) {
-            mConnectedThread.cancel();
-            mConnectedThread = null;
-        }
-
-        // Start the thread to manage the connection and perform transmissions
-        mConnectedThread = new ConnectedThread(this, socket);
-        mConnectedThread.start();
-
-        // Send the name of the connected device back to the UI Activity
-        mHandler.obtainMessage(NsdPickerActivity.MESSAGE_DEVICE_NAME).sendToTarget();
-
-        setState(STATE_CONNECTED);
-    }
-
-    /**
-     * Stop all threads
-     */
+    @NonNull
     @Override
-    public synchronized void stop() {
-        if (mConnectThread != null) {
-            mConnectThread.cancel();
-            mConnectThread = null;
-        }
-        if (mConnectedThread != null) {
-            mConnectedThread.cancel();
-            mConnectedThread = null;
-        }
-        setState(STATE_NONE);
+    protected ConnectThread createConnectThread(@NonNull NsdServiceInfo nsdServiceInfo) {
+        return new NsdConnectThread(this, nsdServiceInfo);
     }
 
-    /**
-     * Write to the ConnectedThread in an not synchronized manner
-     *
-     * @param out The bytes to write
-     * @see ConnectedThread#write(byte[])
-     */
+    @NonNull
     @Override
-    public void write(@NonNull byte[] out) {
-        // Create temporary object
-        ConnectedThread r;
-        // Synchronize a copy of the ConnectedThread
-        synchronized (this) {
-            if (mState != STATE_CONNECTED) return;
-            r = mConnectedThread;
-        }
-        // Perform the write not synchronized
-        r.write(out);
-    }
-
-    /**
-     * Indicate that the connection attempt failed and notify the UI Activity.
-     */
-    public void connectionFailed(NsdServiceInfo nsdServiceInfo) {
-        // Send a failure message back to the Activity
-        Message msg = mHandler.obtainMessage(NsdActivity.MESSAGE_TOAST);
-        Bundle bundle = new Bundle();
-        bundle.putInt(NsdPickerActivity.TOAST, R.string.bluetooth_connecting_error_message);
-        bundle.putString(NsdPickerActivity.DEVICE_NAME, nsdServiceInfo.getServiceName());
-        msg.setData(bundle);
-        mHandler.sendMessage(msg);
-
-        // Start the service over to restart listening mode
-        NsdService.this.start();
+    protected ConnectedThread createConnectedThread(@NonNull Socket socket) {
+        return new NsdConnectedThread(this, socket);
     }
 
     public void setLocalPort(int port) {
@@ -360,11 +228,11 @@ public class NsdService extends MultiplayerService {
     }
 
     public String getServiceName() {
-        return mRegistrationNsdServiceInfo.getServiceName();
+        return mLocalNsdInfo.getServiceName();
     }
 
     public NsdServiceInfo getRegistrationNsdServiceInfo() {
-        return this.mRegistrationNsdServiceInfo;
+        return this.mLocalNsdInfo;
     }
 
     // new functions
@@ -372,7 +240,11 @@ public class NsdService extends MultiplayerService {
     @NonNull
     @Override
     public String getDestinationName() {
-        return mConnectedNsdServiceInfo.getServiceName();
+        if (mDestination != null) {
+            return mDestination.getServiceName();
+        } else {
+            return "";
+        }
     }
 
     public Collection<NsdServiceInfo> getServices() {
@@ -385,10 +257,7 @@ public class NsdService extends MultiplayerService {
 
     private synchronized void setServerState(int state) {
         mServerState = state;
-
-        if (mHandler != null) {
-            mHandler.obtainMessage(NsdPickerActivity.MESSAGE_SERVER_STATE_CHANGE, state, -1).sendToTarget();
-        }
+        sendMsg(NsdPickerActivity.MESSAGE_SERVER_STATE_CHANGE, state);
     }
 
     public int getClientState() {
@@ -397,10 +266,7 @@ public class NsdService extends MultiplayerService {
 
     private synchronized void setClientState(int state) {
         mClientState = state;
-
-        if (mHandler != null) {
-            mHandler.obtainMessage(NsdPickerActivity.MESSAGE_CLIENT_STATE_CHANGE, state, -1).sendToTarget();
-        }
+        sendMsg(NsdPickerActivity.MESSAGE_SERVER_STATE_CHANGE, state);
     }
 
     public void registerService() {

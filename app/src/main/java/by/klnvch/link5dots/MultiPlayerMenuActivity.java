@@ -115,7 +115,7 @@ public class MultiPlayerMenuActivity extends AppCompatActivity implements View.O
                 break;
             case RC_BLUETOOTH_GAME:
                 // bluetooth game finished, make an order
-                if (mIsBluetoothEnabled) {
+                if (!mIsBluetoothEnabled) {
                     BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
                     mBluetoothAdapter.disable();
                 }
