@@ -22,74 +22,75 @@
   ~ SOFTWARE.
   -->
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_gravity="center"
     android:background="@drawable/paper_tiled"
-    android:gravity="center"
-    android:orientation="vertical"
-    android:padding="@dimen/btn_table_padding"
+    android:padding="32dp"
     tools:context="by.klnvch.link5dots.MultiPlayerMenuActivity">
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <android.support.constraint.Guideline
+        android:id="@+id/guidelineVertical"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5" />
 
-        <Button
-            android:id="@+id/multi_player_two_players"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:drawableLeft="@drawable/ic_people_48dp"
-            android:drawableStart="@drawable/ic_people_48dp"
-            android:onClick="onClick"
-            android:text="@string/two_players"
-            tools:ignore="ButtonStyle" />
-
-        <Button
-            android:id="@+id/multi_player_bluetooth"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:drawableLeft="@drawable/ic_bluetooth_48dp"
-            android:drawableStart="@drawable/ic_bluetooth_48dp"
-            android:onClick="onClick"
-            android:text="@string/bluetooth_settings"
-            tools:ignore="ButtonStyle" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
+    <android.support.constraint.Guideline
+        android:id="@+id/guidelineHorizontal"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.5" />
 
-        <Button
-            android:id="@+id/multi_player_lan"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:drawableLeft="@drawable/ic_router_48dp"
-            android:drawableStart="@drawable/ic_router_48dp"
-            android:onClick="onClick"
-            android:text="@string/menu_local_network"
-            tools:ignore="ButtonStyle" />
+    <Button
+        android:id="@+id/multi_player_two_players"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@drawable/ic_people_48dp"
+        android:drawableStart="@drawable/ic_people_48dp"
+        android:onClick="onClick"
+        android:text="@string/two_players"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineHorizontal"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineVertical"
+        app:layout_constraintStart_toStartOf="parent" />
 
-        <Button
-            android:id="@+id/multi_player_online"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:drawableLeft="@drawable/ic_public_48dp"
-            android:drawableStart="@drawable/ic_public_48dp"
-            android:onClick="onClick"
-            android:text="@string/menu_online_game"
-            android:visibility="invisible"
-            tools:ignore="ButtonStyle" />
+    <Button
+        android:id="@+id/multi_player_bluetooth"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@drawable/ic_bluetooth_48dp"
+        android:drawableStart="@drawable/ic_bluetooth_48dp"
+        android:onClick="onClick"
+        android:text="@string/bluetooth_settings"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineHorizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/multi_player_two_players" />
 
-    </LinearLayout>
+    <Button
+        android:id="@+id/multi_player_lan"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@drawable/ic_router_48dp"
+        android:drawableStart="@drawable/ic_router_48dp"
+        android:onClick="onClick"
+        android:text="@string/menu_local_network"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineVertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/guidelineHorizontal" />
 
-</LinearLayout>
+    <Button
+        android:id="@+id/multi_player_online"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@drawable/ic_public_48dp"
+        android:drawableStart="@drawable/ic_public_48dp"
+        android:onClick="onClick"
+        android:text="@string/menu_online_game"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/guidelineVertical"
+        app:layout_constraintTop_toBottomOf="@+id/guidelineHorizontal" />
+
+</android.support.constraint.ConstraintLayout>
