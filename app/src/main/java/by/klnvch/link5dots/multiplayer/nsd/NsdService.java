@@ -266,7 +266,7 @@ public class NsdService extends MultiplayerService<Socket, NsdServiceInfo> {
 
     private synchronized void setClientState(int state) {
         mClientState = state;
-        sendMsg(NsdPickerActivity.MESSAGE_SERVER_STATE_CHANGE, state);
+        sendMsg(NsdPickerActivity.MESSAGE_CLIENT_STATE_CHANGE, state);
     }
 
     public void registerService() {

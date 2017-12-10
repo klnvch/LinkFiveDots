@@ -68,9 +68,9 @@ public class NsdPickerActivity extends AppCompatActivity {
     private ToggleButton registerButton;
     private ToggleButton scanButton;
     private TextView registrationStatusValue;
-    private View registrationStatus;
+    private View registrationStatusLabel;
     private View registrationProgress;
-    private View progressBar;
+    private View scanProgress;
     private ServiceListAdapter mServicesListAdapter;
     private NsdService mNsdService;
 
@@ -121,7 +121,7 @@ public class NsdPickerActivity extends AppCompatActivity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         // Initialize the button to perform device discovery
-        registerButton = findViewById(R.id.register);
+        registerButton = findViewById(R.id.buttonCreate);
         registerButton.setOnClickListener(v -> {
             if (registerButton.isChecked()) {
                 mNsdService.registerService();
@@ -129,7 +129,7 @@ public class NsdPickerActivity extends AppCompatActivity {
                 mNsdService.unRegisterService();
             }
         });
-        scanButton = findViewById(R.id.scan);
+        scanButton = findViewById(R.id.buttonScan);
         scanButton.setOnClickListener(view -> {
             if (scanButton.isChecked()) {
                 mNsdService.discoverServices();
@@ -139,14 +139,14 @@ public class NsdPickerActivity extends AppCompatActivity {
             }
         });
         //
-        registrationStatusValue = findViewById(R.id.registration_status_value);
-        registrationStatus = findViewById(R.id.registration_status);
-        registrationProgress = findViewById(R.id.registration_progress);
+        registrationStatusLabel = findViewById(R.id.textStatusLabel);
+        registrationStatusValue = findViewById(R.id.textStatusValue);
+        registrationProgress = findViewById(R.id.progressCreate);
 
-        progressBar = findViewById(R.id.progressBar);
+        scanProgress = findViewById(R.id.progressScan);
         //
         mServicesListAdapter = new ServiceListAdapter(this);
-        ListView servicesList = findViewById(R.id.list_services);
+        ListView servicesList = findViewById(R.id.listServices);
         servicesList.setOnItemClickListener((adapterView, view, i, l) -> {
             NsdServiceInfo nsdServiceInfo = (NsdServiceInfo) adapterView.getItemAtPosition(i);
             mNsdService.connect(nsdServiceInfo);
@@ -201,7 +201,8 @@ public class NsdPickerActivity extends AppCompatActivity {
                 registerButton.setEnabled(true);
 
                 registrationStatusValue.setText(R.string.apn_not_set);
-                registrationStatus.setVisibility(View.VISIBLE);
+                registrationStatusValue.setVisibility(View.VISIBLE);
+                registrationStatusLabel.setVisibility(View.VISIBLE);
                 registrationProgress.setVisibility(View.INVISIBLE);
                 break;
             case NsdService.STATE_REGISTERING:
@@ -209,7 +210,8 @@ public class NsdPickerActivity extends AppCompatActivity {
                 registerButton.setEnabled(false);
 
                 registrationStatusValue.setText(R.string.apn_not_set);
-                registrationStatus.setVisibility(View.INVISIBLE);
+                registrationStatusValue.setVisibility(View.INVISIBLE);
+                registrationStatusLabel.setVisibility(View.INVISIBLE);
                 registrationProgress.setVisibility(View.VISIBLE);
                 break;
             case NsdService.STATE_REGISTERED:
@@ -221,7 +223,8 @@ public class NsdPickerActivity extends AppCompatActivity {
                 } else {
                     registrationStatusValue.setText(null);
                 }
-                registrationStatus.setVisibility(View.VISIBLE);
+                registrationStatusValue.setVisibility(View.VISIBLE);
+                registrationStatusLabel.setVisibility(View.VISIBLE);
                 registrationProgress.setVisibility(View.INVISIBLE);
                 break;
             case NsdService.STATE_UNREGISTERING:
@@ -229,21 +232,23 @@ public class NsdPickerActivity extends AppCompatActivity {
                 registerButton.setEnabled(false);
 
                 registrationStatusValue.setText(R.string.apn_not_set);
-                registrationStatus.setVisibility(View.INVISIBLE);
+                registrationStatusValue.setVisibility(View.INVISIBLE);
+                registrationStatusLabel.setVisibility(View.INVISIBLE);
                 registrationProgress.setVisibility(View.VISIBLE);
                 break;
         }
     }
 
     private void setScanButton(int state) {
+        Log.d(TAG, "scan state: " + state);
         switch (state) {
             case NsdService.STATE_IDLE:
                 scanButton.setChecked(false);
-                progressBar.setVisibility(View.INVISIBLE);
+                scanProgress.setVisibility(View.INVISIBLE);
                 break;
             case NsdService.STATE_DISCOVERING:
                 scanButton.setChecked(true);
-                progressBar.setVisibility(View.VISIBLE);
+                scanProgress.setVisibility(View.VISIBLE);
                 break;
         }
     }
