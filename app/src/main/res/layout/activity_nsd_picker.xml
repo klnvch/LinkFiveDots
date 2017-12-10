@@ -22,119 +22,98 @@
   ~ SOFTWARE.
   -->
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/paper_tiled"
-    android:padding="@dimen/btn_table_padding">
+    android:padding="32dp"
+    tools:context="by.klnvch.link5dots.multiplayer.nsd.NsdPickerActivity">
 
-    <LinearLayout
-        android:id="@+id/layout_visibility"
-        android:layout_width="match_parent"
+    <ToggleButton
+        android:id="@+id/buttonCreate"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:gravity="center"
-        android:orientation="vertical">
+        android:checked="false"
+        android:textOff="@string/create"
+        android:textOn="@string/cancel"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <ToggleButton
-            android:id="@+id/register"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:checked="false"
-            android:textOff="@string/create"
-            android:textOn="@string/cancel" />
+    <TextView
+        android:id="@+id/textStatusLabel"
+        style="@style/TextAppearance.AppCompat.Medium"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/apn_name"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/buttonCreate" />
 
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+    <TextView
+        android:id="@+id/textStatusValue"
+        style="@style/TextAppearance.AppCompat.Medium"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:text="@string/apn_not_set"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/textStatusLabel"
+        app:layout_constraintTop_toBottomOf="@+id/buttonCreate" />
 
-            <RelativeLayout
-                android:id="@+id/registration_status"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:visibility="visible">
-
-                <TextView
-                    android:id="@+id/registration_status_label"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"
-                    android:text="@string/apn_name"
-                    android:textSize="@dimen/bt_text_size" />
-
-                <TextView
-                    android:id="@+id/registration_status_value"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp"
-                    android:layout_toEndOf="@+id/registration_status_label"
-                    android:layout_toRightOf="@+id/registration_status_label"
-                    android:text="@string/apn_not_set"
-                    android:textSize="@dimen/bt_text_size" />
-
-            </RelativeLayout>
-
-            <ProgressBar
-                android:id="@+id/registration_progress"
-                style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:indeterminate="true"
-                android:visibility="invisible" />
-
-        </FrameLayout>
-
-    </LinearLayout>
+    <ProgressBar
+        android:id="@+id/progressCreate"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@+id/separator"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/buttonCreate" />
 
     <View
         android:id="@+id/separator"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="@dimen/separator_width"
-        android:layout_below="@id/layout_visibility"
-        android:background="@color/foreground_color" />
+        android:layout_marginTop="8dp"
+        android:background="@color/foreground_color"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textStatusLabel" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentBottom="true"
-        android:layout_below="@id/separator"
-        android:orientation="vertical">
+    <ToggleButton
+        android:id="@+id/buttonScan"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:checked="false"
+        android:textOff="@string/search_menu"
+        android:textOn="@string/cancel"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/separator" />
 
-        <ToggleButton
-            android:id="@+id/scan"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:checked="false"
-            android:textOff="@string/search_menu"
-            android:textOn="@string/cancel" />
+    <ProgressBar
+        android:id="@+id/progressScan"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/buttonScan" />
 
-        <RelativeLayout
-            android:id="@+id/layout_available_devices"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1">
+    <ListView
+        android:id="@+id/listServices"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/progressScan" />
 
-            <ProgressBar
-                android:id="@+id/progressBar"
-                style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/label_available_devices"
-                android:indeterminate="true"
-                android:visibility="gone" />
-
-            <ListView
-                android:id="@+id/list_services"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_alignParentBottom="true"
-                android:layout_below="@id/progressBar" />
-
-        </RelativeLayout>
-    </LinearLayout>
-</RelativeLayout>
+</android.support.constraint.ConstraintLayout>
