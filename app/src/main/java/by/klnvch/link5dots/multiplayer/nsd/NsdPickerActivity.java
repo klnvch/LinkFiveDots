@@ -39,7 +39,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -98,27 +97,21 @@ public class NsdPickerActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_nsd_picker);
         setTitle(R.string.menu_local_network);
 
         // NoClassDefFoundError (@by.klnvch.link5dots.activity_nsd_picker.NsdService:<init>:294) {main}
         try {
             Class.forName("android.net.nsd.NsdManager");
+            setResult(RESULT_OK);
         } catch (ClassNotFoundException e) {
             Log.e(TAG, e.getMessage());
-            setContentView(R.layout.nsd_error);
             setResult(RESULT_CANCELED);
+            finish();
             return;
         }
-
-
-        // Setup the window
-        setContentView(R.layout.activity_nsd_picker);
-
-        // Set result CANCELED in case the user backs out
-        setResult(RESULT_CANCELED);
-        //
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         // Initialize the button to perform device discovery
         registerButton = findViewById(R.id.buttonCreate);
@@ -156,6 +149,7 @@ public class NsdPickerActivity extends AppCompatActivity {
 
     @Override
     public void onStart() {
+        Log.d(TAG, "onStart");
         super.onStart();
         // Bind to LocalService
         Intent intent = new Intent(this, NsdService.class);

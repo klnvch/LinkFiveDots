@@ -28,6 +28,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
@@ -124,6 +125,12 @@ public class MultiPlayerMenuActivity extends AppCompatActivity implements View.O
                 break;
             case RC_NSD_GAME:
                 stopService(new Intent(this, NsdService.class));
+                if (resultCode == RESULT_CANCELED) {
+                    new AlertDialog.Builder(this)
+                            .setMessage(R.string.nsd_error)
+                            .setPositiveButton(R.string.okay, null)
+                            .show();
+                }
                 break;
         }
     }
