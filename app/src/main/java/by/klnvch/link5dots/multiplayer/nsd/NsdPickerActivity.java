@@ -29,17 +29,17 @@ import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.net.nsd.NsdServiceInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -70,7 +70,7 @@ public class NsdPickerActivity extends AppCompatActivity {
     private View registrationStatusLabel;
     private View registrationProgress;
     private View scanProgress;
-    private ServiceListAdapter mServicesListAdapter;
+    private NsdListAdapter mAdapter;
     private NsdService mNsdService;
 
     private final ServiceConnection mConnection = new ServiceConnection() {
@@ -128,7 +128,7 @@ public class NsdPickerActivity extends AppCompatActivity {
                 mNsdService.discoverServices();
             } else {
                 mNsdService.stopDiscovery();
-                mServicesListAdapter.clear();
+                mAdapter.clear();
             }
         });
         //
@@ -138,13 +138,12 @@ public class NsdPickerActivity extends AppCompatActivity {
 
         scanProgress = findViewById(R.id.progressScan);
         //
-        mServicesListAdapter = new ServiceListAdapter(this);
-        ListView servicesList = findViewById(R.id.listServices);
-        servicesList.setOnItemClickListener((adapterView, view, i, l) -> {
-            NsdServiceInfo nsdServiceInfo = (NsdServiceInfo) adapterView.getItemAtPosition(i);
-            mNsdService.connect(nsdServiceInfo);
-        });
-        servicesList.setAdapter(mServicesListAdapter);
+        RecyclerView recyclerView = findViewById(R.id.listDestinations);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        mAdapter = new NsdListAdapter(service -> mNsdService.connect(service));
+        recyclerView.setAdapter(mAdapter);
     }
 
     @Override
@@ -248,9 +247,7 @@ public class NsdPickerActivity extends AppCompatActivity {
     }
 
     private void updateServicesList() {
-        mServicesListAdapter.clear();
-        mServicesListAdapter.addAll(mNsdService.getServices());
-        mServicesListAdapter.notifyDataSetChanged();
+        mAdapter.replaceAll(mNsdService.getServices());
     }
 
     @Override

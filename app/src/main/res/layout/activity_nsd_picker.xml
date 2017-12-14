@@ -108,8 +108,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/buttonScan" />
 
-    <ListView
-        android:id="@+id/listServices"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/listDestinations"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
