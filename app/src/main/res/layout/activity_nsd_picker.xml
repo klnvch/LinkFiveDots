@@ -38,7 +38,7 @@
         android:layout_height="wrap_content"
         android:checked="false"
         android:textOff="@string/create"
-        android:textOn="@string/cancel"
+        android:textOn="@string/delete"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
