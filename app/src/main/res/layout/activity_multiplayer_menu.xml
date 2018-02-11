@@ -45,7 +45,7 @@
         android:drawableLeft="@drawable/ic_people_48dp"
         android:drawableStart="@drawable/ic_people_48dp"
         android:onClick="onClick"
-        android:text="@string/two_players"
+        android:text="@string/menu_two_players"
         app:layout_constraintBottom_toTopOf="@+id/multi_player_bluetooth"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
