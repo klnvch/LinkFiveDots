@@ -24,11 +24,52 @@
 
 package by.klnvch.link5dots.multiplayer.online;
 
-/**
- * Created by anton on 20.05.17.
- * <p>
- * user
- */
+import android.support.annotation.NonNull;
 
+import java.util.Random;
+
+@SuppressWarnings({"unused", "WeakerAccess"})
 public class User {
+
+    private String id;
+    private int type;
+    private String name;
+
+    public User() {
+
+    }
+
+    public User(@NonNull String name) {
+        this.id = Long.toHexString(new Random().nextLong());
+        this.name = name;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj != null && obj instanceof User && ((User) obj).id.equals(this.id);
+    }
 }

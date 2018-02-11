@@ -54,8 +54,9 @@
 
     <string name="menu_single_player">Seul Joueur</string>
     <string name="menu_multi_player">Multijoueur</string>
-    <string name="two_players">Deux joueurs</string>
+    <string name="menu_two_players">Deux joueurs</string>
     <string name="menu_local_network">Réseau Local</string>
+    <string name="menu_online_game">Internet</string>
 
     <string name="settings_vibration">Vibreur</string>
     <string name="settings_night_mode">Mode nuit</string>
@@ -67,6 +68,7 @@
     <string name="yes">"Oui"</string>
     <string name="no">"Non"</string>
     <string name="create">"Créer"</string>
+    <string name="delete">"Supprimer"</string>
     <string name="device_info_default">"Inconnu"</string>
 
     <string name="switch_on_text">"Activé"</string>

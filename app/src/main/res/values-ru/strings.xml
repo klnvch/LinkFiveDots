@@ -54,8 +54,9 @@
 
     <string name="menu_single_player">Один игрок</string>
     <string name="menu_multi_player">Мультиплеер</string>
-    <string name="two_players">Два игрока</string>
+    <string name="menu_two_players">Два игрока</string>
     <string name="menu_local_network">Локальная Сеть</string>
+    <string name="menu_online_game">Интернет</string>
 
     <string name="settings_vibration">Вибрация</string>
     <string name="settings_night_mode">Ночной режим</string>
@@ -67,6 +68,7 @@
     <string name="yes">"Да"</string>
     <string name="no">"Нет"</string>
     <string name="create">"Создать"</string>
+    <string name="delete">"Удалить"</string>
     <string name="device_info_default">"Неизвестно"</string>
 
     <string name="switch_on_text">"ВКЛЮЧЕНО"</string>

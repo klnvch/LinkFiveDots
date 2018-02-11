@@ -48,7 +48,7 @@ import io.reactivex.schedulers.Schedulers;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
-    protected static final String KEY_GAME_STATE = "KEY_GAME_STATE_V1";
+    protected static final String KEY_GAME_STATE = "KEY_GAME_STATE_V2";
     protected static final String KEY_VIEW_STATE = "KEY_VIEW_STATE_V3";
 
     protected GameView mView = null;

@@ -46,7 +46,9 @@ public class SettingsUtils {
     private static final String IS_VIBRATION_ENABLED = "IS_VIBRATION_ENABLED";
     private static final String NIGHT_MODE = "NIGHT_MODE";
 
-    public static long VIBRATE_DURATION = 500;
+    public static final long VIBRATE_DURATION = 500;
+
+    private static String username = null;
 
     public static boolean checkConfiguration(@NonNull Context context) {
         boolean isToBeRestated = false;
@@ -105,19 +107,34 @@ public class SettingsUtils {
 
     @NonNull
     public static String getUserNameOrEmpty(@NonNull Context context) {
-        return PreferenceManager
-                .getDefaultSharedPreferences(context)
-                .getString(USER_NAME, "");
+        if (username == null) {
+            username = PreferenceManager
+                    .getDefaultSharedPreferences(context)
+                    .getString(USER_NAME, null);
+        }
+        if (username == null) {
+            return "";
+        } else {
+            return username;
+        }
     }
 
     @NonNull
     public static String getUserNameOrDefault(@NonNull Context context) {
-        return PreferenceManager
-                .getDefaultSharedPreferences(context)
-                .getString(USER_NAME, context.getString(R.string.device_info_default));
+        if (username == null) {
+            username = PreferenceManager
+                    .getDefaultSharedPreferences(context)
+                    .getString(USER_NAME, null);
+        }
+        if (username == null) {
+            return context.getString(R.string.device_info_default);
+        } else {
+            return username;
+        }
     }
 
     static void setUserName(@NonNull Context context, @Nullable String username) {
+        SettingsUtils.username = username;
         PreferenceManager
                 .getDefaultSharedPreferences(context)
                 .edit()

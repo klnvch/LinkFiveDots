@@ -62,14 +62,12 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void onMoveDone(@NonNull Dot currentDot, @Nullable Dot previousDot) {
-        if (previousDot == null || previousDot.getType() == Dot.OPPONENT) {
+        if (previousDot == null || previousDot.getType() != Dot.HOST) {
             // set user dot
-            currentDot.setType(Dot.USER);
-            mView.setDot(currentDot);
+            mView.setHostDot(currentDot);
             // set bot dot
             Dot botDot = Bot.findAnswer(mView.getGameState().getCopyOfNet());
-            botDot.setType(Dot.OPPONENT);
-            mView.setDot(botDot);
+            mView.setGuestDot(botDot);
         }
     }
 

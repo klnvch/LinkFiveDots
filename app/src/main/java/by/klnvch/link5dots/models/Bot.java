@@ -93,9 +93,9 @@ public class Bot {
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < M; j++) {
                 if (net[i][j].getType() == Dot.EMPTY) {
-                    float userRate = getDotRate(net, net[i][j], Dot.USER);
+                    float userRate = getDotRate(net, net[i][j], Dot.HOST);
                     net1[i][j] = (int) userRate;
-                    float botRate = getDotRate(net, net[i][j], Dot.OPPONENT);
+                    float botRate = getDotRate(net, net[i][j], Dot.GUEST);
                     net2[i][j] = (int) botRate;
 
                     //user rates
@@ -205,7 +205,7 @@ public class Bot {
 
         for (int i = -4; i != 5; ++i) {
             for (int j = -4; j != 5; ++j) {
-                if (isInBound(x + i, y + j) && net[x + i][y + j].getType() == Dot.USER) {
+                if (isInBound(x + i, y + j) && net[x + i][y + j].getType() == Dot.HOST) {
                     if (i > 3 || i < -3 || j > 3 || j < -3) {
                         result += 1;
                     } else if (i > 2 || i < -2 || j > 2 || j < -2) {

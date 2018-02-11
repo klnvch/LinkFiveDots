@@ -189,10 +189,9 @@ public abstract class MultiplayerActivity extends BaseActivity {
 
     @Override
     protected void onMoveDone(@NonNull Dot currentDot, @Nullable Dot previousDot) {
-        if (previousDot == null || previousDot.getType() == Dot.OPPONENT) {
+        if (previousDot == null || previousDot.getType() != Dot.HOST) {
             // set user dot
-            currentDot.setType(Dot.USER);
-            mView.setDot(currentDot);
+            mView.setHostDot(currentDot);
             //
             sendMessage(new GameMessage(GameMessage.MSG_DOT, currentDot));
             setTitle(R.string.bt_message_opponents_turn);
@@ -273,8 +272,7 @@ public abstract class MultiplayerActivity extends BaseActivity {
                                 break;
                             case GameMessage.MSG_DOT:
                                 Dot dot = (Dot) gameMessage.getObj();
-                                dot.setType(Dot.OPPONENT);
-                                activity.mView.setDot(dot);
+                                activity.mView.setGuestDot(dot);
                                 activity.setTitle(R.string.bt_message_your_turn);
 
                                 if (activity.isVibrationEnabled) {

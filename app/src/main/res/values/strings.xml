@@ -66,9 +66,9 @@
 
     <string name="menu_single_player">Single Player</string>
     <string name="menu_multi_player">Multiplayer</string>
-    <string name="two_players">Two players</string>
+    <string name="menu_two_players">Two players</string>
     <string name="menu_local_network">Local Area Network</string>
-    <string name="menu_online_game">Online</string>
+    <string name="menu_online_game">Internet</string>
 
     <string name="settings_vibration">Vibration</string>
     <string name="settings_night_mode">Night mode</string>
@@ -84,6 +84,7 @@
     <string name="no">"No"</string>
     <!-- 23 Strings for Dialog create button -->
     <string name="create">Create</string>
+    <string name="delete">Delete</string>
     <!-- 33 Device Info screen. Used for a status item's value when the proper value is not known -->
     <string name="device_info_default">Unknown</string>
 
@@ -91,21 +92,21 @@
     <string name="switch_on_text">On</string>
     <string name="switch_off_text">Off</string>
 
-    <!-- Bluetoactivity_settingsings screen, Discoverable checkbox summary text -->
+    <!-- Bluetooth activity setting screen, Discoverable checkbox summary text -->
     <string name="bluetooth_not_discoverable">Make device discoverable</string>
-    <!-- 233 Bluetoactivity_settingsings screen, summary after selecting Discoverable check box [CHAR LIMIT=50] -->
+    <!-- 233 Bluetooth activity setting screen, summary after selecting Discoverable check box [CHAR LIMIT=50] -->
     <string name="bluetooth_is_discoverable">Visible to all nearby Bluetooth devices (%1$s)</string>
-    <!-- 239 Bluetoactivity_settingsings screen, summary text when not discoverable with paired devices [CHAR LIMIT=50] -->
+    <!-- 239 Bluetooth activity setting screen, summary text when not discoverable with paired devices [CHAR LIMIT=50] -->
     <string name="bluetooth_only_visible_to_paired_devices">Only visible to paired devices</string>
-    <!-- 275 Bluetooth Visibility disconnect question.  Asks the user if they wish to disconnect a paiactivity_bluetooth_pickerooth device.  [CHAR LIMIT=50] -->
+    <!-- 275 Bluetooth Visibility disconnect question.  Asks the user if they wish to disconnect a pair bluetooth device.  [CHAR LIMIT=50] -->
     <string name="bluetooth_is_disconnect_question">"Disconnect \u0022%1$s\u0022?"</string>
-    <!-- 284 Bluetoactivity_settingsings.  Message when connected to a device. [CHAR LIMIT=40] -->
+    <!-- 284 Bluetooth activity setting.  Message when connected to a device. [CHAR LIMIT=40] -->
     <string name="bluetooth_connected">Connected</string>
-    <!-- 294 Bluetoactivity_settingsings.  Message when a device is disconnected -->
+    <!-- 294 Bluetooth activity setting.  Message when a device is disconnected -->
     <string name="bluetooth_disconnected">Disconnected</string>
-    <!-- 298 Bluetoactivity_settingsings.  Message when connecting to a device -->
+    <!-- 298 Bluetooth activity setting.  Message when connecting to a device -->
     <string name="bluetooth_connecting">Connecting\u2026</string>
-    <!-- 308 Bluetoactivity_settingsings screen, text that appears when scanning for devices is finished and no neaactivity_bluetooth_pickerooth device was found [CHAR LIMIT=40]-->
+    <!-- 308 Bluetooth activity setting screen, text that appears when scanning for devices is finished and no nearby bluetooth device was found [CHAR LIMIT=40]-->
     <string name="bluetooth_no_devices_found">No nearby Bluetooth devices were found.</string>
     <!-- 319 Strings for BluetoothDevicePicker [CHAR LIMIT=40]-->
     <string name="device_picker">Choose Bluetooth device</string>
@@ -117,15 +118,15 @@
     <string name="okay">OK</string>
     <!-- 628 Title of the Settings activity shown within the application itself. -->
     <string name="settings_label">Settings</string>
-    <!-- 1118 Used as title on second screen after selecting Bluetoactivity_settingsings -->
+    <!-- 1118 Used as title on second screen after selecting Bluetooth activity setting -->
     <string name="bluetooth_settings">Bluetooth</string>
     <!-- 1174 Message for the error dialog when BT connecting operation fails generically. -->
-    <string name="bluetooth_connecting_error_message">Couldn\'t connect to \u0022%1$s\u0022.</string>
-    <!-- 1179 Bluetoactivity_settingsings: The title of the action button that initiates a search for nearby devices [CHAR LIMIT=20] -->
+    <string name="bluetooth_connecting_error_message">Could not connect to \u0022%1$s\u0022.</string>
+    <!-- 1179 Bluetooth activity setting: The title of the action button that initiates a search for nearby devices [CHAR LIMIT=20] -->
     <string name="bluetooth_search_for_devices">Refresh</string>
-    <!-- 1203 Bluetoactivity_settingsings: The sub heading for devices which have already been paired with this device. [CHAR LIMIT=40] -->
+    <!-- 1203 Bluetooth activity setting: The sub heading for devices which have already been paired with this device. [CHAR LIMIT=40] -->
     <string name="bluetooth_preference_paired_devices">Paired devices</string>
-    <!-- 1205 Bluetoactivity_settingsings: The sub heading for available devices during and after scanning. [CHAR LIMIT=40] -->
+    <!-- 1205 Bluetooth activity setting: The sub heading for available devices during and after scanning. [CHAR LIMIT=40] -->
     <string name="bluetooth_preference_found_devices">Available devices</string>
 
     <!-- 2355 Edit access point label summary text when no value has been set -->
@@ -144,7 +145,7 @@
     <!-- 5947 [CHAR LIMIT=35] Feedback on the device -->
     <string name="device_feedback">Send feedback</string>
 
-    <!-- 3200 On Text & languactivity_settingsings screen, setting option name. title of the setting to take the user to a screen to select the locale. -->
+    <!-- 3200 On Text & language activity screen, setting option name. title of the setting to take the user to a screen to select the locale. -->
     <string name="phone_language">Language</string>
 
 
@@ -159,65 +160,7 @@
     <string name="bt_message_your_turn">Your move, put a dot…</string>
     <string name="bt_message_opponents_turn">Opponent\'s move, wait…</string>
 
-    <!-- garbage is below-->
-
-
-    <string name="action_settings">Settings</string>
-    <string name="hello_world">Hello world!</string>
-    <string name="next_turn_">Next turn</string>
-    <string name="welcome">Welcome to the Skeleton, the game!  This is network-only, so you&amp;apos;ll need to log in to play!</string>
-    <string name="sign_out">Sign Out</string>
-    <string name="match_instructions">Type in a new word for the data in this game, then hit done.</string>
-    <string name="quick_match">Quick match</string>
-    <string name="continue_str">Continue</string>
-    <string name="guesser_prompt">This has not been set.</string>
-    <string name="clear">Clear</string>
-    <string name="done">Done</string>
-    <string name="leave">Leave</string>
-    <string name="finish">Finish</string>
-    <string name="welcome_to_our_skeleton_app_">Welcome to our skeleton app!</string>
-    <string name="check_games">Check games</string>
-    <string name="start_match">Start Match</string>
-    <string name="turn_counter">Turn counter</string>
-    <string name="signin_other_error">There was an issue with sign in.  Please try again later.</string>
-
-    <string name="status_multiplayer_error_not_trusted_tester">Anyone you invite must be a trusted tester</string>
-    <string name="match_error_already_rematched">This rematch has already been started!</string>
-    <string name="client_reconnect_required">Games client reconnect required</string>
-    <string name="network_error_operation_failed">Network error: Operation failed</string>
-    <string name="internal_error">Internal error</string>
-    <string name="unexpected_status">Unexpected status</string>
-    <string name="match_error_inactive_match">This match is inactive.</string>
-    <string name='match_error_locally_modified'>This match has locally-modified data.  This operation cannot be performed until the match is sent to the server.</string>
-
     <string name="nsd_error" translatable="false">DNS-Based Service Discovery is only available since Android 4.1.</string>
     <string name="bluetooth_error" translatable="false">Bluetooth is not supported by your device.</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-
-    <string name="sign_in_failed">Failed to sign in. Please check your network connection and try again.</string>
-    <string name="app_misconfigured">The application is incorrectly configured. Check that the package name and signing certificate match the client ID created in Developer Console. Also, if the application is not yet published, check that the account you are trying to sign in with is listed as a tester account. See logs for more information.</string>
-    <string name="license_failed">License check failed.</string>
-    <string name="unknown_error">Unknown error.</string>
-
-    <string name="signing_out">Signing out</string>
-    <string name="game_blurb">A sample game that tests your ability to click a button. Can you click faster than your friends? Only one way to find out! To play this game with friends, you must sign in with Google.</string>
-    <string name="single_player">Single Player</string>
-    <string name="single_player_explanation">Get some practice!</string>
-    <string name="quick_game">Quick game</string>
-    <string name="invite_players">Invite players</string>
-    <string name="show_invitations">Show invitations</string>
-    <string name="quick_game_explanation">Challenge a random opponent.</string>
-    <string name="invite_players_explanation">Invite friends to play a game.</string>
-    <string name="see_invitations_explanation">See who is inviting you right now.</string>
-    <string name="inv_popup_text">Incoming invitation!</string>
-    <string name="accept_popup_invite">Accept!</string>
-    <string name="instructions">Click the button as fast as you can!</string>
-    <string name="dismiss">Dismiss</string>
-    <string name="your_score">Your score:</string>
-    <string name="error">Error</string>
-    <string name="game_problem">An error occurred while starting the game. Please try again.</string>
-    <string name="click_me">Click me!</string>
-    <string name="is_inviting_you">is challenging you to a game!</string>
 
 </resources>

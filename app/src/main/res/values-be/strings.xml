@@ -54,8 +54,9 @@
 
     <string name="menu_single_player">Адзін гулец</string>
     <string name="menu_multi_player">Мультыплэер</string>
-    <string name="two_players">Два гульца</string>
+    <string name="menu_two_players">Два гульца</string>
     <string name="menu_local_network">Лакальная Сетка</string>
+    <string name="menu_online_game">Інтэрнэт</string>
 
     <string name="settings_vibration">Вібрацыя</string>
     <string name="settings_night_mode">Начны рэжым</string>
@@ -67,6 +68,7 @@
     <string name="yes">"Так"</string>
     <string name="no">"Не"</string>
     <string name="create">"Стварыць"</string>
+    <string name="delete">"Выдаліць"</string>
     <string name="device_info_default">"Невядомы"</string>
 
     <string name="switch_on_text">"Уключана"</string>

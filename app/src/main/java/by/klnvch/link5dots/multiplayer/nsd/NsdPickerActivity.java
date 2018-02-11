@@ -51,7 +51,7 @@ import by.klnvch.link5dots.multiplayer.MultiplayerActivity;
 import by.klnvch.link5dots.multiplayer.MultiplayerService;
 
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-public class NsdPickerActivity extends AppCompatActivity {
+public class NsdPickerActivity extends AppCompatActivity implements View.OnClickListener {
 
     public static final int MESSAGE_SERVER_STATE_CHANGE = 101;
     public static final int MESSAGE_CLIENT_STATE_CHANGE = 102;
@@ -64,12 +64,12 @@ public class NsdPickerActivity extends AppCompatActivity {
 
     private final MHandler mHandler = new MHandler(this);
     private ProgressDialog progressDialog = null;
-    private ToggleButton registerButton;
-    private ToggleButton scanButton;
-    private TextView registrationStatusValue;
-    private View registrationStatusLabel;
-    private View registrationProgress;
-    private View scanProgress;
+    private ToggleButton mButtonCreate;
+    private TextView mCreateStatusValue;
+    private View mCreateStatusLabel;
+    private View mProgressCreate;
+    private ToggleButton mButtonScan;
+    private View mProgressScan;
     private NsdListAdapter mAdapter;
     private NsdService mNsdService;
 
@@ -84,8 +84,8 @@ public class NsdPickerActivity extends AppCompatActivity {
                 }
             }
             //
-            setRegisterButton(mNsdService.getServerState());
-            setScanButton(mNsdService.getClientState());
+            setCreateState(mNsdService.getServerState());
+            setScanState(mNsdService.getClientState());
             updateServicesList();
         }
 
@@ -114,30 +114,18 @@ public class NsdPickerActivity extends AppCompatActivity {
         }
 
         // Initialize the button to perform device discovery
-        registerButton = findViewById(R.id.buttonCreate);
-        registerButton.setOnClickListener(v -> {
-            if (registerButton.isChecked()) {
-                mNsdService.registerService();
-            } else {
-                mNsdService.unRegisterService();
-            }
-        });
-        scanButton = findViewById(R.id.buttonScan);
-        scanButton.setOnClickListener(view -> {
-            if (scanButton.isChecked()) {
-                mNsdService.discoverServices();
-            } else {
-                mNsdService.stopDiscovery();
-                mAdapter.clear();
-            }
-        });
-        //
-        registrationStatusLabel = findViewById(R.id.textStatusLabel);
-        registrationStatusValue = findViewById(R.id.textStatusValue);
-        registrationProgress = findViewById(R.id.progressCreate);
+        mButtonCreate = findViewById(R.id.buttonCreate);
+        mButtonCreate.setOnClickListener(this);
 
-        scanProgress = findViewById(R.id.progressScan);
+        mButtonScan = findViewById(R.id.buttonScan);
+        mButtonScan.setOnClickListener(this);
         //
+        mCreateStatusLabel = findViewById(R.id.textStatusLabel);
+        mCreateStatusValue = findViewById(R.id.textStatusValue);
+        mProgressCreate = findViewById(R.id.progressCreate);
+
+        mProgressScan = findViewById(R.id.progressScan);
+
         RecyclerView recyclerView = findViewById(R.id.listDestinations);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -187,61 +175,62 @@ public class NsdPickerActivity extends AppCompatActivity {
         }
     }
 
-    private void setRegisterButton(int state) {
+    private void setCreateState(int state) {
+        Log.d(TAG, "create state: " + state);
         switch (state) {
             case NsdService.STATE_UNREGISTERED:
-                registerButton.setChecked(false);
-                registerButton.setEnabled(true);
+                mButtonCreate.setChecked(false);
+                mButtonCreate.setEnabled(true);
 
-                registrationStatusValue.setText(R.string.apn_not_set);
-                registrationStatusValue.setVisibility(View.VISIBLE);
-                registrationStatusLabel.setVisibility(View.VISIBLE);
-                registrationProgress.setVisibility(View.INVISIBLE);
+                mCreateStatusValue.setText(R.string.apn_not_set);
+                mCreateStatusValue.setVisibility(View.VISIBLE);
+                mCreateStatusLabel.setVisibility(View.VISIBLE);
+                mProgressCreate.setVisibility(View.INVISIBLE);
                 break;
             case NsdService.STATE_REGISTERING:
-                registerButton.setChecked(false);
-                registerButton.setEnabled(false);
+                mButtonCreate.setChecked(false);
+                mButtonCreate.setEnabled(false);
 
-                registrationStatusValue.setText(R.string.apn_not_set);
-                registrationStatusValue.setVisibility(View.INVISIBLE);
-                registrationStatusLabel.setVisibility(View.INVISIBLE);
-                registrationProgress.setVisibility(View.VISIBLE);
+                mCreateStatusValue.setText(R.string.apn_not_set);
+                mCreateStatusValue.setVisibility(View.INVISIBLE);
+                mCreateStatusLabel.setVisibility(View.INVISIBLE);
+                mProgressCreate.setVisibility(View.VISIBLE);
                 break;
             case NsdService.STATE_REGISTERED:
-                registerButton.setChecked(true);
-                registerButton.setEnabled(true);
+                mButtonCreate.setChecked(true);
+                mButtonCreate.setEnabled(true);
 
                 if (mNsdService != null) {
-                    registrationStatusValue.setText(mNsdService.getServiceName());
+                    mCreateStatusValue.setText(mNsdService.getServiceName());
                 } else {
-                    registrationStatusValue.setText(null);
+                    mCreateStatusValue.setText(null);
                 }
-                registrationStatusValue.setVisibility(View.VISIBLE);
-                registrationStatusLabel.setVisibility(View.VISIBLE);
-                registrationProgress.setVisibility(View.INVISIBLE);
+                mCreateStatusValue.setVisibility(View.VISIBLE);
+                mCreateStatusLabel.setVisibility(View.VISIBLE);
+                mProgressCreate.setVisibility(View.INVISIBLE);
                 break;
             case NsdService.STATE_UNREGISTERING:
-                registerButton.setChecked(true);
-                registerButton.setEnabled(false);
+                mButtonCreate.setChecked(true);
+                mButtonCreate.setEnabled(false);
 
-                registrationStatusValue.setText(R.string.apn_not_set);
-                registrationStatusValue.setVisibility(View.INVISIBLE);
-                registrationStatusLabel.setVisibility(View.INVISIBLE);
-                registrationProgress.setVisibility(View.VISIBLE);
+                mCreateStatusValue.setText(R.string.apn_not_set);
+                mCreateStatusValue.setVisibility(View.INVISIBLE);
+                mCreateStatusLabel.setVisibility(View.INVISIBLE);
+                mProgressCreate.setVisibility(View.VISIBLE);
                 break;
         }
     }
 
-    private void setScanButton(int state) {
+    private void setScanState(int state) {
         Log.d(TAG, "scan state: " + state);
         switch (state) {
             case NsdService.STATE_IDLE:
-                scanButton.setChecked(false);
-                scanProgress.setVisibility(View.INVISIBLE);
+                mButtonScan.setChecked(false);
+                mProgressScan.setVisibility(View.INVISIBLE);
                 break;
             case NsdService.STATE_DISCOVERING:
-                scanButton.setChecked(true);
-                scanProgress.setVisibility(View.VISIBLE);
+                mButtonScan.setChecked(true);
+                mProgressScan.setVisibility(View.VISIBLE);
                 break;
         }
     }
@@ -260,6 +249,27 @@ public class NsdPickerActivity extends AppCompatActivity {
         return false;
     }
 
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.buttonCreate:
+                if (mButtonCreate.isChecked()) {
+                    mNsdService.registerService();
+                } else {
+                    mNsdService.unRegisterService();
+                }
+                break;
+            case R.id.buttonScan:
+                if (mButtonScan.isChecked()) {
+                    mNsdService.discoverServices();
+                } else {
+                    mNsdService.stopDiscovery();
+                    mAdapter.clear();
+                }
+                break;
+        }
+    }
+
     // The Handler that gets information back from the BluetoothService
     private static class MHandler extends Handler {
         private final WeakReference<NsdPickerActivity> mActivity;
@@ -274,10 +284,10 @@ public class NsdPickerActivity extends AppCompatActivity {
             if (activity != null) {
                 switch (msg.what) {
                     case MESSAGE_SERVER_STATE_CHANGE:
-                        activity.setRegisterButton(msg.arg1);
+                        activity.setCreateState(msg.arg1);
                         break;
                     case MESSAGE_CLIENT_STATE_CHANGE:
-                        activity.setScanButton(msg.arg1);
+                        activity.setScanState(msg.arg1);
                         break;
                     case MESSAGE_SERVICES_LIST_UPDATED:
                         activity.updateServicesList();
