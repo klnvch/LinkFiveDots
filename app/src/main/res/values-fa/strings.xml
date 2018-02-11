@@ -65,8 +65,9 @@
 
     <string name="menu_single_player">بازی انفرادی</string>
     <string name="menu_multi_player">بازی دو فرد</string>
-    <string name="two_players">دو نفر</string>
+    <string name="menu_two_players">دو نفر</string>
     <string name="menu_local_network">شبکه ی محلی</string>
+    <string name="menu_online_game">اینترنت</string>
 
     <string name="settings_vibration">لرزش</string>
     <string name="settings_night_mode">حالت شب</string>
@@ -78,6 +79,7 @@
     <string name="yes">"بله"</string>
     <string name="no">"خیر"</string>
     <string name="create">"ایجاد"</string>
+    <string name="delete">"حذف"</string>
     <string name="device_info_default">"ناشناس"</string>
 
     <string name="switch_on_text">"روشن"</string>

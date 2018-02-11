@@ -68,13 +68,10 @@ public class TwoPlayersActivity extends BaseActivity {
 
     @Override
     protected void onMoveDone(@NonNull Dot currentDot, @Nullable Dot previousDot) {
-        if (previousDot == null || previousDot.getType() == Dot.OPPONENT) {
-            // set user dot
-            currentDot.setType(Dot.USER);
-            mView.setDot(currentDot);
+        if (previousDot == null || previousDot.getType() != Dot.HOST) {
+            mView.setHostDot(currentDot);
         } else {
-            currentDot.setType(Dot.OPPONENT);
-            mView.setDot(currentDot);
+            mView.setGuestDot(currentDot);
         }
     }
 

@@ -52,6 +52,7 @@
 
         <service android:name="by.klnvch.link5dots.multiplayer.bluetooth.BluetoothService" />
         <service android:name="by.klnvch.link5dots.multiplayer.nsd.NsdService" />
+        <service android:name="by.klnvch.link5dots.multiplayer.online.OnlineService" />
 
         <activity
             android:name="by.klnvch.link5dots.MainMenuActivity"
@@ -78,7 +79,7 @@
         </activity>
         <activity
             android:name="by.klnvch.link5dots.TwoPlayersActivity"
-            android:label="@string/two_players">
+            android:label="@string/menu_two_players">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="by.klnvch.link5dots.MultiPlayerMenuActivity" />
@@ -114,6 +115,13 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="by.klnvch.link5dots.multiplayer.bluetooth.DevicePickerActivity" />
+        </activity>
+        <activity
+            android:name="by.klnvch.link5dots.multiplayer.online.OnlineGameActivity"
+            android:label="@string/menu_online_game">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="by.klnvch.link5dots.MultiPlayerMenuActivity" />
         </activity>
         <activity
             android:name="by.klnvch.link5dots.scores.ScoresActivity"

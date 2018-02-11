@@ -54,7 +54,7 @@ public class MultiPlayerMenuActivity extends AppCompatActivity implements View.O
         setContentView(R.layout.activity_multiplayer_menu);
         setTitle(R.string.menu_multi_player);
 
-        findViewById(R.id.multi_player_online).setVisibility(View.INVISIBLE);
+        //findViewById(R.id.multi_player_online).setVisibility(View.INVISIBLE);
 
         if (BluetoothAdapter.getDefaultAdapter() == null) {
             findViewById(R.id.multi_player_bluetooth).setVisibility(View.INVISIBLE);

@@ -32,7 +32,6 @@
     </style>
 
     <style name="ButtonStyle" parent="Widget.AppCompat.Button">
-        <item name="android:textColor">@color/foreground_color</item>
         <item name="android:textSize">@dimen/btn_text_size</item>
         <item name="android:textStyle">bold</item>
     </style>

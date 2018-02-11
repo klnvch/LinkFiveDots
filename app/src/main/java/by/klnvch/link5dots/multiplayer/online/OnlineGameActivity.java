@@ -24,90 +24,235 @@
 
 package by.klnvch.link5dots.multiplayer.online;
 
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.Toast;
 
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.auth.FirebaseAuth;
 
-import java.util.HashMap;
-import java.util.Map;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.List;
 
 import by.klnvch.link5dots.R;
+import by.klnvch.link5dots.models.Dot;
 
-public class OnlineGameActivity extends AppCompatActivity implements OnDataActionListener {
+public class OnlineGameActivity extends AppCompatActivity
+        implements OnlinePickerFragment.OnPickerListener, OnlineGameFragment.OnGameListener {
 
-    private static final String TAG = "OnlineGame";
-    private final Map<String, Room> mRoomsMap = new HashMap<>();
-    private DatabaseReference mDatabase;
+    private static final String TAG = "OnlineGameActivity";
+
+    private FirebaseAuth mAuth;
+    private OnlineService mService;
+    private OnlinePickerFragment mPickerFragment = null;
+    private OnlineGameFragment mGameFragment = null;
+    private final ServiceConnection mConnection = new ServiceConnection() {
+
+        @Override
+        public void onServiceConnected(ComponentName className, IBinder service) {
+            Log.d(TAG, "onServiceConnected");
+
+            OnlineService.LocalBinder binder = (OnlineService.LocalBinder) service;
+            mService = binder.getService();
+
+            if (mPickerFragment != null) {
+                mPickerFragment.setRoomState(mService.getRoomState(), mService.getRoom());
+                mPickerFragment.setScanState(mService.getScanState(), mService.getAdapter());
+            }
+
+            if (mGameFragment != null) {
+                mGameFragment.update();
+            }
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName arg0) {
+            Log.d(TAG, "onServiceDisconnected");
+
+            mService = null;
+        }
+    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_online_game);
 
+        Log.d(TAG, "onCreate");
+
+        mAuth = FirebaseAuth.getInstance();
+        mAuth.signInAnonymously()
+                .addOnCompleteListener(task -> Log.d(TAG, "signInAnonymously: " + task.isSuccessful()));
+
         if (savedInstanceState == null) {
+            mPickerFragment = new OnlinePickerFragment();
             getSupportFragmentManager()
                     .beginTransaction()
-                    .add(R.id.fragment_container, new OnlineStartFragment())
+                    .add(R.id.fragmentContainer, mPickerFragment, OnlinePickerFragment.TAG)
                     .commit();
+        } else {
+            mPickerFragment = (OnlinePickerFragment) getSupportFragmentManager()
+                    .findFragmentByTag(OnlinePickerFragment.TAG);
+            mGameFragment = (OnlineGameFragment) getSupportFragmentManager()
+                    .findFragmentByTag(OnlineGameFragment.TAG);
         }
 
-        mDatabase = FirebaseDatabase.getInstance().getReference();
+        Intent intent = new Intent(this, OnlineService.class);
+        if (savedInstanceState == null) {
+            startService(intent);
+        }
+        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+
+        EventBus.getDefault().register(this);
     }
 
     @Override
-    public void createRoom() {
-        String key = mDatabase.child("rooms").push().getKey();
-        mDatabase.child("rooms").child(key).setValue(Room.dummy()).addOnCompleteListener(task -> Log.d(TAG, "onComplete")).addOnSuccessListener(aVoid -> Log.d(TAG, "onSuccess")).addOnFailureListener(e -> Log.d(TAG, "onFailure"));
+    protected void onDestroy() {
+        super.onDestroy();
+
+        Log.d(TAG, "onDestroy");
+
+        EventBus.getDefault().unregister(this);
+
+        unbindService(mConnection);
+        if (isFinishing()) {
+            stopService(new Intent(this, OnlineService.class));
+        }
+        mService = null;
+
+        mPickerFragment = null;
+        mGameFragment = null;
+
+        mAuth = null;
     }
 
     @Override
-    public void findRooms(@NonNull OnUpdateListListener listener) {
-        Log.d(TAG, "findRooms");
-        mRoomsMap.clear();
+    public void onCreateRoom() {
+        mService.createDestination();
+    }
 
-        mDatabase.child("rooms")
-                .orderByChild("state")
-                .equalTo(1)
-                .addChildEventListener(new ChildEventListener() {
-                    @Override
-                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                        Room room = dataSnapshot.getValue(Room.class);
-                        mRoomsMap.put(dataSnapshot.getKey(), room);
-                        listener.onUpdateReady(mRoomsMap);
-                        Log.d(TAG, "onChildAdded: " + dataSnapshot.getKey() + ", " + room + ", " + s);
-                    }
+    @Override
+    public void onDeleteRoom() {
+        mService.deleteDestination();
+    }
 
-                    @Override
-                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                        Log.d(TAG, "onChildChanged");
-                    }
+    @Override
+    public void onStartScan() {
+        mService.startScan();
+    }
 
-                    @Override
-                    public void onChildRemoved(DataSnapshot dataSnapshot) {
-                        Room room = dataSnapshot.getValue(Room.class);
-                        mRoomsMap.remove(dataSnapshot.getKey());
-                        listener.onUpdateReady(mRoomsMap);
-                        Log.d(TAG, "onChildRemoved: " + dataSnapshot.getKey() + ", " + room);
-                    }
+    @Override
+    public void onStopScan() {
+        mService.stopScan();
+    }
 
-                    @Override
-                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-                        Log.d(TAG, "onChildMoved");
-                    }
+    @Override
+    public void onConnect(@NonNull Room room) {
+        mService.connect(room);
+    }
 
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                        mRoomsMap.clear();
-                        listener.onUpdateReady(mRoomsMap);
-                        Log.d(TAG, "onCancelled");
-                    }
-                });
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(@NonNull Integer event) {
+        Log.d(TAG, "onMessageEvent: " + event);
+        switch (event) {
+            case OnlineService.STATE_ROOM_CREATING:
+            case OnlineService.STATE_ROOM_CREATED:
+            case OnlineService.STATE_ROOM_DELETING:
+            case OnlineService.STATE_ROOM_DELETED:
+                if (mPickerFragment != null && mService != null) {
+                    mPickerFragment.setRoomState(event, mService.getCreatedDestination());
+                }
+                break;
+            case OnlineService.STATE_SCAN_OFF:
+            case OnlineService.STATE_SCAN_ON:
+                if (mPickerFragment != null && mService != null) {
+                    mPickerFragment.setScanState(event, mService.getAdapter());
+                }
+                break;
+            case OnlineService.STATE_CONNECTED:
+                if (mGameFragment != null) {
+                    mGameFragment.update();
+                } else {
+                    mGameFragment = new OnlineGameFragment();
+                    getSupportFragmentManager()
+                            .beginTransaction()
+                            .add(R.id.fragmentContainer, mGameFragment, OnlineGameFragment.TAG)
+                            .addToBackStack(null)
+                            .commit();
+                }
+                break;
+            case OnlineService.ERROR_CONNECT_FAILED:
+                Toast.makeText(this,
+                        getString(R.string.bluetooth_connecting_error_message, "null"),
+                        Toast.LENGTH_SHORT).show();
+                break;
+        }
+    }
+
+    @Nullable
+    @Override
+    public String getUserName() {
+        if (mService != null) {
+            User user = mService.getUser();
+            return user.getName();
+        } else {
+            return null;
+        }
+    }
+
+    @Nullable
+    @Override
+    public String getOpponentName() {
+        if (mService != null) {
+            Room room = mService.getRoom();
+            User user = mService.getUser();
+            if (user.equals(room.getUser1())) {
+                return room.getUser2().getName();
+            } else {
+                return room.getUser1().getName();
+            }
+        } else {
+            return null;
+        }
+    }
+
+    @Nullable
+    @Override
+    public List<Dot> getDots() {
+        if (mService != null) {
+            Room room = mService.getRoom();
+            return room.getDots();
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public int getUserDotType() {
+        if (mService != null) {
+            if (mService.getUser().equals(mService.getRoom().getUser1()))
+                return Dot.HOST;
+            else
+                return Dot.GUEST;
+        } else {
+            return Dot.EMPTY;
+        }
+    }
+
+
+    @Override
+    public void onMoveDone(@NonNull Dot dot) {
+        mService.addDot(dot);
     }
 }

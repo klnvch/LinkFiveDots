@@ -24,33 +24,76 @@
 
 package by.klnvch.link5dots.models;
 
+import android.support.annotation.NonNull;
+
+@SuppressWarnings("unused")
 public class Dot {
 
-    public static final int USER = 2;
-    public static final int OPPONENT = 4;
-    static final int EMPTY = 1;
+    public static final int EMPTY = 1;
+    public static final int HOST = 2;
+    public static final int GUEST = 4;
 
-    private final int x;
-    private final int y;
-    private int type = EMPTY;
-    private int index = -1;
+    private int x;
+    private int y;
+    private int id;
+    private int type;
+    private long timestamp;
+
+    public Dot() {
+
+    }
 
     public Dot(int x, int y) {
         this.x = x;
         this.y = y;
+        this.type = EMPTY;
+        this.id = -1;
+    }
+
+    public Dot(int x, int y, int type, int id) {
+        this.x = x;
+        this.y = y;
+        this.type = type;
+        this.id = id;
+    }
+
+    public Dot(@NonNull Dot dot) {
+        this.x = dot.x;
+        this.y = dot.y;
+        this.type = dot.type;
+        this.id = dot.id;
+    }
+
+    public long getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public int getX() {
         return x;
     }
 
+    public void setX(int x) {
+        this.x = x;
+    }
+
     public int getY() {
         return y;
     }
 
-    void changeStatus(int type, int number) {
-        this.type = type;
-        this.index = number;
+    public void setY(int y) {
+        this.y = y;
     }
 
     public int getType() {
@@ -61,19 +104,8 @@ public class Dot {
         this.type = type;
     }
 
-    int getIndex() {
-        return this.index;
-    }
-
     @Override
     public String toString() {
         return "(" + x + "," + y + ")";
-    }
-
-    public Dot copy() {
-        Dot dot = new Dot(x, y);
-        dot.type = type;
-        dot.index = index;
-        return dot;
     }
 }

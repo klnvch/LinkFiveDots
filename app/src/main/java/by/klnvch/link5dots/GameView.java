@@ -180,10 +180,10 @@ public class GameView extends View {
             for (int j = 0; j != GRID_SIZE; ++j) {
                 mViewState.copyMatrix(mDrawMatrix);
                 mDrawMatrix.preTranslate(dotLocations[i], dotLocations[j]);
-                if (mGameState.net[i][j].getType() == Dot.USER) {
+                if (mGameState.isHostDot(i, j)) {
                     canvas.drawBitmap(mBitmapUserDot, mDrawMatrix, null);
                 }
-                if (mGameState.net[i][j].getType() == Dot.OPPONENT) {
+                if (mGameState.isGuestDot(i, j)) {
                     canvas.drawBitmap(mBitmapBotDot, mDrawMatrix, null);
                 }
             }
@@ -261,9 +261,18 @@ public class GameView extends View {
         return result;
     }
 
-    public void setDot(@NonNull Dot dot) {
-        mGameState.setDot(dot.getX(), dot.getY(), dot.getType());
+    @Nullable
+    public Dot setHostDot(@NonNull Dot dot) {
+        Dot result = mGameState.setHostDot(dot);
         invalidate();
+        return result;
+    }
+
+    @Nullable
+    public Dot setGuestDot(@NonNull Dot dot) {
+        Dot result = mGameState.setGuestDot(dot);
+        invalidate();
+        return result;
     }
 
     private void isOver() {
@@ -296,13 +305,15 @@ public class GameView extends View {
             Dot firstDot = winningLine.get(0);
             Dot lastDot = winningLine.get(winningLine.size() - 1);
 
-            float x1 = firstDot.getX();
-            float y1 = firstDot.getY();
-            float x2 = lastDot.getX();
-            float y2 = lastDot.getY();
+            int x1 = firstDot.getX();
+            int y1 = firstDot.getY();
+            int x2 = lastDot.getX();
+            int y2 = lastDot.getY();
+
+            boolean isHostWinner = mGameState.isHostDot(x1, y1);
 
             if (y1 == y2) {//horizontal line
-                if (firstDot.getType() == Dot.USER) {
+                if (isHostWinner) {
                     mWinningLine = userHorLine;
                 } else {
                     mWinningLine = botHorLine;
@@ -310,7 +321,7 @@ public class GameView extends View {
                 mWinningLineDX = 0;
                 mWinningLineDY = lineThickness / 2.0f;
             } else if (x1 == x2) {//vertical line
-                if (firstDot.getType() == Dot.USER) {
+                if (isHostWinner) {
                     mWinningLine = userVerLine;
                 } else {
                     mWinningLine = botVerLine;
@@ -318,7 +329,7 @@ public class GameView extends View {
                 mWinningLineDX = lineThickness / 2.0f;
                 mWinningLineDY = 0;
             } else if (x1 > x2) {//diagonal left to right
-                if (firstDot.getType() == Dot.USER) {
+                if (isHostWinner) {
                     mWinningLine = userDiagonal1Line;
                 } else {
                     mWinningLine = botDiagonal1Line;
@@ -326,7 +337,7 @@ public class GameView extends View {
                 mWinningLineDX = lineLength;
                 mWinningLineDY = 0;
             } else if (x2 > x1) {//diagonal right to left
-                if (firstDot.getType() == Dot.USER) {
+                if (isHostWinner) {
                     mWinningLine = userDiagonal2Line;
                 } else {
                     mWinningLine = botDiagonal2Line;

@@ -24,35 +24,115 @@
 
 package by.klnvch.link5dots.multiplayer.online;
 
-import java.util.Random;
+import android.support.annotation.NonNull;
+
+import java.text.Format;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 import by.klnvch.link5dots.BuildConfig;
+import by.klnvch.link5dots.models.Dot;
 
-/**
- * Created by anton on 20.05.17.
- * <p>
- * room
- */
-
+@SuppressWarnings("unused")
 public class Room {
-    public User user1;
-    public User user2;
-    private int state;
-    private boolean isDebug;
 
-    public Room() {
+    static final String CHILD_ROOM = BuildConfig.DEBUG ? "rooms_debug" : "rooms";
+    static final String CHILD_STATE = "state";
+
+    static final int STATE_CREATED = 0;
+    static final int STATE_DELETED = 1;
+    static final int STATE_STARTED = 2;
+
+    private static final Format TIME_FORMAT =
+            new SimpleDateFormat("MMM-dd HH:mm", Locale.getDefault());
+
+    private String key;
+    private int state;
+    private long timestamp;
+    private List<Dot> dots;
+    private User user1;
+    private User user2;
+
+    private Room() {
 
     }
 
-    public static Room dummy() {
+    public static Room newRoom(@NonNull String key, @NonNull User user) {
         Room room = new Room();
-        room.state = new Random().nextInt(4);
-        room.isDebug = BuildConfig.DEBUG;
+        room.key = key;
+        room.timestamp = System.currentTimeMillis();
+        room.state = STATE_CREATED;
+        room.dots = new ArrayList<>();
+        room.user1 = user;
+
+        room.dots.add(new Dot(1, 2, 2, 0));
+        room.dots.add(new Dot(2, 3, 4, 1));
+        room.dots.add(new Dot(3, 4, 2, 2));
+        room.dots.add(new Dot(4, 5, 4, 3));
+
         return room;
+    }
+
+    public User getUser1() {
+        return user1;
+    }
+
+    public void setUser1(User user1) {
+        this.user1 = user1;
+    }
+
+    public User getUser2() {
+        return user2;
+    }
+
+    public void setUser2(User user2) {
+        this.user2 = user2;
+    }
+
+    public List<Dot> getDots() {
+        return dots;
+    }
+
+    public void setDots(List<Dot> dots) {
+        this.dots = dots;
+    }
+
+    public long getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
+
+    public int getState() {
+        return state;
+    }
+
+    public void setState(int state) {
+        this.state = state;
     }
 
     @Override
     public String toString() {
-        return state + ", " + isDebug;
+        String time = TIME_FORMAT.format(new Date(timestamp));
+        String username = user1.getName();
+        return time + ": " + username;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj != null && obj instanceof Room && ((Room) obj).key.equals(this.key);
     }
 }

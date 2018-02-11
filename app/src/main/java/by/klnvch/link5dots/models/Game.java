@@ -40,18 +40,30 @@ public class Game {
     private static final int N = 20;
     private static final int M = 20;
 
-    public final Dot[][] net = new Dot[N][M];
+    private final Dot[][] net = new Dot[N][M];
     private HighScore currentScore = null;
     private transient ArrayList<Dot> winningLine = null;
     private int movesDone = 0;
     private long startTime;
+    private final int mHostDotType;
+    private final int mGuestDotType;
 
     private Game() {
-        for (int i = 0; i < N; i++) {
-            for (int j = 0; j < M; j++) {
+        mHostDotType = Dot.HOST;
+        mGuestDotType = Dot.GUEST;
+
+        for (int i = 0; i < N; i++)
+            for (int j = 0; j < M; j++)
                 net[i][j] = new Dot(i, j);
-            }
-        }
+    }
+
+    private Game(int hostDotType) {
+        mHostDotType = hostDotType;
+        mGuestDotType = hostDotType == Dot.HOST ? Dot.GUEST : Dot.HOST;
+
+        for (int i = 0; i < N; i++)
+            for (int j = 0; j < M; j++)
+                net[i][j] = new Dot(i, j);
     }
 
     @NonNull
@@ -67,12 +79,21 @@ public class Game {
                 Point p = points.get(i);
                 int x = 8 + p.x;
                 int y = 8 + p.y;
-                if (i % 2 == 0) {
-                    game.net[x][y].changeStatus(Dot.USER, i);
-                } else {
-                    game.net[x][y].changeStatus(Dot.OPPONENT, i);
-                }
+
+                game.net[x][y].setType(i % 2 == 0 ? Dot.HOST : Dot.GUEST);
+                game.net[x][y].setId(i);
             }
+        }
+
+        return game;
+    }
+
+    @NonNull
+    public static Game createGame(@NonNull List<Dot> dots, int hostDotType) {
+        Game game = new Game(hostDotType);
+
+        for (Dot dot : dots) {
+            game.net[dot.getX()][dot.getY()] = dot;
         }
 
         return game;
@@ -99,7 +120,7 @@ public class Game {
 
         if (winningLine != null) {
 
-            if (winningLine.get(0).getType() == Dot.USER) {
+            if (winningLine.get(0).getType() == Dot.HOST) {
                 currentScore = new HighScore(movesDone, time, HighScore.WON);
             } else {
                 currentScore = new HighScore(getNumberOfMoves(), time, HighScore.LOST);
@@ -108,31 +129,51 @@ public class Game {
         }
     }
 
-    public void setDot(int x, int y, int type) {
+    @Nullable
+    public Dot setHostDot(@NonNull Dot dot) {
+        dot.setType(mHostDotType);
+        return setDot(dot);
+    }
 
+    @Nullable
+    public Dot setGuestDot(@NonNull Dot dot) {
+        dot.setType(mGuestDotType);
+        return setDot(dot);
+    }
+
+    @Nullable
+    private Dot setDot(@NonNull Dot dot) {
         Dot theLastDot = getLastDot();
-        if (!checkCorrectness(x, y) || (theLastDot != null && theLastDot.getType() == type)) {
-            return;
+        if (!checkCorrectness(dot.getX(), dot.getY()) ||
+                (theLastDot != null && theLastDot.getType() == dot.getType())) {
+            return null;
         }
 
         if (getNumberOfMoves() == 0) {//it is the first move, start stop watch
             startTime = System.currentTimeMillis() / 1000;
         }
-        if (type == Dot.USER) {
+        if (dot.getType() == mHostDotType) {
             movesDone++;
         }
-        net[x][y].changeStatus(type, getNumberOfMoves());
+
+        int x = dot.getX();
+        int y = dot.getY();
+        net[x][y].setType(dot.getType());
+        net[x][y].setId(getNumberOfMoves());
+
         winningLine = isOver();
 
         if (winningLine != null) {
             prepareScore();
         }
+
+        return net[x][y];
     }
 
     private int getNumberOfMoves() {
         Dot dot = getLastDot();
         if (dot != null) {
-            return dot.getIndex() + 1;
+            return dot.getId() + 1;
         }
         return 0;
     }
@@ -213,13 +254,15 @@ public class Game {
         if (moves > 0) {    // if moves == 1, game with two human
             Dot d = getLastDot();
             if (d != null) {
-                d.changeStatus(Dot.EMPTY, -1);
+                d.setType(Dot.EMPTY);
+                d.setId(-1);
             }
         }
         if (moves > 1) {    // if moves == 2, game with bot
             Dot d = getLastDot();
-            if (d != null && d.getType() == Dot.USER) {
-                d.changeStatus(Dot.EMPTY, -1);
+            if (d != null && d.getType() == Dot.HOST) {
+                d.setType(Dot.EMPTY);
+                d.setId(-1);
             }
         }
 
@@ -238,7 +281,7 @@ public class Game {
             for (int j = 0; j < M; j++) {
                 if (net[i][j].getType() != Dot.EMPTY) {
                     if (result != null) {
-                        if (result.getIndex() < net[i][j].getIndex()) {
+                        if (result.getId() < net[i][j].getId()) {
                             result = net[i][j];
                         }
                     } else {
@@ -248,6 +291,14 @@ public class Game {
             }
         }
         return result;
+    }
+
+    public boolean isHostDot(int i, int j) {
+        return net[i][j].getType() == mHostDotType;
+    }
+
+    public boolean isGuestDot(int i, int j) {
+        return net[i][j].getType() == mGuestDotType;
     }
 
     @Override
@@ -268,7 +319,7 @@ public class Game {
         for (int i = 0; i != this.net.length; ++i) {
             copyNet[i] = new Dot[this.net[i].length];
             for (int j = 0; j != this.net[i].length; ++j) {
-                copyNet[i][j] = this.net[i][j].copy();
+                copyNet[i][j] = new Dot(this.net[i][j]);
             }
         }
         return copyNet;
