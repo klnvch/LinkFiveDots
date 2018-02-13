@@ -25,6 +25,7 @@
 package by.klnvch.link5dots.models;
 
 import android.graphics.Point;
+import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -36,6 +37,15 @@ import java.util.List;
 import by.klnvch.link5dots.utils.LinearCongruentialGenerator;
 
 public class Game {
+
+    private Game(@DotType int hostDotType) {
+        mHostDotType = hostDotType;
+        mGuestDotType = hostDotType == Dot.HOST ? Dot.GUEST : Dot.HOST;
+
+        for (int i = 0; i < N; i++)
+            for (int j = 0; j < M; j++)
+                net[i][j] = new Dot(i, j);
+    }
 
     private static final int N = 20;
     private static final int M = 20;
@@ -57,13 +67,26 @@ public class Game {
                 net[i][j] = new Dot(i, j);
     }
 
-    private Game(int hostDotType) {
-        mHostDotType = hostDotType;
-        mGuestDotType = hostDotType == Dot.HOST ? Dot.GUEST : Dot.HOST;
+    /***
+     * Creates updated version of game to display.
+     * Sets dots on the paper and checks for a winning line.
+     *
+     * @param dots dots sent from service
+     * @param hostDotType dot type of device owner
+     * @return new object of the game
+     */
+    @NonNull
+    public static Game createGame(@NonNull List<Dot> dots, @DotType int hostDotType) {
+        // create an empty game
+        Game game = new Game(hostDotType);
+        // set dots
+        for (Dot dot : dots) {
+            game.net[dot.getX()][dot.getY()] = dot;
+        }
+        // check for the end of the game
+        game.isOver();
 
-        for (int i = 0; i < N; i++)
-            for (int j = 0; j < M; j++)
-                net[i][j] = new Dot(i, j);
+        return game;
     }
 
     @NonNull
@@ -88,15 +111,8 @@ public class Game {
         return game;
     }
 
-    @NonNull
-    public static Game createGame(@NonNull List<Dot> dots, int hostDotType) {
-        Game game = new Game(hostDotType);
-
-        for (Dot dot : dots) {
-            game.net[dot.getX()][dot.getY()] = dot;
-        }
-
-        return game;
+    @IntDef({Dot.HOST, Dot.GUEST})
+    private @interface DotType {
     }
 
     @NonNull
