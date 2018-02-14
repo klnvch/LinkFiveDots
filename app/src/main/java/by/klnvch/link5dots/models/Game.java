@@ -48,7 +48,6 @@ public class Game {
     private HighScore mScore = null;
     private transient ArrayList<Dot> mWinningLine = null;
     private int movesDone = 0;
-    private long startTime;
 
     private Game(@DotType int hostDotType) {
         mHostDotType = hostDotType;
@@ -95,7 +94,6 @@ public class Game {
         Game game = new Game();
 
         if (seed != null) {
-            game.startTime = System.currentTimeMillis() / 1000;
             game.movesDone = 3;
 
             List<Point> points = LinearCongruentialGenerator.generateUniqueSixDots(seed);
@@ -106,6 +104,7 @@ public class Game {
 
                 game.net[x][y].setType(i % 2 == 0 ? Dot.HOST : Dot.GUEST);
                 game.net[x][y].setId(i);
+                game.net[x][y].setTimestamp(System.currentTimeMillis() / 1000);
             }
         }
 
@@ -129,9 +128,11 @@ public class Game {
     }
 
     private void prepareScore() {
-        long time = System.currentTimeMillis() / 1000 - startTime;
+        final Dot firstDot = getFirstDot();
 
-        if (mWinningLine != null) {
+        if (mWinningLine != null && firstDot != null) {
+            final long time = System.currentTimeMillis() / 1000 - firstDot.getTimestamp();
+
             if (mWinningLine.get(0).getType() == Dot.HOST) {
                 mScore = new HighScore(movesDone, time, HighScore.WON);
             } else {
@@ -160,9 +161,6 @@ public class Game {
             return null;
         }
 
-        if (getNumberOfMoves() == 0) {//it is the first move, start stop watch
-            startTime = System.currentTimeMillis() / 1000;
-        }
         if (dot.getType() == mHostDotType) {
             movesDone++;
         }
@@ -171,6 +169,7 @@ public class Game {
         int y = dot.getY();
         net[x][y].setType(dot.getType());
         net[x][y].setId(getNumberOfMoves());
+        net[x][y].setTimestamp(System.currentTimeMillis() / 1000);
 
         isOver();
 
@@ -263,6 +262,18 @@ public class Game {
     @Nullable
     public HighScore getCurrentScore() {
         return mScore;
+    }
+
+    @Nullable
+    private Dot getFirstDot() {
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < M; j++) {
+                if (net[i][j].getType() != Dot.EMPTY && net[i][j].getId() == 0) {
+                    return net[i][j];
+                }
+            }
+        }
+        return null;
     }
 
     @Nullable
