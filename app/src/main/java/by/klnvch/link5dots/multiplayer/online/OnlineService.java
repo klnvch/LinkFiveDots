@@ -42,6 +42,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.util.Collections;
 import java.util.List;
 
 import by.klnvch.link5dots.models.Dot;
@@ -256,8 +257,12 @@ public class OnlineService extends Service {
                         if (r == null) return Transaction.abort();
 
                         List<Dot> dots = r.getDots();
-                        dots.add(dot);
-                        r.setDots(dots);
+                        if (dots != null) {
+                            dots.add(dot);
+                            r.setDots(dots);
+                        } else {
+                            r.setDots(Collections.singletonList(dot));
+                        }
 
                         mutableData.setValue(r);
                         return Transaction.success(mutableData);

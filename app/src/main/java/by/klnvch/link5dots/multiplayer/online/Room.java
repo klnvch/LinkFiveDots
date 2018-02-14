@@ -68,11 +68,6 @@ public class Room {
         room.dots = new ArrayList<>();
         room.user1 = user;
 
-        room.dots.add(new Dot(1, 2, 2, 0));
-        room.dots.add(new Dot(2, 3, 4, 1));
-        room.dots.add(new Dot(3, 4, 2, 2));
-        room.dots.add(new Dot(4, 5, 4, 3));
-
         return room;
     }
 
