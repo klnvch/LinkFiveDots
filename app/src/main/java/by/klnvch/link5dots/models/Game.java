@@ -135,7 +135,7 @@ public class Game {
         if (mWinningLine != null && firstDot != null) {
             final long time = System.currentTimeMillis() / 1000 - firstDot.getTimestamp();
 
-            if (mWinningLine.get(0).getType() == Dot.HOST) {
+            if (mWinningLine.get(0).getType() == mHostDotType) {
                 mScore = new HighScore(movesDone, time, HighScore.WON);
             } else {
                 mScore = new HighScore(getNumberOfMoves(), time, HighScore.LOST);
