@@ -47,7 +47,6 @@ public class Game {
     private final int mGuestDotType;
     private HighScore mScore = null;
     private transient ArrayList<Dot> mWinningLine = null;
-    private int movesDone = 0;
 
     private Game(@DotType int hostDotType) {
         mHostDotType = hostDotType;
@@ -96,8 +95,6 @@ public class Game {
         Game game = new Game();
 
         if (seed != null) {
-            game.movesDone = 3;
-
             List<Point> points = LinearCongruentialGenerator.generateUniqueSixDots(seed);
             for (int i = 0; i != points.size(); ++i) {
                 Point p = points.get(i);
@@ -109,7 +106,6 @@ public class Game {
                 game.net[x][y].setTimestamp(System.currentTimeMillis() / 1000);
             }
         }
-
         return game;
     }
 
@@ -131,14 +127,16 @@ public class Game {
 
     private void prepareScore() {
         final Dot firstDot = getFirstDot();
+        final Dot lastDot = getLastDot();
 
-        if (mWinningLine != null && firstDot != null) {
+        if (mWinningLine != null && firstDot != null && lastDot != null) {
             final long time = System.currentTimeMillis() / 1000 - firstDot.getTimestamp();
+            final int movesDone = lastDot.getId() + 1;
 
             if (mWinningLine.get(0).getType() == mHostDotType) {
                 mScore = new HighScore(movesDone, time, HighScore.WON);
             } else {
-                mScore = new HighScore(getNumberOfMoves(), time, HighScore.LOST);
+                mScore = new HighScore(movesDone, time, HighScore.LOST);
             }
         }
     }
@@ -157,33 +155,25 @@ public class Game {
 
     @Nullable
     private Dot setDot(@NonNull Dot dot) {
-        Dot theLastDot = getLastDot();
+        Dot lastDot = getLastDot();
         if (!checkCorrectness(dot.getX(), dot.getY()) ||
-                (theLastDot != null && theLastDot.getType() == dot.getType())) {
+                (lastDot != null && lastDot.getType() == dot.getType())) {
             return null;
         }
 
-        if (dot.getType() == mHostDotType) {
-            movesDone++;
-        }
+        final int x = dot.getX();
+        final int y = dot.getY();
+        final int id = lastDot != null ? lastDot.getId() + 1 : 0;
+        final int type = dot.getType();
+        final long timestamp = System.currentTimeMillis() / 1000;
 
-        int x = dot.getX();
-        int y = dot.getY();
-        net[x][y].setType(dot.getType());
-        net[x][y].setId(getNumberOfMoves());
-        net[x][y].setTimestamp(System.currentTimeMillis() / 1000);
+        net[x][y].setType(type);
+        net[x][y].setId(id);
+        net[x][y].setTimestamp(timestamp);
 
         isOver();
 
         return net[x][y];
-    }
-
-    private int getNumberOfMoves() {
-        Dot dot = getLastDot();
-        if (dot != null) {
-            return dot.getId() + 1;
-        }
-        return 0;
     }
 
     public boolean checkCorrectness(int x, int y) {
