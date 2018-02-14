@@ -38,6 +38,18 @@ import by.klnvch.link5dots.utils.LinearCongruentialGenerator;
 
 public class Game {
 
+    private static final int N = 20;
+    private static final int M = 20;
+
+    private final Dot[][] net = new Dot[N][M];
+
+    private final int mHostDotType;
+    private final int mGuestDotType;
+    private HighScore mScore = null;
+    private transient ArrayList<Dot> mWinningLine = null;
+    private int movesDone = 0;
+    private long startTime;
+
     private Game(@DotType int hostDotType) {
         mHostDotType = hostDotType;
         mGuestDotType = hostDotType == Dot.HOST ? Dot.GUEST : Dot.HOST;
@@ -46,17 +58,6 @@ public class Game {
             for (int j = 0; j < M; j++)
                 net[i][j] = new Dot(i, j);
     }
-
-    private static final int N = 20;
-    private static final int M = 20;
-
-    private final Dot[][] net = new Dot[N][M];
-    private HighScore currentScore = null;
-    private transient ArrayList<Dot> winningLine = null;
-    private int movesDone = 0;
-    private long startTime;
-    private final int mHostDotType;
-    private final int mGuestDotType;
 
     private Game() {
         mHostDotType = Dot.HOST;
@@ -111,16 +112,12 @@ public class Game {
         return game;
     }
 
-    @IntDef({Dot.HOST, Dot.GUEST})
-    private @interface DotType {
-    }
-
     @NonNull
     public static Game fromJson(@Nullable String json) {
         if (json != null) {
-            Game result = new Gson().fromJson(json, Game.class);
-            result.winningLine = result.isOver();
-            return result;
+            Game game = new Gson().fromJson(json, Game.class);
+            game.isOver();
+            return game;
         } else {
             return new Game();
         }
@@ -134,14 +131,12 @@ public class Game {
     private void prepareScore() {
         long time = System.currentTimeMillis() / 1000 - startTime;
 
-        if (winningLine != null) {
-
-            if (winningLine.get(0).getType() == Dot.HOST) {
-                currentScore = new HighScore(movesDone, time, HighScore.WON);
+        if (mWinningLine != null) {
+            if (mWinningLine.get(0).getType() == Dot.HOST) {
+                mScore = new HighScore(movesDone, time, HighScore.WON);
             } else {
-                currentScore = new HighScore(getNumberOfMoves(), time, HighScore.LOST);
+                mScore = new HighScore(getNumberOfMoves(), time, HighScore.LOST);
             }
-
         }
     }
 
@@ -177,11 +172,7 @@ public class Game {
         net[x][y].setType(dot.getType());
         net[x][y].setId(getNumberOfMoves());
 
-        winningLine = isOver();
-
-        if (winningLine != null) {
-            prepareScore();
-        }
+        isOver();
 
         return net[x][y];
     }
@@ -195,7 +186,7 @@ public class Game {
     }
 
     public boolean checkCorrectness(int x, int y) {
-        return isInBound(x, y) && net[x][y].getType() == Dot.EMPTY && winningLine == null;
+        return isInBound(x, y) && net[x][y].getType() == Dot.EMPTY && mWinningLine == null;
     }
 
     private boolean isInBound(int x, int y) {
@@ -221,49 +212,32 @@ public class Game {
     }
 
     /**
-     * Checks if five dots line has been built
+     * Checks if the last dot appears in a winning row
      *
-     * @return null or array of five dots
+     * @return null or array of winning dots
      */
+    @Nullable
     public ArrayList<Dot> isOver() {
-
-        if (winningLine == null) {
-            if (getNumberOfMoves() < 5) return null;
-
-            Dot lastDot = getLastDot();
+        if (mWinningLine == null) {
+            final Dot lastDot = getLastDot();
 
             if (lastDot == null) return null;
 
-            ArrayList<Dot> result;
+            final int[][] directions = {{1, 0}, {1, 1}, {0, 1}, {-1, 1}};
 
-            result = getDotsNumber(lastDot, 1, 0);
-            if (result.size() >= 5) {
-                winningLine = result;
-                return result;
+            for (int[] d : directions) {
+                ArrayList<Dot> result = getDotsNumber(lastDot, d[0], d[1]);
+                if (result.size() >= 5) {
+                    mWinningLine = result;
+                    break;
+                }
             }
 
-            result = getDotsNumber(lastDot, 1, 1);
-            if (result.size() >= 5) {
-                winningLine = result;
-                return result;
+            if (mWinningLine != null) {
+                prepareScore();
             }
-
-            result = getDotsNumber(lastDot, 0, 1);
-            if (result.size() >= 5) {
-                winningLine = result;
-                return result;
-            }
-
-            result = getDotsNumber(lastDot, -1, 1);
-            if (result.size() >= 5) {
-                winningLine = result;
-                return result;
-            }
-
-            return null;
-        } else {
-            return winningLine;
         }
+        return mWinningLine;
     }
 
     public void undo(int moves) {
@@ -282,12 +256,13 @@ public class Game {
             }
         }
 
-        winningLine = null;
-        winningLine = isOver();
+        mScore = null;
+        mWinningLine = null;
     }
 
+    @Nullable
     public HighScore getCurrentScore() {
-        return currentScore;
+        return mScore;
     }
 
     @Nullable
@@ -339,5 +314,9 @@ public class Game {
             }
         }
         return copyNet;
+    }
+
+    @IntDef({Dot.HOST, Dot.GUEST})
+    private @interface DotType {
     }
 }
