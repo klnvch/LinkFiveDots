@@ -71,20 +71,22 @@ public class Game {
      * Creates updated version of game to display.
      * Sets dots on the paper and checks for a winning line.
      *
-     * @param dots dots sent from service
+     * @param dots dots sent from service or null if empty
      * @param hostDotType dot type of device owner
      * @return new object of the game
      */
     @NonNull
-    public static Game createGame(@NonNull List<Dot> dots, @DotType int hostDotType) {
+    public static Game createGame(@Nullable List<Dot> dots, @DotType int hostDotType) {
         // create an empty game
         Game game = new Game(hostDotType);
-        // set dots
-        for (Dot dot : dots) {
-            game.net[dot.getX()][dot.getY()] = dot;
+        if (dots != null) {
+            // set dots
+            for (Dot dot : dots) {
+                game.net[dot.getX()][dot.getY()] = dot;
+            }
+            // check for the end of the game
+            game.isOver();
         }
-        // check for the end of the game
-        game.isOver();
 
         return game;
     }

@@ -112,7 +112,7 @@ public class OnlineGameFragment extends Fragment {
             mHostDotType = mListener.getUserDotType();
 
             List<Dot> dots = mListener.getDots();
-            if (dots != null && mHostDotType != Dot.EMPTY) {
+            if (mHostDotType != Dot.EMPTY) {
                 mView.setGameState(Game.createGame(dots, mHostDotType));
             }
         } else {
