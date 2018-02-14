@@ -138,11 +138,21 @@ public class OnlineGameFragment extends Fragment {
 
         if (getFragmentManager() != null) {
             EndGameDialog.newInstance(msg, title, false)
+                    .setOnNewGameListener(this::newGame)
                     .show(getFragmentManager(), EndGameDialog.TAG);
         } else {
             Log.e(TAG, "getFragmentManager() is null");
         }
 
+    }
+
+    /**
+     * Exits to Picker Fragment from Game Fragment
+     */
+    private void newGame() {
+        if (getFragmentManager() != null) {
+            getFragmentManager().popBackStack();
+        }
     }
 
     interface OnGameListener {
