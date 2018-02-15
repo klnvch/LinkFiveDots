@@ -32,35 +32,39 @@ import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 
 import by.klnvch.link5dots.R;
+import by.klnvch.link5dots.models.HighScore;
 
-public class EndGameDialog extends DialogFragment implements DialogInterface.OnClickListener {
+public final class EndGameDialog extends DialogFragment implements DialogInterface.OnClickListener {
 
     public static final String TAG = "EndGameDialog";
 
-    private static final String KEY_TITLE = "KEY_TITLE";
-    private static final String KEY_MSG = "KEY_MSG";
-    private static final String KEY_CANCELABLE = "KEY_CANCELABLE";
+    private static final String KEY_IS_WON = "KEY_IS_WON";
+    private static final String KEY_MOVES_NUMBER = "KEY_MOVES_NUMBER";
+    private static final String KEY_ELAPSED_TIME = "KEY_ELAPSED_TIME";
 
     private OnNewGameListener mListenerNew = null;
     private OnUndoMoveListener mListenerUndo = null;
     private OnScoreListener mListenerScore = null;
 
-    public static EndGameDialog newInstance(@NonNull String msg, int title, boolean isCancelable) {
-        Bundle args = new Bundle();
-        args.putString(KEY_MSG, msg);
-        args.putInt(KEY_TITLE, title);
-        args.putBoolean(KEY_CANCELABLE, isCancelable);
+    /**
+     * Creates dialog showing the end of the game
+     *
+     * @param highScore    result of a game
+     * @param ignoreResult ignore won or lost state of the game
+     * @return dialog instance
+     */
+    @NonNull
+    public static EndGameDialog newInstance(@NonNull HighScore highScore, boolean ignoreResult) {
+        final Boolean isWon = ignoreResult ? null : highScore.getStatus() == HighScore.WON;
+        final int movesNumber = highScore.getMoves();
+        final long elapsedTime = highScore.getTime();
 
-        EndGameDialog dialog = new EndGameDialog();
-        dialog.setArguments(args);
-        return dialog;
-    }
+        final Bundle args = new Bundle();
+        args.putSerializable(KEY_IS_WON, isWon);
+        args.putInt(KEY_MOVES_NUMBER, movesNumber);
+        args.putLong(KEY_ELAPSED_TIME, elapsedTime);
 
-    public static EndGameDialog newInstance(@NonNull String msg) {
-        Bundle args = new Bundle();
-        args.putString(KEY_MSG, msg);
-
-        EndGameDialog dialog = new EndGameDialog();
+        final EndGameDialog dialog = new EndGameDialog();
         dialog.setArguments(args);
         return dialog;
     }
@@ -68,15 +72,21 @@ public class EndGameDialog extends DialogFragment implements DialogInterface.OnC
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        String msg = getArguments().getString(KEY_MSG);
-        int title = getArguments().getInt(KEY_TITLE);
-        boolean isCancelable = getArguments().getBoolean(KEY_CANCELABLE, true);
+        if (getArguments() == null || getContext() == null) {
+            throw new RuntimeException("arguments or context are null");
+        }
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext())
-                .setCancelable(isCancelable)
+        final Boolean isWon = (Boolean) getArguments().getSerializable(KEY_IS_WON);
+        final int movesNumber = getArguments().getInt(KEY_MOVES_NUMBER);
+        final long elapsedTime = getArguments().getLong(KEY_ELAPSED_TIME);
+
+        final int title = isWon != null ? isWon ? R.string.end_win : R.string.end_lose : -1;
+        final String msg = getString(R.string.end_move, movesNumber, elapsedTime);
+
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getContext())
                 .setMessage(msg);
 
-        if (title != 0) builder.setTitle(title);
+        if (title != -1) builder.setTitle(title);
 
         if (mListenerNew != null) builder.setPositiveButton(R.string.end_new_game, this);
         if (mListenerUndo != null) builder.setNegativeButton(R.string.end_undo, this);
@@ -115,19 +125,19 @@ public class EndGameDialog extends DialogFragment implements DialogInterface.OnC
     }
 
     @NonNull
-    public EndGameDialog setOnNewGameListener(OnNewGameListener listenerNew) {
+    public EndGameDialog setOnNewGameListener(@NonNull OnNewGameListener listenerNew) {
         this.mListenerNew = listenerNew;
         return this;
     }
 
     @NonNull
-    public EndGameDialog setOnUndoMoveListener(OnUndoMoveListener listenerUndo) {
+    public EndGameDialog setOnUndoMoveListener(@NonNull OnUndoMoveListener listenerUndo) {
         this.mListenerUndo = listenerUndo;
         return this;
     }
 
     @NonNull
-    public EndGameDialog setOnScoreListener(OnScoreListener listenerScore) {
+    public EndGameDialog setOnScoreListener(@NonNull OnScoreListener listenerScore) {
         this.mListenerScore = listenerScore;
         return this;
     }

@@ -107,10 +107,10 @@ public abstract class MultiplayerActivity extends BaseActivity {
         super.onStart();
         bindService(new Intent(this, getServiceClass()), mConnection, 0);
 
-        Observable.fromCallable(this::getVibrationMode)
+        mDisposables.add(Observable.fromCallable(this::getVibrationMode)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::setVibrationMode);
+                .subscribe(this::setVibrationMode));
 
         Log.d(TAG, "onStart");
     }
@@ -200,10 +200,7 @@ public abstract class MultiplayerActivity extends BaseActivity {
 
     @Override
     protected void onGameFinished(@NonNull HighScore highScore) {
-        int title = highScore.getStatus() == HighScore.WON ? R.string.end_win : R.string.end_lose;
-        String msg = getString(R.string.end_move, highScore.getMoves(), highScore.getTime());
-
-        EndGameDialog.newInstance(msg, title, false)
+        EndGameDialog.newInstance(highScore, false)
                 .setOnNewGameListener(this::newGame)
                 .show(getSupportFragmentManager(), EndGameDialog.TAG);
     }
