@@ -32,8 +32,10 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -134,6 +136,31 @@ public class OnlineGameActivity extends AppCompatActivity
         mGameFragment = null;
 
         mAuth = null;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mGameFragment != null && mGameFragment.isVisible()) {
+            final String msg = getString(R.string.bt_is_disconnect_question, getOpponentName());
+            new AlertDialog.Builder(this)
+                    .setMessage(msg)
+                    .setPositiveButton(R.string.yes, (dialog, which) -> super.onBackPressed())
+                    .setNegativeButton(R.string.no, null)
+                    .show();
+        } else {
+            super.onBackPressed();
+        }
     }
 
     @Override
