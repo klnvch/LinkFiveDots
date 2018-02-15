@@ -133,17 +133,13 @@ public class OnlineGameFragment extends Fragment {
     }
 
     private void onGameFinished(@NonNull HighScore highScore) {
-        int title = highScore.getStatus() == HighScore.WON ? R.string.end_win : R.string.end_lose;
-        String msg = getString(R.string.end_move, highScore.getMoves(), highScore.getTime());
-
         if (getFragmentManager() != null) {
-            EndGameDialog.newInstance(msg, title, false)
+            EndGameDialog.newInstance(highScore, false)
                     .setOnNewGameListener(this::newGame)
                     .show(getFragmentManager(), EndGameDialog.TAG);
         } else {
             Log.e(TAG, "getFragmentManager() is null");
         }
-
     }
 
     /**

@@ -50,10 +50,7 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void onGameFinished(@NonNull HighScore highScore) {
-        int title = highScore.getStatus() == HighScore.WON ? R.string.end_win : R.string.end_lose;
-        String msg = getString(R.string.end_move, highScore.getMoves(), highScore.getTime());
-
-        EndGameDialog.newInstance(msg, title, true)
+        EndGameDialog.newInstance(highScore, false)
                 .setOnNewGameListener(this::newGame)
                 .setOnUndoMoveListener(this::undoLastMove)
                 .setOnScoreListener(this::moveToScores)

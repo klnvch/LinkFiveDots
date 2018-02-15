@@ -44,13 +44,14 @@ import by.klnvch.link5dots.models.HighScore;
 import by.klnvch.link5dots.settings.SettingsUtils;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
     protected static final String KEY_GAME_STATE = "KEY_GAME_STATE_V2";
     protected static final String KEY_VIEW_STATE = "KEY_VIEW_STATE_V3";
-
+    protected final CompositeDisposable mDisposables = new CompositeDisposable();
     protected GameView mView = null;
     protected String mUserName = "";
     private DialogFragment mDialogNewGame = null;
@@ -67,10 +68,10 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         setDots();
 
-        Observable.fromCallable(this::getUserName)
+        mDisposables.add(Observable.fromCallable(this::getUserName)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::setUsername);
+                .subscribe(this::setUsername));
     }
 
     @Override
@@ -82,6 +83,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
+        mDisposables.clear();
         mUserName = null;
         mDialogNewGame = null;
         mView = null;
@@ -137,15 +139,15 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected abstract void onGameFinished(@NonNull HighScore highScore);
 
     protected void loadState() {
-        Observable.fromCallable(this::getGameState)
+        mDisposables.add(Observable.fromCallable(this::getGameState)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::setGameState);
+                .subscribe(this::setGameState));
 
-        Observable.fromCallable(this::getViewState)
+        mDisposables.add(Observable.fromCallable(this::getViewState)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::setViewState);
+                .subscribe(this::setViewState));
     }
 
     protected void saveState() {

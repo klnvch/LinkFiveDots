@@ -58,9 +58,7 @@ public class TwoPlayersActivity extends BaseActivity {
     protected void onGameFinished(@NonNull HighScore highScore) {
         if (getSupportFragmentManager().findFragmentByTag(EndGameDialog.TAG) != null) return;
 
-        String msg = getString(R.string.end_move, highScore.getMoves(), highScore.getTime());
-
-        EndGameDialog.newInstance(msg)
+        EndGameDialog.newInstance(highScore, true)
                 .setOnNewGameListener(this::newGame)
                 .setOnUndoMoveListener(this::undoLastMove)
                 .show(getSupportFragmentManager(), EndGameDialog.TAG);
