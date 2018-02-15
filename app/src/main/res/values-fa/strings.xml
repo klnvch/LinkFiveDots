@@ -88,7 +88,7 @@
     <string name="bluetooth_not_discoverable">"دستگاه قابل شناسایی شود"</string>
     <string name="bluetooth_is_discoverable">"قابل مشاهده برای تمام دستگاه‌های بلوتوث اطراف (<xliff:g id="DISCOVERABLE_TIME_PERIOD">%1$s</xliff:g>)"</string>
     <string name="bluetooth_only_visible_to_paired_devices">"فقط برای دستگاه‌های مرتبط شده قابل مشاهده است"</string>
-    <string name="bluetooth_is_disconnect_question">"ارتباط <xliff:g id="DEVICE_NAME">%1$s</xliff:g> قطع شود؟"</string>
+    <string name="bt_is_disconnect_question">"ارتباط <xliff:g id="DEVICE_NAME">%1$s</xliff:g> قطع شود؟"</string>
     <string name="bluetooth_connected">"متصل"</string>
     <string name="bluetooth_disconnected">"اتصال قطع شد"</string>
     <string name="bluetooth_connecting">"در حال اتصال…"</string>

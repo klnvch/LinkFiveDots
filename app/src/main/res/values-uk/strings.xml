@@ -77,7 +77,7 @@
     <string name="bluetooth_not_discoverable">"Зробити пристрій видимим"</string>
     <string name="bluetooth_is_discoverable">"Видимий для всіх пристроїв Bluetooth неподалік (%1$s)"</string>
     <string name="bluetooth_only_visible_to_paired_devices">"Видимий лише для спарених пристроїв"</string>
-    <string name="bluetooth_is_disconnect_question">"Відключити пристрій \"%1$s\"?"</string>
+    <string name="bt_is_disconnect_question">"Відключити пристрій \"%1$s\"?"</string>
     <string name="bluetooth_connected">"Підключено"</string>
     <string name="bluetooth_disconnected">"Роз’єднано"</string>
     <string name="bluetooth_connecting">"Підключення…"</string>

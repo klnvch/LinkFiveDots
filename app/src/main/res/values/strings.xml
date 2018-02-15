@@ -98,8 +98,8 @@
     <string name="bluetooth_is_discoverable">Visible to all nearby Bluetooth devices (%1$s)</string>
     <!-- 239 Bluetooth activity setting screen, summary text when not discoverable with paired devices [CHAR LIMIT=50] -->
     <string name="bluetooth_only_visible_to_paired_devices">Only visible to paired devices</string>
-    <!-- 275 Bluetooth Visibility disconnect question.  Asks the user if they wish to disconnect a pair bluetooth device.  [CHAR LIMIT=50] -->
-    <string name="bluetooth_is_disconnect_question">"Disconnect \u0022%1$s\u0022?"</string>
+    <!-- 275 Bluetooth Visibility disconnect question.  Asks the user if they wish to disconnect a pair bluetooth device. -->
+    <string name="bt_is_disconnect_question">"Disconnect \"%1$s\"?"</string>
     <!-- 284 Bluetooth activity setting.  Message when connected to a device. [CHAR LIMIT=40] -->
     <string name="bluetooth_connected">Connected</string>
     <!-- 294 Bluetooth activity setting.  Message when a device is disconnected -->

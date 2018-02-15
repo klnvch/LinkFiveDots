@@ -163,7 +163,7 @@ public abstract class MultiplayerActivity extends BaseActivity {
     public void onBackPressed() {
         if (mService != null && mService.getState() == MultiplayerService.STATE_CONNECTED) {
             new AlertDialog.Builder(this)
-                    .setMessage(getString(R.string.bluetooth_is_disconnect_question, mService.getDestinationName()))
+                    .setMessage(getString(R.string.bt_is_disconnect_question, mService.getDestinationName()))
                     .setPositiveButton(R.string.yes, (dialog, which) -> {
                         mService.stop();
                         mService.start();
