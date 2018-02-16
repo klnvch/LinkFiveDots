@@ -81,6 +81,7 @@
     <string name="create">"ایجاد"</string>
     <string name="delete">"حذف"</string>
     <string name="scan">"اسکن"</string>
+    <string name="searching">"در حال جستجو…"</string>
     <string name="device_info_default">"ناشناس"</string>
 
     <string name="switch_on_text">"روشن"</string>

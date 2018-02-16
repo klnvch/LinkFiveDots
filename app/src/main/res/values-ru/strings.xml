@@ -70,6 +70,7 @@
     <string name="create">"Создать"</string>
     <string name="delete">"Удалить"</string>
     <string name="scan">"Поиск"</string>
+    <string name="searching">"Поиск…"</string>
     <string name="device_info_default">"Неизвестно"</string>
 
     <string name="switch_on_text">"ВКЛЮЧЕНО"</string>

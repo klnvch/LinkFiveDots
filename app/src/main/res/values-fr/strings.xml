@@ -70,6 +70,7 @@
     <string name="create">"Créer"</string>
     <string name="delete">"Supprimer"</string>
     <string name="scan">"Rechercher"</string>
+    <string name="searching">"Recherche en cours…"</string>
     <string name="device_info_default">"Inconnu"</string>
 
     <string name="switch_on_text">"Activé"</string>

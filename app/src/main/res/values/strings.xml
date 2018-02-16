@@ -86,6 +86,7 @@
     <string name="create">Create</string>
     <string name="delete">Delete</string>
     <string name="scan">Scan</string>
+    <string name="searching">Searching…</string>
     <!-- 33 Device Info screen. Used for a status item's value when the proper value is not known -->
     <string name="device_info_default">Unknown</string>
 
