@@ -30,6 +30,7 @@ import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -115,6 +116,17 @@ public class OnlineGameFragment extends Fragment {
             if (mHostDotType != Dot.EMPTY) {
                 mView.setGameState(Game.createGame(dots, mHostDotType));
             }
+
+            if (dots == null || dots.size() == 0) {
+                setTitle(R.string.bt_message_your_turn);
+            } else {
+                Dot lastDot = dots.get(dots.size() - 1);
+                if (lastDot.getType() == mHostDotType) {
+                    setTitle(R.string.bt_message_opponents_turn);
+                } else {
+                    setTitle(R.string.bt_message_your_turn);
+                }
+            }
         } else {
             Log.e(TAG, "update: listener is null");
         }
@@ -149,6 +161,10 @@ public class OnlineGameFragment extends Fragment {
         if (getFragmentManager() != null) {
             getFragmentManager().popBackStack();
         }
+    }
+
+    private void setTitle(@StringRes int title) {
+        if (getActivity() != null) getActivity().setTitle(title);
     }
 
     interface OnGameListener {
