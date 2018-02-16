@@ -81,9 +81,14 @@ public class OnlineService extends Service {
     static final int ERROR_CONNECT_FAILED = 7;
 
     private final IBinder mBinder = new LocalBinder();
-    private PickerAdapter mAdapter = null;
     private DatabaseReference mDatabase = null;
+    // must be initialized in onCreate
+    private PickerAdapter mAdapter = null;
+    private User mUser = null;
+    // changed during existing
     private Room mRoom = null;
+    private int mRoomState = STATE_ROOM_DELETED;
+    private int mScanState = STATE_SCAN_OFF;
     private final ValueEventListener mStateEventListener = new ValueEventListener() {
         @Override
         public void onDataChange(DataSnapshot dataSnapshot) {
@@ -106,9 +111,6 @@ public class OnlineService extends Service {
             Log.d(TAG, "ValueEventListener.onCancelled", databaseError.toException());
         }
     };
-    private User mUser = null;
-    private int mRoomState = STATE_ROOM_DELETED;
-    private int mScanState = STATE_SCAN_OFF;
 
     @Override
     public void onCreate() {
@@ -285,6 +287,15 @@ public class OnlineService extends Service {
                         }
                     }
                 });
+    }
+
+    /**
+     * Resets the service to initial state
+     */
+    void reset() {
+        stopRoomObserving();
+        mRoom = null;
+        setRoomState(STATE_ROOM_DELETED);
     }
 
     private void startRoomObserving() {

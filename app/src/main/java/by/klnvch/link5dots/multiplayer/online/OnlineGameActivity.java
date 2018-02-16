@@ -32,6 +32,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -50,7 +51,8 @@ import by.klnvch.link5dots.R;
 import by.klnvch.link5dots.models.Dot;
 
 public class OnlineGameActivity extends AppCompatActivity
-        implements OnlinePickerFragment.OnPickerListener, OnlineGameFragment.OnGameListener {
+        implements OnlinePickerFragment.OnPickerListener, OnlineGameFragment.OnGameListener,
+        FragmentManager.OnBackStackChangedListener {
 
     private static final String TAG = "OnlineGameActivity";
 
@@ -59,7 +61,6 @@ public class OnlineGameActivity extends AppCompatActivity
     private OnlinePickerFragment mPickerFragment = null;
     private OnlineGameFragment mGameFragment = null;
     private final ServiceConnection mConnection = new ServiceConnection() {
-
         @Override
         public void onServiceConnected(ComponentName className, IBinder service) {
             Log.d(TAG, "onServiceConnected");
@@ -108,6 +109,8 @@ public class OnlineGameActivity extends AppCompatActivity
             mGameFragment = (OnlineGameFragment) getSupportFragmentManager()
                     .findFragmentByTag(OnlineGameFragment.TAG);
         }
+
+        getSupportFragmentManager().addOnBackStackChangedListener(this);
 
         Intent intent = new Intent(this, OnlineService.class);
         if (savedInstanceState == null) {
@@ -160,6 +163,18 @@ public class OnlineGameActivity extends AppCompatActivity
                     .show();
         } else {
             super.onBackPressed();
+        }
+    }
+
+    @Override
+    public void onBackStackChanged() {
+        final int fragmentsCount = getSupportFragmentManager().getBackStackEntryCount();
+        Log.d(TAG, "onBackStackChanged: " + fragmentsCount);
+        if (fragmentsCount == 0) {
+            // number of fragments in the stack decreased from 1 to 0,
+            // expected quiting from Game Fragment to Picker Fragment
+            mGameFragment = null;
+            mService.reset();
         }
     }
 
