@@ -69,6 +69,7 @@
     <string name="no">"No"</string>
     <string name="create">"Crear"</string>
     <string name="delete">"Eliminar"</string>
+    <string name="scan">"Buscar"</string>
     <string name="device_info_default">"Desconocido"</string>
 
     <string name="switch_on_text">"Activado"</string>
