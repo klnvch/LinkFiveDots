@@ -69,6 +69,7 @@
     <string name="no">"Не"</string>
     <string name="create">"Стварыць"</string>
     <string name="delete">"Выдаліць"</string>
+    <string name="scan">"Сканаваць"</string>
     <string name="device_info_default">"Невядомы"</string>
 
     <string name="switch_on_text">"Уключана"</string>
