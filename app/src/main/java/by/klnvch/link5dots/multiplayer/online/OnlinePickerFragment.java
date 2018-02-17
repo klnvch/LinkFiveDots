@@ -28,7 +28,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -54,6 +53,8 @@ public class OnlinePickerFragment extends Fragment implements View.OnClickListen
     private ToggleButton mButtonScan;
     private View mProgressScan;
     private RecyclerView mRecyclerView;
+    private int mRoomState = OnlineService.STATE_ROOM_DELETED;
+    private int mScanState = OnlineService.STATE_SCAN_OFF;
 
     @Override
     public void onAttach(Context context) {
@@ -132,10 +133,11 @@ public class OnlinePickerFragment extends Fragment implements View.OnClickListen
     }
 
     void setRoomState(int roomState, @Nullable Room room) {
+        mRoomState = roomState;
+        updateTitle();
+
         switch (roomState) {
             case OnlineService.STATE_ROOM_DELETED:
-                setTitle(R.string.menu_online_game);
-
                 mButtonCreate.setChecked(false);
                 mButtonCreate.setEnabled(true);
                 mButtonScan.setEnabled(true);
@@ -146,8 +148,6 @@ public class OnlinePickerFragment extends Fragment implements View.OnClickListen
                 mProgressCreate.setVisibility(View.INVISIBLE);
                 break;
             case OnlineService.STATE_ROOM_CREATING:
-                setTitle(R.string.menu_online_game);
-
                 mButtonCreate.setChecked(false);
                 mButtonCreate.setEnabled(false);
                 mButtonScan.setEnabled(false);
@@ -158,8 +158,6 @@ public class OnlinePickerFragment extends Fragment implements View.OnClickListen
                 mProgressCreate.setVisibility(View.VISIBLE);
                 break;
             case OnlineService.STATE_ROOM_CREATED:
-                setTitle(R.string.master_clear_progress_text);
-
                 mButtonCreate.setChecked(true);
                 mButtonCreate.setEnabled(true);
                 mButtonScan.setEnabled(false);
@@ -174,8 +172,6 @@ public class OnlinePickerFragment extends Fragment implements View.OnClickListen
                 mProgressCreate.setVisibility(View.INVISIBLE);
                 break;
             case OnlineService.STATE_ROOM_DELETING:
-                setTitle(R.string.menu_online_game);
-
                 mButtonCreate.setChecked(true);
                 mButtonCreate.setEnabled(false);
                 mButtonScan.setEnabled(false);
@@ -189,10 +185,11 @@ public class OnlinePickerFragment extends Fragment implements View.OnClickListen
     }
 
     void setScanState(int scanState, @NonNull PickerAdapter adapter) {
+        mScanState = scanState;
+        updateTitle();
+
         switch (scanState) {
             case OnlineService.STATE_SCAN_OFF:
-                setTitle(R.string.menu_online_game);
-
                 mButtonCreate.setEnabled(true);
                 mButtonScan.setChecked(false);
 
@@ -201,8 +198,6 @@ public class OnlinePickerFragment extends Fragment implements View.OnClickListen
                 adapter.setOnItemClickListener(null);
                 break;
             case OnlineService.STATE_SCAN_ON:
-                setTitle(R.string.searching);
-
                 mButtonCreate.setEnabled(false);
                 mButtonScan.setChecked(true);
 
@@ -213,7 +208,16 @@ public class OnlinePickerFragment extends Fragment implements View.OnClickListen
         }
     }
 
-    private void setTitle(@StringRes int title) {
+    private void updateTitle() {
+        final int title;
+        if (mScanState == OnlineService.STATE_SCAN_ON) {
+            title = R.string.searching;
+        } else if (mRoomState == OnlineService.STATE_ROOM_CREATED) {
+            title = R.string.master_clear_progress_text;
+        } else {
+            title = R.string.menu_online_game;
+        }
+
         if (getActivity() != null) getActivity().setTitle(title);
     }
 
