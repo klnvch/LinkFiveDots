@@ -115,6 +115,7 @@
     <string name="phone_language">"زبان"</string>
     <string name="share">"به اشتراک بگذارید"</string>
     <string name="search_menu">"جستجو"</string>
+    <string name="search_settings_no_results">"نتیجه‌ای پیدا نشد"</string>
 
 
     <string name="bt_message_your_turn">…نوبت شماست. نقطه بگذارید </string>

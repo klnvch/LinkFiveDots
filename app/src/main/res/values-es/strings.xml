@@ -104,6 +104,7 @@
     <string name="phone_language">"Idioma"</string>
     <string name="share">"Compartir"</string>
     <string name="search_menu">"Buscar"</string>
+    <string name="search_settings_no_results">"Sin resultados"</string>
 
 
     <string name="bt_message_your_turn">Su turno…</string>

@@ -104,6 +104,7 @@
     <string name="phone_language">"Язык"</string>
     <string name="share">"Отправить"</string>
     <string name="search_menu">"Поиск"</string>
+    <string name="search_settings_no_results">"Ничего не найдено"</string>
 
 
     <string name="bt_message_your_turn">Ваш ход, поставте точку…</string>

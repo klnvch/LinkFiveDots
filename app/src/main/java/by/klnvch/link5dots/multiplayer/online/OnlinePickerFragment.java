@@ -41,7 +41,7 @@ import android.widget.ToggleButton;
 import by.klnvch.link5dots.R;
 
 public class OnlinePickerFragment extends Fragment implements View.OnClickListener,
-        PickerAdapter.OnItemClickListener {
+        PickerAdapter.OnItemClickListener, PickerAdapter.OnEmptyStateListener {
 
     static final String TAG = "OnlineGamePickerFr";
 
@@ -53,6 +53,8 @@ public class OnlinePickerFragment extends Fragment implements View.OnClickListen
     private ToggleButton mButtonScan;
     private View mProgressScan;
     private RecyclerView mRecyclerView;
+    private View mScanWarning;
+
     private int mRoomState = OnlineService.STATE_ROOM_DELETED;
     private int mScanState = OnlineService.STATE_SCAN_OFF;
 
@@ -87,6 +89,8 @@ public class OnlinePickerFragment extends Fragment implements View.OnClickListen
         mRecyclerView = view.findViewById(R.id.listDestinations);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        mScanWarning = view.findViewById(R.id.textWarningEmpty);
 
         return view;
     }
@@ -130,6 +134,16 @@ public class OnlinePickerFragment extends Fragment implements View.OnClickListen
         if (mListener != null) {
             mListener.onConnect(room);
         }
+    }
+
+    @Override
+    public void onEmptyState(boolean isEmpty) {
+        if (isEmpty) {
+            mScanWarning.setVisibility(View.VISIBLE);
+        } else {
+            mScanWarning.setVisibility(View.GONE);
+        }
+
     }
 
     void setRoomState(int roomState, @Nullable Room room) {
@@ -196,6 +210,7 @@ public class OnlinePickerFragment extends Fragment implements View.OnClickListen
                 mProgressScan.setVisibility(View.INVISIBLE);
                 mRecyclerView.setAdapter(null);
                 adapter.setOnItemClickListener(null);
+                adapter.setOnEmptyStateListener(null);
                 break;
             case OnlineService.STATE_SCAN_ON:
                 mButtonCreate.setEnabled(false);
@@ -204,6 +219,7 @@ public class OnlinePickerFragment extends Fragment implements View.OnClickListen
                 mProgressScan.setVisibility(View.VISIBLE);
                 mRecyclerView.setAdapter(adapter);
                 adapter.setOnItemClickListener(this);
+                adapter.setOnEmptyStateListener(this);
                 break;
         }
     }
