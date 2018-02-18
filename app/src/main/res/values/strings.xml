@@ -107,7 +107,7 @@
     <!-- 294 Bluetooth activity setting.  Message when a device is disconnected -->
     <string name="bluetooth_disconnected">Disconnected</string>
     <!-- 298 Bluetooth activity setting.  Message when connecting to a device -->
-    <string name="bluetooth_connecting">Connecting\u2026</string>
+    <string name="bluetooth_connecting">Connecting…</string>
     <!-- 308 Bluetooth activity setting screen, text that appears when scanning for devices is finished and no nearby bluetooth device was found [CHAR LIMIT=40]-->
     <string name="bluetooth_no_devices_found">No nearby Bluetooth devices were found.</string>
     <!-- 319 Strings for BluetoothDevicePicker [CHAR LIMIT=40]-->

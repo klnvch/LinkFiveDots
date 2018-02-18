@@ -92,6 +92,10 @@ public class PickerAdapter extends FirebaseRecyclerAdapter<Room, PickerAdapter.R
         Log.d(OnlineService.TAG, "PickerAdapter.onError", e.toException());
     }
 
+    boolean isEmpty() {
+        return getItemCount() == 0;
+    }
+
     void setOnItemClickListener(@Nullable OnItemClickListener listener) {
         this.mOnItemClickListener = listener;
     }

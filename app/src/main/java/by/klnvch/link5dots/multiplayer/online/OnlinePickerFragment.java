@@ -132,6 +132,7 @@ public class OnlinePickerFragment extends Fragment implements View.OnClickListen
     public void onItemSelected(@NonNull Room room) {
         Log.d(TAG, "onItemSelected: " + room.toString());
         if (mListener != null) {
+            if (getActivity() != null) getActivity().setTitle(R.string.bluetooth_connecting);
             mListener.onConnect(room);
         }
     }
@@ -211,6 +212,7 @@ public class OnlinePickerFragment extends Fragment implements View.OnClickListen
                 mRecyclerView.setAdapter(null);
                 adapter.setOnItemClickListener(null);
                 adapter.setOnEmptyStateListener(null);
+                onEmptyState(false);
                 break;
             case OnlineService.STATE_SCAN_ON:
                 mButtonCreate.setEnabled(false);
@@ -220,6 +222,7 @@ public class OnlinePickerFragment extends Fragment implements View.OnClickListen
                 mRecyclerView.setAdapter(adapter);
                 adapter.setOnItemClickListener(this);
                 adapter.setOnEmptyStateListener(this);
+                onEmptyState(adapter.isEmpty());
                 break;
         }
     }
@@ -230,6 +233,10 @@ public class OnlinePickerFragment extends Fragment implements View.OnClickListen
             title = R.string.searching;
         } else if (mRoomState == OnlineService.STATE_ROOM_CREATED) {
             title = R.string.master_clear_progress_text;
+        } else if (mRoomState == OnlineService.STATE_ROOM_CREATING) {
+            title = R.string.bluetooth_connecting;
+        } else if (mRoomState == OnlineService.STATE_ROOM_DELETING) {
+            title = R.string.bluetooth_connecting;
         } else {
             title = R.string.menu_online_game;
         }
