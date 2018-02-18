@@ -104,6 +104,7 @@
     <string name="phone_language">"Мова"</string>
     <string name="share">"Падзяліцца"</string>
     <string name="search_menu">"Шукай"</string>
+    <string name="search_settings_no_results">"Вынікаў няма"</string>
 
 
     <string name="bt_message_your_turn">Ваш рух, пастаўце кропку&#8230;</string>

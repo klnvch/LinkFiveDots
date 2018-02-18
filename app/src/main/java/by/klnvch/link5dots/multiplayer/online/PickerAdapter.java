@@ -44,6 +44,7 @@ import by.klnvch.link5dots.R;
 public class PickerAdapter extends FirebaseRecyclerAdapter<Room, PickerAdapter.RoomHolder> {
 
     private OnItemClickListener mOnItemClickListener = null;
+    private OnEmptyStateListener mOnEmptyStateListener = null;
 
     private PickerAdapter(@NonNull FirebaseRecyclerOptions<Room> options) {
         super(options);
@@ -78,7 +79,12 @@ public class PickerAdapter extends FirebaseRecyclerAdapter<Room, PickerAdapter.R
 
     @Override
     public void onDataChanged() {
-        Log.d(OnlineService.TAG, "PickerAdapter.onDataChanged");
+        final int count = getItemCount();
+        Log.d(OnlineService.TAG, "PickerAdapter.onDataChanged: " + count);
+
+        if (mOnEmptyStateListener != null) {
+            mOnEmptyStateListener.onEmptyState(count == 0);
+        }
     }
 
     @Override
@@ -90,8 +96,16 @@ public class PickerAdapter extends FirebaseRecyclerAdapter<Room, PickerAdapter.R
         this.mOnItemClickListener = listener;
     }
 
+    void setOnEmptyStateListener(@Nullable OnEmptyStateListener listener) {
+        this.mOnEmptyStateListener = listener;
+    }
+
     interface OnItemClickListener {
         void onItemSelected(@NonNull Room room);
+    }
+
+    interface OnEmptyStateListener {
+        void onEmptyState(boolean isEmpty);
     }
 
     class RoomHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
