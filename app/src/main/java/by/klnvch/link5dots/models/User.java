@@ -22,13 +22,13 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.multiplayer.online;
+package by.klnvch.link5dots.models;
 
 import android.support.annotation.NonNull;
 
 import java.util.Random;
 
-@SuppressWarnings({"unused", "WeakerAccess"})
+@SuppressWarnings({"unused"})
 public class User {
 
     private String id;

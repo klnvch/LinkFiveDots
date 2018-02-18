@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.multiplayer.online;
+package by.klnvch.link5dots.models;
 
 import android.support.annotation.NonNull;
 
@@ -34,17 +34,16 @@ import java.util.List;
 import java.util.Locale;
 
 import by.klnvch.link5dots.BuildConfig;
-import by.klnvch.link5dots.models.Dot;
 
 @SuppressWarnings("unused")
 public class Room {
 
-    static final String CHILD_ROOM = BuildConfig.DEBUG ? "rooms_debug" : "rooms";
-    static final String CHILD_STATE = "state";
+    public static final String CHILD_ROOM = BuildConfig.DEBUG ? "rooms_debug" : "rooms";
+    public static final String CHILD_STATE = "state";
 
-    static final int STATE_CREATED = 0;
-    static final int STATE_DELETED = 1;
-    static final int STATE_STARTED = 2;
+    public static final int STATE_CREATED = 0;
+    public static final int STATE_DELETED = 1;
+    public static final int STATE_STARTED = 2;
 
     private static final Format TIME_FORMAT =
             new SimpleDateFormat("MMM-dd HH:mm", Locale.getDefault());

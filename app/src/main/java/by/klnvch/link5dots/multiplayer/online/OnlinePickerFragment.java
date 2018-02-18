@@ -39,6 +39,7 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import by.klnvch.link5dots.R;
+import by.klnvch.link5dots.models.Room;
 
 public class OnlinePickerFragment extends Fragment implements View.OnClickListener,
         PickerAdapter.OnItemClickListener, PickerAdapter.OnEmptyStateListener {
