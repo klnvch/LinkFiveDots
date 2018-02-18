@@ -45,6 +45,7 @@ public class MultiPlayerMenuActivity extends AppCompatActivity implements View.O
     private static final int RC_ENABLE_BLUETOOTH = 3;
     private static final int RC_BLUETOOTH_GAME = 4;
     private static final int RC_NSD_GAME = 5;
+    private static final int RC_INTERNET = 6;
 
     private boolean mIsBluetoothEnabled = false;
 
@@ -96,11 +97,13 @@ public class MultiPlayerMenuActivity extends AppCompatActivity implements View.O
                 }
                 break;
             case R.id.multi_player_lan:
-                startActivityForResult(new Intent(this, NsdPickerActivity.class), RC_NSD_GAME);
+                startActivityForResult(new Intent(this, NsdPickerActivity.class),
+                        RC_NSD_GAME);
                 startService(new Intent(this, NsdService.class));
                 break;
             case R.id.multi_player_online:
-                startActivity(new Intent(this, OnlineGameActivity.class));
+                startActivityForResult(new Intent(this, OnlineGameActivity.class),
+                        RC_INTERNET);
                 break;
         }
     }
@@ -125,13 +128,21 @@ public class MultiPlayerMenuActivity extends AppCompatActivity implements View.O
                 break;
             case RC_NSD_GAME:
                 stopService(new Intent(this, NsdService.class));
-                if (resultCode == RESULT_CANCELED) {
+                if (resultCode == RESULT_CANCELED)
                     new AlertDialog.Builder(this)
                             .setMessage(R.string.nsd_error)
                             .setPositiveButton(R.string.okay, null)
                             .show();
-                }
                 break;
+            case RC_INTERNET:
+                if (resultCode != RESULT_OK)
+                    new AlertDialog.Builder(this)
+                            .setMessage(R.string.disabled_low_ram_device)
+                            .setPositiveButton(R.string.okay, null)
+                            .show();
+                break;
+            default:
+                super.onActivityResult(requestCode, resultCode, data);
         }
     }
 

@@ -51,6 +51,7 @@ import by.klnvch.link5dots.R;
 import by.klnvch.link5dots.models.Dot;
 import by.klnvch.link5dots.models.Room;
 import by.klnvch.link5dots.models.User;
+import by.klnvch.link5dots.utils.AvailabilityChecker;
 
 public class OnlineGameActivity extends AppCompatActivity
         implements OnlinePickerFragment.OnPickerListener, OnlineGameFragment.OnGameListener,
@@ -95,9 +96,18 @@ public class OnlineGameActivity extends AppCompatActivity
 
         Log.d(TAG, "onCreate");
 
+        if (!AvailabilityChecker.isGPSValid(this)) {
+            setResult(RESULT_CANCELED);
+            finish();
+            return;
+        } else {
+            setResult(RESULT_OK);
+        }
+
         mAuth = FirebaseAuth.getInstance();
         mAuth.signInAnonymously()
-                .addOnCompleteListener(task -> Log.d(TAG, "signInAnonymously: " + task.isSuccessful()));
+                .addOnCompleteListener(task ->
+                        Log.d(TAG, "signInAnonymously: " + task.isSuccessful()));
 
         if (savedInstanceState == null) {
             mPickerFragment = new OnlinePickerFragment();
@@ -131,7 +141,11 @@ public class OnlineGameActivity extends AppCompatActivity
 
         EventBus.getDefault().unregister(this);
 
-        unbindService(mConnection);
+        try {
+            unbindService(mConnection);
+        } catch (Exception e) {
+            Log.e(TAG, "onDestroy", e);
+        }
         if (isFinishing()) {
             stopService(new Intent(this, OnlineService.class));
         }
