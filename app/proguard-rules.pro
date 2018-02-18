@@ -7,6 +7,6 @@
 
 # Firebase Realtime Database
 -keepattributes Signature
--keepclassmembers by.klnvch.link5dots.models.** {
+-keepclassmembers class by.klnvch.link5dots.models.** {
   *;
 }
