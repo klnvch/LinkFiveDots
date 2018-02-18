@@ -238,7 +238,7 @@ public abstract class MultiplayerActivity extends BaseActivity {
         @Override
         public void handleMessage(Message msg) {
             MultiplayerActivity activity = mActivity.get();
-            if (activity != null) {
+            if (activity != null && !activity.isFinishing()) {
                 switch (msg.what) {
                     case MESSAGE_STATE_CHANGE:
                         switch (msg.arg1) {
