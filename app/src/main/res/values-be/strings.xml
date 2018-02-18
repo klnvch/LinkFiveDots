@@ -105,9 +105,10 @@
     <string name="share">"Падзяліцца"</string>
     <string name="search_menu">"Шукай"</string>
     <string name="search_settings_no_results">"Вынікаў няма"</string>
+    <string name="disabled_low_ram_device">"Гэта функцыя недаступна на гэтай прыладзе"</string>
 
 
-    <string name="bt_message_your_turn">Ваш рух, пастаўце кропку&#8230;</string>
-    <string name="bt_message_opponents_turn">Рух праціўніка, пачакайце&#8230;</string>
+    <string name="bt_message_your_turn">Ваш рух, пастаўце кропку…</string>
+    <string name="bt_message_opponents_turn">Рух праціўніка, пачакайце…</string>
 
 </resources>

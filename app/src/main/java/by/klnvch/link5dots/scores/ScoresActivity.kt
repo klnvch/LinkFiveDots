@@ -25,6 +25,7 @@
 package by.klnvch.link5dots.scores
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.os.Bundle
 import android.provider.Settings
 import android.support.v7.app.AppCompatActivity
@@ -35,6 +36,7 @@ import by.klnvch.link5dots.BuildConfig
 import by.klnvch.link5dots.R
 import by.klnvch.link5dots.models.HighScore
 import by.klnvch.link5dots.settings.SettingsUtils
+import by.klnvch.link5dots.utils.AvailabilityChecker
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
@@ -76,6 +78,13 @@ class ScoresActivity : AppCompatActivity() {
 
         swipeRefreshLayout.isRefreshing = true
         swipeRefreshLayout.setOnRefreshListener { swipeRefreshLayout.isRefreshing = false }
+
+        if (!AvailabilityChecker.isGPSValid(this)) {
+            setResult(Activity.RESULT_CANCELED)
+            finish()
+        } else {
+            setResult(Activity.RESULT_OK)
+        }
     }
 
     public override fun onStart() {
@@ -151,9 +160,9 @@ class ScoresActivity : AppCompatActivity() {
     }
 
     companion object {
-        private val TAG = "ScoresActivity"
+        private const val TAG = "ScoresActivity"
 
         private val CHILD_HIGH_SCORES = if (BuildConfig.DEBUG) "high_scores_debug" else "high_scores"
-        private val LIMIT_TO_FIRST = 500
+        private const val LIMIT_TO_FIRST = 500
     }
 }

@@ -105,6 +105,7 @@
     <string name="share">"Отправить"</string>
     <string name="search_menu">"Поиск"</string>
     <string name="search_settings_no_results">"Ничего не найдено"</string>
+    <string name="disabled_low_ram_device">"Функция недоступна на этом устройстве."</string>
 
 
     <string name="bt_message_your_turn">Ваш ход, поставте точку…</string>
