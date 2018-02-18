@@ -158,6 +158,7 @@
     <!-- 5597 Text used as a search hint into the search box -->
     <string name="search_menu">Search</string>
     <string name="search_settings_no_results">No results</string>
+    <string name="disabled_low_ram_device">This feature is not available on this device</string>
 
 
     <string name="bt_message_your_turn">Your move, put a dot…</string>
