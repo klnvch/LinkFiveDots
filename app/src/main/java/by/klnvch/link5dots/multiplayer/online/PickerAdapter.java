@@ -40,6 +40,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
 
 import by.klnvch.link5dots.R;
+import by.klnvch.link5dots.models.Room;
 
 public class PickerAdapter extends FirebaseRecyclerAdapter<Room, PickerAdapter.RoomHolder> {
 

@@ -46,6 +46,8 @@ import java.util.Collections;
 import java.util.List;
 
 import by.klnvch.link5dots.models.Dot;
+import by.klnvch.link5dots.models.Room;
+import by.klnvch.link5dots.models.User;
 import by.klnvch.link5dots.settings.SettingsUtils;
 
 /*

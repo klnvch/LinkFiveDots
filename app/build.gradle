@@ -34,8 +34,8 @@ android {
         applicationId "by.klnvch.link5dots"
         minSdkVersion 14
         targetSdkVersion 27
-        versionCode 28
-        versionName "4.2.1"
+        versionCode 29
+        versionName "4.2.2"
 
         resConfigs "en", "be", "de", "es", "fr", "it", "pl", "ru", "uk", "fa"
     }

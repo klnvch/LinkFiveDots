@@ -49,6 +49,8 @@ import java.util.List;
 
 import by.klnvch.link5dots.R;
 import by.klnvch.link5dots.models.Dot;
+import by.klnvch.link5dots.models.Room;
+import by.klnvch.link5dots.models.User;
 
 public class OnlineGameActivity extends AppCompatActivity
         implements OnlinePickerFragment.OnPickerListener, OnlineGameFragment.OnGameListener,
