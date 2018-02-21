@@ -62,6 +62,7 @@
     <string name="settings_night_mode">Modo nocturno</string>
     <string name="settings_auto">"Automático"</string>
     <string name="settings_system">"Sistema"</string>
+    <string name="settings_dots">"Puntos"</string>
     <string name="settings_reset">"Borrar todo"</string>
     <string name="rate_this_app">Valorar esta aplicación</string>
 

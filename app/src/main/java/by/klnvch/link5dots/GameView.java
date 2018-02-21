@@ -28,6 +28,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.PointF;
 import android.support.annotation.NonNull;
@@ -47,6 +48,8 @@ import by.klnvch.link5dots.models.Dot;
 import by.klnvch.link5dots.models.Game;
 import by.klnvch.link5dots.models.GameViewState;
 import by.klnvch.link5dots.models.HighScore;
+import by.klnvch.link5dots.settings.SettingsUtils;
+import by.klnvch.link5dots.utils.BitmapCreator;
 
 public class GameView extends View {
 
@@ -65,8 +68,8 @@ public class GameView extends View {
     private float screenWidth;
     private float screenHeight;
     private Bitmap mBitmapPaper;
-    private Bitmap mBitmapUserDot;             // red dot
-    private Bitmap mBitmapBotDot;              // blue dot
+    private Bitmap mBitmapUserDot;             // red dot or cross
+    private Bitmap mBitmapBotDot;              // blue dot or ring
     private Bitmap mBitmapArrows;
     private Bitmap userHorLine;
     private Bitmap userVerLine;
@@ -116,9 +119,15 @@ public class GameView extends View {
         scaleGestureDetector = new ScaleGestureDetector(context, new ScaleListener());
 
         // load bitmaps. why do we need matrix?
+        final float density = getResources().getDisplayMetrics().density;
         mBitmapPaper = BitmapFactory.decodeResource(getResources(), R.drawable.background);
-        mBitmapUserDot = BitmapFactory.decodeResource(getResources(), R.drawable.red_dot);
-        mBitmapBotDot = BitmapFactory.decodeResource(getResources(), R.drawable.blue_dot);
+        if (SettingsUtils.getDotsType(getContext()) == SettingsUtils.DOTS_TYPE_ORIGINAL) {
+            mBitmapUserDot = BitmapCreator.createDot(Color.RED, density);
+            mBitmapBotDot = BitmapCreator.createDot(Color.BLUE, density);
+        } else {
+            mBitmapUserDot = BitmapCreator.createCross(Color.RED, density);
+            mBitmapBotDot = BitmapCreator.createRing(Color.BLUE, density);
+        }
         Matrix rotateMatrix = new Matrix();
         rotateMatrix.postRotate(90.0f);
         userHorLine = BitmapFactory.decodeResource(getResources(), R.drawable.redlinehor);
@@ -133,8 +142,8 @@ public class GameView extends View {
         mBitmapArrows = BitmapFactory.decodeResource(getResources(), R.drawable.arrows);
 
         // set bitmap sizes
-        float dotSize = mBitmapUserDot.getWidth();
-        float arrowsSize = mBitmapArrows.getWidth();
+        final float dotSize = mBitmapUserDot.getWidth();
+        final float arrowsSize = mBitmapArrows.getWidth();
         paperSize = mBitmapPaper.getWidth();
         lineLength = userHorLine.getWidth();
         lineThickness = userHorLine.getHeight();

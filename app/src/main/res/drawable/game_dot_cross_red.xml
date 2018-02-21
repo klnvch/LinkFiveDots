@@ -1,0 +1,36 @@
+<!--
+  ~ MIT License
+  ~
+  ~ Copyright (c) 2017 klnvch
+  ~
+  ~ Permission is hereby granted, free of charge, to any person obtaining a copy
+  ~ of this software and associated documentation files (the "Software"), to deal
+  ~ in the Software without restriction, including without limitation the rights
+  ~ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  ~ copies of the Software, and to permit persons to whom the Software is
+  ~ furnished to do so, subject to the following conditions:
+  ~
+  ~ The above copyright notice and this permission notice shall be included in all
+  ~ copies or substantial portions of the Software.
+  ~
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  ~ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  ~ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  ~ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  ~ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  ~ SOFTWARE.
+  -->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="16dp"
+    android:height="16dp"
+    android:tint="#FF0000"
+    android:viewportHeight="28"
+    android:viewportWidth="28">
+    <path
+        android:fillAlpha="1"
+        android:fillColor="#FF000000"
+        android:pathData="M0,26.2706C0,25.3194 2.4028,22.195 5.3395,19.3273L10.679,14.1135 5.3395,8.6729C-3.7766,-0.6157 -0.6157,-3.7766 8.6729,5.3395L14.1135,10.679 19.3273,5.3395C24.581,-0.0408 28,-1.464 28,1.7294 28,2.6806 25.5972,5.805 22.6605,8.6727l-5.3395,5.2139 5.3395,5.4405C25.5972,22.3194 28,25.4949 28,26.3838c0,3.0142 -3.2136,1.6347 -8.6729,-3.7233L13.8865,17.321 8.6727,22.6605C3.419,28.0408 0,29.464 0,26.2706Z"
+        android:strokeWidth="1.33333337" />
+</vector>

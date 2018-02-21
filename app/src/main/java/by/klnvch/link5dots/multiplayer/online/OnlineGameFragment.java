@@ -25,8 +25,6 @@
 package by.klnvch.link5dots.multiplayer.online;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -46,11 +44,16 @@ import by.klnvch.link5dots.dialogs.EndGameDialog;
 import by.klnvch.link5dots.models.Dot;
 import by.klnvch.link5dots.models.Game;
 import by.klnvch.link5dots.models.HighScore;
+import by.klnvch.link5dots.settings.SettingsUtils;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 
 public class OnlineGameFragment extends Fragment {
 
     static final String TAG = "OnlineGameFragment";
-
+    protected final CompositeDisposable mDisposables = new CompositeDisposable();
     private GameView mView = null;
     private TextView mTextUserName;
     private TextView mTextOpponentName;
@@ -78,10 +81,20 @@ public class OnlineGameFragment extends Fragment {
         mView.setOnMoveDoneListener(this::onMoveDone);
         mView.setOnGameEndListener(this::onGameFinished);
 
-        setCardDots();
         update();
 
+        mDisposables.add(Observable.fromCallable(this::getDotsType)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this::setDotsType));
+
         return root;
+    }
+
+    @Override
+    public void onDestroyView() {
+        mDisposables.clear();
+        super.onDestroyView();
     }
 
     @Override
@@ -90,18 +103,26 @@ public class OnlineGameFragment extends Fragment {
         super.onDetach();
     }
 
-    private void setCardDots() {
-        GradientDrawable gameDotUser = (GradientDrawable) getResources()
-                .getDrawable(R.drawable.game_dot);
-        gameDotUser.setColor(Color.RED);
-        mTextUserName.setCompoundDrawablesWithIntrinsicBounds(
-                gameDotUser, null, null, null);
+    private int getDotsType() {
+        if (getContext() != null) {
+            return SettingsUtils.getDotsType(getContext());
+        } else {
+            return SettingsUtils.DOTS_TYPE_ORIGINAL;
+        }
+    }
 
-        GradientDrawable gameDotOpponent = (GradientDrawable) getResources()
-                .getDrawable(R.drawable.game_dot);
-        gameDotOpponent.setColor(Color.BLUE);
-        mTextOpponentName.setCompoundDrawablesWithIntrinsicBounds(
-                gameDotOpponent, null, null, null);
+    private void setDotsType(int dotsType) {
+        if (dotsType == SettingsUtils.DOTS_TYPE_ORIGINAL) {
+            mTextUserName.setCompoundDrawablesWithIntrinsicBounds(
+                    R.drawable.game_dot_circle_red, 0, 0, 0);
+            mTextOpponentName.setCompoundDrawablesWithIntrinsicBounds(
+                    R.drawable.game_dot_circle_blue, 0, 0, 0);
+        } else {
+            mTextUserName.setCompoundDrawablesWithIntrinsicBounds(
+                    R.drawable.game_dot_cross_red, 0, 0, 0);
+            mTextOpponentName.setCompoundDrawablesWithIntrinsicBounds(
+                    R.drawable.game_dot_ring_blue, 0, 0, 0);
+        }
     }
 
     void update() {

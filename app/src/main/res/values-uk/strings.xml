@@ -62,6 +62,7 @@
     <string name="settings_night_mode">Нічний режим</string>
     <string name="settings_auto">"Авто"</string>
     <string name="settings_system">"Система"</string>
+    <string name="settings_dots">"Крапки"</string>
     <string name="settings_reset">"Видалити все"</string>
     <string name="rate_this_app">Оцінити цю програму</string>
 
