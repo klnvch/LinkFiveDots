@@ -24,8 +24,6 @@
 
 package by.klnvch.link5dots;
 
-import android.graphics.Color;
-import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -72,6 +70,11 @@ public abstract class BaseActivity extends AppCompatActivity {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::setUsername));
+
+        mDisposables.add(Observable.fromCallable(this::getDotsType)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this::setDotsType));
     }
 
     @Override
@@ -168,20 +171,29 @@ public abstract class BaseActivity extends AppCompatActivity {
         tvUsername.setText(mUserName);
     }
 
-    private void setDots() {
-        GradientDrawable gameDotUser = (GradientDrawable) getResources()
-                .getDrawable(R.drawable.game_dot);
-        gameDotUser.setColor(Color.RED);
-        TextView tvUserName = findViewById(R.id.text_user_name);
-        tvUserName.setCompoundDrawablesWithIntrinsicBounds(
-                gameDotUser, null, null, null);
+    private int getDotsType() {
+        return SettingsUtils.getDotsType(this);
+    }
 
-        GradientDrawable gameDotOpponent = (GradientDrawable) getResources()
-                .getDrawable(R.drawable.game_dot);
-        gameDotOpponent.setColor(Color.BLUE);
-        TextView tvOpponentName = findViewById(R.id.text_opponent_name);
-        tvOpponentName.setCompoundDrawablesWithIntrinsicBounds(
-                gameDotOpponent, null, null, null);
+    private void setDotsType(int dotsType) {
+        final TextView tvUserName = findViewById(R.id.text_user_name);
+        final TextView tvOpponentName = findViewById(R.id.text_opponent_name);
+
+        if (dotsType == SettingsUtils.DOTS_TYPE_ORIGINAL) {
+            tvUserName.setCompoundDrawablesWithIntrinsicBounds(
+                    R.drawable.game_dot_circle_red, 0, 0, 0);
+            tvOpponentName.setCompoundDrawablesWithIntrinsicBounds(
+                    R.drawable.game_dot_circle_blue, 0, 0, 0);
+        } else {
+            tvUserName.setCompoundDrawablesWithIntrinsicBounds(
+                    R.drawable.game_dot_cross_red, 0, 0, 0);
+            tvOpponentName.setCompoundDrawablesWithIntrinsicBounds(
+                    R.drawable.game_dot_ring_blue, 0, 0, 0);
+        }
+    }
+
+    private void setDots() {
+
     }
 
     @NonNull

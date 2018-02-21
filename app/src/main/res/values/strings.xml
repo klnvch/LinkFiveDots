@@ -75,6 +75,7 @@
     <string name="settings_auto">Auto</string>
     <string name="settings_system">System</string>
     <string name="settings_reset">Erase everything</string>
+    <string name="settings_dots">Dots</string>
     <string name="rate_this_app">Rate this app</string>
     <string name="btn_github" translatable="false">GitHub</string>
 

@@ -29,6 +29,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import by.klnvch.link5dots.R;
@@ -36,14 +37,16 @@ import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.annotations.Nullable;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
 public class SettingsActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final String TAG = "SettingsActivity";
-
+    private final CompositeDisposable mDisposables = new CompositeDisposable();
     private boolean mIsVibrationEnabled = true;
     private boolean mIsNightMode = false;
+    private int mDotsType = SettingsUtils.DOTS_TYPE_ORIGINAL;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,15 +60,26 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
     protected void onStart() {
         super.onStart();
 
-        Observable.fromCallable(this::getUserName)
+        mDisposables.add(Observable.fromCallable(this::getUserName)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::setUsername);
+                .subscribe(this::setUsername));
 
-        Observable.fromCallable(this::getVibrationMode)
+        mDisposables.add(Observable.fromCallable(this::getVibrationMode)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::setVibrationMode);
+                .subscribe(this::setVibrationMode));
+
+        mDisposables.add(Observable.fromCallable(this::getDotsType)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this::setDotsType));
+    }
+
+    @Override
+    protected void onStop() {
+        mDisposables.clear();
+        super.onStop();
     }
 
     @Override
@@ -92,6 +106,11 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
             case R.id.settings_reset:
                 SettingsUtils.reset(this);
                 recreate();
+                break;
+            case R.id.settings_dots:
+                mDotsType = mDotsType == SettingsUtils.DOTS_TYPE_ORIGINAL ?
+                        SettingsUtils.DOTS_TYPE_CROSS_AND_RING : SettingsUtils.DOTS_TYPE_ORIGINAL;
+                setDotsType(mDotsType);
                 break;
         }
     }
@@ -162,6 +181,25 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
             case AppCompatDelegate.MODE_NIGHT_YES:
                 textView.setText(R.string.switch_on_text);
                 break;
+        }
+    }
+
+    private int getDotsType() {
+        mDotsType = SettingsUtils.getDotsType(this);
+        return mDotsType;
+    }
+
+    private void setDotsType(int dotsType) {
+        SettingsUtils.setDotsType(this, dotsType);
+
+        final ImageView imageViewUserDot = findViewById(R.id.dots_user);
+        final ImageView imageViewOpponentDot = findViewById(R.id.dots_opponent);
+        if (dotsType == SettingsUtils.DOTS_TYPE_ORIGINAL) {
+            imageViewUserDot.setImageResource(R.drawable.game_dot_circle_red);
+            imageViewOpponentDot.setImageResource(R.drawable.game_dot_circle_blue);
+        } else {
+            imageViewUserDot.setImageResource(R.drawable.game_dot_cross_red);
+            imageViewOpponentDot.setImageResource(R.drawable.game_dot_ring_blue);
         }
     }
 }

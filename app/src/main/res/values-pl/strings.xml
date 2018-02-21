@@ -62,6 +62,7 @@
     <string name="settings_night_mode">Tryb nocny</string>
     <string name="settings_auto">"Automatyczna"</string>
     <string name="settings_system">"System"</string>
+    <string name="settings_dots">"Kropki"</string>
     <string name="settings_reset">"Wymaż wszystko"</string>
     <string name="rate_this_app">Oceń tę aplikację</string>
 

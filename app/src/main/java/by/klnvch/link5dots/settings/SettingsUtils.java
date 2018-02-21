@@ -45,6 +45,9 @@ public class SettingsUtils {
     private static final String USER_NAME = "USER_NAME";
     private static final String IS_VIBRATION_ENABLED = "IS_VIBRATION_ENABLED";
     private static final String NIGHT_MODE = "NIGHT_MODE";
+    public static final int DOTS_TYPE_ORIGINAL = 1;
+    public static final int DOTS_TYPE_CROSS_AND_RING = 2;
+    private static final String DOTS_TYPE = "DOTS_TYPE";
 
     public static final long VIBRATE_DURATION = 500;
 
@@ -167,6 +170,20 @@ public class SettingsUtils {
                 .getDefaultSharedPreferences(context)
                 .edit()
                 .putInt(NIGHT_MODE, nightMode)
+                .apply();
+    }
+
+    public static int getDotsType(@NonNull Context context) {
+        return PreferenceManager
+                .getDefaultSharedPreferences(context)
+                .getInt(DOTS_TYPE, DOTS_TYPE_ORIGINAL);
+    }
+
+    public static void setDotsType(@NonNull Context context, int dotsType) {
+        PreferenceManager
+                .getDefaultSharedPreferences(context)
+                .edit()
+                .putInt(DOTS_TYPE, dotsType)
                 .apply();
     }
 
