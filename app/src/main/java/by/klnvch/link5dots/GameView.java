@@ -251,7 +251,7 @@ public class GameView extends View {
         invalidate();
     }
 
-    public void newGame(@Nullable Integer seed) {
+    public void newGame(@Nullable Long seed) {
         isEndGameSend = false;
         mGameState = Game.generateGame(seed);
         invalidate();

@@ -28,38 +28,24 @@ import android.graphics.Point;
 import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
-public class LinearCongruentialGenerator {
-
-    public static final int MAX_SEED = 65536;
-
-    private static final int a = 15538;
-    private static final int c = 1;
-    private static final int m = 65536;
-
-    private static int getNext(int x) {
-        return (a * x + c) % m;
-    }
+public class RandomGenerator {
 
     @NonNull
-    public static List<Point> generateUniqueSixDots(int seed) {
-        ArrayList<Point> points = new ArrayList<>(6);
+    public static List<Point> generateUniqueSixDots(long seed) {
+        final ArrayList<Point> points = new ArrayList<>(25);
 
-        while (points.size() != 6) {
-            seed = getNext(seed);
-            int x = seed % 5;
-
-            seed = getNext(seed);
-            int y = seed % 5;
-
-            Point point = new Point(x, y);
-
-            if (!points.contains(point)) {
-                points.add(point);
+        for (int i = 0; i != 5; ++i) {
+            for (int j = 0; j != 5; ++j) {
+                points.add(new Point(i, j));
             }
         }
 
-        return points;
+        Collections.shuffle(points, new Random(seed));
+
+        return points.subList(0, 6);
     }
 }
