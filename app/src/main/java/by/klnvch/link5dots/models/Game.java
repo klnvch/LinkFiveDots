@@ -34,7 +34,7 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.List;
 
-import by.klnvch.link5dots.utils.LinearCongruentialGenerator;
+import by.klnvch.link5dots.utils.RandomGenerator;
 
 public class Game {
 
@@ -91,11 +91,11 @@ public class Game {
     }
 
     @NonNull
-    public static Game generateGame(@Nullable Integer seed) {
+    public static Game generateGame(@Nullable Long seed) {
         Game game = new Game();
 
         if (seed != null) {
-            List<Point> points = LinearCongruentialGenerator.generateUniqueSixDots(seed);
+            List<Point> points = RandomGenerator.generateUniqueSixDots(seed);
             for (int i = 0; i != points.size(); ++i) {
                 Point p = points.get(i);
                 int x = 8 + p.x;

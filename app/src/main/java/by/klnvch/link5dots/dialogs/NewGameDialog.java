@@ -39,7 +39,6 @@ import android.widget.EditText;
 import java.util.Random;
 
 import by.klnvch.link5dots.R;
-import by.klnvch.link5dots.utils.LinearCongruentialGenerator;
 
 public class NewGameDialog extends DialogFragment implements DialogInterface.OnClickListener {
 
@@ -60,8 +59,8 @@ public class NewGameDialog extends DialogFragment implements DialogInterface.OnC
         mEditText = v.findViewById(R.id.editTextSeed);
 
         mCheckBox.setOnCheckedChangeListener((compoundButton, b) -> mEditText.setEnabled(b));
-        int seed = new Random().nextInt(LinearCongruentialGenerator.MAX_SEED);
-        String seedStr = Integer.toString(seed);
+        final long seed = new Random().nextInt(0xFFFF);
+        String seedStr = Long.toString(seed);
         mEditText.setText(seedStr);
 
         return new AlertDialog.Builder(getContext())
@@ -95,8 +94,7 @@ public class NewGameDialog extends DialogFragment implements DialogInterface.OnC
                     if (mCheckBox.isChecked()) {
                         String seedStr = mEditText.getText().toString();
                         try {
-                            Integer seed = Integer.parseInt(seedStr);
-                            seed %= LinearCongruentialGenerator.MAX_SEED;
+                            final long seed = Long.parseLong(seedStr);
                             mListener.onSeedNewGame(seed);
                         } catch (Exception e) {
                             Log.e(TAG, e.getMessage());
@@ -117,6 +115,6 @@ public class NewGameDialog extends DialogFragment implements DialogInterface.OnC
     }
 
     public interface OnSeedNewGameListener {
-        void onSeedNewGame(@Nullable Integer seed);
+        void onSeedNewGame(@Nullable Long seed);
     }
 }
