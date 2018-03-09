@@ -33,7 +33,7 @@ import android.os.IBinder;
 import android.os.Message;
 import android.support.annotation.NonNull;
 
-import com.google.firebase.crash.FirebaseCrash;
+import com.crashlytics.android.Crashlytics;
 
 import by.klnvch.link5dots.R;
 import by.klnvch.link5dots.multiplayer.nsd.NsdActivity;
@@ -237,7 +237,7 @@ public abstract class MultiplayerService<Socket, Destination> extends Service {
         if (mHandler != null) {
             mHandler.obtainMessage(what, -1, -1, buffer).sendToTarget();
         } else {
-            FirebaseCrash.report(new Exception("handler is null: " + what));
+            Crashlytics.logException(new Exception("handler is null: " + what));
         }
     }
 
@@ -245,7 +245,7 @@ public abstract class MultiplayerService<Socket, Destination> extends Service {
         if (mHandler != null) {
             mHandler.obtainMessage(what, state, -1).sendToTarget();
         } else {
-            FirebaseCrash.report(new Exception("handler is null: " + what + " and " + state));
+            Crashlytics.logException(new Exception("handler is null: " + what + " and " + state));
         }
     }
 
@@ -253,7 +253,7 @@ public abstract class MultiplayerService<Socket, Destination> extends Service {
         if (mHandler != null) {
             mHandler.obtainMessage(what, -1, -1).sendToTarget();
         } else {
-            FirebaseCrash.report(new Exception("handler is null: " + what));
+            Crashlytics.logException(new Exception("handler is null: " + what));
         }
     }
 
