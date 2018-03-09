@@ -138,7 +138,7 @@
                 android:value="by.klnvch.link5dots.MainMenuActivity" />
         </activity>
         <activity
-            android:name="by.klnvch.link5dots.settings.InfoActivity"
+            android:name="by.klnvch.link5dots.InfoActivity"
             android:label="@string/application_info_label"
             android:launchMode="standard">
             <meta-data

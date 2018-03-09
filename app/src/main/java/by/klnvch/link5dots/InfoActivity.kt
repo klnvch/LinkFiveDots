@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.settings
+package by.klnvch.link5dots
 
 import android.content.ActivityNotFoundException
 import android.content.Intent
@@ -31,7 +31,6 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
-import by.klnvch.link5dots.R
 
 import kotlinx.android.synthetic.main.activity_info.*
 
