@@ -34,8 +34,8 @@ android {
         applicationId "by.klnvch.link5dots"
         minSdkVersion 14
         targetSdkVersion 27
-        versionCode 30
-        versionName "4.2.3"
+        versionCode 31
+        versionName "4.2.4"
 
         resConfigs "en", "be", "de", "es", "fr", "it", "pl", "ru", "uk", "fa"
     }
@@ -78,6 +78,7 @@ dependencies {
     implementation 'com.android.support:cardview-v7:27.0.2'
     implementation 'com.android.support:support-annotations:27.0.2'
     implementation 'com.android.support:support-v4:27.0.2'
+    implementation 'com.android.support:preference-v7:27.0.2'
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     implementation 'com.google.android.gms:play-services-plus:11.8.0'
     implementation 'com.google.android.gms:play-services-auth:11.8.0'

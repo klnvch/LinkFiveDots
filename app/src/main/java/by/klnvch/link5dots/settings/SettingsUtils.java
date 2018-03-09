@@ -40,25 +40,22 @@ import by.klnvch.link5dots.TwoPlayersActivity;
 
 public class SettingsUtils {
 
-    private static final String FIRST_RUN = "FIRST_RUN";
-    private static final String APP_LANGUAGE = "APP_LANGUAGE";
-    private static final String USER_NAME = "USER_NAME";
-    private static final String IS_VIBRATION_ENABLED = "IS_VIBRATION_ENABLED";
-    private static final String NIGHT_MODE = "NIGHT_MODE";
     public static final int DOTS_TYPE_ORIGINAL = 1;
     public static final int DOTS_TYPE_CROSS_AND_RING = 2;
-    private static final String DOTS_TYPE = "DOTS_TYPE";
-
     public static final long VIBRATE_DURATION = 500;
-
-    private static String username = null;
+    private static final String FIRST_RUN = "FIRST_RUN";
+    private static final String KEY_PREF_LANGUAGE = "pref_language";
+    private static final String KEY_PREF_USERNAME = "pref_username";
+    private static final String KEY_PREF_VIBRATION = "pref_vibration";
+    private static final String KEY_NIGHT_MODE = "pref_night_mode";
+    private static final String KEY_PREF_DOTS_TYPE = "pref_dots_type";
 
     public static boolean checkConfiguration(@NonNull Context context) {
         boolean isToBeRestated = false;
         // check language
         String savedLanguage = PreferenceManager
                 .getDefaultSharedPreferences(context)
-                .getString(APP_LANGUAGE, null);
+                .getString(KEY_PREF_LANGUAGE, null);
         if (savedLanguage != null) {
             Resources resources = context.getResources();
             String currentLanguage = resources.getConfiguration().locale.getLanguage();
@@ -79,7 +76,7 @@ public class SettingsUtils {
         return isToBeRestated;
     }
 
-    static void changeLanguage(@NonNull Context context, @NonNull String language) {
+    private static void changeLanguage(@NonNull Context context, @NonNull String language) {
         Locale locale = new Locale(language);
         Locale.setDefault(locale);
         Resources resources = context.getResources();
@@ -90,7 +87,7 @@ public class SettingsUtils {
         PreferenceManager
                 .getDefaultSharedPreferences(context)
                 .edit()
-                .putString(SettingsUtils.APP_LANGUAGE, language)
+                .putString(SettingsUtils.KEY_PREF_LANGUAGE, language)
                 .apply();
     }
 
@@ -110,11 +107,9 @@ public class SettingsUtils {
 
     @NonNull
     public static String getUserNameOrEmpty(@NonNull Context context) {
-        if (username == null) {
-            username = PreferenceManager
-                    .getDefaultSharedPreferences(context)
-                    .getString(USER_NAME, null);
-        }
+        final String username = PreferenceManager
+                .getDefaultSharedPreferences(context)
+                .getString(KEY_PREF_USERNAME, null);
         if (username == null) {
             return "";
         } else {
@@ -124,11 +119,9 @@ public class SettingsUtils {
 
     @NonNull
     public static String getUserNameOrDefault(@NonNull Context context) {
-        if (username == null) {
-            username = PreferenceManager
-                    .getDefaultSharedPreferences(context)
-                    .getString(USER_NAME, null);
-        }
+        final String username = PreferenceManager
+                .getDefaultSharedPreferences(context)
+                .getString(KEY_PREF_USERNAME, null);
         if (username == null) {
             return context.getString(R.string.device_info_default);
         } else {
@@ -137,54 +130,41 @@ public class SettingsUtils {
     }
 
     static void setUserName(@NonNull Context context, @Nullable String username) {
-        SettingsUtils.username = username;
         PreferenceManager
                 .getDefaultSharedPreferences(context)
                 .edit()
-                .putString(USER_NAME, username)
+                .putString(KEY_PREF_USERNAME, username)
                 .apply();
     }
 
     public static boolean isVibrationEnabled(@NonNull Context context) {
         return PreferenceManager
                 .getDefaultSharedPreferences(context)
-                .getBoolean(IS_VIBRATION_ENABLED, true);
-    }
-
-    static void setVibrationMode(@NonNull Context context, boolean isVibrationEnabled) {
-        PreferenceManager
-                .getDefaultSharedPreferences(context)
-                .edit()
-                .putBoolean(IS_VIBRATION_ENABLED, isVibrationEnabled)
-                .apply();
+                .getBoolean(KEY_PREF_VIBRATION, true);
     }
 
     private static int getNightMode(@NonNull Context context) {
-        return PreferenceManager
+        final String nightMode = PreferenceManager
                 .getDefaultSharedPreferences(context)
-                .getInt(NIGHT_MODE, AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
-    }
-
-    static void setNightMode(@NonNull Context context, int nightMode) {
-        PreferenceManager
-                .getDefaultSharedPreferences(context)
-                .edit()
-                .putInt(NIGHT_MODE, nightMode)
-                .apply();
+                .getString(KEY_NIGHT_MODE, "unknown");
+        switch (nightMode) {
+            case "on":
+                return AppCompatDelegate.MODE_NIGHT_YES;
+            case "off":
+                return AppCompatDelegate.MODE_NIGHT_NO;
+            case "auto":
+                return AppCompatDelegate.MODE_NIGHT_AUTO;
+            case "system":
+                return AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM;
+            default:
+                return AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM;
+        }
     }
 
     public static int getDotsType(@NonNull Context context) {
         return PreferenceManager
                 .getDefaultSharedPreferences(context)
-                .getInt(DOTS_TYPE, DOTS_TYPE_ORIGINAL);
-    }
-
-    public static void setDotsType(@NonNull Context context, int dotsType) {
-        PreferenceManager
-                .getDefaultSharedPreferences(context)
-                .edit()
-                .putInt(DOTS_TYPE, dotsType)
-                .apply();
+                .getInt(KEY_PREF_DOTS_TYPE, DOTS_TYPE_ORIGINAL);
     }
 
     static void reset(@NonNull Context context) {

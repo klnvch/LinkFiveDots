@@ -22,27 +22,28 @@
  * SOFTWARE.
  */
 
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
-buildscript {
-    ext.kotlin_version = '1.2.21'
-    repositories {
-        google()
-        jcenter()
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:3.2.0-alpha05'
-        classpath 'com.google.gms:google-services:3.1.1'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-    }
-}
+package by.klnvch.link5dots.settings;
 
-allprojects {
-    repositories {
-        google()
-        jcenter()
-    }
-}
+import android.os.Bundle;
+import android.support.v7.preference.PreferenceDialogFragmentCompat;
 
-task clean(type: Delete) {
-    delete rootProject.buildDir
+public class DeletePreferenceDialog extends PreferenceDialogFragmentCompat {
+
+    public static DeletePreferenceDialog newInstance(String key) {
+        final DeletePreferenceDialog fragment = new DeletePreferenceDialog();
+        final Bundle bundle = new Bundle(1);
+        bundle.putString(ARG_KEY, key);
+        fragment.setArguments(bundle);
+        return fragment;
+    }
+
+    @Override
+    public void onDialogClosed(boolean positiveResult) {
+        if (getActivity() == null) throw new RuntimeException("activity is null");
+
+        if (positiveResult) {
+            SettingsUtils.reset(getActivity());
+            getActivity().recreate();
+        }
+    }
 }

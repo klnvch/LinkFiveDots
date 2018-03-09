@@ -22,27 +22,38 @@
  * SOFTWARE.
  */
 
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
-buildscript {
-    ext.kotlin_version = '1.2.21'
-    repositories {
-        google()
-        jcenter()
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:3.2.0-alpha05'
-        classpath 'com.google.gms:google-services:3.1.1'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-    }
-}
+package by.klnvch.link5dots.settings;
 
-allprojects {
-    repositories {
-        google()
-        jcenter()
-    }
-}
+import android.content.Context;
+import android.support.v7.preference.SwitchPreferenceCompat;
+import android.util.AttributeSet;
 
-task clean(type: Delete) {
-    delete rootProject.buildDir
+import by.klnvch.link5dots.R;
+
+@SuppressWarnings({"unused"})
+public class SwitchPreference extends SwitchPreferenceCompat {
+    public SwitchPreference(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+        super(context, attrs, defStyleAttr, defStyleRes);
+    }
+
+    public SwitchPreference(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+    }
+
+    public SwitchPreference(Context context, AttributeSet attrs) {
+        super(context, attrs);
+    }
+
+    public SwitchPreference(Context context) {
+        super(context);
+    }
+
+    @Override
+    public CharSequence getSummary() {
+        if (isChecked()) {
+            return getContext().getResources().getString(R.string.switch_on_text);
+        } else {
+            return getContext().getResources().getString(R.string.switch_off_text);
+        }
+    }
 }
