@@ -64,8 +64,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         mView.setOnMoveDoneListener(this::onMoveDone);
         mView.setOnGameEndListener(this::onGameFinished);
 
-        setDots();
-
         mDisposables.add(Observable.fromCallable(this::getUserName)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -190,10 +188,6 @@ public abstract class BaseActivity extends AppCompatActivity {
             tvOpponentName.setCompoundDrawablesWithIntrinsicBounds(
                     R.drawable.game_dot_ring_blue, 0, 0, 0);
         }
-    }
-
-    private void setDots() {
-
     }
 
     @NonNull

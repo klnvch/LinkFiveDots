@@ -76,10 +76,10 @@ class InfoActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     companion object {
-        private val TAG = "InfoActivity"
+        private const val TAG = "InfoActivity"
 
-        private val WEB_PAGE_LINK = "https://play.google.com/store/apps/details?id=by.klnvch.link5dots"
-        private val ANDROID_APP_LINK = "market://details?id=by.klnvch.link5dots"
-        private val GITHUB_LINK = "https://github.com/klnvch/LinkFiveDots"
+        private const val WEB_PAGE_LINK = "https://play.google.com/store/apps/details?id=by.klnvch.link5dots"
+        private const val ANDROID_APP_LINK = "market://details?id=by.klnvch.link5dots"
+        private const val GITHUB_LINK = "https://github.com/klnvch/LinkFiveDots"
     }
 }

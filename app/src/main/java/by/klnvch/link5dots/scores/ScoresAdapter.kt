@@ -71,8 +71,8 @@ internal class ScoresAdapter(private val mData: List<HighScore>) : RecyclerView.
     }
 
     companion object {
-        private val FORMAT_POSITION = "%d."
-        private val FORMAT_MOVES = "%d"
-        private val FORMAT_TIME = "%d"
+        private const val FORMAT_POSITION = "%d."
+        private const val FORMAT_MOVES = "%d"
+        private const val FORMAT_TIME = "%d"
     }
 }
