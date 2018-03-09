@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><!--
+<!--
   ~ MIT License
   ~
   ~ Copyright (c) 2017 klnvch
@@ -22,9 +22,15 @@
   ~ SOFTWARE.
   -->
 
-<resources>
-    <color name="background_color">#FF212121</color>
-    <color name="foreground_color">#FFFAFAFA</color>
-    <color name="dot_color_red">#FFFF8080</color>
-    <color name="dot_color_blue">#FF8080FF</color>
-</resources>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="16dp"
+    android:height="16dp"
+    android:tint="#8080FF"
+    android:viewportHeight="28"
+    android:viewportWidth="28">
+    <path
+        android:fillAlpha="1"
+        android:fillColor="#FF000000"
+        android:pathData="M4.5333,23.4667C1.0114,19.9447 0,17.8327 0,14 0,10.1673 1.0114,8.0553 4.5333,4.5333 8.0553,1.0114 10.1673,0 14,0 20.9815,0 28,7.0185 28,14 28,20.9815 20.9815,28 14,28 10.1673,28 8.0553,26.9886 4.5333,23.4667ZM19.7333,19.7333c2.0668,-2.0668 2.0668,-9.3999 0,-11.4667 -2.0668,-2.0668 -9.3999,-2.0668 -11.4667,0 -0.88,0.88 -1.6,3.46 -1.6,5.7333 0,5.2339 2.0994,7.3333 7.3333,7.3333 2.2733,0 4.8533,-0.72 5.7333,-1.6z"
+        android:strokeWidth="1.33333337" />
+</vector>

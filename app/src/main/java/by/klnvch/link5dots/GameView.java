@@ -28,11 +28,11 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.PointF;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -120,13 +120,15 @@ public class GameView extends View {
 
         // load bitmaps. why do we need matrix?
         final float density = getResources().getDisplayMetrics().density;
+        final int colorRed = ContextCompat.getColor(context, R.color.dot_color_red);
+        final int colorBlue = ContextCompat.getColor(context, R.color.dot_color_blue);
         mBitmapPaper = BitmapFactory.decodeResource(getResources(), R.drawable.background);
         if (SettingsUtils.getDotsType(getContext()) == SettingsUtils.DOTS_TYPE_ORIGINAL) {
-            mBitmapUserDot = BitmapCreator.createDot(Color.RED, density);
-            mBitmapBotDot = BitmapCreator.createDot(Color.BLUE, density);
+            mBitmapUserDot = BitmapCreator.createDot(colorRed, density);
+            mBitmapBotDot = BitmapCreator.createDot(colorBlue, density);
         } else {
-            mBitmapUserDot = BitmapCreator.createCross(Color.RED, density);
-            mBitmapBotDot = BitmapCreator.createRing(Color.BLUE, density);
+            mBitmapUserDot = BitmapCreator.createCross(colorRed, density);
+            mBitmapBotDot = BitmapCreator.createRing(colorBlue, density);
         }
         Matrix rotateMatrix = new Matrix();
         rotateMatrix.postRotate(90.0f);

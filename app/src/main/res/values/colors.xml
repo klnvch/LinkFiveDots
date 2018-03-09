@@ -25,5 +25,7 @@
 <resources>
     <color name="background_color">#FFFAFAFA</color>
     <color name="foreground_color">#FF212121</color>
+    <color name="dot_color_red">#FFFF0000</color>
+    <color name="dot_color_blue">#FF0000FF</color>
     <color name="icon_color">#FF00838F</color>
 </resources>
