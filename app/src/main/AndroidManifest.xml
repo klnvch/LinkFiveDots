@@ -143,7 +143,7 @@
             android:launchMode="standard">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="by.klnvch.link5dots.settings.SettingsActivity" />
+                android:value="by.klnvch.link5dots.MainMenuActivity" />
         </activity>
         <activity
             android:name="by.klnvch.link5dots.settings.SettingsActivity"

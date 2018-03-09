@@ -1,7 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<!--
+  ~ MIT License
+  ~
+  ~ Copyright (c) 2017 klnvch
+  ~
+  ~ Permission is hereby granted, free of charge, to any person obtaining a copy
+  ~ of this software and associated documentation files (the "Software"), to deal
+  ~ in the Software without restriction, including without limitation the rights
+  ~ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  ~ copies of the Software, and to permit persons to whom the Software is
+  ~ furnished to do so, subject to the following conditions:
+  ~
+  ~ The above copyright notice and this permission notice shall be included in all
+  ~ copies or substantial portions of the Software.
+  ~
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  ~ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  ~ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  ~ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  ~ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  ~ SOFTWARE.
+  -->
 
-    <string-array name="languages" translatable="false">
+<resources>
+    <string-array name="languages_entries" translatable="false">
         <item>Deutsch</item>
         <item>English</item>
         <item>Español</item>
@@ -14,4 +37,30 @@
         <item>فارسی</item>
     </string-array>
 
+    <string-array name="languages_values" translatable="false">
+        <item>de</item>
+        <item>en</item>
+        <item>es</item>
+        <item>fr</item>
+        <item>it</item>
+        <item>pl</item>
+        <item>be</item>
+        <item>ru</item>
+        <item>uk</item>
+        <item>fa</item>
+    </string-array>
+
+    <string-array name="night_modes_entries" translatable="false">
+        <item>@string/switch_on_text</item>
+        <item>@string/switch_off_text</item>
+        <item>@string/settings_auto</item>
+        <item>@string/settings_system</item>
+    </string-array>
+
+    <string-array name="night_modes_values" translatable="false">
+        <item>on</item>
+        <item>off</item>
+        <item>auto</item>
+        <item>system</item>
+    </string-array>
 </resources>

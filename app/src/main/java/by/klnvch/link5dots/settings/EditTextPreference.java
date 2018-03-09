@@ -22,27 +22,42 @@
  * SOFTWARE.
  */
 
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
-buildscript {
-    ext.kotlin_version = '1.2.21'
-    repositories {
-        google()
-        jcenter()
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:3.2.0-alpha05'
-        classpath 'com.google.gms:google-services:3.1.1'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-    }
-}
+package by.klnvch.link5dots.settings;
 
-allprojects {
-    repositories {
-        google()
-        jcenter()
-    }
-}
+import android.content.Context;
+import android.util.AttributeSet;
 
-task clean(type: Delete) {
-    delete rootProject.buildDir
+@SuppressWarnings({"unused"})
+public class EditTextPreference extends android.support.v7.preference.EditTextPreference {
+    public EditTextPreference(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+        super(context, attrs, defStyleAttr, defStyleRes);
+        init();
+    }
+
+    public EditTextPreference(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        init();
+    }
+
+    public EditTextPreference(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        init();
+    }
+
+    public EditTextPreference(Context context) {
+        super(context);
+        init();
+    }
+
+    private void init() {
+        setOnPreferenceChangeListener((preference, newValue) -> {
+            setSummary(newValue.toString());
+            return true;
+        });
+    }
+
+    @Override
+    public CharSequence getSummary() {
+        return getText();
+    }
 }

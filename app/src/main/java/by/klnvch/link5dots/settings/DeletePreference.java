@@ -22,27 +22,39 @@
  * SOFTWARE.
  */
 
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
-buildscript {
-    ext.kotlin_version = '1.2.21'
-    repositories {
-        google()
-        jcenter()
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:3.2.0-alpha05'
-        classpath 'com.google.gms:google-services:3.1.1'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-    }
-}
+package by.klnvch.link5dots.settings;
 
-allprojects {
-    repositories {
-        google()
-        jcenter()
-    }
-}
+import android.content.Context;
+import android.support.v7.preference.DialogPreference;
+import android.util.AttributeSet;
 
-task clean(type: Delete) {
-    delete rootProject.buildDir
+import by.klnvch.link5dots.R;
+
+@SuppressWarnings({"unused"})
+public class DeletePreference extends DialogPreference {
+    public DeletePreference(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+        super(context, attrs, defStyleAttr, defStyleRes);
+        init();
+    }
+
+    public DeletePreference(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        init();
+    }
+
+    public DeletePreference(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        init();
+    }
+
+    public DeletePreference(Context context) {
+        super(context);
+        init();
+    }
+
+    private void init() {
+        setDialogIcon(R.drawable.ic_delete_48dp);
+        setPositiveButtonText(R.string.okay);
+        setNegativeButtonText(R.string.cancel);
+    }
 }
