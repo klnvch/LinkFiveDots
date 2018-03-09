@@ -33,7 +33,6 @@ import android.support.v7.app.AppCompatActivity
 import android.view.View
 
 import by.klnvch.link5dots.scores.ScoresActivity
-import by.klnvch.link5dots.settings.InfoActivity
 import by.klnvch.link5dots.settings.SettingsActivity
 import by.klnvch.link5dots.settings.SettingsUtils
 import by.klnvch.link5dots.settings.UsernameDialog

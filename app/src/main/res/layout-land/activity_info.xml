@@ -28,7 +28,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/paper_tiled"
-    tools:context="by.klnvch.link5dots.settings.InfoActivity">
+    tools:context="by.klnvch.link5dots.InfoActivity">
 
     <android.support.constraint.Guideline
         android:id="@+id/guidelineVertical"
