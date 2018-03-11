@@ -34,7 +34,7 @@ import by.klnvch.link5dots.models.Dot;
 import by.klnvch.link5dots.models.HighScore;
 import by.klnvch.link5dots.scores.ScoresActivity;
 
-public class MainActivity extends BaseActivity {
+public final class MainActivity extends BaseActivity {
 
     @Override
     protected void onResume() {
@@ -50,20 +50,31 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void onGameFinished(@NonNull HighScore highScore) {
+        logEvent("game_finish");
         EndGameDialog.newInstance(highScore, false)
-                .setOnNewGameListener(this::newGame)
-                .setOnUndoMoveListener(this::undoLastMove)
-                .setOnScoreListener(this::moveToScores)
+                .setOnNewGameListener(() -> {
+                    logEvent("dialog_new");
+                    newGame();
+                })
+                .setOnUndoMoveListener(() -> {
+                    logEvent("dialog_undo");
+                    undoLastMove();
+                })
+                .setOnScoreListener(() -> {
+                    logEvent("dialog_scores");
+                    moveToScores();
+                })
                 .show(getSupportFragmentManager(), EndGameDialog.TAG);
     }
 
     @Override
     protected void onMoveDone(@NonNull Dot currentDot, @Nullable Dot previousDot) {
+        logEvent("game_move");
         if (previousDot == null || previousDot.getType() != Dot.HOST) {
             // set user dot
             mView.setHostDot(currentDot);
             // set bot dot
-            Dot botDot = Bot.findAnswer(mView.getGameState().getCopyOfNet());
+            final Dot botDot = Bot.findAnswer(mView.getGameState().getCopyOfNet());
             mView.setGuestDot(botDot);
         }
     }
@@ -74,9 +85,9 @@ public class MainActivity extends BaseActivity {
     }
 
     private void moveToScores() {
-        HighScore highScore = mView.getHighScore();
+        final HighScore highScore = mView.getHighScore();
         if (highScore != null) {
-            Intent intent = new Intent(this, ScoresActivity.class);
+            final Intent intent = new Intent(this, ScoresActivity.class);
             intent.putExtra(HighScore.TAG, highScore);
             startActivity(intent);
         }
