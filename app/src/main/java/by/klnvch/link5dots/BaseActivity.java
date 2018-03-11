@@ -41,6 +41,7 @@ import by.klnvch.link5dots.models.Game;
 import by.klnvch.link5dots.models.GameViewState;
 import by.klnvch.link5dots.models.HighScore;
 import by.klnvch.link5dots.settings.SettingsUtils;
+import by.klnvch.link5dots.utils.AnalyticsEvents;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -53,7 +54,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected final CompositeDisposable mDisposables = new CompositeDisposable();
     protected GameView mView;
     protected String mUserName = "";
-    private FirebaseAnalytics mFirebaseAnalytics;
+    protected FirebaseAnalytics mFirebaseAnalytics;
 
     @SuppressLint("MissingPermission")
     @Override
@@ -98,15 +99,15 @@ public abstract class BaseActivity extends AppCompatActivity {
                 onBackPressed();
                 return true;
             case R.id.menu_undo:
-                logEvent("menu_undo");
+                mFirebaseAnalytics.logEvent(AnalyticsEvents.EVENT_UNDO_MOVE, null);
                 undoLastMove();
                 return true;
             case R.id.menu_new_game:
-                logEvent("menu_new");
+                mFirebaseAnalytics.logEvent(AnalyticsEvents.EVENT_NEW_GAME, null);
                 newGame();
                 return true;
             case R.id.menu_search:
-                logEvent("menu_search");
+                mFirebaseAnalytics.logEvent(AnalyticsEvents.EVENT_SEARCH, null);
                 searchLastMove();
                 return true;
             default:
@@ -116,7 +117,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     @Override
     public boolean onSearchRequested() {
-        logEvent("button_search");
+        mFirebaseAnalytics.logEvent(AnalyticsEvents.EVENT_SEARCH, null);
         searchLastMove();
         return true;
     }
@@ -131,11 +132,8 @@ public abstract class BaseActivity extends AppCompatActivity {
         mView.newGame(null);
 
         new NewGameDialog()
-                .setOnSeedNewGameListener(seed -> {
-                    logEvent("dialog_generate");
-                    mView.newGame(seed);
-                })
-                .show(getSupportFragmentManager(), null);
+                .setOnSeedNewGameListener(mView::newGame)
+                .show(getSupportFragmentManager(), NewGameDialog.TAG);
     }
 
     private void searchLastMove() {
@@ -188,11 +186,5 @@ public abstract class BaseActivity extends AppCompatActivity {
         mUserName = name;
         final TextView tvUsername = findViewById(R.id.text_user_name);
         tvUsername.setText(mUserName);
-    }
-
-    protected void logEvent(@NonNull String name) {
-        final Bundle bundle = new Bundle();
-        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, name);
-        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
     }
 }

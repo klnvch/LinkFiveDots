@@ -24,6 +24,7 @@
 
 package by.klnvch.link5dots.dialogs;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -36,9 +37,12 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
+
 import java.util.Random;
 
 import by.klnvch.link5dots.R;
+import by.klnvch.link5dots.utils.AnalyticsEvents;
 
 public class NewGameDialog extends DialogFragment implements DialogInterface.OnClickListener {
 
@@ -46,14 +50,23 @@ public class NewGameDialog extends DialogFragment implements DialogInterface.OnC
 
     private OnSeedNewGameListener mListener = null;
 
+    private FirebaseAnalytics mFirebaseAnalytics;
+
     private CheckBox mCheckBox = null;
     private EditText mEditText = null;
 
+    @SuppressLint("MissingPermission")
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        Log.d(TAG, "onCreateDialog");
-        View v = View.inflate(getContext(), R.layout.dialog_new_game, null);
+        if (getActivity() == null) {
+            throw new RuntimeException("activity is null");
+        }
+
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
+        mFirebaseAnalytics.setCurrentScreen(getActivity(), TAG, null);
+
+        final View v = View.inflate(getContext(), R.layout.dialog_new_game, null);
 
         mCheckBox = v.findViewById(R.id.checkBoxSeed);
         mEditText = v.findViewById(R.id.editTextSeed);
@@ -63,47 +76,53 @@ public class NewGameDialog extends DialogFragment implements DialogInterface.OnC
         String seedStr = Long.toString(seed);
         mEditText.setText(seedStr);
 
-        return new AlertDialog.Builder(getContext())
+        return new AlertDialog.Builder(getActivity())
                 .setCancelable(false)
                 .setPositiveButton(R.string.okay, this)
+                .setNegativeButton(R.string.cancel, this)
                 .setView(v)
                 .create();
     }
 
     @Override
-    public void onDismiss(DialogInterface dialog) {
-        super.onDismiss(dialog);
-        Log.d(TAG, "onDismiss");
-    }
-
-    @Override
-    public void onDestroy() {
+    public void onDetach() {
+        if (getActivity() != null) {
+            mFirebaseAnalytics.setCurrentScreen(getActivity(), null, null);
+        }
         mCheckBox.setOnCheckedChangeListener(null);
         mCheckBox = null;
         mEditText = null;
         mListener = null;
+        super.onDetach();
+    }
+
+    @Override
+    public void onDestroy() {
         super.onDestroy();
         Log.d(TAG, "onDestroy");
     }
 
     @Override
     public void onClick(DialogInterface dialogInterface, int i) {
+        if (mListener == null) return;
+
         switch (i) {
             case DialogInterface.BUTTON_POSITIVE:
-                if (mListener != null) {
-                    if (mCheckBox.isChecked()) {
-                        String seedStr = mEditText.getText().toString();
-                        try {
-                            final long seed = Long.parseLong(seedStr);
-                            mListener.onSeedNewGame(seed);
-                        } catch (Exception e) {
-                            Log.e(TAG, e.getMessage());
-                        }
-                    } else {
-                        mListener.onSeedNewGame(null);
+                if (mCheckBox.isChecked()) {
+                    String seedStr = mEditText.getText().toString();
+                    try {
+                        final long seed = Long.parseLong(seedStr);
+                        mListener.onSeedNewGame(seed);
+                        mFirebaseAnalytics.logEvent(AnalyticsEvents.EVENT_GENERATE_GAME, null);
+                    } catch (Exception e) {
+                        Log.e(TAG, e.getMessage());
                     }
+                } else {
+                    mListener.onSeedNewGame(null);
                 }
-                dismiss();
+                break;
+            case DialogInterface.BUTTON_NEGATIVE:
+                mListener.onSeedNewGame(null);
                 break;
         }
     }
