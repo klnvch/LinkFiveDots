@@ -33,6 +33,7 @@ import by.klnvch.link5dots.models.Bot;
 import by.klnvch.link5dots.models.Dot;
 import by.klnvch.link5dots.models.HighScore;
 import by.klnvch.link5dots.scores.ScoresActivity;
+import by.klnvch.link5dots.utils.AnalyticsEvents;
 
 public final class MainActivity extends BaseActivity {
 
@@ -50,26 +51,19 @@ public final class MainActivity extends BaseActivity {
 
     @Override
     protected void onGameFinished(@NonNull HighScore highScore) {
-        logEvent("game_finish");
+        mFirebaseAnalytics.logEvent(AnalyticsEvents.EVENT_GAME_FINISHED, null);
+
         EndGameDialog.newInstance(highScore, false)
-                .setOnNewGameListener(() -> {
-                    logEvent("dialog_new");
-                    newGame();
-                })
-                .setOnUndoMoveListener(() -> {
-                    logEvent("dialog_undo");
-                    undoLastMove();
-                })
-                .setOnScoreListener(() -> {
-                    logEvent("dialog_scores");
-                    moveToScores();
-                })
+                .setOnNewGameListener(this::newGame)
+                .setOnUndoMoveListener(this::undoLastMove)
+                .setOnScoreListener(this::moveToScores)
                 .show(getSupportFragmentManager(), EndGameDialog.TAG);
     }
 
     @Override
     protected void onMoveDone(@NonNull Dot currentDot, @Nullable Dot previousDot) {
-        logEvent("game_move");
+        mFirebaseAnalytics.logEvent(AnalyticsEvents.EVENT_NEW_MOVE, null);
+
         if (previousDot == null || previousDot.getType() != Dot.HOST) {
             // set user dot
             mView.setHostDot(currentDot);

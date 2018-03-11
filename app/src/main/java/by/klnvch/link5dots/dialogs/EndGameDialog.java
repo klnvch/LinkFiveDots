@@ -24,6 +24,7 @@
 
 package by.klnvch.link5dots.dialogs;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -31,8 +32,11 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
+
 import by.klnvch.link5dots.R;
 import by.klnvch.link5dots.models.HighScore;
+import by.klnvch.link5dots.utils.AnalyticsEvents;
 
 public final class EndGameDialog extends DialogFragment implements DialogInterface.OnClickListener {
 
@@ -45,6 +49,8 @@ public final class EndGameDialog extends DialogFragment implements DialogInterfa
     private OnNewGameListener mListenerNew = null;
     private OnUndoMoveListener mListenerUndo = null;
     private OnScoreListener mListenerScore = null;
+
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     /**
      * Creates dialog showing the end of the game
@@ -69,12 +75,16 @@ public final class EndGameDialog extends DialogFragment implements DialogInterfa
         return dialog;
     }
 
+    @SuppressLint("MissingPermission")
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        if (getArguments() == null || getContext() == null) {
+        if (getArguments() == null || getActivity() == null) {
             throw new RuntimeException("arguments or context are null");
         }
+
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
+        mFirebaseAnalytics.setCurrentScreen(getActivity(), TAG, null);
 
         final Boolean isWon = (Boolean) getArguments().getSerializable(KEY_IS_WON);
         final int movesNumber = getArguments().getInt(KEY_MOVES_NUMBER);
@@ -83,7 +93,7 @@ public final class EndGameDialog extends DialogFragment implements DialogInterfa
         final int title = isWon != null ? isWon ? R.string.end_win : R.string.end_lose : -1;
         final String msg = getString(R.string.end_move, movesNumber, elapsedTime);
 
-        final AlertDialog.Builder builder = new AlertDialog.Builder(getContext())
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
                 .setMessage(msg);
 
         if (title != -1) builder.setTitle(title);
@@ -96,11 +106,14 @@ public final class EndGameDialog extends DialogFragment implements DialogInterfa
     }
 
     @Override
-    public void onDestroy() {
+    public void onDetach() {
+        if (getActivity() != null) {
+            mFirebaseAnalytics.setCurrentScreen(getActivity(), null, null);
+        }
         mListenerNew = null;
         mListenerUndo = null;
         mListenerScore = null;
-        super.onDestroy();
+        super.onDetach();
     }
 
     @Override
@@ -108,16 +121,19 @@ public final class EndGameDialog extends DialogFragment implements DialogInterfa
         switch (which) {
             case DialogInterface.BUTTON_POSITIVE:
                 if (mListenerNew != null) {
+                    mFirebaseAnalytics.logEvent(AnalyticsEvents.EVENT_NEW_GAME, null);
                     mListenerNew.onNewGame();
                 }
                 break;
             case DialogInterface.BUTTON_NEGATIVE:
                 if (mListenerUndo != null) {
+                    mFirebaseAnalytics.logEvent(AnalyticsEvents.EVENT_UNDO_MOVE, null);
                     mListenerUndo.onUndoMove();
                 }
                 break;
             case DialogInterface.BUTTON_NEUTRAL:
                 if (mListenerScore != null) {
+                    mFirebaseAnalytics.logEvent(AnalyticsEvents.EVENT_PUBLISH_SCORE, null);
                     mListenerScore.onScore();
                 }
                 break;
