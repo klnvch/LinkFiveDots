@@ -24,15 +24,16 @@
 
 package by.klnvch.link5dots;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.TextView;
+
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import by.klnvch.link5dots.dialogs.NewGameDialog;
 import by.klnvch.link5dots.models.Dot;
@@ -50,10 +51,11 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected static final String KEY_GAME_STATE = "KEY_GAME_STATE_V2";
     protected static final String KEY_VIEW_STATE = "KEY_VIEW_STATE_V3";
     protected final CompositeDisposable mDisposables = new CompositeDisposable();
-    protected GameView mView = null;
+    protected GameView mView;
     protected String mUserName = "";
-    private DialogFragment mDialogNewGame = null;
+    private FirebaseAnalytics mFirebaseAnalytics;
 
+    @SuppressLint("MissingPermission")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,30 +66,28 @@ public abstract class BaseActivity extends AppCompatActivity {
         mView.setOnMoveDoneListener(this::onMoveDone);
         mView.setOnGameEndListener(this::onGameFinished);
 
-        mDisposables.add(Observable.fromCallable(this::getUserName)
+        mDisposables.add(Observable.fromCallable(() -> SettingsUtils.getUserNameOrDefault(this))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::setUsername));
 
-        mDisposables.add(Observable.fromCallable(this::getDotsType)
+        mDisposables.add(Observable.fromCallable(() -> SettingsUtils.getDotsType(this))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::setDotsType));
+
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_offline, menu);
+        getMenuInflater().inflate(R.menu.menu_offline, menu);
         return true;
     }
 
     @Override
     protected void onDestroy() {
         mDisposables.clear();
-        mUserName = null;
-        mDialogNewGame = null;
-        mView = null;
         super.onDestroy();
     }
 
@@ -98,20 +98,25 @@ public abstract class BaseActivity extends AppCompatActivity {
                 onBackPressed();
                 return true;
             case R.id.menu_undo:
+                logEvent("menu_undo");
                 undoLastMove();
                 return true;
             case R.id.menu_new_game:
+                logEvent("menu_new");
                 newGame();
                 return true;
             case R.id.menu_search:
+                logEvent("menu_search");
                 searchLastMove();
                 return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        return false;
     }
 
     @Override
     public boolean onSearchRequested() {
+        logEvent("button_search");
         searchLastMove();
         return true;
     }
@@ -125,10 +130,12 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         mView.newGame(null);
 
-        mDialogNewGame = null;
-        mDialogNewGame = new NewGameDialog()
-                .setOnSeedNewGameListener(mView::newGame);
-        mDialogNewGame.show(getSupportFragmentManager(), null);
+        new NewGameDialog()
+                .setOnSeedNewGameListener(seed -> {
+                    logEvent("dialog_generate");
+                    mView.newGame(seed);
+                })
+                .show(getSupportFragmentManager(), null);
     }
 
     private void searchLastMove() {
@@ -140,15 +147,17 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected abstract void onGameFinished(@NonNull HighScore highScore);
 
     protected void loadState() {
-        mDisposables.add(Observable.fromCallable(this::getGameState)
+        mDisposables.add(Observable.fromCallable(() -> Game.fromJson(
+                getPreferences(MODE_PRIVATE).getString(KEY_GAME_STATE, null)))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::setGameState));
+                .subscribe(mView::setGameState));
 
-        mDisposables.add(Observable.fromCallable(this::getViewState)
+        mDisposables.add(Observable.fromCallable(() -> GameViewState.fromJson(
+                getPreferences(MODE_PRIVATE).getString(KEY_VIEW_STATE, null)))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::setViewState));
+                .subscribe(mView::setViewState));
     }
 
     protected void saveState() {
@@ -156,21 +165,6 @@ public abstract class BaseActivity extends AppCompatActivity {
                 .putString(KEY_GAME_STATE, mView.getGameState().toJson())
                 .putString(KEY_VIEW_STATE, mView.getViewState().toJson())
                 .apply();
-    }
-
-    @NonNull
-    private String getUserName() {
-        return SettingsUtils.getUserNameOrDefault(this);
-    }
-
-    private void setUsername(@Nullable String name) {
-        mUserName = name;
-        TextView tvUsername = findViewById(R.id.text_user_name);
-        tvUsername.setText(mUserName);
-    }
-
-    private int getDotsType() {
-        return SettingsUtils.getDotsType(this);
     }
 
     private void setDotsType(int dotsType) {
@@ -190,23 +184,15 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
-    @NonNull
-    private Game getGameState() {
-        String jsonGameState = getPreferences(MODE_PRIVATE).getString(KEY_GAME_STATE, null);
-        return Game.fromJson(jsonGameState);
+    private void setUsername(@Nullable String name) {
+        mUserName = name;
+        final TextView tvUsername = findViewById(R.id.text_user_name);
+        tvUsername.setText(mUserName);
     }
 
-    private void setGameState(@NonNull Game game) {
-        mView.setGameState(game);
-    }
-
-    @NonNull
-    private GameViewState getViewState() {
-        String jsonViewState = getPreferences(MODE_PRIVATE).getString(KEY_VIEW_STATE, null);
-        return GameViewState.fromJson(jsonViewState);
-    }
-
-    private void setViewState(@NonNull GameViewState viewState) {
-        mView.setViewState(viewState);
+    protected void logEvent(@NonNull String name) {
+        final Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, name);
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
     }
 }
