@@ -41,7 +41,6 @@ public class GameViewState {
     private static final float MAX_SCALE = 3.0f;
     private final transient Matrix matrix = new Matrix();
     private final float[] matrixArray = new float[9];
-    public boolean isFocusVisible = true;
 
     @NonNull
     public static GameViewState fromJson(@Nullable String json) {
@@ -88,7 +87,31 @@ public class GameViewState {
         return new PointF(result[0], result[1]);
     }
 
-    public void correctParameters(float screenWidth, float screenHeight, float paperSize) {
+
+    /**
+     * Centering to the specified point in device screen
+     *
+     * @param x            width position in pixels
+     * @param y            height position in pixels
+     * @param screenWidth  screen width in pixels
+     * @param screenHeight game paper size in pixels
+     */
+    public void focus(float x, float y, float screenWidth, float screenHeight) {
+        final float[] point = new float[]{x, y};
+        matrix.mapPoints(point);
+        final float dx = screenWidth / 2.0f - point[0];
+        final float dy = screenHeight / 2.0f - point[1];
+        translate(dx, dy);
+    }
+
+    /**
+     * Correcting game paper position in device screen
+     *
+     * @param screenWidth  screen width in pixels
+     * @param screenHeight screen height in pixels
+     * @param paperSize    game paper size in pixels
+     */
+    public void correct(float screenWidth, float screenHeight, float paperSize) {
         //
         // validate scale: minScale <= scale <= maxScale
         //
@@ -109,7 +132,6 @@ public class GameViewState {
         // validate translate: if paper is less than screen, than center it
         //
         float dx = 0;
-        float dy = 0;
         if (paperRect.width() < screenWidth) {
             dx = screenWidth / 2.0f - paperRect.centerX();
             Log.d(TAG, "translate to center width");
@@ -123,6 +145,7 @@ public class GameViewState {
                 Log.d(TAG, "translate to the right corner");
             }
         }
+        float dy = 0;
         if (paperRect.height() < screenHeight) {
             dy = screenHeight / 2.0f - paperRect.centerY();
             Log.d(TAG, "translate to the center height");
