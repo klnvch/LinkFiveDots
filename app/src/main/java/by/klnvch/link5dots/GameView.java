@@ -50,6 +50,7 @@ import by.klnvch.link5dots.models.GameViewState;
 import by.klnvch.link5dots.models.HighScore;
 import by.klnvch.link5dots.settings.SettingsUtils;
 import by.klnvch.link5dots.utils.BitmapCreator;
+import by.klnvch.link5dots.utils.MathUtils;
 
 public class GameView extends View {
 
@@ -58,15 +59,15 @@ public class GameView extends View {
      * number of lines vertical or horizontal
      */
     private final static int GRID_SIZE = 20;
-    private final float[] arr1 = new float[GRID_SIZE];
-    private final float[] dotLocations = new float[GRID_SIZE];
-    private final float[] arrowLocations = new float[GRID_SIZE];
+    private final float[] mLineLocations = new float[GRID_SIZE];
+    private final float[] mDotLocations = new float[GRID_SIZE];
+    private final float[] mArrowLocations = new float[GRID_SIZE];
     private final Matrix mDrawMatrix = new Matrix();
     /**
      * The background bitmap is paper size pixels wide. This array contains positions of lines of number GRID_SIZE
      */
-    private float screenWidth;
-    private float screenHeight;
+    private float mScreenWidth;
+    private float mScreenHeight;
     private Bitmap mBitmapPaper;
     private Bitmap mBitmapUserDot;             // red dot or cross
     private Bitmap mBitmapBotDot;              // blue dot or ring
@@ -79,19 +80,19 @@ public class GameView extends View {
     private Bitmap botVerLine;
     private Bitmap botDiagonal1Line;
     private Bitmap botDiagonal2Line;
-    private float paperSize;
-    private float lineLength;
-    private float lineThickness;
-    private GestureDetector gestureDetector;
-    private ScaleGestureDetector scaleGestureDetector;
+    private float mPaperSize;
+    private float mLineLength;
+    private float mLineThickness;
+    private GestureDetector mGestureDetector;
+    private ScaleGestureDetector mScaleGestureDetector;
     private Game mGameState = Game.generateGame(null);
     private GameViewState mViewState = new GameViewState();
-    private OnMoveDoneListener onMoveDoneListener;
-    private OnGameEndListener onGameEndListener;
+    private OnMoveDoneListener mOnMoveDoneListener;
+    private OnGameEndListener mOnGameEndListener;
     private Bitmap mWinningLine = null;
     private float mWinningLineDX = 0;
     private float mWinningLineDY = 0;
-    private boolean isEndGameSend = false;
+    private boolean mIsEndGameSend = false;
 
     public GameView(Context context) {
         super(context);
@@ -115,8 +116,8 @@ public class GameView extends View {
         setFocusableInTouchMode(true);
 
         // set gesture detectors
-        gestureDetector = new GestureDetector(context, new GestureListener());
-        scaleGestureDetector = new ScaleGestureDetector(context, new ScaleListener());
+        mGestureDetector = new GestureDetector(context, new GestureListener());
+        mScaleGestureDetector = new ScaleGestureDetector(context, new ScaleListener());
 
         // load bitmaps. why do we need matrix?
         final float density = getResources().getDisplayMetrics().density;
@@ -130,7 +131,7 @@ public class GameView extends View {
             mBitmapUserDot = BitmapCreator.createCross(colorRed, density);
             mBitmapBotDot = BitmapCreator.createRing(colorBlue, density);
         }
-        Matrix rotateMatrix = new Matrix();
+        final Matrix rotateMatrix = new Matrix();
         rotateMatrix.postRotate(90.0f);
         userHorLine = BitmapFactory.decodeResource(getResources(), R.drawable.redlinehor);
         userVerLine = Bitmap.createBitmap(userHorLine, 0, 0, userHorLine.getWidth(), userHorLine.getHeight(), rotateMatrix, true);
@@ -146,42 +147,42 @@ public class GameView extends View {
         // set bitmap sizes
         final float dotSize = mBitmapUserDot.getWidth();
         final float arrowsSize = mBitmapArrows.getWidth();
-        paperSize = mBitmapPaper.getWidth();
-        lineLength = userHorLine.getWidth();
-        lineThickness = userHorLine.getHeight();
+        mPaperSize = mBitmapPaper.getWidth();
+        mLineLength = userHorLine.getWidth();
+        mLineThickness = userHorLine.getHeight();
         //
         for (int i = 0; i != GRID_SIZE; ++i) {
-            arr1[i] = paperSize / (2 * GRID_SIZE) + (i * paperSize) / GRID_SIZE;
-            dotLocations[i] = arr1[i] - dotSize / 2.0f;
-            arrowLocations[i] = arr1[i] - arrowsSize / 2.0f;
+            mLineLocations[i] = mPaperSize / (2 * GRID_SIZE) + (i * mPaperSize) / GRID_SIZE;
+            mDotLocations[i] = mLineLocations[i] - dotSize / 2.0f;
+            mArrowLocations[i] = mLineLocations[i] - arrowsSize / 2.0f;
         }
     }
 
     public void setOnMoveDoneListener(@NonNull OnMoveDoneListener listener) {
-        this.onMoveDoneListener = listener;
+        this.mOnMoveDoneListener = listener;
     }
 
     public void setOnGameEndListener(@NonNull OnGameEndListener listener) {
-        this.onGameEndListener = listener;
+        this.mOnGameEndListener = listener;
     }
 
     @Override
     protected void onSizeChanged(int w, int h, int oldW, int oldH) {
         Log.d(TAG, "onSizeChanged");
-        screenWidth = w;
-        screenHeight = h;
+        mScreenWidth = w;
+        mScreenHeight = h;
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         Log.d(TAG, "onDraw");
         // validate basic parameters
-        if (mViewState == null || screenWidth <= 0 || screenHeight <= 0 || paperSize <= 0) {
+        if (mViewState == null || mScreenWidth <= 0 || mScreenHeight <= 0 || mPaperSize <= 0) {
             Log.d(TAG, "onDraw: something is wrong");
             return;
         }
         // correct paper whatever has happened
-        mViewState.correctParameters(screenWidth, screenHeight, paperSize);
+        mViewState.correctParameters(mScreenWidth, mScreenHeight, mPaperSize);
 
         // Draw background
         canvas.drawBitmap(mBitmapPaper, mViewState.getMatrix(), null);
@@ -190,7 +191,7 @@ public class GameView extends View {
         for (int i = 0; i != GRID_SIZE; ++i) {
             for (int j = 0; j != GRID_SIZE; ++j) {
                 mViewState.copyMatrix(mDrawMatrix);
-                mDrawMatrix.preTranslate(dotLocations[i], dotLocations[j]);
+                mDrawMatrix.preTranslate(mDotLocations[i], mDotLocations[j]);
                 if (mGameState.isHostDot(i, j)) {
                     canvas.drawBitmap(mBitmapUserDot, mDrawMatrix, null);
                 }
@@ -200,28 +201,30 @@ public class GameView extends View {
             }
         }
         // Draw dots winning line
-        isOver();
-        ArrayList<Dot> winningLine = mGameState.isOver();
+        final ArrayList<Dot> winningLine = isOver();
         if (winningLine != null) {
+            updateWinningLine();
             for (int lineId = 0; lineId != winningLine.size() - 1; ++lineId) {
-                int i = winningLine.get(lineId).getX();
-                int j = winningLine.get(lineId).getY();
+                final int i = winningLine.get(lineId).getX();
+                final int j = winningLine.get(lineId).getY();
 
-                updateWinningLine();
+                final float dx = mLineLocations[i] - mWinningLineDX;
+                final float dy = mLineLocations[j] - mWinningLineDY;
+
                 mViewState.copyMatrix(mDrawMatrix);
-                mDrawMatrix.preTranslate(arr1[i] - mWinningLineDX, arr1[j] - mWinningLineDY);
+                mDrawMatrix.preTranslate(dx, dy);
                 canvas.drawBitmap(mWinningLine, mDrawMatrix, null);
             }
         }
 
         // Draw four arrows
-        Dot lastDot = mGameState.getLastDot();
+        final Dot lastDot = mGameState.getLastDot();
         if (lastDot != null && mViewState.isFocusVisible) {
-            int i = lastDot.getX();
-            int j = lastDot.getY();
+            final int i = lastDot.getX();
+            final int j = lastDot.getY();
 
             mViewState.copyMatrix(mDrawMatrix);
-            mDrawMatrix.preTranslate(arrowLocations[i], arrowLocations[j]);
+            mDrawMatrix.preTranslate(mArrowLocations[i], mArrowLocations[j]);
             canvas.drawBitmap(mBitmapArrows, mDrawMatrix, null);
         }
 
@@ -231,8 +234,8 @@ public class GameView extends View {
     @Override
     public boolean onTouchEvent(@NonNull MotionEvent event) {
         performClick();
-        gestureDetector.onTouchEvent(event);
-        scaleGestureDetector.onTouchEvent(event);
+        mGestureDetector.onTouchEvent(event);
+        mScaleGestureDetector.onTouchEvent(event);
         return true;
     }
 
@@ -248,58 +251,48 @@ public class GameView extends View {
     }
 
     public void undoLastMove(int moves) {
-        isEndGameSend = false;
+        mIsEndGameSend = false;
         mGameState.undo(moves);
         invalidate();
     }
 
     public void newGame(@Nullable Long seed) {
-        isEndGameSend = false;
+        mIsEndGameSend = false;
         mGameState = Game.generateGame(seed);
         invalidate();
     }
 
-    private int findClosestLine(float line) {
-        int result = 0;
-        float min = Float.MAX_VALUE;
-        for (int i = 0; i != GRID_SIZE; ++i) {
-            float dist = Math.abs(line - arr1[i]);
-            if (min > dist) {
-                min = dist;
-                result = i;
-            }
-        }
-        return result;
-    }
-
     @Nullable
     public Dot setHostDot(@NonNull Dot dot) {
-        Dot result = mGameState.setHostDot(dot);
+        final Dot result = mGameState.setHostDot(dot);
         invalidate();
         return result;
     }
 
     @Nullable
     public Dot setGuestDot(@NonNull Dot dot) {
-        Dot result = mGameState.setGuestDot(dot);
+        final Dot result = mGameState.setGuestDot(dot);
         invalidate();
         return result;
     }
 
-    private void isOver() {
-        if (mGameState.isOver() != null) {
+    @Nullable
+    private ArrayList<Dot> isOver() {
+        final ArrayList<Dot> winningLine = mGameState.isOver();
+        if (winningLine != null) {
             HighScore highScore = mGameState.getCurrentScore();
             if (highScore != null) {
-                if (onGameEndListener != null) {
-                    if (!isEndGameSend) {
-                        isEndGameSend = true;
-                        onGameEndListener.onGameEnd(highScore);
+                if (mOnGameEndListener != null) {
+                    if (!mIsEndGameSend) {
+                        mIsEndGameSend = true;
+                        mOnGameEndListener.onGameEnd(highScore);
                     }
                 } else {
                     Log.e(TAG, "listener is null");
                 }
             }
         }
+        return winningLine;
     }
 
     public HighScore getHighScore() {
@@ -311,17 +304,17 @@ public class GameView extends View {
      */
     private void updateWinningLine() {
         Log.d(TAG, "updateWinningLine");
-        ArrayList<Dot> winningLine = mGameState.isOver();
+        final ArrayList<Dot> winningLine = mGameState.isOver();
         if (winningLine != null) {
-            Dot firstDot = winningLine.get(0);
-            Dot lastDot = winningLine.get(winningLine.size() - 1);
+            final Dot firstDot = winningLine.get(0);
+            final Dot lastDot = winningLine.get(winningLine.size() - 1);
 
-            int x1 = firstDot.getX();
-            int y1 = firstDot.getY();
-            int x2 = lastDot.getX();
-            int y2 = lastDot.getY();
+            final int x1 = firstDot.getX();
+            final int y1 = firstDot.getY();
+            final int x2 = lastDot.getX();
+            final int y2 = lastDot.getY();
 
-            boolean isHostWinner = mGameState.isHostDot(x1, y1);
+            final boolean isHostWinner = mGameState.isHostDot(x1, y1);
 
             if (y1 == y2) {//horizontal line
                 if (isHostWinner) {
@@ -330,14 +323,14 @@ public class GameView extends View {
                     mWinningLine = botHorLine;
                 }
                 mWinningLineDX = 0;
-                mWinningLineDY = lineThickness / 2.0f;
+                mWinningLineDY = mLineThickness / 2.0f;
             } else if (x1 == x2) {//vertical line
                 if (isHostWinner) {
                     mWinningLine = userVerLine;
                 } else {
                     mWinningLine = botVerLine;
                 }
-                mWinningLineDX = lineThickness / 2.0f;
+                mWinningLineDX = mLineThickness / 2.0f;
                 mWinningLineDY = 0;
             } else if (x1 > x2) {//diagonal left to right
                 if (isHostWinner) {
@@ -345,7 +338,7 @@ public class GameView extends View {
                 } else {
                     mWinningLine = botDiagonal1Line;
                 }
-                mWinningLineDX = lineLength;
+                mWinningLineDX = mLineLength;
                 mWinningLineDY = 0;
             } else if (x2 > x1) {//diagonal right to left
                 if (isHostWinner) {
@@ -378,7 +371,8 @@ public class GameView extends View {
         Log.d(TAG, "setViewState");
 
         this.mViewState = viewState;
-        onSizeChanged((int) screenWidth, (int) screenHeight, (int) screenWidth, (int) screenHeight);
+        onSizeChanged((int) mScreenWidth, (int) mScreenHeight,
+                (int) mScreenWidth, (int) mScreenHeight);
         invalidate();
     }
 
@@ -407,16 +401,12 @@ public class GameView extends View {
         @Override
         public boolean onSingleTapConfirmed(MotionEvent e) {
             if (mGameState.isOver() == null) {
-                PointF point = mViewState.invertMapPoint(e.getX(), e.getY());
-                int xl = findClosestLine(point.x);
-                int yl = findClosestLine(point.y);
-                boolean res = mGameState.checkCorrectness(xl, yl);
-                if (!res) {
-                    return true;
-                }
+                final PointF point = mViewState.invertMapPoint(e.getX(), e.getY());
+                final int x = MathUtils.findClosestIndex(mLineLocations, point.x);
+                final int y = MathUtils.findClosestIndex(mLineLocations, point.y);
 
-                if (onMoveDoneListener != null) {
-                    onMoveDoneListener.onMoveDone(new Dot(xl, yl), mGameState.getLastDot());
+                if (mOnMoveDoneListener != null) {
+                    mOnMoveDoneListener.onMoveDone(new Dot(x, y), mGameState.getLastDot());
                 } else {
                     Log.e(TAG, "listener is null");
                 }
