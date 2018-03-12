@@ -182,7 +182,7 @@ public class GameView extends View {
             return;
         }
         // correct paper whatever has happened
-        mViewState.correctParameters(mScreenWidth, mScreenHeight, mPaperSize);
+        mViewState.correct(mScreenWidth, mScreenHeight, mPaperSize);
 
         // Draw background
         canvas.drawBitmap(mBitmapPaper, mViewState.getMatrix(), null);
@@ -219,7 +219,7 @@ public class GameView extends View {
 
         // Draw four arrows
         final Dot lastDot = mGameState.getLastDot();
-        if (lastDot != null && mViewState.isFocusVisible) {
+        if (lastDot != null) {
             final int i = lastDot.getX();
             final int j = lastDot.getY();
 
@@ -246,8 +246,14 @@ public class GameView extends View {
     }
 
     public void switchHideArrow() {
-        mViewState.isFocusVisible = !mViewState.isFocusVisible;
-        invalidate();
+        //mViewState.isFocusVisible = !mViewState.isFocusVisible;
+        final Dot lastDot = mGameState.getLastDot();
+        if (lastDot != null) {
+            final float x = mLineLocations[lastDot.getX()];
+            final float y = mLineLocations[lastDot.getY()];
+            mViewState.focus(x, y, mScreenWidth, mScreenHeight);
+            invalidate();
+        }
     }
 
     public void undoLastMove(int moves) {
@@ -259,6 +265,7 @@ public class GameView extends View {
     public void newGame(@Nullable Long seed) {
         mIsEndGameSend = false;
         mGameState = Game.generateGame(seed);
+        mViewState.focus(mPaperSize / 2.0f, mPaperSize / 2.0f, mScreenWidth, mScreenHeight);
         invalidate();
     }
 
