@@ -27,77 +27,116 @@ package by.klnvch.link5dots.utils;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.support.annotation.ColorInt;
+import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
 public class BitmapCreator {
 
+    public static final int DOT = 1;
+    public static final int RING = 2;
+    public static final int CROSS = 3;
+    public static final int LINE_H = 4;
+    public static final int LINE_V = 5;
+    public static final int LINE_D_L = 6;
+    public static final int LINE_D_R = 7;
+
+    private static final int SIZE_1 = 16;
+    private static final int SIZE_2 = 32;
+
     @NonNull
-    public static Bitmap createDot(@ColorInt int color, float density) {
-        final int n = (int) Math.ceil(density * Circle.N);
+    public static Bitmap createBitmap(@BitmapType int type, @ColorInt int color, float density) {
+        final Shape shape;
+        switch (type) {
+            case DOT:
+                shape = new Circle(density);
+                break;
+            case RING:
+                shape = new Ring(density);
+                break;
+            case CROSS:
+                shape = new Cross(density);
+                break;
+            case LINE_H:
+                shape = new HorizontalLine(density);
+                break;
+            case LINE_V:
+                shape = new VerticalLine(density);
+                break;
+            case LINE_D_L:
+                shape = new LeftDiagonalLine(density);
+                break;
+            case LINE_D_R:
+                shape = new RightDiagonalLine(density);
+                break;
+            default:
+                throw new RuntimeException("unknown parameter");
+        }
+        final int n = shape.getSize();
         final int[] colors = new int[n * n];
 
         for (int i = 0; i != n; ++i) {
             for (int j = 0; j != n; ++j) {
-                if (Circle.isInside(i, j, density)) {
-                    colors[i * n + j] = color;
+                if (shape.isInside(i, j)) {
+                    colors[j * n + i] = color;
                 } else {
-                    colors[i * n + j] = Color.TRANSPARENT;
+                    colors[j * n + i] = Color.TRANSPARENT;
                 }
             }
         }
         return Bitmap.createBitmap(colors, n, n, Bitmap.Config.ARGB_8888);
     }
 
-    @NonNull
-    public static Bitmap createRing(@ColorInt int color, float density) {
-        final int n = (int) Math.ceil(density * Ring.N);
-        final int[] colors = new int[n * n];
-
-        for (int i = 0; i != n; ++i) {
-            for (int j = 0; j != n; ++j) {
-                if (Ring.isInside(i, j, density)) {
-                    colors[i * n + j] = color;
-                } else {
-                    colors[i * n + j] = Color.TRANSPARENT;
-                }
-            }
-        }
-        return Bitmap.createBitmap(colors, n, n, Bitmap.Config.ARGB_8888);
+    @Retention(RetentionPolicy.SOURCE)
+    @IntDef({DOT, RING, CROSS, LINE_H, LINE_V, LINE_D_L, LINE_D_R})
+    private @interface BitmapType {
     }
 
-    @NonNull
-    public static Bitmap createCross(@ColorInt int color, float density) {
-        final int n = (int) Math.ceil(density * Cross.N);
-        final int[] colors = new int[n * n];
+    private static abstract class Shape {
+        final int size;
+        final float density;
 
-        for (int i = 0; i != n; ++i) {
-            for (int j = 0; j != n; ++j) {
-                if (Cross.isInside(i, j, density)) {
-                    colors[i * n + j] = color;
-                } else {
-                    colors[i * n + j] = Color.TRANSPARENT;
-                }
-            }
+        Shape(float density, int size) {
+            this.density = density;
+            this.size = size;
         }
-        return Bitmap.createBitmap(colors, n, n, Bitmap.Config.ARGB_8888);
+
+        abstract boolean isInside(int x, int y);
+
+        int getSize() {
+            return (int) Math.ceil(density * size);
+        }
     }
 
-    private static class Circle {
-        private static final int N = 16;
-        private static final double R = N / 2.0;
+    private static class Circle extends Shape {
+        final double R;
 
-        private static boolean isInside(int x, int y, float density) {
+        Circle(float density) {
+            super(density, SIZE_1);
+            R = size / 2.0;
+        }
+
+        @Override
+        boolean isInside(int x, int y) {
             final double r = R * density;
             return (x - r) * (x - r) + (y - r) * (y - r) <= r * r;
         }
     }
 
-    private static class Ring {
-        private static final int N = 16;
-        private static final double R1 = N / 2.0;
-        private static final double R2 = N / 4.0;
+    private static class Ring extends Shape {
+        final double R1;
+        final double R2;
 
-        private static boolean isInside(int x, int y, float density) {
+        Ring(float density) {
+            super(density, SIZE_1);
+            R1 = size / 2.0;
+            R2 = size / 4.0;
+        }
+
+        @Override
+        boolean isInside(int x, int y) {
             final double r1 = R1 * density;
             final double r2 = R2 * density;
 
@@ -106,14 +145,79 @@ public class BitmapCreator {
         }
     }
 
-    private static class Cross {
-        private static final int N = 16;
-        private static final double R = N / 6.0;
+    private static class Cross extends Shape {
+        final double R;
 
-        private static boolean isInside(int x, int y, float density) {
-            final double n = N * density;
+        Cross(float density) {
+            super(density, SIZE_1);
+            R = size / 6.0;
+        }
+
+        @Override
+        boolean isInside(int x, int y) {
+            final double n = size * density;
             final double r = R * density;
             return x + r >= y && x - r <= y || n - x + r >= y && n - x - r <= y;
+        }
+    }
+
+    private static abstract class Line extends Shape {
+        final double width;
+
+        Line(float density) {
+            super(density, SIZE_2);
+            width = size / 6.0;
+        }
+    }
+
+    private static class HorizontalLine extends Line {
+        HorizontalLine(float density) {
+            super(density);
+        }
+
+        @Override
+        boolean isInside(int x, int y) {
+            final double n = size * density;
+            final double r = width * density;
+            return y >= (n - r) / 2.0 && y <= (n + r) / 2.0;
+        }
+    }
+
+    private static class VerticalLine extends Line {
+        VerticalLine(float density) {
+            super(density);
+        }
+
+        @Override
+        boolean isInside(int x, int y) {
+            final double n = size * density;
+            final double r = width * density;
+            return x >= (n - r) / 2.0 && x <= (n + r) / 2.0;
+        }
+    }
+
+    private static class LeftDiagonalLine extends Line {
+        LeftDiagonalLine(float density) {
+            super(density);
+        }
+
+        @Override
+        boolean isInside(int x, int y) {
+            final double r = width * density;
+            return x + r >= y && x - r <= y;
+        }
+    }
+
+    private static class RightDiagonalLine extends Line {
+        RightDiagonalLine(float density) {
+            super(density);
+        }
+
+        @Override
+        boolean isInside(int x, int y) {
+            final double n = size * density;
+            final double r = width * density;
+            return n - x + r >= y && n - x - r <= y;
         }
     }
 }

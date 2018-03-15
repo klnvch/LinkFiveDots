@@ -125,22 +125,22 @@ public class GameView extends View {
         final int colorBlue = ContextCompat.getColor(context, R.color.dot_color_blue);
         mBitmapPaper = BitmapFactory.decodeResource(getResources(), R.drawable.background);
         if (SettingsUtils.getDotsType(getContext()) == SettingsUtils.DOTS_TYPE_ORIGINAL) {
-            mBitmapUserDot = BitmapCreator.createDot(colorRed, density);
-            mBitmapBotDot = BitmapCreator.createDot(colorBlue, density);
+            mBitmapUserDot = BitmapCreator.createBitmap(BitmapCreator.DOT, colorRed, density);
+            mBitmapBotDot = BitmapCreator.createBitmap(BitmapCreator.DOT, colorBlue, density);
         } else {
-            mBitmapUserDot = BitmapCreator.createCross(colorRed, density);
-            mBitmapBotDot = BitmapCreator.createRing(colorBlue, density);
+            mBitmapUserDot = BitmapCreator.createBitmap(BitmapCreator.CROSS, colorRed, density);
+            mBitmapBotDot = BitmapCreator.createBitmap(BitmapCreator.RING, colorBlue, density);
         }
-        final Matrix rotateMatrix = new Matrix();
-        rotateMatrix.postRotate(90.0f);
-        userHorLine = BitmapFactory.decodeResource(getResources(), R.drawable.redlinehor);
-        userVerLine = Bitmap.createBitmap(userHorLine, 0, 0, userHorLine.getWidth(), userHorLine.getHeight(), rotateMatrix, true);
-        userDiagonal1Line = BitmapFactory.decodeResource(getResources(), R.drawable.redlinediag1);
-        userDiagonal2Line = Bitmap.createBitmap(userDiagonal1Line, 0, 0, userDiagonal1Line.getWidth(), userDiagonal1Line.getHeight(), rotateMatrix, true);
-        botHorLine = BitmapFactory.decodeResource(getResources(), R.drawable.bluelinehor);
-        botVerLine = Bitmap.createBitmap(botHorLine, 0, 0, botHorLine.getWidth(), botHorLine.getHeight(), rotateMatrix, true);
-        botDiagonal1Line = BitmapFactory.decodeResource(getResources(), R.drawable.bluelinediag1);
-        botDiagonal2Line = Bitmap.createBitmap(botDiagonal1Line, 0, 0, botDiagonal1Line.getWidth(), botDiagonal1Line.getHeight(), rotateMatrix, true);
+
+        userHorLine = BitmapCreator.createBitmap(BitmapCreator.LINE_H, colorRed, density);
+        userVerLine = BitmapCreator.createBitmap(BitmapCreator.LINE_V, colorRed, density);
+        userDiagonal2Line = BitmapCreator.createBitmap(BitmapCreator.LINE_D_L, colorRed, density);
+        userDiagonal1Line = BitmapCreator.createBitmap(BitmapCreator.LINE_D_R, colorRed, density);
+
+        botHorLine = BitmapCreator.createBitmap(BitmapCreator.LINE_H, colorBlue, density);
+        botVerLine = BitmapCreator.createBitmap(BitmapCreator.LINE_V, colorBlue, density);
+        botDiagonal2Line = BitmapCreator.createBitmap(BitmapCreator.LINE_D_L, colorBlue, density);
+        botDiagonal1Line = BitmapCreator.createBitmap(BitmapCreator.LINE_D_R, colorBlue, density);
 
         mBitmapArrows = BitmapFactory.decodeResource(getResources(), R.drawable.arrows);
 
