@@ -81,8 +81,7 @@ public class GameView extends View {
     private Bitmap botDiagonal1Line;
     private Bitmap botDiagonal2Line;
     private float mPaperSize;
-    private float mLineLength;
-    private float mLineThickness;
+    private float mLineSize;
     private GestureDetector mGestureDetector;
     private ScaleGestureDetector mScaleGestureDetector;
     private Game mGameState = Game.generateGame(null);
@@ -148,8 +147,7 @@ public class GameView extends View {
         final float dotSize = mBitmapUserDot.getWidth();
         final float arrowsSize = mBitmapArrows.getWidth();
         mPaperSize = mBitmapPaper.getWidth();
-        mLineLength = userHorLine.getWidth();
-        mLineThickness = userHorLine.getHeight();
+        mLineSize = userHorLine.getWidth();
         //
         for (int i = 0; i != GRID_SIZE; ++i) {
             mLineLocations[i] = mPaperSize / (2 * GRID_SIZE) + (i * mPaperSize) / GRID_SIZE;
@@ -330,14 +328,14 @@ public class GameView extends View {
                     mWinningLine = botHorLine;
                 }
                 mWinningLineDX = 0;
-                mWinningLineDY = mLineThickness / 2.0f;
+                mWinningLineDY = mLineSize / 2.0f;
             } else if (x1 == x2) {//vertical line
                 if (isHostWinner) {
                     mWinningLine = userVerLine;
                 } else {
                     mWinningLine = botVerLine;
                 }
-                mWinningLineDX = mLineThickness / 2.0f;
+                mWinningLineDX = mLineSize / 2.0f;
                 mWinningLineDY = 0;
             } else if (x1 > x2) {//diagonal left to right
                 if (isHostWinner) {
@@ -345,7 +343,7 @@ public class GameView extends View {
                 } else {
                     mWinningLine = botDiagonal1Line;
                 }
-                mWinningLineDX = mLineLength;
+                mWinningLineDX = mLineSize;
                 mWinningLineDY = 0;
             } else if (x2 > x1) {//diagonal right to left
                 if (isHostWinner) {
