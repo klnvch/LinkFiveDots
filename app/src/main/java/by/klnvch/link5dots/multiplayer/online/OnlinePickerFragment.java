@@ -73,7 +73,7 @@ public class OnlinePickerFragment extends Fragment implements View.OnClickListen
                              @Nullable Bundle savedInstanceState) {
         Log.d(TAG, "onCreateView");
 
-        View view = inflater.inflate(R.layout.activity_nsd_picker, container, false);
+        View view = inflater.inflate(R.layout.fragment_game_picker, container, false);
 
         mButtonCreate = view.findViewById(R.id.buttonCreate);
         mButtonCreate.setOnClickListener(this);

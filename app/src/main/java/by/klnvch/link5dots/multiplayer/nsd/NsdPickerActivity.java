@@ -99,10 +99,10 @@ public class NsdPickerActivity extends AppCompatActivity implements View.OnClick
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_nsd_picker);
+        setContentView(R.layout.fragment_game_picker);
         setTitle(R.string.menu_local_network);
 
-        // NoClassDefFoundError (@by.klnvch.link5dots.activity_nsd_picker.NsdService:<init>:294) {main}
+        // NoClassDefFoundError (@by.klnvch.link5dots.fragment_game_picker.NsdService:<init>:294) {main}
         try {
             Class.forName("android.net.nsd.NsdManager");
             setResult(RESULT_OK);

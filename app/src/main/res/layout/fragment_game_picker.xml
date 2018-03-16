@@ -30,7 +30,7 @@
     android:background="@drawable/paper_tiled"
     android:keepScreenOn="true"
     android:padding="32dp"
-    tools:context="by.klnvch.link5dots.multiplayer.nsd.NsdPickerActivity">
+    tools:context="by.klnvch.link5dots.multiplayer.online.OnlineGameActivity">
 
     <ToggleButton
         android:id="@+id/buttonCreate"
@@ -56,8 +56,8 @@
         android:id="@+id/textStatusValue"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
         android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
         android:maxLines="1"
         android:text="@string/apn_not_set"
         app:layout_constraintEnd_toEndOf="parent"
@@ -80,7 +80,7 @@
         android:id="@+id/separator"
         android:layout_width="0dp"
         android:layout_height="@dimen/separator_width"
-        android:layout_marginTop="8dp"
+        android:layout_margin="8dp"
         android:background="@color/foreground_color"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
