@@ -22,36 +22,44 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.multiplayer.online;
+package by.klnvch.link5dots.multiplayer.bt;
 
+import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 
 import by.klnvch.link5dots.R;
 import by.klnvch.link5dots.multiplayer.common.AbstractGameActivity;
-import by.klnvch.link5dots.multiplayer.services.GameServiceOnline;
-import by.klnvch.link5dots.utils.AvailabilityChecker;
+import by.klnvch.link5dots.multiplayer.common.PickerFragment;
+import by.klnvch.link5dots.multiplayer.services.GameServiceBluetooth;
 
-public class OnlineGameActivity extends AbstractGameActivity {
-
+public class BtGameActivity extends AbstractGameActivity {
     @NonNull
     @Override
     protected Intent getServiceIntent() {
-        return new Intent(this, GameServiceOnline.class);
+        return new Intent(this, GameServiceBluetooth.class);
     }
 
     @Override
     protected boolean isValid() {
-        return AvailabilityChecker.isGPSValid(this);
+        return BluetoothAdapter.getDefaultAdapter() != null;
     }
 
     @Override
     protected int getDefaultTitle() {
-        return R.string.menu_online_game;
+        return R.string.bluetooth_settings;
     }
 
     @Override
     public void newGame() {
-        getSupportFragmentManager().popBackStackImmediate();
+        mService.newGame();
+    }
+
+    @Override
+    protected void addPickerFragment() {
+        getSupportFragmentManager()
+                .beginTransaction()
+                .add(R.id.fragmentContainer, new BtPickerFragment(), PickerFragment.TAG)
+                .commit();
     }
 }

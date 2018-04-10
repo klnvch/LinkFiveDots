@@ -22,36 +22,22 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.multiplayer.online;
+package by.klnvch.link5dots.multiplayer.adapters;
 
-import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v7.widget.RecyclerView;
 
-import by.klnvch.link5dots.R;
-import by.klnvch.link5dots.multiplayer.common.AbstractGameActivity;
-import by.klnvch.link5dots.multiplayer.services.GameServiceOnline;
-import by.klnvch.link5dots.utils.AvailabilityChecker;
+public interface TargetAdapterInterface {
+    void setOnEmptyStateListener(@Nullable OnEmptyStateListener listener);
 
-public class OnlineGameActivity extends AbstractGameActivity {
+    boolean isEmpty();
 
     @NonNull
-    @Override
-    protected Intent getServiceIntent() {
-        return new Intent(this, GameServiceOnline.class);
-    }
+    OnItemClickListener getOnItemClickListener();
 
-    @Override
-    protected boolean isValid() {
-        return AvailabilityChecker.isGPSValid(this);
-    }
+    void setOnItemClickListener(@Nullable OnItemClickListener listener);
 
-    @Override
-    protected int getDefaultTitle() {
-        return R.string.menu_online_game;
-    }
-
-    @Override
-    public void newGame() {
-        getSupportFragmentManager().popBackStackImmediate();
-    }
+    @NonNull
+    RecyclerView.Adapter getAdapter();
 }

@@ -22,36 +22,10 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.multiplayer.online;
+package by.klnvch.link5dots.multiplayer.common.interfaces;
 
-import android.content.Intent;
-import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
-import by.klnvch.link5dots.R;
-import by.klnvch.link5dots.multiplayer.common.AbstractGameActivity;
-import by.klnvch.link5dots.multiplayer.services.GameServiceOnline;
-import by.klnvch.link5dots.utils.AvailabilityChecker;
-
-public class OnlineGameActivity extends AbstractGameActivity {
-
-    @NonNull
-    @Override
-    protected Intent getServiceIntent() {
-        return new Intent(this, GameServiceOnline.class);
-    }
-
-    @Override
-    protected boolean isValid() {
-        return AvailabilityChecker.isGPSValid(this);
-    }
-
-    @Override
-    protected int getDefaultTitle() {
-        return R.string.menu_online_game;
-    }
-
-    @Override
-    public void newGame() {
-        getSupportFragmentManager().popBackStackImmediate();
-    }
+public interface OnTargetDeletedListener {
+    void onTargetDeleted(@Nullable Exception exception);
 }

@@ -22,36 +22,35 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.multiplayer.online;
+package by.klnvch.link5dots.multiplayer.targets;
 
-import android.content.Intent;
+import android.annotation.SuppressLint;
+import android.bluetooth.BluetoothAdapter;
 import android.support.annotation.NonNull;
 
-import by.klnvch.link5dots.R;
-import by.klnvch.link5dots.multiplayer.common.AbstractGameActivity;
-import by.klnvch.link5dots.multiplayer.services.GameServiceOnline;
-import by.klnvch.link5dots.utils.AvailabilityChecker;
+import by.klnvch.link5dots.multiplayer.bt.BtCredentials;
 
-public class OnlineGameActivity extends AbstractGameActivity {
+public class TargetBluetoothLocal extends Target<String> {
+    public TargetBluetoothLocal(@NonNull String time) {
+        super(fill(time));
+    }
+
+    @SuppressLint("HardwareIds")
+    @NonNull
+    private static String fill(@NonNull String time) {
+        BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        final String name = bluetoothAdapter.getName();
+        final String address = bluetoothAdapter.getAddress();
+        if (BtCredentials.FAKE_ADDRESS.equals(address)) {
+            return name + '\t' + '(' + time + ')';
+        } else {
+            return name + '\t' + '(' + time + ')' + '\n' + address;
+        }
+    }
 
     @NonNull
     @Override
-    protected Intent getServiceIntent() {
-        return new Intent(this, GameServiceOnline.class);
-    }
-
-    @Override
-    protected boolean isValid() {
-        return AvailabilityChecker.isGPSValid(this);
-    }
-
-    @Override
-    protected int getDefaultTitle() {
-        return R.string.menu_online_game;
-    }
-
-    @Override
-    public void newGame() {
-        getSupportFragmentManager().popBackStackImmediate();
+    public String getShortName() {
+        return getTarget();
     }
 }

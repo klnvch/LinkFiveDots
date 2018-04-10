@@ -22,36 +22,39 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.multiplayer.online;
+package by.klnvch.link5dots.multiplayer.factories;
 
-import android.content.Intent;
+import android.content.Context;
 import android.support.annotation.NonNull;
 
-import by.klnvch.link5dots.R;
-import by.klnvch.link5dots.multiplayer.common.AbstractGameActivity;
-import by.klnvch.link5dots.multiplayer.services.GameServiceOnline;
-import by.klnvch.link5dots.utils.AvailabilityChecker;
+import java.io.IOException;
 
-public class OnlineGameActivity extends AbstractGameActivity {
+import by.klnvch.link5dots.multiplayer.adapters.PickerAdapterNsd;
+import by.klnvch.link5dots.multiplayer.adapters.TargetAdapterInterface;
+import by.klnvch.link5dots.multiplayer.sockets.ServerSocketDecorator;
+import by.klnvch.link5dots.multiplayer.sockets.ServerSocketDecoratorNsd;
+import by.klnvch.link5dots.multiplayer.sockets.SocketDecorator;
+import by.klnvch.link5dots.multiplayer.sockets.SocketDecoratorNsd;
+import by.klnvch.link5dots.multiplayer.targets.Target;
+import by.klnvch.link5dots.multiplayer.targets.TargetNsd;
+
+public class FactoryNsd implements FactoryInterface {
+    @NonNull
+    @Override
+    public TargetAdapterInterface getAdapter(@NonNull Context context) {
+        return new PickerAdapterNsd(context);
+    }
 
     @NonNull
     @Override
-    protected Intent getServiceIntent() {
-        return new Intent(this, GameServiceOnline.class);
+    public SocketDecorator.Builder getSocketBuilder(@NonNull Target target) {
+        final TargetNsd targetNsd = (TargetNsd) target;
+        return new SocketDecoratorNsd.NsdBuilder(targetNsd.getTarget());
     }
 
+    @NonNull
     @Override
-    protected boolean isValid() {
-        return AvailabilityChecker.isGPSValid(this);
-    }
-
-    @Override
-    protected int getDefaultTitle() {
-        return R.string.menu_online_game;
-    }
-
-    @Override
-    public void newGame() {
-        getSupportFragmentManager().popBackStackImmediate();
+    public ServerSocketDecorator getServerSocket() throws IOException {
+        return new ServerSocketDecoratorNsd();
     }
 }

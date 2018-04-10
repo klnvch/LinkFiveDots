@@ -32,10 +32,8 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
-import by.klnvch.link5dots.multiplayer.bluetooth.BluetoothService;
-import by.klnvch.link5dots.multiplayer.bluetooth.DevicePickerActivity;
-import by.klnvch.link5dots.multiplayer.nsd.NsdPickerActivity;
-import by.klnvch.link5dots.multiplayer.nsd.NsdService;
+import by.klnvch.link5dots.multiplayer.bt.BtGameActivity;
+import by.klnvch.link5dots.multiplayer.nsd.NsdGameActivity;
 import by.klnvch.link5dots.multiplayer.online.OnlineGameActivity;
 
 public class MultiPlayerMenuActivity extends AppCompatActivity implements View.OnClickListener {
@@ -43,9 +41,9 @@ public class MultiPlayerMenuActivity extends AppCompatActivity implements View.O
     private static final String KEY_IS_BLUETOOTH_ENABLED = "KEY_IS_BLUETOOTH_ENABLED";
 
     private static final int RC_ENABLE_BLUETOOTH = 3;
-    private static final int RC_BLUETOOTH_GAME = 4;
-    private static final int RC_NSD_GAME = 5;
-    private static final int RC_INTERNET = 6;
+    private static final int RC_GAME_BT = 4;
+    private static final int RC_GAME_NSD = 5;
+    private static final int RC_GAME_INTERNET = 6;
 
     private boolean mIsBluetoothEnabled = false;
 
@@ -54,8 +52,6 @@ public class MultiPlayerMenuActivity extends AppCompatActivity implements View.O
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_multiplayer_menu);
         setTitle(R.string.menu_multi_player);
-
-        //findViewById(R.id.multi_player_online).setVisibility(View.INVISIBLE);
 
         if (BluetoothAdapter.getDefaultAdapter() == null) {
             findViewById(R.id.multi_player_bluetooth).setVisibility(View.INVISIBLE);
@@ -97,13 +93,12 @@ public class MultiPlayerMenuActivity extends AppCompatActivity implements View.O
                 }
                 break;
             case R.id.multi_player_lan:
-                startActivityForResult(new Intent(this, NsdPickerActivity.class),
-                        RC_NSD_GAME);
-                startService(new Intent(this, NsdService.class));
+                startActivityForResult(new Intent(this, NsdGameActivity.class),
+                        RC_GAME_NSD);
                 break;
             case R.id.multi_player_online:
                 startActivityForResult(new Intent(this, OnlineGameActivity.class),
-                        RC_INTERNET);
+                        RC_GAME_INTERNET);
                 break;
         }
     }
@@ -117,29 +112,20 @@ public class MultiPlayerMenuActivity extends AppCompatActivity implements View.O
                     startBluetoothActivity();
                 }
                 break;
-            case RC_BLUETOOTH_GAME:
+            case RC_GAME_BT:
                 // bluetooth game finished, make an order
                 if (!mIsBluetoothEnabled) {
                     BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
                     mBluetoothAdapter.disable();
                 }
-                // stop Bluetooth service
-                stopService(new Intent(this, BluetoothService.class));
-                break;
-            case RC_NSD_GAME:
-                stopService(new Intent(this, NsdService.class));
-                if (resultCode == RESULT_CANCELED)
-                    new AlertDialog.Builder(this)
-                            .setMessage(R.string.nsd_error)
-                            .setPositiveButton(R.string.okay, null)
-                            .show();
-                break;
-            case RC_INTERNET:
-                if (resultCode != RESULT_OK)
+            case RC_GAME_NSD:
+            case RC_GAME_INTERNET:
+                if (resultCode != RESULT_OK) {
                     new AlertDialog.Builder(this)
                             .setMessage(R.string.disabled_low_ram_device)
                             .setPositiveButton(R.string.okay, null)
                             .show();
+                }
                 break;
             default:
                 super.onActivityResult(requestCode, resultCode, data);
@@ -147,10 +133,7 @@ public class MultiPlayerMenuActivity extends AppCompatActivity implements View.O
     }
 
     private void startBluetoothActivity() {
-        // launch bluetooth device chooser
-        Intent i = new Intent(this, DevicePickerActivity.class);
-        startActivityForResult(i, RC_BLUETOOTH_GAME);
-        // start Bluetooth service
-        startService(new Intent(this, BluetoothService.class));
+        startActivityForResult(new Intent(this, BtGameActivity.class),
+                RC_GAME_BT);
     }
 }

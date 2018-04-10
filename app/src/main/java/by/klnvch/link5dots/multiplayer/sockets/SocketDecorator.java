@@ -22,36 +22,33 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.multiplayer.online;
+package by.klnvch.link5dots.multiplayer.sockets;
 
-import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.annotation.WorkerThread;
 
-import by.klnvch.link5dots.R;
-import by.klnvch.link5dots.multiplayer.common.AbstractGameActivity;
-import by.klnvch.link5dots.multiplayer.services.GameServiceOnline;
-import by.klnvch.link5dots.utils.AvailabilityChecker;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
-public class OnlineGameActivity extends AbstractGameActivity {
+public abstract class SocketDecorator<T> {
+    final T mSocket;
+
+    SocketDecorator(@NonNull T socket) {
+        mSocket = socket;
+    }
 
     @NonNull
-    @Override
-    protected Intent getServiceIntent() {
-        return new Intent(this, GameServiceOnline.class);
-    }
+    public abstract InputStream getInputStream() throws IOException;
 
-    @Override
-    protected boolean isValid() {
-        return AvailabilityChecker.isGPSValid(this);
-    }
+    @NonNull
+    public abstract OutputStream getOutputStream() throws IOException;
 
-    @Override
-    protected int getDefaultTitle() {
-        return R.string.menu_online_game;
-    }
+    public abstract void close() throws IOException;
 
-    @Override
-    public void newGame() {
-        getSupportFragmentManager().popBackStackImmediate();
+    public abstract static class Builder {
+        @WorkerThread
+        @NonNull
+        public abstract SocketDecorator build() throws IOException;
     }
 }

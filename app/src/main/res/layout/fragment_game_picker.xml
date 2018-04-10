@@ -58,7 +58,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
-        android:maxLines="1"
+        android:maxLines="2"
         android:text="@string/apn_not_set"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/textStatusLabel"
@@ -84,7 +84,7 @@
         android:background="@color/foreground_color"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textStatusLabel" />
+        app:layout_constraintTop_toBottomOf="@+id/textStatusValue" />
 
     <ToggleButton
         android:id="@+id/buttonScan"

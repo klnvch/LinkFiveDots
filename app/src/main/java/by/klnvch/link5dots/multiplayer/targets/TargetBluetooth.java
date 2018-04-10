@@ -22,36 +22,39 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.multiplayer.online;
+package by.klnvch.link5dots.multiplayer.targets;
 
-import android.content.Intent;
+import android.bluetooth.BluetoothDevice;
 import android.support.annotation.NonNull;
 
-import by.klnvch.link5dots.R;
-import by.klnvch.link5dots.multiplayer.common.AbstractGameActivity;
-import by.klnvch.link5dots.multiplayer.services.GameServiceOnline;
-import by.klnvch.link5dots.utils.AvailabilityChecker;
+public class TargetBluetooth extends Target<BluetoothDevice> {
+    public TargetBluetooth(@NonNull BluetoothDevice target) {
+        super(target);
+    }
 
-public class OnlineGameActivity extends AbstractGameActivity {
+    @Override
+    public String toString() {
+        final BluetoothDevice device = getTarget();
+        final String name = device.getName();
+        final String address = device.getAddress();
+        return name + '\n' + address;
+    }
 
     @NonNull
     @Override
-    protected Intent getServiceIntent() {
-        return new Intent(this, GameServiceOnline.class);
+    public String getShortName() {
+        return getTarget().getName();
     }
 
     @Override
-    protected boolean isValid() {
-        return AvailabilityChecker.isGPSValid(this);
-    }
+    public boolean equals(Object obj) {
+        if (obj instanceof TargetBluetooth) {
+            final TargetBluetooth targetBluetooth = (TargetBluetooth) obj;
+            final BluetoothDevice bluetoothDevice = targetBluetooth.getTarget();
 
-    @Override
-    protected int getDefaultTitle() {
-        return R.string.menu_online_game;
-    }
-
-    @Override
-    public void newGame() {
-        getSupportFragmentManager().popBackStackImmediate();
+            return bluetoothDevice.getName().equals(getTarget().getName())
+                    && bluetoothDevice.getAddress().equals(getTarget().getAddress());
+        }
+        return false;
     }
 }

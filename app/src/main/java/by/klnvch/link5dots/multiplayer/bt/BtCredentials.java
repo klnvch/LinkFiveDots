@@ -22,36 +22,15 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.multiplayer.online;
+package by.klnvch.link5dots.multiplayer.bt;
 
-import android.content.Intent;
-import android.support.annotation.NonNull;
+import java.util.UUID;
 
-import by.klnvch.link5dots.R;
-import by.klnvch.link5dots.multiplayer.common.AbstractGameActivity;
-import by.klnvch.link5dots.multiplayer.services.GameServiceOnline;
-import by.klnvch.link5dots.utils.AvailabilityChecker;
-
-public class OnlineGameActivity extends AbstractGameActivity {
-
-    @NonNull
-    @Override
-    protected Intent getServiceIntent() {
-        return new Intent(this, GameServiceOnline.class);
-    }
-
-    @Override
-    protected boolean isValid() {
-        return AvailabilityChecker.isGPSValid(this);
-    }
-
-    @Override
-    protected int getDefaultTitle() {
-        return R.string.menu_online_game;
-    }
-
-    @Override
-    public void newGame() {
-        getSupportFragmentManager().popBackStackImmediate();
-    }
+public class BtCredentials {
+    public static final String NAME_SECURE = "BluetoothLinkFiveDotsSecure";
+    public static final UUID UUID_SECURE = UUID.fromString("fa87c0d0-afac-11de-8a39-0800200c9a66");
+    public static final String FAKE_ADDRESS = "02:00:00:00:00:00";
+    static final int DISCOVERABLE_DURATION_SECONDS = 120;
+    public static final int DISCOVERABLE_DURATION_MILLISECONDS
+            = DISCOVERABLE_DURATION_SECONDS * 1000;
 }
