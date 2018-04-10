@@ -22,36 +22,42 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.multiplayer.online;
+package by.klnvch.link5dots.multiplayer.sockets;
 
-import android.content.Intent;
+import android.support.annotation.MainThread;
 import android.support.annotation.NonNull;
 
-import by.klnvch.link5dots.R;
-import by.klnvch.link5dots.multiplayer.common.AbstractGameActivity;
-import by.klnvch.link5dots.multiplayer.services.GameServiceOnline;
-import by.klnvch.link5dots.utils.AvailabilityChecker;
+import java.io.IOException;
+import java.net.ServerSocket;
 
-public class OnlineGameActivity extends AbstractGameActivity {
+public class ServerSocketDecoratorNsd extends ServerSocketDecorator<ServerSocket> {
+
+    @MainThread
+    public ServerSocketDecoratorNsd() throws IOException {
+        super(create());
+    }
 
     @NonNull
-    @Override
-    protected Intent getServiceIntent() {
-        return new Intent(this, GameServiceOnline.class);
+    private static ServerSocket create() throws IOException {
+        return new ServerSocket(0);
     }
 
     @Override
-    protected boolean isValid() {
-        return AvailabilityChecker.isGPSValid(this);
+    public SocketDecorator accept() throws IOException {
+        return new SocketDecoratorNsd(mSocket.accept());
     }
 
     @Override
-    protected int getDefaultTitle() {
-        return R.string.menu_online_game;
+    public void close() throws IOException {
+        mSocket.close();
+    }
+
+    public int getLocalPort() {
+        return mSocket.getLocalPort();
     }
 
     @Override
-    public void newGame() {
-        getSupportFragmentManager().popBackStackImmediate();
+    public String toString() {
+        return mSocket.toString();
     }
 }

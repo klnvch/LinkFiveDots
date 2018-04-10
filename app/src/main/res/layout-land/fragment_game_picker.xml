@@ -56,7 +56,7 @@
         android:id="@+id/textStatusValue"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:maxLines="1"
+        android:maxLines="2"
         android:text="@string/apn_not_set"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textStatusLabel" />

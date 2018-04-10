@@ -22,36 +22,32 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.multiplayer.online;
+package by.klnvch.link5dots.multiplayer.online.tasks;
 
-import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
-import by.klnvch.link5dots.R;
-import by.klnvch.link5dots.multiplayer.common.AbstractGameActivity;
-import by.klnvch.link5dots.multiplayer.services.GameServiceOnline;
-import by.klnvch.link5dots.utils.AvailabilityChecker;
+import com.google.firebase.database.DatabaseReference;
 
-public class OnlineGameActivity extends AbstractGameActivity {
+import by.klnvch.link5dots.models.Room;
+import by.klnvch.link5dots.multiplayer.common.interfaces.OnTargetDeletedListener;
 
-    @NonNull
-    @Override
-    protected Intent getServiceIntent() {
-        return new Intent(this, GameServiceOnline.class);
-    }
+import static com.google.common.base.Preconditions.checkNotNull;
 
-    @Override
-    protected boolean isValid() {
-        return AvailabilityChecker.isGPSValid(this);
-    }
+public class DeleteRoomTask {
+    public static void deleteRoom(@NonNull DatabaseReference database,
+                                  @Nullable OnTargetDeletedListener listener,
+                                  @NonNull Room room) {
+        checkNotNull(database);
+        checkNotNull(room);
 
-    @Override
-    protected int getDefaultTitle() {
-        return R.string.menu_online_game;
-    }
-
-    @Override
-    public void newGame() {
-        getSupportFragmentManager().popBackStackImmediate();
+        database
+                .child(Room.CHILD_ROOM)
+                .child(room.getKey())
+                .child(Room.CHILD_STATE)
+                .setValue(Room.STATE_DELETED)
+                .addOnCompleteListener(task -> {
+                    if (listener != null) listener.onTargetDeleted(task.getException());
+                });
     }
 }

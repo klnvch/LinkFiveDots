@@ -22,36 +22,37 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.multiplayer.online;
+package by.klnvch.link5dots.multiplayer.adapters;
 
-import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.TextView;
 
 import by.klnvch.link5dots.R;
-import by.klnvch.link5dots.multiplayer.common.AbstractGameActivity;
-import by.klnvch.link5dots.multiplayer.services.GameServiceOnline;
-import by.klnvch.link5dots.utils.AvailabilityChecker;
+import by.klnvch.link5dots.multiplayer.targets.Target;
 
-public class OnlineGameActivity extends AbstractGameActivity {
+public class TargetHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    private final TextView mTextView;
+    private final TargetAdapterInterface mAdapter;
+    private Target mDestination;
 
-    @NonNull
-    @Override
-    protected Intent getServiceIntent() {
-        return new Intent(this, GameServiceOnline.class);
+    TargetHolder(@NonNull View v, @NonNull TargetAdapterInterface adapter) {
+        super(v);
+        mAdapter = adapter;
+        mTextView = v.findViewById(R.id.text);
+        mTextView.setOnClickListener(this);
+    }
+
+    void setDestination(@NonNull Target destination) {
+        mDestination = destination;
+        mTextView.setText(destination.toString());
     }
 
     @Override
-    protected boolean isValid() {
-        return AvailabilityChecker.isGPSValid(this);
-    }
-
-    @Override
-    protected int getDefaultTitle() {
-        return R.string.menu_online_game;
-    }
-
-    @Override
-    public void newGame() {
-        getSupportFragmentManager().popBackStackImmediate();
+    public void onClick(View view) {
+        if (mAdapter != null && mDestination != null) {
+            mAdapter.getOnItemClickListener().onItemSelected(mDestination);
+        }
     }
 }

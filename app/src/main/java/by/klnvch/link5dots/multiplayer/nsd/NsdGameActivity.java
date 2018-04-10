@@ -22,36 +22,45 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.multiplayer.online;
+package by.klnvch.link5dots.multiplayer.nsd;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import by.klnvch.link5dots.R;
 import by.klnvch.link5dots.multiplayer.common.AbstractGameActivity;
-import by.klnvch.link5dots.multiplayer.services.GameServiceOnline;
-import by.klnvch.link5dots.utils.AvailabilityChecker;
+import by.klnvch.link5dots.multiplayer.services.GameServiceNsd;
 
-public class OnlineGameActivity extends AbstractGameActivity {
+public class NsdGameActivity extends AbstractGameActivity {
+
+    private static final String TAG = "NsdGameActivity";
 
     @NonNull
     @Override
     protected Intent getServiceIntent() {
-        return new Intent(this, GameServiceOnline.class);
+        return new Intent(this, GameServiceNsd.class);
     }
 
     @Override
     protected boolean isValid() {
-        return AvailabilityChecker.isGPSValid(this);
+        // NoClassDefFoundError (@by.klnvch.link5dots.fragment_game_picker.NsdService:<init>:294) {main}
+        try {
+            Class.forName("android.net.nsd.NsdManager");
+            return true;
+        } catch (ClassNotFoundException e) {
+            Log.e(TAG, e.getMessage());
+        }
+        return false;
     }
 
     @Override
     protected int getDefaultTitle() {
-        return R.string.menu_online_game;
+        return R.string.menu_local_network;
     }
 
     @Override
     public void newGame() {
-        getSupportFragmentManager().popBackStackImmediate();
+        mService.newGame();
     }
 }

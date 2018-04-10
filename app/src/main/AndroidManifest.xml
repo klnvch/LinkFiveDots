@@ -30,6 +30,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.VIBRATE" />
 
     <uses-permission
@@ -37,6 +38,7 @@
         tools:node="remove" />
 
     <application
+        android:name="android.support.multidex.MultiDexApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -50,9 +52,9 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-        <service android:name="by.klnvch.link5dots.multiplayer.bluetooth.BluetoothService" />
-        <service android:name="by.klnvch.link5dots.multiplayer.nsd.NsdService" />
-        <service android:name="by.klnvch.link5dots.multiplayer.online.OnlineService" />
+        <service android:name="by.klnvch.link5dots.multiplayer.services.GameServiceBluetooth" />
+        <service android:name="by.klnvch.link5dots.multiplayer.services.GameServiceNsd" />
+        <service android:name="by.klnvch.link5dots.multiplayer.services.GameServiceOnline" />
 
         <activity
             android:name="by.klnvch.link5dots.MainMenuActivity"
@@ -85,36 +87,20 @@
                 android:value="by.klnvch.link5dots.MultiPlayerMenuActivity" />
         </activity>
         <activity
-            android:name="by.klnvch.link5dots.multiplayer.bluetooth.DevicePickerActivity"
+            android:name="by.klnvch.link5dots.multiplayer.bt.BtGameActivity"
             android:configChanges="orientation|keyboardHidden|locale"
-            android:label="@string/device_picker">
+            android:label="@string/bluetooth_settings">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="by.klnvch.link5dots.MultiPlayerMenuActivity" />
         </activity>
         <activity
-            android:name="by.klnvch.link5dots.multiplayer.nsd.NsdPickerActivity"
+            android:name="by.klnvch.link5dots.multiplayer.nsd.NsdGameActivity"
             android:configChanges="orientation|keyboardHidden|locale"
             android:label="@string/menu_local_network">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="by.klnvch.link5dots.MultiPlayerMenuActivity" />
-        </activity>
-        <activity
-            android:name="by.klnvch.link5dots.multiplayer.bluetooth.BluetoothActivity"
-            android:configChanges="orientation|keyboardHidden|locale"
-            android:label="@string/app_name">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="by.klnvch.link5dots.multiplayer.bluetooth.DevicePickerActivity" />
-        </activity>
-        <activity
-            android:name="by.klnvch.link5dots.multiplayer.nsd.NsdActivity"
-            android:configChanges="orientation|keyboardHidden|locale"
-            android:label="@string/app_name">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="by.klnvch.link5dots.multiplayer.bluetooth.DevicePickerActivity" />
         </activity>
         <activity
             android:name="by.klnvch.link5dots.multiplayer.online.OnlineGameActivity"

@@ -1,0 +1,371 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2017 klnvch
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
+package by.klnvch.link5dots.multiplayer.common;
+
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
+import android.os.Bundle;
+import android.os.IBinder;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
+import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.MenuItem;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.List;
+
+import by.klnvch.link5dots.R;
+import by.klnvch.link5dots.models.Dot;
+import by.klnvch.link5dots.models.Room;
+import by.klnvch.link5dots.models.User;
+import by.klnvch.link5dots.multiplayer.adapters.TargetAdapterInterface;
+import by.klnvch.link5dots.multiplayer.services.GameService;
+import by.klnvch.link5dots.multiplayer.services.GameServiceInterface;
+import by.klnvch.link5dots.multiplayer.targets.Target;
+
+import static com.google.common.base.Preconditions.checkNotNull;
+
+public abstract class AbstractGameActivity extends AppCompatActivity implements
+        FragmentManager.OnBackStackChangedListener,
+        PickerFragment.OnPickerListener,
+        GameFragment.OnGameListener {
+
+    private static final String TAG = "NsdGameActivity";
+
+    protected GameServiceInterface mService = null; // can be null
+    private GameFragment mGameFragment = null;
+
+    private final ServiceConnection mConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName className, IBinder service) {
+            Log.d(TAG, "onServiceConnected");
+
+            final GameService.LocalBinder binder = (GameService.LocalBinder) service;
+            mService = binder.getService();
+
+            final GameState state = mService.getState();
+            onMessageEvent(state);
+
+            if (mGameFragment != null) {
+                final Room room = mService.getRoom();
+                checkNotNull(room);
+                onMessageEvent(room);
+            }
+
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName arg0) {
+            Log.d(TAG, "onServiceDisconnected");
+            mService = null;
+        }
+    };
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_online_game);
+        setTitle(getDefaultTitle());
+
+        if (isValid()) {
+            setResult(RESULT_OK);
+        } else {
+            setResult(RESULT_CANCELED);
+            finish();
+        }
+
+        if (savedInstanceState == null) {
+            addPickerFragment();
+        } else {
+            mGameFragment = getGameFragment();
+        }
+
+        getSupportFragmentManager().addOnBackStackChangedListener(this);
+
+        final Intent intent = getServiceIntent();
+        if (savedInstanceState == null) {
+            startService(intent);
+        }
+        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        Log.d(TAG, "onDestroy");
+
+        EventBus.getDefault().unregister(this);
+
+        try {
+            unbindService(mConnection);
+        } catch (Exception e) {
+            Log.e(TAG, "onDestroy", e);
+        }
+        if (isFinishing()) {
+            stopService(getServiceIntent());
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        final GameFragment gameFragment = getGameFragment();
+
+        if (gameFragment != null && gameFragment.isVisible()) {
+            checkNotNull(mService);
+            final Room room = mService.getRoom();
+            checkNotNull(room);
+            final User anotherUser = room.getAnotherUser(mService.getUser());
+
+            final String msg = getString(R.string.bt_is_disconnect_question, anotherUser.getName());
+            new AlertDialog.Builder(this)
+                    .setMessage(msg)
+                    .setPositiveButton(R.string.yes, (dialog, which) -> super.onBackPressed())
+                    .setNegativeButton(R.string.no, null)
+                    .show();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
+    public void onBackStackChanged() {
+        if (mService != null) {
+            final FragmentManager fragmentManager = getSupportFragmentManager();
+            final int fragmentsCount = fragmentManager.getBackStackEntryCount();
+            Log.d(TAG, "onBackStackChanged: " + fragmentsCount);
+            if (fragmentsCount == 0) {
+                // number of fragments in the stack decreased from 1 to 0,
+                // expected quiting from Game Fragment to Picker Fragment
+                mGameFragment = null;
+                mService.reset();
+                setTitle(getDefaultTitle());
+            }
+        }
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(@NonNull Room room) {
+        Log.d(TAG, "onMessageEvent: " + room);
+
+        checkNotNull(mService);
+        checkNotNull(mGameFragment);
+        checkNotNull(room);
+
+        mGameFragment.update(room);
+        //
+        // update title
+        //
+        final List<Dot> dots = room.getDots();
+        if (dots == null || dots.size() == 0) {
+            setTitle(R.string.bt_message_your_turn);
+        } else {
+            final int hostDotType =
+                    mService.getUser().equals(room.getUser1()) ? Dot.HOST : Dot.GUEST;
+            final Dot lastDot = dots.get(dots.size() - 1);
+
+            if (lastDot.getType() == hostDotType) {
+                setTitle(R.string.bt_message_opponents_turn);
+            } else {
+                setTitle(R.string.bt_message_your_turn);
+            }
+        }
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(@NonNull Exception event) {
+        Log.d(TAG, "onMessageEvent: " + event);
+        // java.io.IOException: read failed, socket might closed or timeout, read ret: -1
+        // java.net.ConnectException: failed to connect to /192.168.1.2 (port 47555): connect failed: EHOSTUNREACH (No route to host)
+        showMsg(R.string.bluetooth_connect_failed);
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(@NonNull GameState state) {
+        Log.d(TAG, "onMessageEvent: " + state);
+
+        final PickerFragment pickerFragment = getPickerFragment();
+        checkNotNull(pickerFragment);
+        checkNotNull(state);
+
+        pickerFragment.setState(state);
+
+        //
+        // update title
+        //
+        setTitle(getDefaultTitle());
+
+        switch (state.getTargetState()) {
+            case GameState.STATE_TARGET_CREATING:
+            case GameState.STATE_TARGET_DELETING:
+                setTitle(R.string.bluetooth_connecting);
+                break;
+            case GameState.STATE_TARGET_CREATED:
+                setTitle(R.string.master_clear_progress_text);
+                break;
+            case GameState.STATE_NONE:
+            case GameState.STATE_TARGET_DELETED:
+                break;
+        }
+
+        switch (state.getScanState()) {
+            case GameState.STATE_SCAN_ON:
+                setTitle(R.string.searching);
+                break;
+            case GameState.STATE_NONE:
+            case GameState.STATE_SCAN_DONE:
+            case GameState.STATE_SCAN_OFF:
+                break;
+        }
+
+        switch (state.getConnectState()) {
+            case GameState.STATE_CONNECTED:
+                setTitle(R.string.bt_message_your_turn);
+                if (mGameFragment == null) {
+                    mGameFragment = new GameFragment();
+                    getSupportFragmentManager()
+                            .beginTransaction()
+                            .add(R.id.fragmentContainer, mGameFragment, GameFragment.TAG)
+                            .addToBackStack(null)
+                            .commit();
+                }
+                break;
+            case GameState.STATE_CONNECTING:
+                setTitle(R.string.bluetooth_connecting);
+                break;
+            case GameState.STATE_DISCONNECTED:
+                setTitle(R.string.bluetooth_disconnected);
+                break;
+            case GameState.STATE_NONE:
+                break;
+        }
+    }
+
+    @Override
+    public void onCreateRoom() {
+        if (mService != null) mService.createTarget();
+    }
+
+    @Override
+    public void onDeleteRoom() {
+        if (mService != null) mService.deleteTarget();
+    }
+
+    @Override
+    public void onStartScan() {
+        if (mService != null) mService.startScan();
+    }
+
+    @Override
+    public void onStopScan() {
+        if (mService != null) mService.stopScan();
+    }
+
+    @Override
+    public void onConnect(@NonNull Target destination) {
+        if (mService != null) mService.connect(destination);
+    }
+
+    @NonNull
+    @Override
+    public String getTargetLongName() {
+        checkNotNull(mService.getTarget());
+        return mService.getTarget().toString();
+    }
+
+    @NonNull
+    @Override
+    public TargetAdapterInterface getAdapter() {
+        return mService.getAdapter();
+    }
+
+    @NonNull
+    @Override
+    public User getUser() {
+        return mService.getUser();
+    }
+
+    @Override
+    public void onMoveDone(@NonNull Dot dot) {
+        mService.addDot(dot);
+    }
+
+    @NonNull
+    protected abstract Intent getServiceIntent();
+
+    protected abstract boolean isValid();
+
+    @StringRes
+    protected abstract int getDefaultTitle();
+
+    protected void addPickerFragment() {
+        getSupportFragmentManager()
+                .beginTransaction()
+                .add(R.id.fragmentContainer, new PickerFragment(), PickerFragment.TAG)
+                .commit();
+    }
+
+    @Nullable
+    private PickerFragment getPickerFragment() {
+        return (PickerFragment) getSupportFragmentManager().findFragmentByTag(PickerFragment.TAG);
+    }
+
+    @Nullable
+    private GameFragment getGameFragment() {
+        return (GameFragment) getSupportFragmentManager().findFragmentByTag(GameFragment.TAG);
+    }
+
+    private void showMsg(@StringRes int msg) {
+        new AlertDialog.Builder(this)
+                .setMessage(msg)
+                .setPositiveButton(R.string.okay, null)
+                .show();
+    }
+}

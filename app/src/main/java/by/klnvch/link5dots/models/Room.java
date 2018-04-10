@@ -25,10 +25,14 @@
 package by.klnvch.link5dots.models;
 
 import android.support.annotation.NonNull;
+import android.util.Log;
+
+import com.google.gson.Gson;
 
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -45,8 +49,7 @@ public class Room {
     public static final int STATE_DELETED = 1;
     public static final int STATE_STARTED = 2;
 
-    private static final Format TIME_FORMAT =
-            new SimpleDateFormat("MMM-dd HH:mm", Locale.getDefault());
+    private static final String TIME_TEMPLATE = "MMM-dd HH:mm";
 
     private String key;
     private int state;
@@ -59,8 +62,21 @@ public class Room {
 
     }
 
+    @NonNull
+    public static Room newRoom(@NonNull User user) {
+        final Room room = new Room();
+        room.key = null;
+        room.timestamp = System.currentTimeMillis();
+        room.state = STATE_CREATED;
+        room.dots = new ArrayList<>();
+        room.user1 = user;
+
+        return room;
+    }
+
+    @NonNull
     public static Room newRoom(@NonNull String key, @NonNull User user) {
-        Room room = new Room();
+        final Room room = new Room();
         room.key = key;
         room.timestamp = System.currentTimeMillis();
         room.state = STATE_CREATED;
@@ -68,6 +84,33 @@ public class Room {
         room.user1 = user;
 
         return room;
+    }
+
+    @NonNull
+    public static Room fromJson(@NonNull String json) {
+        Log.d(json, "str: " + json);
+        return new Gson().fromJson(json, Room.class);
+    }
+
+    public void addDot(@NonNull Dot dot) {
+        if (dots != null) {
+            dots.add(dot);
+        } else {
+            dots = Collections.singletonList(dot);
+        }
+    }
+
+    public void newGame() {
+        if (dots != null) {
+            dots.clear();
+        }
+    }
+
+    public User getAnotherUser(@NonNull User user) {
+        if (user1.equals(user))
+            return user2;
+        else
+            return user1;
     }
 
     public User getUser1() {
@@ -120,13 +163,22 @@ public class Room {
 
     @Override
     public String toString() {
-        String time = TIME_FORMAT.format(new Date(timestamp));
-        String username = user1.getName();
-        return time + ": " + username;
+        final Format timeFormat = new SimpleDateFormat("MMM-dd HH:mm", Locale.getDefault());
+        final String time = timeFormat.format(new Date(timestamp));
+        final String username = user1.getName();
+        return username + '\n' + time;
     }
 
     @Override
     public boolean equals(Object obj) {
-        return obj != null && obj instanceof Room && ((Room) obj).key.equals(this.key);
+        if (obj instanceof Room) {
+            return ((Room) obj).key.equals(this.key);
+        }
+        return false;
+    }
+
+    @NonNull
+    public String toJson() {
+        return new Gson().toJson(this);
     }
 }

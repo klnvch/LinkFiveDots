@@ -22,36 +22,33 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.multiplayer.online;
+package by.klnvch.link5dots.multiplayer.factories;
 
-import android.content.Intent;
+import android.content.Context;
 import android.support.annotation.NonNull;
 
-import by.klnvch.link5dots.R;
-import by.klnvch.link5dots.multiplayer.common.AbstractGameActivity;
-import by.klnvch.link5dots.multiplayer.services.GameServiceOnline;
-import by.klnvch.link5dots.utils.AvailabilityChecker;
+import by.klnvch.link5dots.multiplayer.adapters.PickerAdapterOnline;
+import by.klnvch.link5dots.multiplayer.adapters.TargetAdapterInterface;
+import by.klnvch.link5dots.multiplayer.sockets.ServerSocketDecorator;
+import by.klnvch.link5dots.multiplayer.sockets.SocketDecorator;
+import by.klnvch.link5dots.multiplayer.targets.Target;
 
-public class OnlineGameActivity extends AbstractGameActivity {
+public class FactoryOnline implements FactoryInterface {
+    @NonNull
+    @Override
+    public TargetAdapterInterface getAdapter(@NonNull Context context) {
+        return PickerAdapterOnline.createAdapter();
+    }
 
     @NonNull
     @Override
-    protected Intent getServiceIntent() {
-        return new Intent(this, GameServiceOnline.class);
+    public SocketDecorator.Builder getSocketBuilder(@NonNull Target target) {
+        throw new IllegalStateException();
     }
 
+    @NonNull
     @Override
-    protected boolean isValid() {
-        return AvailabilityChecker.isGPSValid(this);
-    }
-
-    @Override
-    protected int getDefaultTitle() {
-        return R.string.menu_online_game;
-    }
-
-    @Override
-    public void newGame() {
-        getSupportFragmentManager().popBackStackImmediate();
+    public ServerSocketDecorator getServerSocket() {
+        throw new IllegalStateException();
     }
 }
