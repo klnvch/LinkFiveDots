@@ -72,6 +72,7 @@ public class GameState {
     private static final List<Transition> mAllowedTransitions = Arrays.asList(
             new Transition(UNDEFINED, IDLE),
 
+            new Transition(IDLE, IDLE),
             new Transition(IDLE, TARGET_CREATING),
             new Transition(IDLE, SCAN_ON),
 
