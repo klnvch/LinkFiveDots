@@ -93,7 +93,7 @@ public class PickerFragment extends Fragment implements View.OnClickListener,
 
         mProgressScan = view.findViewById(R.id.progressScan);
 
-        mRecyclerView = view.findViewById(R.id.listDestinations);
+        mRecyclerView = view.findViewById(R.id.listTargets);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
@@ -150,7 +150,7 @@ public class PickerFragment extends Fragment implements View.OnClickListener,
         if (isEmpty) {
             mScanWarning.setVisibility(View.VISIBLE);
         } else {
-            mScanWarning.setVisibility(View.GONE);
+            mScanWarning.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -220,7 +220,9 @@ public class PickerFragment extends Fragment implements View.OnClickListener,
                 mProgressScan.setVisibility(View.INVISIBLE);
                 adapter.setOnItemClickListener(null);
                 adapter.setOnEmptyStateListener(null);
+                mRecyclerView.setVisibility(View.INVISIBLE);
                 mRecyclerView.setAdapter(null);
+                mScanWarning.setVisibility(View.INVISIBLE);
                 break;
             case GameState.STATE_SCAN_OFF:
                 mButtonScan.setEnabled(true);
@@ -228,7 +230,9 @@ public class PickerFragment extends Fragment implements View.OnClickListener,
                 mProgressScan.setVisibility(View.INVISIBLE);
                 adapter.setOnItemClickListener(null);
                 adapter.setOnEmptyStateListener(null);
+                mRecyclerView.setVisibility(View.INVISIBLE);
                 mRecyclerView.setAdapter(null);
+                mScanWarning.setVisibility(View.INVISIBLE);
                 break;
             case GameState.STATE_SCAN_ON:
                 mButtonScan.setEnabled(true);
@@ -237,6 +241,7 @@ public class PickerFragment extends Fragment implements View.OnClickListener,
                 adapter.setOnItemClickListener(this);
                 adapter.setOnEmptyStateListener(this);
                 onEmptyState(adapter.isEmpty());
+                mRecyclerView.setVisibility(View.VISIBLE);
                 mRecyclerView.setAdapter(adapter.getAdapter());
                 break;
             case GameState.STATE_SCAN_DONE:
@@ -246,6 +251,7 @@ public class PickerFragment extends Fragment implements View.OnClickListener,
                 adapter.setOnItemClickListener(this);
                 adapter.setOnEmptyStateListener(null);
                 onEmptyState(adapter.isEmpty());
+                mRecyclerView.setVisibility(View.VISIBLE);
                 mRecyclerView.setAdapter(adapter.getAdapter());
                 break;
         }
