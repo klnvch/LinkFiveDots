@@ -79,17 +79,19 @@ public class MultiPlayerMenuActivity extends AppCompatActivity implements View.O
                 break;
             case R.id.multi_player_bluetooth:
                 // Get local Bluetooth adapter
-                BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+                final BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
                 // If the adapter is null, then Bluetooth is not supported
-                if (mBluetoothAdapter != null) {
-                    mIsBluetoothEnabled = mBluetoothAdapter.isEnabled();
+                if (adapter != null) {
+                    mIsBluetoothEnabled = adapter.isEnabled();
                     if (mIsBluetoothEnabled) {
                         startBluetoothActivity();
                     } else {
                         // enable bluetooth
-                        Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                        final Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
                         startActivityForResult(intent, RC_ENABLE_BLUETOOTH);
                     }
+                } else {
+                    showErrorDialog();
                 }
                 break;
             case R.id.multi_player_lan:
@@ -115,16 +117,13 @@ public class MultiPlayerMenuActivity extends AppCompatActivity implements View.O
             case RC_GAME_BT:
                 // bluetooth game finished, make an order
                 if (!mIsBluetoothEnabled) {
-                    BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-                    mBluetoothAdapter.disable();
+                    final BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
+                    adapter.disable();
                 }
             case RC_GAME_NSD:
             case RC_GAME_INTERNET:
                 if (resultCode != RESULT_OK) {
-                    new AlertDialog.Builder(this)
-                            .setMessage(R.string.disabled_low_ram_device)
-                            .setPositiveButton(R.string.okay, null)
-                            .show();
+                    showErrorDialog();
                 }
                 break;
             default:
@@ -133,7 +132,14 @@ public class MultiPlayerMenuActivity extends AppCompatActivity implements View.O
     }
 
     private void startBluetoothActivity() {
-        startActivityForResult(new Intent(this, BtGameActivity.class),
-                RC_GAME_BT);
+        startActivityForResult(new Intent(this, BtGameActivity.class), RC_GAME_BT);
     }
+
+    private void showErrorDialog() {
+        new AlertDialog.Builder(this)
+                .setMessage(R.string.disabled_low_ram_device)
+                .setPositiveButton(R.string.okay, null)
+                .show();
+    }
+
 }
