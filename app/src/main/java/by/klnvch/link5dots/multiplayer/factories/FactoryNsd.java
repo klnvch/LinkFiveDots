@@ -28,8 +28,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 
-import com.crashlytics.android.Crashlytics;
-
 import java.io.IOException;
 
 import by.klnvch.link5dots.R;
@@ -43,12 +41,13 @@ import by.klnvch.link5dots.multiplayer.sockets.SocketDecorator;
 import by.klnvch.link5dots.multiplayer.sockets.SocketDecoratorNsd;
 import by.klnvch.link5dots.multiplayer.targets.Target;
 import by.klnvch.link5dots.multiplayer.targets.TargetNsd;
+import by.klnvch.link5dots.multiplayer.utils.nsd.NsdHelper;
 
 public class FactoryNsd implements FactoryServiceInterface, FactoryActivityInterface {
     @NonNull
     @Override
     public TargetAdapterInterface getAdapter(@NonNull Context context) {
-        return new PickerAdapterNsd(context);
+        return new PickerAdapterNsd();
     }
 
     @NonNull
@@ -72,13 +71,7 @@ public class FactoryNsd implements FactoryServiceInterface, FactoryActivityInter
 
     @Override
     public boolean isValid(@NonNull Context context) {
-        try {
-            Class.forName("android.net.nsd.NsdManager");
-            return true;
-        } catch (ClassNotFoundException e) {
-            Crashlytics.logException(e);
-        }
-        return false;
+        return NsdHelper.isSupported();
     }
 
     @Override
