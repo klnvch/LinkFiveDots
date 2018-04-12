@@ -32,7 +32,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import by.klnvch.link5dots.multiplayer.utils.bluetooth.BtCredentials;
+import by.klnvch.link5dots.multiplayer.utils.bluetooth.BluetoothHelper;
 
 public class SocketDecoratorBluetooth extends SocketDecorator<BluetoothSocket> {
     SocketDecoratorBluetooth(@NonNull BluetoothSocket socket) {
@@ -67,8 +67,7 @@ public class SocketDecoratorBluetooth extends SocketDecorator<BluetoothSocket> {
         @NonNull
         @Override
         public SocketDecorator build() throws IOException {
-            final BluetoothSocket socket = mBluetoothDevice
-                    .createRfcommSocketToServiceRecord(BtCredentials.UUID_SECURE);
+            final BluetoothSocket socket = BluetoothHelper.createSocket(mBluetoothDevice);
             socket.connect();
             return new SocketDecoratorBluetooth(socket);
         }

@@ -25,10 +25,9 @@
 package by.klnvch.link5dots.multiplayer.targets;
 
 import android.annotation.SuppressLint;
-import android.bluetooth.BluetoothAdapter;
 import android.support.annotation.NonNull;
 
-import by.klnvch.link5dots.multiplayer.utils.bluetooth.BtCredentials;
+import by.klnvch.link5dots.multiplayer.utils.bluetooth.BluetoothHelper;
 
 public class TargetBluetoothLocal extends Target<String> {
     public TargetBluetoothLocal(@NonNull String time) {
@@ -38,10 +37,9 @@ public class TargetBluetoothLocal extends Target<String> {
     @SuppressLint("HardwareIds")
     @NonNull
     private static String fill(@NonNull String time) {
-        BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        final String name = bluetoothAdapter.getName();
-        final String address = bluetoothAdapter.getAddress();
-        if (BtCredentials.FAKE_ADDRESS.equals(address)) {
+        final String name = BluetoothHelper.getName();
+        final String address = BluetoothHelper.getAddress();
+        if (address == null) {
             return name + '\t' + '(' + time + ')';
         } else {
             return name + '\t' + '(' + time + ')' + '\n' + address;

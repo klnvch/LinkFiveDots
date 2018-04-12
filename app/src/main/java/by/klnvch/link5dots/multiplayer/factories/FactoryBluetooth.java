@@ -24,7 +24,6 @@
 
 package by.klnvch.link5dots.multiplayer.factories;
 
-import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -43,6 +42,7 @@ import by.klnvch.link5dots.multiplayer.sockets.SocketDecorator;
 import by.klnvch.link5dots.multiplayer.sockets.SocketDecoratorBluetooth;
 import by.klnvch.link5dots.multiplayer.targets.Target;
 import by.klnvch.link5dots.multiplayer.targets.TargetBluetooth;
+import by.klnvch.link5dots.multiplayer.utils.bluetooth.BluetoothHelper;
 
 public class FactoryBluetooth implements FactoryServiceInterface, FactoryActivityInterface {
     @NonNull
@@ -72,7 +72,7 @@ public class FactoryBluetooth implements FactoryServiceInterface, FactoryActivit
 
     @Override
     public boolean isValid(@NonNull Context context) {
-        return BluetoothAdapter.getDefaultAdapter() != null;
+        return BluetoothHelper.isSupported();
     }
 
     @Override

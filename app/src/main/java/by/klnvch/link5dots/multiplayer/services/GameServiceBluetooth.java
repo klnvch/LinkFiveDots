@@ -24,7 +24,6 @@
 
 package by.klnvch.link5dots.multiplayer.services;
 
-import android.bluetooth.BluetoothAdapter;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -32,6 +31,7 @@ import by.klnvch.link5dots.models.Room;
 import by.klnvch.link5dots.multiplayer.sockets.ServerSocketDecorator;
 import by.klnvch.link5dots.multiplayer.targets.Target;
 import by.klnvch.link5dots.multiplayer.utils.GameState;
+import by.klnvch.link5dots.multiplayer.utils.bluetooth.BluetoothHelper;
 import by.klnvch.link5dots.multiplayer.utils.bluetooth.VisibilityTimer;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -69,10 +69,7 @@ public class GameServiceBluetooth extends GameServiceSockets {
          * a system service, so an application should always call cancelDiscovery() even if it did
          * not directly request a discovery, just to be sure.
          */
-
-        final BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        checkNotNull(bluetoothAdapter);
-        bluetoothAdapter.cancelDiscovery();
+        BluetoothHelper.cancelDiscovery();
 
         super.connect(target);
     }
@@ -83,9 +80,7 @@ public class GameServiceBluetooth extends GameServiceSockets {
 
         // resume scanning
         if (mScanner.isScanning()) {
-            final BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-            checkNotNull(bluetoothAdapter);
-            bluetoothAdapter.startDiscovery();
+            BluetoothHelper.startDiscovery();
         }
 
         super.onSocketFailed(exception);

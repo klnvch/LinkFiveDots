@@ -24,27 +24,18 @@
 
 package by.klnvch.link5dots.multiplayer.sockets;
 
-import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothServerSocket;
 import android.support.annotation.MainThread;
 
 import java.io.IOException;
-import java.util.UUID;
 
-import by.klnvch.link5dots.multiplayer.utils.bluetooth.BtCredentials;
+import by.klnvch.link5dots.multiplayer.utils.bluetooth.BluetoothHelper;
 
 public class ServerSocketDecoratorBluetooth extends ServerSocketDecorator<BluetoothServerSocket> {
 
     @MainThread
     public ServerSocketDecoratorBluetooth() throws IOException {
-        super(create());
-    }
-
-    private static BluetoothServerSocket create() throws IOException {
-        final BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
-        final String name = BtCredentials.NAME_SECURE;
-        final UUID uuid = BtCredentials.UUID_SECURE;
-        return adapter.listenUsingRfcommWithServiceRecord(name, uuid);
+        super(BluetoothHelper.createServerSocket());
     }
 
     @Override
