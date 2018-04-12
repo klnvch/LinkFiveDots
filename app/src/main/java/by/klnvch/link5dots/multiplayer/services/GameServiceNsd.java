@@ -25,13 +25,12 @@
 package by.klnvch.link5dots.multiplayer.services;
 
 import android.annotation.TargetApi;
-import android.content.Context;
-import android.net.nsd.NsdManager;
 import android.os.Build;
 import android.support.annotation.NonNull;
 
 import by.klnvch.link5dots.multiplayer.sockets.ServerSocketDecorator;
 import by.klnvch.link5dots.multiplayer.sockets.ServerSocketDecoratorNsd;
+import by.klnvch.link5dots.multiplayer.utils.nsd.NsdHelper;
 import by.klnvch.link5dots.multiplayer.utils.nsd.RegistrationTask;
 
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
@@ -41,17 +40,15 @@ public class GameServiceNsd extends GameServiceSockets {
 
     @Override
     public void onCreate() {
-        NsdManager mNsdManager = (NsdManager) getSystemService(Context.NSD_SERVICE);
-
         super.onCreate();
-
-        assert mNsdManager != null;
-        mRegistrationTask = new RegistrationTask(mNsdManager);
+        NsdHelper.init(this);
+        mRegistrationTask = new RegistrationTask();
     }
 
     @Override
     public void onDestroy() {
         mRegistrationTask.unregisterService(null);
+        NsdHelper.destroy();
         super.onDestroy();
     }
 

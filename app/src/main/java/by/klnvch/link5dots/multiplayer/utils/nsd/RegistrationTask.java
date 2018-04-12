@@ -44,13 +44,8 @@ public class RegistrationTask implements NsdManager.RegistrationListener {
 
     private static final String TAG = "RegistrationTask";
 
-    private final NsdManager mNsdManager;
     private OnTargetCreatedListener mCreateListener;
     private OnTargetDeletedListener mDeleteListener;
-
-    public RegistrationTask(@NonNull NsdManager nsdManager) {
-        mNsdManager = nsdManager;
-    }
 
     public void registerService(int port,
                                 @NonNull OnTargetCreatedListener createdListener) {
@@ -59,24 +54,12 @@ public class RegistrationTask implements NsdManager.RegistrationListener {
 
         this.mCreateListener = createdListener;
 
-        final NsdServiceInfo serviceInfo = new NsdServiceInfo();
-        serviceInfo.setPort(port);
-        serviceInfo.setServiceName(NsdCredentials.SERVICE_NAME);
-        serviceInfo.setServiceType(NsdCredentials.SERVICE_TYPE);
-
-        mNsdManager.registerService(serviceInfo, NsdManager.PROTOCOL_DNS_SD, this);
+        NsdHelper.registerService(port, this);
     }
 
     public void unregisterService(@Nullable OnTargetDeletedListener deletedListener) {
         this.mDeleteListener = deletedListener;
-        try {
-            mNsdManager.unregisterService(this);
-        } catch (IllegalArgumentException e) {
-            if (mDeleteListener != null) {
-                mDeleteListener.onTargetDeleted(e);
-                mDeleteListener = null;
-            }
-        }
+        NsdHelper.unregisterService(this);
     }
 
     @Override
