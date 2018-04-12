@@ -78,6 +78,8 @@
     <string name="settings_dots">Dots</string>
     <string name="rate_this_app">Rate this app</string>
     <string name="btn_github" translatable="false">GitHub</string>
+    <string name="copy_text" translatable="false">Copy to clipboard</string>
+    <string name="toast_text_copied" translatable="false">Text copied</string>
 
     <!-- 18 Strings for Dialog yes button -->
     <string name="yes">"Yes"</string>

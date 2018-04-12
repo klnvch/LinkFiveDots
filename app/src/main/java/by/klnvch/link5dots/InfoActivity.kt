@@ -25,14 +25,19 @@
 package by.klnvch.link5dots
 
 import android.content.ActivityNotFoundException
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
 import android.view.View
-
+import android.widget.Toast
+import com.crashlytics.android.Crashlytics
 import kotlinx.android.synthetic.main.activity_info.*
+
 
 class InfoActivity : AppCompatActivity(), View.OnClickListener {
 
@@ -48,38 +53,57 @@ class InfoActivity : AppCompatActivity(), View.OnClickListener {
 
     override fun onClick(v: View) {
         when (v.id) {
-            R.id.buttonInfoCode -> startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(GITHUB_LINK)))
-            R.id.buttonInfoRate -> {
-                try {
-                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(ANDROID_APP_LINK)))
-                } catch (e: ActivityNotFoundException) {
-                    Log.e(TAG, e.message)
-                }
+            R.id.buttonInfoCode -> {
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(GITHUB_LINK))
+                launchIntent(intent, GITHUB_LINK)
             }
-            R.id.buttonInfoShare -> startActivity(Intent(Intent.ACTION_SEND)
-                    .putExtra(Intent.EXTRA_TEXT, WEB_PAGE_LINK)
-                    .setType("text/plain"))
+            R.id.buttonInfoRate -> {
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(ANDROID_APP_LINK))
+                launchIntent(intent, WEB_PAGE_LINK)
+            }
+            R.id.buttonInfoShare -> {
+                val intent = Intent(Intent.ACTION_SEND)
+                        .putExtra(Intent.EXTRA_TEXT, WEB_PAGE_LINK)
+                        .setType("text/plain")
+                launchIntent(intent, WEB_PAGE_LINK)
+            }
             R.id.buttonInfoFeedback -> {
-                val feedBackIntent = Intent(Intent.ACTION_SENDTO)
+                val intent = Intent.createChooser(Intent(Intent.ACTION_SENDTO)
                         .setType("message/rfc822")
-                        .setData(Uri.parse("mailto:link5dots@gmail.com"))
-                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                try {
-                    startActivity(Intent.createChooser(feedBackIntent,
-                            getString(R.string.device_feedback)))
-                } catch (e: ActivityNotFoundException) {
-                    Log.e(TAG, e.message)
-                }
-
+                        .setData(Uri.parse(URI_MAIL_DATA))
+                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK),
+                        getString(R.string.device_feedback))
+                launchIntent(intent, MAIL)
             }
         }
     }
 
-    companion object {
-        private const val TAG = "InfoActivity"
+    private fun launchIntent(intent: Intent, errorMsg: String) {
+        try {
+            startActivity(intent)
+        } catch (e: ActivityNotFoundException) {
+            Crashlytics.logException(e)
 
+            AlertDialog.Builder(this)
+                    .setMessage(errorMsg)
+                    .setPositiveButton(R.string.okay, null)
+                    .setNeutralButton(R.string.copy_text, { _, _ -> copyToClipboard(errorMsg) })
+                    .show()
+        }
+    }
+
+    private fun copyToClipboard(msg: String) {
+        val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        val clip = ClipData.newPlainText(msg, msg)
+        clipboard.primaryClip = clip
+        Toast.makeText(this, R.string.toast_text_copied, Toast.LENGTH_SHORT).show()
+    }
+
+    companion object {
         private const val WEB_PAGE_LINK = "https://play.google.com/store/apps/details?id=by.klnvch.link5dots"
         private const val ANDROID_APP_LINK = "market://details?id=by.klnvch.link5dots"
         private const val GITHUB_LINK = "https://github.com/klnvch/LinkFiveDots"
+        private const val MAIL = "link5dots@gmail.com"
+        private const val URI_MAIL_DATA = "mailto:$MAIL"
     }
 }
