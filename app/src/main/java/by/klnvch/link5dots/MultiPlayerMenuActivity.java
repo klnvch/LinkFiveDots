@@ -32,9 +32,9 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
-import by.klnvch.link5dots.multiplayer.bt.BtGameActivity;
-import by.klnvch.link5dots.multiplayer.nsd.NsdGameActivity;
-import by.klnvch.link5dots.multiplayer.online.OnlineGameActivity;
+import by.klnvch.link5dots.multiplayer.activities.GameActivityBluetooth;
+import by.klnvch.link5dots.multiplayer.activities.GameActivityNsd;
+import by.klnvch.link5dots.multiplayer.activities.GameActivityOnline;
 
 public class MultiPlayerMenuActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -95,11 +95,11 @@ public class MultiPlayerMenuActivity extends AppCompatActivity implements View.O
                 }
                 break;
             case R.id.multi_player_lan:
-                startActivityForResult(new Intent(this, NsdGameActivity.class),
+                startActivityForResult(new Intent(this, GameActivityNsd.class),
                         RC_GAME_NSD);
                 break;
             case R.id.multi_player_online:
-                startActivityForResult(new Intent(this, OnlineGameActivity.class),
+                startActivityForResult(new Intent(this, GameActivityOnline.class),
                         RC_GAME_INTERNET);
                 break;
         }
@@ -132,7 +132,7 @@ public class MultiPlayerMenuActivity extends AppCompatActivity implements View.O
     }
 
     private void startBluetoothActivity() {
-        startActivityForResult(new Intent(this, BtGameActivity.class), RC_GAME_BT);
+        startActivityForResult(new Intent(this, GameActivityBluetooth.class), RC_GAME_BT);
     }
 
     private void showErrorDialog() {

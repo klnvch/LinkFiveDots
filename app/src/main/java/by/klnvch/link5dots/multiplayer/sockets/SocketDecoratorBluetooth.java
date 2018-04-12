@@ -32,7 +32,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import by.klnvch.link5dots.multiplayer.bt.BtCredentials;
+import by.klnvch.link5dots.multiplayer.utils.bluetooth.BtCredentials;
 
 public class SocketDecoratorBluetooth extends SocketDecorator<BluetoothSocket> {
     SocketDecoratorBluetooth(@NonNull BluetoothSocket socket) {

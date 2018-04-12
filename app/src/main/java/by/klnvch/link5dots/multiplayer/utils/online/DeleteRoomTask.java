@@ -22,44 +22,32 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.multiplayer.bt;
+package by.klnvch.link5dots.multiplayer.utils.online;
 
-import android.bluetooth.BluetoothAdapter;
-import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
-import by.klnvch.link5dots.R;
-import by.klnvch.link5dots.multiplayer.common.AbstractGameActivity;
-import by.klnvch.link5dots.multiplayer.common.PickerFragment;
-import by.klnvch.link5dots.multiplayer.services.GameServiceBluetooth;
+import com.google.firebase.database.DatabaseReference;
 
-public class BtGameActivity extends AbstractGameActivity {
-    @NonNull
-    @Override
-    protected Intent getServiceIntent() {
-        return new Intent(this, GameServiceBluetooth.class);
-    }
+import by.klnvch.link5dots.models.Room;
+import by.klnvch.link5dots.multiplayer.utils.OnTargetDeletedListener;
 
-    @Override
-    protected boolean isValid() {
-        return BluetoothAdapter.getDefaultAdapter() != null;
-    }
+import static com.google.common.base.Preconditions.checkNotNull;
 
-    @Override
-    protected int getDefaultTitle() {
-        return R.string.bluetooth_settings;
-    }
+public class DeleteRoomTask {
+    public static void deleteRoom(@NonNull DatabaseReference database,
+                                  @Nullable OnTargetDeletedListener listener,
+                                  @NonNull Room room) {
+        checkNotNull(database);
+        checkNotNull(room);
 
-    @Override
-    public void newGame() {
-        mService.newGame();
-    }
-
-    @Override
-    protected void addPickerFragment() {
-        getSupportFragmentManager()
-                .beginTransaction()
-                .add(R.id.fragmentContainer, new BtPickerFragment(), PickerFragment.TAG)
-                .commit();
+        database
+                .child(Room.CHILD_ROOM)
+                .child(room.getKey())
+                .child(Room.CHILD_STATE)
+                .setValue(Room.STATE_DELETED)
+                .addOnCompleteListener(task -> {
+                    if (listener != null) listener.onTargetDeleted(task.getException());
+                });
     }
 }

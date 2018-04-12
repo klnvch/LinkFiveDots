@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.multiplayer.online.tasks;
+package by.klnvch.link5dots.multiplayer.utils.online;
 
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -35,8 +35,8 @@ import com.google.firebase.database.ValueEventListener;
 import java.lang.ref.WeakReference;
 
 import by.klnvch.link5dots.models.Room;
-import by.klnvch.link5dots.multiplayer.common.interfaces.OnRoomUpdatedListener;
 import by.klnvch.link5dots.multiplayer.services.GameServiceOnline;
+import by.klnvch.link5dots.multiplayer.utils.OnRoomUpdatedListener;
 
 public class RoomEventListener implements ValueEventListener {
 

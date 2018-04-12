@@ -36,9 +36,9 @@ import java.io.IOException;
 import java.lang.ref.WeakReference;
 
 import by.klnvch.link5dots.models.Room;
-import by.klnvch.link5dots.multiplayer.common.interfaces.OnRoomConnectedListener;
-import by.klnvch.link5dots.multiplayer.common.interfaces.OnRoomUpdatedListener;
 import by.klnvch.link5dots.multiplayer.sockets.SocketDecorator;
+import by.klnvch.link5dots.multiplayer.utils.OnRoomConnectedListener;
+import by.klnvch.link5dots.multiplayer.utils.OnRoomUpdatedListener;
 
 /**
  * This thread runs during a connection with a remote device.

@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.multiplayer.bt.tasks;
+package by.klnvch.link5dots.multiplayer.utils.bluetooth;
 
 import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
@@ -30,10 +30,9 @@ import android.support.annotation.Nullable;
 
 import java.util.Locale;
 
-import by.klnvch.link5dots.multiplayer.bt.BtCredentials;
-import by.klnvch.link5dots.multiplayer.common.interfaces.OnTargetCreatedListener;
-import by.klnvch.link5dots.multiplayer.common.interfaces.OnTargetDeletedListener;
 import by.klnvch.link5dots.multiplayer.targets.TargetBluetoothLocal;
+import by.klnvch.link5dots.multiplayer.utils.OnTargetCreatedListener;
+import by.klnvch.link5dots.multiplayer.utils.OnTargetDeletedListener;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 

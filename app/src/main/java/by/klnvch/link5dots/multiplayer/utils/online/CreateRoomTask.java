@@ -22,15 +22,15 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.multiplayer.online.tasks;
+package by.klnvch.link5dots.multiplayer.utils.online;
 
 import android.support.annotation.NonNull;
 
 import com.google.firebase.database.DatabaseReference;
 
 import by.klnvch.link5dots.models.Room;
-import by.klnvch.link5dots.multiplayer.common.interfaces.OnTargetCreatedListener;
 import by.klnvch.link5dots.multiplayer.targets.TargetOnline;
+import by.klnvch.link5dots.multiplayer.utils.OnTargetCreatedListener;
 
 public class CreateRoomTask {
     public static void createRoom(@NonNull DatabaseReference database,

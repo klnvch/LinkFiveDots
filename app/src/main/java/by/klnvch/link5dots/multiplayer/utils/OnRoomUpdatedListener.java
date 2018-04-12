@@ -22,9 +22,12 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.multiplayer.nsd;
+package by.klnvch.link5dots.multiplayer.utils;
 
-public class NsdCredentials {
-    public static final String SERVICE_NAME = "Link Five Dots";
-    public static final String SERVICE_TYPE = "_http._tcp.";
+import android.support.annotation.Nullable;
+
+import by.klnvch.link5dots.models.Room;
+
+public interface OnRoomUpdatedListener {
+    void onRoomUpdated(@Nullable Room room, @Nullable Exception exception);
 }

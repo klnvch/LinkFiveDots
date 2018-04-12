@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.multiplayer.common;
+package by.klnvch.link5dots.multiplayer.activities;
 
 import android.content.ComponentName;
 import android.content.Context;
@@ -50,21 +50,25 @@ import by.klnvch.link5dots.models.Dot;
 import by.klnvch.link5dots.models.Room;
 import by.klnvch.link5dots.models.User;
 import by.klnvch.link5dots.multiplayer.adapters.TargetAdapterInterface;
+import by.klnvch.link5dots.multiplayer.factories.FactoryActivityInterface;
+import by.klnvch.link5dots.multiplayer.factories.FactoryProvider;
 import by.klnvch.link5dots.multiplayer.services.GameService;
 import by.klnvch.link5dots.multiplayer.services.GameServiceInterface;
 import by.klnvch.link5dots.multiplayer.targets.Target;
+import by.klnvch.link5dots.multiplayer.utils.GameState;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-public abstract class AbstractGameActivity extends AppCompatActivity implements
+public abstract class GameActivity extends AppCompatActivity implements
         FragmentManager.OnBackStackChangedListener,
         PickerFragment.OnPickerListener,
         GameFragment.OnGameListener {
 
     private static final String TAG = "NsdGameActivity";
 
-    protected GameServiceInterface mService = null; // can be null
+    GameServiceInterface mService = null; // can be null
     private GameFragment mGameFragment = null;
+    private FactoryActivityInterface mFactory;
 
     private final ServiceConnection mConnection = new ServiceConnection() {
         @Override
@@ -96,9 +100,12 @@ public abstract class AbstractGameActivity extends AppCompatActivity implements
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_online_game);
-        setTitle(getDefaultTitle());
 
-        if (isValid()) {
+        mFactory = FactoryProvider.getActivityFactory(this.getClass());
+
+        setTitle(mFactory.getDefaultTitle());
+
+        if (mFactory.isValid(this)) {
             setResult(RESULT_OK);
         } else {
             setResult(RESULT_CANCELED);
@@ -113,7 +120,7 @@ public abstract class AbstractGameActivity extends AppCompatActivity implements
 
         getSupportFragmentManager().addOnBackStackChangedListener(this);
 
-        final Intent intent = getServiceIntent();
+        final Intent intent = mFactory.getServiceIntent(this);
         if (savedInstanceState == null) {
             startService(intent);
         }
@@ -136,7 +143,7 @@ public abstract class AbstractGameActivity extends AppCompatActivity implements
             Log.e(TAG, "onDestroy", e);
         }
         if (isFinishing()) {
-            stopService(getServiceIntent());
+            stopService(mFactory.getServiceIntent(this));
         }
     }
 
@@ -183,7 +190,7 @@ public abstract class AbstractGameActivity extends AppCompatActivity implements
                 // expected quiting from Game Fragment to Picker Fragment
                 mGameFragment = null;
                 mService.reset();
-                setTitle(getDefaultTitle());
+                setTitle(mFactory.getDefaultTitle());
             }
         }
     }
@@ -240,7 +247,7 @@ public abstract class AbstractGameActivity extends AppCompatActivity implements
         //
         // update title
         //
-        setTitle(getDefaultTitle());
+        setTitle(mFactory.getDefaultTitle());
 
         switch (state.getTargetState()) {
             case GameState.STATE_TARGET_CREATING:
@@ -337,18 +344,10 @@ public abstract class AbstractGameActivity extends AppCompatActivity implements
         mService.addDot(dot);
     }
 
-    @NonNull
-    protected abstract Intent getServiceIntent();
-
-    protected abstract boolean isValid();
-
-    @StringRes
-    protected abstract int getDefaultTitle();
-
-    protected void addPickerFragment() {
+    private void addPickerFragment() {
         getSupportFragmentManager()
                 .beginTransaction()
-                .add(R.id.fragmentContainer, new PickerFragment(), PickerFragment.TAG)
+                .add(R.id.fragmentContainer, mFactory.getPickerFragment(), PickerFragment.TAG)
                 .commit();
     }
 

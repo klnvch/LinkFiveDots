@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.multiplayer.common;
+package by.klnvch.link5dots.multiplayer.activities;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -44,6 +44,7 @@ import by.klnvch.link5dots.multiplayer.adapters.OnEmptyStateListener;
 import by.klnvch.link5dots.multiplayer.adapters.OnItemClickListener;
 import by.klnvch.link5dots.multiplayer.adapters.TargetAdapterInterface;
 import by.klnvch.link5dots.multiplayer.targets.Target;
+import by.klnvch.link5dots.multiplayer.utils.GameState;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -52,9 +53,9 @@ public class PickerFragment extends Fragment implements View.OnClickListener,
 
     public static final String TAG = "OnlineGamePickerFr";
 
-    protected OnPickerListener mListener;
-    protected ToggleButton mButtonCreate;
-    protected ToggleButton mButtonScan;
+    OnPickerListener mListener;
+    ToggleButton mButtonCreate;
+    ToggleButton mButtonScan;
     private TextView mCreateStatusValue;
     private View mCreateStatusLabel;
     private View mProgressCreate;
@@ -267,14 +268,14 @@ public class PickerFragment extends Fragment implements View.OnClickListener,
         }
     }
 
-    protected void onCreateButtonClicked() {
+    void onCreateButtonClicked() {
         if (mButtonCreate.isChecked())
             mListener.onCreateRoom();
         else
             mListener.onDeleteRoom();
     }
 
-    protected void onScanButtonClicked() {
+    void onScanButtonClicked() {
         if (mButtonScan.isChecked())
             mListener.onStartScan();
         else

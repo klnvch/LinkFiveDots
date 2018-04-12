@@ -34,8 +34,8 @@ import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import by.klnvch.link5dots.multiplayer.nsd.NsdCredentials;
 import by.klnvch.link5dots.multiplayer.targets.TargetNsd;
+import by.klnvch.link5dots.multiplayer.utils.nsd.NsdCredentials;
 
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 public class PickerAdapterNsd extends PickerAdapterSockets implements NsdManager.DiscoveryListener {

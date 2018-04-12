@@ -41,13 +41,14 @@ import by.klnvch.link5dots.models.User;
 import by.klnvch.link5dots.multiplayer.adapters.OnScanStoppedListener;
 import by.klnvch.link5dots.multiplayer.adapters.ScannerInterface;
 import by.klnvch.link5dots.multiplayer.adapters.TargetAdapterInterface;
-import by.klnvch.link5dots.multiplayer.common.GameState;
-import by.klnvch.link5dots.multiplayer.common.interfaces.OnRoomConnectedListener;
-import by.klnvch.link5dots.multiplayer.common.interfaces.OnRoomUpdatedListener;
-import by.klnvch.link5dots.multiplayer.common.interfaces.OnTargetCreatedListener;
-import by.klnvch.link5dots.multiplayer.common.interfaces.OnTargetDeletedListener;
-import by.klnvch.link5dots.multiplayer.factories.FactoryInterface;
+import by.klnvch.link5dots.multiplayer.factories.FactoryProvider;
+import by.klnvch.link5dots.multiplayer.factories.FactoryServiceInterface;
 import by.klnvch.link5dots.multiplayer.targets.Target;
+import by.klnvch.link5dots.multiplayer.utils.GameState;
+import by.klnvch.link5dots.multiplayer.utils.OnRoomConnectedListener;
+import by.klnvch.link5dots.multiplayer.utils.OnRoomUpdatedListener;
+import by.klnvch.link5dots.multiplayer.utils.OnTargetCreatedListener;
+import by.klnvch.link5dots.multiplayer.utils.OnTargetDeletedListener;
 import by.klnvch.link5dots.settings.SettingsUtils;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -62,7 +63,7 @@ public abstract class GameService extends Service implements GameServiceInterfac
     private final IBinder mBinder = new LocalBinder();
     private final GameState mState = new GameState();
     ScannerInterface mScanner;
-    FactoryInterface mFactory;
+    FactoryServiceInterface mFactory;
     private TargetAdapterInterface mAdapter;
     private User mUser;
     private Room mRoom = null;
@@ -72,6 +73,7 @@ public abstract class GameService extends Service implements GameServiceInterfac
         Log.d(TAG, "onCreate");
         super.onCreate();
         //
+        mFactory = FactoryProvider.getServiceFactory(this.getClass());
         mAdapter = mFactory.getAdapter(this);
         mScanner = (ScannerInterface) mAdapter;
         mUser = new User(SettingsUtils.getUserNameOrDefault(this));

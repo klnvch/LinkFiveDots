@@ -87,7 +87,7 @@
                 android:value="by.klnvch.link5dots.MultiPlayerMenuActivity" />
         </activity>
         <activity
-            android:name="by.klnvch.link5dots.multiplayer.bt.BtGameActivity"
+            android:name="by.klnvch.link5dots.multiplayer.activities.GameActivityBluetooth"
             android:configChanges="orientation|keyboardHidden|locale"
             android:label="@string/bluetooth_settings">
             <meta-data
@@ -95,7 +95,7 @@
                 android:value="by.klnvch.link5dots.MultiPlayerMenuActivity" />
         </activity>
         <activity
-            android:name="by.klnvch.link5dots.multiplayer.nsd.NsdGameActivity"
+            android:name="by.klnvch.link5dots.multiplayer.activities.GameActivityNsd"
             android:configChanges="orientation|keyboardHidden|locale"
             android:label="@string/menu_local_network">
             <meta-data
@@ -103,7 +103,7 @@
                 android:value="by.klnvch.link5dots.MultiPlayerMenuActivity" />
         </activity>
         <activity
-            android:name="by.klnvch.link5dots.multiplayer.online.OnlineGameActivity"
+            android:name="by.klnvch.link5dots.multiplayer.activities.GameActivityOnline"
             android:label="@string/menu_online_game">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

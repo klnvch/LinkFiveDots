@@ -25,12 +25,18 @@
 package by.klnvch.link5dots.multiplayer.factories;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
+
+import com.crashlytics.android.Crashlytics;
 
 import java.io.IOException;
 
+import by.klnvch.link5dots.R;
+import by.klnvch.link5dots.multiplayer.activities.PickerFragment;
 import by.klnvch.link5dots.multiplayer.adapters.PickerAdapterNsd;
 import by.klnvch.link5dots.multiplayer.adapters.TargetAdapterInterface;
+import by.klnvch.link5dots.multiplayer.services.GameServiceNsd;
 import by.klnvch.link5dots.multiplayer.sockets.ServerSocketDecorator;
 import by.klnvch.link5dots.multiplayer.sockets.ServerSocketDecoratorNsd;
 import by.klnvch.link5dots.multiplayer.sockets.SocketDecorator;
@@ -38,7 +44,7 @@ import by.klnvch.link5dots.multiplayer.sockets.SocketDecoratorNsd;
 import by.klnvch.link5dots.multiplayer.targets.Target;
 import by.klnvch.link5dots.multiplayer.targets.TargetNsd;
 
-public class FactoryNsd implements FactoryInterface {
+public class FactoryNsd implements FactoryServiceInterface, FactoryActivityInterface {
     @NonNull
     @Override
     public TargetAdapterInterface getAdapter(@NonNull Context context) {
@@ -56,5 +62,33 @@ public class FactoryNsd implements FactoryInterface {
     @Override
     public ServerSocketDecorator getServerSocket() throws IOException {
         return new ServerSocketDecoratorNsd();
+    }
+
+    @NonNull
+    @Override
+    public Intent getServiceIntent(@NonNull Context context) {
+        return new Intent(context, GameServiceNsd.class);
+    }
+
+    @Override
+    public boolean isValid(@NonNull Context context) {
+        try {
+            Class.forName("android.net.nsd.NsdManager");
+            return true;
+        } catch (ClassNotFoundException e) {
+            Crashlytics.logException(e);
+        }
+        return false;
+    }
+
+    @Override
+    public int getDefaultTitle() {
+        return R.string.menu_local_network;
+    }
+
+    @NonNull
+    @Override
+    public PickerFragment getPickerFragment() {
+        return new PickerFragment();
     }
 }

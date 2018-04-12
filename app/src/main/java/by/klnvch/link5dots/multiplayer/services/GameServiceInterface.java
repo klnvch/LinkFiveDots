@@ -31,8 +31,8 @@ import by.klnvch.link5dots.models.Dot;
 import by.klnvch.link5dots.models.Room;
 import by.klnvch.link5dots.models.User;
 import by.klnvch.link5dots.multiplayer.adapters.TargetAdapterInterface;
-import by.klnvch.link5dots.multiplayer.common.GameState;
 import by.klnvch.link5dots.multiplayer.targets.Target;
+import by.klnvch.link5dots.multiplayer.utils.GameState;
 
 public interface GameServiceInterface {
 

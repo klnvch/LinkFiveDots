@@ -30,10 +30,9 @@ import android.net.nsd.NsdManager;
 import android.os.Build;
 import android.support.annotation.NonNull;
 
-import by.klnvch.link5dots.multiplayer.factories.FactoryNsd;
-import by.klnvch.link5dots.multiplayer.nsd.tasks.RegistrationTask;
 import by.klnvch.link5dots.multiplayer.sockets.ServerSocketDecorator;
 import by.klnvch.link5dots.multiplayer.sockets.ServerSocketDecoratorNsd;
+import by.klnvch.link5dots.multiplayer.utils.nsd.RegistrationTask;
 
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 public class GameServiceNsd extends GameServiceSockets {
@@ -42,7 +41,6 @@ public class GameServiceNsd extends GameServiceSockets {
 
     @Override
     public void onCreate() {
-        mFactory = new FactoryNsd();
         NsdManager mNsdManager = (NsdManager) getSystemService(Context.NSD_SERVICE);
 
         super.onCreate();
