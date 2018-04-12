@@ -33,14 +33,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import by.klnvch.link5dots.models.Room;
-import by.klnvch.link5dots.multiplayer.factories.FactoryOnline;
-import by.klnvch.link5dots.multiplayer.online.tasks.ConnectRoomTask;
-import by.klnvch.link5dots.multiplayer.online.tasks.CreateRoomTask;
-import by.klnvch.link5dots.multiplayer.online.tasks.DeleteRoomTask;
-import by.klnvch.link5dots.multiplayer.online.tasks.RoomEventListener;
-import by.klnvch.link5dots.multiplayer.online.tasks.UpdateRoomTask;
 import by.klnvch.link5dots.multiplayer.targets.Target;
 import by.klnvch.link5dots.multiplayer.targets.TargetOnline;
+import by.klnvch.link5dots.multiplayer.utils.online.ConnectRoomTask;
+import by.klnvch.link5dots.multiplayer.utils.online.CreateRoomTask;
+import by.klnvch.link5dots.multiplayer.utils.online.DeleteRoomTask;
+import by.klnvch.link5dots.multiplayer.utils.online.RoomEventListener;
+import by.klnvch.link5dots.multiplayer.utils.online.UpdateRoomTask;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -70,7 +69,6 @@ public class GameServiceOnline extends GameService {
 
     @Override
     public void onCreate() {
-        mFactory = new FactoryOnline();
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
         super.onCreate();

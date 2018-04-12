@@ -22,32 +22,12 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.multiplayer.online.tasks;
+package by.klnvch.link5dots.multiplayer.activities;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+public class GameActivityBluetooth extends GameActivity {
 
-import com.google.firebase.database.DatabaseReference;
-
-import by.klnvch.link5dots.models.Room;
-import by.klnvch.link5dots.multiplayer.common.interfaces.OnTargetDeletedListener;
-
-import static com.google.common.base.Preconditions.checkNotNull;
-
-public class DeleteRoomTask {
-    public static void deleteRoom(@NonNull DatabaseReference database,
-                                  @Nullable OnTargetDeletedListener listener,
-                                  @NonNull Room room) {
-        checkNotNull(database);
-        checkNotNull(room);
-
-        database
-                .child(Room.CHILD_ROOM)
-                .child(room.getKey())
-                .child(Room.CHILD_STATE)
-                .setValue(Room.STATE_DELETED)
-                .addOnCompleteListener(task -> {
-                    if (listener != null) listener.onTargetDeleted(task.getException());
-                });
+    @Override
+    public void newGame() {
+        mService.newGame();
     }
 }

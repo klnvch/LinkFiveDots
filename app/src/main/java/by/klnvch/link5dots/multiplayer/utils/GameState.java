@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.multiplayer.common;
+package by.klnvch.link5dots.multiplayer.utils;
 
 import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
@@ -156,7 +156,7 @@ public class GameState {
     }
 
     @ScanState
-    int getScanState() {
+    public int getScanState() {
         return scanState;
     }
 
@@ -173,7 +173,7 @@ public class GameState {
     }
 
     @TargetState
-    int getTargetState() {
+    public int getTargetState() {
         return targetState;
     }
 
@@ -190,7 +190,7 @@ public class GameState {
     }
 
     @ConnectState
-    int getConnectState() {
+    public int getConnectState() {
         return connectState;
     }
 

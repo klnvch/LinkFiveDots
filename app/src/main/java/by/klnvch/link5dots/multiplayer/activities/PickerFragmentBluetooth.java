@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.multiplayer.bt;
+package by.klnvch.link5dots.multiplayer.activities;
 
 import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
@@ -31,9 +31,9 @@ import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 
-import by.klnvch.link5dots.multiplayer.common.PickerFragment;
+import by.klnvch.link5dots.multiplayer.utils.bluetooth.BtCredentials;
 
-public class BtPickerFragment extends PickerFragment {
+public class PickerFragmentBluetooth extends PickerFragment {
 
     private static final int REQUEST_DISCOVERABLE = 1;
     private static final int REQUEST_LOCATION = 1;

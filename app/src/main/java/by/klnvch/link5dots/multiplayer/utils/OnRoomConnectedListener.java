@@ -22,16 +22,12 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.multiplayer.common.interfaces;
+package by.klnvch.link5dots.multiplayer.utils;
 
-import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
-import by.klnvch.link5dots.multiplayer.targets.Target;
+import by.klnvch.link5dots.models.Room;
 
-public interface OnTargetCreatedListener {
-    void onTargetCreated(@NonNull Target target);
-
-    void onTargetUpdated(@NonNull Target target);
-
-    void onTargetCreationFailed(@NonNull Exception exception);
+public interface OnRoomConnectedListener {
+    void onRoomConnected(@Nullable Room room, @Nullable Exception exception);
 }

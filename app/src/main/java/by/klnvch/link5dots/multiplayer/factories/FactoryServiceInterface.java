@@ -22,45 +22,25 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.multiplayer.nsd;
+package by.klnvch.link5dots.multiplayer.factories;
 
-import android.content.Intent;
+import android.content.Context;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
-import by.klnvch.link5dots.R;
-import by.klnvch.link5dots.multiplayer.common.AbstractGameActivity;
-import by.klnvch.link5dots.multiplayer.services.GameServiceNsd;
+import java.io.IOException;
 
-public class NsdGameActivity extends AbstractGameActivity {
+import by.klnvch.link5dots.multiplayer.adapters.TargetAdapterInterface;
+import by.klnvch.link5dots.multiplayer.sockets.ServerSocketDecorator;
+import by.klnvch.link5dots.multiplayer.sockets.SocketDecorator;
+import by.klnvch.link5dots.multiplayer.targets.Target;
 
-    private static final String TAG = "NsdGameActivity";
+public interface FactoryServiceInterface {
+    @NonNull
+    TargetAdapterInterface getAdapter(@NonNull Context context);
 
     @NonNull
-    @Override
-    protected Intent getServiceIntent() {
-        return new Intent(this, GameServiceNsd.class);
-    }
+    SocketDecorator.Builder getSocketBuilder(@NonNull Target target);
 
-    @Override
-    protected boolean isValid() {
-        // NoClassDefFoundError (@by.klnvch.link5dots.fragment_game_picker.NsdService:<init>:294) {main}
-        try {
-            Class.forName("android.net.nsd.NsdManager");
-            return true;
-        } catch (ClassNotFoundException e) {
-            Log.e(TAG, e.getMessage());
-        }
-        return false;
-    }
-
-    @Override
-    protected int getDefaultTitle() {
-        return R.string.menu_local_network;
-    }
-
-    @Override
-    public void newGame() {
-        mService.newGame();
-    }
+    @NonNull
+    ServerSocketDecorator getServerSocket() throws IOException;
 }

@@ -30,7 +30,7 @@
     android:background="@drawable/paper_tiled"
     android:keepScreenOn="true"
     android:padding="32dp"
-    tools:context="by.klnvch.link5dots.multiplayer.online.OnlineGameActivity">
+    tools:context="by.klnvch.link5dots.multiplayer.activities.GameActivityOnline">
 
     <ToggleButton
         android:id="@+id/buttonCreate"

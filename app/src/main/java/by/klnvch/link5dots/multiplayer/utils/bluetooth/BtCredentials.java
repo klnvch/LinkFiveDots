@@ -22,10 +22,15 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.multiplayer.common.interfaces;
+package by.klnvch.link5dots.multiplayer.utils.bluetooth;
 
-import android.support.annotation.Nullable;
+import java.util.UUID;
 
-public interface OnTargetDeletedListener {
-    void onTargetDeleted(@Nullable Exception exception);
+public class BtCredentials {
+    public static final String NAME_SECURE = "BluetoothLinkFiveDotsSecure";
+    public static final UUID UUID_SECURE = UUID.fromString("fa87c0d0-afac-11de-8a39-0800200c9a66");
+    public static final String FAKE_ADDRESS = "02:00:00:00:00:00";
+    public static final int DISCOVERABLE_DURATION_SECONDS = 120;
+    public static final int DISCOVERABLE_DURATION_MILLISECONDS
+            = DISCOVERABLE_DURATION_SECONDS * 1000;
 }

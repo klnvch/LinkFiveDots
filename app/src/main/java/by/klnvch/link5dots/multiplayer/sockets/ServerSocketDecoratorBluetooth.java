@@ -31,7 +31,7 @@ import android.support.annotation.MainThread;
 import java.io.IOException;
 import java.util.UUID;
 
-import by.klnvch.link5dots.multiplayer.bt.BtCredentials;
+import by.klnvch.link5dots.multiplayer.utils.bluetooth.BtCredentials;
 
 public class ServerSocketDecoratorBluetooth extends ServerSocketDecorator<BluetoothServerSocket> {
 

@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.multiplayer.nsd.tasks;
+package by.klnvch.link5dots.multiplayer.utils.nsd;
 
 import android.annotation.TargetApi;
 import android.net.nsd.NsdManager;
@@ -32,10 +32,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import by.klnvch.link5dots.multiplayer.common.interfaces.OnTargetCreatedListener;
-import by.klnvch.link5dots.multiplayer.common.interfaces.OnTargetDeletedListener;
-import by.klnvch.link5dots.multiplayer.nsd.NsdCredentials;
 import by.klnvch.link5dots.multiplayer.targets.TargetNsd;
+import by.klnvch.link5dots.multiplayer.utils.OnTargetCreatedListener;
+import by.klnvch.link5dots.multiplayer.utils.OnTargetDeletedListener;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;

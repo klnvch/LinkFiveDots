@@ -32,7 +32,6 @@ import android.util.Log;
 import java.io.IOException;
 
 import by.klnvch.link5dots.models.Room;
-import by.klnvch.link5dots.multiplayer.common.GameState;
 import by.klnvch.link5dots.multiplayer.sockets.ServerSocketDecorator;
 import by.klnvch.link5dots.multiplayer.sockets.SocketDecorator;
 import by.klnvch.link5dots.multiplayer.targets.Target;
@@ -40,6 +39,7 @@ import by.klnvch.link5dots.multiplayer.threads.AcceptThread;
 import by.klnvch.link5dots.multiplayer.threads.ConnectThread;
 import by.klnvch.link5dots.multiplayer.threads.ConnectedThread;
 import by.klnvch.link5dots.multiplayer.threads.OnSocketConnectedListener;
+import by.klnvch.link5dots.multiplayer.utils.GameState;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;

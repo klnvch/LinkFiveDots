@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.multiplayer.online.tasks;
+package by.klnvch.link5dots.multiplayer.utils.online;
 
 import android.support.annotation.NonNull;
 
@@ -33,13 +33,13 @@ import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Transaction;
 
 import by.klnvch.link5dots.models.Room;
-import by.klnvch.link5dots.multiplayer.common.interfaces.OnRoomUpdatedListener;
+import by.klnvch.link5dots.multiplayer.utils.OnRoomConnectedListener;
 
-public class UpdateRoomTask {
+public class ConnectRoomTask {
 
-    public static void updateRoom(@NonNull DatabaseReference database,
-                                  @NonNull OnRoomUpdatedListener listener,
-                                  @NonNull Room room) {
+    public static void connectRoom(@NonNull DatabaseReference database,
+                                   @NonNull OnRoomConnectedListener listener,
+                                   @NonNull Room room) {
         database
                 .child(Room.CHILD_ROOM)
                 .child(room.getKey())
@@ -55,12 +55,12 @@ public class UpdateRoomTask {
                         if (committed) {
                             final Room room = currentData.getValue(Room.class);
                             if (room != null) {
-                                listener.onRoomUpdated(room, null);
+                                listener.onRoomConnected(room, null);
                             } else {
-                                listener.onRoomUpdated(null, new NullPointerException("room is null"));
+                                listener.onRoomConnected(null, new NullPointerException("room is null"));
                             }
                         } else {
-                            listener.onRoomUpdated(null, error.toException());
+                            listener.onRoomConnected(null, error.toException());
                         }
                     }
                 });

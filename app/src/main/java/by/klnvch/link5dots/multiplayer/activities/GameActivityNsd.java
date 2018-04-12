@@ -22,12 +22,11 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.multiplayer.common.interfaces;
+package by.klnvch.link5dots.multiplayer.activities;
 
-import android.support.annotation.Nullable;
-
-import by.klnvch.link5dots.models.Room;
-
-public interface OnRoomUpdatedListener {
-    void onRoomUpdated(@Nullable Room room, @Nullable Exception exception);
+public class GameActivityNsd extends GameActivity {
+    @Override
+    public void newGame() {
+        mService.newGame();
+    }
 }

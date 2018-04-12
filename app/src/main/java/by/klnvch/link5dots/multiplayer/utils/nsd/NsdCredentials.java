@@ -22,35 +22,9 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.multiplayer.targets;
+package by.klnvch.link5dots.multiplayer.utils.nsd;
 
-import android.annotation.SuppressLint;
-import android.bluetooth.BluetoothAdapter;
-import android.support.annotation.NonNull;
-
-import by.klnvch.link5dots.multiplayer.utils.bluetooth.BtCredentials;
-
-public class TargetBluetoothLocal extends Target<String> {
-    public TargetBluetoothLocal(@NonNull String time) {
-        super(fill(time));
-    }
-
-    @SuppressLint("HardwareIds")
-    @NonNull
-    private static String fill(@NonNull String time) {
-        BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        final String name = bluetoothAdapter.getName();
-        final String address = bluetoothAdapter.getAddress();
-        if (BtCredentials.FAKE_ADDRESS.equals(address)) {
-            return name + '\t' + '(' + time + ')';
-        } else {
-            return name + '\t' + '(' + time + ')' + '\n' + address;
-        }
-    }
-
-    @NonNull
-    @Override
-    public String getShortName() {
-        return getTarget();
-    }
+public class NsdCredentials {
+    public static final String SERVICE_NAME = "Link Five Dots";
+    public static final String SERVICE_TYPE = "_http._tcp.";
 }

@@ -29,11 +29,10 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import by.klnvch.link5dots.models.Room;
-import by.klnvch.link5dots.multiplayer.bt.tasks.VisibilityTimer;
-import by.klnvch.link5dots.multiplayer.common.GameState;
-import by.klnvch.link5dots.multiplayer.factories.FactoryBluetooth;
 import by.klnvch.link5dots.multiplayer.sockets.ServerSocketDecorator;
 import by.klnvch.link5dots.multiplayer.targets.Target;
+import by.klnvch.link5dots.multiplayer.utils.GameState;
+import by.klnvch.link5dots.multiplayer.utils.bluetooth.VisibilityTimer;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -49,7 +48,6 @@ public class GameServiceBluetooth extends GameServiceSockets {
 
     @Override
     public void onCreate() {
-        mFactory = new FactoryBluetooth();
         super.onCreate();
         mVisibilityTimer = new VisibilityTimer();
     }

@@ -24,13 +24,19 @@
 
 package by.klnvch.link5dots.multiplayer.factories;
 
+import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 
 import java.io.IOException;
 
+import by.klnvch.link5dots.R;
+import by.klnvch.link5dots.multiplayer.activities.PickerFragment;
+import by.klnvch.link5dots.multiplayer.activities.PickerFragmentBluetooth;
 import by.klnvch.link5dots.multiplayer.adapters.PickerAdapterBluetooth;
 import by.klnvch.link5dots.multiplayer.adapters.TargetAdapterInterface;
+import by.klnvch.link5dots.multiplayer.services.GameServiceBluetooth;
 import by.klnvch.link5dots.multiplayer.sockets.ServerSocketDecorator;
 import by.klnvch.link5dots.multiplayer.sockets.ServerSocketDecoratorBluetooth;
 import by.klnvch.link5dots.multiplayer.sockets.SocketDecorator;
@@ -38,7 +44,7 @@ import by.klnvch.link5dots.multiplayer.sockets.SocketDecoratorBluetooth;
 import by.klnvch.link5dots.multiplayer.targets.Target;
 import by.klnvch.link5dots.multiplayer.targets.TargetBluetooth;
 
-public class FactoryBluetooth implements FactoryInterface {
+public class FactoryBluetooth implements FactoryServiceInterface, FactoryActivityInterface {
     @NonNull
     @Override
     public TargetAdapterInterface getAdapter(@NonNull Context context) {
@@ -56,5 +62,27 @@ public class FactoryBluetooth implements FactoryInterface {
     @Override
     public ServerSocketDecorator getServerSocket() throws IOException {
         return new ServerSocketDecoratorBluetooth();
+    }
+
+    @NonNull
+    @Override
+    public Intent getServiceIntent(@NonNull Context context) {
+        return new Intent(context, GameServiceBluetooth.class);
+    }
+
+    @Override
+    public boolean isValid(@NonNull Context context) {
+        return BluetoothAdapter.getDefaultAdapter() != null;
+    }
+
+    @Override
+    public int getDefaultTitle() {
+        return R.string.bluetooth_settings;
+    }
+
+    @NonNull
+    @Override
+    public PickerFragment getPickerFragment() {
+        return new PickerFragmentBluetooth();
     }
 }

@@ -22,12 +22,10 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.multiplayer.common.interfaces;
+package by.klnvch.link5dots.multiplayer.utils;
 
 import android.support.annotation.Nullable;
 
-import by.klnvch.link5dots.models.Room;
-
-public interface OnRoomConnectedListener {
-    void onRoomConnected(@Nullable Room room, @Nullable Exception exception);
+public interface OnTargetDeletedListener {
+    void onTargetDeleted(@Nullable Exception exception);
 }

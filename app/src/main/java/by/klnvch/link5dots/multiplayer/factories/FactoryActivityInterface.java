@@ -25,22 +25,22 @@
 package by.klnvch.link5dots.multiplayer.factories;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.annotation.StringRes;
 
-import java.io.IOException;
+import by.klnvch.link5dots.multiplayer.activities.PickerFragment;
 
-import by.klnvch.link5dots.multiplayer.adapters.TargetAdapterInterface;
-import by.klnvch.link5dots.multiplayer.sockets.ServerSocketDecorator;
-import by.klnvch.link5dots.multiplayer.sockets.SocketDecorator;
-import by.klnvch.link5dots.multiplayer.targets.Target;
-
-public interface FactoryInterface {
-    @NonNull
-    TargetAdapterInterface getAdapter(@NonNull Context context);
+public interface FactoryActivityInterface {
 
     @NonNull
-    SocketDecorator.Builder getSocketBuilder(@NonNull Target target);
+    Intent getServiceIntent(@NonNull Context context);
+
+    boolean isValid(@NonNull Context context);
+
+    @StringRes
+    int getDefaultTitle();
 
     @NonNull
-    ServerSocketDecorator getServerSocket() throws IOException;
+    PickerFragment getPickerFragment();
 }

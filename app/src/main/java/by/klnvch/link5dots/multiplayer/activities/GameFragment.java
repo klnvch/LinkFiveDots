@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.multiplayer.common;
+package by.klnvch.link5dots.multiplayer.activities;
 
 import android.content.Context;
 import android.os.Bundle;

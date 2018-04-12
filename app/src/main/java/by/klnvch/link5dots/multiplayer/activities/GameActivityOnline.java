@@ -22,15 +22,12 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.multiplayer.bt;
+package by.klnvch.link5dots.multiplayer.activities;
 
-import java.util.UUID;
+public class GameActivityOnline extends GameActivity {
 
-public class BtCredentials {
-    public static final String NAME_SECURE = "BluetoothLinkFiveDotsSecure";
-    public static final UUID UUID_SECURE = UUID.fromString("fa87c0d0-afac-11de-8a39-0800200c9a66");
-    public static final String FAKE_ADDRESS = "02:00:00:00:00:00";
-    static final int DISCOVERABLE_DURATION_SECONDS = 120;
-    public static final int DISCOVERABLE_DURATION_MILLISECONDS
-            = DISCOVERABLE_DURATION_SECONDS * 1000;
+    @Override
+    public void newGame() {
+        getSupportFragmentManager().popBackStackImmediate();
+    }
 }
