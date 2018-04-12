@@ -63,11 +63,11 @@ public class VisibilityTimer {
             mCountDownTimer = null;
         }
 
-        createdListener.onTargetCreated(new TargetBluetoothLocal(
-                getTime(BtCredentials.DISCOVERABLE_DURATION_MILLISECONDS)));
+        final int duration = BluetoothHelper.getDiscoverableDuration();
 
-        mCountDownTimer = new CountDownTimer(BtCredentials.DISCOVERABLE_DURATION_MILLISECONDS,
-                1000) {
+        createdListener.onTargetCreated(new TargetBluetoothLocal(getTime(duration)));
+
+        mCountDownTimer = new CountDownTimer(duration, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
                 final String time = getTime(millisUntilFinished);

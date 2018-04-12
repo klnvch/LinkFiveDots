@@ -24,7 +24,6 @@
 
 package by.klnvch.link5dots;
 
-import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -32,9 +31,12 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
+import com.crashlytics.android.Crashlytics;
+
 import by.klnvch.link5dots.multiplayer.activities.GameActivityBluetooth;
 import by.klnvch.link5dots.multiplayer.activities.GameActivityNsd;
 import by.klnvch.link5dots.multiplayer.activities.GameActivityOnline;
+import by.klnvch.link5dots.multiplayer.utils.bluetooth.BluetoothHelper;
 
 public class MultiPlayerMenuActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -52,13 +54,6 @@ public class MultiPlayerMenuActivity extends AppCompatActivity implements View.O
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_multiplayer_menu);
         setTitle(R.string.menu_multi_player);
-
-        if (BluetoothAdapter.getDefaultAdapter() == null) {
-            findViewById(R.id.multi_player_bluetooth).setVisibility(View.INVISIBLE);
-        }
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
-            findViewById(R.id.multi_player_lan).setVisibility(View.INVISIBLE);
-        }
 
         if (savedInstanceState != null) {
             mIsBluetoothEnabled = savedInstanceState.getBoolean(KEY_IS_BLUETOOTH_ENABLED);
@@ -78,25 +73,24 @@ public class MultiPlayerMenuActivity extends AppCompatActivity implements View.O
                 startActivity(new Intent(this, TwoPlayersActivity.class));
                 break;
             case R.id.multi_player_bluetooth:
-                // Get local Bluetooth adapter
-                final BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
-                // If the adapter is null, then Bluetooth is not supported
-                if (adapter != null) {
-                    mIsBluetoothEnabled = adapter.isEnabled();
+                if (BluetoothHelper.isSupported()) {
+                    mIsBluetoothEnabled = BluetoothHelper.isEnabled();
                     if (mIsBluetoothEnabled) {
                         startBluetoothActivity();
                     } else {
-                        // enable bluetooth
-                        final Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                        startActivityForResult(intent, RC_ENABLE_BLUETOOTH);
+                        BluetoothHelper.requestEnable(this, RC_ENABLE_BLUETOOTH);
                     }
                 } else {
                     showErrorDialog();
                 }
                 break;
             case R.id.multi_player_lan:
-                startActivityForResult(new Intent(this, GameActivityNsd.class),
-                        RC_GAME_NSD);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                    startActivityForResult(new Intent(this, GameActivityNsd.class),
+                            RC_GAME_NSD);
+                } else {
+                    showErrorDialog();
+                }
                 break;
             case R.id.multi_player_online:
                 startActivityForResult(new Intent(this, GameActivityOnline.class),
@@ -117,8 +111,7 @@ public class MultiPlayerMenuActivity extends AppCompatActivity implements View.O
             case RC_GAME_BT:
                 // bluetooth game finished, make an order
                 if (!mIsBluetoothEnabled) {
-                    final BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
-                    adapter.disable();
+                    BluetoothHelper.disable();
                 }
             case RC_GAME_NSD:
             case RC_GAME_INTERNET:
@@ -136,6 +129,7 @@ public class MultiPlayerMenuActivity extends AppCompatActivity implements View.O
     }
 
     private void showErrorDialog() {
+        Crashlytics.log("feature not supported");
         new AlertDialog.Builder(this)
                 .setMessage(R.string.disabled_low_ram_device)
                 .setPositiveButton(R.string.okay, null)

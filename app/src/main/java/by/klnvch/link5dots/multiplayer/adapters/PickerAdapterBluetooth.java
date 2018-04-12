@@ -24,37 +24,34 @@
 
 package by.klnvch.link5dots.multiplayer.adapters;
 
-import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
 import java.util.Set;
 
 import by.klnvch.link5dots.multiplayer.targets.TargetBluetooth;
+import by.klnvch.link5dots.multiplayer.utils.bluetooth.BluetoothHelper;
 
 public class PickerAdapterBluetooth extends PickerAdapterSockets {
 
     private static final String TAG = "BtPickerAdapter";
 
     private final Context mContext;
-    private final BluetoothAdapter mBluetoothAdapter;
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            final String action = intent.getAction();
-            Log.d(TAG, "receiver: " + action);
+            Log.d(TAG, "receiver: " + intent);
 
-            if (BluetoothDevice.ACTION_FOUND.equals(action)) {
-                final BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                if (device.getBondState() != BluetoothDevice.BOND_BONDED) {
-                    add(new TargetBluetooth(device));
-                }
-            } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
+            final BluetoothDevice device = BluetoothHelper.isDeviceFound(intent);
+            if (device != null) {
+                add(new TargetBluetooth(device));
+                return;
+            }
+            if (BluetoothHelper.isDiscoveryFinished(intent)) {
                 if (mOnScanStoppedListener != null) {
                     mOnScanStoppedListener.onScanStopped(null);
                     stopScan();
@@ -65,36 +62,22 @@ public class PickerAdapterBluetooth extends PickerAdapterSockets {
 
     public PickerAdapterBluetooth(@NonNull Context context) {
         mContext = context;
-        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
     }
 
     @Override
     protected void startListening() {
         clear();
 
-        final Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
-        if (pairedDevices.size() > 0) {
-            for (BluetoothDevice device : pairedDevices) {
-                add(new TargetBluetooth(device));
-            }
+        final Set<BluetoothDevice> pairedDevices = BluetoothHelper.getBondedDevices();
+        for (BluetoothDevice device : pairedDevices) {
+            add(new TargetBluetooth(device));
         }
 
-        final IntentFilter filterFound = new IntentFilter(BluetoothDevice.ACTION_FOUND);
-        mContext.registerReceiver(mReceiver, filterFound);
-
-        final IntentFilter filterFinished = new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
-        mContext.registerReceiver(mReceiver, filterFinished);
-
-        mBluetoothAdapter.startDiscovery();
+        BluetoothHelper.registerReceiverAndStartDiscovery(mContext, mReceiver);
     }
 
     @Override
     protected void stopListening() {
-        mBluetoothAdapter.cancelDiscovery();
-        try {
-            mContext.unregisterReceiver(mReceiver);
-        } catch (IllegalArgumentException e) {
-            Log.e(TAG, "stopListening: " + e.getMessage());
-        }
+        BluetoothHelper.unregisterReceiverAndCancelDiscovery(mContext, mReceiver);
     }
 }

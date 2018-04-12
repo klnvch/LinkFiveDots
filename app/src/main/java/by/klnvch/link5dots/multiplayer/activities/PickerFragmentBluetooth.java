@@ -25,13 +25,12 @@
 package by.klnvch.link5dots.multiplayer.activities;
 
 import android.Manifest;
-import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 
-import by.klnvch.link5dots.multiplayer.utils.bluetooth.BtCredentials;
+import by.klnvch.link5dots.multiplayer.utils.bluetooth.BluetoothHelper;
 
 public class PickerFragmentBluetooth extends PickerFragment {
 
@@ -41,10 +40,7 @@ public class PickerFragmentBluetooth extends PickerFragment {
     @Override
     protected void onCreateButtonClicked() {
         if (mButtonCreate.isChecked()) {
-            final Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
-            intent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION,
-                    BtCredentials.DISCOVERABLE_DURATION_SECONDS);
-            startActivityForResult(intent, REQUEST_DISCOVERABLE);
+            BluetoothHelper.requestDiscoverable(this, REQUEST_DISCOVERABLE);
         } else {
             mListener.onDeleteRoom();
         }
