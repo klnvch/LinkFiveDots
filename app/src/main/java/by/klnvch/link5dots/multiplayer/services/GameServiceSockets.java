@@ -29,6 +29,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.crashlytics.android.Crashlytics;
+
 import java.io.IOException;
 
 import by.klnvch.link5dots.models.Room;
@@ -124,6 +126,7 @@ public abstract class GameServiceSockets extends GameService
         checkNotNull(mSocketThread);
 
         Log.e(TAG, "onSocketFailed: " + exception.getMessage());
+        Crashlytics.logException(exception);
 
         mSocketThread = null;
         sendMsg(exception);
