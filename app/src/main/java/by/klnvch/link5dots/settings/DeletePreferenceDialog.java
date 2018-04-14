@@ -26,6 +26,7 @@ package by.klnvch.link5dots.settings;
 
 import android.os.Bundle;
 import android.support.v7.preference.PreferenceDialogFragmentCompat;
+import android.util.Log;
 
 public class DeletePreferenceDialog extends PreferenceDialogFragmentCompat {
 
@@ -39,11 +40,13 @@ public class DeletePreferenceDialog extends PreferenceDialogFragmentCompat {
 
     @Override
     public void onDialogClosed(boolean positiveResult) {
-        if (getActivity() == null) throw new RuntimeException("activity is null");
-
         if (positiveResult) {
-            SettingsUtils.reset(getActivity());
-            getActivity().recreate();
+            if (getActivity() != null) {
+                SettingsUtils.reset(getActivity());
+                getActivity().recreate();
+            } else {
+                Log.e("settings", "activity is null");
+            }
         }
     }
 }
