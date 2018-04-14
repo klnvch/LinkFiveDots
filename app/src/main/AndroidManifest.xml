@@ -23,19 +23,22 @@
   -->
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     package="by.klnvch.link5dots">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
+    <uses-permission-sdk-23 android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.VIBRATE" />
 
-    <uses-permission
-        android:name="android.permission.WAKE_LOCK"
-        tools:node="remove" />
+    <uses-feature
+        android:name="android.hardware.faketouch"
+        android:required="true" />
+    <uses-feature
+        android:name="android.hardware.bluetooth"
+        android:required="false" />
 
     <application
         android:name="android.support.multidex.MultiDexApplication"
@@ -45,12 +48,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <meta-data
-            android:name="com.google.android.gms.games.APP_ID"
-            android:value="@string/app_id" />
-        <meta-data
-            android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
 
         <service android:name="by.klnvch.link5dots.multiplayer.services.GameServiceBluetooth" />
         <service android:name="by.klnvch.link5dots.multiplayer.services.GameServiceNsd" />
