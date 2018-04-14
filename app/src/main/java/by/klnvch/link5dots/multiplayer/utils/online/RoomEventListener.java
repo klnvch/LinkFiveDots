@@ -32,77 +32,75 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
-import java.lang.ref.WeakReference;
-
 import by.klnvch.link5dots.models.Room;
 import by.klnvch.link5dots.multiplayer.services.GameServiceOnline;
 import by.klnvch.link5dots.multiplayer.utils.OnRoomUpdatedListener;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.checkState;
+
 public class RoomEventListener implements ValueEventListener {
 
     private final DatabaseReference mDatabase;
-    private final WeakReference<OnRoomUpdatedListener> mListener;
+    private OnRoomUpdatedListener mListener = null;
     private String mRoomKey = null;
 
-    public RoomEventListener(@NonNull DatabaseReference database,
-                             @NonNull OnRoomUpdatedListener listener) {
+    public RoomEventListener(@NonNull DatabaseReference database) {
         mDatabase = database;
-        mListener = new WeakReference<>(listener);
     }
 
-    public void start(@NonNull String roomKey) {
+    public void start(@NonNull String roomKey,
+                      @NonNull OnRoomUpdatedListener listener) {
+        checkNotNull(roomKey);
+        checkNotNull(listener);
+
         if (mRoomKey == null) {
-            Log.d(GameServiceOnline.TAG, "RoomEventListener.start: ok");
-
             mRoomKey = roomKey;
-
+            mListener = listener;
             mDatabase
                     .child(Room.CHILD_ROOM)
                     .child(roomKey)
                     .addValueEventListener(this);
-
-        } else if (mRoomKey.equals(roomKey)) {
-            Log.e(GameServiceOnline.TAG, "RoomEventListener.start: same key");
         } else {
-            Log.e(GameServiceOnline.TAG, "RoomEventListener.start: wrong key");
+            checkState(mRoomKey.equals(roomKey));
+            Log.w(GameServiceOnline.TAG, "already listening for updates");
         }
     }
 
     public void stop(@NonNull String roomKey) {
-        if (mRoomKey != null && mRoomKey.equals(roomKey)) {
-            Log.d(GameServiceOnline.TAG, "RoomEventListener.stop: ok");
+        checkNotNull(roomKey);
+        checkNotNull(mListener);
+        checkNotNull(mRoomKey);
+        checkState(mRoomKey.equals(roomKey));
 
-            mRoomKey = null;
-
-            mDatabase
-                    .child(Room.CHILD_ROOM)
-                    .child(roomKey)
-                    .removeEventListener(this);
-        } else if (mRoomKey != null && !mRoomKey.equals(roomKey)) {
-            Log.e(GameServiceOnline.TAG, "RoomEventListener.stop: wrong key");
-        } else {
-            Log.e(GameServiceOnline.TAG, "RoomEventListener.stop: null key");
-        }
+        mListener = null;
+        mRoomKey = null;
+        mDatabase
+                .child(Room.CHILD_ROOM)
+                .child(roomKey)
+                .removeEventListener(this);
     }
 
     @Override
     public void onDataChange(DataSnapshot snapshot) {
-        final OnRoomUpdatedListener listener = mListener.get();
-        if (listener != null) {
+        if (mListener != null) {
             final Room room = snapshot.getValue(Room.class);
             if (room != null) {
-                listener.onRoomUpdated(room, null);
+                mListener.onRoomUpdated(room, null);
             } else {
-                listener.onRoomUpdated(null, new NullPointerException("room is null"));
+                mListener.onRoomUpdated(null, new NullPointerException("room is null"));
             }
+        } else {
+            Log.w(GameServiceOnline.TAG, "update listener is null");
         }
     }
 
     @Override
     public void onCancelled(DatabaseError error) {
-        final OnRoomUpdatedListener listener = mListener.get();
-        if (listener != null) {
-            listener.onRoomUpdated(null, error.toException());
+        if (mListener != null) {
+            mListener.onRoomUpdated(null, error.toException());
+        } else {
+            Log.w(GameServiceOnline.TAG, "update listener is null");
         }
     }
 }

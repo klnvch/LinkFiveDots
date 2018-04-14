@@ -77,7 +77,7 @@ public class GameServiceOnline extends GameService {
                 .addOnCompleteListener(task ->
                         Log.d(TAG, "signInAnonymously: " + task.isSuccessful()));
 
-        mRoomEventListener = new RoomEventListener(mDatabase, this);
+        mRoomEventListener = new RoomEventListener(mDatabase);
     }
 
     @Override
@@ -144,7 +144,7 @@ public class GameServiceOnline extends GameService {
     public void onTargetCreated(@NonNull Target target) {
         final Room room = ((TargetOnline) target).getTarget();
         setRoom(room);
-        mRoomEventListener.start(room.getKey());
+        mRoomEventListener.start(room.getKey(), this);
 
         super.onTargetCreated(target);
     }
@@ -183,7 +183,7 @@ public class GameServiceOnline extends GameService {
     protected void startGame(@Nullable Room room) {
         if (room != null) {
             setRoom(room);
-            mRoomEventListener.start(room.getKey());
+            mRoomEventListener.start(room.getKey(), this);
         } else {
             throw new IllegalArgumentException();
         }
