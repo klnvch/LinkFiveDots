@@ -10,3 +10,9 @@
 -keepclassmembers class by.klnvch.link5dots.models.** {
   *;
 }
+
+# Guava
+-dontwarn java.lang.ClassValue
+-dontwarn afu.org.checkerframework.**
+-dontwarn com.google.errorprone.annotations.**
+-dontwarn org.checkerframework.**
