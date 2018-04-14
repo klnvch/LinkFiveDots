@@ -37,6 +37,7 @@ import com.crashlytics.android.Crashlytics;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.checkState;
 
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 public class NsdHelper {
@@ -46,12 +47,20 @@ public class NsdHelper {
     private static final String SERVICE_TYPE = "_http._tcp.";
 
     private static NsdManager mNsdManager = null;
+    private static NsdDiscoveryAdapter mDiscoveryListener = null;
+    private static NsdManager.RegistrationListener mRegistrationListener = null;
 
     public static void init(@NonNull Context context) {
         mNsdManager = (NsdManager) context.getSystemService(Context.NSD_SERVICE);
     }
 
     public static void destroy() {
+        if (mRegistrationListener != null) {
+            unregisterService(mRegistrationListener);
+        }
+        if (mDiscoveryListener != null) {
+            stopServiceDiscovery(mDiscoveryListener);
+        }
         mNsdManager = null;
     }
 
@@ -65,26 +74,30 @@ public class NsdHelper {
         return false;
     }
 
-    public static void discoverServices(@NonNull NsdManager.DiscoveryListener listener) {
+    public static void discoverServices(@NonNull NsdDiscoveryAdapter listener) {
         checkNotNull(mNsdManager);
+        checkState(mDiscoveryListener == null);
         checkNotNull(listener);
 
-        mNsdManager.discoverServices(SERVICE_TYPE, NsdManager.PROTOCOL_DNS_SD, listener);
+        mDiscoveryListener = listener;
+        mNsdManager.discoverServices(SERVICE_TYPE, NsdManager.PROTOCOL_DNS_SD, mDiscoveryListener);
     }
 
-    public static void stopServiceDiscovery(@NonNull NsdManager.DiscoveryListener listener) {
-        checkNotNull(mNsdManager);
+    public static void stopServiceDiscovery(@NonNull NsdDiscoveryAdapter listener) {
         checkNotNull(listener);
 
-        try {
-            mNsdManager.stopServiceDiscovery(listener);
-        } catch (IllegalArgumentException e) {
-            Log.e(TAG, "stopServiceDiscovery: " + e.getMessage());
+        if (mNsdManager != null && mDiscoveryListener != null) {
+            checkState(mDiscoveryListener == listener);
+
+            mNsdManager.stopServiceDiscovery(mDiscoveryListener);
+            mDiscoveryListener = null;
+        } else {
+            Log.w(TAG, "stopServiceDiscovery: already stopped");
         }
     }
 
     public static void resolveService(@NonNull NsdServiceInfo serviceInfo,
-                                      @NonNull NsdManager.ResolveListener listener) {
+                                      @NonNull NsdResolveAdapter listener) {
         checkNotNull(mNsdManager);
         checkNotNull(serviceInfo);
         checkNotNull(listener);
@@ -100,6 +113,7 @@ public class NsdHelper {
                                 @NonNull NsdManager.RegistrationListener listener) {
         checkNotNull(mNsdManager);
         checkArgument(port > 0);
+        checkState(mRegistrationListener == null);
         checkNotNull(listener);
 
         final NsdServiceInfo serviceInfo = new NsdServiceInfo();
@@ -107,17 +121,20 @@ public class NsdHelper {
         serviceInfo.setServiceName(SERVICE_NAME);
         serviceInfo.setServiceType(SERVICE_TYPE);
 
-        mNsdManager.registerService(serviceInfo, NsdManager.PROTOCOL_DNS_SD, listener);
+        mRegistrationListener = listener;
+        mNsdManager.registerService(serviceInfo, NsdManager.PROTOCOL_DNS_SD, mRegistrationListener);
     }
 
     static void unregisterService(@NonNull NsdManager.RegistrationListener listener) {
-        checkNotNull(mNsdManager);
         checkNotNull(listener);
 
-        try {
-            mNsdManager.unregisterService(listener);
-        } catch (IllegalArgumentException e) {
-            Log.e(TAG, "unregisterService: " + e.getMessage());
+        if (mNsdManager != null && mRegistrationListener != null) {
+            checkState(mRegistrationListener == listener);
+
+            mNsdManager.unregisterService(mRegistrationListener);
+            mRegistrationListener = null;
+        } else {
+            Log.w(TAG, "unregisterService: already unregistered");
         }
     }
 

@@ -47,7 +47,6 @@ public class GameServiceNsd extends GameServiceSockets {
 
     @Override
     public void onDestroy() {
-        mRegistrationTask.unregisterService(null);
         NsdHelper.destroy();
         super.onDestroy();
     }
