@@ -158,6 +158,8 @@ public class PickerFragment extends Fragment implements View.OnClickListener,
     public void setState(@NonNull GameState state) {
         checkNotNull(state);
 
+        if (getView() == null) return;
+
         switch (state.getTargetState()) {
             case GameState.STATE_NONE:
                 mButtonCreate.setEnabled(false);
