@@ -33,6 +33,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.crashlytics.android.Crashlytics;
+
 import org.greenrobot.eventbus.EventBus;
 
 import by.klnvch.link5dots.models.Dot;
@@ -255,6 +257,7 @@ public abstract class GameService extends Service implements GameServiceInterfac
 
             setConnectState(GameState.STATE_CONNECTED);
         } else {
+            Crashlytics.logException(exception);
             setConnectState(GameState.STATE_DISCONNECTED);
         }
     }
@@ -267,6 +270,7 @@ public abstract class GameService extends Service implements GameServiceInterfac
             mRoom = room;
             updateRoomLocally(room);
         } else {
+            Crashlytics.logException(exception);
             setConnectState(GameState.STATE_DISCONNECTED);
         }
     }
