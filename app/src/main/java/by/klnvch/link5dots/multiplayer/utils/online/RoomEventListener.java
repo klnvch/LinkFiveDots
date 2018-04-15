@@ -29,7 +29,6 @@ import android.util.Log;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
 import by.klnvch.link5dots.models.Room;
@@ -41,13 +40,8 @@ import static com.google.common.base.Preconditions.checkState;
 
 public class RoomEventListener implements ValueEventListener {
 
-    private final DatabaseReference mDatabase;
     private OnRoomUpdatedListener mListener = null;
     private String mRoomKey = null;
-
-    public RoomEventListener(@NonNull DatabaseReference database) {
-        mDatabase = database;
-    }
 
     public void start(@NonNull String roomKey,
                       @NonNull OnRoomUpdatedListener listener) {
@@ -57,9 +51,7 @@ public class RoomEventListener implements ValueEventListener {
         if (mRoomKey == null) {
             mRoomKey = roomKey;
             mListener = listener;
-            mDatabase
-                    .child(Room.CHILD_ROOM)
-                    .child(roomKey)
+            FirebaseHelper.getRoomReference(roomKey)
                     .addValueEventListener(this);
         } else {
             checkState(mRoomKey.equals(roomKey));
@@ -67,29 +59,28 @@ public class RoomEventListener implements ValueEventListener {
         }
     }
 
-    public void stop(@NonNull String roomKey) {
-        checkNotNull(roomKey);
-        checkNotNull(mListener);
-        checkNotNull(mRoomKey);
-        checkState(mRoomKey.equals(roomKey));
+    public void stop() {
+        if (mRoomKey != null) {
+            checkNotNull(mListener);
 
-        mListener = null;
-        mRoomKey = null;
-        mDatabase
-                .child(Room.CHILD_ROOM)
-                .child(roomKey)
-                .removeEventListener(this);
+            FirebaseHelper.getRoomReference(mRoomKey)
+                    .removeEventListener(this);
+
+            mListener = null;
+            mRoomKey = null;
+        } else {
+            checkState(mListener == null);
+            Log.w(GameServiceOnline.TAG, "already listening stopped");
+        }
     }
 
     @Override
     public void onDataChange(DataSnapshot snapshot) {
         if (mListener != null) {
             final Room room = snapshot.getValue(Room.class);
-            if (room != null) {
-                mListener.onRoomUpdated(room, null);
-            } else {
-                mListener.onRoomUpdated(null, new NullPointerException("room is null"));
-            }
+            checkNotNull(room);
+
+            mListener.onRoomUpdated(room, null);
         } else {
             Log.w(GameServiceOnline.TAG, "update listener is null");
         }

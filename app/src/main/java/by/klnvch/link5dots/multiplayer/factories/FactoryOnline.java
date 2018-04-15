@@ -36,7 +36,7 @@ import by.klnvch.link5dots.multiplayer.services.GameServiceOnline;
 import by.klnvch.link5dots.multiplayer.sockets.ServerSocketDecorator;
 import by.klnvch.link5dots.multiplayer.sockets.SocketDecorator;
 import by.klnvch.link5dots.multiplayer.targets.Target;
-import by.klnvch.link5dots.utils.AvailabilityChecker;
+import by.klnvch.link5dots.multiplayer.utils.online.FirebaseHelper;
 
 public class FactoryOnline implements FactoryServiceInterface, FactoryActivityInterface {
     @NonNull
@@ -65,7 +65,7 @@ public class FactoryOnline implements FactoryServiceInterface, FactoryActivityIn
 
     @Override
     public boolean isValid(@NonNull Context context) {
-        return AvailabilityChecker.isGPSValid(context);
+        return FirebaseHelper.isSupported(context);
     }
 
     @Override

@@ -22,17 +22,59 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.utils;
+package by.klnvch.link5dots.multiplayer.utils.online;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 
-public class AvailabilityChecker {
-    public static boolean isGPSValid(@NonNull Context context) {
+import by.klnvch.link5dots.BuildConfig;
+import by.klnvch.link5dots.models.Room;
+
+import static com.google.common.base.Preconditions.checkNotNull;
+
+public class FirebaseHelper {
+    private static final String CHILD_ROOM = BuildConfig.DEBUG ? "rooms_debug" : "rooms";
+    private static final String CHILD_STATE = "state";
+
+    public static boolean isSupported(@NonNull Context context) {
         return GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(context)
                 == ConnectionResult.SUCCESS;
+    }
+
+    @NonNull
+    private static DatabaseReference getReference() {
+        return FirebaseDatabase.getInstance().getReference().child(CHILD_ROOM);
+    }
+
+    @NonNull
+    public static Query getRoomsQuery() {
+        return getReference()
+                .orderByChild(CHILD_STATE)
+                .equalTo(Room.STATE_CREATED);
+    }
+
+    @NonNull
+    public static String getKey() {
+        return getReference().push().getKey();
+    }
+
+    @NonNull
+    static DatabaseReference getRoomReference(@NonNull String roomKey) {
+        checkNotNull(roomKey);
+
+        return getReference().child(roomKey);
+    }
+
+    @NonNull
+    static DatabaseReference getStateReference(@NonNull String roomKey) {
+        checkNotNull(roomKey);
+
+        return getRoomReference(roomKey).child(CHILD_STATE);
     }
 }

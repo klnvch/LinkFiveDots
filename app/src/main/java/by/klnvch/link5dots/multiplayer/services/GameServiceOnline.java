@@ -29,15 +29,12 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 import by.klnvch.link5dots.models.Room;
 import by.klnvch.link5dots.multiplayer.targets.Target;
 import by.klnvch.link5dots.multiplayer.targets.TargetOnline;
-import by.klnvch.link5dots.multiplayer.utils.online.ConnectRoomTask;
-import by.klnvch.link5dots.multiplayer.utils.online.CreateRoomTask;
-import by.klnvch.link5dots.multiplayer.utils.online.DeleteRoomTask;
+import by.klnvch.link5dots.multiplayer.utils.online.RoomConnectorTask;
+import by.klnvch.link5dots.multiplayer.utils.online.RoomCreatorTask;
 import by.klnvch.link5dots.multiplayer.utils.online.RoomEventListener;
 import by.klnvch.link5dots.multiplayer.utils.online.UpdateRoomTask;
 
@@ -65,43 +62,37 @@ public class GameServiceOnline extends GameService {
     public static final String TAG = "OnlineGameService";
 
     private RoomEventListener mRoomEventListener;
-    private DatabaseReference mDatabase = null;
+    private RoomCreatorTask mRoomCreatorTask;
 
     @Override
     public void onCreate() {
-        mDatabase = FirebaseDatabase.getInstance().getReference();
-
         super.onCreate();
 
         FirebaseAuth.getInstance().signInAnonymously()
                 .addOnCompleteListener(task ->
                         Log.d(TAG, "signInAnonymously: " + task.isSuccessful()));
 
-        mRoomEventListener = new RoomEventListener(mDatabase);
+        mRoomEventListener = new RoomEventListener();
+        mRoomCreatorTask = new RoomCreatorTask();
     }
 
     @Override
     public void onDestroy() {
-        if (getRoom() != null) {
-            DeleteRoomTask.deleteRoom(mDatabase, null, getRoom());
-        }
+        mRoomCreatorTask.deleteRoom(null);
+        mRoomEventListener.stop();
         super.onDestroy();
     }
 
     @Override
     public void createTarget() {
         super.createTarget();
-        CreateRoomTask.createRoom(mDatabase, this, Room.newRoom(getUser()));
+        mRoomCreatorTask.createRoom(this, this, getUser());
     }
 
     @Override
     public void deleteTarget() {
         super.deleteTarget();
-        final Room room = getRoom();
-
-        checkNotNull(room);
-
-        DeleteRoomTask.deleteRoom(mDatabase, this, room);
+        mRoomCreatorTask.deleteRoom(this);
     }
 
     @Override
@@ -109,9 +100,7 @@ public class GameServiceOnline extends GameService {
         super.connect(target);
 
         final Room room = ((TargetOnline) target).getTarget();
-        room.setUser2(getUser());
-
-        ConnectRoomTask.connectRoom(mDatabase, this, room);
+        RoomConnectorTask.connectRoom(room.getKey(), getUser(), this);
     }
 
     @Override
@@ -121,11 +110,7 @@ public class GameServiceOnline extends GameService {
 
     @Override
     public void reset() {
-        final Room room = getRoom();
-        if (room != null) {
-            mRoomEventListener.stop(getRoom().getKey());
-        }
-
+        mRoomEventListener.stop();
         super.reset();
     }
 
@@ -144,48 +129,32 @@ public class GameServiceOnline extends GameService {
     public void onTargetCreated(@NonNull Target target) {
         final Room room = ((TargetOnline) target).getTarget();
         setRoom(room);
-        mRoomEventListener.start(room.getKey(), this);
 
         super.onTargetCreated(target);
     }
 
     @Override
     public void onTargetDeleted(@Nullable Exception exception) {
-        final Room room = getRoom();
-        if (room != null) {
-            setRoom(null);
-            mRoomEventListener.stop(room.getKey());
-        } else {
-            Log.e(TAG, "onTargetDeleted: room is null");
-        }
+        setRoom(null);
 
         super.onTargetDeleted(exception);
     }
 
     @Override
     protected void updateRoomLocally(@NonNull Room room) {
-        if (room.getState() == Room.STATE_STARTED) {
-            sendMsg(room);
-        } else if (room.getUser1() != null && room.getUser2() != null) {
-            onRoomConnected(room, null);
-
-            room.setState(Room.STATE_STARTED);
-            updateRoomRemotely(room);
-        }
+        sendMsg(room);
     }
 
     @Override
     protected void updateRoomRemotely(@NonNull Room room) {
-        UpdateRoomTask.updateRoom(mDatabase, this, room);
+        UpdateRoomTask.updateRoom(this, room);
     }
 
     @Override
     protected void startGame(@Nullable Room room) {
-        if (room != null) {
-            setRoom(room);
-            mRoomEventListener.start(room.getKey(), this);
-        } else {
-            throw new IllegalArgumentException();
-        }
+        checkNotNull(room);
+
+        setRoom(room);
+        mRoomEventListener.start(room.getKey(), this);
     }
 }

@@ -28,7 +28,6 @@ import android.support.annotation.NonNull;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Transaction;
 
@@ -37,12 +36,9 @@ import by.klnvch.link5dots.multiplayer.utils.OnRoomUpdatedListener;
 
 public class UpdateRoomTask {
 
-    public static void updateRoom(@NonNull DatabaseReference database,
-                                  @NonNull OnRoomUpdatedListener listener,
+    public static void updateRoom(@NonNull OnRoomUpdatedListener listener,
                                   @NonNull Room room) {
-        database
-                .child(Room.CHILD_ROOM)
-                .child(room.getKey())
+        FirebaseHelper.getRoomReference(room.getKey())
                 .runTransaction(new Transaction.Handler() {
                     @Override
                     public Transaction.Result doTransaction(MutableData currentData) {

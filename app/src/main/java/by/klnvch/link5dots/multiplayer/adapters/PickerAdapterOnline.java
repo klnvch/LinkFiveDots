@@ -35,14 +35,12 @@ import android.view.ViewGroup;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 
 import by.klnvch.link5dots.R;
 import by.klnvch.link5dots.models.Room;
 import by.klnvch.link5dots.multiplayer.services.GameServiceOnline;
 import by.klnvch.link5dots.multiplayer.targets.TargetOnline;
+import by.klnvch.link5dots.multiplayer.utils.online.FirebaseHelper;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -59,17 +57,9 @@ public class PickerAdapterOnline extends FirebaseRecyclerAdapter<Room, TargetHol
 
     @NonNull
     public static PickerAdapterOnline createAdapter() {
-
-        final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
-
-        final Query query = databaseReference
-                .child(Room.CHILD_ROOM)
-                .orderByChild(Room.CHILD_STATE)
-                .equalTo(Room.STATE_CREATED);
-
         final FirebaseRecyclerOptions<Room> options =
                 new FirebaseRecyclerOptions.Builder<Room>()
-                        .setQuery(query, Room.class)
+                        .setQuery(FirebaseHelper.getRoomsQuery(), Room.class)
                         .build();
 
         return new PickerAdapterOnline(options);
