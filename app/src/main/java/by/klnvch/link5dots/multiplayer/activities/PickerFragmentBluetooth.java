@@ -27,10 +27,13 @@ package by.klnvch.link5dots.multiplayer.activities;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 
 import by.klnvch.link5dots.multiplayer.utils.bluetooth.BluetoothHelper;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 public class PickerFragmentBluetooth extends PickerFragment {
 
@@ -51,9 +54,7 @@ public class PickerFragmentBluetooth extends PickerFragment {
         if (getActivity() == null) return;
 
         if (mButtonScan.isChecked()) {
-            if (ContextCompat.checkSelfPermission(getActivity(),
-                    Manifest.permission.ACCESS_COARSE_LOCATION)
-                    != PackageManager.PERMISSION_GRANTED) {
+            if (isPermissionNeeded() && !isPermissionGranted()) {
                 requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
                         REQUEST_LOCATION);
             } else {
@@ -90,5 +91,16 @@ public class PickerFragmentBluetooth extends PickerFragment {
             default:
                 super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
+    }
+
+    private boolean isPermissionGranted() {
+        checkNotNull(getActivity());
+
+        return ContextCompat.checkSelfPermission(getActivity(),
+                Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+    }
+
+    private boolean isPermissionNeeded() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M;
     }
 }
