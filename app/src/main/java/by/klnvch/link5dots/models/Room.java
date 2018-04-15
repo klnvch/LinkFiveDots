@@ -37,13 +37,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import by.klnvch.link5dots.BuildConfig;
-
 @SuppressWarnings("unused")
 public class Room {
-
-    public static final String CHILD_ROOM = BuildConfig.DEBUG ? "rooms_debug" : "rooms";
-    public static final String CHILD_STATE = "state";
 
     public static final int STATE_CREATED = 0;
     public static final int STATE_DELETED = 1;

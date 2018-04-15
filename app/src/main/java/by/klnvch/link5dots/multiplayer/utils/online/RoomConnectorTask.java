@@ -28,24 +28,34 @@ import android.support.annotation.NonNull;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Transaction;
 
 import by.klnvch.link5dots.models.Room;
+import by.klnvch.link5dots.models.User;
 import by.klnvch.link5dots.multiplayer.utils.OnRoomConnectedListener;
 
-public class ConnectRoomTask {
+import static com.google.common.base.Preconditions.checkNotNull;
 
-    public static void connectRoom(@NonNull DatabaseReference database,
-                                   @NonNull OnRoomConnectedListener listener,
-                                   @NonNull Room room) {
-        database
-                .child(Room.CHILD_ROOM)
-                .child(room.getKey())
+public class RoomConnectorTask {
+
+    public static void connectRoom(@NonNull String roomKey,
+                                   @NonNull User user,
+                                   @NonNull OnRoomConnectedListener listener) {
+        checkNotNull(roomKey);
+        checkNotNull(user);
+        checkNotNull(listener);
+
+        FirebaseHelper.getRoomReference(roomKey)
                 .runTransaction(new Transaction.Handler() {
                     @Override
                     public Transaction.Result doTransaction(MutableData currentData) {
+                        final Room room = currentData.getValue(Room.class);
+                        checkNotNull(room);
+
+                        room.setUser2(user);
+                        room.setState(Room.STATE_STARTED);
+
                         currentData.setValue(room);
                         return Transaction.success(currentData);
                     }
@@ -54,11 +64,9 @@ public class ConnectRoomTask {
                     public void onComplete(DatabaseError error, boolean committed, DataSnapshot currentData) {
                         if (committed) {
                             final Room room = currentData.getValue(Room.class);
-                            if (room != null) {
-                                listener.onRoomConnected(room, null);
-                            } else {
-                                listener.onRoomConnected(null, new NullPointerException("room is null"));
-                            }
+                            checkNotNull(room);
+
+                            listener.onRoomConnected(room, null);
                         } else {
                             listener.onRoomConnected(null, error.toException());
                         }

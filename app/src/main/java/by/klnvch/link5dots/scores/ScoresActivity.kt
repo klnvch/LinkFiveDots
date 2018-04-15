@@ -35,8 +35,8 @@ import android.view.View
 import by.klnvch.link5dots.BuildConfig
 import by.klnvch.link5dots.R
 import by.klnvch.link5dots.models.HighScore
+import by.klnvch.link5dots.multiplayer.utils.online.FirebaseHelper
 import by.klnvch.link5dots.settings.SettingsUtils
-import by.klnvch.link5dots.utils.AvailabilityChecker
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
@@ -79,7 +79,7 @@ class ScoresActivity : AppCompatActivity() {
         swipeRefreshLayout.isRefreshing = true
         swipeRefreshLayout.setOnRefreshListener { swipeRefreshLayout.isRefreshing = false }
 
-        if (!AvailabilityChecker.isGPSValid(this)) {
+        if (!FirebaseHelper.isSupported(this)) {
             setResult(Activity.RESULT_CANCELED)
             finish()
         } else {
