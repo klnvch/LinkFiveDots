@@ -235,13 +235,6 @@ public abstract class GameService extends Service implements GameServiceInterfac
 
     @CallSuper
     @Override
-    public void onTargetUpdated(@NonNull Target target) {
-        checkNotNull(target);
-        sendMsg(getState());
-    }
-
-    @CallSuper
-    @Override
     public void onScanStopped(@Nullable Exception e) {
         Log.d(TAG, "onScanStopped: " + e);
         stopScan();

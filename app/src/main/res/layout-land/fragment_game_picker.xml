@@ -43,6 +43,26 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <Button
+        android:id="@+id/buttonBluetoothVisibility"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/bluetooth_not_discoverable"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="@+id/guidelineVertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/buttonCreate" />
+
+    <TextView
+        android:id="@+id/textBluetoothVisibility"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/bluetooth_only_visible_to_paired_devices"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="@+id/guidelineVertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/buttonBluetoothVisibility" />
+
     <TextView
         android:id="@+id/textStatusLabel"
         android:layout_width="wrap_content"
@@ -50,7 +70,7 @@
         android:maxLines="1"
         android:text="@string/apn_name"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonCreate" />
+        app:layout_constraintTop_toBottomOf="@+id/textBluetoothVisibility" />
 
     <TextView
         android:id="@+id/textStatusValue"
@@ -71,7 +91,7 @@
         app:layout_constraintBottom_toTopOf="@+id/separator"
         app:layout_constraintEnd_toEndOf="@+id/guidelineVertical"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonCreate" />
+        app:layout_constraintTop_toBottomOf="@+id/textBluetoothVisibility" />
 
     <View
         android:id="@+id/separator"

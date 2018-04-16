@@ -30,19 +30,19 @@ import android.support.annotation.NonNull;
 import by.klnvch.link5dots.multiplayer.utils.bluetooth.BluetoothHelper;
 
 public class TargetBluetoothLocal extends Target<String> {
-    public TargetBluetoothLocal(@NonNull String time) {
-        super(fill(time));
+    public TargetBluetoothLocal() {
+        super(fill());
     }
 
     @SuppressLint("HardwareIds")
     @NonNull
-    private static String fill(@NonNull String time) {
+    private static String fill() {
         final String name = BluetoothHelper.getName();
         final String address = BluetoothHelper.getAddress();
         if (address == null) {
-            return name + '\t' + '(' + time + ')';
+            return name;
         } else {
-            return name + '\t' + '(' + time + ')' + '\n' + address;
+            return name + '\n' + address;
         }
     }
 

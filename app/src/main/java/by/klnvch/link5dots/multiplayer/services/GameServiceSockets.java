@@ -237,14 +237,6 @@ public abstract class GameServiceSockets extends GameService
     }
 
     @Override
-    public void onTargetUpdated(@NonNull Target target) {
-        checkNotNull(target);
-        mTarget = target;
-
-        super.onTargetUpdated(target);
-    }
-
-    @Override
     public void onTargetCreationFailed(@NonNull Exception exception) {
         checkNotNull(exception);
         checkNotNull(mSocketThread);
