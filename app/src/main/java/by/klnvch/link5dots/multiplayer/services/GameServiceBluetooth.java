@@ -27,12 +27,11 @@ package by.klnvch.link5dots.multiplayer.services;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import by.klnvch.link5dots.models.Room;
 import by.klnvch.link5dots.multiplayer.sockets.ServerSocketDecorator;
 import by.klnvch.link5dots.multiplayer.targets.Target;
+import by.klnvch.link5dots.multiplayer.targets.TargetBluetoothLocal;
 import by.klnvch.link5dots.multiplayer.utils.GameState;
 import by.klnvch.link5dots.multiplayer.utils.bluetooth.BluetoothHelper;
-import by.klnvch.link5dots.multiplayer.utils.bluetooth.VisibilityTimer;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -43,20 +42,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * thread for performing data transmissions when connected.
  */
 public class GameServiceBluetooth extends GameServiceSockets {
-
-    private VisibilityTimer mVisibilityTimer;
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        mVisibilityTimer = new VisibilityTimer();
-    }
-
-    @Override
-    public void onDestroy() {
-        mVisibilityTimer.stop(null);
-        super.onDestroy();
-    }
 
     @Override
     public void connect(@NonNull Target target) {
@@ -87,28 +72,17 @@ public class GameServiceBluetooth extends GameServiceSockets {
     }
 
     @Override
-    protected void startGame(@Nullable Room room) {
-        mVisibilityTimer.stop(null);
-        super.startGame(room);
-    }
-
-    @Override
     public void onServerSocketCreated(@NonNull ServerSocketDecorator serverSocket) {
+        onTargetCreated(new TargetBluetoothLocal());
+
         super.onServerSocketCreated(serverSocket);
-        mVisibilityTimer.start(this, this);
     }
 
     @Override
     public void deleteTarget() {
         super.deleteTarget();
-        mVisibilityTimer.stop(this);
-    }
 
-    @Override
-    public void reset() {
-        mVisibilityTimer.stop(null);
-
-        super.reset();
+        onTargetDeleted(null);
     }
 
     @Override

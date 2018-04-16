@@ -26,6 +26,7 @@ package by.klnvch.link5dots.multiplayer.activities;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -54,7 +55,7 @@ public class PickerFragment extends Fragment implements View.OnClickListener,
     public static final String TAG = "OnlineGamePickerFr";
 
     OnPickerListener mListener;
-    ToggleButton mButtonCreate;
+    private ToggleButton mButtonCreate;
     ToggleButton mButtonScan;
     private TextView mCreateStatusValue;
     private View mCreateStatusLabel;
@@ -74,6 +75,7 @@ public class PickerFragment extends Fragment implements View.OnClickListener,
         }
     }
 
+    @CallSuper
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -270,7 +272,7 @@ public class PickerFragment extends Fragment implements View.OnClickListener,
         }
     }
 
-    void onCreateButtonClicked() {
+    private void onCreateButtonClicked() {
         if (mButtonCreate.isChecked())
             mListener.onCreateRoom();
         else

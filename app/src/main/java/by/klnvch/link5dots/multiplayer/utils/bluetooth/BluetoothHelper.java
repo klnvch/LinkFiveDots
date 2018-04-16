@@ -48,9 +48,7 @@ public class BluetoothHelper {
     private static final String NAME_SECURE = "BluetoothLinkFiveDotsSecure";
     private static final UUID UUID_SECURE = UUID.fromString("fa87c0d0-afac-11de-8a39-0800200c9a66");
     private static final String FAKE_ADDRESS = "02:00:00:00:00:00";
-    private static final int DISCOVERABLE_DURATION_SECONDS = 120;
-    private static final int DISCOVERABLE_DURATION_MILLISECONDS
-            = DISCOVERABLE_DURATION_SECONDS * 1000;
+    private static final int DISCOVERABLE_DURATION_SECONDS = 30;
 
     public static boolean isSupported() {
         return BluetoothAdapter.getDefaultAdapter() != null;
@@ -74,10 +72,6 @@ public class BluetoothHelper {
                 .putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION,
                         DISCOVERABLE_DURATION_SECONDS);
         fragment.startActivityForResult(intent, requestCode);
-    }
-
-    static int getDiscoverableDuration() {
-        return DISCOVERABLE_DURATION_MILLISECONDS;
     }
 
     @NonNull
