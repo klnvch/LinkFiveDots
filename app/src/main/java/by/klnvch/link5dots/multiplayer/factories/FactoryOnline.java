@@ -29,6 +29,7 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 
 import by.klnvch.link5dots.R;
+import by.klnvch.link5dots.models.Room;
 import by.klnvch.link5dots.multiplayer.activities.PickerFragment;
 import by.klnvch.link5dots.multiplayer.adapters.PickerAdapterOnline;
 import by.klnvch.link5dots.multiplayer.adapters.TargetAdapterInterface;
@@ -55,6 +56,11 @@ public class FactoryOnline implements FactoryServiceInterface, FactoryActivityIn
     @Override
     public ServerSocketDecorator getServerSocket() {
         throw new IllegalStateException();
+    }
+
+    @Override
+    public int getRoomType() {
+        return Room.TYPE_ONLINE;
     }
 
     @NonNull

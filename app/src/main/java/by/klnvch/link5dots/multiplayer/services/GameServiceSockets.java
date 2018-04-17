@@ -231,7 +231,7 @@ public abstract class GameServiceSockets extends GameService
         checkNotNull(target);
 
         mTarget = target;
-        setRoom(Room.newRoom(getUser()));
+        setRoom(Room.newRoom(getUser(), mFactory.getRoomType()));
 
         super.onTargetCreated(target);
     }

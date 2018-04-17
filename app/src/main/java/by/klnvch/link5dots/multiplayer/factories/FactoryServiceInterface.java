@@ -43,4 +43,6 @@ public interface FactoryServiceInterface {
 
     @NonNull
     ServerSocketDecorator getServerSocket() throws IOException;
+
+    int getRoomType();
 }

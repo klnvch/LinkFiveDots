@@ -24,25 +24,36 @@
 
 package by.klnvch.link5dots.db;
 
+import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.RoomDatabase;
 import android.arch.persistence.room.TypeConverters;
+import android.arch.persistence.room.migration.Migration;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
 import by.klnvch.link5dots.models.Room;
 
-@Database(entities = {Room.class}, version = 1)
+@Database(entities = {Room.class}, version = 2)
 @TypeConverters({Converters.class})
 public abstract class AppDatabase extends RoomDatabase {
     private static final String DB_NAME = "DB";
 
     private static AppDatabase instance = null;
 
+    public static final Migration MIGRATION_1_2 = new Migration(1, 2) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            database.execSQL("ALTER TABLE rooms ADD COLUMN type INTEGER NOT NULL DEFAULT 0");
+        }
+    };
+
     public static AppDatabase getDB(@NonNull Context context) {
         if (instance == null) {
-            instance = android.arch.persistence.room.Room.databaseBuilder(context.getApplicationContext(),
-                    AppDatabase.class, DB_NAME).build();
+            instance = android.arch.persistence.room.Room
+                    .databaseBuilder(context.getApplicationContext(), AppDatabase.class, DB_NAME)
+                    .addMigrations(MIGRATION_1_2)
+                    .build();
         }
         return instance;
     }

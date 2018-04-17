@@ -41,6 +41,17 @@ android {
 
         resConfigs "en", "be", "de", "es", "fr", "it", "pl", "ru", "uk", "fa"
         testInstrumentationRunner = 'android.support.test.runner.AndroidJUnitRunner'
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = ["room.schemaLocation":
+                                     "$projectDir/schemas".toString()]
+            }
+        }
+    }
+
+    sourceSets {
+        androidTest.assets.srcDirs += files("$projectDir/schemas".toString())
     }
 
     compileOptions {
@@ -105,6 +116,7 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
         exclude group: 'com.google.code.findbugs'
     }
+    androidTestImplementation "android.arch.persistence.room:testing:1.0.0"
 }
 
 apply plugin: 'com.google.gms.google-services'

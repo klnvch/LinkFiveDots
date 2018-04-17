@@ -88,7 +88,7 @@ public class RoomCreatorTask {
         mConnectedListener = connectedListener;
 
         final String key = FirebaseHelper.getKey();
-        mRoom = Room.newRoom(key, user);
+        mRoom = Room.newRoom(key, user, Room.TYPE_ONLINE);
 
         FirebaseHelper.getRoomReference(key)
                 .setValue(mRoom)
