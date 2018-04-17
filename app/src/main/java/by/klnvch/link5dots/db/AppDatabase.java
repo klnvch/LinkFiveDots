@@ -22,54 +22,30 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.models;
+package by.klnvch.link5dots.db;
 
+import android.arch.persistence.room.Database;
+import android.arch.persistence.room.RoomDatabase;
+import android.arch.persistence.room.TypeConverters;
+import android.content.Context;
 import android.support.annotation.NonNull;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import by.klnvch.link5dots.models.Room;
 
-import static com.google.android.gms.common.internal.Preconditions.checkNotNull;
+@Database(entities = {Room.class}, version = 1)
+@TypeConverters({Converters.class})
+public abstract class AppDatabase extends RoomDatabase {
+    private static final String DB_NAME = "DB";
 
-@NoArgsConstructor
-@AllArgsConstructor
-@Getter
-@Setter
-public class Dot {
+    private static AppDatabase instance = null;
 
-    public static final int EMPTY = 1;
-    public static final int HOST = 2;
-    public static final int GUEST = 4;
-
-    private int x;
-    private int y;
-    private int id;
-    private int type;
-    private long timestamp;
-
-    public Dot(int x, int y) {
-        this.x = x;
-        this.y = y;
-        this.type = EMPTY;
-        this.id = -1;
+    public static AppDatabase getDB(@NonNull Context context) {
+        if (instance == null) {
+            instance = android.arch.persistence.room.Room.databaseBuilder(context.getApplicationContext(),
+                    AppDatabase.class, DB_NAME).build();
+        }
+        return instance;
     }
 
-    static Dot copyDot(@NonNull Dot dot) {
-        checkNotNull(dot);
-
-        final Dot result = new Dot();
-        result.x = dot.x;
-        result.y = dot.y;
-        result.type = dot.type;
-        result.id = dot.id;
-        result.timestamp = dot.timestamp;
-        return result;
-    }
-
-    @Override
-    public String toString() {
-        return "(" + x + "," + y + ")";
-    }
+    public abstract RoomDao roomDao();
 }

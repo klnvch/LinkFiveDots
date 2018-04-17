@@ -24,35 +24,46 @@
 
 package by.klnvch.link5dots.models;
 
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Entity;
 import android.support.annotation.NonNull;
 
 import java.util.Random;
 
-@SuppressWarnings({"unused"})
+import static com.google.android.gms.common.internal.Preconditions.checkNotNull;
+
+@Entity(tableName = "users")
 public class User {
 
+    @ColumnInfo(name = "id")
     private String id;
-    private int type;
+    @ColumnInfo(name = "name")
     private String name;
 
     public User() {
-
     }
 
-    public User(@NonNull String name) {
-        this.id = Long.toHexString(new Random().nextLong());
-        this.name = name;
+    @NonNull
+    public static User newUser(@NonNull String name) {
+        checkNotNull(name);
+
+        final User user = new User();
+        user.id = Long.toHexString(System.currentTimeMillis())
+                + '_' + Long.toHexString(new Random().nextLong());
+        user.name = name;
+        return user;
     }
 
-    public int getType() {
-        return type;
-    }
-
-    public void setType(int type) {
-        this.type = type;
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof User) {
+            return ((User) obj).id.equals(this.id);
+        }
+        return false;
     }
 
     public String getId() {
+
         return id;
     }
 
@@ -66,10 +77,5 @@ public class User {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        return obj != null && obj instanceof User && ((User) obj).id.equals(this.id);
     }
 }

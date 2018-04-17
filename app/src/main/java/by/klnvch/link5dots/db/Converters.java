@@ -22,54 +22,26 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.models;
+package by.klnvch.link5dots.db;
 
-import android.support.annotation.NonNull;
+import android.arch.persistence.room.TypeConverter;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
-import static com.google.android.gms.common.internal.Preconditions.checkNotNull;
+import java.util.ArrayList;
 
-@NoArgsConstructor
-@AllArgsConstructor
-@Getter
-@Setter
-public class Dot {
+import by.klnvch.link5dots.models.Dot;
 
-    public static final int EMPTY = 1;
-    public static final int HOST = 2;
-    public static final int GUEST = 4;
-
-    private int x;
-    private int y;
-    private int id;
-    private int type;
-    private long timestamp;
-
-    public Dot(int x, int y) {
-        this.x = x;
-        this.y = y;
-        this.type = EMPTY;
-        this.id = -1;
+public class Converters {
+    @TypeConverter
+    public static String listToString(ArrayList<Dot> dots) {
+        return dots == null ? null : new Gson().toJson(dots);
     }
 
-    static Dot copyDot(@NonNull Dot dot) {
-        checkNotNull(dot);
-
-        final Dot result = new Dot();
-        result.x = dot.x;
-        result.y = dot.y;
-        result.type = dot.type;
-        result.id = dot.id;
-        result.timestamp = dot.timestamp;
-        return result;
-    }
-
-    @Override
-    public String toString() {
-        return "(" + x + "," + y + ")";
+    @TypeConverter
+    public static ArrayList<Dot> stringToString(String dots) {
+        return dots == null ? null : new Gson().fromJson(dots, new TypeToken<ArrayList<Dot>>() {
+        }.getType());
     }
 }

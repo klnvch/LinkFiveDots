@@ -22,7 +22,7 @@
   ~ SOFTWARE.
   -->
 
-<resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="app_name">Link Five Dots</string>
     <string name="language">English</string>
 
@@ -81,6 +81,10 @@
     <string name="copy_text" translatable="false">Copy to clipboard</string>
     <string name="toast_text_copied" translatable="false">Text copied</string>
     <string name="history_details_title" translatable="false">History details</string>
+    <string name="time_picker_title" translatable="false">Time</string>
+    <string name="menu_proc_stats_duration" translatable="false">Duration</string>
+    <string name="colon" translatable="false">:</string>
+    <string name="contacts_deleted_one_named_toast" translatable="false"><xliff:g id="name">%1$s</xliff:g> deleted</string>
 
     <!-- 18 Strings for Dialog yes button -->
     <string name="yes">"Yes"</string>
