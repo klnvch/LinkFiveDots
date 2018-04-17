@@ -40,6 +40,7 @@ class HistoryAdapter(private val mDataset: MutableList<Room>) :
         val textUser1Name: TextView = view.textUser1Name
         val textUser2Name: TextView = view.textUser2Name
         val textTime: TextView = view.textTimeValue
+        val textType: TextView = view.textTypeValue
         val textDuration: TextView = view.textDurationValue
         val textDots: TextView = view.textDotsValue
     }
@@ -57,6 +58,11 @@ class HistoryAdapter(private val mDataset: MutableList<Room>) :
         holder.textTime.text = mDataset[position].startTime
         holder.textDuration.text = mDataset[position].duration
         holder.textDots.text = mDataset[position].dots.size.toString()
+        when (mDataset[position].type) {
+            Room.TYPE_BLUETOOTH -> holder.textType.setText(R.string.bluetooth_settings)
+            Room.TYPE_NSD -> holder.textType.setText(R.string.menu_local_network)
+            Room.TYPE_ONLINE -> holder.textType.setText(R.string.menu_online_game)
+        }
     }
 
     fun removeAt(position: Int) {

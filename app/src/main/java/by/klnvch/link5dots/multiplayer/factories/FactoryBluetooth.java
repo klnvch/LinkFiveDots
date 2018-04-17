@@ -31,6 +31,7 @@ import android.support.annotation.NonNull;
 import java.io.IOException;
 
 import by.klnvch.link5dots.R;
+import by.klnvch.link5dots.models.Room;
 import by.klnvch.link5dots.multiplayer.activities.PickerFragment;
 import by.klnvch.link5dots.multiplayer.activities.PickerFragmentBluetooth;
 import by.klnvch.link5dots.multiplayer.adapters.PickerAdapterBluetooth;
@@ -62,6 +63,11 @@ public class FactoryBluetooth implements FactoryServiceInterface, FactoryActivit
     @Override
     public ServerSocketDecorator getServerSocket() throws IOException {
         return new ServerSocketDecoratorBluetooth();
+    }
+
+    @Override
+    public int getRoomType() {
+        return Room.TYPE_BLUETOOTH;
     }
 
     @NonNull

@@ -31,6 +31,7 @@ import android.support.annotation.NonNull;
 import java.io.IOException;
 
 import by.klnvch.link5dots.R;
+import by.klnvch.link5dots.models.Room;
 import by.klnvch.link5dots.multiplayer.activities.PickerFragment;
 import by.klnvch.link5dots.multiplayer.adapters.PickerAdapterNsd;
 import by.klnvch.link5dots.multiplayer.adapters.TargetAdapterInterface;
@@ -61,6 +62,11 @@ public class FactoryNsd implements FactoryServiceInterface, FactoryActivityInter
     @Override
     public ServerSocketDecorator getServerSocket() throws IOException {
         return new ServerSocketDecoratorNsd();
+    }
+
+    @Override
+    public int getRoomType() {
+        return Room.TYPE_NSD;
     }
 
     @NonNull

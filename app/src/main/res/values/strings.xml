@@ -85,6 +85,7 @@
     <string name="menu_proc_stats_duration" translatable="false">Duration</string>
     <string name="colon" translatable="false">:</string>
     <string name="contacts_deleted_one_named_toast" translatable="false"><xliff:g id="name">%1$s</xliff:g> deleted</string>
+    <string name="vpn_type" translatable="false">Type</string>
 
     <!-- 18 Strings for Dialog yes button -->
     <string name="yes">"Yes"</string>

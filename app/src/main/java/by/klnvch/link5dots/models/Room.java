@@ -48,6 +48,10 @@ public class Room {
     public static final int STATE_DELETED = 1;
     public static final int STATE_STARTED = 2;
 
+    public static final int TYPE_BLUETOOTH = 1;
+    public static final int TYPE_NSD = 2;
+    public static final int TYPE_ONLINE = 3;
+
     private static final String TIME_TEMPLATE = "MMM-dd HH:mm";
     private static final String TIME_FORMAT = "%d:%02d";
 
@@ -64,30 +68,34 @@ public class Room {
     private User user1;
     @Embedded(prefix = "user_2_")
     private User user2;
+    @ColumnInfo(name = "type")
+    private int type;
 
     public Room() {
     }
 
     @NonNull
-    public static Room newRoom(@NonNull User user) {
+    public static Room newRoom(@NonNull User user, int type) {
         final Room room = new Room();
         room.key = generateKey();
         room.timestamp = System.currentTimeMillis();
         room.state = STATE_CREATED;
         room.dots = new ArrayList<>();
         room.user1 = user;
+        room.type = type;
 
         return room;
     }
 
     @NonNull
-    public static Room newRoom(@NonNull String key, @NonNull User user) {
+    public static Room newRoom(@NonNull String key, @NonNull User user, int type) {
         final Room room = new Room();
         room.key = key;
         room.timestamp = System.currentTimeMillis();
         room.state = STATE_CREATED;
         room.dots = new ArrayList<>();
         room.user1 = user;
+        room.type = type;
 
         return room;
     }
@@ -210,5 +218,13 @@ public class Room {
 
     public void setUser2(User user2) {
         this.user2 = user2;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 }
