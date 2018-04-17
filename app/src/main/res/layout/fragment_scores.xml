@@ -1,4 +1,4 @@
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ MIT License
   ~
   ~ Copyright (c) 2017 klnvch
@@ -25,11 +25,10 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/paper_tiled">
+    android:layout_height="match_parent">
 
-    <android.support.v4.view.ViewPager xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/viewPager"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="8dp"
@@ -38,16 +37,23 @@
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
+        android:scrollbars="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <android.support.v4.view.PagerTabStrip
-            android:id="@+id/pager_title_strip"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-    </android.support.v4.view.ViewPager>
+    <TextView
+        android:id="@+id/textError"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="@string/scores_no_internet"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

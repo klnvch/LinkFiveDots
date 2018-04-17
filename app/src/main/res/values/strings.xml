@@ -80,6 +80,7 @@
     <string name="btn_github" translatable="false">GitHub</string>
     <string name="copy_text" translatable="false">Copy to clipboard</string>
     <string name="toast_text_copied" translatable="false">Text copied</string>
+    <string name="history_details_title" translatable="false">History details</string>
 
     <!-- 18 Strings for Dialog yes button -->
     <string name="yes">"Yes"</string>

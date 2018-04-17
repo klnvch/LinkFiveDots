@@ -24,11 +24,9 @@
 
 package by.klnvch.link5dots
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.os.StrictMode
-import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 
@@ -92,8 +90,7 @@ class MainMenuActivity : AppCompatActivity(), View.OnClickListener, View.OnLongC
             R.id.main_menu_multi_player ->
                 startActivity(Intent(this, MultiPlayerMenuActivity::class.java))
             R.id.main_menu_scores ->
-                startActivityForResult(Intent(this, ScoresActivity::class.java),
-                        RC_SCORES)
+                startActivity(Intent(this, ScoresActivity::class.java))
             R.id.main_menu_how_to ->
                 startActivity(Intent(this, HowToActivity::class.java))
             R.id.main_menu_about ->
@@ -107,11 +104,6 @@ class MainMenuActivity : AppCompatActivity(), View.OnClickListener, View.OnLongC
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
             RC_SETTINGS -> recreate()
-            RC_SCORES -> if (resultCode != Activity.RESULT_OK)
-                AlertDialog.Builder(this)
-                        .setMessage(R.string.disabled_low_ram_device)
-                        .setPositiveButton(R.string.okay, null)
-                        .show()
             else -> super.onActivityResult(requestCode, resultCode, data)
         }
     }
@@ -152,6 +144,5 @@ class MainMenuActivity : AppCompatActivity(), View.OnClickListener, View.OnLongC
 
     companion object {
         private const val RC_SETTINGS = 3
-        private const val RC_SCORES = 4
     }
 }

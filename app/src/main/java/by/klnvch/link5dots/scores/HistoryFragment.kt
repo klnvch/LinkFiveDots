@@ -22,34 +22,8 @@
  * SOFTWARE.
  */
 
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
-buildscript {
-    ext.kotlin_version = '1.2.31'
-    repositories {
-        google()
-        jcenter()
-        maven {
-            url 'https://maven.fabric.io/public'
-        }
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:3.2.0-alpha11'
-        classpath 'com.google.gms:google-services:3.1.1'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath 'io.fabric.tools:gradle:1.25.1'
-    }
-}
+package by.klnvch.link5dots.scores
 
-allprojects {
-    repositories {
-        google()
-        jcenter()
-        maven {
-            url 'https://maven.google.com/'
-        }
-    }
-}
+import android.support.v4.app.Fragment
 
-task clean(type: Delete) {
-    delete rootProject.buildDir
-}
+class HistoryFragment : Fragment()
