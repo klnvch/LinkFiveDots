@@ -176,7 +176,7 @@ public class Game {
         return net[x][y];
     }
 
-    public boolean checkCorrectness(int x, int y) {
+    private boolean checkCorrectness(int x, int y) {
         return isInBound(x, y) && net[x][y].getType() == Dot.EMPTY && mWinningLine == null;
     }
 
@@ -313,7 +313,7 @@ public class Game {
         for (int i = 0; i != this.net.length; ++i) {
             copyNet[i] = new Dot[this.net[i].length];
             for (int j = 0; j != this.net[i].length; ++j) {
-                copyNet[i][j] = new Dot(this.net[i][j]);
+                copyNet[i][j] = Dot.copyDot(this.net[i][j]);
             }
         }
         return copyNet;

@@ -78,7 +78,7 @@ public abstract class GameService extends Service implements GameServiceInterfac
         mFactory = FactoryProvider.getServiceFactory(this.getClass());
         mAdapter = mFactory.getAdapter(this);
         mScanner = (ScannerInterface) mAdapter;
-        mUser = new User(SettingsUtils.getUserNameOrDefault(this));
+        mUser = User.newUser(SettingsUtils.getUserNameOrDefault(this));
     }
 
     @Override

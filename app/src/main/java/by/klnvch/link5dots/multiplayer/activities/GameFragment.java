@@ -42,6 +42,7 @@ import java.util.List;
 
 import by.klnvch.link5dots.GameView;
 import by.klnvch.link5dots.R;
+import by.klnvch.link5dots.db.AppDatabase;
 import by.klnvch.link5dots.dialogs.EndGameDialog;
 import by.klnvch.link5dots.models.Dot;
 import by.klnvch.link5dots.models.Game;
@@ -49,6 +50,7 @@ import by.klnvch.link5dots.models.HighScore;
 import by.klnvch.link5dots.models.Room;
 import by.klnvch.link5dots.models.User;
 import by.klnvch.link5dots.settings.SettingsUtils;
+import io.reactivex.Completable;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -174,6 +176,16 @@ public class GameFragment extends Fragment {
         final List<Dot> dots = room.getDots();
         if (mHostDotType != Dot.EMPTY) {
             mView.setGameState(Game.createGame(dots, mHostDotType));
+        }
+
+        // save to the db
+        if (getContext() != null) {
+            mDisposables.add(Completable.fromAction(() ->
+                    AppDatabase.getDB(getContext()).roomDao().insertRoom(room))
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(() -> Log.d(TAG, "db success"),
+                            throwable -> Log.e(TAG, "db error: ", throwable)));
         }
     }
 

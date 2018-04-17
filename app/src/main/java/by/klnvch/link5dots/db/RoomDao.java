@@ -22,54 +22,27 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.models;
+package by.klnvch.link5dots.db;
 
-import android.support.annotation.NonNull;
+import android.arch.persistence.room.Dao;
+import android.arch.persistence.room.Delete;
+import android.arch.persistence.room.Insert;
+import android.arch.persistence.room.OnConflictStrategy;
+import android.arch.persistence.room.Query;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import java.util.List;
 
-import static com.google.android.gms.common.internal.Preconditions.checkNotNull;
+import by.klnvch.link5dots.models.Room;
+import io.reactivex.Flowable;
 
-@NoArgsConstructor
-@AllArgsConstructor
-@Getter
-@Setter
-public class Dot {
+@Dao
+public interface RoomDao {
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insertRoom(Room room);
 
-    public static final int EMPTY = 1;
-    public static final int HOST = 2;
-    public static final int GUEST = 4;
+    @Delete
+    void deleteRoom(Room room);
 
-    private int x;
-    private int y;
-    private int id;
-    private int type;
-    private long timestamp;
-
-    public Dot(int x, int y) {
-        this.x = x;
-        this.y = y;
-        this.type = EMPTY;
-        this.id = -1;
-    }
-
-    static Dot copyDot(@NonNull Dot dot) {
-        checkNotNull(dot);
-
-        final Dot result = new Dot();
-        result.x = dot.x;
-        result.y = dot.y;
-        result.type = dot.type;
-        result.id = dot.id;
-        result.timestamp = dot.timestamp;
-        return result;
-    }
-
-    @Override
-    public String toString() {
-        return "(" + x + "," + y + ")";
-    }
+    @Query("SELECT * FROM rooms")
+    Flowable<List<Room>> loadAll();
 }
