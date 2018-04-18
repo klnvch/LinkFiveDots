@@ -130,7 +130,7 @@ public class Game {
         final Dot lastDot = getLastDot();
 
         if (mWinningLine != null && firstDot != null && lastDot != null) {
-            final long time = System.currentTimeMillis() / 1000 - firstDot.getTimestamp();
+            final long time = (System.currentTimeMillis() - firstDot.getTimestamp()) / 1000;
             final int movesDone = lastDot.getId() + 1;
 
             if (mWinningLine.get(0).getType() == mHostDotType) {
@@ -176,7 +176,7 @@ public class Game {
         return net[x][y];
     }
 
-    private boolean checkCorrectness(int x, int y) {
+    public boolean checkCorrectness(int x, int y) {
         return isInBound(x, y) && net[x][y].getType() == Dot.EMPTY && mWinningLine == null;
     }
 
@@ -253,6 +253,9 @@ public class Game {
 
     @Nullable
     public HighScore getCurrentScore() {
+        if (mWinningLine != null && mScore == null) {
+            prepareScore();
+        }
         return mScore;
     }
 

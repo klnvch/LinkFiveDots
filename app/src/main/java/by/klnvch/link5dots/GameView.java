@@ -342,7 +342,7 @@ public class GameView extends View {
                 }
                 mWinningLineDX = mLineSize;
                 mWinningLineDY = 0;
-            } else if (x2 > x1) {//diagonal right to left
+            } else { // (x2 > x1) diagonal right to left
                 if (isHostWinner) {
                     mWinningLine = userDiagonal2Line;
                 } else {
@@ -407,7 +407,7 @@ public class GameView extends View {
                 final int x = MathUtils.findClosestIndex(mLineLocations, point.x);
                 final int y = MathUtils.findClosestIndex(mLineLocations, point.y);
 
-                if (mOnMoveDoneListener != null) {
+                if (mOnMoveDoneListener != null && mGameState.checkCorrectness(x, y)) {
                     mOnMoveDoneListener.onMoveDone(new Dot(x, y), mGameState.getLastDot());
                 } else {
                     Log.e(TAG, "listener is null");

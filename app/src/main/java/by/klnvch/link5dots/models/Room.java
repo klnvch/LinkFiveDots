@@ -112,10 +112,12 @@ public class Room {
     }
 
     public void addDot(@NonNull Dot dot) {
+        dot.setTimestamp(System.currentTimeMillis());
         if (dots != null) {
-            dot.setTimestamp(System.currentTimeMillis());
+            dot.setId(dots.size());
             dots.add(dot);
         } else {
+            dot.setId(0);
             dots = new ArrayList<>(Collections.singletonList(dot));
         }
     }
@@ -151,6 +153,18 @@ public class Room {
             return String.format(Locale.getDefault(), TIME_FORMAT, min, sec);
         }
         return null;
+    }
+
+    @Nullable
+    public Dot getLastDot() {
+        if (dots != null && !dots.isEmpty()) {
+            return dots.get(dots.size() - 1);
+        }
+        return null;
+    }
+
+    public int getHostDotType(@NonNull User host) {
+        return host.equals(user1) ? Dot.HOST : Dot.GUEST;
     }
 
     @Override
