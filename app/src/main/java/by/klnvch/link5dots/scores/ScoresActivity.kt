@@ -24,16 +24,23 @@
 
 package by.klnvch.link5dots.scores
 
+import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentStatePagerAdapter
 import android.support.v7.app.AppCompatActivity
 import by.klnvch.link5dots.R
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_scores.*
 
 
 class ScoresActivity : AppCompatActivity() {
+
+    private val mDisposables = CompositeDisposable()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,6 +48,29 @@ class ScoresActivity : AppCompatActivity() {
         setTitle(R.string.scores_title)
 
         viewPager.adapter = PagerAdapter(supportFragmentManager)
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        mDisposables.add(Observable.fromCallable({ getCurrentItem() })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ viewPager.currentItem = it }))
+    }
+
+    override fun onStop() {
+        super.onStop()
+
+        getPreferences(Context.MODE_PRIVATE)
+                .edit()
+                .putInt("currentItem", viewPager.currentItem)
+                .apply()
+        mDisposables.clear()
+    }
+
+    private fun getCurrentItem(): Int {
+        return getPreferences(Context.MODE_PRIVATE).getInt("currentItem", 0)
     }
 
     private inner class PagerAdapter(fm: FragmentManager) : FragmentStatePagerAdapter(fm) {
