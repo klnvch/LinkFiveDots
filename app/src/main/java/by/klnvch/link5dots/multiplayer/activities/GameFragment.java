@@ -26,6 +26,7 @@ package by.klnvch.link5dots.multiplayer.activities;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -37,8 +38,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
-import java.util.List;
 
 import by.klnvch.link5dots.GameView;
 import by.klnvch.link5dots.R;
@@ -60,19 +59,12 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 public class GameFragment extends Fragment {
 
-    public static final String TAG = "OnlineGameFragment";
+    public static final String TAG = "GameFragment";
     private final CompositeDisposable mDisposables = new CompositeDisposable();
-    private GameView mView = null;
+    private GameView mView;
     private TextView mTextUserName;
     private TextView mTextOpponentName;
     private OnGameListener mListener;
-    private int mHostDotType;
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-    }
 
     @Override
     public void onAttach(Context context) {
@@ -88,6 +80,8 @@ public class GameFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
+
         final View root = inflater.inflate(R.layout.game_board, container, false);
 
         mTextUserName = root.findViewById(R.id.text_user_name);
@@ -141,28 +135,29 @@ public class GameFragment extends Fragment {
         mView.init(getContext(), dotsType);
 
         if (dotsType == SettingsUtils.DOTS_TYPE_ORIGINAL) {
-            mTextUserName.setCompoundDrawablesWithIntrinsicBounds(
-                    R.drawable.game_dot_circle_red, 0, 0, 0);
-            mTextOpponentName.setCompoundDrawablesWithIntrinsicBounds(
-                    R.drawable.game_dot_circle_blue, 0, 0, 0);
+            setLeftDrawable(mTextUserName, R.drawable.game_dot_circle_red);
+            setLeftDrawable(mTextOpponentName, R.drawable.game_dot_circle_blue);
         } else {
-            mTextUserName.setCompoundDrawablesWithIntrinsicBounds(
-                    R.drawable.game_dot_cross_red, 0, 0, 0);
-            mTextOpponentName.setCompoundDrawablesWithIntrinsicBounds(
-                    R.drawable.game_dot_ring_blue, 0, 0, 0);
+            setLeftDrawable(mTextUserName, R.drawable.game_dot_cross_red);
+            setLeftDrawable(mTextOpponentName, R.drawable.game_dot_ring_blue);
         }
+    }
+
+    private void setLeftDrawable(@NonNull TextView view, @DrawableRes int drawable) {
+        view.setCompoundDrawablesWithIntrinsicBounds(drawable, 0, 0, 0);
     }
 
     public void update(@NonNull Room room) {
         checkNotNull(room);
+        checkNotNull(getContext());
         checkNotNull(mListener);
 
         final User user1 = room.getUser1();
         final User user2 = room.getUser2();
 
-        mHostDotType = mListener.getUser().equals(user1) ? Dot.HOST : Dot.GUEST;
+        final int hostDotType = room.getHostDotType(mListener.getUser());
 
-        if (mHostDotType == Dot.HOST) {
+        if (hostDotType == Dot.HOST) {
             mTextUserName.setText(user1.getName());
             mTextOpponentName.setText(user2.getName());
         } else {
@@ -170,42 +165,28 @@ public class GameFragment extends Fragment {
             mTextOpponentName.setText(user1.getName());
         }
 
-        final List<Dot> dots = room.getDots();
-        if (mHostDotType != Dot.EMPTY) {
-            mView.setGameState(Game.createGame(dots, mHostDotType));
-        }
+        mView.setGameState(Game.createGame(room.getDots(), hostDotType));
 
         // save to the db
-        if (getContext() != null) {
-            mDisposables.add(Completable.fromAction(() ->
-                    AppDatabase.getDB(getContext()).roomDao().insertRoom(room))
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(() -> Log.d(TAG, "db success"),
-                            throwable -> Log.e(TAG, "db error: ", throwable)));
-        }
+        mDisposables.add(Completable.fromAction(() ->
+                AppDatabase.getDB(getContext()).roomDao().insertRoom(room))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(() -> Log.d(TAG, "db success")));
     }
 
     private void onMoveDone(@NonNull Dot currentDot, @Nullable Dot previousDot) {
-        if (previousDot == null || previousDot.getType() != mHostDotType) {
-            final Dot dot = mView.setHostDot(currentDot);
+        checkNotNull(currentDot);
 
-            if (dot != null) {
-                mListener.onMoveDone(dot);
-            } else {
-                Log.e(TAG, "onMoveDone: result dot is null");
-            }
-        }
+        mListener.onMoveDone(currentDot);
     }
 
     private void onGameFinished(@NonNull HighScore highScore) {
-        if (getFragmentManager() != null) {
-            EndGameDialog.newInstance(highScore, false)
-                    .setOnNewGameListener(this::newGame)
-                    .show(getFragmentManager(), EndGameDialog.TAG);
-        } else {
-            Log.e(TAG, "getFragmentManager() is null");
-        }
+        checkNotNull(getFragmentManager());
+
+        EndGameDialog.newInstance(highScore, false)
+                .setOnNewGameListener(this::newGame)
+                .show(getFragmentManager(), EndGameDialog.TAG);
     }
 
     private void newGame() {
@@ -214,7 +195,6 @@ public class GameFragment extends Fragment {
     }
 
     public interface OnGameListener {
-
         @NonNull
         User getUser();
 

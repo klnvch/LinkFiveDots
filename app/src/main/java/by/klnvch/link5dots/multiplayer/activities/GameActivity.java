@@ -341,7 +341,18 @@ public abstract class GameActivity extends AppCompatActivity implements
 
     @Override
     public void onMoveDone(@NonNull Dot dot) {
-        mService.addDot(dot);
+        final Room room = mService.getRoom();
+
+        checkNotNull(dot);
+        checkNotNull(room);
+
+        final Dot previousDot = room.getLastDot();
+        final int hostDotType = room.getHostDotType(mService.getUser());
+
+        if (previousDot == null || previousDot.getType() != hostDotType) {
+            dot.setType(hostDotType);
+            mService.addDot(dot);
+        }
     }
 
     private void addPickerFragment() {
