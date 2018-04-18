@@ -70,6 +70,11 @@ class HistoryAdapter(private val mDataset: MutableList<Room>) :
         notifyItemRemoved(position)
     }
 
+    fun insertAt(position: Int, room: Room) {
+        mDataset.add(position, room)
+        notifyItemInserted(position)
+    }
+
     fun get(position: Int): Room {
         return mDataset[position]
     }

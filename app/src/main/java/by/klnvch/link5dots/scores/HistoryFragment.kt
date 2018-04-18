@@ -25,15 +25,14 @@
 package by.klnvch.link5dots.scores
 
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import by.klnvch.link5dots.R
 import by.klnvch.link5dots.db.AppDatabase
 import by.klnvch.link5dots.models.Room
@@ -56,7 +55,6 @@ class HistoryFragment : Fragment() {
                             target: RecyclerView.ViewHolder?): Boolean {
             return false
         }
-
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -74,8 +72,7 @@ class HistoryFragment : Fragment() {
                 mCompositeDisposable.add(Completable.fromAction { deleteRoom(room) }
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe({ onRoomDeleted(position) }
-                        ) { throwable -> Log.e("HistoryFragment", "db error: ", throwable) })
+                        .subscribe({ onRoomDeleted(position, room) }))
             }
         }
         val itemTouchHelper = ItemTouchHelper(swipeHandler)
@@ -115,10 +112,26 @@ class HistoryFragment : Fragment() {
         AppDatabase.getDB(context!!).roomDao().deleteRoom(room)
     }
 
-    private fun onRoomDeleted(position: Int) {
+    private fun onRoomDeleted(position: Int, room: Room) {
         (view?.recyclerView?.adapter as HistoryAdapter).removeAt(position)
+
         val msg = getString(R.string.contacts_deleted_one_named_toast, position.toString())
-        Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+        Snackbar.make(view!!.recyclerView!!, msg, Snackbar.LENGTH_LONG)
+                .setAction(R.string.end_undo, {
+                    mCompositeDisposable.add(Completable.fromAction { insertRoom(room) }
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe({ onRoomInserted(position, room) }))
+                })
+                .show()
+    }
+
+    private fun insertRoom(room: Room) {
+        AppDatabase.getDB(context!!).roomDao().insertRoom(room)
+    }
+
+    private fun onRoomInserted(position: Int, room: Room) {
+        (view?.recyclerView?.adapter as HistoryAdapter).insertAt(position, room)
     }
 
     private fun showError(msg: Int) {

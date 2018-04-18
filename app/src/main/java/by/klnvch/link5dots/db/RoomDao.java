@@ -43,6 +43,6 @@ public interface RoomDao {
     @Delete
     void deleteRoom(Room room);
 
-    @Query("SELECT * FROM rooms")
+    @Query("SELECT * FROM rooms ORDER BY timestamp")
     Flowable<List<Room>> loadAll();
 }
