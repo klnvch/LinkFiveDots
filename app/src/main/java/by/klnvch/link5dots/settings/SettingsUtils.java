@@ -28,15 +28,19 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.preference.PreferenceManager;
+import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatDelegate;
 
+import java.lang.annotation.Retention;
 import java.util.Locale;
 
 import by.klnvch.link5dots.MainActivity;
 import by.klnvch.link5dots.R;
 import by.klnvch.link5dots.TwoPlayersActivity;
+
+import static java.lang.annotation.RetentionPolicy.SOURCE;
 
 public class SettingsUtils {
 
@@ -161,6 +165,7 @@ public class SettingsUtils {
         }
     }
 
+    @DotsType
     public static int getDotsType(@NonNull Context context) {
         return PreferenceManager
                 .getDefaultSharedPreferences(context)
@@ -186,5 +191,10 @@ public class SettingsUtils {
         Configuration config = new Configuration(resources.getConfiguration());
         config.locale = locale;
         resources.updateConfiguration(config, resources.getDisplayMetrics());
+    }
+
+    @Retention(SOURCE)
+    @IntDef({DOTS_TYPE_ORIGINAL, DOTS_TYPE_CROSS_AND_RING})
+    public @interface DotsType {
     }
 }

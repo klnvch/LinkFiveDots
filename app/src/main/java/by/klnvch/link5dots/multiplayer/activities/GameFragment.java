@@ -97,7 +97,8 @@ public class GameFragment extends Fragment {
         mView.setOnMoveDoneListener(this::onMoveDone);
         mView.setOnGameEndListener(this::onGameFinished);
 
-        mDisposables.add(Observable.fromCallable(this::getDotsType)
+        checkNotNull(getContext());
+        mDisposables.add(Observable.fromCallable(() -> SettingsUtils.getDotsType(getContext()))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::setDotsType));
@@ -134,15 +135,11 @@ public class GameFragment extends Fragment {
         }
     }
 
-    private int getDotsType() {
-        if (getContext() != null) {
-            return SettingsUtils.getDotsType(getContext());
-        } else {
-            return SettingsUtils.DOTS_TYPE_ORIGINAL;
-        }
-    }
+    private void setDotsType(@SettingsUtils.DotsType int dotsType) {
+        checkNotNull(getContext());
 
-    private void setDotsType(int dotsType) {
+        mView.init(getContext(), dotsType);
+
         if (dotsType == SettingsUtils.DOTS_TYPE_ORIGINAL) {
             mTextUserName.setCompoundDrawablesWithIntrinsicBounds(
                     R.drawable.game_dot_circle_red, 0, 0, 0);

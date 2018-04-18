@@ -95,20 +95,17 @@ public class GameView extends View {
 
     public GameView(Context context) {
         super(context);
-        initGameView(context);
     }
 
-    public GameView(Context context, AttributeSet attrSet) {
-        super(context, attrSet);
-        initGameView(context);
+    public GameView(Context context, @Nullable AttributeSet attrs) {
+        super(context, attrs);
     }
 
-    public GameView(Context context, AttributeSet attrSet, int defStyle) {
-        super(context, attrSet, defStyle);
-        initGameView(context);
+    public GameView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
     }
 
-    private void initGameView(Context context) {
+    public void init(@NonNull Context context, @SettingsUtils.DotsType int dotsType) {
         Log.d(TAG, "initGameView");
 
         setFocusable(true);
@@ -123,7 +120,7 @@ public class GameView extends View {
         final int colorRed = ContextCompat.getColor(context, R.color.dot_color_red);
         final int colorBlue = ContextCompat.getColor(context, R.color.dot_color_blue);
         mBitmapPaper = BitmapFactory.decodeResource(getResources(), R.drawable.background);
-        if (SettingsUtils.getDotsType(getContext()) == SettingsUtils.DOTS_TYPE_ORIGINAL) {
+        if (dotsType == SettingsUtils.DOTS_TYPE_ORIGINAL) {
             mBitmapUserDot = BitmapCreator.createBitmap(BitmapCreator.DOT, colorRed, density);
             mBitmapBotDot = BitmapCreator.createBitmap(BitmapCreator.DOT, colorBlue, density);
         } else {
