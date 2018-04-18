@@ -165,7 +165,9 @@ public abstract class BaseActivity extends AppCompatActivity {
                 .apply();
     }
 
-    private void setDotsType(int dotsType) {
+    private void setDotsType(@SettingsUtils.DotsType int dotsType) {
+        mView.init(this, dotsType);
+
         final TextView tvUserName = findViewById(R.id.text_user_name);
         final TextView tvOpponentName = findViewById(R.id.text_opponent_name);
 
