@@ -36,7 +36,10 @@ import kotlinx.android.synthetic.main.item_history.view.*
 class HistoryAdapter(private val mDataset: MutableList<Room>) :
         RecyclerView.Adapter<HistoryAdapter.HighScoreHolder>() {
 
+    var onItemClickListener: OnItemClickListener? = null
+
     class HighScoreHolder(view: View) : RecyclerView.ViewHolder(view) {
+        val root = view
         val textUser1Name: TextView = view.textUser1Name
         val textUser2Name: TextView = view.textUser2Name
         val textTime: TextView = view.textTimeValue
@@ -53,6 +56,7 @@ class HistoryAdapter(private val mDataset: MutableList<Room>) :
     }
 
     override fun onBindViewHolder(holder: HighScoreHolder, position: Int) {
+        holder.root.setOnClickListener { onItemClickListener?.onItemSelected(mDataset[position]) }
         holder.textUser1Name.text = mDataset[position].user1.name
         holder.textUser2Name.text = mDataset[position].user2.name
         holder.textTime.text = mDataset[position].startTime
@@ -80,4 +84,8 @@ class HistoryAdapter(private val mDataset: MutableList<Room>) :
     }
 
     override fun getItemCount() = mDataset.size
+
+    interface OnItemClickListener {
+        fun onItemSelected(room: Room)
+    }
 }

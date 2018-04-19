@@ -42,7 +42,6 @@ import android.widget.TextView;
 import by.klnvch.link5dots.GameView;
 import by.klnvch.link5dots.R;
 import by.klnvch.link5dots.db.AppDatabase;
-import by.klnvch.link5dots.dialogs.EndGameDialog;
 import by.klnvch.link5dots.models.Dot;
 import by.klnvch.link5dots.models.Game;
 import by.klnvch.link5dots.models.HighScore;
@@ -168,11 +167,17 @@ public class GameFragment extends Fragment {
         mView.setGameState(Game.createGame(room.getDots(), hostDotType));
 
         // save to the db
-        mDisposables.add(Completable.fromAction(() ->
-                AppDatabase.getDB(getContext()).roomDao().insertRoom(room))
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(() -> Log.d(TAG, "db success")));
+        if (!room.isEmpty()) {
+            mDisposables.add(Completable.fromAction(() ->
+                    AppDatabase.getDB(getContext()).roomDao().insertRoom(room))
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(() -> Log.d(TAG, "db success")));
+        }
+    }
+
+    public void reset() {
+        mView.newGame(null);
     }
 
     private void onMoveDone(@NonNull Dot currentDot, @Nullable Dot previousDot) {
@@ -182,16 +187,7 @@ public class GameFragment extends Fragment {
     }
 
     private void onGameFinished(@NonNull HighScore highScore) {
-        checkNotNull(getFragmentManager());
-
-        EndGameDialog.newInstance(highScore, false)
-                .setOnNewGameListener(this::newGame)
-                .show(getFragmentManager(), EndGameDialog.TAG);
-    }
-
-    private void newGame() {
-        mView.newGame(null);
-        mListener.newGame();
+        mListener.onGameFinished(highScore);
     }
 
     public interface OnGameListener {
@@ -200,6 +196,6 @@ public class GameFragment extends Fragment {
 
         void onMoveDone(@NonNull Dot dot);
 
-        void newGame();
+        void onGameFinished(@NonNull HighScore highScore);
     }
 }

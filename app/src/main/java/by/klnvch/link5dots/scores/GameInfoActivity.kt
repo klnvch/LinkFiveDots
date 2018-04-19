@@ -22,56 +22,37 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.models;
+package by.klnvch.link5dots.scores
 
-import android.support.annotation.NonNull;
+import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
+import by.klnvch.link5dots.R
+import by.klnvch.link5dots.models.Dot
+import by.klnvch.link5dots.models.HighScore
+import by.klnvch.link5dots.models.Room
+import by.klnvch.link5dots.models.User
+import by.klnvch.link5dots.multiplayer.activities.GameFragment
+import kotlinx.android.synthetic.main.activity_game_info.*
 
-import java.io.Serializable;
-
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-import static com.google.android.gms.common.internal.Preconditions.checkNotNull;
-
-@NoArgsConstructor
-@AllArgsConstructor
-@Getter
-@Setter
-public class Dot implements Serializable {
-
-    public static final int EMPTY = 1;
-    public static final int HOST = 2;
-    public static final int GUEST = 4;
-
-    private int x;
-    private int y;
-    private int id;
-    private int type;
-    private long timestamp;
-
-    public Dot(int x, int y) {
-        this.x = x;
-        this.y = y;
-        this.type = EMPTY;
-        this.id = -1;
+class GameInfoActivity : AppCompatActivity(), GameFragment.OnGameListener {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_game_info)
+        setTitle(R.string.application_info_label)
     }
 
-    static Dot copyDot(@NonNull Dot dot) {
-        checkNotNull(dot);
-
-        final Dot result = new Dot();
-        result.x = dot.x;
-        result.y = dot.y;
-        result.type = dot.type;
-        result.id = dot.id;
-        result.timestamp = dot.timestamp;
-        return result;
+    override fun onStart() {
+        super.onStart()
+        (fragment as GameFragment).update(intent.getSerializableExtra("room") as Room)
     }
 
-    @Override
-    public String toString() {
-        return "(" + x + "," + y + ")";
+    override fun onMoveDone(dot: Dot) {
+    }
+
+    override fun onGameFinished(highScore: HighScore) {
+    }
+
+    override fun getUser(): User {
+        return (intent.getSerializableExtra("room") as Room).user1
     }
 }

@@ -27,6 +27,7 @@ package by.klnvch.link5dots.multiplayer.activities;
 public class GameActivityNsd extends GameActivity {
     @Override
     public void newGame() {
+        mGameFragment.reset();
         mService.newGame();
     }
 }

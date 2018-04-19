@@ -28,12 +28,13 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.support.annotation.NonNull;
 
+import java.io.Serializable;
 import java.util.Random;
 
 import static com.google.android.gms.common.internal.Preconditions.checkNotNull;
 
 @Entity(tableName = "users")
-public class User {
+public class User implements Serializable {
 
     @ColumnInfo(name = "id")
     private String id;

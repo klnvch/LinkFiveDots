@@ -25,9 +25,9 @@
 package by.klnvch.link5dots.multiplayer.activities;
 
 public class GameActivityBluetooth extends GameActivity {
-
     @Override
     public void newGame() {
+        mGameFragment.reset();
         mService.newGame();
     }
 }
