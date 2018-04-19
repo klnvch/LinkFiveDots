@@ -114,6 +114,13 @@
                 android:value="by.klnvch.link5dots.MainMenuActivity" />
         </activity>
         <activity
+            android:name="by.klnvch.link5dots.scores.GameInfoActivity"
+            android:label="@string/application_info_label">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="by.klnvch.link5dots.scores.ScoresActivity" />
+        </activity>
+        <activity
             android:name="by.klnvch.link5dots.HowToActivity"
             android:label="@string/how_to_title">
             <meta-data

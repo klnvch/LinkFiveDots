@@ -33,6 +33,7 @@ import android.support.annotation.Nullable;
 
 import com.google.gson.Gson;
 
+import java.io.Serializable;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -42,7 +43,7 @@ import java.util.Locale;
 import java.util.Random;
 
 @Entity(tableName = "rooms")
-public class Room {
+public class Room implements Serializable {
 
     public static final int STATE_CREATED = 0;
     public static final int STATE_DELETED = 1;
@@ -161,6 +162,10 @@ public class Room {
             return dots.get(dots.size() - 1);
         }
         return null;
+    }
+
+    public boolean isEmpty() {
+        return dots == null || dots.isEmpty();
     }
 
     public int getHostDotType(@NonNull User host) {

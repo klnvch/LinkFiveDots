@@ -24,6 +24,7 @@
 
 package by.klnvch.link5dots.scores
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
@@ -36,6 +37,7 @@ import android.view.ViewGroup
 import by.klnvch.link5dots.R
 import by.klnvch.link5dots.db.AppDatabase
 import by.klnvch.link5dots.models.Room
+import by.klnvch.link5dots.scores.HistoryAdapter.OnItemClickListener
 import io.reactivex.Completable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -44,7 +46,7 @@ import kotlinx.android.synthetic.main.fragment_scores.*
 import kotlinx.android.synthetic.main.fragment_scores.view.*
 
 
-class HistoryFragment : Fragment() {
+class HistoryFragment : Fragment(), OnItemClickListener {
 
     private val mCompositeDisposable = CompositeDisposable()
 
@@ -91,6 +93,10 @@ class HistoryFragment : Fragment() {
         mCompositeDisposable.clear()
     }
 
+    override fun onItemSelected(room: Room) {
+        startActivity(Intent(context, GameInfoActivity::class.java).putExtra("room", room))
+    }
+
     private fun loadData() {
         val disposable = AppDatabase.getDB(context!!).roomDao().loadAll()
                 .subscribeOn(Schedulers.io())
@@ -104,7 +110,9 @@ class HistoryFragment : Fragment() {
         if (rooms.isEmpty()) {
             showError(R.string.search_settings_no_results)
         } else {
-            view?.recyclerView?.adapter = HistoryAdapter(rooms.toMutableList())
+            val adapter = HistoryAdapter(rooms.toMutableList())
+            view?.recyclerView?.adapter = adapter
+            adapter.onItemClickListener = this
         }
     }
 

@@ -46,7 +46,9 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.List;
 
 import by.klnvch.link5dots.R;
+import by.klnvch.link5dots.dialogs.EndGameDialog;
 import by.klnvch.link5dots.models.Dot;
+import by.klnvch.link5dots.models.HighScore;
 import by.klnvch.link5dots.models.Room;
 import by.klnvch.link5dots.models.User;
 import by.klnvch.link5dots.multiplayer.adapters.TargetAdapterInterface;
@@ -67,7 +69,7 @@ public abstract class GameActivity extends AppCompatActivity implements
     private static final String TAG = "NsdGameActivity";
 
     GameServiceInterface mService = null; // can be null
-    private GameFragment mGameFragment = null;
+    protected GameFragment mGameFragment = null;
     private FactoryActivityInterface mFactory;
 
     private final ServiceConnection mConnection = new ServiceConnection() {
@@ -354,6 +356,17 @@ public abstract class GameActivity extends AppCompatActivity implements
             mService.addDot(dot);
         }
     }
+
+    @Override
+    public void onGameFinished(@NonNull HighScore highScore) {
+        checkNotNull(getFragmentManager());
+
+        EndGameDialog.newInstance(highScore, false)
+                .setOnNewGameListener(this::newGame)
+                .show(getSupportFragmentManager(), EndGameDialog.TAG);
+    }
+
+    protected abstract void newGame();
 
     private void addPickerFragment() {
         getSupportFragmentManager()
