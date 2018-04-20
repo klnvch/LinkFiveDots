@@ -67,12 +67,12 @@ public abstract class BaseActivity extends AppCompatActivity {
         mView.setOnMoveDoneListener(this::onMoveDone);
         mView.setOnGameEndListener(this::onGameFinished);
 
-        mDisposables.add(Observable.fromCallable(() -> SettingsUtils.getUserNameOrDefault(this))
+        mDisposables.add(SettingsUtils.getUserNameOrDefault(this)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::setUsername));
 
-        mDisposables.add(Observable.fromCallable(() -> SettingsUtils.getDotsType(this))
+        mDisposables.add(SettingsUtils.getDotsType(this)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::setDotsType));

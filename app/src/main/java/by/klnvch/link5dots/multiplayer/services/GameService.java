@@ -52,6 +52,9 @@ import by.klnvch.link5dots.multiplayer.utils.OnRoomUpdatedListener;
 import by.klnvch.link5dots.multiplayer.utils.OnTargetCreatedListener;
 import by.klnvch.link5dots.multiplayer.utils.OnTargetDeletedListener;
 import by.klnvch.link5dots.settings.SettingsUtils;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -69,6 +72,7 @@ public abstract class GameService extends Service implements GameServiceInterfac
     private TargetAdapterInterface mAdapter;
     private User mUser;
     private Room mRoom = null;
+    protected final CompositeDisposable mDisposables = new CompositeDisposable();
 
     @Override
     public void onCreate() {
@@ -78,7 +82,12 @@ public abstract class GameService extends Service implements GameServiceInterfac
         mFactory = FactoryProvider.getServiceFactory(this.getClass());
         mAdapter = mFactory.getAdapter(this);
         mScanner = (ScannerInterface) mAdapter;
-        mUser = User.newUser(SettingsUtils.getUserNameOrDefault(this));
+
+        // TODO: set NOT READY state till completion
+        mDisposables.add(SettingsUtils.getUserNameOrDefault(this)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(s -> mUser = User.newUser(s)));
     }
 
     @Override
@@ -99,7 +108,7 @@ public abstract class GameService extends Service implements GameServiceInterfac
         Log.d(TAG, "onDestroy");
 
         mScanner.stopScan();
-
+        mDisposables.clear();
         super.onDestroy();
     }
 

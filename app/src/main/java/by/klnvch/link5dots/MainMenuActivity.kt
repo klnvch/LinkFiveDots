@@ -34,7 +34,6 @@ import by.klnvch.link5dots.scores.ScoresActivity
 import by.klnvch.link5dots.settings.SettingsActivity
 import by.klnvch.link5dots.settings.SettingsUtils
 import by.klnvch.link5dots.settings.UsernameDialog
-import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -62,17 +61,17 @@ class MainMenuActivity : AppCompatActivity(), View.OnClickListener, View.OnLongC
 
         textViewGreeting.setOnLongClickListener(this)
 
-        mDisposables.add(Observable.fromCallable { SettingsUtils.isTheFirstRun(this) }
+        mDisposables.add(SettingsUtils.isTheFirstRun(this)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { checkTheFirstRun(it) })
 
-        mDisposables.add(Observable.fromCallable { SettingsUtils.checkConfiguration(this) }
+        mDisposables.add(SettingsUtils.isConfigurationChanged(this)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { changeConfiguration(it) })
 
-        mDisposables.add(Observable.fromCallable { SettingsUtils.getUserNameOrEmpty(this) }
+        mDisposables.add(SettingsUtils.getUserNameOrEmpty(this)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { setUsername(it) })

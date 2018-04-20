@@ -36,19 +36,24 @@ import android.view.View;
 import android.widget.EditText;
 
 import by.klnvch.link5dots.R;
-import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 public class UsernameDialog extends DialogFragment implements DialogInterface.OnClickListener {
 
     public static final String TAG = "UsernameDialog";
 
     private OnUsernameChangedListener mListener = null;
+    protected final CompositeDisposable mDisposables = new CompositeDisposable();
 
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+        checkNotNull(getContext());
+
         return new AlertDialog.Builder(getContext())
                 .setCancelable(false)
                 .setPositiveButton(R.string.okay, this)
@@ -60,15 +65,18 @@ public class UsernameDialog extends DialogFragment implements DialogInterface.On
     @Override
     public void onStart() {
         super.onStart();
-        Observable.fromCallable(this::getUserName)
+        checkNotNull(getContext());
+
+        mDisposables.add(SettingsUtils.getUserNameOrDefault(getContext())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::setUsername);
+                .subscribe(this::setUsername));
     }
 
     @Override
     public void onDestroy() {
         mListener = null;
+        mDisposables.clear();
         super.onDestroy();
     }
 
@@ -80,19 +88,16 @@ public class UsernameDialog extends DialogFragment implements DialogInterface.On
 
     @Override
     public void onClick(DialogInterface dialog, int which) {
-        EditText editText = getDialog().findViewById(R.id.username);
-        String username = editText.getText().toString().trim();
+        checkNotNull(getContext());
+
+        final EditText editText = getDialog().findViewById(R.id.username);
+        final String username = editText.getText().toString().trim();
         if (!username.isEmpty()) {
             SettingsUtils.setUserName(getContext(), username);
             if (mListener != null) {
                 mListener.onUsernameChanged(username);
             }
         }
-    }
-
-    @NonNull
-    private String getUserName() {
-        return SettingsUtils.getUserNameOrDefault(getContext());
     }
 
     private void setUsername(@Nullable String username) {

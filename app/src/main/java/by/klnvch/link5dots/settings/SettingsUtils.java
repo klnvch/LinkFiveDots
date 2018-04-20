@@ -39,6 +39,7 @@ import java.util.Locale;
 import by.klnvch.link5dots.MainActivity;
 import by.klnvch.link5dots.R;
 import by.klnvch.link5dots.TwoPlayersActivity;
+import io.reactivex.Observable;
 
 import static java.lang.annotation.RetentionPolicy.SOURCE;
 
@@ -54,7 +55,11 @@ public class SettingsUtils {
     private static final String KEY_NIGHT_MODE = "pref_night_mode";
     private static final String KEY_PREF_DOTS_TYPE = "pref_dots_type";
 
-    public static boolean checkConfiguration(@NonNull Context context) {
+    public static Observable<Boolean> isConfigurationChanged(@NonNull Context context) {
+        return Observable.fromCallable(() -> checkConfiguration(context));
+    }
+
+    private static boolean checkConfiguration(@NonNull Context context) {
         boolean isToBeRestated = false;
         // check language
         String savedLanguage = PreferenceManager
@@ -95,10 +100,10 @@ public class SettingsUtils {
                 .apply();
     }
 
-    public static boolean isTheFirstRun(@NonNull Context context) {
-        return PreferenceManager
+    public static Observable<Boolean> isTheFirstRun(@NonNull Context context) {
+        return Observable.fromCallable(() -> PreferenceManager
                 .getDefaultSharedPreferences(context)
-                .getBoolean(SettingsUtils.FIRST_RUN, true);
+                .getBoolean(SettingsUtils.FIRST_RUN, true));
     }
 
     public static void setTheFirstRun(@NonNull Context context) {
@@ -110,27 +115,31 @@ public class SettingsUtils {
     }
 
     @NonNull
-    public static String getUserNameOrEmpty(@NonNull Context context) {
-        final String username = PreferenceManager
-                .getDefaultSharedPreferences(context)
-                .getString(KEY_PREF_USERNAME, null);
-        if (username == null) {
-            return "";
-        } else {
-            return username;
-        }
+    public static Observable<String> getUserNameOrEmpty(@NonNull Context context) {
+        return Observable.fromCallable(() -> {
+            final String username = PreferenceManager
+                    .getDefaultSharedPreferences(context)
+                    .getString(KEY_PREF_USERNAME, null);
+            if (username == null) {
+                return "";
+            } else {
+                return username;
+            }
+        });
     }
 
     @NonNull
-    public static String getUserNameOrDefault(@NonNull Context context) {
-        final String username = PreferenceManager
-                .getDefaultSharedPreferences(context)
-                .getString(KEY_PREF_USERNAME, null);
-        if (username == null) {
-            return context.getString(R.string.device_info_default);
-        } else {
-            return username;
-        }
+    public static Observable<String> getUserNameOrDefault(@NonNull Context context) {
+        return Observable.fromCallable(() -> {
+            final String username = PreferenceManager
+                    .getDefaultSharedPreferences(context)
+                    .getString(KEY_PREF_USERNAME, null);
+            if (username == null) {
+                return context.getString(R.string.device_info_default);
+            } else {
+                return username;
+            }
+        });
     }
 
     static void setUserName(@NonNull Context context, @Nullable String username) {
@@ -141,10 +150,10 @@ public class SettingsUtils {
                 .apply();
     }
 
-    public static boolean isVibrationEnabled(@NonNull Context context) {
-        return PreferenceManager
+    public static Observable<Boolean> isVibrationEnabled(@NonNull Context context) {
+        return Observable.fromCallable(() -> PreferenceManager
                 .getDefaultSharedPreferences(context)
-                .getBoolean(KEY_PREF_VIBRATION, true);
+                .getBoolean(KEY_PREF_VIBRATION, true));
     }
 
     private static int getNightMode(@NonNull Context context) {
@@ -165,11 +174,10 @@ public class SettingsUtils {
         }
     }
 
-    @DotsType
-    public static int getDotsType(@NonNull Context context) {
-        return PreferenceManager
+    public static Observable<Integer> getDotsType(@NonNull Context context) {
+        return Observable.fromCallable(() -> PreferenceManager
                 .getDefaultSharedPreferences(context)
-                .getInt(KEY_PREF_DOTS_TYPE, DOTS_TYPE_ORIGINAL);
+                .getInt(KEY_PREF_DOTS_TYPE, DOTS_TYPE_ORIGINAL));
     }
 
     static void reset(@NonNull Context context) {
