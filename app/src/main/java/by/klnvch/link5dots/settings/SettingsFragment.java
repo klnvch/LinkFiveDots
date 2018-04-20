@@ -31,8 +31,17 @@ import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 
 import by.klnvch.link5dots.R;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 
-public class SettingsFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener {
+import static com.google.common.base.Preconditions.checkNotNull;
+
+public class SettingsFragment extends PreferenceFragmentCompat
+        implements SharedPreferences.OnSharedPreferenceChangeListener {
+
+    protected final CompositeDisposable mDisposables = new CompositeDisposable();
+
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.preferences, rootKey);
@@ -66,11 +75,24 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
     }
 
     @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if (getActivity() == null) throw new RuntimeException("activity is null");
+    public void onDestroy() {
+        mDisposables.clear();
+        super.onDestroy();
+    }
 
-        if (SettingsUtils.checkConfiguration(getActivity())) {
-            getActivity().recreate();
-        }
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        checkNotNull(getActivity());
+
+        mDisposables.add(SettingsUtils.isConfigurationChanged(getActivity())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this::recreateActivity));
+    }
+
+    private void recreateActivity(boolean isChanged) {
+        checkNotNull(getActivity());
+
+        if (isChanged) getActivity().recreate();
     }
 }

@@ -30,7 +30,6 @@ import android.provider.Settings
 import android.util.Log
 import by.klnvch.link5dots.BuildConfig
 import by.klnvch.link5dots.models.HighScore
-import by.klnvch.link5dots.settings.SettingsUtils
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import com.google.firebase.auth.FirebaseAuth
@@ -57,7 +56,6 @@ class FirebaseUtils {
         fun publishScore(context: Context, highScore: HighScore) {
             highScore.userId = FirebaseAuth.getInstance().currentUser!!.uid
             highScore.androidId = Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
-            highScore.userName = SettingsUtils.getUserNameOrDefault(context)
             highScore.code()
 
             // write to database

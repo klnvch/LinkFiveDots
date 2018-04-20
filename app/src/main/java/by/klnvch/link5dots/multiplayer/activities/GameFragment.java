@@ -49,7 +49,6 @@ import by.klnvch.link5dots.models.Room;
 import by.klnvch.link5dots.models.User;
 import by.klnvch.link5dots.settings.SettingsUtils;
 import io.reactivex.Completable;
-import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
@@ -91,7 +90,7 @@ public class GameFragment extends Fragment {
         mView.setOnGameEndListener(this::onGameFinished);
 
         checkNotNull(getContext());
-        mDisposables.add(Observable.fromCallable(() -> SettingsUtils.getDotsType(getContext()))
+        mDisposables.add(SettingsUtils.getDotsType(getContext())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::setDotsType));
