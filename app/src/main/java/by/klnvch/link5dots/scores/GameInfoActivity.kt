@@ -25,16 +25,16 @@
 package by.klnvch.link5dots.scores
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import by.klnvch.link5dots.GameFragment
 import by.klnvch.link5dots.R
 import by.klnvch.link5dots.models.Dot
 import by.klnvch.link5dots.models.HighScore
 import by.klnvch.link5dots.models.Room
 import by.klnvch.link5dots.models.User
+import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_game.*
 
-class GameInfoActivity : AppCompatActivity(), GameFragment.OnGameListener {
+class GameInfoActivity : DaggerAppCompatActivity(), GameFragment.OnGameListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)

@@ -30,6 +30,7 @@ import by.klnvch.link5dots.TwoPlayersActivity
 import by.klnvch.link5dots.multiplayer.activities.GameActivityBluetooth
 import by.klnvch.link5dots.multiplayer.activities.GameActivityNsd
 import by.klnvch.link5dots.multiplayer.activities.GameActivityOnline
+import by.klnvch.link5dots.scores.GameInfoActivity
 import by.klnvch.link5dots.scores.ScoresActivity
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
@@ -44,6 +45,10 @@ abstract class ActivityBindingModule {
     @ActivityScoped
     @ContributesAndroidInjector(modules = [(FragmentBuildersModule::class)])
     abstract fun scoresActivity(): ScoresActivity
+
+    @ActivityScoped
+    @ContributesAndroidInjector(modules = [(FragmentBuildersModule::class)])
+    abstract fun gameInfoActivity(): GameInfoActivity
 
     @ActivityScoped
     @ContributesAndroidInjector(modules = [(FragmentBuildersModule::class)])

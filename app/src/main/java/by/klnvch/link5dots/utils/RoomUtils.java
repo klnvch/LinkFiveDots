@@ -54,6 +54,20 @@ public class RoomUtils {
         return Room.newRoom(Room.TYPE_TWO_PLAYERS);
     }
 
+    @NonNull
+    public static Room createOnlineGame(@NonNull String key, @NonNull User user) {
+        checkNotNull(key);
+        checkNotNull(user);
+
+        final Room room = new Room();
+        room.setKey(key);
+        room.setTimestamp(System.currentTimeMillis());
+        room.setState(Room.STATE_CREATED);
+        room.setUser1(user);
+        room.setType(Room.TYPE_ONLINE);
+        return room;
+    }
+
     public static boolean isEmpty(@NonNull Room room) {
         checkNotNull(room);
 

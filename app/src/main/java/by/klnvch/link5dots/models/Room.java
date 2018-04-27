@@ -107,19 +107,6 @@ public class Room implements Serializable {
     }
 
     @NonNull
-    public static Room newRoom(@NonNull String key, @NonNull User user, int type) {
-        final Room room = new Room();
-        room.key = key;
-        room.timestamp = System.currentTimeMillis();
-        room.state = STATE_CREATED;
-        room.dots = new ArrayList<>();
-        room.user1 = user;
-        room.type = type;
-
-        return room;
-    }
-
-    @NonNull
     public static Room fromJson(@NonNull String json) {
         return new Gson().fromJson(json, Room.class);
     }
@@ -183,10 +170,7 @@ public class Room implements Serializable {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof Room) {
-            return ((Room) obj).key.equals(this.key);
-        }
-        return false;
+        return obj instanceof Room && ((Room) obj).key.equals(this.key);
     }
 
     @NonNull

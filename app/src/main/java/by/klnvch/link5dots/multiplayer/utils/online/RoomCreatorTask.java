@@ -39,6 +39,7 @@ import by.klnvch.link5dots.multiplayer.targets.TargetOnline;
 import by.klnvch.link5dots.multiplayer.utils.OnRoomConnectedListener;
 import by.klnvch.link5dots.multiplayer.utils.OnTargetCreatedListener;
 import by.klnvch.link5dots.multiplayer.utils.OnTargetDeletedListener;
+import by.klnvch.link5dots.utils.RoomUtils;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
@@ -88,7 +89,7 @@ public class RoomCreatorTask {
         mConnectedListener = connectedListener;
 
         final String key = FirebaseHelper.getKey();
-        mRoom = Room.newRoom(key, user, Room.TYPE_ONLINE);
+        mRoom = RoomUtils.createOnlineGame(key, user);
 
         FirebaseHelper.getRoomReference(key)
                 .setValue(mRoom)
