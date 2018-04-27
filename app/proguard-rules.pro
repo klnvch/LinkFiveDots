@@ -22,3 +22,6 @@
 -dontwarn retrofit2.Platform$Java8
 -keepattributes Signature
 -keepattributes Exceptions
+
+# OkHttp
+-dontwarn okhttp3.**
