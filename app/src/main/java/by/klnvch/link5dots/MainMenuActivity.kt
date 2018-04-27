@@ -27,21 +27,33 @@ package by.klnvch.link5dots
 import android.content.Intent
 import android.os.Bundle
 import android.os.StrictMode
-import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.View
+import by.klnvch.link5dots.db.RoomDao
+import by.klnvch.link5dots.models.Room
+import by.klnvch.link5dots.network.NetworkService
 
 import by.klnvch.link5dots.scores.ScoresActivity
 import by.klnvch.link5dots.settings.SettingsActivity
 import by.klnvch.link5dots.settings.SettingsUtils
 import by.klnvch.link5dots.settings.UsernameDialog
+import com.crashlytics.android.Crashlytics
+import dagger.android.support.DaggerAppCompatActivity
+import io.reactivex.Completable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main_menu.*
+import javax.inject.Inject
 
-class MainMenuActivity : AppCompatActivity(), View.OnClickListener, View.OnLongClickListener {
+class MainMenuActivity : DaggerAppCompatActivity(), View.OnClickListener, View.OnLongClickListener {
 
     private val mDisposables = CompositeDisposable()
+
+    @Inject
+    lateinit var networkService: NetworkService
+    @Inject
+    lateinit var roomDao: RoomDao
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,6 +87,27 @@ class MainMenuActivity : AppCompatActivity(), View.OnClickListener, View.OnLongC
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { setUsername(it) })
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        mDisposables.add(roomDao.loadAll()
+                .take(1)
+                .flatMapIterable { it }
+                .filter { !it.isSend }
+                .flatMapSingle { networkService.addRoom(it.key, it) }
+                .flatMapCompletable { update(it) }
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ Log.d(TAG, MSG_SENT) }, { Crashlytics.logException(it) }))
+    }
+
+    private fun update(room: Room): Completable {
+        return Completable.fromAction({
+            room.isSend = true
+            roomDao.updateRoom(room)
+        })
     }
 
     override fun onDestroy() {
@@ -142,6 +175,8 @@ class MainMenuActivity : AppCompatActivity(), View.OnClickListener, View.OnLongC
     }
 
     companion object {
+        private const val TAG = "MainMenuActivity"
+        private const val MSG_SENT = "history updated successfully"
         private const val RC_SETTINGS = 3
     }
 }

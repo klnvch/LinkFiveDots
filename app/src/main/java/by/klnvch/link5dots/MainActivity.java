@@ -25,66 +25,72 @@
 package by.klnvch.link5dots;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import by.klnvch.link5dots.dialogs.EndGameDialog;
-import by.klnvch.link5dots.models.Bot;
 import by.klnvch.link5dots.models.Dot;
 import by.klnvch.link5dots.models.HighScore;
+import by.klnvch.link5dots.models.Room;
+import by.klnvch.link5dots.models.User;
 import by.klnvch.link5dots.scores.ScoresActivity;
 import by.klnvch.link5dots.utils.AnalyticsEvents;
+import by.klnvch.link5dots.utils.RoomUtils;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 public final class MainActivity extends BaseActivity {
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        loadState();
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setTitle(R.string.app_name);
+    }
+
+    @Nullable
+    @Override
+    public User getUser() {
+        return mRoom.getUser1();
     }
 
     @Override
-    protected void onPause() {
-        saveState();
-        super.onPause();
+    public void onMoveDone(@NonNull Dot dot) {
+        mFirebaseAnalytics.logEvent(AnalyticsEvents.EVENT_NEW_MOVE, null);
+
+        mGameFragment.update(RoomUtils.addDotWithBotAnswer(mRoom, dot));
     }
 
     @Override
-    protected void onGameFinished(@NonNull HighScore highScore) {
+    public void onGameFinished(@NonNull HighScore highScore) {
         mFirebaseAnalytics.logEvent(AnalyticsEvents.EVENT_GAME_FINISHED, null);
 
         EndGameDialog.newInstance(highScore, false)
                 .setOnNewGameListener(this::newGame)
                 .setOnUndoMoveListener(this::undoLastMove)
-                .setOnScoreListener(this::moveToScores)
+                .setOnScoreListener(() -> moveToScores(highScore))
                 .show(getSupportFragmentManager(), EndGameDialog.TAG);
     }
 
     @Override
-    protected void onMoveDone(@NonNull Dot currentDot, @Nullable Dot previousDot) {
-        mFirebaseAnalytics.logEvent(AnalyticsEvents.EVENT_NEW_MOVE, null);
-
-        if (previousDot == null || previousDot.getType() != Dot.HOST) {
-            // set user dot
-            mView.setHostDot(currentDot);
-            // set bot dot
-            final Dot botDot = Bot.findAnswer(mView.getGameState().getCopyOfNet());
-            mView.setGuestDot(botDot);
-        }
-    }
-
-    @Override
     protected void undoLastMove() {
-        mView.undoLastMove(2);
+        mGameFragment.update(RoomUtils.undo(RoomUtils.undo(mRoom)));
     }
 
-    private void moveToScores() {
-        final HighScore highScore = mView.getHighScore();
-        if (highScore != null) {
-            highScore.setUserName(mUserName);
-            final Intent intent = new Intent(this, ScoresActivity.class);
-            intent.putExtra(HighScore.TAG, highScore);
-            startActivity(intent);
-        }
+    @NonNull
+    @Override
+    protected Room createRoom(@Nullable User host) {
+        checkNotNull(host);
+
+        return RoomUtils.createBotGame(host, User.newUser(getString(R.string.android)));
+    }
+
+    private void moveToScores(@NonNull HighScore highScore) {
+        checkNotNull(getUser());
+
+        highScore.setUserName(getUser().getName());
+        final Intent intent = new Intent(this, ScoresActivity.class);
+        intent.putExtra(HighScore.TAG, highScore);
+        startActivity(intent);
     }
 }

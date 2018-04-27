@@ -128,7 +128,7 @@ public class NewGameDialog extends DialogFragment implements DialogInterface.OnC
     }
 
     @NonNull
-    public NewGameDialog setOnSeedNewGameListener(@NonNull OnSeedNewGameListener listener) {
+    public NewGameDialog setOnNewGameListener(@NonNull OnSeedNewGameListener listener) {
         this.mListener = listener;
         return this;
     }

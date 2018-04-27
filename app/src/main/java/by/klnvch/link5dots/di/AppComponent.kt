@@ -22,33 +22,23 @@
  * SOFTWARE.
  */
 
-buildscript {
-    ext.kotlin_version = '1.2.40'
-    repositories {
-        google()
-        jcenter()
-        maven {
-            url 'https://maven.fabric.io/public'
-        }
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:3.2.0-alpha12'
-        classpath 'com.google.gms:google-services:3.1.1'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath 'io.fabric.tools:gradle:1.25.1'
-    }
-}
+package by.klnvch.link5dots.di
 
-allprojects {
-    repositories {
-        google()
-        jcenter()
-        maven {
-            url 'https://maven.google.com/'
-        }
-    }
-}
+import android.app.Application
+import dagger.BindsInstance
+import dagger.Component
+import dagger.android.AndroidInjector
+import dagger.android.support.AndroidSupportInjectionModule
+import javax.inject.Singleton
 
-task clean(type: Delete) {
-    delete rootProject.buildDir
+@Singleton
+@Component(modules = [(AppModule::class), (ActivityBindingModule::class), (AndroidSupportInjectionModule::class)])
+interface AppComponent : AndroidInjector<MyApp> {
+    @Component.Builder
+    interface Builder {
+        @BindsInstance
+        fun application(application: Application): Builder
+
+        fun build(): AppComponent
+    }
 }

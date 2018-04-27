@@ -29,7 +29,7 @@
 
     <fragment
         android:id="@+id/fragment"
-        android:name="by.klnvch.link5dots.multiplayer.activities.GameFragment"
+        android:name="by.klnvch.link5dots.GameFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"

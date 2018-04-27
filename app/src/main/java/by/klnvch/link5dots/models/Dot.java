@@ -28,28 +28,29 @@ import android.support.annotation.NonNull;
 
 import java.io.Serializable;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
 import static com.google.android.gms.common.internal.Preconditions.checkNotNull;
 
-@NoArgsConstructor
-@AllArgsConstructor
-@Getter
-@Setter
 public class Dot implements Serializable {
 
     public static final int EMPTY = 1;
     public static final int HOST = 2;
     public static final int GUEST = 4;
-
     private int x;
     private int y;
     private int id;
     private int type;
     private long timestamp;
+
+    public Dot(int x, int y, int id, int type, long timestamp) {
+        this.x = x;
+        this.y = y;
+        this.id = id;
+        this.type = type;
+        this.timestamp = timestamp;
+    }
+
+    public Dot() {
+    }
 
     public Dot(int x, int y) {
         this.x = x;
@@ -68,6 +69,46 @@ public class Dot implements Serializable {
         result.id = dot.id;
         result.timestamp = dot.timestamp;
         return result;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
+
+    public long getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
     }
 
     @Override

@@ -29,8 +29,8 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentStatePagerAdapter
-import android.support.v7.app.AppCompatActivity
 import by.klnvch.link5dots.R
+import dagger.android.support.DaggerAppCompatActivity
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -38,7 +38,7 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_scores.*
 
 
-class ScoresActivity : AppCompatActivity() {
+class ScoresActivity : DaggerAppCompatActivity() {
 
     private val mDisposables = CompositeDisposable()
 

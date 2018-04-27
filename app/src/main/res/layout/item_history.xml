@@ -48,6 +48,7 @@
             android:drawablePadding="8dp"
             android:gravity="center"
             android:text="@string/device_info_default"
+            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -60,6 +61,7 @@
             android:drawablePadding="8dp"
             android:gravity="center"
             android:text="@string/android"
+            android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -86,6 +88,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
             android:text="@string/device_info_default"
+            android:textStyle="bold"
             app:layout_constraintStart_toEndOf="@+id/textTimeColon"
             app:layout_constraintTop_toBottomOf="@+id/textTypeLabel" />
 
@@ -113,6 +116,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
             android:text="@string/device_info_default"
+            android:textStyle="bold"
             app:layout_constraintStart_toEndOf="@+id/textTypeColon"
             app:layout_constraintTop_toBottomOf="@+id/textUser2Name" />
 
@@ -139,6 +143,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
             android:text="@string/device_info_default"
+            android:textStyle="bold"
             app:layout_constraintStart_toEndOf="@+id/textDurationColon"
             app:layout_constraintTop_toBottomOf="@+id/textTimeLabel" />
 
@@ -166,6 +171,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/device_info_default"
+            android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textTimeLabel" />
 

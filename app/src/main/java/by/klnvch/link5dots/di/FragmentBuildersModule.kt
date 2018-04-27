@@ -22,33 +22,20 @@
  * SOFTWARE.
  */
 
-buildscript {
-    ext.kotlin_version = '1.2.40'
-    repositories {
-        google()
-        jcenter()
-        maven {
-            url 'https://maven.fabric.io/public'
-        }
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:3.2.0-alpha12'
-        classpath 'com.google.gms:google-services:3.1.1'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath 'io.fabric.tools:gradle:1.25.1'
-    }
-}
+package by.klnvch.link5dots.di
 
-allprojects {
-    repositories {
-        google()
-        jcenter()
-        maven {
-            url 'https://maven.google.com/'
-        }
-    }
-}
+import by.klnvch.link5dots.GameFragment
+import by.klnvch.link5dots.scores.HistoryFragment
+import dagger.Module
+import dagger.android.ContributesAndroidInjector
 
-task clean(type: Delete) {
-    delete rootProject.buildDir
+
+@Module
+abstract class FragmentBuildersModule {
+    //@FragmentScoped
+    @ContributesAndroidInjector
+    abstract fun historyFragment(): HistoryFragment
+
+    @ContributesAndroidInjector
+    abstract fun gameFragment(): GameFragment
 }

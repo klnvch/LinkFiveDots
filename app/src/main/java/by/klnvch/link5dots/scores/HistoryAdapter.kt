@@ -24,11 +24,13 @@
 
 package by.klnvch.link5dots.scores
 
+import android.graphics.Color
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import by.klnvch.link5dots.BuildConfig
 import by.klnvch.link5dots.R
 import by.klnvch.link5dots.models.Room
 import kotlinx.android.synthetic.main.item_history.view.*
@@ -57,8 +59,8 @@ class HistoryAdapter(private val mDataset: MutableList<Room>) :
 
     override fun onBindViewHolder(holder: HighScoreHolder, position: Int) {
         holder.root.setOnClickListener { onItemClickListener?.onItemSelected(mDataset[position]) }
-        holder.textUser1Name.text = mDataset[position].user1.name
-        holder.textUser2Name.text = mDataset[position].user2.name
+        holder.textUser1Name.text = mDataset[position].user1?.name
+        holder.textUser2Name.text = mDataset[position].user2?.name
         holder.textTime.text = mDataset[position].startTime
         holder.textDuration.text = mDataset[position].duration
         holder.textDots.text = mDataset[position].dots.size.toString()
@@ -66,6 +68,15 @@ class HistoryAdapter(private val mDataset: MutableList<Room>) :
             Room.TYPE_BLUETOOTH -> holder.textType.setText(R.string.bluetooth_settings)
             Room.TYPE_NSD -> holder.textType.setText(R.string.menu_local_network)
             Room.TYPE_ONLINE -> holder.textType.setText(R.string.menu_online_game)
+            Room.TYPE_TWO_PLAYERS -> holder.textType.setText(R.string.menu_two_players)
+            Room.TYPE_BOT -> holder.textType.setText(R.string.app_name)
+        }
+        if (BuildConfig.DEBUG) {
+            if (mDataset[position].isSend) {
+                holder.root.setBackgroundColor(Color.argb(255, 128, 255, 128))
+            } else {
+                holder.root.setBackgroundColor(Color.argb(255, 255, 128, 128))
+            }
         }
     }
 

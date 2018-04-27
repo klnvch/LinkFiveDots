@@ -27,7 +27,6 @@ package by.klnvch.link5dots.scores
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.Snackbar
-import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
@@ -35,19 +34,23 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import by.klnvch.link5dots.R
-import by.klnvch.link5dots.db.AppDatabase
+import by.klnvch.link5dots.db.RoomDao
 import by.klnvch.link5dots.models.Room
 import by.klnvch.link5dots.scores.HistoryAdapter.OnItemClickListener
+import dagger.android.support.DaggerFragment
 import io.reactivex.Completable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_scores.*
 import kotlinx.android.synthetic.main.fragment_scores.view.*
+import javax.inject.Inject
 
 
-class HistoryFragment : Fragment(), OnItemClickListener {
+class HistoryFragment : DaggerFragment(), OnItemClickListener {
 
+    @Inject
+    lateinit var roomDao: RoomDao
     private val mCompositeDisposable = CompositeDisposable()
 
     abstract class SwipeToDeleteCallback : ItemTouchHelper.SimpleCallback(0,
@@ -71,7 +74,7 @@ class HistoryFragment : Fragment(), OnItemClickListener {
                 val position = viewHolder!!.adapterPosition
                 val room = adapter.get(position)
 
-                mCompositeDisposable.add(Completable.fromAction { deleteRoom(room) }
+                mCompositeDisposable.add(Completable.fromAction { roomDao.deleteRoom(room) }
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe({ onRoomDeleted(position, room) }))
@@ -83,27 +86,23 @@ class HistoryFragment : Fragment(), OnItemClickListener {
         return view
     }
 
-    override fun onResume() {
-        super.onResume()
-        loadData()
+    override fun onStart() {
+        super.onStart()
+
+        mCompositeDisposable.add(roomDao.loadAll()
+                .take(1)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ onDataLoaded(it) }))
     }
 
-    override fun onPause() {
-        super.onPause()
+    override fun onStop() {
+        super.onStop()
         mCompositeDisposable.clear()
     }
 
     override fun onItemSelected(room: Room) {
         startActivity(Intent(context, GameInfoActivity::class.java).putExtra("room", room))
-    }
-
-    private fun loadData() {
-        val disposable = AppDatabase.getDB(context!!).roomDao().loadAll()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ rooms -> onDataLoaded(rooms) })
-
-        mCompositeDisposable.add(disposable)
     }
 
     private fun onDataLoaded(rooms: List<Room>) {
@@ -116,26 +115,18 @@ class HistoryFragment : Fragment(), OnItemClickListener {
         }
     }
 
-    private fun deleteRoom(room: Room) {
-        AppDatabase.getDB(context!!).roomDao().deleteRoom(room)
-    }
-
     private fun onRoomDeleted(position: Int, room: Room) {
         (view?.recyclerView?.adapter as HistoryAdapter).removeAt(position)
 
         val msg = getString(R.string.contacts_deleted_one_named_toast, position.toString())
         Snackbar.make(view!!.recyclerView!!, msg, Snackbar.LENGTH_LONG)
                 .setAction(R.string.end_undo, {
-                    mCompositeDisposable.add(Completable.fromAction { insertRoom(room) }
+                    mCompositeDisposable.add(Completable.fromAction { roomDao.insertRoom(room) }
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe({ onRoomInserted(position, room) }))
                 })
                 .show()
-    }
-
-    private fun insertRoom(room: Room) {
-        AppDatabase.getDB(context!!).roomDao().insertRoom(room)
     }
 
     private fun onRoomInserted(position: Int, room: Room) {

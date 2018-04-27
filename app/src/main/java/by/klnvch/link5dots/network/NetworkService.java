@@ -22,33 +22,15 @@
  * SOFTWARE.
  */
 
-buildscript {
-    ext.kotlin_version = '1.2.40'
-    repositories {
-        google()
-        jcenter()
-        maven {
-            url 'https://maven.fabric.io/public'
-        }
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:3.2.0-alpha12'
-        classpath 'com.google.gms:google-services:3.1.1'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath 'io.fabric.tools:gradle:1.25.1'
-    }
-}
+package by.klnvch.link5dots.network;
 
-allprojects {
-    repositories {
-        google()
-        jcenter()
-        maven {
-            url 'https://maven.google.com/'
-        }
-    }
-}
+import by.klnvch.link5dots.models.Room;
+import io.reactivex.Single;
+import retrofit2.http.Body;
+import retrofit2.http.PUT;
+import retrofit2.http.Path;
 
-task clean(type: Delete) {
-    delete rootProject.buildDir
+public interface NetworkService {
+    @PUT("history_debug/{key}.json")
+    Single<Room> addRoom(@Path("key") String key, @Body Room room);
 }

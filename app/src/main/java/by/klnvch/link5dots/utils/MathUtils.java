@@ -24,6 +24,10 @@
 
 package by.klnvch.link5dots.utils;
 
+import android.support.annotation.NonNull;
+
+import java.util.Random;
+
 public class MathUtils {
 
     /**
@@ -44,5 +48,11 @@ public class MathUtils {
             }
         }
         return result;
+    }
+
+    @NonNull
+    public static String generateKey() {
+        return Long.toHexString(System.currentTimeMillis())
+                + '_' + Long.toHexString(new Random().nextLong());
     }
 }

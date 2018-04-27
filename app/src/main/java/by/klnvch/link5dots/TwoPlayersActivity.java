@@ -27,35 +27,35 @@ package by.klnvch.link5dots;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.view.View;
 
 import by.klnvch.link5dots.dialogs.EndGameDialog;
 import by.klnvch.link5dots.models.Dot;
 import by.klnvch.link5dots.models.HighScore;
+import by.klnvch.link5dots.models.Room;
+import by.klnvch.link5dots.models.User;
+import by.klnvch.link5dots.utils.RoomUtils;
 
 public class TwoPlayersActivity extends BaseActivity {
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTitle(R.string.menu_two_players);
+    }
 
-        findViewById(R.id.game_info).setVisibility(View.GONE);
+    @Nullable
+    @Override
+    public User getUser() {
+        return null;
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        loadState();
+    public void onMoveDone(@NonNull Dot dot) {
+        mGameFragment.update(RoomUtils.addDotAsAnotherType(mRoom, dot));
     }
 
     @Override
-    protected void onPause() {
-        saveState();
-        super.onPause();
-    }
-
-    @Override
-    protected void onGameFinished(@NonNull HighScore highScore) {
+    public void onGameFinished(@NonNull HighScore highScore) {
         if (getSupportFragmentManager().findFragmentByTag(EndGameDialog.TAG) != null) return;
 
         EndGameDialog.newInstance(highScore, true)
@@ -65,16 +65,13 @@ public class TwoPlayersActivity extends BaseActivity {
     }
 
     @Override
-    protected void onMoveDone(@NonNull Dot currentDot, @Nullable Dot previousDot) {
-        if (previousDot == null || previousDot.getType() != Dot.HOST) {
-            mView.setHostDot(currentDot);
-        } else {
-            mView.setGuestDot(currentDot);
-        }
+    protected void undoLastMove() {
+        mGameFragment.update(RoomUtils.undo(mRoom));
     }
 
+    @NonNull
     @Override
-    protected void undoLastMove() {
-        mView.undoLastMove(1);
+    protected Room createRoom(@Nullable User user) {
+        return RoomUtils.createTwoGame();
     }
 }

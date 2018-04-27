@@ -251,12 +251,6 @@ public class GameView extends View {
         }
     }
 
-    public void undoLastMove(int moves) {
-        mIsEndGameSend = false;
-        mGameState.undo(moves);
-        invalidate();
-    }
-
     public void newGame(@Nullable Long seed) {
         mIsEndGameSend = false;
         mGameState = Game.generateGame(seed);
@@ -379,7 +373,7 @@ public class GameView extends View {
     }
 
     public interface OnMoveDoneListener {
-        void onMoveDone(@NonNull Dot currentDot, @Nullable Dot previousDot);
+        void onMoveDone(@NonNull Dot dot);
     }
 
     public interface OnGameEndListener {
@@ -408,7 +402,7 @@ public class GameView extends View {
                 final int y = MathUtils.findClosestIndex(mLineLocations, point.y);
 
                 if (mOnMoveDoneListener != null && mGameState.checkCorrectness(x, y)) {
-                    mOnMoveDoneListener.onMoveDone(new Dot(x, y), mGameState.getLastDot());
+                    mOnMoveDoneListener.onMoveDone(new Dot(x, y));
                 } else {
                     Log.e(TAG, "listener is null");
                 }
