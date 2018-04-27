@@ -29,6 +29,7 @@ import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
+import android.arch.persistence.room.Update;
 
 import java.util.List;
 
@@ -39,6 +40,9 @@ import io.reactivex.Flowable;
 public interface RoomDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertRoom(Room room);
+
+    @Update(onConflict = OnConflictStrategy.REPLACE)
+    void updateRoom(Room room);
 
     @Delete
     void deleteRoom(Room room);

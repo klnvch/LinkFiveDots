@@ -28,62 +28,62 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import by.klnvch.link5dots.dialogs.NewGameDialog;
-import by.klnvch.link5dots.models.Dot;
-import by.klnvch.link5dots.models.Game;
-import by.klnvch.link5dots.models.GameViewState;
-import by.klnvch.link5dots.models.HighScore;
+import by.klnvch.link5dots.models.Room;
+import by.klnvch.link5dots.models.User;
 import by.klnvch.link5dots.settings.SettingsUtils;
 import by.klnvch.link5dots.utils.AnalyticsEvents;
+import by.klnvch.link5dots.utils.RoomUtils;
+import dagger.android.support.DaggerAppCompatActivity;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
-public abstract class BaseActivity extends AppCompatActivity {
+public abstract class BaseActivity extends DaggerAppCompatActivity
+        implements GameFragment.OnGameListener {
 
-    protected static final String KEY_GAME_STATE = "KEY_GAME_STATE_V2";
-    protected static final String KEY_VIEW_STATE = "KEY_VIEW_STATE_V3";
+    protected static final String KEY_GAME_STATE = "KEY_GAME_STATE_V6";
     protected final CompositeDisposable mDisposables = new CompositeDisposable();
-    protected GameView mView;
-    protected String mUserName = "";
+    protected GameFragment mGameFragment;
+    protected Room mRoom;
     protected FirebaseAnalytics mFirebaseAnalytics;
 
     @SuppressLint("MissingPermission")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.game_board);
-        setTitle(R.string.app_name);
+        setContentView(R.layout.activity_game);
 
-        mView = findViewById(R.id.game_view);
-        mView.setOnMoveDoneListener(this::onMoveDone);
-        mView.setOnGameEndListener(this::onGameFinished);
-
-        mDisposables.add(SettingsUtils.getUserNameOrDefault(this)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::setUsername));
-
-        mDisposables.add(SettingsUtils.getDotsType(this)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::setDotsType));
+        mGameFragment = (GameFragment) getSupportFragmentManager().findFragmentById(R.id.fragment);
 
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_offline, menu);
-        return true;
+    protected void onStart() {
+        super.onStart();
+
+        mDisposables.add(Observable.fromCallable(this::loadRoom)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this::setRoom));
+    }
+
+    @Override
+    protected void onStop() {
+        if (mRoom != null) {
+            getPreferences(MODE_PRIVATE).edit()
+                    .putString(KEY_GAME_STATE, mRoom.toJson())
+                    .apply();
+        }
+
+        super.onStop();
     }
 
     @Override
@@ -93,23 +93,27 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_game_offline, menu);
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 onBackPressed();
                 return true;
             case R.id.menu_undo:
-                mFirebaseAnalytics.logEvent(AnalyticsEvents.EVENT_UNDO_MOVE, null);
+                log(AnalyticsEvents.EVENT_UNDO_MOVE);
                 undoLastMove();
                 return true;
             case R.id.menu_new_game:
-                mFirebaseAnalytics.logEvent(AnalyticsEvents.EVENT_NEW_GAME, null);
+                log(AnalyticsEvents.EVENT_NEW_GAME);
                 newGame();
                 return true;
             case R.id.menu_search:
-                mFirebaseAnalytics.logEvent(AnalyticsEvents.EVENT_SEARCH, null);
-                searchLastMove();
-                return true;
+                log(AnalyticsEvents.EVENT_SEARCH);
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -117,7 +121,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     @Override
     public boolean onSearchRequested() {
-        mFirebaseAnalytics.logEvent(AnalyticsEvents.EVENT_SEARCH, null);
+        log(AnalyticsEvents.EVENT_SEARCH);
         searchLastMove();
         return true;
     }
@@ -129,64 +133,37 @@ public abstract class BaseActivity extends AppCompatActivity {
                 .putString(KEY_GAME_STATE, null)
                 .apply();
 
-        mView.newGame(null);
+        mGameFragment.update(RoomUtils.newGame(mRoom, null));
 
         new NewGameDialog()
-                .setOnSeedNewGameListener(mView::newGame)
+                .setOnNewGameListener(seed -> mGameFragment.update(RoomUtils.newGame(mRoom, seed)))
                 .show(getSupportFragmentManager(), NewGameDialog.TAG);
     }
 
     private void searchLastMove() {
-        mView.switchHideArrow();
+        mGameFragment.focus();
     }
 
-    protected abstract void onMoveDone(@NonNull Dot currentDot, @Nullable Dot previousDot);
 
-    protected abstract void onGameFinished(@NonNull HighScore highScore);
-
-    protected void loadState() {
-        mDisposables.add(Observable.fromCallable(() -> Game.fromJson(
-                getPreferences(MODE_PRIVATE).getString(KEY_GAME_STATE, null)))
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(mView::setGameState));
-
-        mDisposables.add(Observable.fromCallable(() -> GameViewState.fromJson(
-                getPreferences(MODE_PRIVATE).getString(KEY_VIEW_STATE, null)))
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(mView::setViewState));
-    }
-
-    protected void saveState() {
-        getPreferences(MODE_PRIVATE).edit()
-                .putString(KEY_GAME_STATE, mView.getGameState().toJson())
-                .putString(KEY_VIEW_STATE, mView.getViewState().toJson())
-                .apply();
-    }
-
-    private void setDotsType(@SettingsUtils.DotsType int dotsType) {
-        mView.init(this, dotsType);
-
-        final TextView tvUserName = findViewById(R.id.text_user_name);
-        final TextView tvOpponentName = findViewById(R.id.text_opponent_name);
-
-        if (dotsType == SettingsUtils.DOTS_TYPE_ORIGINAL) {
-            tvUserName.setCompoundDrawablesWithIntrinsicBounds(
-                    R.drawable.game_dot_circle_red, 0, 0, 0);
-            tvOpponentName.setCompoundDrawablesWithIntrinsicBounds(
-                    R.drawable.game_dot_circle_blue, 0, 0, 0);
+    @NonNull
+    private Room loadRoom() {
+        final String json = getPreferences(MODE_PRIVATE).getString(KEY_GAME_STATE, null);
+        if (json != null) {
+            return Room.fromJson(json);
         } else {
-            tvUserName.setCompoundDrawablesWithIntrinsicBounds(
-                    R.drawable.game_dot_cross_red, 0, 0, 0);
-            tvOpponentName.setCompoundDrawablesWithIntrinsicBounds(
-                    R.drawable.game_dot_ring_blue, 0, 0, 0);
+            final User user = User.newUser(SettingsUtils.getUserNameOrDefault2(this));
+            return createRoom(user);
         }
     }
 
-    private void setUsername(@Nullable String name) {
-        mUserName = name;
-        final TextView tvUsername = findViewById(R.id.text_user_name);
-        tvUsername.setText(mUserName);
+    private void setRoom(@NonNull Room room) {
+        mGameFragment.update(mRoom = room);
     }
+
+    private void log(@NonNull String event) {
+        mFirebaseAnalytics.logEvent(event, null);
+    }
+
+    @NonNull
+    protected abstract Room createRoom(@Nullable User host);
 }

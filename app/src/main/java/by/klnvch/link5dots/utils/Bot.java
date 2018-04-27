@@ -22,9 +22,16 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.models;
+package by.klnvch.link5dots.utils;
+
+import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import by.klnvch.link5dots.models.Dot;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 public class Bot {
 
@@ -83,7 +90,17 @@ public class Bot {
             new int[]{3, 3, 3, 3, 1, 1, 0, 0, 1}
     };
 
-    public static Dot findAnswer(Dot[][] net) {
+    static Dot findAnswer(@NonNull List<Dot> dots) {
+        checkNotNull(dots);
+
+        final Dot[][] net = new Dot[N][N];
+        for (int i = 0; i < N; i++)
+            for (int j = 0; j < M; j++)
+                net[i][j] = new Dot(i, j);
+
+        for (Dot dot : dots) {
+            net[dot.getX()][dot.getY()] = dot;
+        }
 
         float maxUserRate = -1;
         ArrayList<Dot> listUser = new ArrayList<>();

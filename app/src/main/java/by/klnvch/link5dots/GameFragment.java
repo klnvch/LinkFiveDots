@@ -22,14 +22,13 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.multiplayer.activities;
+package by.klnvch.link5dots;
 
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -39,15 +38,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import by.klnvch.link5dots.GameView;
-import by.klnvch.link5dots.R;
-import by.klnvch.link5dots.db.AppDatabase;
+import javax.inject.Inject;
+
+import by.klnvch.link5dots.db.RoomDao;
 import by.klnvch.link5dots.models.Dot;
 import by.klnvch.link5dots.models.Game;
+import by.klnvch.link5dots.models.GameViewState;
 import by.klnvch.link5dots.models.HighScore;
 import by.klnvch.link5dots.models.Room;
 import by.klnvch.link5dots.models.User;
 import by.klnvch.link5dots.settings.SettingsUtils;
+import by.klnvch.link5dots.utils.RoomUtils;
+import dagger.android.support.DaggerFragment;
 import io.reactivex.Completable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -55,11 +57,15 @@ import io.reactivex.schedulers.Schedulers;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-public class GameFragment extends Fragment {
+public class GameFragment extends DaggerFragment {
 
     public static final String TAG = "GameFragment";
+    private static final String KEY_VIEW_STATE = "KEY_VIEW_STATE";
     private final CompositeDisposable mDisposables = new CompositeDisposable();
+    @Inject
+    public RoomDao roomDao;
     private GameView mView;
+    private View mGameInfo;
     private TextView mTextUserName;
     private TextView mTextOpponentName;
     private OnGameListener mListener;
@@ -82,12 +88,17 @@ public class GameFragment extends Fragment {
 
         final View root = inflater.inflate(R.layout.game_board, container, false);
 
+        mGameInfo = root.findViewById(R.id.game_info);
         mTextUserName = root.findViewById(R.id.text_user_name);
         mTextOpponentName = root.findViewById(R.id.text_opponent_name);
 
         mView = root.findViewById(R.id.game_view);
         mView.setOnMoveDoneListener(this::onMoveDone);
         mView.setOnGameEndListener(this::onGameFinished);
+
+        if (savedInstanceState != null) {
+            mView.setViewState(GameViewState.fromJson(savedInstanceState.getString(KEY_VIEW_STATE)));
+        }
 
         checkNotNull(getContext());
         mDisposables.add(SettingsUtils.getDotsType(getContext())
@@ -96,6 +107,12 @@ public class GameFragment extends Fragment {
                 .subscribe(this::setDotsType));
 
         return root;
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        outState.putString(KEY_VIEW_STATE, mView.getViewState().toJson());
+        super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -112,7 +129,7 @@ public class GameFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_multiplayer_game, menu);
+        inflater.inflate(R.menu.menu_game_fragment, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -150,25 +167,33 @@ public class GameFragment extends Fragment {
         checkNotNull(getContext());
         checkNotNull(mListener);
 
-        final User user1 = room.getUser1();
-        final User user2 = room.getUser2();
+        final User user = mListener.getUser();
 
-        final int hostDotType = room.getHostDotType(mListener.getUser());
+        if (user != null) {
+            mGameInfo.setVisibility(View.VISIBLE);
 
-        if (hostDotType == Dot.HOST) {
-            mTextUserName.setText(user1.getName());
-            mTextOpponentName.setText(user2.getName());
+            final User user1 = room.getUser1();
+            final User user2 = room.getUser2();
+
+            final int hostDotType = RoomUtils.getHostDotType(room, user);
+
+            if (hostDotType == Dot.HOST) {
+                if (user1 != null) mTextUserName.setText(user1.getName());
+                if (user2 != null) mTextOpponentName.setText(user2.getName());
+            } else {
+                if (user2 != null) mTextUserName.setText(user2.getName());
+                if (user1 != null) mTextOpponentName.setText(user1.getName());
+            }
+
+            mView.setGameState(Game.createGame(room.getDots(), hostDotType));
         } else {
-            mTextUserName.setText(user2.getName());
-            mTextOpponentName.setText(user1.getName());
+            mGameInfo.setVisibility(View.GONE);
+            mView.setGameState(Game.createGame(room.getDots(), Dot.HOST));
         }
 
-        mView.setGameState(Game.createGame(room.getDots(), hostDotType));
-
         // save to the db
-        if (!room.isEmpty()) {
-            mDisposables.add(Completable.fromAction(() ->
-                    AppDatabase.getDB(getContext()).roomDao().insertRoom(room))
+        if (!RoomUtils.isEmpty(room)) {
+            mDisposables.add(Completable.fromAction(() -> roomDao.insertRoom(room))
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(() -> Log.d(TAG, "db success")));
@@ -179,18 +204,20 @@ public class GameFragment extends Fragment {
         mView.newGame(null);
     }
 
-    private void onMoveDone(@NonNull Dot currentDot, @Nullable Dot previousDot) {
-        checkNotNull(currentDot);
-
-        mListener.onMoveDone(currentDot);
+    private void onMoveDone(@NonNull Dot dot) {
+        mListener.onMoveDone(checkNotNull(dot));
     }
 
     private void onGameFinished(@NonNull HighScore highScore) {
-        mListener.onGameFinished(highScore);
+        mListener.onGameFinished(checkNotNull(highScore));
+    }
+
+    public void focus() {
+        mView.switchHideArrow();
     }
 
     public interface OnGameListener {
-        @NonNull
+        @Nullable
         User getUser();
 
         void onMoveDone(@NonNull Dot dot);

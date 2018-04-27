@@ -29,17 +29,14 @@ import android.arch.persistence.room.Database;
 import android.arch.persistence.room.RoomDatabase;
 import android.arch.persistence.room.TypeConverters;
 import android.arch.persistence.room.migration.Migration;
-import android.content.Context;
 import android.support.annotation.NonNull;
 
 import by.klnvch.link5dots.models.Room;
 
-@Database(entities = {Room.class}, version = 2)
+@Database(entities = {Room.class}, version = 3)
 @TypeConverters({Converters.class})
 public abstract class AppDatabase extends RoomDatabase {
-    private static final String DB_NAME = "DB";
-
-    private static AppDatabase instance = null;
+    public static final String DB_NAME = "DB";
 
     public static final Migration MIGRATION_1_2 = new Migration(1, 2) {
         @Override
@@ -48,15 +45,12 @@ public abstract class AppDatabase extends RoomDatabase {
         }
     };
 
-    public static AppDatabase getDB(@NonNull Context context) {
-        if (instance == null) {
-            instance = android.arch.persistence.room.Room
-                    .databaseBuilder(context.getApplicationContext(), AppDatabase.class, DB_NAME)
-                    .addMigrations(MIGRATION_1_2)
-                    .build();
+    public static final Migration MIGRATION_2_3 = new Migration(2, 3) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            database.execSQL("ALTER TABLE rooms ADD COLUMN is_send INTEGER NOT NULL DEFAULT 0");
         }
-        return instance;
-    }
+    };
 
     public abstract RoomDao roomDao();
 }

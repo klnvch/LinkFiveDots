@@ -26,18 +26,18 @@ package by.klnvch.link5dots.scores
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import by.klnvch.link5dots.GameFragment
 import by.klnvch.link5dots.R
 import by.klnvch.link5dots.models.Dot
 import by.klnvch.link5dots.models.HighScore
 import by.klnvch.link5dots.models.Room
 import by.klnvch.link5dots.models.User
-import by.klnvch.link5dots.multiplayer.activities.GameFragment
-import kotlinx.android.synthetic.main.activity_game_info.*
+import kotlinx.android.synthetic.main.activity_game.*
 
 class GameInfoActivity : AppCompatActivity(), GameFragment.OnGameListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_game_info)
+        setContentView(R.layout.activity_game)
         setTitle(R.string.application_info_label)
     }
 
@@ -52,7 +52,7 @@ class GameInfoActivity : AppCompatActivity(), GameFragment.OnGameListener {
     override fun onGameFinished(highScore: HighScore) {
     }
 
-    override fun getUser(): User {
+    override fun getUser(): User? {
         return (intent.getSerializableExtra("room") as Room).user1
     }
 }

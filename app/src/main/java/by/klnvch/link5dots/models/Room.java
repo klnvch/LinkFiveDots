@@ -40,7 +40,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Locale;
-import java.util.Random;
+
+import by.klnvch.link5dots.utils.MathUtils;
 
 @Entity(tableName = "rooms")
 public class Room implements Serializable {
@@ -52,6 +53,8 @@ public class Room implements Serializable {
     public static final int TYPE_BLUETOOTH = 1;
     public static final int TYPE_NSD = 2;
     public static final int TYPE_ONLINE = 3;
+    public static final int TYPE_TWO_PLAYERS = 4;
+    public static final int TYPE_BOT = 5;
 
     private static final String TIME_TEMPLATE = "MMM-dd HH:mm";
     private static final String TIME_FORMAT = "%d:%02d";
@@ -71,14 +74,29 @@ public class Room implements Serializable {
     private User user2;
     @ColumnInfo(name = "type")
     private int type;
+    @ColumnInfo(name = "is_send")
+    private boolean isSend = false;
 
     public Room() {
     }
 
     @NonNull
+    public static Room newRoom(int type) {
+        final Room room = new Room();
+        room.key = MathUtils.generateKey();
+        room.timestamp = System.currentTimeMillis();
+        room.state = STATE_CREATED;
+        room.dots = new ArrayList<>();
+        room.user1 = null;
+        room.type = type;
+
+        return room;
+    }
+
+    @NonNull
     public static Room newRoom(@NonNull User user, int type) {
         final Room room = new Room();
-        room.key = generateKey();
+        room.key = MathUtils.generateKey();
         room.timestamp = System.currentTimeMillis();
         room.state = STATE_CREATED;
         room.dots = new ArrayList<>();
@@ -106,12 +124,6 @@ public class Room implements Serializable {
         return new Gson().fromJson(json, Room.class);
     }
 
-    @NonNull
-    private static String generateKey() {
-        return Long.toHexString(System.currentTimeMillis())
-                + '_' + Long.toHexString(new Random().nextLong());
-    }
-
     public void addDot(@NonNull Dot dot) {
         dot.setTimestamp(System.currentTimeMillis());
         if (dots != null) {
@@ -126,7 +138,7 @@ public class Room implements Serializable {
     public void newGame() {
         if (dots != null) {
             dots.clear();
-            key = generateKey();
+            key = MathUtils.generateKey();
         }
     }
 
@@ -162,14 +174,6 @@ public class Room implements Serializable {
             return dots.get(dots.size() - 1);
         }
         return null;
-    }
-
-    public boolean isEmpty() {
-        return dots == null || dots.isEmpty();
-    }
-
-    public int getHostDotType(@NonNull User host) {
-        return host.equals(user1) ? Dot.HOST : Dot.GUEST;
     }
 
     @Override
@@ -245,5 +249,13 @@ public class Room implements Serializable {
 
     public void setType(int type) {
         this.type = type;
+    }
+
+    public boolean isSend() {
+        return isSend;
+    }
+
+    public void setSend(boolean send) {
+        isSend = send;
     }
 }

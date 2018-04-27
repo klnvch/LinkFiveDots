@@ -35,7 +35,6 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 
@@ -45,6 +44,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
 
+import by.klnvch.link5dots.GameFragment;
 import by.klnvch.link5dots.R;
 import by.klnvch.link5dots.dialogs.EndGameDialog;
 import by.klnvch.link5dots.models.Dot;
@@ -58,10 +58,12 @@ import by.klnvch.link5dots.multiplayer.services.GameService;
 import by.klnvch.link5dots.multiplayer.services.GameServiceInterface;
 import by.klnvch.link5dots.multiplayer.targets.Target;
 import by.klnvch.link5dots.multiplayer.utils.GameState;
+import by.klnvch.link5dots.utils.RoomUtils;
+import dagger.android.support.DaggerAppCompatActivity;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-public abstract class GameActivity extends AppCompatActivity implements
+public abstract class GameActivity extends DaggerAppCompatActivity implements
         FragmentManager.OnBackStackChangedListener,
         PickerFragment.OnPickerListener,
         GameFragment.OnGameListener {
@@ -349,7 +351,7 @@ public abstract class GameActivity extends AppCompatActivity implements
         checkNotNull(room);
 
         final Dot previousDot = room.getLastDot();
-        final int hostDotType = room.getHostDotType(mService.getUser());
+        final int hostDotType = RoomUtils.getHostDotType(room, mService.getUser());
 
         if (previousDot == null || previousDot.getType() != hostDotType) {
             dot.setType(hostDotType);

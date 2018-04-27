@@ -130,16 +130,19 @@ public class SettingsUtils {
 
     @NonNull
     public static Observable<String> getUserNameOrDefault(@NonNull Context context) {
-        return Observable.fromCallable(() -> {
-            final String username = PreferenceManager
-                    .getDefaultSharedPreferences(context)
-                    .getString(KEY_PREF_USERNAME, null);
-            if (username == null) {
-                return context.getString(R.string.device_info_default);
-            } else {
-                return username;
-            }
-        });
+        return Observable.fromCallable(() -> getUserNameOrDefault2(context));
+    }
+
+    @NonNull
+    public static String getUserNameOrDefault2(@NonNull Context context) {
+        final String username = PreferenceManager
+                .getDefaultSharedPreferences(context)
+                .getString(KEY_PREF_USERNAME, null);
+        if (username == null) {
+            return context.getString(R.string.device_info_default);
+        } else {
+            return username;
+        }
     }
 
     static void setUserName(@NonNull Context context, @Nullable String username) {
