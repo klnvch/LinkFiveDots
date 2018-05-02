@@ -29,11 +29,10 @@ import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.google.gson.Gson;
-
 import java.util.ArrayList;
 import java.util.List;
 
+import by.klnvch.link5dots.utils.DotsArrayUtils;
 import by.klnvch.link5dots.utils.RandomGenerator;
 
 public class Game {
@@ -42,6 +41,7 @@ public class Game {
     private static final int M = 20;
 
     private final Dot[][] net = new Dot[N][M];
+    private final List<Dot> dots = new ArrayList<>();
 
     private final int mHostDotType;
     private final int mGuestDotType;
@@ -80,6 +80,7 @@ public class Game {
         Game game = new Game(hostDotType);
         if (dots != null) {
             // set dots
+            game.dots.addAll(dots);
             for (Dot dot : dots) {
                 game.net[dot.getX()][dot.getY()] = dot;
             }
@@ -104,25 +105,10 @@ public class Game {
                 game.net[x][y].setType(i % 2 == 0 ? Dot.HOST : Dot.GUEST);
                 game.net[x][y].setId(i);
                 game.net[x][y].setTimestamp(System.currentTimeMillis() / 1000);
+                game.dots.add(game.net[x][y]);
             }
         }
         return game;
-    }
-
-    @NonNull
-    public static Game fromJson(@Nullable String json) {
-        if (json != null) {
-            Game game = new Gson().fromJson(json, Game.class);
-            game.isOver();
-            return game;
-        } else {
-            return new Game();
-        }
-    }
-
-    @NonNull
-    public String toJson() {
-        return new Gson().toJson(this);
     }
 
     private void prepareScore() {
@@ -141,65 +127,12 @@ public class Game {
         }
     }
 
-    @Nullable
-    public Dot setHostDot(@NonNull Dot dot) {
-        dot.setType(mHostDotType);
-        return setDot(dot);
-    }
-
-    @Nullable
-    public Dot setGuestDot(@NonNull Dot dot) {
-        dot.setType(mGuestDotType);
-        return setDot(dot);
-    }
-
-    @Nullable
-    private Dot setDot(@NonNull Dot dot) {
-        Dot lastDot = getLastDot();
-        if (!checkCorrectness(dot.getX(), dot.getY()) ||
-                (lastDot != null && lastDot.getType() == dot.getType())) {
-            return null;
-        }
-
-        final int x = dot.getX();
-        final int y = dot.getY();
-        final int id = lastDot != null ? lastDot.getId() + 1 : 0;
-        final int type = dot.getType();
-        final long timestamp = System.currentTimeMillis() / 1000;
-
-        net[x][y].setType(type);
-        net[x][y].setId(id);
-        net[x][y].setTimestamp(timestamp);
-
-        isOver();
-
-        return net[x][y];
-    }
-
     public boolean checkCorrectness(int x, int y) {
         return isInBound(x, y) && net[x][y].getType() == Dot.EMPTY && mWinningLine == null;
     }
 
     private boolean isInBound(int x, int y) {
         return x >= 0 && y >= 0 && x < N && y < M;
-    }
-
-    private ArrayList<Dot> getDotsNumber(Dot dot, int dx, int dy) {
-
-        int x = dot.getX();
-        int y = dot.getY();
-
-        ArrayList<Dot> result = new ArrayList<>();
-        result.add(dot);
-
-        for (int k = 1; (k < 5) && isInBound(x + dx * k, y + dy * k) && net[x + dx * k][y + dy * k].getType() == dot.getType(); k++) {
-            result.add(net[x + dx * k][y + dy * k]);
-        }
-        for (int k = 1; (k < 5) && isInBound(x - dx * k, y - dy * k) && net[x - dx * k][y - dy * k].getType() == dot.getType(); k++) {
-            result.add(0, net[x - dx * k][y - dy * k]);
-        }
-
-        return result;
     }
 
     /**
@@ -210,45 +143,13 @@ public class Game {
     @Nullable
     public ArrayList<Dot> isOver() {
         if (mWinningLine == null) {
-            final Dot lastDot = getLastDot();
-
-            if (lastDot == null) return null;
-
-            final int[][] directions = {{1, 0}, {1, 1}, {0, 1}, {-1, 1}};
-
-            for (int[] d : directions) {
-                ArrayList<Dot> result = getDotsNumber(lastDot, d[0], d[1]);
-                if (result.size() >= 5) {
-                    mWinningLine = result;
-                    break;
-                }
-            }
+            mWinningLine = DotsArrayUtils.findWinningLine(dots);
 
             if (mWinningLine != null) {
                 prepareScore();
             }
         }
         return mWinningLine;
-    }
-
-    public void undo(int moves) {
-        if (moves > 0) {    // if moves == 1, game with two human
-            Dot d = getLastDot();
-            if (d != null) {
-                d.setType(Dot.EMPTY);
-                d.setId(-1);
-            }
-        }
-        if (moves > 1) {    // if moves == 2, game with bot
-            Dot d = getLastDot();
-            if (d != null && d.getType() == Dot.HOST) {
-                d.setType(Dot.EMPTY);
-                d.setId(-1);
-            }
-        }
-
-        mScore = null;
-        mWinningLine = null;
     }
 
     @Nullable
@@ -308,18 +209,6 @@ public class Game {
             result.append("\n");
         }
         return result.toString();
-    }
-
-    @NonNull
-    public Dot[][] getCopyOfNet() {
-        Dot[][] copyNet = new Dot[this.net.length][];
-        for (int i = 0; i != this.net.length; ++i) {
-            copyNet[i] = new Dot[this.net[i].length];
-            for (int j = 0; j != this.net[i].length; ++j) {
-                copyNet[i][j] = Dot.copyDot(this.net[i][j]);
-            }
-        }
-        return copyNet;
     }
 
     @IntDef({Dot.HOST, Dot.GUEST})

@@ -259,20 +259,6 @@ public class GameView extends View {
     }
 
     @Nullable
-    public Dot setHostDot(@NonNull Dot dot) {
-        final Dot result = mGameState.setHostDot(dot);
-        invalidate();
-        return result;
-    }
-
-    @Nullable
-    public Dot setGuestDot(@NonNull Dot dot) {
-        final Dot result = mGameState.setGuestDot(dot);
-        invalidate();
-        return result;
-    }
-
-    @Nullable
     private ArrayList<Dot> isOver() {
         final ArrayList<Dot> winningLine = mGameState.isOver();
         if (winningLine != null) {
@@ -289,10 +275,6 @@ public class GameView extends View {
             }
         }
         return winningLine;
-    }
-
-    public HighScore getHighScore() {
-        return mGameState.getCurrentScore();
     }
 
     /**
@@ -346,11 +328,6 @@ public class GameView extends View {
                 mWinningLineDY = 0;
             }
         }
-    }
-
-    @NonNull
-    public Game getGameState() {
-        return this.mGameState;
     }
 
     public void setGameState(@NonNull Game game) {

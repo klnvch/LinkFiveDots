@@ -138,7 +138,9 @@ public class RoomUtils {
         checkNotNull(dot);
 
         addDot(room, dot, Dot.HOST);
-        addDot(room, Bot.findAnswer(room.getDots()), Dot.GUEST);
+        if (DotsArrayUtils.findWinningLine(room.getDots()) == null) {
+            addDot(room, Bot.findAnswer(room.getDots()), Dot.GUEST);
+        }
 
         return room;
     }
