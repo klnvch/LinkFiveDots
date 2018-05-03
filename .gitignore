@@ -11,6 +11,9 @@ gradle
 build
 app/google-services.json
 app/schemas
+app/debug
 keystore
 gradlew
 gradlew.bat
+keystore.properties
+*.jks
