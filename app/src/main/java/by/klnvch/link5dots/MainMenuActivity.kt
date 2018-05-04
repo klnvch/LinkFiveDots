@@ -96,11 +96,11 @@ class MainMenuActivity : DaggerAppCompatActivity(), View.OnClickListener, View.O
                 .take(1)
                 .flatMapIterable { it }
                 .filter { !it.isSend }
-                .flatMapSingle { networkService.addRoom(it.key, it) }
+                .flatMapSingle { networkService.addRoom(HISTORY_TABLE, it.key, it) }
                 .flatMapCompletable { update(it) }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ Log.d(TAG, MSG_SENT) }, { Crashlytics.logException(it) }))
+                .subscribe({ Log.d(TAG, MSG_SENT) }, { onError(it) }))
     }
 
     private fun update(room: Room): Completable {
@@ -108,6 +108,10 @@ class MainMenuActivity : DaggerAppCompatActivity(), View.OnClickListener, View.O
             room.isSend = true
             roomDao.updateRoom(room)
         })
+    }
+
+    private fun onError(throwable: Throwable) {
+        Crashlytics.logException(throwable)
     }
 
     override fun onDestroy() {
@@ -178,5 +182,6 @@ class MainMenuActivity : DaggerAppCompatActivity(), View.OnClickListener, View.O
         private const val TAG = "MainMenuActivity"
         private const val MSG_SENT = "history updated successfully"
         private const val RC_SETTINGS = 3
+        private val HISTORY_TABLE = if (BuildConfig.DEBUG) "history_debug" else "history"
     }
 }
