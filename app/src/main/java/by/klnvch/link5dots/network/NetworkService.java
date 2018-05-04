@@ -31,6 +31,6 @@ import retrofit2.http.PUT;
 import retrofit2.http.Path;
 
 public interface NetworkService {
-    @PUT("history_debug/{key}.json")
-    Single<Room> addRoom(@Path("key") String key, @Body Room room);
+    @PUT("{table}/{key}.json")
+    Single<Room> addRoom(@Path("table") String table, @Path("key") String key, @Body Room room);
 }
