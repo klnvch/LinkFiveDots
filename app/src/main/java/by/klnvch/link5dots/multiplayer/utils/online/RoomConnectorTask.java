@@ -66,9 +66,9 @@ public class RoomConnectorTask {
                             final Room room = currentData.getValue(Room.class);
                             checkNotNull(room);
 
-                            listener.onRoomConnected(room, null);
+                            listener.onRoomConnected(room);
                         } else {
-                            listener.onRoomConnected(null, error.toException());
+                            listener.onRoomConnectFailed(error.toException());
                         }
                     }
                 });

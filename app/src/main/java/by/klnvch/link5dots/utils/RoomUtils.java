@@ -28,16 +28,23 @@ import android.graphics.Point;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import java.text.Format;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import by.klnvch.link5dots.models.Dot;
+import by.klnvch.link5dots.models.HighScore;
 import by.klnvch.link5dots.models.Room;
 import by.klnvch.link5dots.models.User;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public class RoomUtils {
+
+    private static final String TIME_TEMPLATE = "MMM-dd HH:mm";
 
     @NonNull
     public static Room createBotGame(@NonNull User user1, @NonNull User user2) {
@@ -113,22 +120,56 @@ public class RoomUtils {
         return room;
     }
 
+    public static long getDuration(@NonNull Room room) {
+        checkNotNull(room);
+        if (!isEmpty(room)) {
+            final Dot lastDot = DotsArrayUtils.getLastDot(room.getDots());
+            return (lastDot.getTimestamp() - room.getTimestamp());
+        }
+        return 0;
+    }
+
+    public static String formatStartTime(@NonNull Room room) {
+        checkNotNull(room);
+
+        final Format timeFormat = new SimpleDateFormat(TIME_TEMPLATE, Locale.getDefault());
+        return timeFormat.format(new Date(room.getTimestamp()));
+    }
+
     @Nullable
     private static Integer getLastDotType(@NonNull Room room) {
         checkNotNull(room);
 
         if (!isEmpty(room)) {
-            final ArrayList<Dot> dots = room.getDots();
-            return dots.get(dots.size() - 1).getType();
+            return DotsArrayUtils.getLastDot(room.getDots()).getType();
         }
         return null;
     }
 
     public static int getHostDotType(@NonNull Room room, @NonNull User host) {
         checkNotNull(room);
-        checkNotNull(room);
 
         return host.equals(room.getUser1()) ? Dot.HOST : Dot.GUEST;
+    }
+
+    @NonNull
+    public static HighScore getHighScore(@NonNull Room room, @Nullable User user) {
+        checkNotNull(room);
+
+        final Dot lastDot = DotsArrayUtils.getLastDot(room.getDots());
+
+        final long time = (lastDot.getTimestamp() - room.getTimestamp()) / 1000;
+        final int movesDone = lastDot.getId() + 1;
+
+        if (user != null) {
+            if (lastDot.getType() == getHostDotType(room, user)) {
+                return new HighScore(movesDone, time, HighScore.WON);
+            } else {
+                return new HighScore(movesDone, time, HighScore.LOST);
+            }
+        } else {
+            return new HighScore(movesDone, time, -1);
+        }
     }
 
     @NonNull

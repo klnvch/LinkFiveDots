@@ -45,7 +45,6 @@ public class Game {
 
     private final int mHostDotType;
     private final int mGuestDotType;
-    private HighScore mScore = null;
     private transient ArrayList<Dot> mWinningLine = null;
 
     private Game(@DotType int hostDotType) {
@@ -111,22 +110,6 @@ public class Game {
         return game;
     }
 
-    private void prepareScore() {
-        final Dot firstDot = getFirstDot();
-        final Dot lastDot = getLastDot();
-
-        if (mWinningLine != null && firstDot != null && lastDot != null) {
-            final long time = (System.currentTimeMillis() - firstDot.getTimestamp()) / 1000;
-            final int movesDone = lastDot.getId() + 1;
-
-            if (mWinningLine.get(0).getType() == mHostDotType) {
-                mScore = new HighScore(movesDone, time, HighScore.WON);
-            } else {
-                mScore = new HighScore(movesDone, time, HighScore.LOST);
-            }
-        }
-    }
-
     public boolean checkCorrectness(int x, int y) {
         return isInBound(x, y) && net[x][y].getType() == Dot.EMPTY && mWinningLine == null;
     }
@@ -144,32 +127,8 @@ public class Game {
     public ArrayList<Dot> isOver() {
         if (mWinningLine == null) {
             mWinningLine = DotsArrayUtils.findWinningLine(dots);
-
-            if (mWinningLine != null) {
-                prepareScore();
-            }
         }
         return mWinningLine;
-    }
-
-    @Nullable
-    public HighScore getCurrentScore() {
-        if (mWinningLine != null && mScore == null) {
-            prepareScore();
-        }
-        return mScore;
-    }
-
-    @Nullable
-    private Dot getFirstDot() {
-        for (int i = 0; i < N; i++) {
-            for (int j = 0; j < M; j++) {
-                if (net[i][j].getType() != Dot.EMPTY && net[i][j].getId() == 0) {
-                    return net[i][j];
-                }
-            }
-        }
-        return null;
     }
 
     @Nullable

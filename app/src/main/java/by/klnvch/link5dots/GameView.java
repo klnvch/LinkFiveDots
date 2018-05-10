@@ -47,7 +47,6 @@ import java.util.ArrayList;
 import by.klnvch.link5dots.models.Dot;
 import by.klnvch.link5dots.models.Game;
 import by.klnvch.link5dots.models.GameViewState;
-import by.klnvch.link5dots.models.HighScore;
 import by.klnvch.link5dots.settings.SettingsUtils;
 import by.klnvch.link5dots.utils.BitmapCreator;
 import by.klnvch.link5dots.utils.MathUtils;
@@ -91,7 +90,6 @@ public class GameView extends View {
     private Bitmap mWinningLine = null;
     private float mWinningLineDX = 0;
     private float mWinningLineDY = 0;
-    private boolean mIsEndGameSend = false;
 
     public GameView(Context context) {
         super(context);
@@ -252,7 +250,6 @@ public class GameView extends View {
     }
 
     public void newGame(@Nullable Long seed) {
-        mIsEndGameSend = false;
         mGameState = Game.generateGame(seed);
         mViewState.focus(mPaperSize / 2.0f, mPaperSize / 2.0f, mScreenWidth, mScreenHeight);
         invalidate();
@@ -262,16 +259,10 @@ public class GameView extends View {
     private ArrayList<Dot> isOver() {
         final ArrayList<Dot> winningLine = mGameState.isOver();
         if (winningLine != null) {
-            HighScore highScore = mGameState.getCurrentScore();
-            if (highScore != null) {
-                if (mOnGameEndListener != null) {
-                    if (!mIsEndGameSend) {
-                        mIsEndGameSend = true;
-                        mOnGameEndListener.onGameEnd(highScore);
-                    }
-                } else {
-                    Log.e(TAG, "listener is null");
-                }
+            if (mOnGameEndListener != null) {
+                mOnGameEndListener.onGameEnd();
+            } else {
+                Log.e(TAG, "listener is null");
             }
         }
         return winningLine;
@@ -354,7 +345,7 @@ public class GameView extends View {
     }
 
     public interface OnGameEndListener {
-        void onGameEnd(@NonNull HighScore highScore);
+        void onGameEnd();
     }
 
     private class GestureListener extends SimpleOnGestureListener {

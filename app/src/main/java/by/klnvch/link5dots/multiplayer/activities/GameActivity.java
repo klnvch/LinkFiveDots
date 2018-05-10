@@ -58,6 +58,7 @@ import by.klnvch.link5dots.multiplayer.services.GameService;
 import by.klnvch.link5dots.multiplayer.services.GameServiceInterface;
 import by.klnvch.link5dots.multiplayer.targets.Target;
 import by.klnvch.link5dots.multiplayer.utils.GameState;
+import by.klnvch.link5dots.utils.ActivityUtils;
 import by.klnvch.link5dots.utils.RoomUtils;
 import dagger.android.support.DaggerAppCompatActivity;
 
@@ -234,6 +235,7 @@ public abstract class GameActivity extends DaggerAppCompatActivity implements
         Log.d(TAG, "onMessageEvent: " + event);
         // java.io.IOException: read failed, socket might closed or timeout, read ret: -1
         // java.net.ConnectException: failed to connect to /192.168.1.2 (port 47555): connect failed: EHOSTUNREACH (No route to host)
+        // when disappeared
         showMsg(R.string.bluetooth_connect_failed);
     }
 
@@ -328,7 +330,7 @@ public abstract class GameActivity extends DaggerAppCompatActivity implements
     @Override
     public String getTargetLongName() {
         checkNotNull(mService.getTarget());
-        return mService.getTarget().toString();
+        return mService.getTarget().getLongName();
     }
 
     @NonNull
@@ -360,12 +362,15 @@ public abstract class GameActivity extends DaggerAppCompatActivity implements
     }
 
     @Override
-    public void onGameFinished(@NonNull HighScore highScore) {
-        checkNotNull(getFragmentManager());
+    public void onGameFinished() {
+        checkNotNull(mService.getRoom());
+        checkNotNull(mService.getUser());
 
-        EndGameDialog.newInstance(highScore, false)
-                .setOnNewGameListener(this::newGame)
-                .show(getSupportFragmentManager(), EndGameDialog.TAG);
+        final HighScore highScore = RoomUtils.getHighScore(mService.getRoom(), mService.getUser());
+
+        final EndGameDialog dialog = EndGameDialog.newInstance(highScore, false)
+                .setOnNewGameListener(this::newGame);
+        ActivityUtils.showDialog(getSupportFragmentManager(), dialog, EndGameDialog.TAG);
     }
 
     protected abstract void newGame();

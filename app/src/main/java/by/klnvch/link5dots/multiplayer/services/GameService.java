@@ -250,18 +250,21 @@ public abstract class GameService extends Service implements GameServiceInterfac
     }
 
     @Override
-    public void onRoomConnected(@Nullable Room room, @Nullable Exception exception) {
-        Log.d(TAG, "onRoomConnected: " + exception);
+    public final void onRoomConnected(@Nullable Room room) {
+        Log.d(TAG, "onRoomConnected");
 
-        if (exception == null) {
-            mScanner.stopScan();
-            startGame(room);
+        mScanner.stopScan();
+        startGame(room);
+        setConnectState(GameState.STATE_CONNECTED);
+    }
 
-            setConnectState(GameState.STATE_CONNECTED);
-        } else {
-            Crashlytics.logException(exception);
-            setConnectState(GameState.STATE_DISCONNECTED);
-        }
+    @Override
+    public void onRoomConnectFailed(@NonNull Exception exception) {
+        Log.w(TAG, "onRoomConnectFailed: " + exception.getMessage());
+
+        Crashlytics.logException(exception);
+        setConnectState(GameState.STATE_NONE);
+        sendMsg(exception);
     }
 
     @Override

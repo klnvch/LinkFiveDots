@@ -31,6 +31,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
+import android.text.format.DateUtils;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 
@@ -91,7 +92,8 @@ public final class EndGameDialog extends DialogFragment implements DialogInterfa
         final long elapsedTime = getArguments().getLong(KEY_ELAPSED_TIME);
 
         final int title = isWon != null ? isWon ? R.string.end_win : R.string.end_lose : -1;
-        final String msg = getString(R.string.end_move, movesNumber, elapsedTime);
+        final String timeStr = DateUtils.formatElapsedTime(elapsedTime);
+        final String msg = getString(R.string.end_move, movesNumber, timeStr);
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
                 .setMessage(msg);

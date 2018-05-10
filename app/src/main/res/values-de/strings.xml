@@ -45,7 +45,7 @@
     <string name="end_lose">Sie haben verloren!</string>
     <string name="end_new_game">Neues</string>
     <string name="end_undo">Rückgängig</string>
-    <string name="end_move">%1$d Male bewegt für %2$d S.</string>
+    <string name="end_move">%1$d Male bewegt für %2$s.</string>
 
     <string name="scores_time">Zeit</string>
     <string name="end_publish">Veröffentlichen</string>

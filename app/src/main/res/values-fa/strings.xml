@@ -22,7 +22,7 @@
   ~ SOFTWARE.
   -->
 
-<resources xmlns:xliff="http://schemas.android.com/apk/res/android">
+<resources xmlns:xliff="http://schemas.android.com/apk/res/android" xmlns:ns2="http://schemas.android.com/tools">
     <string name="app_name">اتصال پنج نقطه</string>
     <string name="language">فارسی</string>
 
@@ -56,7 +56,7 @@
     <string name="end_lose">شما باخته اید!</string>
     <string name="end_new_game">جدید</string>
     <string name="end_undo">بازگشت</string>
-    <string name="end_move">" <xliff:g id="MOVES">%1$d</xliff:g> حرکت انجام شده است در <xliff:g id="TIME">%2$d</xliff:g>  ثانیه"</string>
+    <string name="end_move">" <ns2:g id="MOVES">%1$d</ns2:g> حرکت انجام شده است در <ns2:g id="TIME">%2$s</ns2:g>"</string>
 
     <string name="scores_time">زمان</string>
     <string name="end_publish">نشر</string>

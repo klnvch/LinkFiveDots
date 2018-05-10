@@ -33,6 +33,7 @@ import by.klnvch.link5dots.models.Dot;
 import by.klnvch.link5dots.models.HighScore;
 import by.klnvch.link5dots.models.Room;
 import by.klnvch.link5dots.models.User;
+import by.klnvch.link5dots.utils.ActivityUtils;
 import by.klnvch.link5dots.utils.RoomUtils;
 
 public class TwoPlayersActivity extends BaseActivity {
@@ -55,13 +56,13 @@ public class TwoPlayersActivity extends BaseActivity {
     }
 
     @Override
-    public void onGameFinished(@NonNull HighScore highScore) {
-        if (getSupportFragmentManager().findFragmentByTag(EndGameDialog.TAG) != null) return;
+    public void onGameFinished() {
+        final HighScore highScore = RoomUtils.getHighScore(mRoom, null);
 
-        EndGameDialog.newInstance(highScore, true)
+        final EndGameDialog dialog = EndGameDialog.newInstance(highScore, true)
                 .setOnNewGameListener(this::newGame)
-                .setOnUndoMoveListener(this::undoLastMove)
-                .show(getSupportFragmentManager(), EndGameDialog.TAG);
+                .setOnUndoMoveListener(this::undoLastMove);
+        ActivityUtils.showDialog(getSupportFragmentManager(), dialog, EndGameDialog.TAG);
     }
 
     @Override

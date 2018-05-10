@@ -44,7 +44,6 @@ import by.klnvch.link5dots.db.RoomDao;
 import by.klnvch.link5dots.models.Dot;
 import by.klnvch.link5dots.models.Game;
 import by.klnvch.link5dots.models.GameViewState;
-import by.klnvch.link5dots.models.HighScore;
 import by.klnvch.link5dots.models.Room;
 import by.klnvch.link5dots.models.User;
 import by.klnvch.link5dots.settings.SettingsUtils;
@@ -208,8 +207,8 @@ public class GameFragment extends DaggerFragment {
         mListener.onMoveDone(checkNotNull(dot));
     }
 
-    private void onGameFinished(@NonNull HighScore highScore) {
-        mListener.onGameFinished(checkNotNull(highScore));
+    private void onGameFinished() {
+        mListener.onGameFinished();
     }
 
     public void focus() {
@@ -222,6 +221,6 @@ public class GameFragment extends DaggerFragment {
 
         void onMoveDone(@NonNull Dot dot);
 
-        void onGameFinished(@NonNull HighScore highScore);
+        void onGameFinished();
     }
 }

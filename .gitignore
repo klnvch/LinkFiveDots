@@ -12,6 +12,7 @@ build
 app/google-services.json
 app/schemas
 app/debug
+app/release
 keystore
 gradlew
 gradlew.bat

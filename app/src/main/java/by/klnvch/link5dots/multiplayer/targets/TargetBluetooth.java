@@ -32,18 +32,19 @@ public class TargetBluetooth extends Target<BluetoothDevice> {
         super(target);
     }
 
-    @Override
-    public String toString() {
-        final BluetoothDevice device = getTarget();
-        final String name = device.getName();
-        final String address = device.getAddress();
-        return name + '\n' + address;
-    }
-
     @NonNull
     @Override
     public String getShortName() {
         return getTarget().getName();
+    }
+
+    @NonNull
+    @Override
+    public String getLongName() {
+        final BluetoothDevice device = getTarget();
+        final String name = device.getName();
+        final String address = device.getAddress();
+        return name + '\n' + address;
     }
 
     @Override

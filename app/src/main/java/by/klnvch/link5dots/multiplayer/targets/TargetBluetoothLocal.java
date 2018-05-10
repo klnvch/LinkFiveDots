@@ -51,4 +51,10 @@ public class TargetBluetoothLocal extends Target<String> {
     public String getShortName() {
         return getTarget();
     }
+
+    @NonNull
+    @Override
+    public String getLongName() {
+        return getTarget();
+    }
 }

@@ -37,8 +37,15 @@ public class TargetNsd extends Target<NsdServiceInfo> {
         super(target);
     }
 
+    @NonNull
     @Override
-    public String toString() {
+    public String getShortName() {
+        return getTarget().getServiceName();
+    }
+
+    @NonNull
+    @Override
+    public String getLongName() {
         final NsdServiceInfo serviceInfo = getTarget();
         final String serviceName = serviceInfo.getServiceName();
         final int port = serviceInfo.getPort();
@@ -48,12 +55,6 @@ public class TargetNsd extends Target<NsdServiceInfo> {
         } else {
             return serviceName;
         }
-    }
-
-    @NonNull
-    @Override
-    public String getShortName() {
-        return getTarget().getServiceName();
     }
 
     @Override

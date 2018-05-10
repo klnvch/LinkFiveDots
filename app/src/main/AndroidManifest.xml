@@ -55,7 +55,8 @@
 
         <activity
             android:name="by.klnvch.link5dots.MainMenuActivity"
-            android:label="@string/app_name">
+            android:label="@string/app_name"
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -64,21 +65,24 @@
         </activity>
         <activity
             android:name="by.klnvch.link5dots.MainActivity"
-            android:label="@string/app_name">
+            android:label="@string/app_name"
+            android:launchMode="singleTop">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="by.klnvch.link5dots.MainMenuActivity" />
         </activity>
         <activity
             android:name="by.klnvch.link5dots.MultiPlayerMenuActivity"
-            android:label="@string/menu_multi_player">
+            android:label="@string/menu_multi_player"
+            android:launchMode="singleTop">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="by.klnvch.link5dots.MainMenuActivity" />
         </activity>
         <activity
             android:name="by.klnvch.link5dots.TwoPlayersActivity"
-            android:label="@string/menu_two_players">
+            android:label="@string/menu_two_players"
+            android:launchMode="singleTop">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="by.klnvch.link5dots.MultiPlayerMenuActivity" />
@@ -86,7 +90,8 @@
         <activity
             android:name="by.klnvch.link5dots.multiplayer.activities.GameActivityBluetooth"
             android:configChanges="orientation|keyboardHidden|locale"
-            android:label="@string/bluetooth_settings">
+            android:label="@string/bluetooth_settings"
+            android:launchMode="singleTop">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="by.klnvch.link5dots.MultiPlayerMenuActivity" />
@@ -94,35 +99,40 @@
         <activity
             android:name="by.klnvch.link5dots.multiplayer.activities.GameActivityNsd"
             android:configChanges="orientation|keyboardHidden|locale"
-            android:label="@string/menu_local_network">
+            android:label="@string/menu_local_network"
+            android:launchMode="singleTop">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="by.klnvch.link5dots.MultiPlayerMenuActivity" />
         </activity>
         <activity
             android:name="by.klnvch.link5dots.multiplayer.activities.GameActivityOnline"
-            android:label="@string/menu_online_game">
+            android:label="@string/menu_online_game"
+            android:launchMode="singleTop">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="by.klnvch.link5dots.MultiPlayerMenuActivity" />
         </activity>
         <activity
             android:name="by.klnvch.link5dots.scores.ScoresActivity"
-            android:label="@string/scores_title">
+            android:label="@string/scores_title"
+            android:launchMode="singleTop">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="by.klnvch.link5dots.MainMenuActivity" />
         </activity>
         <activity
             android:name="by.klnvch.link5dots.scores.GameInfoActivity"
-            android:label="@string/application_info_label">
+            android:label="@string/application_info_label"
+            android:launchMode="singleTop">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="by.klnvch.link5dots.scores.ScoresActivity" />
         </activity>
         <activity
             android:name="by.klnvch.link5dots.HowToActivity"
-            android:label="@string/how_to_title">
+            android:label="@string/how_to_title"
+            android:launchMode="singleTop">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="by.klnvch.link5dots.MainMenuActivity" />
@@ -130,14 +140,15 @@
         <activity
             android:name="by.klnvch.link5dots.InfoActivity"
             android:label="@string/application_info_label"
-            android:launchMode="standard">
+            android:launchMode="singleTop">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="by.klnvch.link5dots.MainMenuActivity" />
         </activity>
         <activity
             android:name="by.klnvch.link5dots.settings.SettingsActivity"
-            android:label="@string/settings_label">
+            android:label="@string/settings_label"
+            android:launchMode="singleTop">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="by.klnvch.link5dots.MainMenuActivity" />

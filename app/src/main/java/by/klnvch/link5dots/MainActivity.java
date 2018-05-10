@@ -35,6 +35,7 @@ import by.klnvch.link5dots.models.HighScore;
 import by.klnvch.link5dots.models.Room;
 import by.klnvch.link5dots.models.User;
 import by.klnvch.link5dots.scores.ScoresActivity;
+import by.klnvch.link5dots.utils.ActivityUtils;
 import by.klnvch.link5dots.utils.AnalyticsEvents;
 import by.klnvch.link5dots.utils.RoomUtils;
 
@@ -62,14 +63,16 @@ public final class MainActivity extends BaseActivity {
     }
 
     @Override
-    public void onGameFinished(@NonNull HighScore highScore) {
+    public void onGameFinished() {
         mFirebaseAnalytics.logEvent(AnalyticsEvents.EVENT_GAME_FINISHED, null);
 
-        EndGameDialog.newInstance(highScore, false)
+        final HighScore highScore = RoomUtils.getHighScore(mRoom, getUser());
+
+        final EndGameDialog dialog = EndGameDialog.newInstance(highScore, false)
                 .setOnNewGameListener(this::newGame)
                 .setOnUndoMoveListener(this::undoLastMove)
-                .setOnScoreListener(() -> moveToScores(highScore))
-                .show(getSupportFragmentManager(), EndGameDialog.TAG);
+                .setOnScoreListener(() -> moveToScores(highScore));
+        ActivityUtils.showDialog(getSupportFragmentManager(), dialog, EndGameDialog.TAG);
     }
 
     @Override

@@ -38,11 +38,9 @@ public abstract class Target<T> {
         return mTarget;
     }
 
-    @Override
-    public String toString() {
-        return mTarget.toString();
-    }
-
     @NonNull
     public abstract String getShortName();
+
+    @NonNull
+    public abstract String getLongName();
 }
