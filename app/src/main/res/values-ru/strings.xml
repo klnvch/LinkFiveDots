@@ -45,7 +45,7 @@
     <string name="end_lose">Вы проиграли!</string>
     <string name="end_new_game">Новая</string>
     <string name="end_undo">Отменить</string>
-    <string name="end_move">%1$d ходов сделано за %2$d с.</string>
+    <string name="end_move">%1$d ходов сделано за %2$s.</string>
 
     <string name="scores_time">Время</string>
     <string name="end_publish">Опубликовать</string>

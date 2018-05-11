@@ -57,7 +57,6 @@ public class Room implements Serializable {
     public static final int TYPE_BOT = 5;
 
     private static final String TIME_TEMPLATE = "MMM-dd HH:mm";
-    private static final String TIME_FORMAT = "%d:%02d";
 
     @PrimaryKey
     @NonNull
@@ -141,18 +140,6 @@ public class Room implements Serializable {
     public String getStartTime() {
         final Format timeFormat = new SimpleDateFormat(TIME_TEMPLATE, Locale.getDefault());
         return timeFormat.format(new Date(timestamp));
-    }
-
-    @Nullable
-    public String getDuration() {
-        if (dots != null && !dots.isEmpty()) {
-            final Dot dot = dots.get(dots.size() - 1);
-            final long duration = (dot.getTimestamp() - timestamp) / 1000;
-            final int min = (int) (duration / 60);
-            final int sec = (int) (duration % 60);
-            return String.format(Locale.getDefault(), TIME_FORMAT, min, sec);
-        }
-        return null;
     }
 
     @Nullable

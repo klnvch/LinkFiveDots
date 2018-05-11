@@ -29,7 +29,7 @@ public class DotsArrayUtils {
             net[dot.getX()][dot.getY()] = dot;
         }
 
-        final Dot lastDot = dots.get(dots.size() - 1);
+        final Dot lastDot = getLastDot(dots);
 
         final int[][] directions = {{1, 0}, {1, 1}, {0, 1}, {-1, 1}};
 
@@ -41,6 +41,11 @@ public class DotsArrayUtils {
         }
 
         return null;
+    }
+
+    @NonNull
+    static Dot getLastDot(@NonNull List<Dot> dots) {
+        return dots.get(dots.size() - 1);
     }
 
     @NonNull

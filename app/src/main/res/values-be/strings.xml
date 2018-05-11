@@ -45,7 +45,7 @@
     <string name="end_lose">Вы прайгралі!</string>
     <string name="end_new_game">Новая</string>
     <string name="end_undo">Скасаваць</string>
-    <string name="end_move">%1$d рухаў зроблена за %2$d s.</string>
+    <string name="end_move">%1$d рухаў зроблена за %2$s.</string>
 
     <string name="scores_time">Час</string>
     <string name="end_publish">Апублікаваць</string>

@@ -45,7 +45,7 @@
     <string name="end_lose">Przegrałeś!</string>
     <string name="end_new_game">Nowa</string>
     <string name="end_undo">Cofnij</string>
-    <string name="end_move">%1$d ruchów zrobiono przez %2$d s.</string>
+    <string name="end_move">%1$d ruchów zrobiono przez %2$s.</string>
 
     <string name="scores_time">Czas</string>
     <string name="end_publish">Opublikuj</string>

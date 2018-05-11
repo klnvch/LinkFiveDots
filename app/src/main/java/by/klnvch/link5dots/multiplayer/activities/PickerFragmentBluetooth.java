@@ -34,13 +34,12 @@ import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-
-import java.util.Locale;
 
 import by.klnvch.link5dots.R;
 import by.klnvch.link5dots.multiplayer.utils.bluetooth.BluetoothHelper;
@@ -51,20 +50,11 @@ public class PickerFragmentBluetooth extends PickerFragment {
 
     private static final int REQUEST_DISCOVERABLE = 1;
     private static final int REQUEST_LOCATION = 1;
-    private static final String TIME_FORMAT = "%d:%02d";
 
     private Button mButtonDiscoverable;
     private TextView mTextDiscoverable;
     private CountDownTimer mCountDownTimer = null;
     private long mTimerFinishTime = 0;
-
-    @NonNull
-    private static String getTime(long time) {
-        final long millisUntilFinished = time / 1000;
-        final int min = (int) (millisUntilFinished / 60);
-        final int sec = (int) (millisUntilFinished % 60);
-        return String.format(Locale.getDefault(), TIME_FORMAT, min, sec);
-    }
 
     @Nullable
     @Override
@@ -187,7 +177,7 @@ public class PickerFragmentBluetooth extends PickerFragment {
         mCountDownTimer = new CountDownTimer(duration, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
-                final String time = getTime(millisUntilFinished);
+                final String time = DateUtils.formatElapsedTime(millisUntilFinished / 1000);
                 mTextDiscoverable.setText(getString(R.string.bluetooth_is_discoverable, time));
             }
 

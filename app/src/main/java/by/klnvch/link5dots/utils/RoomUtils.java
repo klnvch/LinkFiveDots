@@ -113,13 +113,21 @@ public class RoomUtils {
         return room;
     }
 
+    public static long getDuration(@NonNull Room room) {
+        checkNotNull(room);
+        if (!isEmpty(room)) {
+            final Dot lastDot = DotsArrayUtils.getLastDot(room.getDots());
+            return (lastDot.getTimestamp() - room.getTimestamp());
+        }
+        return 0;
+    }
+
     @Nullable
     private static Integer getLastDotType(@NonNull Room room) {
         checkNotNull(room);
 
         if (!isEmpty(room)) {
-            final ArrayList<Dot> dots = room.getDots();
-            return dots.get(dots.size() - 1).getType();
+            return DotsArrayUtils.getLastDot(room.getDots()).getType();
         }
         return null;
     }

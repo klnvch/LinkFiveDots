@@ -25,6 +25,7 @@
 package by.klnvch.link5dots.scores
 
 import android.support.v7.widget.RecyclerView
+import android.text.format.DateUtils
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -44,7 +45,7 @@ class ScoresAdapter(options: FirebaseRecyclerOptions<HighScore>) : FirebaseRecyc
         holder.mPosition.text = String.format(Locale.getDefault(), FORMAT_POSITION, position + 1)
         holder.mUserName.text = model.userName
         holder.mMoves.text = String.format(Locale.getDefault(), FORMAT_MOVES, model.moves)
-        holder.mTime.text = String.format(Locale.getDefault(), FORMAT_TIME, model.time)
+        holder.mTime.text = DateUtils.formatElapsedTime(model.time)
         when (model.status) {
             HighScore.WON -> holder.mStatus.setText(R.string.scores_won)
             HighScore.LOST -> holder.mStatus.setText(R.string.scores_lost)
@@ -80,7 +81,6 @@ class ScoresAdapter(options: FirebaseRecyclerOptions<HighScore>) : FirebaseRecyc
     companion object {
         private const val FORMAT_POSITION = "%d."
         private const val FORMAT_MOVES = "%d"
-        private const val FORMAT_TIME = "%d"
 
         fun create(): ScoresAdapter {
             return ScoresAdapter(FirebaseRecyclerOptions.Builder<HighScore>()

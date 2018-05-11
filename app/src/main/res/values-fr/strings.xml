@@ -45,7 +45,7 @@
     <string name="end_lose">Vous avez échoué!</string>
     <string name="end_new_game">Nouveau</string>
     <string name="end_undo">Annuler</string>
-    <string name="end_move">%1$d déplacements effectués pendant %2$d s.</string>
+    <string name="end_move">%1$d déplacements effectués pendant %2$s.</string>
 
     <string name="scores_time">Durée</string>
     <string name="end_publish">Publier</string>
