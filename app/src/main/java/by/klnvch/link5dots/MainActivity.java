@@ -62,8 +62,10 @@ public final class MainActivity extends BaseActivity {
     }
 
     @Override
-    public void onGameFinished(@NonNull HighScore highScore) {
+    public void onGameFinished() {
         mFirebaseAnalytics.logEvent(AnalyticsEvents.EVENT_GAME_FINISHED, null);
+
+        final HighScore highScore = RoomUtils.getHighScore(mRoom, getUser());
 
         EndGameDialog.newInstance(highScore, false)
                 .setOnNewGameListener(this::newGame)

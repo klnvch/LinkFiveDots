@@ -55,8 +55,10 @@ public class TwoPlayersActivity extends BaseActivity {
     }
 
     @Override
-    public void onGameFinished(@NonNull HighScore highScore) {
+    public void onGameFinished() {
         if (getSupportFragmentManager().findFragmentByTag(EndGameDialog.TAG) != null) return;
+
+        final HighScore highScore = RoomUtils.getHighScore(mRoom, null);
 
         EndGameDialog.newInstance(highScore, true)
                 .setOnNewGameListener(this::newGame)

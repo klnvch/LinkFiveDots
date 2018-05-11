@@ -54,7 +54,7 @@ public class HighScore implements Serializable {
 
     }
 
-    HighScore(int moves, long time, long status) {
+    public HighScore(int moves, long time, long status) {
         this.moves = moves;
         this.time = time;
         this.status = (int) status;

@@ -47,7 +47,6 @@ import java.util.ArrayList;
 import by.klnvch.link5dots.models.Dot;
 import by.klnvch.link5dots.models.Game;
 import by.klnvch.link5dots.models.GameViewState;
-import by.klnvch.link5dots.models.HighScore;
 import by.klnvch.link5dots.settings.SettingsUtils;
 import by.klnvch.link5dots.utils.BitmapCreator;
 import by.klnvch.link5dots.utils.MathUtils;
@@ -262,17 +261,14 @@ public class GameView extends View {
     private ArrayList<Dot> isOver() {
         final ArrayList<Dot> winningLine = mGameState.isOver();
         if (winningLine != null) {
-            HighScore highScore = mGameState.getCurrentScore();
-            if (highScore != null) {
                 if (mOnGameEndListener != null) {
                     if (!mIsEndGameSend) {
                         mIsEndGameSend = true;
-                        mOnGameEndListener.onGameEnd(highScore);
+                        mOnGameEndListener.onGameEnd();
                     }
                 } else {
                     Log.e(TAG, "listener is null");
                 }
-            }
         }
         return winningLine;
     }
@@ -354,7 +350,7 @@ public class GameView extends View {
     }
 
     public interface OnGameEndListener {
-        void onGameEnd(@NonNull HighScore highScore);
+        void onGameEnd();
     }
 
     private class GestureListener extends SimpleOnGestureListener {

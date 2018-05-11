@@ -360,8 +360,12 @@ public abstract class GameActivity extends DaggerAppCompatActivity implements
     }
 
     @Override
-    public void onGameFinished(@NonNull HighScore highScore) {
+    public void onGameFinished() {
         checkNotNull(getFragmentManager());
+        checkNotNull(mService.getRoom());
+        checkNotNull(mService.getUser());
+
+        final HighScore highScore = RoomUtils.getHighScore(mService.getRoom(), mService.getUser());
 
         EndGameDialog.newInstance(highScore, false)
                 .setOnNewGameListener(this::newGame)

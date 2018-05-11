@@ -28,7 +28,6 @@ import android.os.Bundle
 import by.klnvch.link5dots.GameFragment
 import by.klnvch.link5dots.R
 import by.klnvch.link5dots.models.Dot
-import by.klnvch.link5dots.models.HighScore
 import by.klnvch.link5dots.models.Room
 import by.klnvch.link5dots.models.User
 import dagger.android.support.DaggerAppCompatActivity
@@ -49,7 +48,7 @@ class GameInfoActivity : DaggerAppCompatActivity(), GameFragment.OnGameListener 
     override fun onMoveDone(dot: Dot) {
     }
 
-    override fun onGameFinished(highScore: HighScore) {
+    override fun onGameFinished() {
     }
 
     override fun getUser(): User? {
