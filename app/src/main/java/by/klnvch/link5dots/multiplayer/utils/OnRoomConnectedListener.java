@@ -24,10 +24,12 @@
 
 package by.klnvch.link5dots.multiplayer.utils;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import by.klnvch.link5dots.models.Room;
 
 public interface OnRoomConnectedListener {
-    void onRoomConnected(@Nullable Room room, @Nullable Exception exception);
+    void onRoomConnected(@Nullable Room room);
+    void onRoomConnectFailed(@NonNull Exception exception);
 }

@@ -234,6 +234,7 @@ public abstract class GameActivity extends DaggerAppCompatActivity implements
         Log.d(TAG, "onMessageEvent: " + event);
         // java.io.IOException: read failed, socket might closed or timeout, read ret: -1
         // java.net.ConnectException: failed to connect to /192.168.1.2 (port 47555): connect failed: EHOSTUNREACH (No route to host)
+        // when disappeared
         showMsg(R.string.bluetooth_connect_failed);
     }
 

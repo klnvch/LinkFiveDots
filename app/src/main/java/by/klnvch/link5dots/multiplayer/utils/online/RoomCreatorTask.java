@@ -61,7 +61,7 @@ public class RoomCreatorTask {
                     mCreatedListener.onTargetCreated(new TargetOnline(mRoom));
                     break;
                 case Room.STATE_STARTED:
-                    mConnectedListener.onRoomConnected(mRoom, null);
+                    mConnectedListener.onRoomConnected(mRoom);
                     stopObserving();
                     break;
             }

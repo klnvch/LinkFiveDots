@@ -82,10 +82,10 @@ public class ConnectedThread extends Thread {
         final OnRoomConnectedListener connectedListener = mConnectedListener.get();
         if (connectedListener != null) {
             if (exception == null) {
-                connectedListener.onRoomConnected(null, null);
+                connectedListener.onRoomConnected(null);
             } else {
                 if (!isInterrupted()) {
-                    connectedListener.onRoomConnected(null, exception);
+                    connectedListener.onRoomConnectFailed(exception);
                 }
                 return;
             }
