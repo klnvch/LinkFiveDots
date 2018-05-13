@@ -63,7 +63,7 @@ class HistoryAdapter(private val rooms: MutableList<Room>) :
         holder.root.setOnClickListener { onItemClickListener?.onItemSelected(rooms[position]) }
         holder.textUser1Name.text = rooms[position].user1?.name
         holder.textUser2Name.text = rooms[position].user2?.name
-        holder.textTime.text = rooms[position].startTime
+        holder.textTime.text = RoomUtils.formatStartTime(rooms[position])
         holder.textDuration.text = DateUtils.formatElapsedTime(RoomUtils.getDuration(rooms[position]) / 1000)
         holder.textDots.text = rooms[position].dots.size.toString()
         when (rooms[position].type) {

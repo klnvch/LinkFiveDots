@@ -31,15 +31,12 @@ import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.google.firebase.database.Exclude;
 import com.google.gson.Gson;
 
 import java.io.Serializable;
-import java.text.Format;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
-import java.util.Locale;
 
 import by.klnvch.link5dots.utils.MathUtils;
 
@@ -55,8 +52,6 @@ public class Room implements Serializable {
     public static final int TYPE_ONLINE = 3;
     public static final int TYPE_TWO_PLAYERS = 4;
     public static final int TYPE_BOT = 5;
-
-    private static final String TIME_TEMPLATE = "MMM-dd HH:mm";
 
     @PrimaryKey
     @NonNull
@@ -136,23 +131,12 @@ public class Room implements Serializable {
             return user1;
     }
 
-    @NonNull
-    public String getStartTime() {
-        final Format timeFormat = new SimpleDateFormat(TIME_TEMPLATE, Locale.getDefault());
-        return timeFormat.format(new Date(timestamp));
-    }
-
     @Nullable
     public Dot getLastDot() {
         if (dots != null && !dots.isEmpty()) {
             return dots.get(dots.size() - 1);
         }
         return null;
-    }
-
-    @Override
-    public String toString() {
-        return getStartTime() + '\n' + user1.getName();
     }
 
     @Override
@@ -222,6 +206,7 @@ public class Room implements Serializable {
         this.type = type;
     }
 
+    @Exclude
     public boolean isSend() {
         return isSend;
     }

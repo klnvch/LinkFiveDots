@@ -329,7 +329,7 @@ public abstract class GameActivity extends DaggerAppCompatActivity implements
     @Override
     public String getTargetLongName() {
         checkNotNull(mService.getTarget());
-        return mService.getTarget().toString();
+        return mService.getTarget().getLongName();
     }
 
     @NonNull

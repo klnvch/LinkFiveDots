@@ -28,8 +28,12 @@ import android.graphics.Point;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import java.text.Format;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import by.klnvch.link5dots.models.Dot;
 import by.klnvch.link5dots.models.HighScore;
@@ -39,6 +43,8 @@ import by.klnvch.link5dots.models.User;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public class RoomUtils {
+
+    private static final String TIME_TEMPLATE = "MMM-dd HH:mm";
 
     @NonNull
     public static Room createBotGame(@NonNull User user1, @NonNull User user2) {
@@ -121,6 +127,13 @@ public class RoomUtils {
             return (lastDot.getTimestamp() - room.getTimestamp());
         }
         return 0;
+    }
+
+    public static String formatStartTime(@NonNull Room room) {
+        checkNotNull(room);
+
+        final Format timeFormat = new SimpleDateFormat(TIME_TEMPLATE, Locale.getDefault());
+        return timeFormat.format(new Date(room.getTimestamp()));
     }
 
     @Nullable

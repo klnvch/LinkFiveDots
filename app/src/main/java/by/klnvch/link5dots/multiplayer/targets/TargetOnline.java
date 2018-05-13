@@ -27,8 +27,10 @@ package by.klnvch.link5dots.multiplayer.targets;
 import android.support.annotation.NonNull;
 
 import by.klnvch.link5dots.models.Room;
+import by.klnvch.link5dots.utils.RoomUtils;
 
 public final class TargetOnline extends Target<Room> {
+
     public TargetOnline(@NonNull Room target) {
         super(target);
     }
@@ -37,5 +39,12 @@ public final class TargetOnline extends Target<Room> {
     @Override
     public String getShortName() {
         return getTarget().getUser1().getName();
+    }
+
+    @NonNull
+    @Override
+    public String getLongName() {
+        final Room room = getTarget();
+        return RoomUtils.formatStartTime(room) + '\n' + room.getUser1().getName();
     }
 }

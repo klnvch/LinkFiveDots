@@ -35,7 +35,7 @@ import by.klnvch.link5dots.multiplayer.targets.Target;
 public class TargetHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
     private final TextView mTextView;
     private final TargetAdapterInterface mAdapter;
-    private Target mDestination;
+    private Target mTarget;
 
     TargetHolder(@NonNull View v, @NonNull TargetAdapterInterface adapter) {
         super(v);
@@ -44,15 +44,13 @@ public class TargetHolder extends RecyclerView.ViewHolder implements View.OnClic
         mTextView.setOnClickListener(this);
     }
 
-    void setDestination(@NonNull Target destination) {
-        mDestination = destination;
-        mTextView.setText(destination.toString());
+    void setDestination(@NonNull Target target) {
+        mTarget = target;
+        mTextView.setText(target.getLongName());
     }
 
     @Override
     public void onClick(View view) {
-        if (mAdapter != null && mDestination != null) {
-            mAdapter.getOnItemClickListener().onItemSelected(mDestination);
-        }
+        mAdapter.getOnItemClickListener().onItemSelected(mTarget);
     }
 }
