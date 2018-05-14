@@ -58,6 +58,7 @@ import by.klnvch.link5dots.multiplayer.services.GameService;
 import by.klnvch.link5dots.multiplayer.services.GameServiceInterface;
 import by.klnvch.link5dots.multiplayer.targets.Target;
 import by.klnvch.link5dots.multiplayer.utils.GameState;
+import by.klnvch.link5dots.utils.ActivityUtils;
 import by.klnvch.link5dots.utils.RoomUtils;
 import dagger.android.support.DaggerAppCompatActivity;
 
@@ -362,15 +363,14 @@ public abstract class GameActivity extends DaggerAppCompatActivity implements
 
     @Override
     public void onGameFinished() {
-        checkNotNull(getFragmentManager());
         checkNotNull(mService.getRoom());
         checkNotNull(mService.getUser());
 
         final HighScore highScore = RoomUtils.getHighScore(mService.getRoom(), mService.getUser());
 
-        EndGameDialog.newInstance(highScore, false)
-                .setOnNewGameListener(this::newGame)
-                .show(getSupportFragmentManager(), EndGameDialog.TAG);
+        final EndGameDialog dialog = EndGameDialog.newInstance(highScore, false)
+                .setOnNewGameListener(this::newGame);
+        ActivityUtils.showDialog(getSupportFragmentManager(), dialog, EndGameDialog.TAG);
     }
 
     protected abstract void newGame();
