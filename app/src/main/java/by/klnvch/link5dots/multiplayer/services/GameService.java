@@ -250,10 +250,8 @@ public abstract class GameService extends Service implements GameServiceInterfac
     }
 
     @Override
-    public void onRoomConnected(@Nullable Room room) {
+    public final void onRoomConnected(@Nullable Room room) {
         Log.d(TAG, "onRoomConnected");
-
-        checkNotNull(room);
 
         mScanner.stopScan();
         startGame(room);
