@@ -175,7 +175,6 @@ public class RoomUtils {
     @NonNull
     public static Room addDotWithBotAnswer(@NonNull Room room, @NonNull Dot dot) {
         checkNotNull(room);
-        checkNotNull(room.getDots());
         checkNotNull(dot);
 
         addDot(room, dot, Dot.HOST);
