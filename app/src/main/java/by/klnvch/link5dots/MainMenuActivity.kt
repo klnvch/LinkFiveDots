@@ -40,6 +40,7 @@ import by.klnvch.link5dots.settings.UsernameDialog
 import com.crashlytics.android.Crashlytics
 import dagger.android.support.DaggerAppCompatActivity
 import io.reactivex.Completable
+import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -54,6 +55,8 @@ class MainMenuActivity : DaggerAppCompatActivity(), View.OnClickListener, View.O
     lateinit var networkService: NetworkService
     @Inject
     lateinit var roomDao: RoomDao
+    @Inject
+    lateinit var settingsUtils: SettingsUtils
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,17 +76,17 @@ class MainMenuActivity : DaggerAppCompatActivity(), View.OnClickListener, View.O
 
         textViewGreeting.setOnLongClickListener(this)
 
-        mDisposables.add(SettingsUtils.isTheFirstRun(this)
+        mDisposables.add(settingsUtils.isTheFirstRun
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { checkTheFirstRun(it) })
 
-        mDisposables.add(SettingsUtils.isConfigurationChanged(this)
+        mDisposables.add(settingsUtils.isConfigurationChanged
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { changeConfiguration(it) })
 
-        mDisposables.add(SettingsUtils.getUserNameOrEmpty(this)
+        mDisposables.add(settingsUtils.userNameOrEmpty
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { setUsername(it) })
@@ -96,11 +99,20 @@ class MainMenuActivity : DaggerAppCompatActivity(), View.OnClickListener, View.O
                 .take(1)
                 .flatMapIterable { it }
                 .filter { !it.isSend }
+                .flatMapSingle { updateIsTest(it) }
                 .flatMapSingle { networkService.addRoom(HISTORY_TABLE, it.key, it) }
                 .flatMapCompletable { update(it) }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ Log.d(TAG, MSG_SENT) }, { onError(it) }))
+    }
+
+    private fun updateIsTest(room: Room): Single<Room> {
+        return Single.fromCallable {
+            room.isTest = settingsUtils.isTest
+            roomDao.updateRoom(room)
+            room
+        }
     }
 
     private fun update(room: Room): Completable {
@@ -161,7 +173,7 @@ class MainMenuActivity : DaggerAppCompatActivity(), View.OnClickListener, View.O
     private fun checkTheFirstRun(isTheFirstRun: Boolean) {
         if (isTheFirstRun) {
             showUsernameDialog()
-            SettingsUtils.setTheFirstRun(this)
+            settingsUtils.setTheFirstRun()
         }
     }
 

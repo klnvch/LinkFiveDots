@@ -29,23 +29,22 @@ import android.arch.persistence.room.Embedded;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import com.google.firebase.database.Exclude;
+import com.google.firebase.database.IgnoreExtraProperties;
 import com.google.gson.Gson;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
-
-import by.klnvch.link5dots.utils.MathUtils;
 
 @Entity(tableName = "rooms")
+@IgnoreExtraProperties
 public class Room implements Serializable {
 
     public static final int STATE_CREATED = 0;
     public static final int STATE_DELETED = 1;
     public static final int STATE_STARTED = 2;
+    public static final int STATE_FINISHED = 3;
 
     public static final int TYPE_BLUETOOTH = 1;
     public static final int TYPE_NSD = 2;
@@ -69,74 +68,17 @@ public class Room implements Serializable {
     @ColumnInfo(name = "type")
     private int type;
     @ColumnInfo(name = "is_send")
+    @Exclude
     private boolean isSend = false;
+    @ColumnInfo(name = "is_test")
+    private boolean isTest = false;
 
     public Room() {
     }
 
     @NonNull
-    public static Room newRoom(int type) {
-        final Room room = new Room();
-        room.key = MathUtils.generateKey();
-        room.timestamp = System.currentTimeMillis();
-        room.state = STATE_CREATED;
-        room.dots = new ArrayList<>();
-        room.user1 = null;
-        room.type = type;
-
-        return room;
-    }
-
-    @NonNull
-    public static Room newRoom(@NonNull User user, int type) {
-        final Room room = new Room();
-        room.key = MathUtils.generateKey();
-        room.timestamp = System.currentTimeMillis();
-        room.state = STATE_CREATED;
-        room.dots = new ArrayList<>();
-        room.user1 = user;
-        room.type = type;
-
-        return room;
-    }
-
-    @NonNull
     public static Room fromJson(@NonNull String json) {
         return new Gson().fromJson(json, Room.class);
-    }
-
-    public void addDot(@NonNull Dot dot) {
-        dot.setTimestamp(System.currentTimeMillis());
-        if (dots != null) {
-            dot.setId(dots.size());
-            dots.add(dot);
-        } else {
-            dot.setId(0);
-            dots = new ArrayList<>(Collections.singletonList(dot));
-        }
-    }
-
-    public void newGame() {
-        if (dots != null) {
-            dots.clear();
-            key = MathUtils.generateKey();
-        }
-    }
-
-    @NonNull
-    public User getAnotherUser(@NonNull User user) {
-        if (user1.equals(user))
-            return user2;
-        else
-            return user1;
-    }
-
-    @Nullable
-    public Dot getLastDot() {
-        if (dots != null && !dots.isEmpty()) {
-            return dots.get(dots.size() - 1);
-        }
-        return null;
     }
 
     @Override
@@ -211,7 +153,16 @@ public class Room implements Serializable {
         return isSend;
     }
 
+    @Exclude
     public void setSend(boolean send) {
         isSend = send;
+    }
+
+    public boolean isTest() {
+        return isTest;
+    }
+
+    public void setTest(boolean test) {
+        isTest = test;
     }
 }

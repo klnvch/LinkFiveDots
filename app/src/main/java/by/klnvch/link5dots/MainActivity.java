@@ -64,6 +64,8 @@ public final class MainActivity extends BaseActivity {
 
     @Override
     public void onGameFinished() {
+        if (isFinishing()) return;
+
         mFirebaseAnalytics.logEvent(AnalyticsEvents.EVENT_GAME_FINISHED, null);
 
         final HighScore highScore = RoomUtils.getHighScore(mRoom, getUser());

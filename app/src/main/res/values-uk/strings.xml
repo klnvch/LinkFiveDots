@@ -85,16 +85,12 @@
     <string name="bluetooth_disconnected">"Роз’єднано"</string>
     <string name="bluetooth_connecting">"Підключення…"</string>
     <string name="bluetooth_no_devices_found">"Пристрої Bluetooth поблизу не знайдено."</string>
-    <string name="device_picker">"Виберіть пристрій Bluetooth"</string>
     <string name="bluetooth_connection_dialog_text">"Підключитися до пристрою \"%1$s\"?"</string>
     <string name="cancel">"Скасувати"</string>
     <string name="okay">"ОК"</string>
     <string name="settings_label">"Налаштування"</string>
     <string name="bluetooth_settings">"Bluetooth"</string>
     <string name="bluetooth_connecting_error_message">"Не вдалося з’єднатися з пристроєм \"%1$s\"."</string>
-    <string name="bluetooth_search_for_devices">"Оновити"</string>
-    <string name="bluetooth_preference_paired_devices">"Спарені пристрої"</string>
-    <string name="bluetooth_preference_found_devices">"Доступні пристрої"</string>
     <string name="apn_not_set">"Не встановлено"</string>
     <string name="apn_name">"Назва:"</string>
     <string name="apn_user">"Ім’я користувача"</string>

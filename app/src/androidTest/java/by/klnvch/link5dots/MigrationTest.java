@@ -78,7 +78,7 @@ public class MigrationTest {
         // db has schema version 1. insert some data using SQL queries.
         // You cannot use DAO classes because they expect the latest schema.
         db.execSQL("INSERT INTO rooms VALUES ('jjj','786', 'NULL')");
-        insertUser(Room.newRoom(User.newUser("sds"), 0), db);
+        //insertUser(Room.newRoom(User.newUser("sds"), 0), db);
 
         // Prepare for the next version.
         db.close();

@@ -70,9 +70,8 @@ public abstract class GameActivity extends DaggerAppCompatActivity implements
         GameFragment.OnGameListener {
 
     private static final String TAG = "NsdGameActivity";
-
-    GameServiceInterface mService = null; // can be null
     protected GameFragment mGameFragment = null;
+    GameServiceInterface mService = null; // can be null
     private FactoryActivityInterface mFactory;
 
     private final ServiceConnection mConnection = new ServiceConnection() {
@@ -171,7 +170,7 @@ public abstract class GameActivity extends DaggerAppCompatActivity implements
             checkNotNull(mService);
             final Room room = mService.getRoom();
             checkNotNull(room);
-            final User anotherUser = room.getAnotherUser(mService.getUser());
+            final User anotherUser = RoomUtils.getAnotherUser(room, mService.getUser());
 
             final String msg = getString(R.string.bt_is_disconnect_question, anotherUser.getName());
             new AlertDialog.Builder(this)
@@ -347,22 +346,13 @@ public abstract class GameActivity extends DaggerAppCompatActivity implements
 
     @Override
     public void onMoveDone(@NonNull Dot dot) {
-        final Room room = mService.getRoom();
-
-        checkNotNull(dot);
-        checkNotNull(room);
-
-        final Dot previousDot = room.getLastDot();
-        final int hostDotType = RoomUtils.getHostDotType(room, mService.getUser());
-
-        if (previousDot == null || previousDot.getType() != hostDotType) {
-            dot.setType(hostDotType);
-            mService.addDot(dot);
-        }
+        mService.addDot(checkNotNull(dot));
     }
 
     @Override
     public void onGameFinished() {
+        if (isFinishing()) return;
+
         checkNotNull(mService.getRoom());
         checkNotNull(mService.getUser());
 

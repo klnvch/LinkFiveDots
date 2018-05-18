@@ -33,7 +33,7 @@ import android.support.annotation.NonNull;
 
 import by.klnvch.link5dots.models.Room;
 
-@Database(entities = {Room.class}, version = 3)
+@Database(entities = {Room.class}, version = 4)
 @TypeConverters({Converters.class})
 public abstract class AppDatabase extends RoomDatabase {
     public static final String DB_NAME = "DB";
@@ -49,6 +49,13 @@ public abstract class AppDatabase extends RoomDatabase {
         @Override
         public void migrate(@NonNull SupportSQLiteDatabase database) {
             database.execSQL("ALTER TABLE rooms ADD COLUMN is_send INTEGER NOT NULL DEFAULT 0");
+        }
+    };
+
+    public static final Migration MIGRATION_3_4 = new Migration(3, 4) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            database.execSQL("ALTER TABLE rooms ADD COLUMN is_test INTEGER NOT NULL DEFAULT 0");
         }
     };
 

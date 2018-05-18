@@ -46,19 +46,66 @@ public class RoomUtils {
 
     private static final String TIME_TEMPLATE = "MMM-dd HH:mm";
 
+    /**
+     * Creates game with AI
+     *
+     * @param user1 user
+     * @param user2 bot
+     * @return game with AI
+     */
     @NonNull
     public static Room createBotGame(@NonNull User user1, @NonNull User user2) {
         checkNotNull(user1);
         checkNotNull(user2);
 
-        final Room room = Room.newRoom(user1, Room.TYPE_BOT);
+        final Room room = new Room();
+        room.setKey(MathUtils.generateKey());
+        room.setState(Room.STATE_CREATED);
+        room.setTimestamp(System.currentTimeMillis());
+        room.setDots(new ArrayList<>());
+        room.setUser1(user1);
         room.setUser2(user2);
+        room.setType(Room.TYPE_BOT);
+        room.setSend(false);
+        room.setTest(false);
+        return room;
+    }
+
+    /**
+     * Creates game for two players on the same device
+     *
+     * @return game for two players on the same device
+     */
+    @NonNull
+    public static Room createTwoGame() {
+        final Room room = new Room();
+        room.setKey(MathUtils.generateKey());
+        room.setState(Room.STATE_CREATED);
+        room.setTimestamp(System.currentTimeMillis());
+        room.setDots(new ArrayList<>());
+        room.setUser1(null);
+        room.setUser2(null);
+        room.setType(Room.TYPE_TWO_PLAYERS);
+        room.setSend(false);
+        room.setTest(false);
         return room;
     }
 
     @NonNull
-    public static Room createTwoGame() {
-        return Room.newRoom(Room.TYPE_TWO_PLAYERS);
+    public static Room createMultiplayerGame(@NonNull User user, int type) {
+        checkNotNull(user);
+
+        final Room room = new Room();
+        room.setKey(MathUtils.generateKey());
+        room.setState(Room.STATE_CREATED);
+        room.setTimestamp(System.currentTimeMillis());
+        room.setDots(new ArrayList<>());
+        room.setUser1(user);
+        room.setUser2(null);
+        room.setType(type);
+        room.setSend(false);
+        room.setTest(false);
+        return room;
     }
 
     @NonNull
@@ -101,7 +148,7 @@ public class RoomUtils {
 
         room.setKey(MathUtils.generateKey());
         room.setTimestamp(System.currentTimeMillis());
-        room.setDots(null);
+        room.setDots(new ArrayList<>());
         room.setSend(false);
 
         if (seed != null) {
@@ -134,6 +181,17 @@ public class RoomUtils {
 
         final Format timeFormat = new SimpleDateFormat(TIME_TEMPLATE, Locale.getDefault());
         return timeFormat.format(new Date(room.getTimestamp()));
+    }
+
+    @NonNull
+    public static User getAnotherUser(@NonNull Room room, @NonNull User user) {
+        checkNotNull(room);
+        checkNotNull(user);
+
+        if (room.getUser1().equals(user))
+            return room.getUser2();
+        else
+            return room.getUser1();
     }
 
     @Nullable
@@ -190,12 +248,27 @@ public class RoomUtils {
         checkNotNull(room);
         checkNotNull(dot);
 
-        final Integer lastDotType = RoomUtils.getLastDotType(room);
+        final Integer lastDotType = getLastDotType(room);
         if (lastDotType == null || lastDotType != Dot.HOST)
-            RoomUtils.addDot(room, dot, Dot.HOST);
+            addDot(room, dot, Dot.HOST);
         else
-            RoomUtils.addDot(room, dot, Dot.GUEST);
+            addDot(room, dot, Dot.GUEST);
 
+        return room;
+    }
+
+    @NonNull
+    public static Room addDotMultiplayer(@NonNull Room room, @NonNull User user, @NonNull Dot dot) {
+        checkNotNull(room);
+        checkNotNull(user);
+        checkNotNull(dot);
+
+        final Integer lastDotType = getLastDotType(room);
+        final int hostDotType = getHostDotType(room, user);
+
+        if (lastDotType == null || lastDotType != hostDotType) {
+            addDot(room, dot, hostDotType);
+        }
 
         return room;
     }

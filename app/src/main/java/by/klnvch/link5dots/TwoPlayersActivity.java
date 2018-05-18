@@ -57,6 +57,8 @@ public class TwoPlayersActivity extends BaseActivity {
 
     @Override
     public void onGameFinished() {
+        if (isFinishing()) return;
+
         final HighScore highScore = RoomUtils.getHighScore(mRoom, null);
 
         final EndGameDialog dialog = EndGameDialog.newInstance(highScore, true)

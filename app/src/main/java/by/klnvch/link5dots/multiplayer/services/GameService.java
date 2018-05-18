@@ -24,7 +24,6 @@
 
 package by.klnvch.link5dots.multiplayer.services;
 
-import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
@@ -36,6 +35,8 @@ import android.util.Log;
 import com.crashlytics.android.Crashlytics;
 
 import org.greenrobot.eventbus.EventBus;
+
+import javax.inject.Inject;
 
 import by.klnvch.link5dots.models.Dot;
 import by.klnvch.link5dots.models.Room;
@@ -52,27 +53,30 @@ import by.klnvch.link5dots.multiplayer.utils.OnRoomUpdatedListener;
 import by.klnvch.link5dots.multiplayer.utils.OnTargetCreatedListener;
 import by.klnvch.link5dots.multiplayer.utils.OnTargetDeletedListener;
 import by.klnvch.link5dots.settings.SettingsUtils;
+import by.klnvch.link5dots.utils.RoomUtils;
+import dagger.android.DaggerService;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-public abstract class GameService extends Service implements GameServiceInterface,
+public abstract class GameService extends DaggerService implements GameServiceInterface,
         OnTargetCreatedListener, OnTargetDeletedListener,
         OnScanStoppedListener,
         OnRoomConnectedListener, OnRoomUpdatedListener {
 
     private static final String TAG = "GameService";
-
+    protected final CompositeDisposable mDisposables = new CompositeDisposable();
     private final IBinder mBinder = new LocalBinder();
     private final GameState mState = new GameState();
     ScannerInterface mScanner;
     FactoryServiceInterface mFactory;
+    @Inject
+    SettingsUtils settingsUtils;
     private TargetAdapterInterface mAdapter;
     private User mUser;
     private Room mRoom = null;
-    protected final CompositeDisposable mDisposables = new CompositeDisposable();
 
     @Override
     public void onCreate() {
@@ -84,7 +88,7 @@ public abstract class GameService extends Service implements GameServiceInterfac
         mScanner = (ScannerInterface) mAdapter;
 
         // TODO: set NOT READY state till completion
-        mDisposables.add(SettingsUtils.getUserNameOrDefault(this)
+        mDisposables.add(settingsUtils.getUserNameOrDefault()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(s -> mUser = User.newUser(s)));
@@ -188,8 +192,9 @@ public abstract class GameService extends Service implements GameServiceInterfac
 
     @Override
     public void addDot(@NonNull Dot dot) {
-        mRoom.addDot(dot);
-        updateRoomRemotely(mRoom);
+        if (mRoom != null) {
+            updateRoomRemotely(RoomUtils.addDotMultiplayer(mRoom, mUser, dot));
+        }
     }
 
     @CallSuper
@@ -231,6 +236,7 @@ public abstract class GameService extends Service implements GameServiceInterfac
     @Override
     public void onTargetCreationFailed(@NonNull Exception exception) {
         Log.e(TAG, "onTargetCreationFailed: " + exception.getMessage());
+        Crashlytics.logException(exception);
 
         setRoomState(GameState.STATE_TARGET_DELETED);
     }

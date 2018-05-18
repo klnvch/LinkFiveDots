@@ -29,5 +29,6 @@ public class GameActivityOnline extends GameActivity {
     @Override
     public void newGame() {
         getSupportFragmentManager().popBackStackImmediate();
+        mService.reset();
     }
 }

@@ -85,16 +85,12 @@
     <string name="bluetooth_disconnected">"Nicht verbunden"</string>
     <string name="bluetooth_connecting">"Verbindung wird hergestellt…"</string>
     <string name="bluetooth_no_devices_found">"Kein Bluetooth-Gerät in der Nähe gefunden"</string>
-    <string name="device_picker">"Bluetooth-Gerät auswählen"</string>
     <string name="bluetooth_connection_dialog_text">"Möchten Sie eine Verbindung mit \"%1$s\" herstellen?"</string>
     <string name="cancel">"Abbrechen"</string>
     <string name="okay">"OK"</string>
     <string name="settings_label">"Einstellungen"</string>
     <string name="bluetooth_settings">"Bluetooth"</string>
     <string name="bluetooth_connecting_error_message">"Keine Verbindung zu \"%1$s\" möglich"</string>
-    <string name="bluetooth_search_for_devices">"Aktualisieren"</string>
-    <string name="bluetooth_preference_paired_devices">"Pairing-Geräte"</string>
-    <string name="bluetooth_preference_found_devices">"Verfügbar"</string>
     <string name="apn_not_set">"Nicht definiert"</string>
     <string name="apn_name">"Name:"</string>
     <string name="apn_user">"Nutzername"</string>

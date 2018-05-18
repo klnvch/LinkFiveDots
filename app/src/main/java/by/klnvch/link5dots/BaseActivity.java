@@ -33,6 +33,8 @@ import android.view.MenuItem;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 
+import javax.inject.Inject;
+
 import by.klnvch.link5dots.dialogs.NewGameDialog;
 import by.klnvch.link5dots.models.Room;
 import by.klnvch.link5dots.models.User;
@@ -53,6 +55,8 @@ public abstract class BaseActivity extends DaggerAppCompatActivity
     protected GameFragment mGameFragment;
     protected Room mRoom;
     protected FirebaseAnalytics mFirebaseAnalytics;
+    @Inject
+    SettingsUtils settingsUtils;
 
     @SuppressLint("MissingPermission")
     @Override
@@ -151,7 +155,7 @@ public abstract class BaseActivity extends DaggerAppCompatActivity
         if (json != null) {
             return Room.fromJson(json);
         } else {
-            final User user = User.newUser(SettingsUtils.getUserNameOrDefault2(this));
+            final User user = User.newUser(settingsUtils.getUserNameOrDefault2());
             return createRoom(user);
         }
     }

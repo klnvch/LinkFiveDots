@@ -24,6 +24,7 @@
 
 package by.klnvch.link5dots.settings;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -31,16 +32,11 @@ import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 
 import by.klnvch.link5dots.R;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.schedulers.Schedulers;
-
-import static com.google.common.base.Preconditions.checkNotNull;
 
 public class SettingsFragment extends PreferenceFragmentCompat
         implements SharedPreferences.OnSharedPreferenceChangeListener {
 
-    protected final CompositeDisposable mDisposables = new CompositeDisposable();
+    private OnCheckForRestartListener mListener;
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
@@ -61,6 +57,18 @@ public class SettingsFragment extends PreferenceFragmentCompat
     }
 
     @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mListener = (OnCheckForRestartListener) context;
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         getPreferenceScreen().getSharedPreferences()
@@ -75,24 +83,13 @@ public class SettingsFragment extends PreferenceFragmentCompat
     }
 
     @Override
-    public void onDestroy() {
-        mDisposables.clear();
-        super.onDestroy();
-    }
-
-    @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        checkNotNull(getActivity());
-
-        mDisposables.add(SettingsUtils.isConfigurationChanged(getActivity())
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::recreateActivity));
+        if (mListener != null) {
+            mListener.onCheckForRestart();
+        }
     }
 
-    private void recreateActivity(boolean isChanged) {
-        checkNotNull(getActivity());
-
-        if (isChanged) getActivity().recreate();
+    interface OnCheckForRestartListener {
+        void onCheckForRestart();
     }
 }

@@ -42,6 +42,7 @@ import by.klnvch.link5dots.multiplayer.threads.ConnectThread;
 import by.klnvch.link5dots.multiplayer.threads.ConnectedThread;
 import by.klnvch.link5dots.multiplayer.threads.OnSocketConnectedListener;
 import by.klnvch.link5dots.multiplayer.utils.GameState;
+import by.klnvch.link5dots.utils.RoomUtils;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
@@ -167,10 +168,8 @@ public abstract class GameServiceSockets extends GameService
     @Override
     public void newGame() {
         final Room room = getRoom();
-
         checkNotNull(room);
-
-        room.newGame();
+        RoomUtils.newGame(room, null);
         updateRoomRemotely(room);
     }
 
@@ -231,7 +230,7 @@ public abstract class GameServiceSockets extends GameService
         checkNotNull(target);
 
         mTarget = target;
-        setRoom(Room.newRoom(getUser(), mFactory.getRoomType()));
+        setRoom(RoomUtils.createMultiplayerGame(getUser(), mFactory.getRoomType()));
 
         super.onTargetCreated(target);
     }

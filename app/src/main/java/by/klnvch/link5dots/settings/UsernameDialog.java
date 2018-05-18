@@ -29,25 +29,29 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
+import javax.inject.Inject;
+
 import by.klnvch.link5dots.R;
+import dagger.android.support.DaggerAppCompatDialogFragment;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-public class UsernameDialog extends DialogFragment implements DialogInterface.OnClickListener {
+public class UsernameDialog extends DaggerAppCompatDialogFragment implements
+        DialogInterface.OnClickListener {
 
     public static final String TAG = "UsernameDialog";
-
-    private OnUsernameChangedListener mListener = null;
     protected final CompositeDisposable mDisposables = new CompositeDisposable();
+    @Inject
+    SettingsUtils settingsUtils;
+    private OnUsernameChangedListener mListener = null;
 
     @NonNull
     @Override
@@ -65,9 +69,8 @@ public class UsernameDialog extends DialogFragment implements DialogInterface.On
     @Override
     public void onStart() {
         super.onStart();
-        checkNotNull(getContext());
 
-        mDisposables.add(SettingsUtils.getUserNameOrDefault(getContext())
+        mDisposables.add(settingsUtils.getUserNameOrDefault()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::setUsername));
@@ -93,7 +96,7 @@ public class UsernameDialog extends DialogFragment implements DialogInterface.On
         final EditText editText = getDialog().findViewById(R.id.username);
         final String username = editText.getText().toString().trim();
         if (!username.isEmpty()) {
-            SettingsUtils.setUserName(getContext(), username);
+            settingsUtils.setUserName(username);
             if (mListener != null) {
                 mListener.onUsernameChanged(username);
             }
