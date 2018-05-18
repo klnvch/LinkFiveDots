@@ -363,6 +363,8 @@ public abstract class GameActivity extends DaggerAppCompatActivity implements
 
     @Override
     public void onGameFinished() {
+        if (isFinishing()) return;
+
         checkNotNull(mService.getRoom());
         checkNotNull(mService.getUser());
 

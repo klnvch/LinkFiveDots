@@ -56,8 +56,8 @@ android {
         minSdkVersion 14
         targetSdkVersion 27
         multiDexEnabled true
-        versionCode 40
-        versionName "4.4.4"
+        versionCode 41
+        versionName "4.4.5"
 
         resConfigs "en", "be", "de", "es", "fr", "it", "pl", "ru", "uk", "fa"
         testInstrumentationRunner = 'android.support.test.runner.AndroidJUnitRunner'
