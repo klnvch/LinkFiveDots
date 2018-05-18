@@ -100,6 +100,8 @@ public class RoomCreatorTask {
                         final Exception exception = task.getException();
                         checkNotNull(exception);
                         createdListener.onTargetCreationFailed(exception);
+
+                        deleteRoom(null);
                     }
                 });
     }

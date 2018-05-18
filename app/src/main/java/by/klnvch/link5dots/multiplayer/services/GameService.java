@@ -231,6 +231,7 @@ public abstract class GameService extends Service implements GameServiceInterfac
     @Override
     public void onTargetCreationFailed(@NonNull Exception exception) {
         Log.e(TAG, "onTargetCreationFailed: " + exception.getMessage());
+        Crashlytics.logException(exception);
 
         setRoomState(GameState.STATE_TARGET_DELETED);
     }
