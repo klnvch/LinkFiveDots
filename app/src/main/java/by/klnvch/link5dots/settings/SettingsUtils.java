@@ -24,21 +24,26 @@
 
 package by.klnvch.link5dots.settings;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatDelegate;
+import android.util.Log;
 
 import java.lang.annotation.Retention;
 import java.util.Locale;
+import java.util.concurrent.Callable;
 
 import by.klnvch.link5dots.MainActivity;
 import by.klnvch.link5dots.R;
 import by.klnvch.link5dots.TwoPlayersActivity;
+import by.klnvch.link5dots.utils.TestDevices;
 import io.reactivex.Observable;
 
 import static java.lang.annotation.RetentionPolicy.SOURCE;
@@ -208,6 +213,14 @@ public final class SettingsUtils {
         Configuration config = new Configuration(resources.getConfiguration());
         config.locale = locale;
         resources.updateConfiguration(config, resources.getDisplayMetrics());
+    }
+
+    @SuppressLint("HardwareIds")
+    public boolean isTest() {
+        final String androidID = Settings.Secure.getString(
+                mContext.getContentResolver(), Settings.Secure.ANDROID_ID);
+        Log.d("SettingsUtils", "android id: " + androidID);
+        return TestDevices.TEST_DEVICES.contains(androidID);
     }
 
     @Retention(SOURCE)

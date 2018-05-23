@@ -32,6 +32,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.google.firebase.database.Exclude;
+import com.google.firebase.database.IgnoreExtraProperties;
 import com.google.gson.Gson;
 
 import java.io.Serializable;
@@ -41,6 +42,7 @@ import java.util.Collections;
 import by.klnvch.link5dots.utils.MathUtils;
 
 @Entity(tableName = "rooms")
+@IgnoreExtraProperties
 public class Room implements Serializable {
 
     public static final int STATE_CREATED = 0;
@@ -69,7 +71,10 @@ public class Room implements Serializable {
     @ColumnInfo(name = "type")
     private int type;
     @ColumnInfo(name = "is_send")
+    @Exclude
     private boolean isSend = false;
+    @ColumnInfo(name = "is_test")
+    private boolean isTest = false;
 
     public Room() {
     }
@@ -211,7 +216,16 @@ public class Room implements Serializable {
         return isSend;
     }
 
+    @Exclude
     public void setSend(boolean send) {
         isSend = send;
+    }
+
+    public boolean isTest() {
+        return isTest;
+    }
+
+    public void setTest(boolean test) {
+        isTest = test;
     }
 }

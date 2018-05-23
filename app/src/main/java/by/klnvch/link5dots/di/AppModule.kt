@@ -27,8 +27,6 @@ package by.klnvch.link5dots.di
 import android.app.Application
 import android.arch.persistence.room.Room
 import by.klnvch.link5dots.db.AppDatabase
-import by.klnvch.link5dots.db.AppDatabase.MIGRATION_1_2
-import by.klnvch.link5dots.db.AppDatabase.MIGRATION_2_3
 import by.klnvch.link5dots.db.RoomDao
 import by.klnvch.link5dots.network.NetworkService
 import by.klnvch.link5dots.settings.SettingsUtils
@@ -58,8 +56,9 @@ class AppModule {
     fun provideDatabase(app: Application): AppDatabase {
         return Room
                 .databaseBuilder(app, AppDatabase::class.java, AppDatabase.DB_NAME)
-                .addMigrations(MIGRATION_1_2)
-                .addMigrations(MIGRATION_2_3)
+                .addMigrations(AppDatabase.MIGRATION_1_2)
+                .addMigrations(AppDatabase.MIGRATION_2_3)
+                .addMigrations(AppDatabase.MIGRATION_3_4)
                 .build()
     }
 

@@ -40,6 +40,7 @@ import by.klnvch.link5dots.settings.UsernameDialog
 import com.crashlytics.android.Crashlytics
 import dagger.android.support.DaggerAppCompatActivity
 import io.reactivex.Completable
+import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -98,11 +99,20 @@ class MainMenuActivity : DaggerAppCompatActivity(), View.OnClickListener, View.O
                 .take(1)
                 .flatMapIterable { it }
                 .filter { !it.isSend }
+                .flatMapSingle { updateIsTest(it) }
                 .flatMapSingle { networkService.addRoom(HISTORY_TABLE, it.key, it) }
                 .flatMapCompletable { update(it) }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ Log.d(TAG, MSG_SENT) }, { onError(it) }))
+    }
+
+    private fun updateIsTest(room: Room): Single<Room> {
+        return Single.fromCallable {
+            room.isTest = settingsUtils.isTest
+            roomDao.updateRoom(room)
+            room
+        }
     }
 
     private fun update(room: Room): Completable {
