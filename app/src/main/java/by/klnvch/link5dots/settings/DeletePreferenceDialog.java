@@ -24,11 +24,14 @@
 
 package by.klnvch.link5dots.settings;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.preference.PreferenceDialogFragmentCompat;
 import android.util.Log;
 
 public class DeletePreferenceDialog extends PreferenceDialogFragmentCompat {
+
+    private OnDeleteAllListener mListener;
 
     public static DeletePreferenceDialog newInstance(String key) {
         final DeletePreferenceDialog fragment = new DeletePreferenceDialog();
@@ -39,14 +42,29 @@ public class DeletePreferenceDialog extends PreferenceDialogFragmentCompat {
     }
 
     @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mListener = (OnDeleteAllListener) context;
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
+    }
+
+    @Override
     public void onDialogClosed(boolean positiveResult) {
         if (positiveResult) {
-            if (getActivity() != null) {
-                SettingsUtils.reset(getActivity());
-                getActivity().recreate();
+            if (mListener != null) {
+                mListener.onDeleteAll();
             } else {
                 Log.e("settings", "activity is null");
             }
         }
+    }
+
+    interface OnDeleteAllListener {
+        void onDeleteAll();
     }
 }

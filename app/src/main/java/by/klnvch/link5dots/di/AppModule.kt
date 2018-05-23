@@ -31,6 +31,7 @@ import by.klnvch.link5dots.db.AppDatabase.MIGRATION_1_2
 import by.klnvch.link5dots.db.AppDatabase.MIGRATION_2_3
 import by.klnvch.link5dots.db.RoomDao
 import by.klnvch.link5dots.network.NetworkService
+import by.klnvch.link5dots.settings.SettingsUtils
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import dagger.Module
 import dagger.Provides
@@ -66,5 +67,11 @@ class AppModule {
     @Singleton
     fun provideRoomDao(appDatabase: AppDatabase): RoomDao {
         return appDatabase.roomDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideSettingsUtils(app: Application): SettingsUtils {
+        return SettingsUtils(app)
     }
 }

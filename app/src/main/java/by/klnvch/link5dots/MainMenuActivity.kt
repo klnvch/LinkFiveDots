@@ -54,6 +54,8 @@ class MainMenuActivity : DaggerAppCompatActivity(), View.OnClickListener, View.O
     lateinit var networkService: NetworkService
     @Inject
     lateinit var roomDao: RoomDao
+    @Inject
+    lateinit var settingsUtils: SettingsUtils
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,17 +75,17 @@ class MainMenuActivity : DaggerAppCompatActivity(), View.OnClickListener, View.O
 
         textViewGreeting.setOnLongClickListener(this)
 
-        mDisposables.add(SettingsUtils.isTheFirstRun(this)
+        mDisposables.add(settingsUtils.isTheFirstRun
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { checkTheFirstRun(it) })
 
-        mDisposables.add(SettingsUtils.isConfigurationChanged(this)
+        mDisposables.add(settingsUtils.isConfigurationChanged
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { changeConfiguration(it) })
 
-        mDisposables.add(SettingsUtils.getUserNameOrEmpty(this)
+        mDisposables.add(settingsUtils.userNameOrEmpty
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { setUsername(it) })
@@ -161,7 +163,7 @@ class MainMenuActivity : DaggerAppCompatActivity(), View.OnClickListener, View.O
     private fun checkTheFirstRun(isTheFirstRun: Boolean) {
         if (isTheFirstRun) {
             showUsernameDialog()
-            SettingsUtils.setTheFirstRun(this)
+            settingsUtils.setTheFirstRun()
         }
     }
 

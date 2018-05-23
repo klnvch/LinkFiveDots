@@ -43,7 +43,7 @@ import io.reactivex.Observable;
 
 import static java.lang.annotation.RetentionPolicy.SOURCE;
 
-public class SettingsUtils {
+public final class SettingsUtils {
 
     public static final int DOTS_TYPE_ORIGINAL = 1;
     public static final int DOTS_TYPE_CROSS_AND_RING = 2;
@@ -55,28 +55,34 @@ public class SettingsUtils {
     private static final String KEY_NIGHT_MODE = "pref_night_mode";
     private static final String KEY_PREF_DOTS_TYPE = "pref_dots_type";
 
-    public static Observable<Boolean> isConfigurationChanged(@NonNull Context context) {
-        return Observable.fromCallable(() -> checkConfiguration(context));
+    private final Context mContext;
+
+    public SettingsUtils(@NonNull Context context) {
+        mContext = context;
     }
 
-    private static boolean checkConfiguration(@NonNull Context context) {
+    public Observable<Boolean> isConfigurationChanged() {
+        return Observable.fromCallable(this::checkConfiguration);
+    }
+
+    private boolean checkConfiguration() {
         boolean isToBeRestated = false;
         // check language
         String savedLanguage = PreferenceManager
-                .getDefaultSharedPreferences(context)
+                .getDefaultSharedPreferences(mContext)
                 .getString(KEY_PREF_LANGUAGE, null);
         if (savedLanguage != null) {
-            Resources resources = context.getResources();
+            Resources resources = mContext.getResources();
             String currentLanguage = resources.getConfiguration().locale.getLanguage();
             if (!savedLanguage.equals(currentLanguage)) {
-                changeLanguage(context, savedLanguage);
+                changeLanguage(savedLanguage);
                 isToBeRestated = true;
             } else {
                 isToBeRestated = false;
             }
         }
         // check night mode
-        int nightMode = getNightMode(context);
+        int nightMode = getNightMode();
         if (nightMode != AppCompatDelegate.getDefaultNightMode()) {
             AppCompatDelegate.setDefaultNightMode(nightMode);
             isToBeRestated = true;
@@ -85,40 +91,40 @@ public class SettingsUtils {
         return isToBeRestated;
     }
 
-    private static void changeLanguage(@NonNull Context context, @NonNull String language) {
+    private void changeLanguage(@NonNull String language) {
         Locale locale = new Locale(language);
         Locale.setDefault(locale);
-        Resources resources = context.getResources();
+        Resources resources = mContext.getResources();
         Configuration config = new Configuration(resources.getConfiguration());
         config.locale = locale;
         resources.updateConfiguration(config, resources.getDisplayMetrics());
         //
         PreferenceManager
-                .getDefaultSharedPreferences(context)
+                .getDefaultSharedPreferences(mContext)
                 .edit()
                 .putString(SettingsUtils.KEY_PREF_LANGUAGE, language)
                 .apply();
     }
 
-    public static Observable<Boolean> isTheFirstRun(@NonNull Context context) {
+    public Observable<Boolean> isTheFirstRun() {
         return Observable.fromCallable(() -> PreferenceManager
-                .getDefaultSharedPreferences(context)
+                .getDefaultSharedPreferences(mContext)
                 .getBoolean(SettingsUtils.FIRST_RUN, true));
     }
 
-    public static void setTheFirstRun(@NonNull Context context) {
+    public void setTheFirstRun() {
         PreferenceManager
-                .getDefaultSharedPreferences(context)
+                .getDefaultSharedPreferences(mContext)
                 .edit()
                 .putBoolean(SettingsUtils.FIRST_RUN, false)
                 .apply();
     }
 
     @NonNull
-    public static Observable<String> getUserNameOrEmpty(@NonNull Context context) {
+    public Observable<String> getUserNameOrEmpty() {
         return Observable.fromCallable(() -> {
             final String username = PreferenceManager
-                    .getDefaultSharedPreferences(context)
+                    .getDefaultSharedPreferences(mContext)
                     .getString(KEY_PREF_USERNAME, null);
             if (username == null) {
                 return "";
@@ -129,39 +135,39 @@ public class SettingsUtils {
     }
 
     @NonNull
-    public static Observable<String> getUserNameOrDefault(@NonNull Context context) {
-        return Observable.fromCallable(() -> getUserNameOrDefault2(context));
+    public Observable<String> getUserNameOrDefault() {
+        return Observable.fromCallable(this::getUserNameOrDefault2);
     }
 
     @NonNull
-    public static String getUserNameOrDefault2(@NonNull Context context) {
+    public String getUserNameOrDefault2() {
         final String username = PreferenceManager
-                .getDefaultSharedPreferences(context)
+                .getDefaultSharedPreferences(mContext)
                 .getString(KEY_PREF_USERNAME, null);
         if (username == null) {
-            return context.getString(R.string.device_info_default);
+            return mContext.getString(R.string.device_info_default);
         } else {
             return username;
         }
     }
 
-    static void setUserName(@NonNull Context context, @Nullable String username) {
+    void setUserName(@Nullable String username) {
         PreferenceManager
-                .getDefaultSharedPreferences(context)
+                .getDefaultSharedPreferences(mContext)
                 .edit()
                 .putString(KEY_PREF_USERNAME, username)
                 .apply();
     }
 
-    public static Observable<Boolean> isVibrationEnabled(@NonNull Context context) {
+    public Observable<Boolean> isVibrationEnabled() {
         return Observable.fromCallable(() -> PreferenceManager
-                .getDefaultSharedPreferences(context)
+                .getDefaultSharedPreferences(mContext)
                 .getBoolean(KEY_PREF_VIBRATION, true));
     }
 
-    private static int getNightMode(@NonNull Context context) {
+    private int getNightMode() {
         final String nightMode = PreferenceManager
-                .getDefaultSharedPreferences(context)
+                .getDefaultSharedPreferences(mContext)
                 .getString(KEY_NIGHT_MODE, "unknown");
         switch (nightMode) {
             case "on":
@@ -177,19 +183,19 @@ public class SettingsUtils {
         }
     }
 
-    public static Observable<Integer> getDotsType(@NonNull Context context) {
+    public Observable<Integer> getDotsType() {
         return Observable.fromCallable(() -> PreferenceManager
-                .getDefaultSharedPreferences(context)
+                .getDefaultSharedPreferences(mContext)
                 .getInt(KEY_PREF_DOTS_TYPE, DOTS_TYPE_ORIGINAL));
     }
 
-    static void reset(@NonNull Context context) {
+    void reset() {
         // clear preferences
-        PreferenceManager.getDefaultSharedPreferences(context)
+        PreferenceManager.getDefaultSharedPreferences(mContext)
                 .edit().clear().apply();
-        context.getSharedPreferences(MainActivity.class.getName(), Context.MODE_PRIVATE)
+        mContext.getSharedPreferences(MainActivity.class.getName(), Context.MODE_PRIVATE)
                 .edit().clear().apply();
-        context.getSharedPreferences(TwoPlayersActivity.class.getName(), Context.MODE_PRIVATE)
+        mContext.getSharedPreferences(TwoPlayersActivity.class.getName(), Context.MODE_PRIVATE)
                 .edit().clear().apply();
 
         // clear night mode
@@ -198,7 +204,7 @@ public class SettingsUtils {
         // clear language
         Locale locale = Resources.getSystem().getConfiguration().locale;
         Locale.setDefault(locale);
-        Resources resources = context.getResources();
+        Resources resources = mContext.getResources();
         Configuration config = new Configuration(resources.getConfiguration());
         config.locale = locale;
         resources.updateConfiguration(config, resources.getDisplayMetrics());

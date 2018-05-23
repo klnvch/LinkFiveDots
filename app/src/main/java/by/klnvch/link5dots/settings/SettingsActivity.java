@@ -26,11 +26,27 @@ package by.klnvch.link5dots.settings;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
+
+import javax.inject.Inject;
 
 import by.klnvch.link5dots.R;
+import by.klnvch.link5dots.db.AppDatabase;
+import dagger.android.support.DaggerAppCompatActivity;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 
-public class SettingsActivity extends AppCompatActivity {
+public class SettingsActivity extends DaggerAppCompatActivity implements
+        DeletePreferenceDialog.OnDeleteAllListener,
+        SettingsFragment.OnCheckForRestartListener {
+
+    private final CompositeDisposable mDisposables = new CompositeDisposable();
+    @Inject
+    SettingsUtils settingsUtils;
+    @Inject
+    AppDatabase database;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,5 +55,40 @@ public class SettingsActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragmentContainer, new SettingsFragment())
                 .commit();
+    }
+
+    @Override
+    protected void onDestroy() {
+        mDisposables.clear();
+        super.onDestroy();
+    }
+
+    @Override
+    public void onDeleteAll() {
+        mDisposables.add(Observable.fromCallable(this::deleteAll)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this::restart));
+    }
+
+    @Override
+    public void onCheckForRestart() {
+        mDisposables.add(settingsUtils.isConfigurationChanged()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this::restart));
+    }
+
+    @SuppressWarnings("SameReturnValue")
+    private boolean deleteAll() {
+        settingsUtils.reset();
+        database.clearAllTables();
+        return true;
+    }
+
+    private void restart(boolean isChanged) {
+        if (isChanged && !isFinishing()) {
+            recreate();
+        }
     }
 }

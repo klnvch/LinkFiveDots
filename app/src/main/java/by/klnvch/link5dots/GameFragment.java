@@ -63,6 +63,8 @@ public class GameFragment extends DaggerFragment {
     private final CompositeDisposable mDisposables = new CompositeDisposable();
     @Inject
     public RoomDao roomDao;
+    @Inject
+    SettingsUtils settingsUtils;
     private GameView mView;
     private View mGameInfo;
     private TextView mTextUserName;
@@ -99,8 +101,7 @@ public class GameFragment extends DaggerFragment {
             mView.setViewState(GameViewState.fromJson(savedInstanceState.getString(KEY_VIEW_STATE)));
         }
 
-        checkNotNull(getContext());
-        mDisposables.add(SettingsUtils.getDotsType(getContext())
+        mDisposables.add(settingsUtils.getDotsType()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::setDotsType));
