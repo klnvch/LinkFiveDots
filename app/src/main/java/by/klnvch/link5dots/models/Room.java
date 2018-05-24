@@ -80,32 +80,6 @@ public class Room implements Serializable {
     }
 
     @NonNull
-    public static Room newRoom(int type) {
-        final Room room = new Room();
-        room.key = MathUtils.generateKey();
-        room.timestamp = System.currentTimeMillis();
-        room.state = STATE_CREATED;
-        room.dots = new ArrayList<>();
-        room.user1 = null;
-        room.type = type;
-
-        return room;
-    }
-
-    @NonNull
-    public static Room newRoom(@NonNull User user, int type) {
-        final Room room = new Room();
-        room.key = MathUtils.generateKey();
-        room.timestamp = System.currentTimeMillis();
-        room.state = STATE_CREATED;
-        room.dots = new ArrayList<>();
-        room.user1 = user;
-        room.type = type;
-
-        return room;
-    }
-
-    @NonNull
     public static Room fromJson(@NonNull String json) {
         return new Gson().fromJson(json, Room.class);
     }

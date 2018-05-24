@@ -28,6 +28,8 @@ import android.support.annotation.NonNull;
 
 import java.util.Random;
 
+import static com.google.android.gms.common.internal.Preconditions.checkNotNull;
+
 public class MathUtils {
 
     /**
@@ -52,7 +54,9 @@ public class MathUtils {
 
     @NonNull
     public static String generateKey() {
-        return Long.toHexString(System.currentTimeMillis())
-                + '_' + Long.toHexString(new Random().nextLong());
+        final long time = System.currentTimeMillis();
+        final long random = new Random().nextLong();
+        final String key = Long.toHexString(time) + '_' + Long.toHexString(random);
+        return checkNotNull(key);
     }
 }
