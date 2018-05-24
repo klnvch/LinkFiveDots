@@ -53,6 +53,7 @@ import by.klnvch.link5dots.multiplayer.utils.OnRoomUpdatedListener;
 import by.klnvch.link5dots.multiplayer.utils.OnTargetCreatedListener;
 import by.klnvch.link5dots.multiplayer.utils.OnTargetDeletedListener;
 import by.klnvch.link5dots.settings.SettingsUtils;
+import by.klnvch.link5dots.utils.RoomUtils;
 import dagger.android.DaggerService;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -191,8 +192,9 @@ public abstract class GameService extends DaggerService implements GameServiceIn
 
     @Override
     public void addDot(@NonNull Dot dot) {
-        mRoom.addDot(dot);
-        updateRoomRemotely(mRoom);
+        if (mRoom != null) {
+            updateRoomRemotely(RoomUtils.addDotMultiplayer(mRoom, mUser, dot));
+        }
     }
 
     @CallSuper

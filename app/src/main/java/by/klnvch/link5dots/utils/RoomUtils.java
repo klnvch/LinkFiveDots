@@ -148,7 +148,7 @@ public class RoomUtils {
 
         room.setKey(MathUtils.generateKey());
         room.setTimestamp(System.currentTimeMillis());
-        room.setDots(null);
+        room.setDots(new ArrayList<>());
         room.setSend(false);
 
         if (seed != null) {
@@ -181,6 +181,17 @@ public class RoomUtils {
 
         final Format timeFormat = new SimpleDateFormat(TIME_TEMPLATE, Locale.getDefault());
         return timeFormat.format(new Date(room.getTimestamp()));
+    }
+
+    @NonNull
+    public static User getAnotherUser(@NonNull Room room, @NonNull User user) {
+        checkNotNull(room);
+        checkNotNull(user);
+
+        if (room.getUser1().equals(user))
+            return room.getUser2();
+        else
+            return room.getUser1();
     }
 
     @Nullable
@@ -237,12 +248,27 @@ public class RoomUtils {
         checkNotNull(room);
         checkNotNull(dot);
 
-        final Integer lastDotType = RoomUtils.getLastDotType(room);
+        final Integer lastDotType = getLastDotType(room);
         if (lastDotType == null || lastDotType != Dot.HOST)
-            RoomUtils.addDot(room, dot, Dot.HOST);
+            addDot(room, dot, Dot.HOST);
         else
-            RoomUtils.addDot(room, dot, Dot.GUEST);
+            addDot(room, dot, Dot.GUEST);
 
+        return room;
+    }
+
+    @NonNull
+    public static Room addDotMultiplayer(@NonNull Room room, @NonNull User user, @NonNull Dot dot) {
+        checkNotNull(room);
+        checkNotNull(user);
+        checkNotNull(dot);
+
+        final Integer lastDotType = getLastDotType(room);
+        final int hostDotType = getHostDotType(room, user);
+
+        if (lastDotType == null || lastDotType != hostDotType) {
+            addDot(room, dot, hostDotType);
+        }
 
         return room;
     }

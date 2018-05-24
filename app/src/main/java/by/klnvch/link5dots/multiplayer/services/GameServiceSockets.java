@@ -168,10 +168,8 @@ public abstract class GameServiceSockets extends GameService
     @Override
     public void newGame() {
         final Room room = getRoom();
-
         checkNotNull(room);
-
-        room.newGame();
+        RoomUtils.newGame(room, null);
         updateRoomRemotely(room);
     }
 

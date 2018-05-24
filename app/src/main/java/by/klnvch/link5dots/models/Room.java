@@ -29,7 +29,6 @@ import android.arch.persistence.room.Embedded;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.IgnoreExtraProperties;
@@ -37,9 +36,6 @@ import com.google.gson.Gson;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
-
-import by.klnvch.link5dots.utils.MathUtils;
 
 @Entity(tableName = "rooms")
 @IgnoreExtraProperties
@@ -82,40 +78,6 @@ public class Room implements Serializable {
     @NonNull
     public static Room fromJson(@NonNull String json) {
         return new Gson().fromJson(json, Room.class);
-    }
-
-    public void addDot(@NonNull Dot dot) {
-        dot.setTimestamp(System.currentTimeMillis());
-        if (dots != null) {
-            dot.setId(dots.size());
-            dots.add(dot);
-        } else {
-            dot.setId(0);
-            dots = new ArrayList<>(Collections.singletonList(dot));
-        }
-    }
-
-    public void newGame() {
-        if (dots != null) {
-            dots.clear();
-            key = MathUtils.generateKey();
-        }
-    }
-
-    @NonNull
-    public User getAnotherUser(@NonNull User user) {
-        if (user1.equals(user))
-            return user2;
-        else
-            return user1;
-    }
-
-    @Nullable
-    public Dot getLastDot() {
-        if (dots != null && !dots.isEmpty()) {
-            return dots.get(dots.size() - 1);
-        }
-        return null;
     }
 
     @Override
