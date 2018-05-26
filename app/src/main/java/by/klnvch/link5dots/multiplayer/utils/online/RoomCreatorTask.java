@@ -106,7 +106,15 @@ public class RoomCreatorTask {
                 });
     }
 
+    public void finishRoom() {
+        deleteRoom(null, Room.STATE_FINISHED);
+    }
+
     public void deleteRoom(@Nullable OnTargetDeletedListener listener) {
+        deleteRoom(listener, Room.STATE_DELETED);
+    }
+
+    private void deleteRoom(@Nullable OnTargetDeletedListener listener, int state) {
         if (mRoom != null) {
             checkNotNull(mCreatedListener);
             checkNotNull(mConnectedListener);
@@ -117,7 +125,7 @@ public class RoomCreatorTask {
             stopObserving();
 
             FirebaseHelper.getStateReference(mRoom.getKey())
-                    .setValue(Room.STATE_DELETED)
+                    .setValue(state)
                     .addOnCompleteListener(task -> {
                         if (listener != null) listener.onTargetDeleted(task.getException());
                     });

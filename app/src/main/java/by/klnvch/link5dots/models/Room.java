@@ -44,6 +44,7 @@ public class Room implements Serializable {
     public static final int STATE_CREATED = 0;
     public static final int STATE_DELETED = 1;
     public static final int STATE_STARTED = 2;
+    public static final int STATE_FINISHED = 3;
 
     public static final int TYPE_BLUETOOTH = 1;
     public static final int TYPE_NSD = 2;

@@ -111,6 +111,7 @@ public class GameServiceOnline extends GameService {
     @Override
     public void reset() {
         mRoomEventListener.stop();
+        mRoomCreatorTask.finishRoom();
         super.reset();
     }
 
