@@ -85,16 +85,12 @@
     <string name="bluetooth_disconnected">"Раз’яднана"</string>
     <string name="bluetooth_connecting">"Падключэнне…"</string>
     <string name="bluetooth_no_devices_found">"Адсутнасць прылад Bluetooth паблізу"</string>
-    <string name="device_picker">"Выбраць прыладу Bluetooth"</string>
     <string name="bluetooth_connection_dialog_text">"Падключыцца да прылады „%1$s”?"</string>
     <string name="cancel">"Скасаваць"</string>
     <string name="okay">"ОК"</string>
     <string name="settings_label">"Наладкі"</string>
     <string name="bluetooth_settings">"Bluetooth"</string>
     <string name="bluetooth_connecting_error_message">"Не атрымалася падключыцца да „%1$s”."</string>
-    <string name="bluetooth_search_for_devices">"Абнавіць"</string>
-    <string name="bluetooth_preference_paired_devices">"Спараныя прылады"</string>
-    <string name="bluetooth_preference_found_devices">"Даступныя прылады"</string>
     <string name="apn_not_set">Не устаноўлена</string>
     <string name="apn_name">Назва:</string>
     <string name="apn_user">"Імя карыстальніка"</string>

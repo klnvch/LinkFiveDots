@@ -85,16 +85,12 @@
     <string name="bluetooth_disconnected">"Отключено"</string>
     <string name="bluetooth_connecting">"Подключение…"</string>
     <string name="bluetooth_no_devices_found">"Устройства Bluetooth не найдены."</string>
-    <string name="device_picker">"Выбрать устройство Bluetooth"</string>
     <string name="bluetooth_connection_dialog_text">"Подключиться к устройству \"%1$s\"?"</string>
     <string name="bluetooth_settings">"Bluetooth"</string>
     <string name="bluetooth_connecting_error_message">"Не удалось подключиться к \"%1$s\"."</string>
     <string name="cancel">"Отмена"</string>
     <string name="okay">"ОК"</string>
     <string name="settings_label">"Настройки"</string>
-    <string name="bluetooth_search_for_devices">"Обновить"</string>
-    <string name="bluetooth_preference_paired_devices">"Подключенные устройства"</string>
-    <string name="bluetooth_preference_found_devices">"Доступные устройства"</string>
     <string name="apn_not_set">"Не задано"</string>
     <string name="apn_name">"Имя:"</string>
     <string name="apn_user">"Имя пользователя"</string>

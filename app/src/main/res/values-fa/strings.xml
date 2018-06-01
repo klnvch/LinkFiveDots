@@ -96,16 +96,12 @@
     <string name="bluetooth_disconnected">"اتصال قطع شد"</string>
     <string name="bluetooth_connecting">"در حال اتصال…"</string>
     <string name="bluetooth_no_devices_found">"هیچ دستگاه بلوتوثی در این اطراف پیدا نشد."</string>
-    <string name="device_picker">"انتخاب دستگاه بلوتوث"</string>
     <string name="bluetooth_connection_dialog_text">"آیا می‌خواهید به \"<xliff:g id="DEVICE_NAME">%1$s</xliff:g>\" وصل شوید؟"</string>
     <string name="cancel">"لغو"</string>
     <string name="okay">"تأیید"</string>
     <string name="settings_label">"تنظیمات"</string>
     <string name="bluetooth_settings">"بلوتوث"</string>
     <string name="bluetooth_connecting_error_message">"اتصال به <xliff:g id="DEVICE_NAME">%1$s</xliff:g> ممکن نیست."</string>
-    <string name="bluetooth_search_for_devices">"بازخوانی"</string>
-    <string name="bluetooth_preference_paired_devices">"دستگاه‌های جفت شده"</string>
-    <string name="bluetooth_preference_found_devices">"دستگاه‌های در دسترس"</string>
     <string name="apn_not_set">"تنظیم نشده است"</string>
     <string name="apn_name">"نام"</string>
     <string name="apn_user">"نام کاربری"</string>

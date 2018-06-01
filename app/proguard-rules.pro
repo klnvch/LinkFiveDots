@@ -18,13 +18,11 @@
 -dontwarn org.checkerframework.**
 
 # Retrofit
--dontnote retrofit2.Platform
--dontwarn retrofit2.Platform$Java8
 -keepattributes Signature
--keepattributes Exceptions
--keepclasseswithmembers class * {
+-keepclassmembernames,allowobfuscation interface * {
     @retrofit2.http.* <methods>;
 }
+-dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
 
 # OkHttp
 -dontwarn okhttp3.**

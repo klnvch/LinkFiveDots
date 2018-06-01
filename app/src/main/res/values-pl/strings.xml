@@ -85,16 +85,12 @@
     <string name="bluetooth_disconnected">"Rozłączona"</string>
     <string name="bluetooth_connecting">"Łączenie…"</string>
     <string name="bluetooth_no_devices_found">"Brak urządzeń Bluetooth w pobliżu"</string>
-    <string name="device_picker">"Wybierz urządzenie Bluetooth"</string>
     <string name="bluetooth_connection_dialog_text">"Czy chcesz nawiązać połączenie z urządzeniem „%1$s”?"</string>
     <string name="cancel">"Anuluj"</string>
     <string name="okay">"OK"</string>
     <string name="settings_label">"Ustawienia"</string>
     <string name="bluetooth_settings">"Bluetooth"</string>
     <string name="bluetooth_connecting_error_message">"Nie udało się nawiązać połączenia z „%1$s”."</string>
-    <string name="bluetooth_search_for_devices">"Odśwież"</string>
-    <string name="bluetooth_preference_paired_devices">"Powiązane urządzenia"</string>
-    <string name="bluetooth_preference_found_devices">"Dostępne urządzenia"</string>
     <string name="apn_not_set">"Nie ustawiono"</string>
     <string name="apn_name">"Nazwa:"</string>
     <string name="apn_user">"Nazwa użytkownika"</string>

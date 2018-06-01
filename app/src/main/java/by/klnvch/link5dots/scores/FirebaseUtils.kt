@@ -30,6 +30,7 @@ import android.provider.Settings
 import android.util.Log
 import by.klnvch.link5dots.BuildConfig
 import by.klnvch.link5dots.models.HighScore
+import com.crashlytics.android.Crashlytics
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import com.google.firebase.auth.FirebaseAuth
@@ -61,12 +62,17 @@ class FirebaseUtils {
             // write to database
             val mDatabase = FirebaseDatabase.getInstance().reference.child(CHILD_HIGH_SCORES)
             val key = mDatabase.push().key
-            mDatabase
-                    .child(key)
-                    .setValue(highScore)
-                    .addOnCompleteListener { task ->
-                        Log.d("FirebaseUtils", "publishScore: " + task.exception)
-                    }
+
+            if (key != null) {
+                mDatabase
+                        .child(key)
+                        .setValue(highScore)
+                        .addOnCompleteListener { task ->
+                            Log.d("FirebaseUtils", "publishScore: " + task.exception)
+                        }
+            } else {
+                Crashlytics.logException(NullPointerException("Firebase key is null"))
+            }
         }
     }
 }
