@@ -23,6 +23,7 @@
   -->
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="by.klnvch.link5dots">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -40,6 +41,8 @@
         android:name="android.hardware.bluetooth"
         android:required="false" />
 
+    <uses-sdk tools:overrideLibrary="com.firebase.ui.database, com.firebase.ui.common" />
+
     <application
         android:name="by.klnvch.link5dots.di.MyApp"
         android:allowBackup="true"
@@ -47,7 +50,8 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        tools:ignore="AllowBackup,GoogleAppIndexingWarning">
 
         <service android:name="by.klnvch.link5dots.multiplayer.services.GameServiceBluetooth" />
         <service android:name="by.klnvch.link5dots.multiplayer.services.GameServiceNsd" />
@@ -90,7 +94,7 @@
         <activity
             android:name="by.klnvch.link5dots.multiplayer.activities.GameActivityBluetooth"
             android:configChanges="orientation|keyboardHidden|locale"
-            android:label="@string/bluetooth_settings"
+            android:label="@string/bluetooth"
             android:launchMode="singleTop">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -131,7 +135,7 @@
         </activity>
         <activity
             android:name="by.klnvch.link5dots.HowToActivity"
-            android:label="@string/how_to_title"
+            android:label="@string/help"
             android:launchMode="singleTop">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -147,7 +151,7 @@
         </activity>
         <activity
             android:name="by.klnvch.link5dots.settings.SettingsActivity"
-            android:label="@string/settings_label"
+            android:label="@string/settings"
             android:launchMode="singleTop">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

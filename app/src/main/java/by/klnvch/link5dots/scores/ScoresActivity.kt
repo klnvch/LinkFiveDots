@@ -53,10 +53,10 @@ class ScoresActivity : DaggerAppCompatActivity() {
     override fun onStart() {
         super.onStart()
 
-        mDisposables.add(Observable.fromCallable({ getCurrentItem() })
+        mDisposables.add(Observable.fromCallable { getCurrentItem() }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ viewPager.currentItem = it }))
+                .subscribe { viewPager.currentItem = it })
     }
 
     override fun onStop() {
@@ -90,7 +90,7 @@ class ScoresActivity : DaggerAppCompatActivity() {
         override fun getPageTitle(position: Int): CharSequence? {
             when (position) {
                 0 -> return getString(R.string.scores_title)
-                1 -> return getString(R.string.history_details_title)
+                1 -> return getString(R.string.history)
             }
             throw IllegalStateException()
         }

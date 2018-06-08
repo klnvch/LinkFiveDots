@@ -51,7 +51,7 @@ public class SettingsActivity extends DaggerAppCompatActivity implements
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
-        setTitle(R.string.settings_label);
+        setTitle(R.string.settings);
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragmentContainer, new SettingsFragment())
                 .commit();
@@ -73,7 +73,7 @@ public class SettingsActivity extends DaggerAppCompatActivity implements
 
     @Override
     public void onCheckForRestart() {
-        mDisposables.add(settingsUtils.isConfigurationChanged()
+        mDisposables.add(SettingsUtils.isConfigurationChanged(this)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::restart));

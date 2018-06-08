@@ -24,11 +24,7 @@
 
 package by.klnvch.link5dots
 
-import android.content.ActivityNotFoundException
-import android.content.ClipData
-import android.content.ClipboardManager
-import android.content.Context
-import android.content.Intent
+import android.content.*
 import android.net.Uri
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
@@ -72,7 +68,7 @@ class InfoActivity : AppCompatActivity(), View.OnClickListener {
                         .setType("message/rfc822")
                         .setData(Uri.parse(URI_MAIL_DATA))
                         .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK),
-                        getString(R.string.device_feedback))
+                        getString(R.string.connection_error_message))
                 launchIntent(intent, MAIL)
             }
         }
@@ -87,7 +83,7 @@ class InfoActivity : AppCompatActivity(), View.OnClickListener {
             AlertDialog.Builder(this)
                     .setMessage(errorMsg)
                     .setPositiveButton(R.string.okay, null)
-                    .setNeutralButton(R.string.copy_text, { _, _ -> copyToClipboard(errorMsg) })
+                    .setNeutralButton(R.string.copy_text) { _, _ -> copyToClipboard(errorMsg) }
                     .show()
         }
     }

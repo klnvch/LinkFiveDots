@@ -81,7 +81,7 @@ class MainMenuActivity : DaggerAppCompatActivity(), View.OnClickListener, View.O
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { checkTheFirstRun(it) })
 
-        mDisposables.add(settingsUtils.isConfigurationChanged
+        mDisposables.add(SettingsUtils.isConfigurationChanged(this)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { changeConfiguration(it) })
@@ -116,10 +116,10 @@ class MainMenuActivity : DaggerAppCompatActivity(), View.OnClickListener, View.O
     }
 
     private fun update(room: Room): Completable {
-        return Completable.fromAction({
+        return Completable.fromAction {
             room.isSend = true
             roomDao.updateRoom(room)
-        })
+        }
     }
 
     private fun onError(throwable: Throwable) {

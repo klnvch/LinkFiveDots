@@ -24,13 +24,13 @@
 
 <android.support.v7.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <by.klnvch.link5dots.settings.EditTextPreference
-        android:defaultValue="@string/device_info_default"
+        android:defaultValue="@string/unknown"
         android:dialogIcon="@drawable/ic_mood_48dp"
         android:icon="@drawable/ic_mood_48dp"
         android:key="pref_username"
         android:selectAllOnFocus="true"
         android:singleLine="true"
-        android:title="@string/apn_user" />
+        android:title="@string/username" />
     <ListPreference
         android:defaultValue="en"
         android:dialogIcon="@drawable/ic_language_48dp"
@@ -39,7 +39,7 @@
         android:icon="@drawable/ic_language_48dp"
         android:key="pref_language"
         android:summary="%s"
-        android:title="@string/phone_language" />
+        android:title="@string/settings_language" />
     <by.klnvch.link5dots.settings.SwitchPreference
         android:defaultValue="true"
         android:icon="@drawable/ic_vibration_48dp"
@@ -57,7 +57,7 @@
     <by.klnvch.link5dots.settings.DeletePreference
         android:icon="@drawable/ic_delete_48dp"
         android:key="pref_delete"
-        android:title="@string/settings_reset" />
+        android:title="@string/settings_delete_all" />
     <by.klnvch.link5dots.settings.DotsTypePreference
         android:defaultValue="1"
         android:icon="@drawable/ic_grain_48dp"

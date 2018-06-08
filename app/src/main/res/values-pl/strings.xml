@@ -22,90 +22,83 @@
   ~ SOFTWARE.
   -->
 
-<resources>
+<resources xmlns:ns0="urn:oasis:names:tc:xliff:document:1.2">
     <string name="app_name">Połącz pięć kropek</string>
     <string name="language">Polski</string>
-
-
     <string name="greetings">Cześć, %1$s!</string>
-    <string name="android">Android</string>
-    <string name="how_to_title">Jak grać</string>
-    <string name="how_to_text">\tBądź pierwszy połączywszy pięć kropek w linię prostą: poziomo, pionowo lub ukośnie. Android gra niebieskimi kropkami, grasz czerwonymi kropkami. Czerwone i niebieskie kropki rozmieszczają się po kolei na skrzyżwaniach lini. Pierwszy ruch należy do Ciebie.\n\n\tPrzeciągnij po ekranie, aby przenieść siatkę.\n\tSkaluj ekran, aby powiększyć lub zmniejszyć rozmiar siatki.\n\tUżyj menu, aby ponownie uruchomić grę, cofnąć ostatni ruch, zobaczyć wyniki lub jak grać.\n\tNaciśnij przycisk \"Szukaj\", aby ukryć/pokazać strzałki wokoło kropki ostatniego ruchu.</string>
-
     <string name="scores_title">Wyniki</string>
-    <string name="scores_no_internet">Brak dostępu do internetu</string>
-    <string name="scores_number">#</string>
-    <string name="scores_name">Imię</string>
     <string name="scores_moves">Liczba ruchów</string>
-    <string name="scores_status">Stan</string>
     <string name="scores_won">wygrana</string>
     <string name="scores_lost">przegrana</string>
-
     <string name="end_win">Wygrałeś!</string>
     <string name="end_lose">Przegrałeś!</string>
-    <string name="end_new_game">Nowa</string>
-    <string name="end_undo">Cofnij</string>
-    <string name="end_move">%1$d ruchów zrobiono przez %2$s.</string>
-
-    <string name="scores_time">Czas</string>
-    <string name="end_publish">Opublikuj</string>
-
-    <string name="scores_loading">Ładowanie&#8230;</string>
-
     <string name="menu_single_player">Jeden Gracz</string>
     <string name="menu_multi_player">Multiplayer</string>
     <string name="menu_two_players">Dwa gracza</string>
     <string name="menu_local_network">Sieć Lokalna</string>
     <string name="menu_online_game">Internet</string>
-
-    <string name="settings_vibration">Wibracje</string>
-    <string name="settings_night_mode">Tryb nocny</string>
-    <string name="settings_auto">"Automatyczna"</string>
-    <string name="settings_system">"System"</string>
     <string name="settings_dots">"Kropki"</string>
-    <string name="settings_reset">"Wymaż wszystko"</string>
     <string name="rate_this_app">Oceń tę aplikację</string>
+    <string name="bluetooth_not_discoverable">"Zezwalaj na wykrywanie urządzenia"</string>
+    <string name="bt_message_your_turn">Twoja kolej, postaw kropkę…</string>
+    <string name="bt_message_opponents_turn">Ruch rywala, czekaj…</string>
+
+
+    <string name="how_to_text">\tBądź pierwszy połączywszy pięć kropek w linię prostą: poziomo, pionowo lub ukośnie. Android gra niebieskimi kropkami, grasz czerwonymi kropkami. Czerwone i niebieskie kropki rozmieszczają się po kolei na skrzyżwaniach lini. Pierwszy ruch należy do Ciebie.\n\n\tPrzeciągnij po ekranie, aby przenieść siatkę.\n\tSkaluj ekran, aby powiększyć lub zmniejszyć rozmiar siatki.\n\tUżyj menu, aby ponownie uruchomić grę, cofnąć ostatni ruch, zobaczyć wyniki lub jak grać.\n\tNaciśnij przycisk \"Szukaj\", aby ukryć/pokazać strzałki wokoło kropki ostatniego ruchu.</string>
+
 
     <string name="yes">"Tak"</string>
     <string name="no">"Nie"</string>
     <string name="create">"Utwórz"</string>
-    <string name="delete">"Usuń"</string>
-    <string name="scan">"Skanuj"</string>
-    <string name="searching">"Wyszukiwanie…"</string>
-    <string name="device_info_default">"Nieznane"</string>
-
-    <string name="switch_on_text">"Wł."</string>
-    <string name="switch_off_text">"Wył."</string>
-
-    <string name="bluetooth_not_discoverable">"Zezwalaj na wykrywanie urządzenia"</string>
-    <string name="bluetooth_is_discoverable">"Widoczne dla wszystkich urządzeń Bluetooth (%1$s)"</string>
-    <string name="bluetooth_only_visible_to_paired_devices">"Widoczne tylko dla urządzeń sparowanych"</string>
-    <string name="bt_is_disconnect_question">"Odłączyć urządzenie \"%1$s\"?"</string>
-    <string name="bluetooth_connected">"Połączony"</string>
-    <string name="bluetooth_disconnected">"Rozłączona"</string>
-    <string name="bluetooth_connecting">"Łączenie…"</string>
-    <string name="bluetooth_no_devices_found">"Brak urządzeń Bluetooth w pobliżu"</string>
-    <string name="bluetooth_connection_dialog_text">"Czy chcesz nawiązać połączenie z urządzeniem „%1$s”?"</string>
+    <string name="unknown">"Nieznane"</string>
+    <string name="settings_system">"System"</string>
+    <string name="disconnected">"Rozłączona"</string>
+    <string name="bluetooth">"Bluetooth"</string>
+    <string name="bluetooth_is_discoverable">"Widoczne dla wszystkich urządzeń Bluetooth (<ns0:g id="DISCOVERABLE_TIME_PERIOD">%1$s</ns0:g>)"</string>
+    <string name="bluetooth_only_visible_to_paired_devices">"Widoczne tylko na urządzenia sparowanych"</string>
+    <string name="is_disconnect_question">"Odłączyć urządzenie <ns0:g id="DEVICE_NAME">%1$s</ns0:g>?"</string>
+    <string name="connection_dialog_text">"Czy chcesz nawiązać połączenie z urządzeniem „<ns0:g id="DEVICE_NAME">%1$s</ns0:g>”?"</string>
     <string name="cancel">"Anuluj"</string>
     <string name="okay">"OK"</string>
-    <string name="settings_label">"Ustawienia"</string>
-    <string name="bluetooth_settings">"Bluetooth"</string>
-    <string name="bluetooth_connecting_error_message">"Nie udało się nawiązać połączenia z „%1$s”."</string>
-    <string name="apn_not_set">"Nie ustawiono"</string>
-    <string name="apn_name">"Nazwa:"</string>
-    <string name="apn_user">"Nazwa użytkownika"</string>
+    <string name="time">"Godzina"</string>
+    <string name="connecting_error_message">"Nie udało się nawiązać połączenia z <ns0:g id="DEVICE_NAME">%1$s</ns0:g>."</string>
+    <string name="searching">"Wyszukiwanie…"</string>
+    <string name="connect_failed">"Nie udało się nawiązać połączenia. Spróbuj ponownie."</string>
+    <string name="connected">"Połączony"</string>
+    <string name="scan">"Skanuj"</string>
+    <string name="status">"Stan"</string>
+    <string name="search">"Wyszukiwanie"</string>
+    <string name="search_no_results">"Brak wyników"</string>
+    <string name="settings_night_mode">"Podświetlenie nocne"</string>
+    <string name="name_not_set">"Nie ustawiono"</string>
+    <string name="name">"Nazwa"</string>
+    <string name="settings_delete_all">"Wymaż wszystko"</string>
+    <string name="progress_text">"Zaczekaj…"</string>
+    <string name="help">"Pomoc"</string>
+    <string name="loading">"Ładuję…"</string>
     <string name="application_info_label">"Informacje o aplikacji"</string>
-    <string name="master_clear_progress_text">"Zaczekaj…"</string>
-    <string name="version_text">"wersja %1$s"</string>
-    <string name="device_feedback">Prześlij opinię</string>
-    <string name="phone_language">"Język"</string>
+    <string name="version_text">"wersja <ns0:g id="VERSION_NUM">%1$s</ns0:g>"</string>
+    <string name="settings_language">"Języki"</string>
+    <string name="settings_auto">"Automatycznie"</string>
+    <string name="settings">"Ustawienia"</string>
+    <string name="duration">"Czas trwania"</string>
+    <string name="connecting">"Łączenie…"</string>
+    <string name="delete">"Usuń"</string>
+    <string name="type">"Typ"</string>
+    <string name="settings_vibration">"Wibracje"</string>
+    <string name="switch_on_text">"Wł."</string>
+    <string name="switch_off_text">"Wył."</string>
     <string name="share">"Udostępnij"</string>
-    <string name="search_menu">"Szukaj"</string>
-    <string name="search_settings_no_results">"Brak wyników"</string>
-    <string name="disabled_low_ram_device">"Ta funkcja jest niedostępna na tym urządzeniu."</string>
-
-
-    <string name="bt_message_your_turn">Wasz ruch, postaw kropkę…</string>
-    <string name="bt_message_opponents_turn">Ruch rywala, czekaj…</string>
+    <string name="computer">"Komputer"</string>
+    <string name="error_feature_not_available">"Ta funkcja jest niedostępna na tym urządzeniu."</string>
+    <string name="deleted_toast">"Kontakt <ns0:g id="NAME">%1$s</ns0:g> usunięty"</string>
+    <string name="send_mail">"Wyślij e-maila"</string>
+    <string name="copy_text">"Kopiuj do schowka"</string>
+    <string name="toast_text_copied">"Tekst skopiowany"</string>
+    <string name="new_game">"Nowe"</string>
+    <string name="undo">"Cofnij"</string>
+    <string name="connection_error_message">"Brak połączenia"</string>
+    <string name="username">"Nazwa"</string>
+    <string name="history">"Historia"</string>
 
 </resources>

@@ -77,7 +77,7 @@ class HistoryFragment : DaggerFragment(), OnItemClickListener {
                 mCompositeDisposable.add(Completable.fromAction { roomDao.deleteRoom(room) }
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe({ onRoomDeleted(position, room) }))
+                        .subscribe { onRoomDeleted(position, room) })
             }
         }
         val itemTouchHelper = ItemTouchHelper(swipeHandler)
@@ -93,7 +93,7 @@ class HistoryFragment : DaggerFragment(), OnItemClickListener {
                 .take(1)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ onDataLoaded(it) }))
+                .subscribe { onDataLoaded(it) })
     }
 
     override fun onStop() {
@@ -107,7 +107,7 @@ class HistoryFragment : DaggerFragment(), OnItemClickListener {
 
     private fun onDataLoaded(rooms: List<Room>) {
         if (rooms.isEmpty()) {
-            showError(R.string.search_settings_no_results)
+            showError(R.string.search_no_results)
         } else {
             val adapter = HistoryAdapter(rooms.toMutableList())
             view?.recyclerView?.adapter = adapter
@@ -118,14 +118,14 @@ class HistoryFragment : DaggerFragment(), OnItemClickListener {
     private fun onRoomDeleted(position: Int, room: Room) {
         (view?.recyclerView?.adapter as HistoryAdapter).removeAt(position)
 
-        val msg = getString(R.string.contacts_deleted_one_named_toast, position.toString())
+        val msg = getString(R.string.deleted_toast, position.toString())
         Snackbar.make(view!!.recyclerView!!, msg, Snackbar.LENGTH_LONG)
-                .setAction(R.string.end_undo, {
+                .setAction(R.string.undo) {
                     mCompositeDisposable.add(Completable.fromAction { roomDao.insertRoom(room) }
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe({ onRoomInserted(position, room) }))
-                })
+                            .subscribe { onRoomInserted(position, room) })
+                }
                 .show()
     }
 

@@ -58,6 +58,7 @@ public class PickerFragment extends Fragment implements View.OnClickListener,
     private ToggleButton mButtonCreate;
     ToggleButton mButtonScan;
     private TextView mCreateStatusValue;
+    private View mCreateStatusColon;
     private View mCreateStatusLabel;
     private View mProgressCreate;
     private View mProgressScan;
@@ -91,6 +92,7 @@ public class PickerFragment extends Fragment implements View.OnClickListener,
         mButtonScan.setOnClickListener(this);
 
         mCreateStatusLabel = view.findViewById(R.id.textStatusLabel);
+        mCreateStatusColon = view.findViewById(R.id.textStatusColon);
         mCreateStatusValue = view.findViewById(R.id.textStatusValue);
         mProgressCreate = view.findViewById(R.id.progressCreate);
 
@@ -137,7 +139,7 @@ public class PickerFragment extends Fragment implements View.OnClickListener,
 
             checkNotNull(getContext());
 
-            final String msg = getString(R.string.bluetooth_connection_dialog_text, target.getShortName());
+            final String msg = getString(R.string.connection_dialog_text, target.getShortName());
             new AlertDialog.Builder(getContext())
                     .setMessage(msg)
                     .setPositiveButton(R.string.yes, (dialog, which) -> mListener.onConnect(target))
@@ -166,31 +168,37 @@ public class PickerFragment extends Fragment implements View.OnClickListener,
             case GameState.STATE_NONE:
                 mButtonCreate.setEnabled(false);
                 mButtonCreate.setChecked(false);
-                mCreateStatusValue.setText(R.string.apn_not_set);
+                mCreateStatusValue.setText(R.string.name_not_set);
                 mCreateStatusValue.setEnabled(false);
                 mCreateStatusValue.setVisibility(View.VISIBLE);
                 mCreateStatusLabel.setEnabled(false);
                 mCreateStatusLabel.setVisibility(View.VISIBLE);
+                mCreateStatusColon.setEnabled(false);
+                mCreateStatusColon.setVisibility(View.VISIBLE);
                 mProgressCreate.setVisibility(View.INVISIBLE);
                 break;
             case GameState.STATE_TARGET_DELETED:
                 mButtonCreate.setEnabled(true);
                 mButtonCreate.setChecked(false);
-                mCreateStatusValue.setText(R.string.apn_not_set);
+                mCreateStatusValue.setText(R.string.name_not_set);
                 mCreateStatusValue.setEnabled(true);
                 mCreateStatusValue.setVisibility(View.VISIBLE);
                 mCreateStatusLabel.setEnabled(true);
                 mCreateStatusLabel.setVisibility(View.VISIBLE);
+                mCreateStatusColon.setEnabled(true);
+                mCreateStatusColon.setVisibility(View.VISIBLE);
                 mProgressCreate.setVisibility(View.INVISIBLE);
                 break;
             case GameState.STATE_TARGET_CREATING:
                 mButtonCreate.setEnabled(false);
                 mButtonCreate.setChecked(false);
-                mCreateStatusValue.setText(R.string.apn_not_set);
+                mCreateStatusValue.setText(R.string.name_not_set);
                 mCreateStatusValue.setEnabled(false);
                 mCreateStatusValue.setVisibility(View.INVISIBLE);
                 mCreateStatusLabel.setEnabled(false);
                 mCreateStatusLabel.setVisibility(View.INVISIBLE);
+                mCreateStatusColon.setEnabled(false);
+                mCreateStatusColon.setVisibility(View.INVISIBLE);
                 mProgressCreate.setVisibility(View.VISIBLE);
                 break;
             case GameState.STATE_TARGET_CREATED:
@@ -201,16 +209,20 @@ public class PickerFragment extends Fragment implements View.OnClickListener,
                 mCreateStatusValue.setVisibility(View.VISIBLE);
                 mCreateStatusLabel.setEnabled(true);
                 mCreateStatusLabel.setVisibility(View.VISIBLE);
+                mCreateStatusColon.setEnabled(true);
+                mCreateStatusColon.setVisibility(View.VISIBLE);
                 mProgressCreate.setVisibility(View.INVISIBLE);
                 break;
             case GameState.STATE_TARGET_DELETING:
                 mButtonCreate.setEnabled(false);
                 mButtonCreate.setChecked(true);
-                mCreateStatusValue.setText(R.string.apn_not_set);
+                mCreateStatusValue.setText(R.string.name_not_set);
                 mCreateStatusValue.setEnabled(false);
                 mCreateStatusValue.setVisibility(View.INVISIBLE);
                 mCreateStatusLabel.setEnabled(false);
                 mCreateStatusLabel.setVisibility(View.INVISIBLE);
+                mCreateStatusColon.setEnabled(false);
+                mCreateStatusColon.setVisibility(View.INVISIBLE);
                 mProgressCreate.setVisibility(View.VISIBLE);
                 break;
         }
@@ -267,6 +279,7 @@ public class PickerFragment extends Fragment implements View.OnClickListener,
             mCreateStatusValue.setEnabled(false);
             mButtonScan.setEnabled(false);
             mCreateStatusLabel.setEnabled(false);
+            mCreateStatusColon.setEnabled(false);
         } else {
             isClickable = true;
         }

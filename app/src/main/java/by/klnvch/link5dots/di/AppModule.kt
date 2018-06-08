@@ -30,10 +30,10 @@ import by.klnvch.link5dots.db.AppDatabase
 import by.klnvch.link5dots.db.RoomDao
 import by.klnvch.link5dots.network.NetworkService
 import by.klnvch.link5dots.settings.SettingsUtils
+import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import dagger.Module
 import dagger.Provides
 import retrofit2.Retrofit
-import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
@@ -46,7 +46,7 @@ class AppModule {
         return Retrofit.Builder()
                 .baseUrl("https://link-five-dots.firebaseio.com/")
                 .addConverterFactory(GsonConverterFactory.create())
-                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build()
                 .create(NetworkService::class.java)
     }

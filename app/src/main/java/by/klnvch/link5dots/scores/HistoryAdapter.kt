@@ -67,7 +67,7 @@ class HistoryAdapter(private val rooms: MutableList<Room>) :
         holder.textDuration.text = DateUtils.formatElapsedTime(RoomUtils.getDuration(rooms[position]) / 1000)
         holder.textDots.text = rooms[position].dots.size.toString()
         when (rooms[position].type) {
-            Room.TYPE_BLUETOOTH -> holder.textType.setText(R.string.bluetooth_settings)
+            Room.TYPE_BLUETOOTH -> holder.textType.setText(R.string.bluetooth)
             Room.TYPE_NSD -> holder.textType.setText(R.string.menu_local_network)
             Room.TYPE_ONLINE -> holder.textType.setText(R.string.menu_online_game)
             Room.TYPE_TWO_PLAYERS -> holder.textType.setText(R.string.menu_two_players)

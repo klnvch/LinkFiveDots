@@ -131,7 +131,7 @@ public class MultiPlayerMenuActivity extends AppCompatActivity implements View.O
     private void showErrorDialog() {
         Crashlytics.log("feature not supported");
         new AlertDialog.Builder(this)
-                .setMessage(R.string.disabled_low_ram_device)
+                .setMessage(R.string.error_feature_not_available)
                 .setPositiveButton(R.string.okay, null)
                 .show();
     }
