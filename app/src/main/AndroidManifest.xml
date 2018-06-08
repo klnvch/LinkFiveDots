@@ -23,6 +23,7 @@
   -->
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="by.klnvch.link5dots">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -40,14 +41,18 @@
         android:name="android.hardware.bluetooth"
         android:required="false" />
 
+    <uses-sdk tools:overrideLibrary="com.firebase.ui.database, com.firebase.ui.common" />
+
     <application
         android:name="by.klnvch.link5dots.di.MyApp"
         android:allowBackup="true"
+        android:fullBackupContent=""
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        tools:ignore="GoogleAppIndexingWarning">
 
         <service android:name="by.klnvch.link5dots.multiplayer.services.GameServiceBluetooth" />
         <service android:name="by.klnvch.link5dots.multiplayer.services.GameServiceNsd" />
