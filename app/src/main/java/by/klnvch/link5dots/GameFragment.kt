@@ -63,12 +63,15 @@ class GameFragment : DaggerFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.game_board, container, false)
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
         setHasOptionsMenu(true)
 
-        val root = inflater.inflate(R.layout.game_board, container, false)
-
-        gameView.setOnMoveDoneListener { this.onMoveDone(it) }
-        gameView.setOnGameEndListener { this.onGameFinished() }
+        gameView.setOnMoveDoneListener { onMoveDone(it) }
+        gameView.setOnGameEndListener { onGameFinished() }
 
         if (savedInstanceState != null) {
             gameView.viewState = GameViewState.fromJson(savedInstanceState.getString(KEY_VIEW_STATE))
@@ -78,8 +81,6 @@ class GameFragment : DaggerFragment() {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { this.setDotsType(it) })
-
-        return root
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
