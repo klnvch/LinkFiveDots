@@ -22,90 +22,83 @@
   ~ SOFTWARE.
   -->
 
-<resources>
+<resources xmlns:ns0="urn:oasis:names:tc:xliff:document:1.2">
     <string name="app_name">З’єднай П’ять Точок</string>
     <string name="language">Українська</string>
-
-
     <string name="greetings">Привіт, %1$s!</string>
-    <string name="android">Андроід</string>
-    <string name="how_to_title">Як грати</string>
-    <string name="how_to_text">\tЗ’єднайте першими п’ять точок по прямій горизонтально, вертикально чи по діагоналі. Андроїд грає синіми точками, ви граєте червоними точками. Червоні і сині точки розміщуються поперемінно на перетині ліній сітки. Перший крок за Вами.\n\n\tПеретягніть екран, щоб перемістити сітку.\n\tРозтягніть екран, щоб збільшити або зменшити розмір сітки.\n\tВикористовуйте меню, щоб перезапустити гру, скасувати останній хід, подивитися досягнення в іграх або подивитися, як грати.\n\tНатисніть кнопку \"Пошук\", щоб приховати / показати стрілки, що показують останній хід точкою.</string>
-
     <string name="scores_title">Результати</string>
-    <string name="scores_no_internet">Відсутній доступ до Інтернету</string>
-    <string name="scores_number">#</string>
-    <string name="scores_name">Ім\'я</string>
     <string name="scores_moves">Кількість ходів</string>
-    <string name="scores_status">Статус</string>
     <string name="scores_won">виграно</string>
     <string name="scores_lost">програно</string>
-
     <string name="end_win">Ви виграли!</string>
     <string name="end_lose">Ви програли!</string>
-    <string name="end_new_game">Нова</string>
-    <string name="end_undo">Скасувати</string>
-    <string name="end_move">%1$d ходів зроблено за %2$s.</string>
-
-    <string name="scores_time">Час</string>
-    <string name="end_publish">Обублікувати</string>
-
-    <string name="scores_loading">Завантаження&#8230;</string>
-
     <string name="menu_single_player">Один гравець</string>
     <string name="menu_multi_player">Мультиплеер</string>
     <string name="menu_two_players">Два гравці</string>
     <string name="menu_local_network">Локальна Мережа</string>
     <string name="menu_online_game">Інтернет</string>
-
-    <string name="settings_vibration">Вібросигнал</string>
-    <string name="settings_night_mode">Нічний режим</string>
-    <string name="settings_auto">"Авто"</string>
-    <string name="settings_system">"Система"</string>
     <string name="settings_dots">"Крапки"</string>
-    <string name="settings_reset">"Видалити все"</string>
     <string name="rate_this_app">Оцінити цю програму</string>
+    <string name="bluetooth_not_discoverable">"Зробити пристрій видимим"</string>
+    <string name="bt_message_your_turn">Твій крок, постав точку…</string>
+    <string name="bt_message_opponents_turn">Хід опонента, зачекайте…</string>
+
+
+    <string name="how_to_text">\tЗ’єднайте першими п’ять точок по прямій горизонтально, вертикально чи по діагоналі. Андроїд грає синіми точками, ви граєте червоними точками. Червоні і сині точки розміщуються поперемінно на перетині ліній сітки. Перший крок за Вами.\n\n\tПеретягніть екран, щоб перемістити сітку.\n\tРозтягніть екран, щоб збільшити або зменшити розмір сітки.\n\tВикористовуйте меню, щоб перезапустити гру, скасувати останній хід, подивитися досягнення в іграх або подивитися, як грати.\n\tНатисніть кнопку \"Пошук\", щоб приховати / показати стрілки, що показують останній хід точкою.</string>
+
 
     <string name="yes">"Так"</string>
     <string name="no">"Ні"</string>
     <string name="create">"Створити"</string>
-    <string name="delete">"Видалити"</string>
-    <string name="scan">"Сканувати"</string>
-    <string name="searching">"Пошук…"</string>
-    <string name="device_info_default">"Невідомо"</string>
-
-    <string name="switch_on_text">"Увімкнено"</string>
-    <string name="switch_off_text">"Вимкнено"</string>
-
-    <string name="bluetooth_not_discoverable">"Зробити пристрій видимим"</string>
-    <string name="bluetooth_is_discoverable">"Видимий для всіх пристроїв Bluetooth неподалік (%1$s)"</string>
+    <string name="unknown">"Невідомо"</string>
+    <string name="settings_system">"Система"</string>
+    <string name="disconnected">"Роз’єднано"</string>
+    <string name="bluetooth">"Bluetooth"</string>
+    <string name="bluetooth_is_discoverable">"Видимий для всіх пристроїв Bluetooth неподалік (<ns0:g id="DISCOVERABLE_TIME_PERIOD">%1$s</ns0:g>)"</string>
     <string name="bluetooth_only_visible_to_paired_devices">"Видимий лише для спарених пристроїв"</string>
-    <string name="bt_is_disconnect_question">"Відключити пристрій \"%1$s\"?"</string>
-    <string name="bluetooth_connected">"Підключено"</string>
-    <string name="bluetooth_disconnected">"Роз’єднано"</string>
-    <string name="bluetooth_connecting">"Підключення…"</string>
-    <string name="bluetooth_no_devices_found">"Пристрої Bluetooth поблизу не знайдено."</string>
-    <string name="bluetooth_connection_dialog_text">"Підключитися до пристрою \"%1$s\"?"</string>
+    <string name="is_disconnect_question">"Відключити пристрій <ns0:g id="DEVICE_NAME">%1$s</ns0:g>?"</string>
+    <string name="connection_dialog_text">"Підключитися до пристрою \"<ns0:g id="DEVICE_NAME">%1$s</ns0:g>\"?"</string>
     <string name="cancel">"Скасувати"</string>
     <string name="okay">"ОК"</string>
-    <string name="settings_label">"Налаштування"</string>
-    <string name="bluetooth_settings">"Bluetooth"</string>
-    <string name="bluetooth_connecting_error_message">"Не вдалося з’єднатися з пристроєм \"%1$s\"."</string>
-    <string name="apn_not_set">"Не встановлено"</string>
-    <string name="apn_name">"Назва:"</string>
-    <string name="apn_user">"Ім’я користувача"</string>
+    <string name="time">"Час"</string>
+    <string name="connecting_error_message">"Не вдалося з’єднатися з пристроєм <ns0:g id="DEVICE_NAME">%1$s</ns0:g>."</string>
+    <string name="searching">"Пошук…"</string>
+    <string name="connect_failed">"Не вдалося під’єднатися. Повторіть спробу."</string>
+    <string name="connected">"Під’єднані"</string>
+    <string name="scan">"Сканув."</string>
+    <string name="status">"Стан"</string>
+    <string name="search">"Пошук"</string>
+    <string name="search_no_results">"Результатів немає"</string>
+    <string name="settings_night_mode">"Нічний режим"</string>
+    <string name="name_not_set">"Не встановлено"</string>
+    <string name="name">"Назва"</string>
+    <string name="settings_delete_all">"Видалити все"</string>
+    <string name="progress_text">"Зачекайте…"</string>
+    <string name="help">"Довідка"</string>
+    <string name="loading">"Завант-ня…"</string>
     <string name="application_info_label">"Про додаток"</string>
-    <string name="master_clear_progress_text">"Зачекайте…"</string>
-    <string name="version_text">"версія %1$s"</string>
-    <string name="device_feedback">Надіслати відгук</string>
-    <string name="phone_language">"Мова"</string>
+    <string name="version_text">"версія <ns0:g id="VERSION_NUM">%1$s</ns0:g>"</string>
+    <string name="settings_language">"Мови"</string>
+    <string name="settings_auto">"Автоматично"</string>
+    <string name="settings">"Налаштування"</string>
+    <string name="duration">"Тривалість"</string>
+    <string name="connecting">"Під’єднання…"</string>
+    <string name="delete">"Видалити"</string>
+    <string name="type">"Тип"</string>
+    <string name="settings_vibration">"Вібросигнал"</string>
+    <string name="switch_on_text">"Увімкнено"</string>
+    <string name="switch_off_text">"Вимкнено"</string>
     <string name="share">"Поділитися"</string>
-    <string name="search_menu">"Пошук"</string>
-    <string name="search_settings_no_results">"Результатів немає"</string>
-    <string name="disabled_low_ram_device">"Ця функція недоступна на цьому пристрої"</string>
-
-
-    <string name="bt_message_your_turn">Твій крок, постав точку…</string>
-    <string name="bt_message_opponents_turn">Хід опонента, зачекайте…</string>
+    <string name="computer">"Комп’ютер"</string>
+    <string name="error_feature_not_available">"Ця функція недоступна на цьому пристрої"</string>
+    <string name="deleted_toast">"Контакт <ns0:g id="NAME">%1$s</ns0:g> видалено"</string>
+    <string name="send_mail">"Надіслати електронний лист"</string>
+    <string name="copy_text">"Копіювати в буфер обміну"</string>
+    <string name="toast_text_copied">"Текст скопійовано"</string>
+    <string name="new_game">"Нові"</string>
+    <string name="undo">"Відмінити"</string>
+    <string name="connection_error_message">"Немає з’єднання"</string>
+    <string name="username">"Ім\'я"</string>
+    <string name="history">"Історія"</string>
 
 </resources>

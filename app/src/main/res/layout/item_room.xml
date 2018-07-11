@@ -41,6 +41,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:lines="2"
-        android:text="@string/apn_not_set" />
+        android:text="@string/name_not_set" />
 
 </android.support.v7.widget.CardView>

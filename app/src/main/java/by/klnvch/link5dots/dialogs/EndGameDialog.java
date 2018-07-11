@@ -32,6 +32,8 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.text.format.DateUtils;
+import android.view.View;
+import android.widget.TextView;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 
@@ -93,16 +95,22 @@ public final class EndGameDialog extends DialogFragment implements DialogInterfa
 
         final int title = isWon != null ? isWon ? R.string.end_win : R.string.end_lose : -1;
         final String timeStr = DateUtils.formatElapsedTime(elapsedTime);
-        final String msg = getString(R.string.end_move, movesNumber, timeStr);
+        final String dotsSrt = Integer.toString(movesNumber);
+
+        final View v = View.inflate(getContext(), R.layout.dialog_end_game, null);
+        final TextView tvDuration = v.findViewById(R.id.textDurationValue);
+        tvDuration.setText(timeStr);
+        final TextView tvDots = v.findViewById(R.id.textDotsValue);
+        tvDots.setText(dotsSrt);
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
-                .setMessage(msg);
+                .setView(v);
 
         if (title != -1) builder.setTitle(title);
 
-        if (mListenerNew != null) builder.setPositiveButton(R.string.end_new_game, this);
-        if (mListenerUndo != null) builder.setNegativeButton(R.string.end_undo, this);
-        if (mListenerScore != null) builder.setNeutralButton(R.string.scores_title, this);
+        if (mListenerNew != null) builder.setPositiveButton(R.string.new_game, this);
+        if (mListenerUndo != null) builder.setNegativeButton(R.string.undo, this);
+        if (mListenerScore != null) builder.setNeutralButton(R.string.share, this);
 
         return builder.show();
     }

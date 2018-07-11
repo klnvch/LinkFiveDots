@@ -34,10 +34,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="4dp"
-        android:hint="@string/apn_user"
+        android:hint="@string/username"
         android:inputType="textPersonName"
         android:maxLength="16"
         android:singleLine="true"
-        android:text="@string/device_info_default" />
+        android:text="@string/unknown" />
 
 </android.support.design.widget.TextInputLayout>

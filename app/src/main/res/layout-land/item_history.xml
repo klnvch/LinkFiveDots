@@ -47,7 +47,7 @@
             android:drawableLeft="@drawable/game_dot_circle_red"
             android:drawablePadding="8dp"
             android:gravity="center"
-            android:text="@string/device_info_default"
+            android:text="@string/unknown"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -60,7 +60,7 @@
             android:drawableLeft="@drawable/game_dot_circle_blue"
             android:drawablePadding="8dp"
             android:gravity="center"
-            android:text="@string/android"
+            android:text="@string/computer"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -70,7 +70,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="@string/time_picker_title"
+            android:text="@string/time"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textUser2Name" />
 
         <TextView
@@ -87,7 +88,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
-            android:text="@string/device_info_default"
+            android:text="@string/unknown"
             android:textStyle="bold"
             app:layout_constraintStart_toEndOf="@+id/textTimeColon"
             app:layout_constraintTop_toBottomOf="@+id/textUser2Name" />
@@ -97,7 +98,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="@string/vpn_type"
+            android:text="@string/type"
             app:layout_constraintEnd_toStartOf="@+id/textTypeColon"
             app:layout_constraintTop_toBottomOf="@+id/textUser2Name" />
 
@@ -115,7 +116,7 @@
             android:id="@+id/textTypeValue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/device_info_default"
+            android:text="@string/unknown"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textUser2Name" />
@@ -125,7 +126,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="@string/menu_proc_stats_duration"
+            android:text="@string/duration"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textTimeLabel" />
 
         <TextView
@@ -142,7 +144,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
-            android:text="@string/device_info_default"
+            android:text="@string/unknown"
             android:textStyle="bold"
             app:layout_constraintStart_toEndOf="@+id/textDurationColon"
             app:layout_constraintTop_toBottomOf="@+id/textTimeLabel" />
@@ -170,7 +172,7 @@
             android:id="@+id/textDotsValue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/device_info_default"
+            android:text="@string/unknown"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textTimeLabel" />

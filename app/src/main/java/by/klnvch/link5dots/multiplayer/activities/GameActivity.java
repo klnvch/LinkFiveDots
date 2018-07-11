@@ -32,7 +32,6 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.annotation.StringRes;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -172,7 +171,7 @@ public abstract class GameActivity extends DaggerAppCompatActivity implements
             checkNotNull(room);
             final User anotherUser = RoomUtils.getAnotherUser(room, mService.getUser());
 
-            final String msg = getString(R.string.bt_is_disconnect_question, anotherUser.getName());
+            final String msg = getString(R.string.is_disconnect_question, anotherUser.getName());
             new AlertDialog.Builder(this)
                     .setMessage(msg)
                     .setPositiveButton(R.string.yes, (dialog, which) -> super.onBackPressed())
@@ -235,7 +234,7 @@ public abstract class GameActivity extends DaggerAppCompatActivity implements
         // java.io.IOException: read failed, socket might closed or timeout, read ret: -1
         // java.net.ConnectException: failed to connect to /192.168.1.2 (port 47555): connect failed: EHOSTUNREACH (No route to host)
         // when disappeared
-        showMsg(R.string.bluetooth_connect_failed);
+        showMsg();
     }
 
     @SuppressWarnings("unused")
@@ -257,10 +256,10 @@ public abstract class GameActivity extends DaggerAppCompatActivity implements
         switch (state.getTargetState()) {
             case GameState.STATE_TARGET_CREATING:
             case GameState.STATE_TARGET_DELETING:
-                setTitle(R.string.bluetooth_connecting);
+                setTitle(R.string.connecting);
                 break;
             case GameState.STATE_TARGET_CREATED:
-                setTitle(R.string.master_clear_progress_text);
+                setTitle(R.string.progress_text);
                 break;
             case GameState.STATE_NONE:
             case GameState.STATE_TARGET_DELETED:
@@ -290,10 +289,10 @@ public abstract class GameActivity extends DaggerAppCompatActivity implements
                 }
                 break;
             case GameState.STATE_CONNECTING:
-                setTitle(R.string.bluetooth_connecting);
+                setTitle(R.string.connecting);
                 break;
             case GameState.STATE_DISCONNECTED:
-                setTitle(R.string.bluetooth_disconnected);
+                setTitle(R.string.disconnected);
                 break;
             case GameState.STATE_NONE:
                 break;
@@ -382,9 +381,9 @@ public abstract class GameActivity extends DaggerAppCompatActivity implements
         return (GameFragment) getSupportFragmentManager().findFragmentByTag(GameFragment.TAG);
     }
 
-    private void showMsg(@StringRes int msg) {
+    private void showMsg() {
         new AlertDialog.Builder(this)
-                .setMessage(msg)
+                .setMessage(R.string.connect_failed)
                 .setPositiveButton(R.string.okay, null)
                 .show();
     }

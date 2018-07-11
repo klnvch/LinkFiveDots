@@ -26,10 +26,10 @@
     <item
         android:id="@+id/menu_undo"
         android:icon="@android:drawable/ic_menu_close_clear_cancel"
-        android:title="@string/end_undo" />
+        android:title="@string/undo" />
 
     <item
         android:id="@+id/menu_new_game"
         android:icon="@android:drawable/ic_menu_rotate"
-        android:title="@string/end_new_game" />
+        android:title="@string/new_game" />
 </menu>

@@ -83,7 +83,7 @@ public class FactoryBluetooth implements FactoryServiceInterface, FactoryActivit
 
     @Override
     public int getDefaultTitle() {
-        return R.string.bluetooth_settings;
+        return R.string.bluetooth;
     }
 
     @NonNull

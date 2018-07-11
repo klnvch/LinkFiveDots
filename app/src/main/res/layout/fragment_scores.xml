@@ -48,7 +48,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:text="@string/scores_no_internet"
+        android:text="@string/connection_error_message"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"

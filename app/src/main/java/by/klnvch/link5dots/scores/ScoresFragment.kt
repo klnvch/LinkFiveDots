@@ -54,9 +54,9 @@ class ScoresFragment : Fragment() {
 
         if (FirebaseUtils.isSupported(context!!)) {
             // TODO: StrictMode policy violation
-            FirebaseAuth.getInstance().signInAnonymously().addOnCompleteListener({ onSignedIn(it) })
+            FirebaseAuth.getInstance().signInAnonymously().addOnCompleteListener { onSignedIn(it) }
         } else {
-            showError(R.string.disabled_low_ram_device)
+            showError(R.string.error_feature_not_available)
         }
     }
 
@@ -73,7 +73,7 @@ class ScoresFragment : Fragment() {
     private fun onSignedIn(task: Task<AuthResult>) {
         Log.d("ScoresFragment", "onSignedIn: " + task.exception)
         if (!task.isSuccessful) {
-            showError(R.string.scores_no_internet)
+            showError(R.string.connection_error_message)
         } else {
             // init firebase adapter
             // TODO: add loading progress

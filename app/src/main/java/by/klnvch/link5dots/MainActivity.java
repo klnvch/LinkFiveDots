@@ -87,7 +87,7 @@ public final class MainActivity extends BaseActivity {
     protected Room createRoom(@Nullable User host) {
         checkNotNull(host);
 
-        return RoomUtils.createBotGame(host, User.newUser(getString(R.string.android)));
+        return RoomUtils.createBotGame(host, User.newUser(getString(R.string.computer)));
     }
 
     private void moveToScores(@NonNull HighScore highScore) {

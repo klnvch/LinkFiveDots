@@ -94,7 +94,7 @@
         <activity
             android:name="by.klnvch.link5dots.multiplayer.activities.GameActivityBluetooth"
             android:configChanges="orientation|keyboardHidden|locale"
-            android:label="@string/bluetooth_settings"
+            android:label="@string/bluetooth"
             android:launchMode="singleTop">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -135,7 +135,7 @@
         </activity>
         <activity
             android:name="by.klnvch.link5dots.HowToActivity"
-            android:label="@string/how_to_title"
+            android:label="@string/help"
             android:launchMode="singleTop">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -151,7 +151,7 @@
         </activity>
         <activity
             android:name="by.klnvch.link5dots.settings.SettingsActivity"
-            android:label="@string/settings_label"
+            android:label="@string/settings"
             android:launchMode="singleTop">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

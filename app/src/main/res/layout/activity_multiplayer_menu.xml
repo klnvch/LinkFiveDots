@@ -57,7 +57,7 @@
         android:drawableLeft="@drawable/ic_bluetooth_48dp"
         android:drawableStart="@drawable/ic_bluetooth_48dp"
         android:onClick="onClick"
-        android:text="@string/bluetooth_settings"
+        android:text="@string/bluetooth"
         app:layout_constraintBottom_toTopOf="@+id/guidelineHorizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

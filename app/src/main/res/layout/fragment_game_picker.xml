@@ -68,8 +68,17 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:maxLines="1"
-        android:text="@string/apn_name"
+        android:text="@string/name"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textBluetoothVisibility" />
+
+    <TextView
+        android:id="@+id/textStatusColon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxLines="1"
+        android:text="@string/colon"
+        app:layout_constraintStart_toEndOf="@+id/textStatusLabel"
         app:layout_constraintTop_toBottomOf="@+id/textBluetoothVisibility" />
 
     <TextView
@@ -79,9 +88,9 @@
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:maxLines="2"
-        android:text="@string/apn_not_set"
+        android:text="@string/name_not_set"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/textStatusLabel"
+        app:layout_constraintStart_toEndOf="@+id/textStatusColon"
         app:layout_constraintTop_toBottomOf="@+id/textBluetoothVisibility" />
 
     <ProgressBar
@@ -142,7 +151,7 @@
         android:id="@+id/textWarningEmpty"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/search_settings_no_results"
+        android:text="@string/search_no_results"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

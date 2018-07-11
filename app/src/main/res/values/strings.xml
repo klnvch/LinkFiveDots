@@ -22,13 +22,28 @@
   ~ SOFTWARE.
   -->
 
-<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+<resources xmlns:ns0="urn:oasis:names:tc:xliff:document:1.2" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="app_name">Link Five Dots</string>
     <string name="language">English</string>
-
     <string name="greetings">Hi, %1$s!</string>
-    <string name="android">Android</string>
-    <string name="how_to_title">How To Play</string>
+    <string name="scores_title">Scores</string>
+    <string name="scores_moves">Turns</string>
+    <string name="scores_won">won</string>
+    <string name="scores_lost">lost</string>
+    <string name="end_win">You’ve won!</string>
+    <string name="end_lose">You’ve failed!</string>
+    <string name="menu_single_player">Single Player</string>
+    <string name="menu_multi_player">Multiplayer</string>
+    <string name="menu_two_players">Two players</string>
+    <string name="menu_local_network">Local Area Network</string>
+    <string name="menu_online_game">Internet</string>
+    <string name="settings_dots">Dots</string>
+    <string name="rate_this_app">Rate this app</string>
+    <string name="bt_message_your_turn">Your turn, put a dot…</string>
+    <string name="bt_message_opponents_turn">Opponent\'s move, please wait…</string>
+    <string name="bluetooth_not_discoverable">Make device discoverable</string>
+
+
     <string name="how_to_text">
         \t
         Be the first to link five dots in a straight line horizontally, vertically or diagonally.
@@ -43,94 +58,65 @@
         \n\t
         Press \"Search\" button to hide/show arrows around the last move dot.</string>
 
-    <string name="scores_title">Scores</string>
-    <string name="scores_no_internet">No internet access</string>
-    <string name="scores_number">#</string>
-    <string name="scores_name">Name</string>
-    <string name="scores_moves">Number of moves</string>
-    <string name="scores_status">Status</string>
-    <string name="scores_won">won</string>
-    <string name="scores_lost">lost</string>
 
-    <string name="end_win">You’ve won!</string>
-    <string name="end_lose">You’ve failed!</string>
-    <string name="end_new_game">New</string>
-    <string name="end_undo">Undo</string>
-    <string name="end_move">%1$d moves done for %2$s.</string>
+    <string name="scores_number" translatable="false">#</string>
     <string name="seed_hint" translatable="false">45664</string>
-
-    <string name="scores_time">Time</string>
-    <string name="end_publish">Publish</string>
-
-    <string name="scores_loading">Loading…</string>
-
-    <string name="menu_single_player">Single Player</string>
-    <string name="menu_multi_player">Multiplayer</string>
-    <string name="menu_two_players">Two players</string>
-    <string name="menu_local_network">Local Area Network</string>
-    <string name="menu_online_game">Internet</string>
-
-    <string name="settings_vibration">Vibration</string>
-    <string name="settings_night_mode">Night mode</string>
-    <string name="settings_auto">Auto</string>
-    <string name="settings_system">System</string>
-    <string name="settings_reset">Erase everything</string>
-    <string name="settings_dots">Dots</string>
-    <string name="rate_this_app">Rate this app</string>
     <string name="btn_github" translatable="false">GitHub</string>
-    <string name="copy_text" translatable="false">Copy to clipboard</string>
-    <string name="toast_text_copied" translatable="false">Text copied</string>
-    <string name="history_details_title" translatable="false">History details</string>
-    <string name="time_picker_title" translatable="false">Time</string>
-    <string name="menu_proc_stats_duration" translatable="false">Duration</string>
     <string name="colon" translatable="false">:</string>
-    <string name="contacts_deleted_one_named_toast" translatable="false"><xliff:g id="name">%1$s</xliff:g> deleted</string>
-    <string name="vpn_type" translatable="false">Type</string>
+
 
     <string name="yes">"Yes"</string>
     <string name="no">"No"</string>
     <string name="create">Create</string>
-    <string name="delete">Delete</string>
-    <string name="scan">Scan</string>
-    <string name="searching">Searching…</string>
-    <string name="device_info_default">Unknown</string>
-
-    <string name="switch_on_text">On</string>
-    <string name="switch_off_text">Off</string>
-
-    <string name="bluetooth_not_discoverable">Make device discoverable</string>
-    <string name="bluetooth_is_discoverable">Visible to all nearby Bluetooth devices (%1$s)</string>
+    <string name="unknown">Unknown</string>
+    <string name="settings_system">System</string>
+    <string name="disconnected">Disconnected</string>
+    <string name="bluetooth">Bluetooth</string>
+    <string name="bluetooth_is_discoverable">Visible to all nearby Bluetooth devices (<ns0:g id="discoverable_time_period">%1$s</ns0:g>)</string>
     <string name="bluetooth_only_visible_to_paired_devices">Only visible to paired devices</string>
-    <string name="bt_is_disconnect_question">"Disconnect \"%1$s\"?"</string>
-    <string name="bluetooth_connected">Connected</string>
-    <string name="bluetooth_disconnected">Disconnected</string>
-    <string name="bluetooth_connecting">Connecting…</string>
-    <string name="bluetooth_no_devices_found">No nearby Bluetooth devices were found.</string>
-    <string name="bluetooth_connection_dialog_text">"Do you want to connect to \u0022%1$s\u0022?"</string>
+    <string name="is_disconnect_question">Disconnect <ns0:g id="device_name">%1$s</ns0:g>?</string>
+    <string name="connection_dialog_text">"Do you want to connect to \u0022<ns0:g id="device_name">%1$s</ns0:g>\u0022?"</string>
     <string name="cancel">Cancel</string>
     <string name="okay">OK</string>
-    <string name="settings_label">Settings</string>
-    <string name="bluetooth_settings">Bluetooth</string>
-    <string name="bluetooth_connecting_error_message">Could not connect to \u0022%1$s\u0022.</string>
-    <string name="bluetooth_connect_failed" translatable="false">Couldn\'t connect. Try again.</string>
-
-    <string name="apn_not_set">Not set</string>
-    <string name="apn_name">Name:</string>
-    <string name="apn_user">Username</string>
-
+    <string name="time">Time</string>
+    <string name="connecting_error_message">Couldn\u2019t connect to <ns0:g id="device_name">%1$s</ns0:g>.</string>
+    <string name="searching">Searching\u2026</string>
+    <string name="connect_failed">Couldn\'t connect. Try again.</string>
+    <string name="connected">Connected</string>
+    <string name="scan">Scan</string>
+    <string name="status">Status</string>
+    <string name="search">Search</string>
+    <string name="search_no_results">No results</string>
+    <string name="settings_night_mode">Night Light</string>
+    <string name="name_not_set">Not set</string>
+    <string name="name">Name</string>
+    <string name="settings_delete_all">Erase everything</string>
+    <string name="progress_text">Please wait…</string>
+    <string name="help">Help</string>
+    <string name="loading">Loading\u2026</string>
     <string name="application_info_label">App info</string>
-    <string name="master_clear_progress_text">Please wait…</string>
-    <string name="version_text">version %1$s</string>
-    <string name="device_feedback">Send feedback</string>
-
-    <string name="phone_language">Language</string>
-
+    <string name="version_text">version <ns0:g id="version_num">%1$s</ns0:g></string>
+    <string name="settings_language">Languages</string>
+    <string name="settings_auto">Automatic</string>
+    <string name="settings">Settings</string>
+    <string name="duration">Duration</string>
+    <string name="connecting">Connecting\u2026</string>
+    <string name="delete">Delete</string>
+    <string name="type">Type</string>
+    <string name="settings_vibration">Vibrations</string>
+    <string name="switch_on_text">On</string>
+    <string name="switch_off_text">Off</string>
     <string name="share">Share</string>
-    <string name="search_menu">Search</string>
-    <string name="search_settings_no_results">No results</string>
-    <string name="disabled_low_ram_device">This feature is not available on this device</string>
-
-    <string name="bt_message_your_turn">Your move, put a dot…</string>
-    <string name="bt_message_opponents_turn">Opponent\'s move, wait…</string>
+    <string name="computer">Computer</string>
+    <string name="error_feature_not_available">This feature is not available on this device</string>
+    <string name="deleted_toast">None<ns0:g id="name">%1$s</ns0:g> deleted</string>
+    <string name="send_mail">Send email</string>
+    <string name="copy_text">Copy to clipboard</string>
+    <string name="toast_text_copied">Text copied</string>
+    <string name="new_game">New</string>
+    <string name="undo">Undo</string>
+    <string name="connection_error_message">No connection</string>
+    <string name="username">Name</string>
+    <string name="history">History</string>
 
 </resources>

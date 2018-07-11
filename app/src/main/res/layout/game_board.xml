@@ -52,7 +52,7 @@
                 android:layout_height="wrap_content"
                 android:drawablePadding="8dp"
                 android:gravity="center"
-                android:text="@string/device_info_default" />
+                android:text="@string/unknown" />
 
             <TextView
                 android:id="@+id/textUser2"
@@ -60,7 +60,7 @@
                 android:layout_height="wrap_content"
                 android:drawablePadding="8dp"
                 android:gravity="center"
-                android:text="@string/android" />
+                android:text="@string/computer" />
 
         </LinearLayout>
 
