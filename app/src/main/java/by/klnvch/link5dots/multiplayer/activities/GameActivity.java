@@ -166,17 +166,21 @@ public abstract class GameActivity extends DaggerAppCompatActivity implements
         final GameFragment gameFragment = getGameFragment();
 
         if (gameFragment != null && gameFragment.isVisible()) {
-            checkNotNull(mService);
-            final Room room = mService.getRoom();
-            checkNotNull(room);
-            final User anotherUser = RoomUtils.getAnotherUser(room, mService.getUser());
+            if (mService != null) {
+                final Room room = mService.getRoom();
+                if (room != null) {
+                    final User anotherUser = RoomUtils.getAnotherUser(room, mService.getUser());
 
-            final String msg = getString(R.string.is_disconnect_question, anotherUser.getName());
-            new AlertDialog.Builder(this)
-                    .setMessage(msg)
-                    .setPositiveButton(R.string.yes, (dialog, which) -> super.onBackPressed())
-                    .setNegativeButton(R.string.no, null)
-                    .show();
+                    final String msg = getString(R.string.is_disconnect_question, anotherUser.getName());
+                    new AlertDialog.Builder(this)
+                            .setMessage(msg)
+                            .setPositiveButton(R.string.yes, (dialog, which) -> super.onBackPressed())
+                            .setNegativeButton(R.string.no, null)
+                            .show();
+                } else {
+                    super.onBackPressed();
+                }
+            }
         } else {
             super.onBackPressed();
         }
