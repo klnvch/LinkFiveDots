@@ -238,8 +238,10 @@ public class GameView extends View {
         return true;
     }
 
-    public void switchHideArrow() {
-        //mViewState.isFocusVisible = !mViewState.isFocusVisible;
+    /**
+     * Centers screen on the last dot
+     */
+    public void focus() {
         final Dot lastDot = mGameState.getLastDot();
         if (lastDot != null) {
             final float x = mLineLocations[lastDot.getX()];
@@ -323,7 +325,11 @@ public class GameView extends View {
 
     public void setGameState(@NonNull Game game) {
         this.mGameState = game;
-        invalidate();
+        if (!mViewState.isFocused()) {
+            focus();
+        } else {
+            invalidate();
+        }
     }
 
     @NonNull

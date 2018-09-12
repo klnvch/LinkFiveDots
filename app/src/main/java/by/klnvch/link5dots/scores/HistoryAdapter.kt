@@ -52,21 +52,23 @@ class HistoryAdapter(private val rooms: MutableList<Room>) :
         val textDots: TextView = view.textDotsValue
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup,
-                                    viewType: Int): HistoryAdapter.HighScoreHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int):
+            HistoryAdapter.HighScoreHolder {
         val view = LayoutInflater.from(parent.context)
                 .inflate(R.layout.item_history, parent, false)
         return HighScoreHolder(view)
     }
 
     override fun onBindViewHolder(holder: HighScoreHolder, position: Int) {
-        holder.root.setOnClickListener { onItemClickListener?.onItemSelected(rooms[position]) }
-        holder.textUser1Name.text = rooms[position].user1?.name
-        holder.textUser2Name.text = rooms[position].user2?.name
-        holder.textTime.text = RoomUtils.formatStartTime(rooms[position])
-        holder.textDuration.text = DateUtils.formatElapsedTime(RoomUtils.getDuration(rooms[position]) / 1000)
-        holder.textDots.text = rooms[position].dots.size.toString()
-        when (rooms[position].type) {
+        val room: Room = rooms[position]
+
+        holder.root.setOnClickListener { onItemClickListener?.onItemSelected(room) }
+        holder.textUser1Name.text = room.user1?.name
+        holder.textUser2Name.text = room.user2?.name
+        holder.textTime.text = RoomUtils.formatStartTime(room)
+        holder.textDuration.text = DateUtils.formatElapsedTime(RoomUtils.getDurationInSeconds(room))
+        holder.textDots.text = room.dots.size.toString()
+        when (room.type) {
             Room.TYPE_BLUETOOTH -> holder.textType.setText(R.string.bluetooth)
             Room.TYPE_NSD -> holder.textType.setText(R.string.menu_local_network)
             Room.TYPE_ONLINE -> holder.textType.setText(R.string.menu_online_game)
@@ -74,11 +76,7 @@ class HistoryAdapter(private val rooms: MutableList<Room>) :
             Room.TYPE_BOT -> holder.textType.setText(R.string.app_name)
         }
         if (BuildConfig.DEBUG) {
-            if (rooms[position].isSend) {
-                holder.root.setBackgroundColor(Color.argb(255, 128, 255, 128))
-            } else {
-                holder.root.setBackgroundColor(Color.argb(255, 255, 128, 128))
-            }
+            holder.root.setBackgroundColor(if (room.isSend) COLOR_GREEN else COLOR_RED)
         }
     }
 
@@ -100,5 +98,10 @@ class HistoryAdapter(private val rooms: MutableList<Room>) :
 
     interface OnItemClickListener {
         fun onItemSelected(room: Room)
+    }
+
+    companion object {
+        private val COLOR_GREEN = Color.argb(255, 128, 255, 128)
+        private val COLOR_RED = Color.argb(255, 255, 128, 128)
     }
 }

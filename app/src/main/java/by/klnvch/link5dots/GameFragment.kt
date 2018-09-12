@@ -53,12 +53,7 @@ class GameFragment : DaggerFragment() {
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
-        try {
-            mListener = context as OnGameListener
-        } catch (e: ClassCastException) {
-            throw ClassCastException(context!!.toString() + " must implement OnGameListener")
-        }
-
+        mListener = context as OnGameListener
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -83,6 +78,11 @@ class GameFragment : DaggerFragment() {
                 .subscribe { this.setDotsType(it) })
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        inflater!!.inflate(R.menu.menu_game_fragment, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putString(KEY_VIEW_STATE, gameView.viewState.toJson())
         super.onSaveInstanceState(outState)
@@ -93,17 +93,9 @@ class GameFragment : DaggerFragment() {
         super.onDestroyView()
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        inflater!!.inflate(R.menu.menu_game_fragment, menu)
-        super.onCreateOptionsMenu(menu, inflater)
-    }
-
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         return when (item!!.itemId) {
-            R.id.menu_search -> {
-                gameView.switchHideArrow()
-                true
-            }
+            R.id.menu_search -> focus()
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -137,11 +129,11 @@ class GameFragment : DaggerFragment() {
             val hostDotType = RoomUtils.getHostDotType(room, user)
 
             if (hostDotType == Dot.HOST) {
-                if (user1 != null) textUser1.text = user1.name
-                if (user2 != null) textUser2.text = user2.name
+                textUser1.text = user1?.name
+                textUser2.text = user2?.name
             } else {
-                if (user2 != null) textUser1.text = user2.name
-                if (user1 != null) textUser2.text = user1.name
+                textUser1.text = user2?.name
+                textUser2.text = user1?.name
             }
 
             gameView.setGameState(Game.createGame(room.dots, hostDotType))
@@ -173,8 +165,9 @@ class GameFragment : DaggerFragment() {
         mListener.onGameFinished()
     }
 
-    fun focus() {
-        gameView.switchHideArrow()
+    fun focus(): Boolean {
+        gameView.focus()
+        return true
     }
 
     interface OnGameListener {

@@ -52,6 +52,7 @@ class HistoryFragment : DaggerFragment(), OnItemClickListener {
     @Inject
     lateinit var roomDao: RoomDao
     private val mCompositeDisposable = CompositeDisposable()
+    private lateinit var mHistoryAdapter: HistoryAdapter
 
     abstract class SwipeToDeleteCallback : ItemTouchHelper.SimpleCallback(0,
             ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
@@ -62,7 +63,8 @@ class HistoryFragment : DaggerFragment(), OnItemClickListener {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
+                              savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_scores, container, false)
 
         view.recyclerView.setHasFixedSize(true)
@@ -86,8 +88,8 @@ class HistoryFragment : DaggerFragment(), OnItemClickListener {
         return view
     }
 
-    override fun onStart() {
-        super.onStart()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         mCompositeDisposable.add(roomDao.loadAll()
                 .take(1)
@@ -96,8 +98,8 @@ class HistoryFragment : DaggerFragment(), OnItemClickListener {
                 .subscribe { onDataLoaded(it) })
     }
 
-    override fun onStop() {
-        super.onStop()
+    override fun onDestroyView() {
+        super.onDestroyView()
         mCompositeDisposable.clear()
     }
 
@@ -109,14 +111,14 @@ class HistoryFragment : DaggerFragment(), OnItemClickListener {
         if (rooms.isEmpty()) {
             showError(R.string.search_no_results)
         } else {
-            val adapter = HistoryAdapter(rooms.toMutableList())
-            view?.recyclerView?.adapter = adapter
-            adapter.onItemClickListener = this
+            mHistoryAdapter = HistoryAdapter(rooms.toMutableList())
+            view?.recyclerView?.adapter = mHistoryAdapter
+            mHistoryAdapter.onItemClickListener = this
         }
     }
 
     private fun onRoomDeleted(position: Int, room: Room) {
-        (view?.recyclerView?.adapter as HistoryAdapter).removeAt(position)
+        mHistoryAdapter.removeAt(position)
 
         val msg = getString(R.string.deleted_toast, position.toString())
         Snackbar.make(view!!.recyclerView!!, msg, Snackbar.LENGTH_LONG)
@@ -130,7 +132,7 @@ class HistoryFragment : DaggerFragment(), OnItemClickListener {
     }
 
     private fun onRoomInserted(position: Int, room: Room) {
-        (view?.recyclerView?.adapter as HistoryAdapter).insertAt(position, room)
+        mHistoryAdapter.insertAt(position, room)
     }
 
     private fun showError(msg: Int) {
