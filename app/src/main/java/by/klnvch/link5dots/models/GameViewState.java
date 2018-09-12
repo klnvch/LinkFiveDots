@@ -41,12 +41,14 @@ public class GameViewState {
     private static final float MAX_SCALE = 3.0f;
     private final transient Matrix matrix = new Matrix();
     private final float[] matrixArray = new float[9];
+    private transient boolean isFocused = false;
 
     @NonNull
     public static GameViewState fromJson(@Nullable String json) {
         if (json != null) {
             GameViewState result = new Gson().fromJson(json, GameViewState.class);
             result.matrix.setValues(result.matrixArray);
+            result.isFocused = true;
             return result;
         } else {
             return new GameViewState();
@@ -102,6 +104,7 @@ public class GameViewState {
         final float dx = screenWidth / 2.0f - point[0];
         final float dy = screenHeight / 2.0f - point[1];
         translate(dx, dy);
+        isFocused = true;
     }
 
     /**
@@ -166,5 +169,9 @@ public class GameViewState {
     public String toJson() {
         matrix.getValues(matrixArray);
         return new Gson().toJson(this);
+    }
+
+    public boolean isFocused() {
+        return isFocused;
     }
 }
