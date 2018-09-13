@@ -152,10 +152,12 @@ public abstract class BaseActivity extends DaggerAppCompatActivity
     @NonNull
     private Room loadRoom() {
         final String json = getPreferences(MODE_PRIVATE).getString(KEY_GAME_STATE, null);
+        final User user = User.newUser(settingsUtils.getUserNameOrDefault2());
         if (json != null) {
-            return Room.fromJson(json);
+            final Room room = Room.fromJson(json);
+            if (room.getUser1() != null) room.getUser1().setName(user.getName());
+            return room;
         } else {
-            final User user = User.newUser(settingsUtils.getUserNameOrDefault2());
             return createRoom(user);
         }
     }
