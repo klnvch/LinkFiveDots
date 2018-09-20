@@ -48,6 +48,7 @@ class ScoresActivity : DaggerAppCompatActivity() {
         setTitle(R.string.scores_title)
 
         viewPager.adapter = PagerAdapter(supportFragmentManager)
+        tabLayout.setupWithViewPager(viewPager)
     }
 
     override fun onStart() {
@@ -64,21 +65,21 @@ class ScoresActivity : DaggerAppCompatActivity() {
 
         getPreferences(Context.MODE_PRIVATE)
                 .edit()
-                .putInt("currentItem", viewPager.currentItem)
+                .putInt(CURRENT_TAB_KEY, viewPager.currentItem)
                 .apply()
         mDisposables.clear()
     }
 
     private fun getCurrentItem(): Int {
-        return getPreferences(Context.MODE_PRIVATE).getInt("currentItem", 0)
+        return getPreferences(Context.MODE_PRIVATE).getInt(CURRENT_TAB_KEY, 0)
     }
 
     private inner class PagerAdapter(fm: FragmentManager) : FragmentStatePagerAdapter(fm) {
 
         override fun getItem(i: Int): Fragment {
             when (i) {
-                0 -> return ScoresFragment()
-                1 -> return HistoryFragment()
+                TAB_SCORES -> return ScoresFragment()
+                TAB_HISTORY -> return HistoryFragment()
             }
             throw IllegalStateException()
         }
@@ -89,10 +90,16 @@ class ScoresActivity : DaggerAppCompatActivity() {
 
         override fun getPageTitle(position: Int): CharSequence? {
             when (position) {
-                0 -> return getString(R.string.scores_title)
-                1 -> return getString(R.string.history)
+                TAB_SCORES -> return getString(R.string.scores_title)
+                TAB_HISTORY -> return getString(R.string.history)
             }
             throw IllegalStateException()
         }
+    }
+
+    companion object {
+        private const val CURRENT_TAB_KEY = "currentItem"
+        private const val TAB_SCORES = 0
+        private const val TAB_HISTORY = 1
     }
 }
