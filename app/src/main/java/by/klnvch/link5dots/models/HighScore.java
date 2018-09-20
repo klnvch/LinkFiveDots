@@ -61,6 +61,14 @@ public class HighScore implements Serializable {
         this.timestamp = System.currentTimeMillis();
     }
 
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
     public long getTimestamp() {
         return timestamp;
     }
@@ -91,14 +99,6 @@ public class HighScore implements Serializable {
 
     public void setAndroidId(String androidId) {
         this.androidId = androidId;
-    }
-
-    public String getUserName() {
-        return username;
-    }
-
-    public void setUserName(String userName) {
-        this.username = userName;
     }
 
     public long getScore() {

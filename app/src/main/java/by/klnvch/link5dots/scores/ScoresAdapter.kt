@@ -43,7 +43,7 @@ class ScoresAdapter(options: FirebaseRecyclerOptions<HighScore>) : FirebaseRecyc
 
     override fun onBindViewHolder(holder: HighScoreHolder, position: Int, model: HighScore) {
         holder.mPosition.text = String.format(Locale.getDefault(), FORMAT_POSITION, position + 1)
-        holder.mUserName.text = model.userName
+        holder.mUserName.text = model.username
         holder.mMoves.text = String.format(Locale.getDefault(), FORMAT_MOVES, model.moves)
         holder.mTime.text = DateUtils.formatElapsedTime(model.time)
         when (model.status) {

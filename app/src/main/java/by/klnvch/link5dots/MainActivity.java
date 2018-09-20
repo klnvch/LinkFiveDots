@@ -93,7 +93,7 @@ public final class MainActivity extends BaseActivity {
     private void moveToScores(@NonNull HighScore highScore) {
         checkNotNull(getUser());
 
-        highScore.setUserName(getUser().getName());
+        highScore.setUsername(getUser().getName());
         final Intent intent = new Intent(this, ScoresActivity.class);
         intent.putExtra(HighScore.TAG, highScore);
         startActivity(intent);
