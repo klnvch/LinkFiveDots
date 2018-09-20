@@ -57,6 +57,10 @@
         <service android:name="by.klnvch.link5dots.multiplayer.services.GameServiceNsd" />
         <service android:name="by.klnvch.link5dots.multiplayer.services.GameServiceOnline" />
 
+        <meta-data
+            android:name="google_analytics_adid_collection_enabled"
+            android:value="false" />
+
         <activity
             android:name="by.klnvch.link5dots.MainMenuActivity"
             android:label="@string/app_name"
