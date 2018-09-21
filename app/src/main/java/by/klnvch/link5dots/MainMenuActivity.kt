@@ -47,7 +47,8 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main_menu.*
 import javax.inject.Inject
 
-class MainMenuActivity : DaggerAppCompatActivity(), View.OnClickListener, View.OnLongClickListener {
+class MainMenuActivity : DaggerAppCompatActivity(), View.OnClickListener, View.OnLongClickListener,
+        UsernameDialog.OnUsernameChangedListener {
 
     private val mDisposables = CompositeDisposable()
 
@@ -164,10 +165,12 @@ class MainMenuActivity : DaggerAppCompatActivity(), View.OnClickListener, View.O
     }
 
     private fun showUsernameDialog(): Boolean {
-        UsernameDialog()
-                .setOnUsernameChangeListener { setUsername(it) }
-                .show(supportFragmentManager, null)
+        UsernameDialog().show(supportFragmentManager, null)
         return true
+    }
+
+    override fun onUsernameChanged(username: String) {
+        setUsername(username)
     }
 
     private fun checkTheFirstRun(isTheFirstRun: Boolean) {

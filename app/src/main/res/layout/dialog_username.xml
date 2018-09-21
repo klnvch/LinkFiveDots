@@ -23,10 +23,10 @@
   -->
 
 <android.support.design.widget.TextInputLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/input_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_below="@+id/userName"
     android:padding="8dp">
 
     <EditText
@@ -37,7 +37,9 @@
         android:hint="@string/username"
         android:inputType="textPersonName"
         android:maxLength="16"
+        android:minHeight="@dimen/clickable_min_size"
         android:singleLine="true"
-        android:text="@string/unknown" />
+        android:text="@string/unknown"
+        tools:ignore="Autofill" />
 
 </android.support.design.widget.TextInputLayout>
