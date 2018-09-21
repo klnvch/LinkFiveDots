@@ -48,7 +48,7 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
 public abstract class BaseActivity extends DaggerAppCompatActivity
-        implements GameFragment.OnGameListener {
+        implements GameFragment.OnGameListener, NewGameDialog.OnSeedNewGameListener {
 
     protected static final String KEY_GAME_STATE = "KEY_GAME_STATE_V6";
     protected final CompositeDisposable mDisposables = new CompositeDisposable();
@@ -139,9 +139,12 @@ public abstract class BaseActivity extends DaggerAppCompatActivity
 
         mGameFragment.update(RoomUtils.newGame(mRoom, null));
 
-        new NewGameDialog()
-                .setOnNewGameListener(seed -> mGameFragment.update(RoomUtils.newGame(mRoom, seed)))
-                .show(getSupportFragmentManager(), NewGameDialog.TAG);
+        new NewGameDialog().show(getSupportFragmentManager(), NewGameDialog.TAG);
+    }
+
+    @Override
+    public void onSeedNewGame(@Nullable Long seed) {
+        mGameFragment.update(RoomUtils.newGame(mRoom, seed));
     }
 
     private void searchLastMove() {
