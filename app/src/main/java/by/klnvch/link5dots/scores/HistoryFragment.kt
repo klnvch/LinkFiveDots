@@ -56,9 +56,9 @@ class HistoryFragment : DaggerFragment(), OnItemClickListener {
 
     abstract class SwipeToDeleteCallback : ItemTouchHelper.SimpleCallback(0,
             ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
-        override fun onMove(recyclerView: RecyclerView?,
-                            viewHolder: RecyclerView.ViewHolder?,
-                            target: RecyclerView.ViewHolder?): Boolean {
+        override fun onMove(recyclerView: RecyclerView,
+                            viewHolder: RecyclerView.ViewHolder,
+                            target: RecyclerView.ViewHolder): Boolean {
             return false
         }
     }
@@ -71,9 +71,9 @@ class HistoryFragment : DaggerFragment(), OnItemClickListener {
         view.recyclerView.layoutManager = LinearLayoutManager(context)
 
         val swipeHandler = object : SwipeToDeleteCallback() {
-            override fun onSwiped(viewHolder: RecyclerView.ViewHolder?, direction: Int) {
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val adapter = recyclerView.adapter as HistoryAdapter
-                val position = viewHolder!!.adapterPosition
+                val position = viewHolder.adapterPosition
                 val room = adapter.get(position)
 
                 mCompositeDisposable.add(Completable.fromAction { roomDao.deleteRoom(room) }
