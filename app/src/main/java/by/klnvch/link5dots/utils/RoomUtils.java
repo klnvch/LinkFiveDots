@@ -25,8 +25,6 @@
 package by.klnvch.link5dots.utils;
 
 import android.graphics.Point;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import java.text.Format;
 import java.text.SimpleDateFormat;
@@ -35,6 +33,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import by.klnvch.link5dots.models.Dot;
 import by.klnvch.link5dots.models.HighScore;
 import by.klnvch.link5dots.models.Room;

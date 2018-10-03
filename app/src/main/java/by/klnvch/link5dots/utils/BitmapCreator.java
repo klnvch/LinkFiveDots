@@ -26,12 +26,13 @@ package by.klnvch.link5dots.utils;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.support.annotation.ColorInt;
-import android.support.annotation.IntDef;
-import android.support.annotation.NonNull;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+
+import androidx.annotation.ColorInt;
+import androidx.annotation.IntDef;
+import androidx.annotation.NonNull;
 
 public class BitmapCreator {
 

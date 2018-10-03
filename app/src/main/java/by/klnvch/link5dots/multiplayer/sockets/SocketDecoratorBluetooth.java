@@ -26,12 +26,12 @@ package by.klnvch.link5dots.multiplayer.sockets;
 
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
-import android.support.annotation.NonNull;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import androidx.annotation.NonNull;
 import by.klnvch.link5dots.multiplayer.utils.bluetooth.BluetoothHelper;
 
 public class SocketDecoratorBluetooth extends SocketDecorator<BluetoothSocket> {

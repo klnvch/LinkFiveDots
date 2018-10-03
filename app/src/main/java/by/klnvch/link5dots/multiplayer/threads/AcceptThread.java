@@ -25,11 +25,11 @@
 package by.klnvch.link5dots.multiplayer.threads;
 
 import android.net.TrafficStats;
-import android.support.annotation.NonNull;
 import android.util.Log;
 
 import java.io.IOException;
 
+import androidx.annotation.NonNull;
 import by.klnvch.link5dots.multiplayer.sockets.ServerSocketDecorator;
 import by.klnvch.link5dots.multiplayer.sockets.SocketDecorator;
 

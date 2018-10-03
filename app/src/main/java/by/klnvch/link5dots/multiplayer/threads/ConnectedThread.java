@@ -26,8 +26,6 @@ package by.klnvch.link5dots.multiplayer.threads;
 
 import android.net.TrafficStats;
 import android.os.AsyncTask;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.util.Log;
 
 import java.io.DataInputStream;
@@ -35,6 +33,8 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import by.klnvch.link5dots.models.Room;
 import by.klnvch.link5dots.multiplayer.sockets.SocketDecorator;
 import by.klnvch.link5dots.multiplayer.utils.OnRoomConnectedListener;

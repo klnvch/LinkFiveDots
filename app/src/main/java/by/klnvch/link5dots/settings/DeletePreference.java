@@ -25,9 +25,9 @@
 package by.klnvch.link5dots.settings;
 
 import android.content.Context;
-import android.support.v7.preference.DialogPreference;
 import android.util.AttributeSet;
 
+import androidx.preference.DialogPreference;
 import by.klnvch.link5dots.R;
 
 @SuppressWarnings({"unused"})

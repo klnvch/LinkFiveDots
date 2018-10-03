@@ -24,7 +24,7 @@
 
 package by.klnvch.link5dots.multiplayer.targets;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 public abstract class Target<T> {
     private final T mTarget;

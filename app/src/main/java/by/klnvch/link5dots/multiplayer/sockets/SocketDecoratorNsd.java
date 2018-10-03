@@ -27,13 +27,14 @@ package by.klnvch.link5dots.multiplayer.sockets;
 import android.annotation.TargetApi;
 import android.net.nsd.NsdServiceInfo;
 import android.os.Build;
-import android.support.annotation.NonNull;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
+
+import androidx.annotation.NonNull;
 
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 public class SocketDecoratorNsd extends SocketDecorator<Socket> {

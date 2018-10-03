@@ -24,9 +24,9 @@
 
 package by.klnvch.link5dots.multiplayer.sockets;
 
-import android.support.annotation.NonNull;
-
 import java.io.IOException;
+
+import androidx.annotation.NonNull;
 
 public abstract class ServerSocketDecorator<T> {
     final T mSocket;

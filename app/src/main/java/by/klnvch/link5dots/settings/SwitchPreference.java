@@ -25,9 +25,9 @@
 package by.klnvch.link5dots.settings;
 
 import android.content.Context;
-import android.support.v7.preference.SwitchPreferenceCompat;
 import android.util.AttributeSet;
 
+import androidx.preference.SwitchPreferenceCompat;
 import by.klnvch.link5dots.R;
 
 @SuppressWarnings({"unused"})

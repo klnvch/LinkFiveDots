@@ -29,8 +29,8 @@ import android.net.nsd.NsdServiceInfo;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.annotation.NonNull;
 
+import androidx.annotation.NonNull;
 import by.klnvch.link5dots.multiplayer.targets.TargetNsd;
 import by.klnvch.link5dots.multiplayer.utils.nsd.NsdHelper;
 

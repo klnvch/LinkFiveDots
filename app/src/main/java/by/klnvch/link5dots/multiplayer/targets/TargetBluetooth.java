@@ -25,7 +25,8 @@
 package by.klnvch.link5dots.multiplayer.targets;
 
 import android.bluetooth.BluetoothDevice;
-import android.support.annotation.NonNull;
+
+import androidx.annotation.NonNull;
 
 public class TargetBluetooth extends Target<BluetoothDevice> {
     public TargetBluetooth(@NonNull BluetoothDevice target) {

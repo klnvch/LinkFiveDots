@@ -24,11 +24,11 @@
 
 package by.klnvch.link5dots.multiplayer.adapters;
 
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import by.klnvch.link5dots.R;
 import by.klnvch.link5dots.multiplayer.targets.Target;
 

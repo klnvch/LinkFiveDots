@@ -25,7 +25,7 @@
 package by.klnvch.link5dots.di
 
 import android.app.Application
-import android.arch.persistence.room.Room
+import androidx.room.Room
 import by.klnvch.link5dots.db.AppDatabase
 import by.klnvch.link5dots.db.RoomDao
 import by.klnvch.link5dots.network.NetworkService

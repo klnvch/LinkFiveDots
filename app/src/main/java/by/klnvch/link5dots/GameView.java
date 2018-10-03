@@ -30,9 +30,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.PointF;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -44,6 +41,9 @@ import android.view.View;
 
 import java.util.ArrayList;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import by.klnvch.link5dots.models.Dot;
 import by.klnvch.link5dots.models.Game;
 import by.klnvch.link5dots.models.GameViewState;

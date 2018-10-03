@@ -24,9 +24,9 @@
 
 package by.klnvch.link5dots.models;
 
-import android.support.annotation.NonNull;
-
 import java.io.Serializable;
+
+import androidx.annotation.NonNull;
 
 import static com.google.android.gms.common.internal.Preconditions.checkNotNull;
 
@@ -111,6 +111,7 @@ public class Dot implements Serializable {
         this.timestamp = timestamp;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "(" + x + "," + y + ")";

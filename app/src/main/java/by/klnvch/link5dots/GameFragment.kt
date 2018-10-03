@@ -26,10 +26,10 @@ package by.klnvch.link5dots
 
 import android.content.Context
 import android.os.Bundle
-import android.support.annotation.DrawableRes
 import android.util.Log
 import android.view.*
 import android.widget.TextView
+import androidx.annotation.DrawableRes
 import by.klnvch.link5dots.db.RoomDao
 import by.klnvch.link5dots.models.*
 import by.klnvch.link5dots.settings.SettingsUtils

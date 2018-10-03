@@ -24,8 +24,7 @@
 
 package by.klnvch.link5dots.multiplayer.threads;
 
-import android.support.annotation.NonNull;
-
+import androidx.annotation.NonNull;
 import by.klnvch.link5dots.multiplayer.sockets.SocketDecorator;
 
 public interface OnSocketConnectedListener {

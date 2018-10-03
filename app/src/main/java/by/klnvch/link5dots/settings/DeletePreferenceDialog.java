@@ -26,14 +26,15 @@ package by.klnvch.link5dots.settings;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v7.preference.PreferenceDialogFragmentCompat;
 import android.util.Log;
+
+import androidx.preference.PreferenceDialogFragmentCompat;
 
 public class DeletePreferenceDialog extends PreferenceDialogFragmentCompat {
 
     private OnDeleteAllListener mListener;
 
-    public static DeletePreferenceDialog newInstance(String key) {
+    static DeletePreferenceDialog newInstance(String key) {
         final DeletePreferenceDialog fragment = new DeletePreferenceDialog();
         final Bundle bundle = new Bundle(1);
         bundle.putString(ARG_KEY, key);

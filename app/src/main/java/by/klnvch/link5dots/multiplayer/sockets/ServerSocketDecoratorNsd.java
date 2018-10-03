@@ -24,11 +24,11 @@
 
 package by.klnvch.link5dots.multiplayer.sockets;
 
-import android.support.annotation.MainThread;
-import android.support.annotation.NonNull;
-
 import java.io.IOException;
 import java.net.ServerSocket;
+
+import androidx.annotation.MainThread;
+import androidx.annotation.NonNull;
 
 public class ServerSocketDecoratorNsd extends ServerSocketDecorator<ServerSocket> {
 
@@ -56,6 +56,7 @@ public class ServerSocketDecoratorNsd extends ServerSocketDecorator<ServerSocket
         return mSocket.getLocalPort();
     }
 
+    @NonNull
     @Override
     public String toString() {
         return mSocket.toString();

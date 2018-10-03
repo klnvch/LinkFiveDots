@@ -25,7 +25,7 @@
 package by.klnvch.link5dots.di
 
 import android.content.Context
-import android.support.multidex.MultiDex
+import androidx.multidex.MultiDex
 import dagger.android.AndroidInjector
 import dagger.android.DaggerApplication
 

@@ -24,13 +24,13 @@
 
 package by.klnvch.link5dots.multiplayer.utils.online;
 
-import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
+import androidx.annotation.NonNull;
 import by.klnvch.link5dots.models.Room;
 import by.klnvch.link5dots.multiplayer.services.GameServiceOnline;
 import by.klnvch.link5dots.multiplayer.utils.OnRoomUpdatedListener;
@@ -75,7 +75,7 @@ public class RoomEventListener implements ValueEventListener {
     }
 
     @Override
-    public void onDataChange(DataSnapshot snapshot) {
+    public void onDataChange(@NonNull DataSnapshot snapshot) {
         if (mListener != null) {
             final Room room = snapshot.getValue(Room.class);
             checkNotNull(room);
@@ -87,7 +87,7 @@ public class RoomEventListener implements ValueEventListener {
     }
 
     @Override
-    public void onCancelled(DatabaseError error) {
+    public void onCancelled(@NonNull DatabaseError error) {
         if (mListener != null) {
             mListener.onRoomUpdated(null, error.toException());
         } else {

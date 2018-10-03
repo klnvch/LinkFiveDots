@@ -25,8 +25,8 @@
 package by.klnvch.link5dots.multiplayer.targets;
 
 import android.annotation.SuppressLint;
-import android.support.annotation.NonNull;
 
+import androidx.annotation.NonNull;
 import by.klnvch.link5dots.multiplayer.utils.bluetooth.BluetoothHelper;
 
 public class TargetBluetoothLocal extends Target<String> {

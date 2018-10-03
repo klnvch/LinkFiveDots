@@ -25,10 +25,11 @@
 package by.klnvch.link5dots.multiplayer.sockets;
 
 import android.bluetooth.BluetoothServerSocket;
-import android.support.annotation.MainThread;
 
 import java.io.IOException;
 
+import androidx.annotation.MainThread;
+import androidx.annotation.NonNull;
 import by.klnvch.link5dots.multiplayer.utils.bluetooth.BluetoothHelper;
 
 public class ServerSocketDecoratorBluetooth extends ServerSocketDecorator<BluetoothServerSocket> {
@@ -48,6 +49,7 @@ public class ServerSocketDecoratorBluetooth extends ServerSocketDecorator<Blueto
         mSocket.close();
     }
 
+    @NonNull
     @Override
     public String toString() {
         return mSocket.toString();

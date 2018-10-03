@@ -26,9 +26,9 @@ package by.klnvch.link5dots.scores
 
 import android.content.Context
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentStatePagerAdapter
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentStatePagerAdapter
 import by.klnvch.link5dots.R
 import dagger.android.support.DaggerAppCompatActivity
 import io.reactivex.Observable

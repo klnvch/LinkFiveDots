@@ -25,12 +25,13 @@
 package by.klnvch.link5dots.utils;
 
 import android.graphics.Point;
-import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+
+import androidx.annotation.NonNull;
 
 public class RandomGenerator {
 

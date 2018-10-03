@@ -24,13 +24,13 @@
 
 package by.klnvch.link5dots.scores
 
-import android.support.v7.widget.RecyclerView
 import android.text.format.DateUtils
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
 import by.klnvch.link5dots.R
 import by.klnvch.link5dots.models.HighScore
 import com.firebase.ui.database.FirebaseRecyclerAdapter

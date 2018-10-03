@@ -24,12 +24,12 @@
 
 package by.klnvch.link5dots.multiplayer.sockets;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.WorkerThread;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.WorkerThread;
 
 public abstract class SocketDecorator<T> {
     final T mSocket;

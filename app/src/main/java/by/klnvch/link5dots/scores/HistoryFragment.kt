@@ -26,17 +26,17 @@ package by.klnvch.link5dots.scores
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.Snackbar
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.helper.ItemTouchHelper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import by.klnvch.link5dots.R
 import by.klnvch.link5dots.db.RoomDao
 import by.klnvch.link5dots.models.Room
 import by.klnvch.link5dots.scores.HistoryAdapter.OnItemClickListener
+import com.google.android.material.snackbar.Snackbar
 import dagger.android.support.DaggerFragment
 import io.reactivex.Completable
 import io.reactivex.android.schedulers.AndroidSchedulers

@@ -24,9 +24,8 @@
 
 package by.klnvch.link5dots.multiplayer.services;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import by.klnvch.link5dots.models.Dot;
 import by.klnvch.link5dots.models.Room;
 import by.klnvch.link5dots.models.User;
