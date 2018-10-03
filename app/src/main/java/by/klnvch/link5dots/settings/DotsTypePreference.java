@@ -28,11 +28,11 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.v7.preference.Preference;
-import android.support.v7.preference.PreferenceViewHolder;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
+import androidx.preference.Preference;
+import androidx.preference.PreferenceViewHolder;
 import by.klnvch.link5dots.R;
 
 @SuppressWarnings({"unused"})

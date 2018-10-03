@@ -6,16 +6,17 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Build;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.WorkerThread;
 
 import java.util.Locale;
 
-public class LanguageUtils {
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.WorkerThread;
+
+class LanguageUtils {
 
     @WorkerThread
-    public static boolean checkLanguage(@NonNull Context context) {
+    static boolean checkLanguage(@NonNull Context context) {
         final String savedLanguage = getLanguage(context);
         if (savedLanguage != null) {
             final Resources resources = context.getResources();

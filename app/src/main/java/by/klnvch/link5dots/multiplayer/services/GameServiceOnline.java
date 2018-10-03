@@ -24,12 +24,12 @@
 
 package by.klnvch.link5dots.multiplayer.services;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.google.firebase.auth.FirebaseAuth;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import by.klnvch.link5dots.models.Room;
 import by.klnvch.link5dots.multiplayer.targets.Target;
 import by.klnvch.link5dots.multiplayer.targets.TargetOnline;

@@ -25,10 +25,10 @@
 package by.klnvch.link5dots.multiplayer.factories;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 
 import java.io.IOException;
 
+import androidx.annotation.NonNull;
 import by.klnvch.link5dots.multiplayer.adapters.TargetAdapterInterface;
 import by.klnvch.link5dots.multiplayer.sockets.ServerSocketDecorator;
 import by.klnvch.link5dots.multiplayer.sockets.SocketDecorator;

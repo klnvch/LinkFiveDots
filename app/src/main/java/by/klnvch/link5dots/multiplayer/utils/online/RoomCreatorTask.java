@@ -24,14 +24,14 @@
 
 package by.klnvch.link5dots.multiplayer.utils.online;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import by.klnvch.link5dots.models.Room;
 import by.klnvch.link5dots.models.User;
 import by.klnvch.link5dots.multiplayer.services.GameServiceOnline;
@@ -68,7 +68,7 @@ public class RoomCreatorTask {
         }
 
         @Override
-        public void onCancelled(DatabaseError error) {
+        public void onCancelled(@NonNull DatabaseError error) {
             if (mCreatedListener != null) {
                 mCreatedListener.onTargetCreationFailed(error.toException());
             }

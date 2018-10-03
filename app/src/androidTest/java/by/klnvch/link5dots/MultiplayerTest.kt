@@ -25,21 +25,21 @@
 package by.klnvch.link5dots
 
 import android.os.Build
-import android.support.test.InstrumentationRegistry.getInstrumentation
-import android.support.test.espresso.Espresso.onView
-import android.support.test.espresso.Espresso.pressBack
-import android.support.test.espresso.action.ViewActions.click
-import android.support.test.espresso.assertion.ViewAssertions.matches
-import android.support.test.espresso.matcher.ViewMatchers.*
-import android.support.test.filters.LargeTest
-import android.support.test.rule.ActivityTestRule
-import android.support.test.runner.AndroidJUnit4
-import android.support.test.uiautomator.UiDevice
-import android.support.test.uiautomator.UiObjectNotFoundException
-import android.support.test.uiautomator.UiSelector
-import android.support.v7.widget.Toolbar
 import android.util.Log
 import android.widget.TextView
+import androidx.appcompat.widget.Toolbar
+import androidx.test.InstrumentationRegistry.getInstrumentation
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.Espresso.pressBack
+import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.filters.LargeTest
+import androidx.test.rule.ActivityTestRule
+import androidx.test.runner.AndroidJUnit4
+import androidx.test.uiautomator.UiDevice
+import androidx.test.uiautomator.UiObjectNotFoundException
+import androidx.test.uiautomator.UiSelector
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.not
 import org.junit.Rule
@@ -59,7 +59,7 @@ class MultiplayerTest {
     fun testBluetoothNone() {
         Thread.sleep(2000)
         clickMenuButton(R.id.multi_player_bluetooth)
-        checkIdleState(R.string.bluetooth_settings)
+        checkIdleState(R.string.bluetooth)
         pressBack()
     }
 
@@ -67,7 +67,7 @@ class MultiplayerTest {
     fun testBluetoothCreate() {
         Thread.sleep(2000)
         clickMenuButton(R.id.multi_player_bluetooth)
-        checkIdleState(R.string.bluetooth_settings)
+        checkIdleState(R.string.bluetooth)
         clickCreateButton()
         checkCreatedState()
         pressBack()
@@ -77,11 +77,11 @@ class MultiplayerTest {
     fun testBluetoothCreateDelete() {
         Thread.sleep(2000)
         clickMenuButton(R.id.multi_player_bluetooth)
-        checkIdleState(R.string.bluetooth_settings)
+        checkIdleState(R.string.bluetooth)
         clickCreateButton()
         checkCreatedState()
         clickCreateButton()
-        checkIdleState(R.string.bluetooth_settings)
+        checkIdleState(R.string.bluetooth)
         pressBack()
     }
 
@@ -89,7 +89,7 @@ class MultiplayerTest {
     fun testBluetoothScan() {
         Thread.sleep(2000)
         clickMenuButton(R.id.multi_player_bluetooth)
-        checkIdleState(R.string.bluetooth_settings)
+        checkIdleState(R.string.bluetooth)
         clickScanButton()
         checkScanningState()
         pressBack()
@@ -99,11 +99,11 @@ class MultiplayerTest {
     fun testBluetoothScanCancel() {
         Thread.sleep(2000)
         clickMenuButton(R.id.multi_player_bluetooth)
-        checkIdleState(R.string.bluetooth_settings)
+        checkIdleState(R.string.bluetooth)
         clickScanButton()
         checkScanningState()
         clickScanButton()
-        checkIdleState(R.string.bluetooth_settings)
+        checkIdleState(R.string.bluetooth)
         pressBack()
     }
 
@@ -111,15 +111,15 @@ class MultiplayerTest {
     fun testBluetoothAll() {
         Thread.sleep(2000)
         clickMenuButton(R.id.multi_player_bluetooth)
-        checkIdleState(R.string.bluetooth_settings)
+        checkIdleState(R.string.bluetooth)
         clickCreateButton()
         checkCreatedState()
         clickCreateButton()
-        checkIdleState(R.string.bluetooth_settings)
+        checkIdleState(R.string.bluetooth)
         clickScanButton()
         checkScanningState()
         clickScanButton()
-        checkIdleState(R.string.bluetooth_settings)
+        checkIdleState(R.string.bluetooth)
         pressBack()
     }
 
@@ -298,7 +298,7 @@ class MultiplayerTest {
         onView(withId(R.id.textStatusValue))
                 .check(matches(isDisplayed()))
                 .check(matches(isEnabled()))
-                .check(matches(withText(R.string.apn_not_set)))
+                .check(matches(withText(R.string.name_not_set)))
 
         onView(withId(R.id.progressCreate))
                 .check(matches(not(isDisplayed())))
@@ -322,7 +322,7 @@ class MultiplayerTest {
     private fun checkCreatedState() {
         onView(allOf(isAssignableFrom(TextView::class.java),
                 withParent(isAssignableFrom(Toolbar::class.java))))
-                .check(matches(withText(R.string.master_clear_progress_text)))
+                .check(matches(withText(R.string.loading)))
 
         onView(withId(R.id.buttonCreate))
                 .check(matches(isDisplayed()))
@@ -337,7 +337,7 @@ class MultiplayerTest {
         onView(withId(R.id.textStatusValue))
                 .check(matches(isDisplayed()))
                 .check(matches(isEnabled()))
-                .check(matches(not(withText(R.string.apn_not_set))))
+                .check(matches(not(withText(R.string.name_not_set))))
 
         onView(withId(R.id.progressCreate))
                 .check(matches(not(isDisplayed())))
@@ -376,7 +376,7 @@ class MultiplayerTest {
         onView(withId(R.id.textStatusValue))
                 .check(matches(isDisplayed()))
                 .check(matches(not(isEnabled())))
-                .check(matches(withText(R.string.apn_not_set)))
+                .check(matches(withText(R.string.name_not_set)))
 
         onView(withId(R.id.progressCreate))
                 .check(matches(not(isDisplayed())))

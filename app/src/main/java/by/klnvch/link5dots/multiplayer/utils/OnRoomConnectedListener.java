@@ -24,9 +24,8 @@
 
 package by.klnvch.link5dots.multiplayer.utils;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import by.klnvch.link5dots.models.Room;
 
 public interface OnRoomConnectedListener {

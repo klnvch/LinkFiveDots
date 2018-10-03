@@ -24,13 +24,8 @@
 
 package by.klnvch.link5dots;
 
-import android.arch.persistence.db.SupportSQLiteDatabase;
-import android.arch.persistence.db.framework.FrameworkSQLiteOpenHelperFactory;
-import android.arch.persistence.room.testing.MigrationTestHelper;
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
-import android.support.test.InstrumentationRegistry;
-import android.support.test.runner.AndroidJUnit4;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -38,9 +33,13 @@ import org.junit.runner.RunWith;
 
 import java.io.IOException;
 
+import androidx.room.testing.MigrationTestHelper;
+import androidx.sqlite.db.SupportSQLiteDatabase;
+import androidx.sqlite.db.framework.FrameworkSQLiteOpenHelperFactory;
+import androidx.test.InstrumentationRegistry;
+import androidx.test.runner.AndroidJUnit4;
 import by.klnvch.link5dots.db.AppDatabase;
 import by.klnvch.link5dots.models.Room;
-import by.klnvch.link5dots.models.User;
 
 @RunWith(AndroidJUnit4.class)
 public class MigrationTest {

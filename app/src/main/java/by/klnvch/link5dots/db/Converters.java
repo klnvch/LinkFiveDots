@@ -24,13 +24,12 @@
 
 package by.klnvch.link5dots.db;
 
-import android.arch.persistence.room.TypeConverter;
-
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
 
+import androidx.room.TypeConverter;
 import by.klnvch.link5dots.models.Dot;
 
 public class Converters {

@@ -24,12 +24,12 @@
 
 package by.klnvch.link5dots.multiplayer.utils;
 
-import android.support.annotation.IntDef;
-import android.support.annotation.NonNull;
-
 import java.lang.annotation.Retention;
 import java.util.Arrays;
 import java.util.List;
+
+import androidx.annotation.IntDef;
+import androidx.annotation.NonNull;
 
 import static com.google.common.base.Preconditions.checkState;
 import static java.lang.annotation.RetentionPolicy.SOURCE;
@@ -148,6 +148,7 @@ public class GameState {
         return false;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return '(' + Integer.toString(targetState) + ','
@@ -240,6 +241,7 @@ public class GameState {
             return false;
         }
 
+        @NonNull
         @Override
         public String toString() {
             return mPrevState.toString() + '-' + mNextState.toString();

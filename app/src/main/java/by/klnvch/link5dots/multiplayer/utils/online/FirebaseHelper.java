@@ -25,7 +25,6 @@
 package by.klnvch.link5dots.multiplayer.utils.online;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -33,6 +32,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
+import androidx.annotation.NonNull;
 import by.klnvch.link5dots.BuildConfig;
 import by.klnvch.link5dots.models.Room;
 

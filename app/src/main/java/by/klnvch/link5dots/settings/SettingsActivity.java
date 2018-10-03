@@ -25,10 +25,10 @@
 package by.klnvch.link5dots.settings;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 
 import javax.inject.Inject;
 
+import androidx.annotation.Nullable;
 import by.klnvch.link5dots.R;
 import by.klnvch.link5dots.db.AppDatabase;
 import dagger.android.support.DaggerAppCompatActivity;

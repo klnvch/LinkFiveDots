@@ -25,12 +25,12 @@
 package by.klnvch.link5dots.scores
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import by.klnvch.link5dots.R
 import by.klnvch.link5dots.models.HighScore
 import com.google.android.gms.tasks.Task

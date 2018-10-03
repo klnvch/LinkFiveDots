@@ -24,13 +24,12 @@
 
 package by.klnvch.link5dots.db;
 
-import android.arch.persistence.db.SupportSQLiteDatabase;
-import android.arch.persistence.room.Database;
-import android.arch.persistence.room.RoomDatabase;
-import android.arch.persistence.room.TypeConverters;
-import android.arch.persistence.room.migration.Migration;
-import android.support.annotation.NonNull;
-
+import androidx.annotation.NonNull;
+import androidx.room.Database;
+import androidx.room.RoomDatabase;
+import androidx.room.TypeConverters;
+import androidx.room.migration.Migration;
+import androidx.sqlite.db.SupportSQLiteDatabase;
 import by.klnvch.link5dots.models.Room;
 
 @Database(entities = {Room.class}, version = 4)

@@ -26,8 +26,8 @@ package by.klnvch.link5dots.multiplayer.factories;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.NonNull;
 
+import androidx.annotation.NonNull;
 import by.klnvch.link5dots.R;
 import by.klnvch.link5dots.models.Room;
 import by.klnvch.link5dots.multiplayer.activities.PickerFragment;

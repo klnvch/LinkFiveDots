@@ -28,15 +28,15 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.DialogFragment;
-import android.support.v7.app.AlertDialog;
 import android.text.format.DateUtils;
 import android.view.View;
 import android.widget.TextView;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.DialogFragment;
 import by.klnvch.link5dots.R;
 import by.klnvch.link5dots.models.HighScore;
 import by.klnvch.link5dots.utils.AnalyticsEvents;

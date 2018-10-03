@@ -24,7 +24,7 @@
 
 package by.klnvch.link5dots.multiplayer.adapters;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 public interface OnScanStoppedListener {
     void onScanStopped(@Nullable Exception e);

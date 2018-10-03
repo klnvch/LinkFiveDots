@@ -24,7 +24,7 @@
 
 package by.klnvch.link5dots.multiplayer.adapters;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 public interface ScannerInterface {
     void startScan(@NonNull OnScanStoppedListener onScanStoppedListener);

@@ -26,9 +26,9 @@ package by.klnvch.link5dots.multiplayer.factories;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.annotation.StringRes;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.StringRes;
 import by.klnvch.link5dots.multiplayer.activities.PickerFragment;
 
 public interface FactoryActivityInterface {

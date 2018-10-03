@@ -27,9 +27,6 @@ package by.klnvch.link5dots.multiplayer.services;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
-import android.support.annotation.CallSuper;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
@@ -38,6 +35,9 @@ import org.greenrobot.eventbus.EventBus;
 
 import javax.inject.Inject;
 
+import androidx.annotation.CallSuper;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import by.klnvch.link5dots.models.Dot;
 import by.klnvch.link5dots.models.Room;
 import by.klnvch.link5dots.models.User;

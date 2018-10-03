@@ -28,7 +28,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 
 @SuppressWarnings({"unused"})
-public class EditTextPreference extends android.support.v7.preference.EditTextPreference {
+public class EditTextPreference extends androidx.preference.EditTextPreference {
     public EditTextPreference(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         init();

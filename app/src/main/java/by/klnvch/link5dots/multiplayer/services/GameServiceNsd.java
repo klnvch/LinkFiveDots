@@ -26,8 +26,8 @@ package by.klnvch.link5dots.multiplayer.services;
 
 import android.annotation.TargetApi;
 import android.os.Build;
-import android.support.annotation.NonNull;
 
+import androidx.annotation.NonNull;
 import by.klnvch.link5dots.multiplayer.sockets.ServerSocketDecorator;
 import by.klnvch.link5dots.multiplayer.sockets.ServerSocketDecoratorNsd;
 import by.klnvch.link5dots.multiplayer.utils.nsd.NsdHelper;

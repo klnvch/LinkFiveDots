@@ -24,11 +24,10 @@
 
 package by.klnvch.link5dots.utils;
 
-import android.support.annotation.NonNull;
-
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
 import by.klnvch.link5dots.models.Dot;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -350,6 +349,7 @@ public class Bot {
         return true;
     }
 
+    @NonNull
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder();

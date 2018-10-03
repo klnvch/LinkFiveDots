@@ -27,11 +27,12 @@ package by.klnvch.link5dots.models;
 import android.graphics.Matrix;
 import android.graphics.PointF;
 import android.graphics.RectF;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.google.gson.Gson;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 public class GameViewState {
 

@@ -24,8 +24,7 @@
 
 package by.klnvch.link5dots.multiplayer.factories;
 
-import android.support.annotation.NonNull;
-
+import androidx.annotation.NonNull;
 import by.klnvch.link5dots.multiplayer.activities.GameActivityBluetooth;
 import by.klnvch.link5dots.multiplayer.activities.GameActivityNsd;
 import by.klnvch.link5dots.multiplayer.activities.GameActivityOnline;

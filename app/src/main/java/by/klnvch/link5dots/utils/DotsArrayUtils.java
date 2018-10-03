@@ -1,11 +1,10 @@
 package by.klnvch.link5dots.utils;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import by.klnvch.link5dots.models.Dot;
 
 public class DotsArrayUtils {

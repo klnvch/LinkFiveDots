@@ -26,8 +26,6 @@ package by.klnvch.link5dots;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -35,6 +33,8 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 
 import javax.inject.Inject;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import by.klnvch.link5dots.dialogs.NewGameDialog;
 import by.klnvch.link5dots.models.Room;
 import by.klnvch.link5dots.models.User;

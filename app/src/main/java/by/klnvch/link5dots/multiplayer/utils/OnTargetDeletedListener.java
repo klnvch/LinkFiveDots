@@ -24,7 +24,7 @@
 
 package by.klnvch.link5dots.multiplayer.utils;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 public interface OnTargetDeletedListener {
     void onTargetDeleted(@Nullable Exception exception);

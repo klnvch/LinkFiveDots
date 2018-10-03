@@ -30,15 +30,15 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
-import android.support.annotation.IntDef;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatDelegate;
 import android.util.Log;
 
 import java.lang.annotation.Retention;
 import java.util.Locale;
 
+import androidx.annotation.IntDef;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatDelegate;
 import by.klnvch.link5dots.MainActivity;
 import by.klnvch.link5dots.R;
 import by.klnvch.link5dots.TwoPlayersActivity;

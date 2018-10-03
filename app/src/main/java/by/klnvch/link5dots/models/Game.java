@@ -25,13 +25,13 @@
 package by.klnvch.link5dots.models;
 
 import android.graphics.Point;
-import android.support.annotation.IntDef;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.IntDef;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import by.klnvch.link5dots.utils.DotsArrayUtils;
 import by.klnvch.link5dots.utils.RandomGenerator;
 
@@ -158,6 +158,7 @@ public class Game {
         return net[i][j].getType() == mGuestDotType;
     }
 
+    @NonNull
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder();

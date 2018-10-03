@@ -24,9 +24,9 @@
 
 package by.klnvch.link5dots.utils;
 
-import android.support.annotation.NonNull;
-
 import java.util.Random;
+
+import androidx.annotation.NonNull;
 
 import static com.google.android.gms.common.internal.Preconditions.checkNotNull;
 
@@ -53,7 +53,7 @@ public class MathUtils {
     }
 
     @NonNull
-    public static String generateKey() {
+    static String generateKey() {
         final long time = System.currentTimeMillis();
         final long random = new Random().nextLong();
         final String key = Long.toHexString(time) + '_' + Long.toHexString(random);
