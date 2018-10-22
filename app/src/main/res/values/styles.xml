@@ -28,7 +28,11 @@
         <item name="buttonStyle">@style/ButtonStyle</item>
         <item name="android:buttonStyleToggle">@style/ButtonStyle</item>
         <item name="colorButtonNormal">@color/background_color</item>
-        <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
+        <item name="preferenceTheme">@style/PreferenceTheme</item>
+    </style>
+
+    <style name="PreferenceTheme" parent="@style/PreferenceThemeOverlay">
+        <item name="android:textColorSecondary">@color/foreground_color</item>
     </style>
 
     <style name="ButtonStyle" parent="Widget.AppCompat.Button">
