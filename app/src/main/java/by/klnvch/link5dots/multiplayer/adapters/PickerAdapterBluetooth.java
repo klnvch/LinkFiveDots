@@ -46,12 +46,12 @@ public class PickerAdapterBluetooth extends PickerAdapterSockets {
         public void onReceive(Context context, Intent intent) {
             Log.d(TAG, "receiver: " + intent);
 
-            final BluetoothDevice device = BluetoothHelper.isDeviceFound(intent);
+            final BluetoothDevice device = BluetoothHelper.INSTANCE.isDeviceFound(intent);
             if (device != null) {
                 add(new TargetBluetooth(device));
                 return;
             }
-            if (BluetoothHelper.isDiscoveryFinished(intent)) {
+            if (BluetoothHelper.INSTANCE.isDiscoveryFinished(intent)) {
                 if (mOnScanStoppedListener != null) {
                     mOnScanStoppedListener.onScanStopped(null);
                     stopScan();
@@ -68,16 +68,16 @@ public class PickerAdapterBluetooth extends PickerAdapterSockets {
     protected void startListening() {
         clear();
 
-        final Set<BluetoothDevice> pairedDevices = BluetoothHelper.getBondedDevices();
+        final Set<BluetoothDevice> pairedDevices = BluetoothHelper.INSTANCE.getBondedDevices();
         for (BluetoothDevice device : pairedDevices) {
             add(new TargetBluetooth(device));
         }
 
-        BluetoothHelper.registerReceiverAndStartDiscovery(mContext, mReceiver);
+        BluetoothHelper.INSTANCE.registerReceiverAndStartDiscovery(mContext, mReceiver);
     }
 
     @Override
     protected void stopListening() {
-        BluetoothHelper.unregisterReceiverAndCancelDiscovery(mContext, mReceiver);
+        BluetoothHelper.INSTANCE.unregisterReceiverAndCancelDiscovery(mContext, mReceiver);
     }
 }
