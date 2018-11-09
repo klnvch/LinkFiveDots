@@ -36,7 +36,7 @@ public class ServerSocketDecoratorBluetooth extends ServerSocketDecorator<Blueto
 
     @MainThread
     public ServerSocketDecoratorBluetooth() throws IOException {
-        super(BluetoothHelper.createServerSocket());
+        super(BluetoothHelper.INSTANCE.createServerSocket());
     }
 
     @Override

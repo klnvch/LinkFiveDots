@@ -53,7 +53,7 @@ public class GameServiceBluetooth extends GameServiceSockets {
          * a system service, so an application should always call cancelDiscovery() even if it did
          * not directly request a discovery, just to be sure.
          */
-        BluetoothHelper.cancelDiscovery();
+        BluetoothHelper.INSTANCE.cancelDiscovery();
 
         super.connect(target);
     }
@@ -64,7 +64,7 @@ public class GameServiceBluetooth extends GameServiceSockets {
 
         // resume scanning
         if (mScanner.isScanning()) {
-            BluetoothHelper.startDiscovery();
+            BluetoothHelper.INSTANCE.startDiscovery();
         }
 
         super.onSocketFailed(exception);

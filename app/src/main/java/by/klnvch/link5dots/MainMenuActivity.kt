@@ -165,7 +165,7 @@ class MainMenuActivity : DaggerAppCompatActivity(), View.OnClickListener, View.O
     }
 
     private fun showUsernameDialog(): Boolean {
-        UsernameDialog().show(supportFragmentManager, null)
+        UsernameDialog().show(supportFragmentManager, UsernameDialog.TAG)
         return true
     }
 
@@ -175,7 +175,6 @@ class MainMenuActivity : DaggerAppCompatActivity(), View.OnClickListener, View.O
 
     private fun checkTheFirstRun(isTheFirstRun: Boolean) {
         if (isTheFirstRun) {
-            showUsernameDialog()
             settingsUtils.setTheFirstRun()
         }
     }

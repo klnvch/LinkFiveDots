@@ -67,7 +67,7 @@ public class SocketDecoratorBluetooth extends SocketDecorator<BluetoothSocket> {
         @NonNull
         @Override
         public SocketDecorator build() throws IOException {
-            final BluetoothSocket socket = BluetoothHelper.createSocket(mBluetoothDevice);
+            final BluetoothSocket socket = BluetoothHelper.INSTANCE.createSocket(mBluetoothDevice);
             socket.connect();
             return new SocketDecoratorBluetooth(socket);
         }

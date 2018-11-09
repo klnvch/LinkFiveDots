@@ -37,8 +37,8 @@ public class TargetBluetoothLocal extends Target<String> {
     @SuppressLint("HardwareIds")
     @NonNull
     private static String fill() {
-        final String name = BluetoothHelper.getName();
-        final String address = BluetoothHelper.getAddress();
+        final String name = BluetoothHelper.INSTANCE.getName();
+        final String address = BluetoothHelper.INSTANCE.getAddress();
         if (address == null) {
             return name;
         } else {

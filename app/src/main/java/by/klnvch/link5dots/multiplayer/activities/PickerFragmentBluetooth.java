@@ -122,27 +122,22 @@ public class PickerFragmentBluetooth extends PickerFragment {
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.buttonBluetoothVisibility:
-                BluetoothHelper.requestDiscoverable(this, REQUEST_DISCOVERABLE);
-                break;
-            default:
-                super.onClick(v);
+        if (v.getId() == R.id.buttonBluetoothVisibility) {
+            BluetoothHelper.INSTANCE.requestDiscoverable(this, REQUEST_DISCOVERABLE);
+        } else {
+            super.onClick(v);
         }
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case REQUEST_LOCATION:
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    mListener.onStartScan();
-                }
-                break;
-            default:
-                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_LOCATION) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                mListener.onStartScan();
+            }
+        } else {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
     }
 
@@ -159,14 +154,12 @@ public class PickerFragmentBluetooth extends PickerFragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode) {
-            case REQUEST_DISCOVERABLE:
-                if (resultCode != Activity.RESULT_CANCELED) {
-                    startTimer(resultCode * 1000);
-                }
-                break;
-            default:
-                super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_DISCOVERABLE) {
+            if (resultCode != Activity.RESULT_CANCELED) {
+                startTimer(resultCode * 1000);
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
         }
     }
 

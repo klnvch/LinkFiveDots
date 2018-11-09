@@ -78,7 +78,7 @@ public class FactoryBluetooth implements FactoryServiceInterface, FactoryActivit
 
     @Override
     public boolean isValid(@NonNull Context context) {
-        return BluetoothHelper.isSupported();
+        return BluetoothHelper.INSTANCE.isSupported();
     }
 
     @Override

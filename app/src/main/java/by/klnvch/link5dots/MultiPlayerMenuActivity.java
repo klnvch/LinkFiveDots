@@ -73,12 +73,12 @@ public class MultiPlayerMenuActivity extends AppCompatActivity implements View.O
                 startActivity(new Intent(this, TwoPlayersActivity.class));
                 break;
             case R.id.multi_player_bluetooth:
-                if (BluetoothHelper.isSupported()) {
-                    mIsBluetoothEnabled = BluetoothHelper.isEnabled();
+                if (BluetoothHelper.INSTANCE.isSupported()) {
+                    mIsBluetoothEnabled = BluetoothHelper.INSTANCE.isEnabled();
                     if (mIsBluetoothEnabled) {
                         startBluetoothActivity();
                     } else {
-                        BluetoothHelper.requestEnable(this, RC_ENABLE_BLUETOOTH);
+                        BluetoothHelper.INSTANCE.requestEnable(this, RC_ENABLE_BLUETOOTH);
                     }
                 } else {
                     showErrorDialog();
@@ -111,7 +111,7 @@ public class MultiPlayerMenuActivity extends AppCompatActivity implements View.O
             case RC_GAME_BT:
                 // bluetooth game finished, make an order
                 if (!mIsBluetoothEnabled) {
-                    BluetoothHelper.disable();
+                    BluetoothHelper.INSTANCE.disable();
                 }
             case RC_GAME_NSD:
             case RC_GAME_INTERNET:
