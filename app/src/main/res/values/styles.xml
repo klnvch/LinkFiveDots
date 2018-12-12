@@ -23,12 +23,14 @@
   -->
 
 <resources>
+
     <style name="AppTheme" parent="@style/Theme.AppCompat.DayNight.DarkActionBar">
         <item name="android:windowBackground">@null</item>
         <item name="buttonStyle">@style/ButtonStyle</item>
         <item name="android:buttonStyleToggle">@style/ButtonStyle</item>
         <item name="colorButtonNormal">@color/background_color</item>
         <item name="preferenceTheme">@style/PreferenceTheme</item>
+        <item name="colorAccent">@color/text_color</item>
     </style>
 
     <style name="PreferenceTheme" parent="@style/PreferenceThemeOverlay">
@@ -39,4 +41,5 @@
         <item name="android:textSize">@dimen/btn_text_size</item>
         <item name="android:textStyle">bold</item>
     </style>
+
 </resources>

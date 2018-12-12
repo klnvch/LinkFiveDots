@@ -27,5 +27,5 @@
     <color name="foreground_color">#FF212121</color>
     <color name="dot_color_red">#FFFF0000</color>
     <color name="dot_color_blue">#FF0000FF</color>
-    <color name="icon_color">#FF00838F</color>
+    <color name="text_color">#FF00737F</color>
 </resources>
