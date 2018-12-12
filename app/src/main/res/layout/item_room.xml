@@ -29,10 +29,11 @@
     android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:layout_margin="4dp"
+    android:background="?android:attr/selectableItemBackground"
     android:clickable="true"
     android:focusable="true"
-    android:background="?android:attr/selectableItemBackground"
     android:minHeight="@dimen/clickable_min_size"
+    android:padding="4dp"
     card_view:cardCornerRadius="8dp"
     card_view:contentPadding="8dp">
 

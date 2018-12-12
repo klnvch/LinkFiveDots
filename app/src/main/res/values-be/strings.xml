@@ -88,7 +88,6 @@
     <string name="settings_vibration">"Вібрацыя"</string>
     <string name="switch_on_text">"Уключана"</string>
     <string name="switch_off_text">"Выключана"</string>
-    <string name="share">"Абагуліць"</string>
     <string name="computer">"Камп\'ютар"</string>
     <string name="error_feature_not_available">"Гэта функцыя недаступная на гэтай прыладзе"</string>
     <string name="deleted_toast">"Карыстальнік <ns0:g id="NAME">%1$s</ns0:g> выдалены"</string>
@@ -100,5 +99,6 @@
     <string name="connection_error_message">"Няма падключэння"</string>
     <string name="username">Імя</string>
     <string name="history">Гісторыя</string>
+    <string name="share">Падзяліцца</string>
 
 </resources>

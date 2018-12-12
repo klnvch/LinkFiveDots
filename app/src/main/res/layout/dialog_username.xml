@@ -38,6 +38,7 @@
         android:inputType="textPersonName"
         android:maxLength="16"
         android:minHeight="@dimen/clickable_min_size"
+        android:padding="4dp"
         android:singleLine="true"
         android:text="@string/unknown"
         tools:ignore="Autofill" />
