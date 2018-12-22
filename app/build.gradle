@@ -124,22 +124,22 @@ dependencies {
     implementation "com.google.android.material:material:${support_version}"
     implementation "androidx.cardview:cardview:${support_version}"
     implementation "androidx.preference:preference:${support_version}"
-    implementation 'androidx.multidex:multidex:2.0.0'
+    implementation 'androidx.multidex:multidex:2.0.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha2'
     implementation 'androidx.core:core-ktx:1.0.1'
     implementation 'com.crashlytics.sdk.android:crashlytics:2.9.7'
     implementation 'com.google.firebase:firebase-core:16.0.6'
-    implementation 'com.google.firebase:firebase-auth:16.0.5'
+    implementation 'com.google.firebase:firebase-auth:16.1.0'
     implementation 'com.google.firebase:firebase-database:16.0.5'
     implementation 'com.firebaseui:firebase-ui-database:4.2.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${kotlin_version}"
     androidTestImplementation 'androidx.test.uiautomator:uiautomator:2.2.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0', {
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1', {
         exclude group: 'com.android.support', module: 'support-annotations'
         exclude group: 'com.google.code.findbugs'
     }
     androidTestImplementation "androidx.room:room-testing:${lifecycle_version}"
-    androidTestImplementation 'androidx.test:rules:1.1.0'
+    androidTestImplementation 'androidx.test:rules:1.1.1'
 }
 
 apply plugin: 'com.google.gms.google-services'
