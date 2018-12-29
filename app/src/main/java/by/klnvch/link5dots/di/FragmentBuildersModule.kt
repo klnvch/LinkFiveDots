@@ -26,7 +26,6 @@ package by.klnvch.link5dots.di
 
 import by.klnvch.link5dots.GameFragment
 import by.klnvch.link5dots.scores.HistoryFragment
-import by.klnvch.link5dots.settings.SettingsFragment
 import by.klnvch.link5dots.settings.UsernameDialog
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
