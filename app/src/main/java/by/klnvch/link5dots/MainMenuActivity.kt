@@ -124,6 +124,7 @@ class MainMenuActivity : DaggerAppCompatActivity(), View.OnClickListener, View.O
     }
 
     private fun onError(throwable: Throwable) {
+        Log.e(TAG, MSG_FAIL, throwable)
         Crashlytics.logException(throwable)
     }
 
@@ -195,6 +196,7 @@ class MainMenuActivity : DaggerAppCompatActivity(), View.OnClickListener, View.O
     companion object {
         private const val TAG = "MainMenuActivity"
         private const val MSG_SENT = "history updated successfully"
+        private const val MSG_FAIL = "history update failed"
         private const val RC_SETTINGS = 3
         private val HISTORY_TABLE = if (BuildConfig.DEBUG) "history_debug" else "history"
     }
