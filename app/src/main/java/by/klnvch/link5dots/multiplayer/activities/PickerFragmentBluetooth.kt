@@ -132,8 +132,6 @@ class PickerFragmentBluetooth : PickerFragment() {
     }
 
     private fun startTimer(duration: Long) {
-        textBluetoothVisibility.visibility = View.GONE
-
         mTimerFinishTime = System.currentTimeMillis() + duration
         mCountDownTimer = object : CountDownTimer(duration, 1000) {
             override fun onTick(millisUntilFinished: Long) {
@@ -144,10 +142,11 @@ class PickerFragmentBluetooth : PickerFragment() {
             }
 
             override fun onFinish() {
-                textBluetoothVisibility.visibility = View.VISIBLE
-                textBluetoothVisibility.setText(R.string.bluetooth_only_visible_to_paired_devices)
-                mCountDownTimer = null
-                mTimerFinishTime = 0L
+                if (context != null) {
+                    textBluetoothVisibility.setText(R.string.bluetooth_only_visible_to_paired_devices)
+                    mCountDownTimer = null
+                    mTimerFinishTime = 0L
+                }
             }
         }.start()
     }
