@@ -25,6 +25,7 @@
 package by.klnvch.link5dots.scores
 
 import android.os.Bundle
+import android.view.View
 import by.klnvch.link5dots.GameFragment
 import by.klnvch.link5dots.R
 import by.klnvch.link5dots.models.Dot
@@ -42,7 +43,12 @@ class GameInfoActivity : DaggerAppCompatActivity(), GameFragment.OnGameListener 
 
     override fun onStart() {
         super.onStart()
-        (fragment as GameFragment).update(intent.getSerializableExtra("room") as Room)
+        val room = intent.getSerializableExtra("room")
+        if (room != null) {
+            (fragment as GameFragment).update(room as Room)
+        } else {
+            errorMessage.visibility = View.VISIBLE
+        }
     }
 
     override fun onMoveDone(dot: Dot) {
@@ -52,6 +58,10 @@ class GameInfoActivity : DaggerAppCompatActivity(), GameFragment.OnGameListener 
     }
 
     override fun getUser(): User? {
-        return (intent.getSerializableExtra("room") as Room).user1
+        val room = intent.getSerializableExtra("room")
+        room?.let {
+            return (room as Room).user1
+        }
+        return null
     }
 }

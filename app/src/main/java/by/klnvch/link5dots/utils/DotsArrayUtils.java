@@ -1,17 +1,18 @@
 package by.klnvch.link5dots.utils;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import by.klnvch.link5dots.models.Dot;
 
 public class DotsArrayUtils {
     private static final int N = 20;
     private static final int M = 20;
 
-    private static Dot[][] net = new Dot[N][M];
+    private static final Dot[][] net = new Dot[N][M];
 
     private static void clearNet() {
         for (int i = 0; i < N; i++)
