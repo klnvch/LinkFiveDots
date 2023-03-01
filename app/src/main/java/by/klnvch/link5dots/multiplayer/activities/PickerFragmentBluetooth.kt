@@ -26,6 +26,7 @@ package by.klnvch.link5dots.multiplayer.activities
 
 import android.Manifest
 import android.app.Activity
+import android.bluetooth.BluetoothAdapter
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
@@ -33,10 +34,9 @@ import android.os.Bundle
 import android.os.CountDownTimer
 import android.text.format.DateUtils
 import android.view.View
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import by.klnvch.link5dots.R
-import by.klnvch.link5dots.multiplayer.utils.bluetooth.BluetoothHelper
-import kotlinx.android.synthetic.main.fragment_game_picker.*
 
 class PickerFragmentBluetooth : PickerFragment() {
 
@@ -45,23 +45,35 @@ class PickerFragmentBluetooth : PickerFragment() {
 
     private val isPermissionGranted: Boolean
         get() {
-            return ContextCompat.checkSelfPermission(context!!,
-                    Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
+            return ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
         }
 
     private val isPermissionNeeded: Boolean get() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
 
+    private val requestPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) {
+            if (it) {
+                mListener.onStartScan()
+            }
+        }
+
+    private val startDiscoverableForResult =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            if (it.resultCode != Activity.RESULT_CANCELED) {
+                startTimer(it.resultCode * 1000L)
+            }
+        }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        buttonBluetoothVisibility.visibility = View.VISIBLE
-        buttonBluetoothVisibility.setOnClickListener(this)
+        binding.buttonBluetoothVisibility.visibility = View.VISIBLE
+        binding.buttonBluetoothVisibility.setOnClickListener(this)
 
-        textBluetoothVisibility.visibility = View.VISIBLE
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+        binding.textBluetoothVisibility.visibility = View.VISIBLE
 
         if (savedInstanceState != null) {
             mTimerFinishTime = savedInstanceState.getLong(KEY_TIMER_FINISH_TIME)
@@ -92,8 +104,7 @@ class PickerFragmentBluetooth : PickerFragment() {
 
         if (mButtonScan.isChecked) {
             if (isPermissionNeeded && !isPermissionGranted) {
-                requestPermissions(arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION),
-                        REQUEST_LOCATION)
+                requestPermissionLauncher.launch(Manifest.permission.ACCESS_COARSE_LOCATION)
             } else {
                 mListener.onStartScan()
             }
@@ -104,30 +115,14 @@ class PickerFragmentBluetooth : PickerFragment() {
 
     override fun onClick(v: View) {
         if (v.id == R.id.buttonBluetoothVisibility) {
-            BluetoothHelper.requestDiscoverable(this, REQUEST_DISCOVERABLE)
+            val intent = Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE)
+                .putExtra(
+                    BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION,
+                    DISCOVERABLE_DURATION_SECONDS
+                )
+            startDiscoverableForResult.launch(intent)
         } else {
             super.onClick(v)
-        }
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>,
-                                            grantResults: IntArray) {
-        if (requestCode == REQUEST_LOCATION) {
-            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                mListener.onStartScan()
-            }
-        } else {
-            super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        }
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == REQUEST_DISCOVERABLE) {
-            if (resultCode != Activity.RESULT_CANCELED) {
-                startTimer(resultCode * 1000L)
-            }
-        } else {
-            super.onActivityResult(requestCode, resultCode, data)
         }
     }
 
@@ -137,13 +132,14 @@ class PickerFragmentBluetooth : PickerFragment() {
             override fun onTick(millisUntilFinished: Long) {
                 if (context != null) {
                     val time = DateUtils.formatElapsedTime(millisUntilFinished / 1000)
-                    textBluetoothVisibility.text = getString(R.string.bluetooth_is_discoverable, time)
+                    binding.textBluetoothVisibility.text =
+                        getString(R.string.bluetooth_is_discoverable, time)
                 }
             }
 
             override fun onFinish() {
                 if (context != null) {
-                    textBluetoothVisibility.setText(R.string.bluetooth_only_visible_to_paired_devices)
+                    binding.textBluetoothVisibility.setText(R.string.bluetooth_only_visible_to_paired_devices)
                     mCountDownTimer = null
                     mTimerFinishTime = 0L
                 }
@@ -152,8 +148,7 @@ class PickerFragmentBluetooth : PickerFragment() {
     }
 
     companion object {
-        private const val REQUEST_DISCOVERABLE = 1
-        private const val REQUEST_LOCATION = 1
         private const val KEY_TIMER_FINISH_TIME = "mTimerFinishTime"
+        private const val DISCOVERABLE_DURATION_SECONDS = 30
     }
 }

@@ -29,8 +29,6 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
 
-import com.crashlytics.android.Crashlytics;
-
 import org.greenrobot.eventbus.EventBus;
 
 import javax.inject.Inject;
@@ -38,6 +36,7 @@ import javax.inject.Inject;
 import androidx.annotation.CallSuper;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
 import by.klnvch.link5dots.models.Dot;
 import by.klnvch.link5dots.models.Room;
 import by.klnvch.link5dots.models.User;
@@ -60,6 +59,8 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 public abstract class GameService extends DaggerService implements GameServiceInterface,
         OnTargetCreatedListener, OnTargetDeletedListener,
@@ -236,7 +237,7 @@ public abstract class GameService extends DaggerService implements GameServiceIn
     @Override
     public void onTargetCreationFailed(@NonNull Exception exception) {
         Log.e(TAG, "onTargetCreationFailed: " + exception.getMessage());
-        Crashlytics.logException(exception);
+        FirebaseCrashlytics.getInstance().recordException(exception);
 
         setRoomState(GameState.STATE_TARGET_DELETED);
     }
@@ -268,7 +269,7 @@ public abstract class GameService extends DaggerService implements GameServiceIn
     public void onRoomConnectFailed(@NonNull Exception exception) {
         Log.w(TAG, "onRoomConnectFailed: " + exception.getMessage());
 
-        Crashlytics.logException(exception);
+        FirebaseCrashlytics.getInstance().recordException(exception);
         setConnectState(GameState.STATE_NONE);
         sendMsg(exception);
     }
@@ -281,7 +282,9 @@ public abstract class GameService extends DaggerService implements GameServiceIn
             mRoom = room;
             updateRoomLocally(room);
         } else {
-            Crashlytics.logException(exception);
+            if (exception != null) {
+                FirebaseCrashlytics.getInstance().recordException(exception);
+            }
             setConnectState(GameState.STATE_DISCONNECTED);
         }
     }

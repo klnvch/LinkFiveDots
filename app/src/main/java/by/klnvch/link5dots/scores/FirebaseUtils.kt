@@ -30,16 +30,17 @@ import android.provider.Settings
 import android.util.Log
 import by.klnvch.link5dots.BuildConfig
 import by.klnvch.link5dots.models.HighScore
-import com.crashlytics.android.Crashlytics
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.Query
 
 class FirebaseUtils {
     companion object {
-        private val CHILD_HIGH_SCORES = if (BuildConfig.DEBUG) "high_scores_debug" else "high_scores"
+        private val CHILD_HIGH_SCORES =
+            if (BuildConfig.DEBUG) "high_scores_debug" else "high_scores"
         private const val LIMIT_TO_FIRST = 500
 
         fun isSupported(context: Context): Boolean {
@@ -49,14 +50,15 @@ class FirebaseUtils {
 
         fun getScoresQuery(): Query {
             return FirebaseDatabase.getInstance().reference
-                    .child(CHILD_HIGH_SCORES)
-                    .limitToLast(LIMIT_TO_FIRST)
+                .child(CHILD_HIGH_SCORES)
+                .limitToLast(LIMIT_TO_FIRST)
         }
 
         @SuppressLint("HardwareIds")
         fun publishScore(context: Context, highScore: HighScore) {
             highScore.userId = FirebaseAuth.getInstance().currentUser!!.uid
-            highScore.androidId = Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
+            highScore.androidId =
+                Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
             highScore.code()
 
             // write to database
@@ -65,13 +67,14 @@ class FirebaseUtils {
 
             if (key != null) {
                 mDatabase
-                        .child(key)
-                        .setValue(highScore)
-                        .addOnCompleteListener { task ->
-                            Log.d("FirebaseUtils", "publishScore: " + task.exception)
-                        }
+                    .child(key)
+                    .setValue(highScore)
+                    .addOnCompleteListener { task ->
+                        Log.d("FirebaseUtils", "publishScore: " + task.exception)
+                    }
             } else {
-                Crashlytics.logException(NullPointerException("Firebase key is null"))
+                FirebaseCrashlytics.getInstance()
+                    .recordException(NullPointerException("Firebase key is null"))
             }
         }
     }

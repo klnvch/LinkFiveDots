@@ -39,6 +39,7 @@ import javax.inject.Inject
 
 class UsernameDialog : DaggerAppCompatDialogFragment(), DialogInterface.OnClickListener {
     private val mDisposables = CompositeDisposable()
+
     @Inject
     internal lateinit var settingsUtils: SettingsUtils
     private lateinit var mEditText: EditText
@@ -48,21 +49,21 @@ class UsernameDialog : DaggerAppCompatDialogFragment(), DialogInterface.OnClickL
 
         mEditText = v.findViewById(R.id.username)
 
-        return AlertDialog.Builder(context!!)
-                .setCancelable(false)
-                .setPositiveButton(R.string.okay, this)
-                .setNegativeButton(R.string.cancel, null)
-                .setView(v)
-                .create()
+        return AlertDialog.Builder(requireContext())
+            .setCancelable(false)
+            .setPositiveButton(R.string.okay, this)
+            .setNegativeButton(R.string.cancel, null)
+            .setView(v)
+            .create()
     }
 
     override fun onStart() {
         super.onStart()
 
         mDisposables.add(settingsUtils.userNameOrDefault
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { this.setUsername(it) })
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe { this.setUsername(it) })
     }
 
     override fun onDestroy() {

@@ -24,23 +24,20 @@
 
 package by.klnvch.link5dots.multiplayer.utils.nsd;
 
-import android.annotation.TargetApi;
-import android.content.Context;
-import android.net.nsd.NsdManager;
-import android.net.nsd.NsdServiceInfo;
-import android.os.Build;
-import android.util.Log;
-
-import com.crashlytics.android.Crashlytics;
-
-import androidx.annotation.CallSuper;
-import androidx.annotation.NonNull;
-
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
-@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+import android.content.Context;
+import android.net.nsd.NsdManager;
+import android.net.nsd.NsdServiceInfo;
+import android.util.Log;
+
+import androidx.annotation.CallSuper;
+import androidx.annotation.NonNull;
+
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
+
 public class NsdHelper {
     private static final String TAG = "NsdHelper";
 
@@ -70,7 +67,7 @@ public class NsdHelper {
             Class.forName("android.net.nsd.NsdManager");
             return true;
         } catch (ClassNotFoundException e) {
-            Crashlytics.logException(e);
+            FirebaseCrashlytics.getInstance().recordException(e);
         }
         return false;
     }

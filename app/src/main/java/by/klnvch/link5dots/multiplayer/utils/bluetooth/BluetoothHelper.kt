@@ -35,7 +35,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.util.Log
-import androidx.fragment.app.Fragment
 import java.io.IOException
 import java.util.*
 
@@ -45,7 +44,6 @@ object BluetoothHelper {
     private const val NAME_SECURE = "BluetoothLinkFiveDotsSecure"
     private val UUID_SECURE = UUID.fromString("fa87c0d0-afac-11de-8a39-0800200c9a66")
     private const val FAKE_ADDRESS = "02:00:00:00:00:00"
-    private const val DISCOVERABLE_DURATION_SECONDS = 30
 
     val isSupported: Boolean
         get() = getAdapter() != null
@@ -78,13 +76,6 @@ object BluetoothHelper {
         activity.startActivityForResult(Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE), requestCode)
     }
 
-    fun requestDiscoverable(fragment: Fragment, requestCode: Int) {
-        val intent = Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE)
-                .putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION,
-                        DISCOVERABLE_DURATION_SECONDS)
-        fragment.startActivityForResult(intent, requestCode)
-    }
-
     fun registerReceiverAndStartDiscovery(context: Context, receiver: BroadcastReceiver) {
         context.registerReceiver(receiver, IntentFilter(BluetoothDevice.ACTION_FOUND))
         context.registerReceiver(receiver, IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED))
@@ -98,7 +89,6 @@ object BluetoothHelper {
         } catch (e: IllegalArgumentException) {
             Log.e(TAG, "unregisterReceiver: " + e.message)
         }
-
     }
 
     fun startDiscovery() {
@@ -112,7 +102,7 @@ object BluetoothHelper {
     fun isDeviceFound(intent: Intent): BluetoothDevice? {
         if (BluetoothDevice.ACTION_FOUND == intent.action) {
             val device = intent.getParcelableExtra<BluetoothDevice>(BluetoothDevice.EXTRA_DEVICE)
-            if (device.bondState != BluetoothDevice.BOND_BONDED) {
+            if (device?.bondState != BluetoothDevice.BOND_BONDED) {
                 return device
             }
         }

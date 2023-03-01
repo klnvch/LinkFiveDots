@@ -29,83 +29,98 @@ import android.os.Bundle
 import android.os.StrictMode
 import android.util.Log
 import android.view.View
+import androidx.activity.result.contract.ActivityResultContracts
+import by.klnvch.link5dots.databinding.ActivityMainMenuBinding
 import by.klnvch.link5dots.db.RoomDao
 import by.klnvch.link5dots.models.Room
 import by.klnvch.link5dots.network.NetworkService
-
 import by.klnvch.link5dots.scores.ScoresActivity
 import by.klnvch.link5dots.settings.SettingsActivity
 import by.klnvch.link5dots.settings.SettingsUtils
 import by.klnvch.link5dots.settings.UsernameDialog
-import com.crashlytics.android.Crashlytics
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import dagger.android.support.DaggerAppCompatActivity
 import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.activity_main_menu.*
 import javax.inject.Inject
 
 class MainMenuActivity : DaggerAppCompatActivity(), View.OnClickListener, View.OnLongClickListener,
-        UsernameDialog.OnUsernameChangedListener {
+    UsernameDialog.OnUsernameChangedListener {
 
     private val mDisposables = CompositeDisposable()
 
+    private lateinit var binding: ActivityMainMenuBinding
+
     @Inject
     lateinit var networkService: NetworkService
+
     @Inject
     lateinit var roomDao: RoomDao
+
     @Inject
     lateinit var settingsUtils: SettingsUtils
 
+    private val startSettingsForResult =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            recreate()
+        }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main_menu)
+        binding = ActivityMainMenuBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         setTitle(R.string.app_name)
 
         if (BuildConfig.DEBUG) {
-            StrictMode.setThreadPolicy(StrictMode.ThreadPolicy.Builder()
+            StrictMode.setThreadPolicy(
+                StrictMode.ThreadPolicy.Builder()
                     .detectAll()
                     .penaltyLog()
-                    .build())
-            StrictMode.setVmPolicy(StrictMode.VmPolicy.Builder()
+                    .build()
+            )
+            StrictMode.setVmPolicy(
+                StrictMode.VmPolicy.Builder()
                     .detectAll()
                     .penaltyLog()
-                    .build())
+                    .build()
+            )
         }
 
-        textViewGreeting.setOnLongClickListener(this)
+        binding.textViewGreeting.setOnLongClickListener(this)
 
         mDisposables.add(settingsUtils.isTheFirstRun
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { checkTheFirstRun(it) })
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe { checkTheFirstRun(it) })
 
         mDisposables.add(SettingsUtils.isConfigurationChanged(this)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { changeConfiguration(it) })
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe { changeConfiguration(it) })
 
         mDisposables.add(settingsUtils.userNameOrEmpty
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { setUsername(it) })
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe { setUsername(it) })
     }
 
     override fun onResume() {
         super.onResume()
 
         mDisposables.add(roomDao.loadAll()
-                .take(1)
-                .flatMapIterable { it }
-                .filter { !it.isSend }
-                .flatMapSingle { updateIsTest(it) }
-                .flatMapSingle { networkService.addRoom(HISTORY_TABLE, it.key, it) }
-                .flatMapCompletable { update(it) }
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ Log.d(TAG, MSG_SENT) }, { onError(it) }))
+            .take(1)
+            .flatMapIterable { it }
+            .filter { !it.isSend }
+            .flatMapSingle { updateIsTest(it) }
+            .flatMapSingle { networkService.addRoom(HISTORY_TABLE, it.key, it) }
+            .flatMapCompletable { update(it) }
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ Log.d(TAG, MSG_SENT) }, { onError(it) })
+        )
     }
 
     private fun updateIsTest(room: Room): Single<Room> {
@@ -125,7 +140,7 @@ class MainMenuActivity : DaggerAppCompatActivity(), View.OnClickListener, View.O
 
     private fun onError(throwable: Throwable) {
         Log.e(TAG, MSG_FAIL, throwable)
-        Crashlytics.logException(throwable)
+        FirebaseCrashlytics.getInstance().recordException(throwable)
     }
 
     override fun onDestroy() {
@@ -146,15 +161,7 @@ class MainMenuActivity : DaggerAppCompatActivity(), View.OnClickListener, View.O
             R.id.main_menu_about ->
                 startActivity(Intent(this, InfoActivity::class.java))
             R.id.main_menu_settings ->
-                startActivityForResult(Intent(this, SettingsActivity::class.java),
-                        RC_SETTINGS)
-        }
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        when (requestCode) {
-            RC_SETTINGS -> recreate()
-            else -> super.onActivityResult(requestCode, resultCode, data)
+                startSettingsForResult.launch(Intent(this, SettingsActivity::class.java))
         }
     }
 
@@ -182,10 +189,10 @@ class MainMenuActivity : DaggerAppCompatActivity(), View.OnClickListener, View.O
 
     private fun setUsername(username: String) {
         if (username.isEmpty()) {
-            textViewGreeting.visibility = View.GONE
+            binding.textViewGreeting.visibility = View.GONE
         } else {
-            textViewGreeting.visibility = View.VISIBLE
-            textViewGreeting.text = getString(R.string.greetings, username)
+            binding.textViewGreeting.visibility = View.VISIBLE
+            binding.textViewGreeting.text = getString(R.string.greetings, username)
         }
     }
 
@@ -197,7 +204,6 @@ class MainMenuActivity : DaggerAppCompatActivity(), View.OnClickListener, View.O
         private const val TAG = "MainMenuActivity"
         private const val MSG_SENT = "history updated successfully"
         private const val MSG_FAIL = "history update failed"
-        private const val RC_SETTINGS = 3
         private val HISTORY_TABLE = if (BuildConfig.DEBUG) "history_debug" else "history"
     }
 }

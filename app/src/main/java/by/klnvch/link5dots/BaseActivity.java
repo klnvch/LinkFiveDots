@@ -35,6 +35,7 @@ import javax.inject.Inject;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
 import by.klnvch.link5dots.dialogs.NewGameDialog;
 import by.klnvch.link5dots.models.Room;
 import by.klnvch.link5dots.models.User;
@@ -104,23 +105,21 @@ public abstract class BaseActivity extends DaggerAppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();
-                return true;
-            case R.id.menu_undo:
-                log(AnalyticsEvents.EVENT_UNDO_MOVE);
-                undoLastMove();
-                return true;
-            case R.id.menu_new_game:
-                log(AnalyticsEvents.EVENT_NEW_GAME);
-                newGame();
-                return true;
-            case R.id.menu_search:
-                log(AnalyticsEvents.EVENT_SEARCH);
-            default:
-                return super.onOptionsItemSelected(item);
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return true;
+        } else if (item.getItemId() == R.id.menu_undo) {
+            log(AnalyticsEvents.EVENT_UNDO_MOVE);
+            undoLastMove();
+            return true;
+        } else if (item.getItemId() == R.id.menu_new_game) {
+            log(AnalyticsEvents.EVENT_NEW_GAME);
+            newGame();
+            return true;
+        } else if (item.getItemId() == R.id.menu_new_game) {
+            log(AnalyticsEvents.EVENT_SEARCH);
         }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

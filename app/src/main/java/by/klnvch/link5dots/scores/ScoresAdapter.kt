@@ -27,46 +27,40 @@ package by.klnvch.link5dots.scores
 import android.text.format.DateUtils
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import by.klnvch.link5dots.R
+import by.klnvch.link5dots.databinding.ItemHighScoreBinding
 import by.klnvch.link5dots.models.HighScore
 import com.firebase.ui.database.FirebaseRecyclerAdapter
 import com.firebase.ui.database.FirebaseRecyclerOptions
 import com.google.firebase.database.DatabaseError
-import kotlinx.android.synthetic.main.item_high_score.view.*
 import java.util.*
 
-class ScoresAdapter(options: FirebaseRecyclerOptions<HighScore>) : FirebaseRecyclerAdapter<HighScore, ScoresAdapter.HighScoreHolder>(options) {
+class ScoresAdapter(options: FirebaseRecyclerOptions<HighScore>) :
+    FirebaseRecyclerAdapter<HighScore, ScoresAdapter.HighScoreHolder>(options) {
 
     override fun onBindViewHolder(holder: HighScoreHolder, position: Int, model: HighScore) {
-        holder.mPosition.text = String.format(Locale.getDefault(), FORMAT_POSITION, position + 1)
-        holder.mUserName.text = model.username
-        holder.mMoves.text = String.format(Locale.getDefault(), FORMAT_MOVES, model.moves)
-        holder.mTime.text = DateUtils.formatElapsedTime(model.time)
+        holder.binding.scorePosition.text =
+            String.format(Locale.getDefault(), FORMAT_POSITION, position + 1)
+        holder.binding.scoreUsername.text = model.username
+        holder.binding.scoreMoves.text =
+            String.format(Locale.getDefault(), FORMAT_MOVES, model.moves)
+        holder.binding.scoreTime.text = DateUtils.formatElapsedTime(model.time)
         when (model.status) {
-            HighScore.WON -> holder.mStatus.setText(R.string.scores_won)
-            HighScore.LOST -> holder.mStatus.setText(R.string.scores_lost)
-            else -> holder.mStatus.text = null
+            HighScore.WON -> holder.binding.scoreStatus.setText(R.string.scores_won)
+            HighScore.LOST -> holder.binding.scoreStatus.setText(R.string.scores_lost)
+            else -> holder.binding.scoreStatus.text = null
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HighScoreHolder {
-        val view = LayoutInflater.from(parent.context)
-                .inflate(R.layout.item_high_score, parent, false)
-
-        return ScoresAdapter.HighScoreHolder(view)
+        val binding =
+            ItemHighScoreBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return HighScoreHolder(binding)
     }
 
-    class HighScoreHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val mPosition: TextView = view.scorePosition
-        val mUserName: TextView = view.scoreUsername
-        val mMoves: TextView = view.scoreMoves
-        val mTime: TextView = view.scoreTime
-        val mStatus: TextView = view.scoreStatus
-    }
+    class HighScoreHolder(val binding: ItemHighScoreBinding) : RecyclerView.ViewHolder(binding.root)
 
     override fun onDataChanged() {
         super.onDataChanged()
@@ -83,9 +77,11 @@ class ScoresAdapter(options: FirebaseRecyclerOptions<HighScore>) : FirebaseRecyc
         private const val FORMAT_MOVES = "%d"
 
         fun create(): ScoresAdapter {
-            return ScoresAdapter(FirebaseRecyclerOptions.Builder<HighScore>()
+            return ScoresAdapter(
+                FirebaseRecyclerOptions.Builder<HighScore>()
                     .setQuery(FirebaseUtils.getScoresQuery(), HighScore::class.java)
-                    .build())
+                    .build()
+            )
         }
     }
 }

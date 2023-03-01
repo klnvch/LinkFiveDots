@@ -27,56 +27,45 @@ package by.klnvch.link5dots.scores
 import android.graphics.Color
 import android.text.format.DateUtils
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import by.klnvch.link5dots.BuildConfig
 import by.klnvch.link5dots.R
+import by.klnvch.link5dots.databinding.ItemHistoryBinding
 import by.klnvch.link5dots.models.Room
 import by.klnvch.link5dots.utils.RoomUtils
-import kotlinx.android.synthetic.main.item_history.view.*
 
 class HistoryAdapter(private val rooms: MutableList<Room>) :
         RecyclerView.Adapter<HistoryAdapter.HighScoreHolder>() {
 
     var onItemClickListener: OnItemClickListener? = null
 
-    class HighScoreHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val root = view
-        val textUser1Name: TextView = view.textUser1Name
-        val textUser2Name: TextView = view.textUser2Name
-        val textTime: TextView = view.textTimeValue
-        val textType: TextView = view.textTypeValue
-        val textDuration: TextView = view.textDurationValue
-        val textDots: TextView = view.textDotsValue
-    }
+    class HighScoreHolder(val binding: ItemHistoryBinding) : RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int):
-            HistoryAdapter.HighScoreHolder {
-        val view = LayoutInflater.from(parent.context)
-                .inflate(R.layout.item_history, parent, false)
-        return HighScoreHolder(view)
+            HighScoreHolder {
+        val binding = ItemHistoryBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return HighScoreHolder(binding)
     }
 
     override fun onBindViewHolder(holder: HighScoreHolder, position: Int) {
         val room: Room = rooms[position]
 
-        holder.root.setOnClickListener { onItemClickListener?.onItemSelected(room) }
-        holder.textUser1Name.text = room.user1?.name
-        holder.textUser2Name.text = room.user2?.name
-        holder.textTime.text = RoomUtils.formatStartTime(room)
-        holder.textDuration.text = DateUtils.formatElapsedTime(RoomUtils.getDurationInSeconds(room))
-        holder.textDots.text = room.dots.size.toString()
+        holder.binding.root.setOnClickListener { onItemClickListener?.onItemSelected(room) }
+        holder.binding.textUser1Name.text = room.user1?.name
+        holder.binding.textUser2Name.text = room.user2?.name
+        holder.binding.textTimeValue.text = RoomUtils.formatStartTime(room)
+        holder.binding.textDurationValue.text = DateUtils.formatElapsedTime(RoomUtils.getDurationInSeconds(room))
+        holder.binding.textDotsValue.text = room.dots.size.toString()
         when (room.type) {
-            Room.TYPE_BLUETOOTH -> holder.textType.setText(R.string.bluetooth)
-            Room.TYPE_NSD -> holder.textType.setText(R.string.menu_local_network)
-            Room.TYPE_ONLINE -> holder.textType.setText(R.string.menu_online_game)
-            Room.TYPE_TWO_PLAYERS -> holder.textType.setText(R.string.menu_two_players)
-            Room.TYPE_BOT -> holder.textType.setText(R.string.app_name)
+            Room.TYPE_BLUETOOTH -> holder.binding.textTypeValue.setText(R.string.bluetooth)
+            Room.TYPE_NSD -> holder.binding.textTypeValue.setText(R.string.menu_local_network)
+            Room.TYPE_ONLINE -> holder.binding.textTypeValue.setText(R.string.menu_online_game)
+            Room.TYPE_TWO_PLAYERS -> holder.binding.textTypeValue.setText(R.string.menu_two_players)
+            Room.TYPE_BOT -> holder.binding.textTypeValue.setText(R.string.app_name)
         }
         if (BuildConfig.DEBUG) {
-            holder.root.setBackgroundColor(if (room.isSend) COLOR_GREEN else COLOR_RED)
+            holder.binding.root.setBackgroundColor(if (room.isSend) COLOR_GREEN else COLOR_RED)
         }
     }
 

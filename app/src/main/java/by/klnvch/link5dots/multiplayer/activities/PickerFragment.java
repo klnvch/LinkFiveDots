@@ -24,6 +24,8 @@
 
 package by.klnvch.link5dots.multiplayer.activities;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
@@ -40,23 +42,23 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import by.klnvch.link5dots.R;
+import by.klnvch.link5dots.databinding.FragmentGamePickerBinding;
 import by.klnvch.link5dots.multiplayer.adapters.OnEmptyStateListener;
 import by.klnvch.link5dots.multiplayer.adapters.OnItemClickListener;
 import by.klnvch.link5dots.multiplayer.adapters.TargetAdapterInterface;
 import by.klnvch.link5dots.multiplayer.targets.Target;
 import by.klnvch.link5dots.multiplayer.utils.GameState;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 public class PickerFragment extends Fragment implements View.OnClickListener,
         OnItemClickListener, OnEmptyStateListener {
 
     public static final String TAG = "OnlineGamePickerFr";
-
+    protected FragmentGamePickerBinding binding;
     OnPickerListener mListener;
-    private ToggleButton mButtonCreate;
     ToggleButton mButtonScan;
+    private ToggleButton mButtonCreate;
     private TextView mCreateStatusValue;
     private View mCreateStatusColon;
     private View mCreateStatusLabel;
@@ -67,7 +69,7 @@ public class PickerFragment extends Fragment implements View.OnClickListener,
     private boolean isClickable = false;
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         try {
             mListener = (OnPickerListener) context;
@@ -83,28 +85,28 @@ public class PickerFragment extends Fragment implements View.OnClickListener,
                              @Nullable Bundle savedInstanceState) {
         Log.d(TAG, "onCreateView");
 
-        final View view = inflater.inflate(R.layout.fragment_game_picker, container, false);
+        binding = FragmentGamePickerBinding.inflate(inflater, container, false);
 
-        mButtonCreate = view.findViewById(R.id.buttonCreate);
+        mButtonCreate = binding.getRoot().findViewById(R.id.buttonCreate);
         mButtonCreate.setOnClickListener(this);
 
-        mButtonScan = view.findViewById(R.id.buttonScan);
+        mButtonScan = binding.getRoot().findViewById(R.id.buttonScan);
         mButtonScan.setOnClickListener(this);
 
-        mCreateStatusLabel = view.findViewById(R.id.textStatusLabel);
-        mCreateStatusColon = view.findViewById(R.id.textStatusColon);
-        mCreateStatusValue = view.findViewById(R.id.textStatusValue);
-        mProgressCreate = view.findViewById(R.id.progressCreate);
+        mCreateStatusLabel = binding.getRoot().findViewById(R.id.textStatusLabel);
+        mCreateStatusColon = binding.getRoot().findViewById(R.id.textStatusColon);
+        mCreateStatusValue = binding.getRoot().findViewById(R.id.textStatusValue);
+        mProgressCreate = binding.getRoot().findViewById(R.id.progressCreate);
 
-        mProgressScan = view.findViewById(R.id.progressScan);
+        mProgressScan = binding.getRoot().findViewById(R.id.progressScan);
 
-        mRecyclerView = view.findViewById(R.id.listTargets);
+        mRecyclerView = binding.getRoot().findViewById(R.id.listTargets);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        mScanWarning = view.findViewById(R.id.textWarningEmpty);
+        mScanWarning = binding.getRoot().findViewById(R.id.textWarningEmpty);
 
-        return view;
+        return binding.getRoot();
     }
 
     @Override
@@ -122,25 +124,20 @@ public class PickerFragment extends Fragment implements View.OnClickListener,
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.buttonCreate:
-                onCreateButtonClicked();
-                break;
-            case R.id.buttonScan:
-                onScanButtonClicked();
-                break;
+        if (v.getId() == R.id.buttonCreate) {
+            onCreateButtonClicked();
+        } else if (v.getId() == R.id.buttonScan) {
+            onScanButtonClicked();
         }
     }
 
     @Override
     public void onItemSelected(@NonNull Target target) {
         if (isClickable) {
-            Log.d(TAG, "onItemSelected: " + target.toString());
-
-            checkNotNull(getContext());
+            Log.d(TAG, "onItemSelected: " + target);
 
             final String msg = getString(R.string.connection_dialog_text, target.getShortName());
-            new AlertDialog.Builder(getContext())
+            new AlertDialog.Builder(requireContext())
                     .setMessage(msg)
                     .setPositiveButton(R.string.yes, (dialog, which) -> mListener.onConnect(target))
                     .setNegativeButton(R.string.no, null)

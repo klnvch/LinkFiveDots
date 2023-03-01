@@ -43,27 +43,27 @@
             android:id="@+id/textUser1Name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawableStart="@drawable/game_dot_circle_red"
-            android:drawableLeft="@drawable/game_dot_circle_red"
             android:drawablePadding="8dp"
             android:gravity="center"
             android:text="@string/unknown"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:drawableStartCompat="@drawable/game_dot_circle_red"
+            app:drawableLeftCompat="@drawable/game_dot_circle_red" />
 
         <TextView
             android:id="@+id/textUser2Name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawableStart="@drawable/game_dot_circle_blue"
-            android:drawableLeft="@drawable/game_dot_circle_blue"
             android:drawablePadding="8dp"
             android:gravity="center"
             android:text="@string/computer"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:drawableStartCompat="@drawable/game_dot_circle_blue"
+            app:drawableLeftCompat="@drawable/game_dot_circle_blue" />
 
         <TextView
             android:id="@+id/textTimeLabel"

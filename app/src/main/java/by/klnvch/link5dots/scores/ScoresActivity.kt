@@ -27,46 +27,58 @@ package by.klnvch.link5dots.scores
 import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentStatePagerAdapter
+import androidx.fragment.app.FragmentActivity
+import androidx.viewpager2.adapter.FragmentStateAdapter
 import by.klnvch.link5dots.R
+import by.klnvch.link5dots.databinding.ActivityScoresBinding
+import com.google.android.material.tabs.TabLayoutMediator
 import dagger.android.support.DaggerAppCompatActivity
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.activity_scores.*
 
 
 class ScoresActivity : DaggerAppCompatActivity() {
+    private lateinit var binding: ActivityScoresBinding
 
     private val mDisposables = CompositeDisposable()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_scores)
+        binding = ActivityScoresBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         setTitle(R.string.scores_title)
 
-        viewPager.adapter = PagerAdapter(supportFragmentManager)
-        tabLayout.setupWithViewPager(viewPager)
+        binding.viewPager.adapter = PagerAdapter(this)
+
+        TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
+            tab.text = when (position) {
+                TAB_SCORES -> getString(R.string.scores_title)
+                TAB_HISTORY -> getString(R.string.history)
+                else -> {
+                    throw IllegalStateException()
+                }
+            }
+        }.attach()
     }
 
     override fun onStart() {
         super.onStart()
 
         mDisposables.add(Observable.fromCallable { getCurrentItem() }
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { viewPager.currentItem = it })
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe { binding.viewPager.currentItem = it })
     }
 
     override fun onStop() {
         super.onStop()
 
         getPreferences(Context.MODE_PRIVATE)
-                .edit()
-                .putInt(CURRENT_TAB_KEY, viewPager.currentItem)
-                .apply()
+            .edit()
+            .putInt(CURRENT_TAB_KEY, binding.viewPager.currentItem)
+            .apply()
         mDisposables.clear()
     }
 
@@ -74,9 +86,8 @@ class ScoresActivity : DaggerAppCompatActivity() {
         return getPreferences(Context.MODE_PRIVATE).getInt(CURRENT_TAB_KEY, 0)
     }
 
-    private inner class PagerAdapter(fm: FragmentManager) : FragmentStatePagerAdapter(fm) {
-
-        override fun getItem(i: Int): Fragment {
+    private inner class PagerAdapter(fa: FragmentActivity) : FragmentStateAdapter(fa) {
+        override fun createFragment(i: Int): Fragment {
             when (i) {
                 TAB_SCORES -> return ScoresFragment()
                 TAB_HISTORY -> return HistoryFragment()
@@ -84,17 +95,7 @@ class ScoresActivity : DaggerAppCompatActivity() {
             throw IllegalStateException()
         }
 
-        override fun getCount(): Int {
-            return 2
-        }
-
-        override fun getPageTitle(position: Int): CharSequence? {
-            when (position) {
-                TAB_SCORES -> return getString(R.string.scores_title)
-                TAB_HISTORY -> return getString(R.string.history)
-            }
-            throw IllegalStateException()
-        }
+        override fun getItemCount(): Int = 2
     }
 
     companion object {

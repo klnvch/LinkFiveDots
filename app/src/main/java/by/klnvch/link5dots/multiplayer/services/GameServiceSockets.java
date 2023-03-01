@@ -24,15 +24,19 @@
 
 package by.klnvch.link5dots.multiplayer.services;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.checkState;
+
 import android.util.Log;
-
-import com.crashlytics.android.Crashlytics;
-
-import java.io.IOException;
 
 import androidx.annotation.CallSuper;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
+
+import java.io.IOException;
+
 import by.klnvch.link5dots.models.Room;
 import by.klnvch.link5dots.multiplayer.sockets.ServerSocketDecorator;
 import by.klnvch.link5dots.multiplayer.sockets.SocketDecorator;
@@ -43,9 +47,6 @@ import by.klnvch.link5dots.multiplayer.threads.ConnectedThread;
 import by.klnvch.link5dots.multiplayer.threads.OnSocketConnectedListener;
 import by.klnvch.link5dots.multiplayer.utils.GameState;
 import by.klnvch.link5dots.utils.RoomUtils;
-
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Preconditions.checkState;
 
 /**
  * Server:
@@ -127,7 +128,7 @@ public abstract class GameServiceSockets extends GameService
         checkNotNull(mSocketThread);
 
         Log.e(TAG, "onSocketFailed: " + exception.getMessage());
-        Crashlytics.logException(exception);
+        FirebaseCrashlytics.getInstance().recordException(exception);
 
         mSocketThread = null;
         sendMsg(exception);

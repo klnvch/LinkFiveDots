@@ -32,7 +32,7 @@ import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import by.klnvch.link5dots.R
-import com.crashlytics.android.Crashlytics
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import java.util.*
 
 class NewGameDialog : DialogFragment(), DialogInterface.OnClickListener {
@@ -49,12 +49,12 @@ class NewGameDialog : DialogFragment(), DialogInterface.OnClickListener {
         mEditText.setText(seedStr)
         mEditText.setSelection(seedStr.length)
 
-        return AlertDialog.Builder(context!!)
-                .setCancelable(false)
-                .setPositiveButton(R.string.okay, this)
-                .setNegativeButton(R.string.cancel, this)
-                .setView(v)
-                .create()
+        return AlertDialog.Builder(requireContext())
+            .setCancelable(false)
+            .setPositiveButton(R.string.okay, this)
+            .setNegativeButton(R.string.cancel, this)
+            .setView(v)
+            .create()
     }
 
     override fun onClick(dialogInterface: DialogInterface, i: Int) {
@@ -67,7 +67,7 @@ class NewGameDialog : DialogFragment(), DialogInterface.OnClickListener {
                     val seed = seedStr.toLong()
                     listener.onSeedNewGame(seed)
                 } catch (e: Exception) {
-                    Crashlytics.logException(e)
+                    FirebaseCrashlytics.getInstance().recordException(e)
                 }
 
             }

@@ -41,7 +41,7 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:visibility="visible" />
 
-    <fragment
+    <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragment"
         android:name="by.klnvch.link5dots.GameFragment"
         android:layout_width="match_parent"

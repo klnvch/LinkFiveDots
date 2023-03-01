@@ -31,20 +31,20 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import com.crashlytics.android.Crashlytics
-import kotlinx.android.synthetic.main.activity_info.*
+import by.klnvch.link5dots.databinding.ActivityInfoBinding
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 
 
 class InfoActivity : AppCompatActivity(), View.OnClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_info)
+        val binding = ActivityInfoBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         setTitle(R.string.application_info_label)
 
         // set version
-        val versionName = packageManager.getPackageInfo(packageName, 0).versionName
-        textViewAppVersion.text = getString(R.string.version_text, versionName)
+        binding.textViewAppVersion.text = getString(R.string.version_text, BuildConfig.VERSION_NAME)
     }
 
     override fun onClick(v: View) {
@@ -59,16 +59,17 @@ class InfoActivity : AppCompatActivity(), View.OnClickListener {
             }
             R.id.buttonInfoShare -> {
                 val intent = Intent(Intent.ACTION_SEND)
-                        .putExtra(Intent.EXTRA_TEXT, WEB_PAGE_LINK)
-                        .setType("text/plain")
+                    .putExtra(Intent.EXTRA_TEXT, WEB_PAGE_LINK)
+                    .setType("text/plain")
                 launchIntent(intent, WEB_PAGE_LINK)
             }
             R.id.buttonInfoFeedback -> {
-                val intent = Intent.createChooser(Intent(Intent.ACTION_SENDTO)
-                        .setType("message/rfc822")
-                        .setData(Uri.parse(URI_MAIL_DATA))
+                val intent = Intent.createChooser(
+                    Intent(Intent.ACTION_SENDTO)
+                        .setDataAndType(Uri.parse(URI_MAIL_DATA), "message/rfc822")
                         .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK),
-                        getString(R.string.connection_error_message))
+                    getString(R.string.connection_error_message)
+                )
                 launchIntent(intent, MAIL)
             }
         }
@@ -78,25 +79,26 @@ class InfoActivity : AppCompatActivity(), View.OnClickListener {
         try {
             startActivity(intent)
         } catch (e: ActivityNotFoundException) {
-            Crashlytics.logException(e)
+            FirebaseCrashlytics.getInstance().recordException(e)
 
             AlertDialog.Builder(this)
-                    .setMessage(errorMsg)
-                    .setPositiveButton(R.string.okay, null)
-                    .setNeutralButton(R.string.copy_text) { _, _ -> copyToClipboard(errorMsg) }
-                    .show()
+                .setMessage(errorMsg)
+                .setPositiveButton(R.string.okay, null)
+                .setNeutralButton(R.string.copy_text) { _, _ -> copyToClipboard(errorMsg) }
+                .show()
         }
     }
 
     private fun copyToClipboard(msg: String) {
         val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
         val clip = ClipData.newPlainText(msg, msg)
-        clipboard.primaryClip = clip
+        clipboard.setPrimaryClip(clip)
         Toast.makeText(this, R.string.toast_text_copied, Toast.LENGTH_SHORT).show()
     }
 
     companion object {
-        private const val WEB_PAGE_LINK = "https://play.google.com/store/apps/details?id=by.klnvch.link5dots"
+        private const val WEB_PAGE_LINK =
+            "https://play.google.com/store/apps/details?id=by.klnvch.link5dots"
         private const val ANDROID_APP_LINK = "market://details?id=by.klnvch.link5dots"
         private const val GITHUB_LINK = "https://github.com/klnvch/LinkFiveDots"
         private const val MAIL = "link5dots@gmail.com"

@@ -32,27 +32,33 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import by.klnvch.link5dots.R
+import by.klnvch.link5dots.databinding.FragmentScoresBinding
 import by.klnvch.link5dots.models.HighScore
+import by.klnvch.link5dots.utils.IntentExt.getHighScore
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
-import kotlinx.android.synthetic.main.fragment_scores.view.*
 
 class ScoresFragment : Fragment() {
+    private lateinit var binding: FragmentScoresBinding
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.fragment_scores, container, false)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        binding = FragmentScoresBinding.inflate(inflater, container, false)
 
-        view.recyclerView.setHasFixedSize(true)
-        view.recyclerView.layoutManager = LinearLayoutManager(context)
+        binding.recyclerView.setHasFixedSize(true)
+        binding.recyclerView.layoutManager = LinearLayoutManager(context)
 
-        return view
+        return binding.root
     }
 
     override fun onStart() {
         super.onStart()
 
-        if (FirebaseUtils.isSupported(context!!)) {
+        if (FirebaseUtils.isSupported(requireContext())) {
             // TODO: StrictMode policy violation
             FirebaseAuth.getInstance().signInAnonymously().addOnCompleteListener { onSignedIn(it) }
         } else {
@@ -77,30 +83,30 @@ class ScoresFragment : Fragment() {
         } else {
             // init firebase adapter
             // TODO: add loading progress
-            view?.recyclerView?.adapter = ScoresAdapter.create()
+            binding.recyclerView.adapter = ScoresAdapter.create()
             // TODO: what if it is not resumed
             startListening()
 
             // send score if necessary
-            val highScore = activity?.intent?.getSerializableExtra(HighScore.TAG)
+            val highScore = activity?.intent?.getHighScore()
             if (highScore != null) {
                 activity?.intent?.removeExtra(HighScore.TAG)
-                FirebaseUtils.publishScore(context!!, highScore as HighScore)
+                FirebaseUtils.publishScore(requireContext(), highScore)
             }
         }
     }
 
     private fun showError(msg: Int) {
-        view?.recyclerView?.visibility = View.GONE
-        view?.textError?.visibility = View.VISIBLE
-        view?.textError?.text = getString(msg)
+        binding.recyclerView.visibility = View.GONE
+        binding.textError.visibility = View.VISIBLE
+        binding.textError.text = getString(msg)
     }
 
     private fun startListening() {
-        (view?.recyclerView?.adapter as? ScoresAdapter)?.startListening()
+        (binding.recyclerView.adapter as? ScoresAdapter)?.startListening()
     }
 
     private fun stopListening() {
-        (view?.recyclerView?.adapter as? ScoresAdapter)?.stopListening()
+        (binding.recyclerView.adapter as? ScoresAdapter)?.stopListening()
     }
 }

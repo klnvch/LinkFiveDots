@@ -28,26 +28,29 @@ import android.os.Bundle
 import android.view.View
 import by.klnvch.link5dots.GameFragment
 import by.klnvch.link5dots.R
+import by.klnvch.link5dots.databinding.ActivityGameBinding
 import by.klnvch.link5dots.models.Dot
-import by.klnvch.link5dots.models.Room
 import by.klnvch.link5dots.models.User
+import by.klnvch.link5dots.utils.IntentExt.getRoom
 import dagger.android.support.DaggerAppCompatActivity
-import kotlinx.android.synthetic.main.activity_game.*
 
 class GameInfoActivity : DaggerAppCompatActivity(), GameFragment.OnGameListener {
+    private lateinit var binding: ActivityGameBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_game)
+        binding = ActivityGameBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         setTitle(R.string.application_info_label)
     }
 
     override fun onStart() {
         super.onStart()
-        val room = intent.getSerializableExtra("room")
+        val room = intent.getRoom()
         if (room != null) {
-            (fragment as GameFragment).update(room as Room)
+            (binding.fragment.getFragment() as GameFragment).update(room)
         } else {
-            errorMessage.visibility = View.VISIBLE
+            binding.errorMessage.visibility = View.VISIBLE
         }
     }
 
@@ -58,10 +61,6 @@ class GameInfoActivity : DaggerAppCompatActivity(), GameFragment.OnGameListener 
     }
 
     override fun getUser(): User? {
-        val room = intent.getSerializableExtra("room")
-        room?.let {
-            return (room as Room).user1
-        }
-        return null
+        return intent.getRoom()?.user1
     }
 }

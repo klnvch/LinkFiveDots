@@ -30,61 +30,82 @@ import android.util.Log
 import android.view.*
 import android.widget.TextView
 import androidx.annotation.DrawableRes
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
+import androidx.lifecycle.Lifecycle
+import by.klnvch.link5dots.databinding.GameBoardBinding
 import by.klnvch.link5dots.db.RoomDao
 import by.klnvch.link5dots.models.*
 import by.klnvch.link5dots.settings.SettingsUtils
 import by.klnvch.link5dots.utils.RoomUtils
-import com.crashlytics.android.Crashlytics
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import dagger.android.support.DaggerFragment
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.game_board.*
 import javax.inject.Inject
 
 class GameFragment : DaggerFragment() {
     private val mDisposables = CompositeDisposable()
     private lateinit var mListener: OnGameListener
+    private lateinit var binding: GameBoardBinding
+
     @Inject
     lateinit var roomDao: RoomDao
+
     @Inject
     lateinit var settingsUtils: SettingsUtils
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         mListener = context as OnGameListener
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.game_board, container, false)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        binding = GameBoardBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        setHasOptionsMenu(true)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        gameView.setOnMoveDoneListener { onMoveDone(it) }
-        gameView.setOnGameEndListener { onGameFinished() }
+        binding.gameView.setOnMoveDoneListener { onMoveDone(it) }
+        binding.gameView.setOnGameEndListener { onGameFinished() }
 
         if (savedInstanceState != null) {
-            gameView.viewState = GameViewState.fromJson(savedInstanceState.getString(KEY_VIEW_STATE))
+            binding.gameView.viewState =
+                GameViewState.fromJson(savedInstanceState.getString(KEY_VIEW_STATE))
         }
 
         mDisposables.add(settingsUtils.dotsType
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { this.setDotsType(it) })
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe { this.setDotsType(it) })
+
+        setupMenu()
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        inflater!!.inflate(R.menu.menu_game_fragment, menu)
-        super.onCreateOptionsMenu(menu, inflater)
+    private fun setupMenu() {
+        (requireActivity() as MenuHost).addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.menu_game_fragment, menu)
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                return when (menuItem.itemId) {
+                    R.id.menu_search -> focus()
+                    else -> true
+                }
+            }
+        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        outState.putString(KEY_VIEW_STATE, gameView.viewState.toJson())
+        outState.putString(KEY_VIEW_STATE, binding.gameView.viewState.toJson())
         super.onSaveInstanceState(outState)
     }
 
@@ -93,22 +114,15 @@ class GameFragment : DaggerFragment() {
         super.onDestroyView()
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        return when (item!!.itemId) {
-            R.id.menu_search -> focus()
-            else -> super.onOptionsItemSelected(item)
-        }
-    }
-
     private fun setDotsType(@SettingsUtils.DotsType dotsType: Int) {
-        gameView.init(context!!, dotsType)
+        binding.gameView.init(requireContext(), dotsType)
 
         if (dotsType == SettingsUtils.DOTS_TYPE_ORIGINAL) {
-            setLeftDrawable(textUser1, R.drawable.game_dot_circle_red)
-            setLeftDrawable(textUser2, R.drawable.game_dot_circle_blue)
+            setLeftDrawable(binding.textUser1, R.drawable.game_dot_circle_red)
+            setLeftDrawable(binding.textUser2, R.drawable.game_dot_circle_blue)
         } else {
-            setLeftDrawable(textUser1, R.drawable.game_dot_cross_red)
-            setLeftDrawable(textUser2, R.drawable.game_dot_ring_blue)
+            setLeftDrawable(binding.textUser1, R.drawable.game_dot_cross_red)
+            setLeftDrawable(binding.textUser2, R.drawable.game_dot_ring_blue)
         }
     }
 
@@ -121,7 +135,7 @@ class GameFragment : DaggerFragment() {
         val user = mListener.getUser()
 
         if (user != null) {
-            gameInfo.visibility = View.VISIBLE
+            binding.gameInfo.visibility = View.VISIBLE
 
             val user1 = room.user1
             val user2 = room.user2
@@ -129,32 +143,33 @@ class GameFragment : DaggerFragment() {
             val hostDotType = RoomUtils.getHostDotType(room, user)
 
             if (hostDotType == Dot.HOST) {
-                textUser1.text = user1?.name
-                textUser2.text = user2?.name
+                binding.textUser1.text = user1?.name
+                binding.textUser2.text = user2?.name
             } else {
-                textUser1.text = user2?.name
-                textUser2.text = user1?.name
+                binding.textUser1.text = user2?.name
+                binding.textUser2.text = user1?.name
             }
 
-            gameView.setGameState(Game.createGame(room.dots, hostDotType))
+            binding.gameView.setGameState(Game.createGame(room.dots, hostDotType))
         } else {
-            gameInfo.visibility = View.GONE
-            gameView.setGameState(Game.createGame(room.dots, Dot.HOST))
+            binding.gameInfo.visibility = View.GONE
+            binding.gameView.setGameState(Game.createGame(room.dots, Dot.HOST))
         }
 
         // add non-empty to the database
         mDisposables.add(Observable.just(room)
-                .filter { !RoomUtils.isEmpty(it) }
-                .doOnNext { roomDao.insertRoom(it) }
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        { Log.d(TAG, MSG_DB_INSERT_SUCCESS) },
-                        { Crashlytics.logException(it) }))
+            .filter { !RoomUtils.isEmpty(it) }
+            .doOnNext { roomDao.insertRoom(it) }
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                { Log.d(TAG, MSG_DB_INSERT_SUCCESS) },
+                { FirebaseCrashlytics.getInstance().recordException(it) })
+        )
     }
 
     fun reset() {
-        gameView.newGame(null)
+        binding.gameView.newGame(null)
     }
 
     private fun onMoveDone(dot: Dot) {
@@ -166,7 +181,7 @@ class GameFragment : DaggerFragment() {
     }
 
     fun focus(): Boolean {
-        gameView.focus()
+        binding.gameView.focus()
         return true
     }
 

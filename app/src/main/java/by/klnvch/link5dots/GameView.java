@@ -149,6 +149,8 @@ public class GameView extends View {
             mDotLocations[i] = mLineLocations[i] - dotSize / 2.0f;
             mArrowLocations[i] = mLineLocations[i] - arrowsSize / 2.0f;
         }
+
+        invalidate();
     }
 
     public void setOnMoveDoneListener(@NonNull OnMoveDoneListener listener) {

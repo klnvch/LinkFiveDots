@@ -29,10 +29,11 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 
-import com.crashlytics.android.Crashlytics;
-
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
+
 import by.klnvch.link5dots.multiplayer.activities.GameActivityBluetooth;
 import by.klnvch.link5dots.multiplayer.activities.GameActivityNsd;
 import by.klnvch.link5dots.multiplayer.activities.GameActivityOnline;
@@ -68,34 +69,29 @@ public class MultiPlayerMenuActivity extends AppCompatActivity implements View.O
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.multi_player_two_players:
-                startActivity(new Intent(this, TwoPlayersActivity.class));
-                break;
-            case R.id.multi_player_bluetooth:
-                if (BluetoothHelper.INSTANCE.isSupported()) {
-                    mIsBluetoothEnabled = BluetoothHelper.INSTANCE.isEnabled();
-                    if (mIsBluetoothEnabled) {
-                        startBluetoothActivity();
-                    } else {
-                        BluetoothHelper.INSTANCE.requestEnable(this, RC_ENABLE_BLUETOOTH);
-                    }
+        if (view.getId() == R.id.multi_player_two_players) {
+            startActivity(new Intent(this, TwoPlayersActivity.class));
+        } else if (view.getId() == R.id.multi_player_bluetooth) {
+            if (BluetoothHelper.INSTANCE.isSupported()) {
+                mIsBluetoothEnabled = BluetoothHelper.INSTANCE.isEnabled();
+                if (mIsBluetoothEnabled) {
+                    startBluetoothActivity();
                 } else {
-                    showErrorDialog();
+                    BluetoothHelper.INSTANCE.requestEnable(this, RC_ENABLE_BLUETOOTH);
                 }
-                break;
-            case R.id.multi_player_lan:
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                    startActivityForResult(new Intent(this, GameActivityNsd.class),
-                            RC_GAME_NSD);
-                } else {
-                    showErrorDialog();
-                }
-                break;
-            case R.id.multi_player_online:
-                startActivityForResult(new Intent(this, GameActivityOnline.class),
-                        RC_GAME_INTERNET);
-                break;
+            } else {
+                showErrorDialog();
+            }
+        } else if (view.getId() == R.id.multi_player_lan) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                startActivityForResult(new Intent(this, GameActivityNsd.class),
+                        RC_GAME_NSD);
+            } else {
+                showErrorDialog();
+            }
+        } else if (view.getId() == R.id.multi_player_online) {
+            startActivityForResult(new Intent(this, GameActivityOnline.class),
+                    RC_GAME_INTERNET);
         }
     }
 
@@ -129,11 +125,10 @@ public class MultiPlayerMenuActivity extends AppCompatActivity implements View.O
     }
 
     private void showErrorDialog() {
-        Crashlytics.log("feature not supported");
+        FirebaseCrashlytics.getInstance().log("feature not supported");
         new AlertDialog.Builder(this)
                 .setMessage(R.string.error_feature_not_available)
                 .setPositiveButton(R.string.okay, null)
                 .show();
     }
-
 }
