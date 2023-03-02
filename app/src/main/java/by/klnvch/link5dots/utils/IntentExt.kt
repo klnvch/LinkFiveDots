@@ -18,7 +18,7 @@ object IntentExt {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             getSerializableExtra(HighScore.TAG, HighScore::class.java)
         } else {
-            getSerializableExtra("room") as HighScore?
+            getSerializableExtra(HighScore.TAG) as HighScore?
         }
     }
 }

@@ -57,6 +57,7 @@ android {
         applicationId "by.klnvch.link5dots"
         minSdkVersion 19
         targetSdkVersion 33
+        compileSdkVersion 33
         multiDexEnabled true
         versionCode 48
         versionName "4.4.12"
