@@ -38,7 +38,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 import androidx.sqlite.db.framework.FrameworkSQLiteOpenHelperFactory;
 import androidx.test.InstrumentationRegistry;
 import androidx.test.runner.AndroidJUnit4;
-import by.klnvch.link5dots.db.AppDatabase;
+import by.klnvch.link5dots.data.db.AppDatabase;
 import by.klnvch.link5dots.models.Room;
 
 @RunWith(AndroidJUnit4.class)

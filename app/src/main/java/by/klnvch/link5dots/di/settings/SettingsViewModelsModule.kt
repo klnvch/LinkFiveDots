@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2017 klnvch
+ * Copyright (c) 2023 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,25 +22,20 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.db;
+package by.klnvch.link5dots.di.settings
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import androidx.lifecycle.ViewModel
+import by.klnvch.link5dots.di.ViewModelKey
+import by.klnvch.link5dots.ui.settings.SettingsViewModel
+import dagger.Binds
+import dagger.Module
+import dagger.multibindings.IntoMap
+import javax.inject.Singleton
 
-import java.util.ArrayList;
-
-import androidx.room.TypeConverter;
-import by.klnvch.link5dots.models.Dot;
-
-public class Converters {
-    @TypeConverter
-    public static String listToString(ArrayList<Dot> dots) {
-        return dots == null ? null : new Gson().toJson(dots);
-    }
-
-    @TypeConverter
-    public static ArrayList<Dot> stringToString(String dots) {
-        return dots == null ? null : new Gson().fromJson(dots, new TypeToken<ArrayList<Dot>>() {
-        }.getType());
-    }
+@Module
+abstract class SettingsViewModelsModule {
+    @Binds
+    @IntoMap
+    @ViewModelKey(SettingsViewModel::class)
+    abstract fun bindProfileViewModel(viewModel: SettingsViewModel): ViewModel
 }

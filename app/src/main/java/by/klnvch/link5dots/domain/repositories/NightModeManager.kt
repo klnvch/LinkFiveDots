@@ -22,33 +22,9 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.di
+package by.klnvch.link5dots.domain.repositories
 
-import android.app.Application
-import by.klnvch.link5dots.di.settings.SettingsModule
-import dagger.BindsInstance
-import dagger.Component
-import dagger.android.AndroidInjector
-import dagger.android.support.AndroidSupportInjectionModule
-import javax.inject.Singleton
-
-@ApplicationScope
-@Component(
-    modules = [
-        AppModule::class,
-        ServiceBindingModule::class,
-        ActivityBindingModule::class,
-        AndroidSupportInjectionModule::class,
-        ViewModelFactoryModule::class,
-        SettingsModule::class
-    ]
-)
-interface AppComponent : AndroidInjector<MyApp> {
-    @Component.Builder
-    interface Builder {
-        @BindsInstance
-        fun application(application: Application): Builder
-
-        fun build(): AppComponent
-    }
+interface NightModeManager {
+    fun set(nightMode: String): Boolean
+    fun reset()
 }

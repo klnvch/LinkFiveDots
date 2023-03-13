@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2017 klnvch
+ * Copyright (c) 2023 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,14 +26,13 @@ package by.klnvch.link5dots.di
 
 import by.klnvch.link5dots.GameFragment
 import by.klnvch.link5dots.scores.HistoryFragment
-import by.klnvch.link5dots.settings.UsernameDialog
+import by.klnvch.link5dots.ui.main.UsernameDialog
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
 
 @Module
 abstract class FragmentBuildersModule {
-    //@FragmentScoped
     @ContributesAndroidInjector
     abstract fun historyFragment(): HistoryFragment
 

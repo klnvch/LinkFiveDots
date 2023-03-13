@@ -154,7 +154,7 @@
                 android:value="by.klnvch.link5dots.MainMenuActivity" />
         </activity>
         <activity
-            android:name="by.klnvch.link5dots.settings.SettingsActivity"
+            android:name="by.klnvch.link5dots.ui.settings.SettingsActivity"
             android:label="@string/settings"
             android:launchMode="singleTop">
             <meta-data

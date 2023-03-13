@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2017 klnvch
+ * Copyright (c) 2023 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.settings;
+package by.klnvch.link5dots.ui.settings.preferences;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -31,62 +31,54 @@ import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
+import androidx.annotation.NonNull;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceViewHolder;
+
 import by.klnvch.link5dots.R;
+import by.klnvch.link5dots.domain.models.DotsType;
 
 @SuppressWarnings({"unused"})
 public class DotsTypePreference extends Preference {
 
-    private static final int DEFAULT_VALUE = SettingsUtils.DOTS_TYPE_ORIGINAL;
+    private static final int DEFAULT_VALUE = DotsType.ORIGINAL;
 
     private int mCurrentValue;
 
     public DotsTypePreference(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
-        init();
+        setWidgetLayoutResource(R.layout.switch_dots_type);
     }
 
     public DotsTypePreference(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init();
+        setWidgetLayoutResource(R.layout.switch_dots_type);
     }
 
     public DotsTypePreference(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init();
+        setWidgetLayoutResource(R.layout.switch_dots_type);
     }
 
     public DotsTypePreference(Context context) {
         super(context);
-        init();
-    }
-
-    private void init() {
         setWidgetLayoutResource(R.layout.switch_dots_type);
     }
 
     @Override
-    public void onBindViewHolder(PreferenceViewHolder holder) {
+    public void onBindViewHolder(@NonNull PreferenceViewHolder holder) {
         super.onBindViewHolder(holder);
         final ImageView dot1 = (ImageView) holder.findViewById(R.id.dot_1);
         final ImageView dot2 = (ImageView) holder.findViewById(R.id.dot_2);
-        if (mCurrentValue == SettingsUtils.DOTS_TYPE_ORIGINAL) {
-            dot1.setImageResource(R.drawable.game_dot_circle_red);
-            dot2.setImageResource(R.drawable.game_dot_circle_blue);
-        } else {
-            dot1.setImageResource(R.drawable.game_dot_cross_red);
-            dot2.setImageResource(R.drawable.game_dot_ring_blue);
-        }
-    }
-
-    @Override
-    protected void onSetInitialValue(boolean restorePersistedValue, Object defaultValue) {
-        if (restorePersistedValue) {
-            mCurrentValue = this.getPersistedInt(DEFAULT_VALUE);
-        } else {
-            mCurrentValue = (Integer) defaultValue;
-            persistInt(mCurrentValue);
+        switch (mCurrentValue) {
+            case DotsType.CROSS_AND_RING:
+                dot1.setImageResource(R.drawable.game_dot_cross_red);
+                dot2.setImageResource(R.drawable.game_dot_ring_blue);
+                break;
+            case DotsType.ORIGINAL:
+            default:
+                dot1.setImageResource(R.drawable.game_dot_circle_red);
+                dot2.setImageResource(R.drawable.game_dot_circle_blue);
         }
     }
 
@@ -98,10 +90,13 @@ public class DotsTypePreference extends Preference {
     @Override
     protected void onClick() {
         final int newValue;
-        if (mCurrentValue == SettingsUtils.DOTS_TYPE_ORIGINAL) {
-            newValue = SettingsUtils.DOTS_TYPE_CROSS_AND_RING;
-        } else {
-            newValue = SettingsUtils.DOTS_TYPE_ORIGINAL;
+        switch (mCurrentValue) {
+            case DotsType.CROSS_AND_RING:
+                newValue = DotsType.ORIGINAL;
+                break;
+            case DotsType.ORIGINAL:
+            default:
+                newValue = DotsType.CROSS_AND_RING;
         }
 
         if (!callChangeListener(newValue)) {
@@ -127,7 +122,7 @@ public class DotsTypePreference extends Preference {
 
     @Override
     protected void onRestoreInstanceState(Parcelable state) {
-        if (!state.getClass().equals(SavedState.class)) {
+        if (state != null && !state.getClass().equals(SavedState.class)) {
             super.onRestoreInstanceState(state);
             return;
         }
@@ -145,7 +140,6 @@ public class DotsTypePreference extends Preference {
                     public SavedState createFromParcel(Parcel in) {
                         return new SavedState(in);
                     }
-
                     public SavedState[] newArray(int size) {
                         return new SavedState[size];
                     }

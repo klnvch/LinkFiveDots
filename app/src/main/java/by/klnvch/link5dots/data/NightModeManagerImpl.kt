@@ -22,33 +22,35 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.di
+package by.klnvch.link5dots.data
 
-import android.app.Application
-import by.klnvch.link5dots.di.settings.SettingsModule
-import dagger.BindsInstance
-import dagger.Component
-import dagger.android.AndroidInjector
-import dagger.android.support.AndroidSupportInjectionModule
-import javax.inject.Singleton
+import androidx.appcompat.app.AppCompatDelegate
+import by.klnvch.link5dots.domain.models.NightMode
+import by.klnvch.link5dots.domain.repositories.NightModeManager
 
-@ApplicationScope
-@Component(
-    modules = [
-        AppModule::class,
-        ServiceBindingModule::class,
-        ActivityBindingModule::class,
-        AndroidSupportInjectionModule::class,
-        ViewModelFactoryModule::class,
-        SettingsModule::class
-    ]
-)
-interface AppComponent : AndroidInjector<MyApp> {
-    @Component.Builder
-    interface Builder {
-        @BindsInstance
-        fun application(application: Application): Builder
+class NightModeManagerImpl : NightModeManager {
+    override fun set(nightMode: String): Boolean {
+        val newNightMode = map(nightMode)
+        val oldNightMode = AppCompatDelegate.getDefaultNightMode()
+        return if (newNightMode != oldNightMode) {
+            AppCompatDelegate.setDefaultNightMode(newNightMode)
+            true
+        } else {
+            false
+        }
+    }
 
-        fun build(): AppComponent
+    override fun reset() {
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+    }
+
+    private fun map(nightMode: String): Int {
+        return when (nightMode) {
+            NightMode.ON -> AppCompatDelegate.MODE_NIGHT_YES
+            NightMode.OFF -> AppCompatDelegate.MODE_NIGHT_NO
+            NightMode.AUTO -> AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY
+            NightMode.SYSTEM -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+            else -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+        }
     }
 }

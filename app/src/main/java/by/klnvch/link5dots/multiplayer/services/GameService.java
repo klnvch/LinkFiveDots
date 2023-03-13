@@ -21,22 +21,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 package by.klnvch.link5dots.multiplayer.services;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
 
-import org.greenrobot.eventbus.EventBus;
-
-import javax.inject.Inject;
-
 import androidx.annotation.CallSuper;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
+
+import org.greenrobot.eventbus.EventBus;
+
+import javax.inject.Inject;
+
+import by.klnvch.link5dots.domain.repositories.Settings;
 import by.klnvch.link5dots.models.Dot;
 import by.klnvch.link5dots.models.Room;
 import by.klnvch.link5dots.models.User;
@@ -51,16 +55,9 @@ import by.klnvch.link5dots.multiplayer.utils.OnRoomConnectedListener;
 import by.klnvch.link5dots.multiplayer.utils.OnRoomUpdatedListener;
 import by.klnvch.link5dots.multiplayer.utils.OnTargetCreatedListener;
 import by.klnvch.link5dots.multiplayer.utils.OnTargetDeletedListener;
-import by.klnvch.link5dots.settings.SettingsUtils;
 import by.klnvch.link5dots.utils.RoomUtils;
 import dagger.android.DaggerService;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.schedulers.Schedulers;
-
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 public abstract class GameService extends DaggerService implements GameServiceInterface,
         OnTargetCreatedListener, OnTargetDeletedListener,
@@ -74,7 +71,7 @@ public abstract class GameService extends DaggerService implements GameServiceIn
     ScannerInterface mScanner;
     FactoryServiceInterface mFactory;
     @Inject
-    SettingsUtils settingsUtils;
+    Settings settings;
     private TargetAdapterInterface mAdapter;
     private User mUser;
     private Room mRoom = null;
@@ -87,12 +84,7 @@ public abstract class GameService extends DaggerService implements GameServiceIn
         mFactory = FactoryProvider.getServiceFactory(this.getClass());
         mAdapter = mFactory.getAdapter(this);
         mScanner = (ScannerInterface) mAdapter;
-
-        // TODO: set NOT READY state till completion
-        mDisposables.add(settingsUtils.getUserNameOrDefault()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(s -> mUser = User.newUser(s)));
+        mUser = User.newUser(settings.getUserNameBlocking());
     }
 
     @Override

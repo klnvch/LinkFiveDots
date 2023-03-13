@@ -22,33 +22,21 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.di
+package by.klnvch.link5dots.di.settings
 
-import android.app.Application
-import by.klnvch.link5dots.di.settings.SettingsModule
-import dagger.BindsInstance
-import dagger.Component
+import by.klnvch.link5dots.ui.settings.SettingsActivity
+import dagger.Subcomponent
 import dagger.android.AndroidInjector
-import dagger.android.support.AndroidSupportInjectionModule
-import javax.inject.Singleton
 
-@ApplicationScope
-@Component(
+@SettingsScope
+@Subcomponent(
     modules = [
-        AppModule::class,
-        ServiceBindingModule::class,
-        ActivityBindingModule::class,
-        AndroidSupportInjectionModule::class,
-        ViewModelFactoryModule::class,
-        SettingsModule::class
+        SettingsFragmentBuildersModule::class,
+        SettingsViewModelsModule::class,
+        LanguageModule::class
     ]
 )
-interface AppComponent : AndroidInjector<MyApp> {
-    @Component.Builder
-    interface Builder {
-        @BindsInstance
-        fun application(application: Application): Builder
-
-        fun build(): AppComponent
-    }
+interface SettingsSubcomponent : AndroidInjector<SettingsActivity> {
+    @Subcomponent.Factory
+    interface Factory : AndroidInjector.Factory<SettingsActivity>
 }

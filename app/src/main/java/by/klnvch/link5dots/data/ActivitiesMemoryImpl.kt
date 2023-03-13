@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2017 klnvch
+ * Copyright (c) 2023 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,43 +21,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+package by.klnvch.link5dots.data
 
-package by.klnvch.link5dots.settings;
+import android.content.Context
+import by.klnvch.link5dots.MainActivity
+import by.klnvch.link5dots.TwoPlayersActivity
+import by.klnvch.link5dots.domain.repositories.ActivitiesMemory
 
-import android.content.Context;
-import android.util.AttributeSet;
-
-@SuppressWarnings({"unused"})
-public class EditTextPreference extends androidx.preference.EditTextPreference {
-    public EditTextPreference(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-        init();
-    }
-
-    public EditTextPreference(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        init();
-    }
-
-    public EditTextPreference(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        init();
-    }
-
-    public EditTextPreference(Context context) {
-        super(context);
-        init();
-    }
-
-    private void init() {
-        setOnPreferenceChangeListener((preference, newValue) -> {
-            setSummary(newValue.toString());
-            return true;
-        });
-    }
-
-    @Override
-    public CharSequence getSummary() {
-        return getText();
+class ActivitiesMemoryImpl(private val context: Context) : ActivitiesMemory {
+    override fun reset() {
+        context.getSharedPreferences(MainActivity::class.java.name, Context.MODE_PRIVATE)
+            .edit().clear().apply()
+        context.getSharedPreferences(TwoPlayersActivity::class.java.name, Context.MODE_PRIVATE)
+            .edit().clear().apply()
     }
 }

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2017 klnvch
+ * Copyright (c) 2023 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -39,15 +39,16 @@ import android.view.ScaleGestureDetector;
 import android.view.ScaleGestureDetector.SimpleOnScaleGestureListener;
 import android.view.View;
 
-import java.util.ArrayList;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
+
+import java.util.ArrayList;
+
+import by.klnvch.link5dots.domain.models.DotsType;
 import by.klnvch.link5dots.models.Dot;
 import by.klnvch.link5dots.models.Game;
 import by.klnvch.link5dots.models.GameViewState;
-import by.klnvch.link5dots.settings.SettingsUtils;
 import by.klnvch.link5dots.utils.BitmapCreator;
 import by.klnvch.link5dots.utils.MathUtils;
 
@@ -103,7 +104,7 @@ public class GameView extends View {
         super(context, attrs, defStyleAttr);
     }
 
-    public void init(@NonNull Context context, @SettingsUtils.DotsType int dotsType) {
+    public void init(@NonNull Context context, int dotsType) {
         Log.d(TAG, "initGameView");
 
         setFocusable(true);
@@ -118,7 +119,7 @@ public class GameView extends View {
         final int colorRed = ContextCompat.getColor(context, R.color.dot_color_red);
         final int colorBlue = ContextCompat.getColor(context, R.color.dot_color_blue);
         mBitmapPaper = BitmapFactory.decodeResource(getResources(), R.drawable.background);
-        if (dotsType == SettingsUtils.DOTS_TYPE_ORIGINAL) {
+        if (dotsType == DotsType.ORIGINAL) {
             mBitmapUserDot = BitmapCreator.createBitmap(BitmapCreator.DOT, colorRed, density);
             mBitmapBotDot = BitmapCreator.createBitmap(BitmapCreator.DOT, colorBlue, density);
         } else {

@@ -22,33 +22,26 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.di
+package by.klnvch.link5dots.domain.repositories
 
-import android.app.Application
-import by.klnvch.link5dots.di.settings.SettingsModule
-import dagger.BindsInstance
-import dagger.Component
-import dagger.android.AndroidInjector
-import dagger.android.support.AndroidSupportInjectionModule
-import javax.inject.Singleton
+import androidx.room.*
+import by.klnvch.link5dots.models.Room
+import io.reactivex.Flowable
 
-@ApplicationScope
-@Component(
-    modules = [
-        AppModule::class,
-        ServiceBindingModule::class,
-        ActivityBindingModule::class,
-        AndroidSupportInjectionModule::class,
-        ViewModelFactoryModule::class,
-        SettingsModule::class
-    ]
-)
-interface AppComponent : AndroidInjector<MyApp> {
-    @Component.Builder
-    interface Builder {
-        @BindsInstance
-        fun application(application: Application): Builder
+@Dao
+interface RoomDao {
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertRoom(room: Room)
 
-        fun build(): AppComponent
-    }
+    @Update(onConflict = OnConflictStrategy.REPLACE)
+    fun updateRoom(room: Room)
+
+    @Delete
+    fun deleteRoom(room: Room)
+
+    @Query("SELECT * FROM rooms ORDER BY timestamp DESC")
+    fun loadAll(): Flowable<List<Room>>
+
+    @Query("DELETE FROM rooms")
+    suspend fun deleteAll()
 }

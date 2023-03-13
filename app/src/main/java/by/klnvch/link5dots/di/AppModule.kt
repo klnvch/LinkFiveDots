@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2017 klnvch
+ * Copyright (c) 2023 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,52 +25,88 @@
 package by.klnvch.link5dots.di
 
 import android.app.Application
+import android.content.Context
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStore
+import androidx.preference.PreferenceDataStore
 import androidx.room.Room
-import by.klnvch.link5dots.db.AppDatabase
-import by.klnvch.link5dots.db.RoomDao
+import by.klnvch.link5dots.data.ActivitiesMemoryImpl
+import by.klnvch.link5dots.data.NightModeManagerImpl
+import by.klnvch.link5dots.data.db.AppDatabase
+import by.klnvch.link5dots.data.settings.PreferenceDataStoreImpl
+import by.klnvch.link5dots.data.settings.SettingsImpl
+import by.klnvch.link5dots.domain.repositories.ActivitiesMemory
+import by.klnvch.link5dots.domain.repositories.NightModeManager
+import by.klnvch.link5dots.domain.repositories.RoomDao
+import by.klnvch.link5dots.domain.repositories.Settings
 import by.klnvch.link5dots.network.NetworkService
-import by.klnvch.link5dots.settings.SettingsUtils
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import dagger.Module
 import dagger.Provides
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import javax.inject.Singleton
 
+val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 
 @Module
 class AppModule {
+
+    @ApplicationScope
     @Provides
-    @Singleton
     fun provideNetworkService(): NetworkService {
         return Retrofit.Builder()
-                .baseUrl("https://link-five-dots.firebaseio.com/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .build()
-                .create(NetworkService::class.java)
+            .baseUrl("https://link-five-dots.firebaseio.com/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+            .build()
+            .create(NetworkService::class.java)
     }
 
+    @ApplicationScope
     @Provides
-    @Singleton
     fun provideDatabase(app: Application): AppDatabase {
         return Room
-                .databaseBuilder(app, AppDatabase::class.java, AppDatabase.DB_NAME)
-                .addMigrations(AppDatabase.MIGRATION_1_2)
-                .addMigrations(AppDatabase.MIGRATION_2_3)
-                .addMigrations(AppDatabase.MIGRATION_3_4)
-                .build()
+            .databaseBuilder(app, AppDatabase::class.java, AppDatabase.DB_NAME)
+            .addMigrations(AppDatabase.MIGRATION_1_2)
+            .addMigrations(AppDatabase.MIGRATION_2_3)
+            .addMigrations(AppDatabase.MIGRATION_3_4)
+            .build()
     }
 
+    @ApplicationScope
     @Provides
-    @Singleton
     fun provideRoomDao(appDatabase: AppDatabase): RoomDao {
         return appDatabase.roomDao()
     }
 
+    @ApplicationScope
     @Provides
-    @Singleton
-    fun provideSettingsUtils(app: Application): SettingsUtils {
-        return SettingsUtils(app)
+    fun provideSettings(app: Application): Settings {
+        return SettingsImpl(app.dataStore)
     }
+
+    @ApplicationScope
+    @Provides
+    fun providePreferenceDataStore(app: Application): PreferenceDataStore {
+        return PreferenceDataStoreImpl(app.dataStore)
+    }
+
+    @ApplicationScope
+    @Provides
+    fun provideActivitiesMemory(app: Application): ActivitiesMemory {
+        return ActivitiesMemoryImpl(app)
+    }
+
+    @ApplicationScope
+    @Provides
+    fun provideNighModeManager(): NightModeManager {
+        return NightModeManagerImpl()
+    }
+
+    //@ApplicationScope
+    //@Provides
+    //fun provideLanguageManager(app: Application): LanguageManager {
+    //    return LanguageManagerImpl(app)
+    //}
 }

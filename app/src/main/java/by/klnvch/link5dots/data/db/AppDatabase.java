@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2017 klnvch
+ * Copyright (c) 2023 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.db;
+package by.klnvch.link5dots.data.db;
 
 import androidx.annotation.NonNull;
 import androidx.room.Database;
@@ -30,6 +30,8 @@ import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
+
+import by.klnvch.link5dots.domain.repositories.RoomDao;
 import by.klnvch.link5dots.models.Room;
 
 @Database(entities = {Room.class}, version = 4)

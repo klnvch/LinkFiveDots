@@ -34,7 +34,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import by.klnvch.link5dots.R
 import by.klnvch.link5dots.databinding.FragmentScoresBinding
-import by.klnvch.link5dots.db.RoomDao
+import by.klnvch.link5dots.domain.repositories.RoomDao
 import by.klnvch.link5dots.models.Room
 import by.klnvch.link5dots.scores.HistoryAdapter.OnItemClickListener
 import com.google.android.material.snackbar.Snackbar

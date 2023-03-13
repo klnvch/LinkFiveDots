@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2017 klnvch
+ * Copyright (c) 2023 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,17 +29,17 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import javax.inject.Inject;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
 import by.klnvch.link5dots.dialogs.NewGameDialog;
+import by.klnvch.link5dots.domain.repositories.Settings;
 import by.klnvch.link5dots.models.Room;
 import by.klnvch.link5dots.models.User;
-import by.klnvch.link5dots.settings.SettingsUtils;
 import by.klnvch.link5dots.utils.AnalyticsEvents;
 import by.klnvch.link5dots.utils.RoomUtils;
 import dagger.android.support.DaggerAppCompatActivity;
@@ -57,7 +57,7 @@ public abstract class BaseActivity extends DaggerAppCompatActivity
     protected Room mRoom;
     protected FirebaseAnalytics mFirebaseAnalytics;
     @Inject
-    SettingsUtils settingsUtils;
+    Settings settings;
 
     @SuppressLint("MissingPermission")
     @Override
@@ -154,7 +154,7 @@ public abstract class BaseActivity extends DaggerAppCompatActivity
     @NonNull
     private Room loadRoom() {
         final String json = getPreferences(MODE_PRIVATE).getString(KEY_GAME_STATE, null);
-        final User user = User.newUser(settingsUtils.getUserNameOrDefault2());
+        final User user = User.newUser(settings.getUserNameBlocking());
         if (json != null) {
             final Room room = Room.fromJson(json);
             if (room.getUser1() != null) room.getUser1().setName(user.getName());

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2017 klnvch
+ * Copyright (c) 2023 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,30 +22,25 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.db;
+package by.klnvch.link5dots.data.db;
 
-import java.util.List;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
-import androidx.room.Dao;
-import androidx.room.Delete;
-import androidx.room.Insert;
-import androidx.room.OnConflictStrategy;
-import androidx.room.Query;
-import androidx.room.Update;
-import by.klnvch.link5dots.models.Room;
-import io.reactivex.Flowable;
+import java.util.ArrayList;
 
-@Dao
-public interface RoomDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertRoom(Room room);
+import androidx.room.TypeConverter;
+import by.klnvch.link5dots.models.Dot;
 
-    @Update(onConflict = OnConflictStrategy.REPLACE)
-    void updateRoom(Room room);
+public class Converters {
+    @TypeConverter
+    public static String listToString(ArrayList<Dot> dots) {
+        return dots == null ? null : new Gson().toJson(dots);
+    }
 
-    @Delete
-    void deleteRoom(Room room);
-
-    @Query("SELECT * FROM rooms ORDER BY timestamp DESC")
-    Flowable<List<Room>> loadAll();
+    @TypeConverter
+    public static ArrayList<Dot> stringToString(String dots) {
+        return dots == null ? null : new Gson().fromJson(dots, new TypeToken<ArrayList<Dot>>() {
+        }.getType());
+    }
 }

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2017 klnvch
+ * Copyright (c) 2023 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.settings
+package by.klnvch.link5dots.ui.main
 
 import android.app.Dialog
 import android.content.DialogInterface
@@ -31,22 +31,25 @@ import android.view.View
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import by.klnvch.link5dots.R
+import by.klnvch.link5dots.domain.repositories.Settings
 import dagger.android.support.DaggerAppCompatDialogFragment
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class UsernameDialog : DaggerAppCompatDialogFragment(), DialogInterface.OnClickListener {
     private val mDisposables = CompositeDisposable()
 
     @Inject
-    internal lateinit var settingsUtils: SettingsUtils
+    internal lateinit var settings: Settings
+
     private lateinit var mEditText: EditText
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val v = View.inflate(activity, R.layout.dialog_username, null)
-
         mEditText = v.findViewById(R.id.username)
 
         return AlertDialog.Builder(requireContext())
@@ -60,10 +63,13 @@ class UsernameDialog : DaggerAppCompatDialogFragment(), DialogInterface.OnClickL
     override fun onStart() {
         super.onStart()
 
-        mDisposables.add(settingsUtils.userNameOrDefault
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe { this.setUsername(it) })
+        CoroutineScope(Dispatchers.IO).launch {
+            settings.getUserName().collect {
+                withContext(Dispatchers.Main) {
+                    setUsername(it)
+                }
+            }
+        }
     }
 
     override fun onDestroy() {
@@ -75,9 +81,11 @@ class UsernameDialog : DaggerAppCompatDialogFragment(), DialogInterface.OnClickL
         val listener = context as OnUsernameChangedListener
 
         val username = mEditText.text.toString().trim { it <= ' ' }
-        if (!username.isEmpty()) {
-            settingsUtils.setUserName(username)
-            listener.onUsernameChanged(username)
+        if (username.isNotEmpty()) {
+            CoroutineScope(Dispatchers.IO).launch {
+                settings.setUserName(username)
+                listener.onUsernameChanged(username)
+            }
         }
     }
 

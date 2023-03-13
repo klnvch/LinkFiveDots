@@ -22,33 +22,27 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.di
+package by.klnvch.link5dots.domain.repositories
 
-import android.app.Application
-import by.klnvch.link5dots.di.settings.SettingsModule
-import dagger.BindsInstance
-import dagger.Component
-import dagger.android.AndroidInjector
-import dagger.android.support.AndroidSupportInjectionModule
-import javax.inject.Singleton
+import kotlinx.coroutines.flow.Flow
 
-@ApplicationScope
-@Component(
-    modules = [
-        AppModule::class,
-        ServiceBindingModule::class,
-        ActivityBindingModule::class,
-        AndroidSupportInjectionModule::class,
-        ViewModelFactoryModule::class,
-        SettingsModule::class
-    ]
-)
-interface AppComponent : AndroidInjector<MyApp> {
-    @Component.Builder
-    interface Builder {
-        @BindsInstance
-        fun application(application: Application): Builder
+interface Settings {
+    fun getUserName(): Flow<String>
+    fun getUserNameBlocking(): String
+    suspend fun setUserName(userName: String)
+    suspend fun isFirstRun(): Boolean
+    suspend fun setFirstRun()
+    fun getDotsType(): Flow<Int>
+    fun getLanguage(): Flow<String>
+    fun getNightMode(): Flow<String>
+    suspend fun reset()
 
-        fun build(): AppComponent
+    companion object {
+        const val KEY_USER_NAME = "pref_username"
+        const val KEY_FIRST_RUN = "FIRST_RUN"
+        const val KEY_LANGUAGE = "pref_language"
+        const val KEY_VIBRATION = "pref_vibration"
+        const val KEY_DOTS_TYPE = "pref_dots_type"
+        const val KEY_NIGHT_MODE = "pref_night_mode"
     }
 }

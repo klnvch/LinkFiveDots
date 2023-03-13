@@ -23,7 +23,7 @@
   -->
 
 <androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <by.klnvch.link5dots.settings.EditTextPreference
+    <EditTextPreference
         android:defaultValue="@string/unknown"
         android:dialogIcon="@drawable/ic_mood_48dp"
         android:icon="@drawable/ic_mood_48dp"
@@ -38,12 +38,13 @@
         android:entryValues="@array/languages_values"
         android:icon="@drawable/ic_language_48dp"
         android:key="pref_language"
-        android:summary="%s"
         android:title="@string/settings_language" />
-    <by.klnvch.link5dots.settings.SwitchPreference
+    <SwitchPreference
         android:defaultValue="true"
         android:icon="@drawable/ic_vibration_48dp"
         android:key="pref_vibration"
+        android:summaryOff="@string/switch_off_text"
+        android:summaryOn="@string/switch_on_text"
         android:title="@string/settings_vibration" />
     <ListPreference
         android:defaultValue="system"
@@ -52,16 +53,14 @@
         android:entryValues="@array/night_modes_values"
         android:icon="@drawable/ic_wb_sunny_48dp"
         android:key="pref_night_mode"
-        android:summary="%s"
         android:title="@string/settings_night_mode" />
-    <by.klnvch.link5dots.settings.DeletePreference
-        android:icon="@drawable/ic_delete_48dp"
-        android:key="pref_delete"
-        android:title="@string/settings_delete_all" />
-    <by.klnvch.link5dots.settings.DotsTypePreference
+    <by.klnvch.link5dots.ui.settings.preferences.DotsTypePreference
         android:defaultValue="1"
         android:icon="@drawable/ic_grain_48dp"
         android:key="pref_dots_type"
         android:title="@string/settings_dots" />
-
+    <by.klnvch.link5dots.ui.settings.preferences.DeletePreference
+        android:icon="@drawable/ic_delete_48dp"
+        android:key="pref_delete"
+        android:title="@string/settings_delete_all" />
 </androidx.preference.PreferenceScreen>

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2017 klnvch
+ * Copyright (c) 2023 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -30,14 +30,17 @@ import android.os.StrictMode
 import android.util.Log
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.lifecycle.lifecycleScope
 import by.klnvch.link5dots.databinding.ActivityMainMenuBinding
-import by.klnvch.link5dots.db.RoomDao
+import by.klnvch.link5dots.domain.repositories.RoomDao
+import by.klnvch.link5dots.domain.repositories.Settings
+import by.klnvch.link5dots.domain.usecases.GetNightModeChangesUseCase
 import by.klnvch.link5dots.models.Room
 import by.klnvch.link5dots.network.NetworkService
 import by.klnvch.link5dots.scores.ScoresActivity
-import by.klnvch.link5dots.settings.SettingsActivity
-import by.klnvch.link5dots.settings.SettingsUtils
-import by.klnvch.link5dots.settings.UsernameDialog
+import by.klnvch.link5dots.ui.main.UsernameDialog
+import by.klnvch.link5dots.ui.settings.SettingsActivity
+import by.klnvch.link5dots.utils.ContextExt.isTestDevice
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import dagger.android.support.DaggerAppCompatActivity
 import io.reactivex.Completable
@@ -45,6 +48,8 @@ import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class MainMenuActivity : DaggerAppCompatActivity(), View.OnClickListener, View.OnLongClickListener,
@@ -60,8 +65,14 @@ class MainMenuActivity : DaggerAppCompatActivity(), View.OnClickListener, View.O
     @Inject
     lateinit var roomDao: RoomDao
 
+    //@Inject
+    //lateinit var languageChangesUseCase: GetLanguageChangesUseCase
+
     @Inject
-    lateinit var settingsUtils: SettingsUtils
+    lateinit var nightModeChangesUseCase: GetNightModeChangesUseCase
+
+    @Inject
+    lateinit var settings: Settings
 
     private val startSettingsForResult =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
@@ -91,20 +102,22 @@ class MainMenuActivity : DaggerAppCompatActivity(), View.OnClickListener, View.O
 
         binding.textViewGreeting.setOnLongClickListener(this)
 
-        mDisposables.add(settingsUtils.isTheFirstRun
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe { checkTheFirstRun(it) })
+        lifecycleScope.launch {
+            val isTheFirstRun = settings.isFirstRun()
+            checkTheFirstRun(isTheFirstRun)
+        }
 
-        mDisposables.add(SettingsUtils.isConfigurationChanged(this)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe { changeConfiguration(it) })
+        //lifecycleScope.launch {
+        //    languageChangesUseCase.isChanged().collect {
+        //        withContext(Dispatchers.Main) {
+        //            changeConfiguration(it)
+        //        }
+        //    }
+        //}
 
-        mDisposables.add(settingsUtils.userNameOrEmpty
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe { setUsername(it) })
+        lifecycleScope.launch {
+            nightModeChangesUseCase.isChanged().collect()
+        }
     }
 
     override fun onResume() {
@@ -125,7 +138,7 @@ class MainMenuActivity : DaggerAppCompatActivity(), View.OnClickListener, View.O
 
     private fun updateIsTest(room: Room): Single<Room> {
         return Single.fromCallable {
-            room.isTest = settingsUtils.isTest
+            room.isTest = isTestDevice()
             roomDao.updateRoom(room)
             room
         }
@@ -181,9 +194,9 @@ class MainMenuActivity : DaggerAppCompatActivity(), View.OnClickListener, View.O
         setUsername(username)
     }
 
-    private fun checkTheFirstRun(isTheFirstRun: Boolean) {
+    private suspend fun checkTheFirstRun(isTheFirstRun: Boolean) {
         if (isTheFirstRun) {
-            settingsUtils.setTheFirstRun()
+            settings.setFirstRun()
         }
     }
 

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2017 klnvch
+ * Copyright (c) 2023 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -34,9 +34,10 @@ import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.lifecycle.Lifecycle
 import by.klnvch.link5dots.databinding.GameBoardBinding
-import by.klnvch.link5dots.db.RoomDao
+import by.klnvch.link5dots.domain.repositories.RoomDao
+import by.klnvch.link5dots.domain.models.DotsType
+import by.klnvch.link5dots.domain.repositories.Settings
 import by.klnvch.link5dots.models.*
-import by.klnvch.link5dots.settings.SettingsUtils
 import by.klnvch.link5dots.utils.RoomUtils
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import dagger.android.support.DaggerFragment
@@ -44,6 +45,10 @@ import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class GameFragment : DaggerFragment() {
@@ -55,7 +60,7 @@ class GameFragment : DaggerFragment() {
     lateinit var roomDao: RoomDao
 
     @Inject
-    lateinit var settingsUtils: SettingsUtils
+    lateinit var settings: Settings
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -81,10 +86,13 @@ class GameFragment : DaggerFragment() {
                 GameViewState.fromJson(savedInstanceState.getString(KEY_VIEW_STATE))
         }
 
-        mDisposables.add(settingsUtils.dotsType
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe { this.setDotsType(it) })
+        CoroutineScope(Dispatchers.IO).launch {
+            settings.getDotsType().collect {
+                withContext(Dispatchers.Main) {
+                    setDotsType(it)
+                }
+            }
+        }
 
         setupMenu()
     }
@@ -114,10 +122,10 @@ class GameFragment : DaggerFragment() {
         super.onDestroyView()
     }
 
-    private fun setDotsType(@SettingsUtils.DotsType dotsType: Int) {
+    private fun setDotsType(dotsType: Int) {
         binding.gameView.init(requireContext(), dotsType)
 
-        if (dotsType == SettingsUtils.DOTS_TYPE_ORIGINAL) {
+        if (dotsType == DotsType.ORIGINAL) {
             setLeftDrawable(binding.textUser1, R.drawable.game_dot_circle_red)
             setLeftDrawable(binding.textUser2, R.drawable.game_dot_circle_blue)
         } else {

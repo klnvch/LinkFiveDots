@@ -22,33 +22,39 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.di
+package by.klnvch.link5dots.ui.settings.preferences;
 
-import android.app.Application
-import by.klnvch.link5dots.di.settings.SettingsModule
-import dagger.BindsInstance
-import dagger.Component
-import dagger.android.AndroidInjector
-import dagger.android.support.AndroidSupportInjectionModule
-import javax.inject.Singleton
+import android.content.Context;
+import android.util.AttributeSet;
 
-@ApplicationScope
-@Component(
-    modules = [
-        AppModule::class,
-        ServiceBindingModule::class,
-        ActivityBindingModule::class,
-        AndroidSupportInjectionModule::class,
-        ViewModelFactoryModule::class,
-        SettingsModule::class
-    ]
-)
-interface AppComponent : AndroidInjector<MyApp> {
-    @Component.Builder
-    interface Builder {
-        @BindsInstance
-        fun application(application: Application): Builder
+import androidx.preference.DialogPreference;
+import by.klnvch.link5dots.R;
 
-        fun build(): AppComponent
+@SuppressWarnings({"unused"})
+public class DeletePreference extends DialogPreference {
+    public DeletePreference(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+        super(context, attrs, defStyleAttr, defStyleRes);
+        init();
+    }
+
+    public DeletePreference(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        init();
+    }
+
+    public DeletePreference(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        init();
+    }
+
+    public DeletePreference(Context context) {
+        super(context);
+        init();
+    }
+
+    private void init() {
+        setDialogIcon(R.drawable.ic_delete_48dp);
+        setPositiveButtonText(R.string.okay);
+        setNegativeButtonText(R.string.cancel);
     }
 }

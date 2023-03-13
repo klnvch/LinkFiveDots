@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2017 klnvch
+ * Copyright (c) 2023 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,40 +21,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+package by.klnvch.link5dots.domain.repositories
 
-package by.klnvch.link5dots.settings;
-
-import android.content.Context;
-import android.util.AttributeSet;
-
-import androidx.preference.DialogPreference;
-import by.klnvch.link5dots.R;
-
-@SuppressWarnings({"unused"})
-public class DeletePreference extends DialogPreference {
-    public DeletePreference(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-        init();
-    }
-
-    public DeletePreference(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        init();
-    }
-
-    public DeletePreference(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        init();
-    }
-
-    public DeletePreference(Context context) {
-        super(context);
-        init();
-    }
-
-    private void init() {
-        setDialogIcon(R.drawable.ic_delete_48dp);
-        setPositiveButtonText(R.string.okay);
-        setNegativeButtonText(R.string.cancel);
-    }
+interface ActivitiesMemory {
+    fun reset()
 }

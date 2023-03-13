@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2017 klnvch
+ * Copyright (c) 2023 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,39 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+package by.klnvch.link5dots.domain.models
 
-package by.klnvch.link5dots.settings;
-
-import android.content.Context;
-import android.util.AttributeSet;
-
-import androidx.preference.SwitchPreferenceCompat;
-import by.klnvch.link5dots.R;
-
-@SuppressWarnings({"unused"})
-public class SwitchPreference extends SwitchPreferenceCompat {
-    public SwitchPreference(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-    }
-
-    public SwitchPreference(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-    }
-
-    public SwitchPreference(Context context, AttributeSet attrs) {
-        super(context, attrs);
-    }
-
-    public SwitchPreference(Context context) {
-        super(context);
-    }
-
-    @Override
-    public CharSequence getSummary() {
-        if (isChecked()) {
-            return getContext().getResources().getString(R.string.switch_on_text);
-        } else {
-            return getContext().getResources().getString(R.string.switch_off_text);
-        }
-    }
+object DotsType {
+    const val ORIGINAL = 1
+    const val CROSS_AND_RING = 2
 }

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2017 klnvch
+ * Copyright (c) 2023 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -32,7 +32,6 @@ import by.klnvch.link5dots.multiplayer.activities.GameActivityNsd
 import by.klnvch.link5dots.multiplayer.activities.GameActivityOnline
 import by.klnvch.link5dots.scores.GameInfoActivity
 import by.klnvch.link5dots.scores.ScoresActivity
-import by.klnvch.link5dots.settings.SettingsActivity
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
@@ -70,8 +69,4 @@ abstract class ActivityBindingModule {
     @ActivityScoped
     @ContributesAndroidInjector(modules = [(FragmentBuildersModule::class)])
     abstract fun gameActivityOnline(): GameActivityOnline
-
-    @ActivityScoped
-    @ContributesAndroidInjector(modules = [(FragmentBuildersModule::class)])
-    abstract fun settingActivity(): SettingsActivity
 }
