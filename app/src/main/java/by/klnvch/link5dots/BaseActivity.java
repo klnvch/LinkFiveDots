@@ -24,7 +24,6 @@
 
 package by.klnvch.link5dots;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -59,7 +58,6 @@ public abstract class BaseActivity extends DaggerAppCompatActivity
     @Inject
     Settings settings;
 
-    @SuppressLint("MissingPermission")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

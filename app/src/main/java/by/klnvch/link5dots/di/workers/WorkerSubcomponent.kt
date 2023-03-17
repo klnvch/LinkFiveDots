@@ -22,19 +22,23 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.di.settings
+package by.klnvch.link5dots.di.workers
 
-import androidx.lifecycle.ViewModel
-import by.klnvch.link5dots.di.ViewModelKey
-import by.klnvch.link5dots.ui.settings.SettingsViewModel
-import dagger.Binds
-import dagger.Module
-import dagger.multibindings.IntoMap
+import androidx.work.ListenableWorker
+import androidx.work.WorkerParameters
+import dagger.BindsInstance
+import dagger.Subcomponent
+import javax.inject.Provider
 
-@Module
-abstract class SettingsViewModelsModule {
-    @Binds
-    @IntoMap
-    @ViewModelKey(SettingsViewModel::class)
-    abstract fun bindSettingsViewModel(viewModel: SettingsViewModel): ViewModel
+@Subcomponent(modules = [SyncHistoryWorkerModule::class])
+interface WorkerSubcomponent {
+
+    fun workers(): Map<Class<out ListenableWorker>, Provider<ListenableWorker>>
+
+    @Subcomponent.Builder
+    interface Builder {
+        @BindsInstance
+        fun workerParameters(param: WorkerParameters): Builder
+        fun build(): WorkerSubcomponent
+    }
 }

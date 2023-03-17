@@ -22,19 +22,22 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.di.settings
+package by.klnvch.link5dots.di.menu
 
-import androidx.lifecycle.ViewModel
-import by.klnvch.link5dots.di.ViewModelKey
-import by.klnvch.link5dots.ui.settings.SettingsViewModel
-import dagger.Binds
+import by.klnvch.link5dots.ui.menu.MainMenuFragment
+import by.klnvch.link5dots.ui.menu.MultiplayerMenuFragment
+import by.klnvch.link5dots.ui.menu.UsernameDialog
 import dagger.Module
-import dagger.multibindings.IntoMap
+import dagger.android.ContributesAndroidInjector
 
 @Module
-abstract class SettingsViewModelsModule {
-    @Binds
-    @IntoMap
-    @ViewModelKey(SettingsViewModel::class)
-    abstract fun bindSettingsViewModel(viewModel: SettingsViewModel): ViewModel
+abstract class MenuFragmentBuildersModule {
+    @ContributesAndroidInjector
+    abstract fun contributeUsernameDialog(): UsernameDialog
+
+    @ContributesAndroidInjector
+    abstract fun contributeMainMenuFragment(): MainMenuFragment
+
+    @ContributesAndroidInjector
+    abstract fun contributeMultiplayerMenuFragment(): MultiplayerMenuFragment
 }

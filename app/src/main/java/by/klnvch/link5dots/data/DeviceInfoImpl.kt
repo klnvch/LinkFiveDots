@@ -22,19 +22,20 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.di.settings
+package by.klnvch.link5dots.data
 
-import androidx.lifecycle.ViewModel
-import by.klnvch.link5dots.di.ViewModelKey
-import by.klnvch.link5dots.ui.settings.SettingsViewModel
-import dagger.Binds
-import dagger.Module
-import dagger.multibindings.IntoMap
+import android.annotation.SuppressLint
+import android.content.Context
+import android.provider.Settings
+import by.klnvch.link5dots.domain.repositories.DeviceInfo
+import by.klnvch.link5dots.utils.TestDevices
 
-@Module
-abstract class SettingsViewModelsModule {
-    @Binds
-    @IntoMap
-    @ViewModelKey(SettingsViewModel::class)
-    abstract fun bindSettingsViewModel(viewModel: SettingsViewModel): ViewModel
+@SuppressLint("HardwareIds")
+class DeviceInfoImpl constructor(private val context: Context) : DeviceInfo {
+    override fun isTest(): Boolean {
+        val androidID = Settings.Secure.getString(
+            context.contentResolver, Settings.Secure.ANDROID_ID
+        )
+        return TestDevices.TEST_DEVICES.contains(androidID)
+    }
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?><!--
   ~ MIT License
   ~
-  ~ Copyright (c) 2017 klnvch
+  ~ Copyright (c) 2023 klnvch
   ~
   ~ Permission is hereby granted, free of charge, to any person obtaining a copy
   ~ of this software and associated documentation files (the "Software"), to deal
@@ -62,8 +62,20 @@
             android:name="google_analytics_adid_collection_enabled"
             android:value="false" />
 
+        <provider
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="${applicationId}.androidx-startup"
+            android:exported="false"
+            tools:node="merge">
+
+            <meta-data
+                android:name="androidx.work.WorkManagerInitializer"
+                android:value="androidx.startup"
+                tools:node="remove" />
+        </provider>
+
         <activity
-            android:name="by.klnvch.link5dots.MainMenuActivity"
+            android:name="by.klnvch.link5dots.ui.menu.MenuActivity"
             android:exported="true"
             android:launchMode="singleTop">
             <intent-filter>
@@ -77,15 +89,7 @@
             android:launchMode="singleTop">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="by.klnvch.link5dots.MainMenuActivity" />
-        </activity>
-        <activity
-            android:name="by.klnvch.link5dots.MultiPlayerMenuActivity"
-            android:label="@string/menu_multi_player"
-            android:launchMode="singleTop">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="by.klnvch.link5dots.MainMenuActivity" />
+                android:value="by.klnvch.link5dots.ui.menu.MenuActivity" />
         </activity>
         <activity
             android:name="by.klnvch.link5dots.TwoPlayersActivity"
@@ -93,7 +97,7 @@
             android:launchMode="singleTop">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="by.klnvch.link5dots.MultiPlayerMenuActivity" />
+                android:value="by.klnvch.link5dots.ui.menu.MenuActivity" />
         </activity>
         <activity
             android:name="by.klnvch.link5dots.multiplayer.activities.GameActivityBluetooth"
@@ -102,7 +106,7 @@
             android:launchMode="singleTop">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="by.klnvch.link5dots.MultiPlayerMenuActivity" />
+                android:value="by.klnvch.link5dots.ui.menu.MenuActivity" />
         </activity>
         <activity
             android:name="by.klnvch.link5dots.multiplayer.activities.GameActivityNsd"
@@ -111,7 +115,7 @@
             android:launchMode="singleTop">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="by.klnvch.link5dots.MultiPlayerMenuActivity" />
+                android:value="by.klnvch.link5dots.ui.menu.MenuActivity" />
         </activity>
         <activity
             android:name="by.klnvch.link5dots.multiplayer.activities.GameActivityOnline"
@@ -119,7 +123,7 @@
             android:launchMode="singleTop">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="by.klnvch.link5dots.MultiPlayerMenuActivity" />
+                android:value="by.klnvch.link5dots.ui.menu.MenuActivity" />
         </activity>
         <activity
             android:name="by.klnvch.link5dots.scores.ScoresActivity"
@@ -127,7 +131,7 @@
             android:launchMode="singleTop">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="by.klnvch.link5dots.MainMenuActivity" />
+                android:value="by.klnvch.link5dots.ui.menu.MenuActivity" />
         </activity>
         <activity
             android:name="by.klnvch.link5dots.scores.GameInfoActivity"
@@ -143,7 +147,7 @@
             android:launchMode="singleTop">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="by.klnvch.link5dots.MainMenuActivity" />
+                android:value="by.klnvch.link5dots.ui.menu.MenuActivity" />
         </activity>
         <activity
             android:name="by.klnvch.link5dots.InfoActivity"
@@ -151,7 +155,7 @@
             android:launchMode="singleTop">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="by.klnvch.link5dots.MainMenuActivity" />
+                android:value="by.klnvch.link5dots.ui.menu.MenuActivity" />
         </activity>
         <activity
             android:name="by.klnvch.link5dots.ui.settings.SettingsActivity"
@@ -159,7 +163,7 @@
             android:launchMode="singleTop">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="by.klnvch.link5dots.MainMenuActivity" />
+                android:value="by.klnvch.link5dots.ui.menu.MenuActivity" />
         </activity>
     </application>
 

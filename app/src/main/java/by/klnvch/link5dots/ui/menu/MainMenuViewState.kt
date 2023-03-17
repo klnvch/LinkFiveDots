@@ -22,19 +22,10 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.di.settings
+package by.klnvch.link5dots.ui.menu
 
-import androidx.lifecycle.ViewModel
-import by.klnvch.link5dots.di.ViewModelKey
-import by.klnvch.link5dots.ui.settings.SettingsViewModel
-import dagger.Binds
-import dagger.Module
-import dagger.multibindings.IntoMap
-
-@Module
-abstract class SettingsViewModelsModule {
-    @Binds
-    @IntoMap
-    @ViewModelKey(SettingsViewModel::class)
-    abstract fun bindSettingsViewModel(viewModel: SettingsViewModel): ViewModel
+data class MainMenuViewState(val userName: String) {
+    companion object {
+        fun initial() = MainMenuViewState("")
+    }
 }

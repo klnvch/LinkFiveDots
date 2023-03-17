@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2017 klnvch
+ * Copyright (c) 2023 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,15 +22,20 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.network;
+package by.klnvch.link5dots.di.menu
 
-import by.klnvch.link5dots.models.Room;
-import io.reactivex.Single;
-import retrofit2.http.Body;
-import retrofit2.http.PUT;
-import retrofit2.http.Path;
 
-public interface NetworkService {
-    @PUT("{table}/{key}.json")
-    Single<Room> addRoom(@Path("table") String table, @Path("key") String key, @Body Room room);
+import androidx.lifecycle.ViewModel
+import by.klnvch.link5dots.di.ViewModelKey
+import by.klnvch.link5dots.ui.menu.MainMenuViewModel
+import dagger.Binds
+import dagger.Module
+import dagger.multibindings.IntoMap
+
+@Module
+abstract class MenuViewModelsModule {
+    @Binds
+    @IntoMap
+    @ViewModelKey(MainMenuViewModel::class)
+    abstract fun bindMainMenuViewModel(viewModel: MainMenuViewModel): ViewModel
 }

@@ -26,7 +26,6 @@ package by.klnvch.link5dots.di
 
 import by.klnvch.link5dots.GameFragment
 import by.klnvch.link5dots.scores.HistoryFragment
-import by.klnvch.link5dots.ui.main.UsernameDialog
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
@@ -38,7 +37,4 @@ abstract class FragmentBuildersModule {
 
     @ContributesAndroidInjector
     abstract fun gameFragment(): GameFragment
-
-    @ContributesAndroidInjector
-    abstract fun usernameDialog(): UsernameDialog
 }

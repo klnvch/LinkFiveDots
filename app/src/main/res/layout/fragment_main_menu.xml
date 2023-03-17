@@ -29,7 +29,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/paper_tiled"
     android:padding="32dp"
-    tools:context="by.klnvch.link5dots.MainMenuActivity">
+    tools:context="by.klnvch.link5dots.ui.menu.MenuActivity">
 
     <TextView
         android:id="@+id/textViewGreeting"

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/menu_nav_graph"
+    app:startDestination="@id/mainMenuFragment">
+
+    <fragment
+        android:id="@+id/mainMenuFragment"
+        android:name="by.klnvch.link5dots.ui.menu.MainMenuFragment"
+        android:label="@string/app_name"
+        tools:layout="@layout/fragment_main_menu">
+        <action
+            android:id="@+id/action_mainMenuFragment_to_multiplayerMenuFragment"
+            app:destination="@id/multiplayerMenuFragment" />
+        <action
+            android:id="@+id/action_mainMenuFragment_to_mainActivity"
+            app:destination="@id/mainActivity" />
+        <action
+            android:id="@+id/action_mainMenuFragment_to_scoresActivity"
+            app:destination="@id/scoresActivity" />
+        <action
+            android:id="@+id/action_mainMenuFragment_to_usernameDialog"
+            app:destination="@id/usernameDialog" />
+        <action
+            android:id="@+id/action_mainMenuFragment_to_howToActivity"
+            app:destination="@id/howToActivity" />
+        <action
+            android:id="@+id/action_mainMenuFragment_to_infoActivity"
+            app:destination="@id/infoActivity" />
+        <action
+            android:id="@+id/action_mainMenuFragment_to_settingsActivity"
+            app:destination="@id/settingsActivity" />
+    </fragment>
+    <fragment
+        android:id="@+id/multiplayerMenuFragment"
+        android:name="by.klnvch.link5dots.ui.menu.MultiplayerMenuFragment"
+        android:label="@string/menu_multi_player"
+        tools:layout="@layout/fragment_multiplayer_menu" >
+        <action
+            android:id="@+id/action_multiplayerMenuFragment_to_twoPlayersActivity"
+            app:destination="@id/twoPlayersActivity" />
+        <action
+            android:id="@+id/action_multiplayerMenuFragment_to_gameActivityBluetooth"
+            app:destination="@id/gameActivityBluetooth" />
+        <action
+            android:id="@+id/action_multiplayerMenuFragment_to_gameActivityNsd"
+            app:destination="@id/gameActivityNsd" />
+        <action
+            android:id="@+id/action_multiplayerMenuFragment_to_gameActivityOnline"
+            app:destination="@id/gameActivityOnline" />
+    </fragment>
+    <activity
+        android:id="@+id/mainActivity"
+        android:name="by.klnvch.link5dots.MainActivity"
+        android:label="@string/app_name" />
+    <activity
+        android:id="@+id/scoresActivity"
+        android:name="by.klnvch.link5dots.scores.ScoresActivity"
+        android:label="@string/scores_title" />
+    <dialog
+        android:id="@+id/usernameDialog"
+        android:name="by.klnvch.link5dots.ui.menu.UsernameDialog"
+        android:label="@string/username" />
+    <activity
+        android:id="@+id/howToActivity"
+        android:name="by.klnvch.link5dots.HowToActivity"
+        android:label="@string/help" />
+    <activity
+        android:id="@+id/twoPlayersActivity"
+        android:name="by.klnvch.link5dots.TwoPlayersActivity"
+        android:label="@string/menu_two_players" />
+    <activity
+        android:id="@+id/settingsActivity"
+        android:name="by.klnvch.link5dots.ui.settings.SettingsActivity"
+        android:label="@string/settings" />
+    <activity
+        android:id="@+id/infoActivity"
+        android:name="by.klnvch.link5dots.InfoActivity"
+        android:label="@string/application_info_label"
+        tools:layout="@layout/activity_info" />
+    <activity
+        android:id="@+id/gameActivityBluetooth"
+        android:name="by.klnvch.link5dots.multiplayer.activities.GameActivityBluetooth"
+        android:label="GameActivityBluetooth" />
+    <activity
+        android:id="@+id/gameActivityNsd"
+        android:name="by.klnvch.link5dots.multiplayer.activities.GameActivityNsd"
+        android:label="GameActivityNsd" />
+    <activity
+        android:id="@+id/gameActivityOnline"
+        android:name="by.klnvch.link5dots.multiplayer.activities.GameActivityOnline"
+        android:label="activity_online_game"
+        tools:layout="@layout/activity_online_game" />
+</navigation>

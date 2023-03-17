@@ -25,7 +25,6 @@
 package by.klnvch.link5dots.di
 
 import by.klnvch.link5dots.MainActivity
-import by.klnvch.link5dots.MainMenuActivity
 import by.klnvch.link5dots.TwoPlayersActivity
 import by.klnvch.link5dots.multiplayer.activities.GameActivityBluetooth
 import by.klnvch.link5dots.multiplayer.activities.GameActivityNsd
@@ -38,9 +37,6 @@ import dagger.android.ContributesAndroidInjector
 
 @Module
 abstract class ActivityBindingModule {
-    @ActivityScoped
-    @ContributesAndroidInjector(modules = [(FragmentBuildersModule::class)])
-    abstract fun mainMenuActivity(): MainMenuActivity
 
     @ActivityScoped
     @ContributesAndroidInjector(modules = [(FragmentBuildersModule::class)])

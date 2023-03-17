@@ -21,20 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package by.klnvch.link5dots.utils
 
-import android.annotation.SuppressLint
-import android.content.Context
-import android.provider.Settings
-import android.util.Log
+package by.klnvch.link5dots.domain.repositories
 
-object ContextExt {
-    @SuppressLint("HardwareIds")
-    fun Context.isTestDevice(): Boolean {
-        val androidID = Settings.Secure.getString(
-            contentResolver, Settings.Secure.ANDROID_ID
-        )
-        Log.d("SettingsUtils", "android id: $androidID")
-        return TestDevices.TEST_DEVICES.contains(androidID)
-    }
+import by.klnvch.link5dots.models.Room
+
+interface RoomRemoteSource {
+    suspend fun save(room: Room)
 }

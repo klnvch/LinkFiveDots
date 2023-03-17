@@ -30,7 +30,7 @@ interface Settings {
     fun getUserName(): Flow<String>
     fun getUserNameBlocking(): String
     suspend fun setUserName(userName: String)
-    suspend fun isFirstRun(): Boolean
+    fun isFirstRun(): Flow<Boolean>
     suspend fun setFirstRun()
     fun getDotsType(): Flow<Int>
     fun getLanguage(): Flow<String>

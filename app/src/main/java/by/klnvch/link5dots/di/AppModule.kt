@@ -32,15 +32,15 @@ import androidx.datastore.preferences.preferencesDataStore
 import androidx.preference.PreferenceDataStore
 import androidx.room.Room
 import by.klnvch.link5dots.data.ActivitiesMemoryImpl
+import by.klnvch.link5dots.data.CrashRepositoryImpl
+import by.klnvch.link5dots.data.DeviceInfoImpl
 import by.klnvch.link5dots.data.NightModeManagerImpl
 import by.klnvch.link5dots.data.db.AppDatabase
 import by.klnvch.link5dots.data.settings.PreferenceDataStoreImpl
 import by.klnvch.link5dots.data.settings.SettingsImpl
-import by.klnvch.link5dots.domain.repositories.ActivitiesMemory
-import by.klnvch.link5dots.domain.repositories.NightModeManager
-import by.klnvch.link5dots.domain.repositories.RoomDao
-import by.klnvch.link5dots.domain.repositories.Settings
-import by.klnvch.link5dots.network.NetworkService
+import by.klnvch.link5dots.data.network.NetworkService
+import by.klnvch.link5dots.data.network.RoomRemoteSourceImpl
+import by.klnvch.link5dots.domain.repositories.*
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import dagger.Module
 import dagger.Provides
@@ -65,6 +65,15 @@ class AppModule {
 
     @ApplicationScope
     @Provides
+    fun provideRoomRemoteSource(networkService: NetworkService): RoomRemoteSource =
+        RoomRemoteSourceImpl(networkService)
+
+    @ApplicationScope
+    @Provides
+    fun provideDeviceInfo(app: Application): DeviceInfo = DeviceInfoImpl(app)
+
+    @ApplicationScope
+    @Provides
     fun provideDatabase(app: Application): AppDatabase {
         return Room
             .databaseBuilder(app, AppDatabase::class.java, AppDatabase.DB_NAME)
@@ -76,37 +85,31 @@ class AppModule {
 
     @ApplicationScope
     @Provides
-    fun provideRoomDao(appDatabase: AppDatabase): RoomDao {
-        return appDatabase.roomDao()
-    }
+    fun provideRoomDao(appDatabase: AppDatabase): RoomDao = appDatabase.roomDao()
 
     @ApplicationScope
     @Provides
-    fun provideSettings(app: Application): Settings {
-        return SettingsImpl(app.dataStore)
-    }
+    fun provideSettings(app: Application): Settings = SettingsImpl(app.dataStore)
 
     @ApplicationScope
     @Provides
-    fun providePreferenceDataStore(app: Application): PreferenceDataStore {
-        return PreferenceDataStoreImpl(app.dataStore)
-    }
+    fun providePreferenceDataStore(app: Application): PreferenceDataStore =
+        PreferenceDataStoreImpl(app.dataStore)
 
     @ApplicationScope
     @Provides
-    fun provideActivitiesMemory(app: Application): ActivitiesMemory {
-        return ActivitiesMemoryImpl(app)
-    }
+    fun provideActivitiesMemory(app: Application): ActivitiesMemory = ActivitiesMemoryImpl(app)
 
     @ApplicationScope
     @Provides
-    fun provideNighModeManager(): NightModeManager {
-        return NightModeManagerImpl()
-    }
+    fun provideNighModeManager(): NightModeManager = NightModeManagerImpl()
 
-    //@ApplicationScope
-    //@Provides
-    //fun provideLanguageManager(app: Application): LanguageManager {
-    //    return LanguageManagerImpl(app)
-    //}
+    @ApplicationScope
+    @Provides
+    fun provideCrashRepository(): CrashRepository = CrashRepositoryImpl()
+
+    @ApplicationScope
+    @Provides
+    fun provideContext(app: Application): Context = app
+
 }

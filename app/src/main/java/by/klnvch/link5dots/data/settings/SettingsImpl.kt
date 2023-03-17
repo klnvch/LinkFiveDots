@@ -67,9 +67,7 @@ class SettingsImpl(private val dataStore: DataStore<Preferences>) : Settings {
         .map { it[LANGUAGE] ?: DEFAULT_LANGUAGE }
         .distinctUntilChanged()
 
-    override suspend fun isFirstRun(): Boolean {
-        return dataStore.data.map { it[FIRST_RUN] ?: DEFAULT_FIRST_RUN }.first()
-    }
+    override fun isFirstRun() = dataStore.data.map { it[FIRST_RUN] ?: DEFAULT_FIRST_RUN }
 
     override suspend fun setFirstRun() {
         dataStore.edit { it[FIRST_RUN] = true }

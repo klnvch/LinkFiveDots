@@ -25,7 +25,6 @@
 package by.klnvch.link5dots.multiplayer.utils.bluetooth
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothServerSocket
@@ -70,10 +69,6 @@ object BluetoothHelper {
 
     fun disable() {
         getAdapter()?.disable()
-    }
-
-    fun requestEnable(activity: Activity, requestCode: Int) {
-        activity.startActivityForResult(Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE), requestCode)
     }
 
     fun registerReceiverAndStartDiscovery(context: Context, receiver: BroadcastReceiver) {

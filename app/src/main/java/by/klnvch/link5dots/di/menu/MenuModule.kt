@@ -22,19 +22,20 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.di.settings
+package by.klnvch.link5dots.di.menu
 
-import androidx.lifecycle.ViewModel
-import by.klnvch.link5dots.di.ViewModelKey
-import by.klnvch.link5dots.ui.settings.SettingsViewModel
+import by.klnvch.link5dots.ui.menu.MenuActivity
 import dagger.Binds
 import dagger.Module
+import dagger.android.AndroidInjector
+import dagger.multibindings.ClassKey
 import dagger.multibindings.IntoMap
 
-@Module
-abstract class SettingsViewModelsModule {
+
+@Module(subcomponents = [MenuSubcomponent::class])
+internal abstract class MenuModule {
     @Binds
     @IntoMap
-    @ViewModelKey(SettingsViewModel::class)
-    abstract fun bindSettingsViewModel(viewModel: SettingsViewModel): ViewModel
+    @ClassKey(MenuActivity::class)
+    abstract fun bindAndroidInjectorFactory(factory: MenuSubcomponent.Factory): AndroidInjector.Factory<*>
 }

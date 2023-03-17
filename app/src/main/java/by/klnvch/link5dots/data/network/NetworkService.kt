@@ -22,19 +22,14 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.di.settings
+package by.klnvch.link5dots.data.network
 
-import androidx.lifecycle.ViewModel
-import by.klnvch.link5dots.di.ViewModelKey
-import by.klnvch.link5dots.ui.settings.SettingsViewModel
-import dagger.Binds
-import dagger.Module
-import dagger.multibindings.IntoMap
+import by.klnvch.link5dots.models.Room
+import retrofit2.http.Body
+import retrofit2.http.PUT
+import retrofit2.http.Path
 
-@Module
-abstract class SettingsViewModelsModule {
-    @Binds
-    @IntoMap
-    @ViewModelKey(SettingsViewModel::class)
-    abstract fun bindSettingsViewModel(viewModel: SettingsViewModel): ViewModel
+interface NetworkService {
+    @PUT("{table}/{key}.json")
+    suspend fun addRoom(@Path("table") table: String, @Path("key") key: String, @Body room: Room)
 }

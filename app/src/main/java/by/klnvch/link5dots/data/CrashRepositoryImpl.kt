@@ -22,19 +22,13 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.di.settings
+package by.klnvch.link5dots.data
 
-import androidx.lifecycle.ViewModel
-import by.klnvch.link5dots.di.ViewModelKey
-import by.klnvch.link5dots.ui.settings.SettingsViewModel
-import dagger.Binds
-import dagger.Module
-import dagger.multibindings.IntoMap
+import by.klnvch.link5dots.domain.repositories.CrashRepository
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 
-@Module
-abstract class SettingsViewModelsModule {
-    @Binds
-    @IntoMap
-    @ViewModelKey(SettingsViewModel::class)
-    abstract fun bindSettingsViewModel(viewModel: SettingsViewModel): ViewModel
+class CrashRepositoryImpl : CrashRepository {
+    override fun save(throwable: Throwable) {
+        FirebaseCrashlytics.getInstance().recordException(throwable)
+    }
 }

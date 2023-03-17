@@ -34,13 +34,19 @@ interface RoomDao {
     fun insertRoom(room: Room)
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
-    fun updateRoom(room: Room)
+    suspend fun updateRoom(room: Room)
 
     @Delete
     fun deleteRoom(room: Room)
 
     @Query("SELECT * FROM rooms ORDER BY timestamp DESC")
     fun loadAll(): Flowable<List<Room>>
+
+    @Query("SELECT * FROM rooms WHERE is_send = 0 ORDER BY timestamp DESC")
+    suspend fun getNotSent(): List<Room>
+
+    @Query("UPDATE rooms SET is_send = 1 WHERE key = :key")
+    suspend fun setSent(key: String)
 
     @Query("DELETE FROM rooms")
     suspend fun deleteAll()

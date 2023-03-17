@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.ui.main
+package by.klnvch.link5dots.ui.menu
 
 import android.app.Dialog
 import android.content.DialogInterface
@@ -30,27 +30,40 @@ import android.os.Bundle
 import android.view.View
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import by.klnvch.link5dots.R
-import by.klnvch.link5dots.domain.repositories.Settings
 import dagger.android.support.DaggerAppCompatDialogFragment
-import io.reactivex.disposables.CompositeDisposable
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class UsernameDialog : DaggerAppCompatDialogFragment(), DialogInterface.OnClickListener {
-    private val mDisposables = CompositeDisposable()
+
+    private lateinit var viewModel: MainMenuViewModel
 
     @Inject
-    internal lateinit var settings: Settings
+    lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private lateinit var mEditText: EditText
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val v = View.inflate(activity, R.layout.dialog_username, null)
         mEditText = v.findViewById(R.id.username)
+
+        viewModel =
+            ViewModelProvider(requireActivity(), viewModelFactory)[MainMenuViewModel::class.java]
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.uiState.map { it.userName }.collect { userName ->
+                    mEditText.setText(userName)
+                    mEditText.setSelection(userName.length)
+                }
+            }
+        }
 
         return AlertDialog.Builder(requireContext())
             .setCancelable(false)
@@ -60,42 +73,10 @@ class UsernameDialog : DaggerAppCompatDialogFragment(), DialogInterface.OnClickL
             .create()
     }
 
-    override fun onStart() {
-        super.onStart()
-
-        CoroutineScope(Dispatchers.IO).launch {
-            settings.getUserName().collect {
-                withContext(Dispatchers.Main) {
-                    setUsername(it)
-                }
-            }
-        }
-    }
-
-    override fun onDestroy() {
-        mDisposables.clear()
-        super.onDestroy()
-    }
-
     override fun onClick(dialog: DialogInterface, which: Int) {
-        val listener = context as OnUsernameChangedListener
-
-        val username = mEditText.text.toString().trim { it <= ' ' }
-        if (username.isNotEmpty()) {
-            CoroutineScope(Dispatchers.IO).launch {
-                settings.setUserName(username)
-                listener.onUsernameChanged(username)
-            }
+        if (which == DialogInterface.BUTTON_POSITIVE) {
+            viewModel.setUserName(mEditText.text.toString())
         }
-    }
-
-    private fun setUsername(username: String) {
-        mEditText.setText(username)
-        mEditText.setSelection(username.length)
-    }
-
-    interface OnUsernameChangedListener {
-        fun onUsernameChanged(username: String)
     }
 
     companion object {
