@@ -28,11 +28,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import by.klnvch.link5dots.R
 import by.klnvch.link5dots.databinding.FragmentMultiplayerMenuBinding
+import by.klnvch.link5dots.ui.menu.MultiplayerMenuFragmentDirections.Companion.actionMultiplayerMenuFragmentToGameActivityBluetooth
+import by.klnvch.link5dots.ui.menu.MultiplayerMenuFragmentDirections.Companion.actionMultiplayerMenuFragmentToGameActivityNsd
+import by.klnvch.link5dots.ui.menu.MultiplayerMenuFragmentDirections.Companion.actionMultiplayerMenuFragmentToGameActivityOnline
+import by.klnvch.link5dots.ui.menu.MultiplayerMenuFragmentDirections.Companion.actionMultiplayerMenuFragmentToTwoPlayersActivity
 import dagger.android.support.DaggerFragment
 
-class MultiplayerMenuFragment : DaggerFragment() {
+class MultiplayerMenuFragment : DaggerFragment(), OnMultiplayerMenuListener {
     private lateinit var binding: FragmentMultiplayerMenuBinding
 
     override fun onCreateView(
@@ -41,6 +46,7 @@ class MultiplayerMenuFragment : DaggerFragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentMultiplayerMenuBinding.inflate(inflater, container, false)
+        binding.listener = this
         return binding.root
     }
 
@@ -48,4 +54,16 @@ class MultiplayerMenuFragment : DaggerFragment() {
         requireActivity().setTitle(R.string.menu_multi_player)
         super.onViewCreated(view, savedInstanceState)
     }
+
+    override fun onTwoPlayersGameClicked() =
+        findNavController().navigate(actionMultiplayerMenuFragmentToTwoPlayersActivity())
+
+    override fun onBluetoothGameClicked() =
+        findNavController().navigate(actionMultiplayerMenuFragmentToGameActivityBluetooth())
+
+    override fun onNsdGameClicked() =
+        findNavController().navigate(actionMultiplayerMenuFragmentToGameActivityNsd())
+
+    override fun onOnlineGameClicked() =
+        findNavController().navigate(actionMultiplayerMenuFragmentToGameActivityOnline())
 }

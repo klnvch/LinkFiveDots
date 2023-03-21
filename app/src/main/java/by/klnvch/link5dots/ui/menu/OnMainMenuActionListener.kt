@@ -21,22 +21,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+package by.klnvch.link5dots.ui.menu
 
-package by.klnvch.link5dots.multiplayer.activities;
-
-import android.annotation.SuppressLint;
-import android.os.Build;
-
-public class GameActivityNsd extends GameActivity {
-    @Override
-    public void newGame() {
-        mGameFragment.reset();
-        mService.newGame();
-    }
-
-    @SuppressLint("ObsoleteSdkInt")
-    @Override
-    protected boolean isValidFomMainMenuMoved() {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN;
-    }
+interface OnMainMenuActionListener {
+    fun onUserNameClicked()
+    fun onSinglePlayerClicked()
+    fun onMultiplayerPlayerClicked()
+    fun onScoresClicked()
+    fun onSettingsClicked()
+    fun onInfoClicked()
+    fun onHelpClicked()
 }

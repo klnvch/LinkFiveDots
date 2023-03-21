@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2017 klnvch
+ * Copyright (c) 2023 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -30,5 +30,10 @@ public class GameActivityOnline extends GameActivity {
     public void newGame() {
         getSupportFragmentManager().popBackStackImmediate();
         mService.reset();
+    }
+
+    @Override
+    protected boolean isValidFomMainMenuMoved() {
+        return true;
     }
 }

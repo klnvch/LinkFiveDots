@@ -24,6 +24,8 @@
 
 package by.klnvch.link5dots.multiplayer.activities;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -37,6 +39,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.FragmentManager;
+
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -61,8 +65,6 @@ import by.klnvch.link5dots.multiplayer.utils.GameState;
 import by.klnvch.link5dots.utils.ActivityUtils;
 import by.klnvch.link5dots.utils.RoomUtils;
 import dagger.android.support.DaggerAppCompatActivity;
-
-import static com.google.common.base.Preconditions.checkNotNull;
 
 public abstract class GameActivity extends DaggerAppCompatActivity implements
         FragmentManager.OnBackStackChangedListener,
@@ -90,7 +92,6 @@ public abstract class GameActivity extends DaggerAppCompatActivity implements
                 checkNotNull(room);
                 onMessageEvent(room);
             }
-
         }
 
         @Override
@@ -109,13 +110,6 @@ public abstract class GameActivity extends DaggerAppCompatActivity implements
 
         setTitle(mFactory.getDefaultTitle());
 
-        if (mFactory.isValid(this)) {
-            setResult(RESULT_OK);
-        } else {
-            setResult(RESULT_CANCELED);
-            finish();
-        }
-
         if (savedInstanceState == null) {
             addPickerFragment();
         } else {
@@ -131,6 +125,13 @@ public abstract class GameActivity extends DaggerAppCompatActivity implements
         bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
 
         EventBus.getDefault().register(this);
+
+        if (mFactory.isValid(this) && isValidFomMainMenuMoved()) {
+            setResult(RESULT_OK);
+        } else {
+            setResult(RESULT_CANCELED);
+            showErrorDialog();
+        }
     }
 
     @Override
@@ -367,6 +368,8 @@ public abstract class GameActivity extends DaggerAppCompatActivity implements
 
     protected abstract void newGame();
 
+    protected abstract boolean isValidFomMainMenuMoved();
+
     private void addPickerFragment() {
         getSupportFragmentManager()
                 .beginTransaction()
@@ -388,6 +391,15 @@ public abstract class GameActivity extends DaggerAppCompatActivity implements
         new AlertDialog.Builder(this)
                 .setMessage(R.string.connect_failed)
                 .setPositiveButton(R.string.okay, null)
+                .show();
+    }
+
+    protected void showErrorDialog() {
+        FirebaseCrashlytics.getInstance().log("feature not supported");
+        new AlertDialog.Builder(this)
+                .setCancelable(false)
+                .setMessage(R.string.error_feature_not_available)
+                .setPositiveButton(R.string.okay, (dialog, which) -> finish())
                 .show();
     }
 }

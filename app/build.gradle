@@ -102,7 +102,7 @@ android {
     }
     namespace 'by.klnvch.link5dots'
     buildFeatures {
-        viewBinding true
+        dataBinding true
     }
 }
 

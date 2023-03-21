@@ -32,15 +32,21 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.navigation.findNavController
-import by.klnvch.link5dots.R
+import androidx.navigation.fragment.findNavController
 import by.klnvch.link5dots.databinding.FragmentMainMenuBinding
+import by.klnvch.link5dots.ui.menu.MainMenuFragmentDirections.Companion.actionMainMenuFragmentToHowToActivity
+import by.klnvch.link5dots.ui.menu.MainMenuFragmentDirections.Companion.actionMainMenuFragmentToInfoActivity
+import by.klnvch.link5dots.ui.menu.MainMenuFragmentDirections.Companion.actionMainMenuFragmentToMainActivity
+import by.klnvch.link5dots.ui.menu.MainMenuFragmentDirections.Companion.actionMainMenuFragmentToMultiplayerMenuFragment
+import by.klnvch.link5dots.ui.menu.MainMenuFragmentDirections.Companion.actionMainMenuFragmentToScoresActivity
+import by.klnvch.link5dots.ui.menu.MainMenuFragmentDirections.Companion.actionMainMenuFragmentToSettingsActivity
+import by.klnvch.link5dots.ui.menu.MainMenuFragmentDirections.Companion.actionMainMenuFragmentToUsernameDialog
 import dagger.android.support.DaggerFragment
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class MainMenuFragment : DaggerFragment(), View.OnLongClickListener {
+class MainMenuFragment : DaggerFragment(), OnMainMenuActionListener {
     private lateinit var viewModel: MainMenuViewModel
 
     @Inject
@@ -65,32 +71,31 @@ class MainMenuFragment : DaggerFragment(), View.OnLongClickListener {
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.uiState.map { it.userName }.collect { setUserName(it) }
+                viewModel.uiState.map { it.userName }.collect { binding.userName = it }
             }
         }
 
-        binding.textViewGreeting.setOnLongClickListener(this)
+        binding.listener = this
     }
 
-    override fun onLongClick(v: View): Boolean {
-        return when (v.id) {
-            R.id.textViewGreeting -> showUsernameDialog(v)
-            else -> false
-        }
-    }
+    override fun onUserNameClicked() =
+        findNavController().navigate(actionMainMenuFragmentToUsernameDialog())
 
-    private fun setUserName(userName: String) {
-        if (userName.isEmpty()) {
-            binding.textViewGreeting.visibility = View.GONE
-        } else {
-            binding.textViewGreeting.visibility = View.VISIBLE
-            binding.textViewGreeting.text = getString(R.string.greetings, userName)
-        }
-    }
+    override fun onSinglePlayerClicked() =
+        findNavController().navigate(actionMainMenuFragmentToMainActivity())
 
-    private fun showUsernameDialog(v: View): Boolean {
-        v.findNavController()
-            .navigate(MainMenuFragmentDirections.actionMainMenuFragmentToUsernameDialog())
-        return true
-    }
+    override fun onMultiplayerPlayerClicked() =
+        findNavController().navigate(actionMainMenuFragmentToMultiplayerMenuFragment())
+
+    override fun onScoresClicked() =
+        findNavController().navigate(actionMainMenuFragmentToScoresActivity())
+
+    override fun onSettingsClicked() =
+        findNavController().navigate(actionMainMenuFragmentToSettingsActivity())
+
+    override fun onInfoClicked() =
+        findNavController().navigate(actionMainMenuFragmentToInfoActivity())
+
+    override fun onHelpClicked() =
+        findNavController().navigate(actionMainMenuFragmentToHowToActivity())
 }

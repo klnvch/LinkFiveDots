@@ -22,42 +22,27 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.multiplayer.activities;
+package by.klnvch.link5dots.utils
 
-import android.bluetooth.BluetoothAdapter;
-import android.content.Intent;
+import android.view.View
+import android.widget.TextView
+import androidx.databinding.BindingAdapter
+import by.klnvch.link5dots.R
 
-import by.klnvch.link5dots.multiplayer.utils.bluetooth.BluetoothHelper;
-
-public class GameActivityBluetooth extends GameActivity {
-    private static final int RC_ENABLE_BLUETOOTH = 3;
-
-    @Override
-    public void newGame() {
-        mGameFragment.reset();
-        mService.newGame();
+object BindingUtils {
+    @JvmStatic
+    @BindingAdapter("android:onLongClick")
+    fun setOnLongClickListener(view: View, func: () -> Unit) {
+        view.setOnLongClickListener {
+            func()
+            true
+        }
     }
 
-    @Override
-    protected boolean isValidFomMainMenuMoved() {
-        if (BluetoothHelper.INSTANCE.isSupported()) {
-            if (!BluetoothHelper.INSTANCE.isEnabled()) {
-                startActivityForResult(new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE), RC_ENABLE_BLUETOOTH);
-            }
-            return true;
-        }
-        return false;
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == RC_ENABLE_BLUETOOTH) {
-            if (resultCode != RESULT_OK) {
-                setResult(RESULT_CANCELED);
-                showErrorDialog();
-            }
-        } else {
-            super.onActivityResult(requestCode, resultCode, data);
-        }
+    @JvmStatic
+    @BindingAdapter("app:greetings")
+    fun setGreetings(textView: TextView, text: String) {
+        textView.text = textView.context.getString(R.string.greetings, text)
+        textView.visibility = if (text.isEmpty()) View.GONE else View.VISIBLE
     }
 }
