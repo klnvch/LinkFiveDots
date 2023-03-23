@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?><!--
   ~ MIT License
   ~
-  ~ Copyright (c) 2017 klnvch
+  ~ Copyright (c) 2023 klnvch
   ~
   ~ Permission is hereby granted, free of charge, to any person obtaining a copy
   ~ of this software and associated documentation files (the "Software"), to deal
@@ -22,161 +22,164 @@
   ~ SOFTWARE.
   -->
 
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/card_view"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_gravity="center"
-    android:layout_margin="4dp"
-    android:clickable="true"
-    android:focusable="true"
-    android:background="?android:attr/selectableItemBackground"
-    card_view:cardCornerRadius="8dp"
-    card_view:contentPadding="8dp">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto">
 
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/card_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="4dp"
+        android:background="?android:attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
+        card_view:cardCornerRadius="8dp"
+        card_view:contentPadding="8dp">
 
-        <TextView
-            android:id="@+id/textUser1Name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:drawablePadding="8dp"
-            android:gravity="center"
-            android:text="@string/unknown"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:drawableStartCompat="@drawable/game_dot_circle_red"
-            app:drawableLeftCompat="@drawable/game_dot_circle_red" />
+        <androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/textUser2Name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:drawablePadding="8dp"
-            android:gravity="center"
-            android:text="@string/computer"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:drawableStartCompat="@drawable/game_dot_circle_blue"
-            app:drawableLeftCompat="@drawable/game_dot_circle_blue" />
+            <TextView
+                android:id="@+id/textUser1Name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawablePadding="8dp"
+                android:gravity="center"
+                android:text="@string/unknown"
+                android:textStyle="bold"
+                app:drawableLeftCompat="@drawable/game_dot_circle_red"
+                app:drawableStartCompat="@drawable/game_dot_circle_red"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/textTimeLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="@string/time"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textUser2Name" />
+            <TextView
+                android:id="@+id/textUser2Name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawablePadding="8dp"
+                android:gravity="center"
+                android:text="@string/computer"
+                android:textStyle="bold"
+                app:drawableLeftCompat="@drawable/game_dot_circle_blue"
+                app:drawableStartCompat="@drawable/game_dot_circle_blue"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/textTimeColon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/colon"
-            app:layout_constraintStart_toEndOf="@+id/textTimeLabel"
-            app:layout_constraintTop_toBottomOf="@+id/textUser2Name" />
+            <TextView
+                android:id="@+id/textTimeLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/time"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textUser2Name" />
 
-        <TextView
-            android:id="@+id/textTimeValue"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:text="@string/unknown"
-            android:textStyle="bold"
-            app:layout_constraintStart_toEndOf="@+id/textTimeColon"
-            app:layout_constraintTop_toBottomOf="@+id/textUser2Name" />
+            <TextView
+                android:id="@+id/textTimeColon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/colon"
+                app:layout_constraintStart_toEndOf="@+id/textTimeLabel"
+                app:layout_constraintTop_toBottomOf="@+id/textUser2Name" />
 
-        <TextView
-            android:id="@+id/textTypeLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="@string/type"
-            app:layout_constraintEnd_toStartOf="@+id/textTypeColon"
-            app:layout_constraintTop_toBottomOf="@+id/textUser2Name" />
+            <TextView
+                android:id="@+id/textTimeValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:text="@string/unknown"
+                android:textStyle="bold"
+                app:layout_constraintStart_toEndOf="@+id/textTimeColon"
+                app:layout_constraintTop_toBottomOf="@+id/textUser2Name" />
 
-        <TextView
-            android:id="@+id/textTypeColon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:text="@string/colon"
-            app:layout_constraintEnd_toStartOf="@+id/textTypeValue"
-            app:layout_constraintTop_toBottomOf="@+id/textUser2Name" />
+            <TextView
+                android:id="@+id/textTypeLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/type"
+                app:layout_constraintEnd_toStartOf="@+id/textTypeColon"
+                app:layout_constraintTop_toBottomOf="@+id/textUser2Name" />
 
-        <TextView
-            android:id="@+id/textTypeValue"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/unknown"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textUser2Name" />
+            <TextView
+                android:id="@+id/textTypeColon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:text="@string/colon"
+                app:layout_constraintEnd_toStartOf="@+id/textTypeValue"
+                app:layout_constraintTop_toBottomOf="@+id/textUser2Name" />
 
-        <TextView
-            android:id="@+id/textDurationLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="@string/duration"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textTimeLabel" />
+            <TextView
+                android:id="@+id/textTypeValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/unknown"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textUser2Name" />
 
-        <TextView
-            android:id="@+id/textDurationColon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/colon"
-            app:layout_constraintStart_toEndOf="@+id/textDurationLabel"
-            app:layout_constraintTop_toBottomOf="@+id/textTimeLabel" />
+            <TextView
+                android:id="@+id/textDurationLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/duration"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textTimeLabel" />
 
-        <TextView
-            android:id="@+id/textDurationValue"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:text="@string/unknown"
-            android:textStyle="bold"
-            app:layout_constraintStart_toEndOf="@+id/textDurationColon"
-            app:layout_constraintTop_toBottomOf="@+id/textTimeLabel" />
+            <TextView
+                android:id="@+id/textDurationColon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/colon"
+                app:layout_constraintStart_toEndOf="@+id/textDurationLabel"
+                app:layout_constraintTop_toBottomOf="@+id/textTimeLabel" />
 
-        <TextView
-            android:id="@+id/textDotsLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="@string/settings_dots"
-            app:layout_constraintEnd_toStartOf="@+id/textDotsColon"
-            app:layout_constraintTop_toBottomOf="@+id/textTimeLabel" />
+            <TextView
+                android:id="@+id/textDurationValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:text="@string/unknown"
+                android:textStyle="bold"
+                app:layout_constraintStart_toEndOf="@+id/textDurationColon"
+                app:layout_constraintTop_toBottomOf="@+id/textTimeLabel" />
 
-        <TextView
-            android:id="@+id/textDotsColon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:text="@string/colon"
-            app:layout_constraintEnd_toStartOf="@+id/textDotsValue"
-            app:layout_constraintTop_toBottomOf="@+id/textTimeLabel" />
+            <TextView
+                android:id="@+id/textDotsLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/settings_dots"
+                app:layout_constraintEnd_toStartOf="@+id/textDotsColon"
+                app:layout_constraintTop_toBottomOf="@+id/textTimeLabel" />
 
-        <TextView
-            android:id="@+id/textDotsValue"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/unknown"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textTimeLabel" />
+            <TextView
+                android:id="@+id/textDotsColon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:text="@string/colon"
+                app:layout_constraintEnd_toStartOf="@+id/textDotsValue"
+                app:layout_constraintTop_toBottomOf="@+id/textTimeLabel" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <TextView
+                android:id="@+id/textDotsValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/unknown"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textTimeLabel" />
 
-</androidx.cardview.widget.CardView>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+</layout>
