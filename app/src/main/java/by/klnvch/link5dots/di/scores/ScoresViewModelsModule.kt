@@ -22,27 +22,35 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.di
+package by.klnvch.link5dots.di.scores
 
+import android.os.Bundle
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import javax.inject.Inject
-import javax.inject.Provider
+import androidx.savedstate.SavedStateRegistryOwner
+import by.klnvch.link5dots.di.viewmodels.AssistedSavedStateViewModelFactory
+import by.klnvch.link5dots.di.viewmodels.ViewModelKey
+import by.klnvch.link5dots.ui.scores.ScoresActivity
+import by.klnvch.link5dots.ui.scores.ScoresViewModel
+import dagger.Binds
+import dagger.Module
+import dagger.Provides
+import dagger.multibindings.IntoMap
 
-class ViewModelFactory @Inject constructor(
-    private val creators: Map<Class<out ViewModel>, @JvmSuppressWildcards Provider<ViewModel>>
-) : ViewModelProvider.Factory {
 
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        val creator = creators[modelClass] ?: creators.asIterable()
-            .firstOrNull { modelClass.isAssignableFrom(it.key) }?.value
-        ?: throw IllegalArgumentException("unknown model class $modelClass")
+@Module
+abstract class ScoresViewModelsModule {
+    @Binds
+    @IntoMap
+    @ViewModelKey(ScoresViewModel::class)
+    abstract fun bindScoresViewModel(factory: ScoresViewModel.Factory): AssistedSavedStateViewModelFactory<out ViewModel>
 
-        return try {
-            @Suppress("UNCHECKED_CAST")
-            creator.get() as T
-        } catch (e: Exception) {
-            throw RuntimeException(e)
+    @Binds
+    abstract fun bindSavedStateRegistryOwner(scoresActivity: ScoresActivity): SavedStateRegistryOwner
+
+    companion object {
+        @Provides
+        fun provideDefaultArgs(): Bundle? {
+            return null
         }
     }
 }

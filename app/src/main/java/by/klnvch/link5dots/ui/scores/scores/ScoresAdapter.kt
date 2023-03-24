@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2017 klnvch
+ * Copyright (c) 2023 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,36 +22,23 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.scores
+package by.klnvch.link5dots.ui.scores.scores
 
-import android.text.format.DateUtils
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import by.klnvch.link5dots.R
 import by.klnvch.link5dots.databinding.ItemHighScoreBinding
 import by.klnvch.link5dots.models.HighScore
 import com.firebase.ui.database.FirebaseRecyclerAdapter
 import com.firebase.ui.database.FirebaseRecyclerOptions
-import com.google.firebase.database.DatabaseError
-import java.util.*
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.Query
 
 class ScoresAdapter(options: FirebaseRecyclerOptions<HighScore>) :
     FirebaseRecyclerAdapter<HighScore, ScoresAdapter.HighScoreHolder>(options) {
 
     override fun onBindViewHolder(holder: HighScoreHolder, position: Int, model: HighScore) {
-        holder.binding.scorePosition.text =
-            String.format(Locale.getDefault(), FORMAT_POSITION, position + 1)
-        holder.binding.scoreUsername.text = model.username
-        holder.binding.scoreMoves.text =
-            String.format(Locale.getDefault(), FORMAT_MOVES, model.moves)
-        holder.binding.scoreTime.text = DateUtils.formatElapsedTime(model.time)
-        when (model.status) {
-            HighScore.WON -> holder.binding.scoreStatus.setText(R.string.scores_won)
-            HighScore.LOST -> holder.binding.scoreStatus.setText(R.string.scores_lost)
-            else -> holder.binding.scoreStatus.text = null
-        }
+        holder.binding.viewState = HighScoreViewState(position, model)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HighScoreHolder {
@@ -62,24 +49,19 @@ class ScoresAdapter(options: FirebaseRecyclerOptions<HighScore>) :
 
     class HighScoreHolder(val binding: ItemHighScoreBinding) : RecyclerView.ViewHolder(binding.root)
 
-    override fun onDataChanged() {
-        super.onDataChanged()
-        Log.d("ScoresAdapter", "onDataChanged")
-    }
-
-    override fun onError(error: DatabaseError) {
-        super.onError(error)
-        Log.e("ScoresAdapter", "onError: " + error.message)
-    }
-
     companion object {
-        private const val FORMAT_POSITION = "%d."
-        private const val FORMAT_MOVES = "%d"
+        private const val LIMIT_TO_FIRST = 500
 
-        fun create(): ScoresAdapter {
+        private fun getScoresQuery(highScorePath: String): Query {
+            return FirebaseDatabase.getInstance().reference
+                .child(highScorePath)
+                .limitToLast(LIMIT_TO_FIRST)
+        }
+
+        fun create(highScorePath: String): ScoresAdapter {
             return ScoresAdapter(
                 FirebaseRecyclerOptions.Builder<HighScore>()
-                    .setQuery(FirebaseUtils.getScoresQuery(), HighScore::class.java)
+                    .setQuery(getScoresQuery(highScorePath), HighScore::class.java)
                     .build()
             )
         }

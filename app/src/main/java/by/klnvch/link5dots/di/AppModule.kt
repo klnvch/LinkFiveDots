@@ -36,6 +36,7 @@ import by.klnvch.link5dots.data.CrashRepositoryImpl
 import by.klnvch.link5dots.data.DeviceInfoImpl
 import by.klnvch.link5dots.data.NightModeManagerImpl
 import by.klnvch.link5dots.data.db.AppDatabase
+import by.klnvch.link5dots.data.firebase.FirebaseManagerImpl
 import by.klnvch.link5dots.data.settings.PreferenceDataStoreImpl
 import by.klnvch.link5dots.data.settings.SettingsImpl
 import by.klnvch.link5dots.data.network.NetworkService
@@ -112,4 +113,7 @@ class AppModule {
     @Provides
     fun provideContext(app: Application): Context = app
 
+    @ApplicationScope
+    @Provides
+    fun provideFirebaseManager(app: Application): FirebaseManager = FirebaseManagerImpl(app)
 }

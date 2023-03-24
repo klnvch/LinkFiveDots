@@ -22,14 +22,20 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.di
+package by.klnvch.link5dots.di.scores
 
-import androidx.lifecycle.ViewModelProvider
-import dagger.Binds
-import dagger.Module
+import by.klnvch.link5dots.ui.scores.ScoresActivity
+import dagger.Subcomponent
+import dagger.android.AndroidInjector
 
-@Module
-abstract class ViewModelFactoryModule {
-    @Binds
-    abstract fun bindViewModelFactory(factory: ViewModelFactory): ViewModelProvider.Factory
+@ScoresScope
+@Subcomponent(
+    modules = [
+        ScoresFragmentBuildersModule::class,
+        ScoresViewModelsModule::class,
+    ]
+)
+interface ScoresSubcomponent : AndroidInjector<ScoresActivity> {
+    @Subcomponent.Factory
+    interface Factory : AndroidInjector.Factory<ScoresActivity>
 }

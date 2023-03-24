@@ -22,35 +22,41 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.domain.repositories
+package by.klnvch.link5dots.ui.scores.history
 
-import androidx.room.*
+import by.klnvch.link5dots.R
+import by.klnvch.link5dots.domain.models.RoomExt.getDuration
 import by.klnvch.link5dots.models.Room
-import kotlinx.coroutines.flow.Flow
+import by.klnvch.link5dots.utils.FormatUtils.formatDateTime
+import by.klnvch.link5dots.utils.FormatUtils.formatDuration
 
-@Dao
-interface RoomDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(room: Room)
+data class HistoryItemViewState(
+    val userName1: String?,
+    val userName2: String?,
+    val startTime: String,
+    val duration: String,
+    val size: String,
+    val typeStringRes: Int
+) {
+    constructor(room: Room) : this(
+        room.user1?.name,
+        room.user2?.name,
+        room.timestamp.formatDateTime(),
+        room.getDuration().formatDuration(),
+        room.dots.size.toString(),
+        room.type.toStringRes()
+    )
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertRoom(room: Room)
-
-    @Update(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun updateRoom(room: Room)
-
-    @Delete
-    suspend fun delete(room: Room)
-
-    @Query("SELECT * FROM rooms ORDER BY timestamp DESC")
-    fun getAll(): Flow<List<Room>>
-
-    @Query("SELECT * FROM rooms WHERE is_send = 0 ORDER BY timestamp DESC")
-    suspend fun getNotSent(): List<Room>
-
-    @Query("UPDATE rooms SET is_send = 1 WHERE key = :key")
-    suspend fun setSent(key: String)
-
-    @Query("DELETE FROM rooms")
-    suspend fun deleteAll()
+    companion object {
+        fun Int.toStringRes(): Int {
+            return when (this) {
+                Room.TYPE_BLUETOOTH -> R.string.bluetooth
+                Room.TYPE_NSD -> R.string.menu_local_network
+                Room.TYPE_ONLINE -> R.string.menu_online_game
+                Room.TYPE_TWO_PLAYERS -> R.string.menu_two_players
+                Room.TYPE_BOT -> R.string.app_name
+                else -> R.string.unknown
+            }
+        }
+    }
 }

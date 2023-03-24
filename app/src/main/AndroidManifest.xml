@@ -126,7 +126,7 @@
                 android:value="by.klnvch.link5dots.ui.menu.MenuActivity" />
         </activity>
         <activity
-            android:name="by.klnvch.link5dots.scores.ScoresActivity"
+            android:name="by.klnvch.link5dots.ui.scores.ScoresActivity"
             android:label="@string/scores_title"
             android:launchMode="singleTop">
             <meta-data
@@ -134,12 +134,12 @@
                 android:value="by.klnvch.link5dots.ui.menu.MenuActivity" />
         </activity>
         <activity
-            android:name="by.klnvch.link5dots.scores.GameInfoActivity"
+            android:name="by.klnvch.link5dots.ui.scores.history.GameInfoActivity"
             android:label="@string/application_info_label"
             android:launchMode="singleTop">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="by.klnvch.link5dots.scores.ScoresActivity" />
+                android:value="by.klnvch.link5dots.ui.scores.ScoresActivity" />
         </activity>
         <activity
             android:name="by.klnvch.link5dots.HowToActivity"

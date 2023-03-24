@@ -22,35 +22,12 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.domain.repositories
+package by.klnvch.link5dots.domain.usecases
 
-import androidx.room.*
+import by.klnvch.link5dots.domain.repositories.RoomDao
 import by.klnvch.link5dots.models.Room
-import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
-@Dao
-interface RoomDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(room: Room)
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertRoom(room: Room)
-
-    @Update(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun updateRoom(room: Room)
-
-    @Delete
-    suspend fun delete(room: Room)
-
-    @Query("SELECT * FROM rooms ORDER BY timestamp DESC")
-    fun getAll(): Flow<List<Room>>
-
-    @Query("SELECT * FROM rooms WHERE is_send = 0 ORDER BY timestamp DESC")
-    suspend fun getNotSent(): List<Room>
-
-    @Query("UPDATE rooms SET is_send = 1 WHERE key = :key")
-    suspend fun setSent(key: String)
-
-    @Query("DELETE FROM rooms")
-    suspend fun deleteAll()
+class DeleteRoomUseCase @Inject constructor(private val roomDao: RoomDao) {
+    suspend fun delete(room: Room) = roomDao.delete(room)
 }

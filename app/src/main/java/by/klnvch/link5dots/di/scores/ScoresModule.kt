@@ -22,35 +22,19 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.domain.repositories
+package by.klnvch.link5dots.di.scores
 
-import androidx.room.*
-import by.klnvch.link5dots.models.Room
-import kotlinx.coroutines.flow.Flow
+import by.klnvch.link5dots.ui.scores.ScoresActivity
+import dagger.Binds
+import dagger.Module
+import dagger.android.AndroidInjector
+import dagger.multibindings.ClassKey
+import dagger.multibindings.IntoMap
 
-@Dao
-interface RoomDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(room: Room)
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertRoom(room: Room)
-
-    @Update(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun updateRoom(room: Room)
-
-    @Delete
-    suspend fun delete(room: Room)
-
-    @Query("SELECT * FROM rooms ORDER BY timestamp DESC")
-    fun getAll(): Flow<List<Room>>
-
-    @Query("SELECT * FROM rooms WHERE is_send = 0 ORDER BY timestamp DESC")
-    suspend fun getNotSent(): List<Room>
-
-    @Query("UPDATE rooms SET is_send = 1 WHERE key = :key")
-    suspend fun setSent(key: String)
-
-    @Query("DELETE FROM rooms")
-    suspend fun deleteAll()
+@Module(subcomponents = [ScoresSubcomponent::class])
+internal abstract class ScoresModule {
+    @Binds
+    @IntoMap
+    @ClassKey(ScoresActivity::class)
+    abstract fun bindAndroidInjectorFactory(factory: ScoresSubcomponent.Factory): AndroidInjector.Factory<*>
 }

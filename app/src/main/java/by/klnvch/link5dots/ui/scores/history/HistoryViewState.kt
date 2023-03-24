@@ -22,35 +22,15 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.domain.repositories
+package by.klnvch.link5dots.ui.scores.history
 
-import androidx.room.*
+import android.view.View
 import by.klnvch.link5dots.models.Room
-import kotlinx.coroutines.flow.Flow
 
-@Dao
-interface RoomDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(room: Room)
+data class HistoryViewState(val rooms: List<Room>) {
+    val errorMessageVisibility = if (rooms.isEmpty()) View.VISIBLE else View.GONE
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertRoom(room: Room)
-
-    @Update(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun updateRoom(room: Room)
-
-    @Delete
-    suspend fun delete(room: Room)
-
-    @Query("SELECT * FROM rooms ORDER BY timestamp DESC")
-    fun getAll(): Flow<List<Room>>
-
-    @Query("SELECT * FROM rooms WHERE is_send = 0 ORDER BY timestamp DESC")
-    suspend fun getNotSent(): List<Room>
-
-    @Query("UPDATE rooms SET is_send = 1 WHERE key = :key")
-    suspend fun setSent(key: String)
-
-    @Query("DELETE FROM rooms")
-    suspend fun deleteAll()
+    companion object {
+        fun initial() = HistoryViewState(emptyList())
+    }
 }

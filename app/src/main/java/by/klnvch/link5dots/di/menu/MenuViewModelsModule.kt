@@ -26,7 +26,7 @@ package by.klnvch.link5dots.di.menu
 
 
 import androidx.lifecycle.ViewModel
-import by.klnvch.link5dots.di.ViewModelKey
+import by.klnvch.link5dots.di.viewmodels.ViewModelKey
 import by.klnvch.link5dots.ui.menu.MainMenuViewModel
 import dagger.Binds
 import dagger.Module

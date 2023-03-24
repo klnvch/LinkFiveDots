@@ -25,6 +25,13 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto">
 
+    <data>
+
+        <variable
+            name="viewState"
+            type="by.klnvch.link5dots.ui.scores.history.HistoryItemViewState" />
+    </data>
+
     <androidx.cardview.widget.CardView
         android:id="@+id/card_view"
         android:layout_width="match_parent"
@@ -47,7 +54,7 @@
                 android:layout_height="wrap_content"
                 android:drawablePadding="8dp"
                 android:gravity="center"
-                android:text="@string/unknown"
+                android:text="@{viewState.userName1}"
                 android:textStyle="bold"
                 app:drawableLeftCompat="@drawable/game_dot_circle_red"
                 app:drawableStartCompat="@drawable/game_dot_circle_red"
@@ -60,7 +67,7 @@
                 android:layout_height="wrap_content"
                 android:drawablePadding="8dp"
                 android:gravity="center"
-                android:text="@string/computer"
+                android:text="@{viewState.userName2}"
                 android:textStyle="bold"
                 app:drawableLeftCompat="@drawable/game_dot_circle_blue"
                 app:drawableStartCompat="@drawable/game_dot_circle_blue"
@@ -90,7 +97,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginLeft="8dp"
-                android:text="@string/unknown"
+                android:text="@{viewState.startTime}"
                 android:textStyle="bold"
                 app:layout_constraintStart_toEndOf="@+id/textTimeColon"
                 app:layout_constraintTop_toBottomOf="@+id/textUser2Name" />
@@ -118,7 +125,7 @@
                 android:id="@+id/textTypeValue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/unknown"
+                android:text="@{viewState.typeStringRes}"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textUser2Name" />
@@ -146,7 +153,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginLeft="8dp"
-                android:text="@string/unknown"
+                android:text="@{viewState.duration}"
                 android:textStyle="bold"
                 app:layout_constraintStart_toEndOf="@+id/textDurationColon"
                 app:layout_constraintTop_toBottomOf="@+id/textTimeLabel" />
@@ -174,7 +181,7 @@
                 android:id="@+id/textDotsValue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/unknown"
+                android:text="@{viewState.size}"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textTimeLabel" />

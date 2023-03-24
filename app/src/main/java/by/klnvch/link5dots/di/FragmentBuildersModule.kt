@@ -25,15 +25,12 @@
 package by.klnvch.link5dots.di
 
 import by.klnvch.link5dots.GameFragment
-import by.klnvch.link5dots.scores.HistoryFragment
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
 
 @Module
 abstract class FragmentBuildersModule {
-    @ContributesAndroidInjector
-    abstract fun historyFragment(): HistoryFragment
 
     @ContributesAndroidInjector
     abstract fun gameFragment(): GameFragment

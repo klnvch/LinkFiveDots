@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.scores
+package by.klnvch.link5dots.ui.scores.history
 
 import android.os.Bundle
 import android.view.View

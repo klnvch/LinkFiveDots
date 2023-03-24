@@ -22,35 +22,22 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.domain.repositories
+package by.klnvch.link5dots.utils
 
-import androidx.room.*
-import by.klnvch.link5dots.models.Room
-import kotlinx.coroutines.flow.Flow
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.time.Duration.Companion.milliseconds
 
-@Dao
-interface RoomDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(room: Room)
+object FormatUtils {
+    fun Long.formatDuration(): String {
+        return milliseconds.toComponents { hours, minutes, seconds, _ ->
+            if (hours > 0) "%02d:%02d:%02d".format(hours, minutes, seconds)
+            else "%02d:%02d".format(minutes, seconds)
+        }
+    }
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertRoom(room: Room)
-
-    @Update(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun updateRoom(room: Room)
-
-    @Delete
-    suspend fun delete(room: Room)
-
-    @Query("SELECT * FROM rooms ORDER BY timestamp DESC")
-    fun getAll(): Flow<List<Room>>
-
-    @Query("SELECT * FROM rooms WHERE is_send = 0 ORDER BY timestamp DESC")
-    suspend fun getNotSent(): List<Room>
-
-    @Query("UPDATE rooms SET is_send = 1 WHERE key = :key")
-    suspend fun setSent(key: String)
-
-    @Query("DELETE FROM rooms")
-    suspend fun deleteAll()
+    fun Long.formatDateTime(): String {
+        val timeFormat = SimpleDateFormat("MMM-dd HH:mm", Locale.getDefault())
+        return timeFormat.format(Date(this))
+    }
 }

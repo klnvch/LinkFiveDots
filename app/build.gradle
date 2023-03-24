@@ -128,6 +128,7 @@ dependencies {
     kapt "com.google.dagger:dagger-android-processor:${dagger_version}"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-savedstate:$lifecycle_version"
     implementation "androidx.room:room-runtime:${room_version}"
     implementation "androidx.room:room-rxjava2:${room_version}"
     annotationProcessor "androidx.room:room-compiler:${room_version}"

@@ -22,35 +22,24 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.domain.repositories
+package by.klnvch.link5dots.ui.scores.scores
 
-import androidx.room.*
-import by.klnvch.link5dots.models.Room
-import kotlinx.coroutines.flow.Flow
+import android.view.View
+import by.klnvch.link5dots.R
 
-@Dao
-interface RoomDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(room: Room)
+data class ScoresViewState(val firebaseState: FirebaseState, val highScorePath: String? = null) {
+    val errorMsg = when (firebaseState) {
+        FirebaseState.NOT_SUPPORTED -> R.string.error_feature_not_available
+        FirebaseState.ERROR -> R.string.connection_error_message
+        else -> R.string.loading
+    }
+    val errorVisibility = if (firebaseState != FirebaseState.SIGNED_IN) View.VISIBLE else View.GONE
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertRoom(room: Room)
+    companion object {
+        fun initial() = ScoresViewState(FirebaseState.UNKNOWN)
+    }
+}
 
-    @Update(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun updateRoom(room: Room)
-
-    @Delete
-    suspend fun delete(room: Room)
-
-    @Query("SELECT * FROM rooms ORDER BY timestamp DESC")
-    fun getAll(): Flow<List<Room>>
-
-    @Query("SELECT * FROM rooms WHERE is_send = 0 ORDER BY timestamp DESC")
-    suspend fun getNotSent(): List<Room>
-
-    @Query("UPDATE rooms SET is_send = 1 WHERE key = :key")
-    suspend fun setSent(key: String)
-
-    @Query("DELETE FROM rooms")
-    suspend fun deleteAll()
+enum class FirebaseState {
+    UNKNOWN, NOT_SUPPORTED, SIGNED_IN, ERROR
 }

@@ -40,7 +40,7 @@ object BindingUtils {
     }
 
     @JvmStatic
-    @BindingAdapter("app:greetings")
+    @BindingAdapter("greetings")
     fun setGreetings(textView: TextView, text: String) {
         textView.text = textView.context.getString(R.string.greetings, text)
         textView.visibility = if (text.isEmpty()) View.GONE else View.VISIBLE

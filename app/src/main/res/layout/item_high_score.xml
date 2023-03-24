@@ -21,7 +21,15 @@
   ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
   ~ SOFTWARE.
   -->
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="viewState"
+            type="by.klnvch.link5dots.ui.scores.scores.HighScoreViewState" />
+    </data>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -34,7 +42,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:lines="1"
-            android:text="@string/scores_number"
+            android:text="@{viewState.position ?? @string/scores_number}"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <TextView
@@ -43,7 +51,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="4"
             android:lines="1"
-            android:text="@string/name"
+            android:text="@{viewState.userName ?? @string/name}"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <TextView
@@ -52,7 +60,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="2"
             android:lines="1"
-            android:text="@string/scores_moves"
+            android:text="@{viewState.size ?? @string/scores_moves}"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <TextView
@@ -62,7 +70,7 @@
             android:layout_weight="3"
             android:gravity="end"
             android:lines="1"
-            android:text="@string/time"
+            android:text="@{viewState.duration ?? @string/time}"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <TextView
@@ -72,8 +80,8 @@
             android:layout_weight="3"
             android:gravity="end"
             android:lines="1"
-            android:text="@string/status"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            app:highScoreStatus="@{viewState.status}" />
 
     </LinearLayout>
 </layout>

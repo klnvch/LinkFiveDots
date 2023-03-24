@@ -29,20 +29,13 @@
 
         <variable
             name="viewState"
-            type="by.klnvch.link5dots.ui.scores.scores.ScoresViewState" />
+            type="by.klnvch.link5dots.ui.scores.history.HistoryViewState" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:background="@color/background_color">
-
-        <include
-            android:id="@+id/head"
-            layout="@layout/item_high_score"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
@@ -58,7 +51,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/head" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:rooms="@{viewState.rooms}" />
 
         <TextView
             android:id="@+id/textError"
@@ -66,9 +60,9 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:gravity="center"
-            android:text="@{viewState.errorMsg}"
+            android:text="@string/search_no_results"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:visibility="@{viewState.errorVisibility}"
+            android:visibility="@{viewState.errorMessageVisibility}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

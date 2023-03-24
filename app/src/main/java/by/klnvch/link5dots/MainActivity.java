@@ -34,7 +34,7 @@ import by.klnvch.link5dots.models.Dot;
 import by.klnvch.link5dots.models.HighScore;
 import by.klnvch.link5dots.models.Room;
 import by.klnvch.link5dots.models.User;
-import by.klnvch.link5dots.scores.ScoresActivity;
+import by.klnvch.link5dots.ui.scores.ScoresActivity;
 import by.klnvch.link5dots.utils.ActivityUtils;
 import by.klnvch.link5dots.utils.AnalyticsEvents;
 import by.klnvch.link5dots.utils.RoomUtils;

@@ -24,10 +24,7 @@
 
 package by.klnvch.link5dots.domain.usecases
 
-import by.klnvch.link5dots.data.db.AppDatabase
 import by.klnvch.link5dots.domain.repositories.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class ResetAllDataUseCase @Inject constructor(

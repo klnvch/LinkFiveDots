@@ -26,8 +26,9 @@ package by.klnvch.link5dots.di
 
 import android.app.Application
 import by.klnvch.link5dots.di.menu.MenuModule
+import by.klnvch.link5dots.di.scores.ScoresModule
 import by.klnvch.link5dots.di.settings.SettingsModule
-import by.klnvch.link5dots.di.workers.SyncHistoryWorkerModule
+import by.klnvch.link5dots.di.viewmodels.ViewModelFactoryModule
 import by.klnvch.link5dots.di.workers.WorkerSubcomponent
 import dagger.BindsInstance
 import dagger.Component
@@ -44,6 +45,7 @@ import dagger.android.support.AndroidSupportInjectionModule
         ViewModelFactoryModule::class,
         SettingsModule::class,
         MenuModule::class,
+        ScoresModule::class,
     ]
 )
 interface AppComponent : AndroidInjector<MyApp> {

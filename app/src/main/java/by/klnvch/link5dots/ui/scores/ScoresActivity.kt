@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2017 klnvch
+ * Copyright (c) 2023 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,27 +22,32 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.scores
+package by.klnvch.link5dots.ui.scores
 
-import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import by.klnvch.link5dots.R
 import by.klnvch.link5dots.databinding.ActivityScoresBinding
+import by.klnvch.link5dots.di.viewmodels.SavedStateViewModelFactory
+import by.klnvch.link5dots.ui.scores.history.HistoryFragment
+import by.klnvch.link5dots.ui.scores.scores.ScoresFragment
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.android.support.DaggerAppCompatActivity
-import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
+import javax.inject.Inject
 
 
-class ScoresActivity : DaggerAppCompatActivity() {
+class ScoresActivity : DaggerAppCompatActivity(), OnTabSelectedListener {
     private lateinit var binding: ActivityScoresBinding
 
-    private val mDisposables = CompositeDisposable()
+    private lateinit var viewModel: ScoresViewModel
+
+    @Inject
+    lateinit var viewModelFactory: SavedStateViewModelFactory
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,57 +55,43 @@ class ScoresActivity : DaggerAppCompatActivity() {
         setContentView(binding.root)
         setTitle(R.string.scores_title)
 
+        viewModel = ViewModelProvider(this, viewModelFactory)[ScoresViewModel::class.java]
+
         binding.viewPager.adapter = PagerAdapter(this)
+        binding.viewPager.currentItem = viewModel.getCurrentItem()
+        binding.tabLayout.addOnTabSelectedListener(this)
 
         TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
             tab.text = when (position) {
-                TAB_SCORES -> getString(R.string.scores_title)
-                TAB_HISTORY -> getString(R.string.history)
-                else -> {
-                    throw IllegalStateException()
-                }
+                ScoresTabPosition.SCORES -> getString(R.string.scores_title)
+                ScoresTabPosition.HISTORY -> getString(R.string.history)
+                else -> throw IllegalStateException()
             }
         }.attach()
     }
 
-    override fun onStart() {
-        super.onStart()
-
-        mDisposables.add(Observable.fromCallable { getCurrentItem() }
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe { binding.viewPager.currentItem = it })
-    }
-
-    override fun onStop() {
-        super.onStop()
-
-        getPreferences(Context.MODE_PRIVATE)
-            .edit()
-            .putInt(CURRENT_TAB_KEY, binding.viewPager.currentItem)
-            .apply()
-        mDisposables.clear()
-    }
-
-    private fun getCurrentItem(): Int {
-        return getPreferences(Context.MODE_PRIVATE).getInt(CURRENT_TAB_KEY, 0)
+    override fun onDestroy() {
+        binding.tabLayout.removeOnTabSelectedListener(this)
+        super.onDestroy()
     }
 
     private inner class PagerAdapter(fa: FragmentActivity) : FragmentStateAdapter(fa) {
-        override fun createFragment(i: Int): Fragment {
-            when (i) {
-                TAB_SCORES -> return ScoresFragment()
-                TAB_HISTORY -> return HistoryFragment()
+        override fun createFragment(position: Int): Fragment {
+            return when (position) {
+                ScoresTabPosition.SCORES -> ScoresFragment()
+                ScoresTabPosition.HISTORY -> HistoryFragment()
+                else -> throw IllegalStateException()
             }
-            throw IllegalStateException()
         }
 
         override fun getItemCount(): Int = 2
     }
 
-    companion object {
-        private const val CURRENT_TAB_KEY = "currentItem"
-        private const val TAB_SCORES = 0
-        private const val TAB_HISTORY = 1
+    override fun onTabSelected(tab: TabLayout.Tab) {
+        viewModel.setCurrentItem(tab.position)
     }
+
+    override fun onTabUnselected(tab: TabLayout.Tab) {}
+
+    override fun onTabReselected(tab: TabLayout.Tab) {}
 }
