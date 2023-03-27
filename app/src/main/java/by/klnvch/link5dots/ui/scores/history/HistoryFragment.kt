@@ -29,7 +29,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.databinding.BindingAdapter
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -112,14 +111,5 @@ class HistoryFragment : DaggerFragment(), OnItemSelectedListener {
 
     override fun onItemSelected(room: Room) {
         startActivity(Intent(context, GameInfoActivity::class.java).putExtra("room", room))
-    }
-
-    companion object {
-        @JvmStatic
-        @BindingAdapter("rooms")
-        fun setRooms(recyclerView: RecyclerView, rooms: List<Room>) {
-            val adapter = recyclerView.adapter as HistoryAdapter
-            adapter.submitList(rooms)
-        }
     }
 }

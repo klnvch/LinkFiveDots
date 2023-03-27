@@ -28,17 +28,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import androidx.databinding.BindingAdapter
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
-import by.klnvch.link5dots.R
 import by.klnvch.link5dots.databinding.FragmentScoresBinding
 import by.klnvch.link5dots.di.viewmodels.SavedStateViewModelFactory
-import by.klnvch.link5dots.domain.models.GameResult
 import by.klnvch.link5dots.ui.scores.ScoresViewModel
 import dagger.android.support.DaggerFragment
 import kotlinx.coroutines.launch
@@ -94,18 +90,6 @@ class ScoresFragment : DaggerFragment() {
 
         if (viewState.firebaseState == FirebaseState.SIGNED_IN) {
             scoresAdapter.startListening()
-        }
-    }
-
-    companion object {
-        @JvmStatic
-        @BindingAdapter("highScoreStatus")
-        fun setHighScoreStatus(textView: TextView, status: GameResult?) {
-            when (status) {
-                GameResult.WON -> textView.setText(R.string.scores_won)
-                GameResult.LOST -> textView.setText(R.string.scores_lost)
-                else -> textView.setText(R.string.status)
-            }
         }
     }
 }
