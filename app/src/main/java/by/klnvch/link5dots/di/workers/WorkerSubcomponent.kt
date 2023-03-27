@@ -30,7 +30,7 @@ import dagger.BindsInstance
 import dagger.Subcomponent
 import javax.inject.Provider
 
-@Subcomponent(modules = [SyncHistoryWorkerModule::class])
+@Subcomponent(modules = [WorkerBindingModule::class])
 interface WorkerSubcomponent {
 
     fun workers(): Map<Class<out ListenableWorker>, Provider<ListenableWorker>>

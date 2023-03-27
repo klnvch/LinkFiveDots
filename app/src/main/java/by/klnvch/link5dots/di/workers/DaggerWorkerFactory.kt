@@ -41,18 +41,19 @@ class DaggerWorkerFactory @Inject constructor(
         appContext: Context,
         workerClassName: String,
         workerParameters: WorkerParameters
-    ): ListenableWorker? = workerSubcomponent
+    ): ListenableWorker = workerSubcomponent
         .workerParameters(workerParameters)
         .build().run {
-            createWorker(workerClassName, workers())
+            val workerClass =
+                Class.forName(workerClassName).asSubclass(ListenableWorker::class.java)
+            createWorker(workerClass, workers())
+                ?: createWorker(appContext, workerParameters, workerClass)
         }
 
     private fun createWorker(
-        workerClassName: String,
+        workerClass: Class<out ListenableWorker>,
         workers: Map<Class<out ListenableWorker>, Provider<ListenableWorker>>
-    ): ListenableWorker? = try {
-        val workerClass = Class.forName(workerClassName).asSubclass(ListenableWorker::class.java)
-
+    ): ListenableWorker? {
         var provider = workers[workerClass]
         if (provider == null) {
             for ((key, value) in workers) {
@@ -62,12 +63,16 @@ class DaggerWorkerFactory @Inject constructor(
                 }
             }
         }
-        if (provider == null) {
-            throw IllegalArgumentException("Missing binding for $workerClassName")
-        }
+        return provider?.get()
+    }
 
-        provider.get()
-    } catch (e: Exception) {
-        throw RuntimeException(e)
+    private fun createWorker(
+        context: Context,
+        workerParameters: WorkerParameters,
+        workerClass: Class<out ListenableWorker>
+    ): ListenableWorker {
+        val workerConstructor =
+            workerClass.getDeclaredConstructor(Context::class.java, WorkerParameters::class.java)
+        return workerConstructor.newInstance(context, workerParameters)
     }
 }

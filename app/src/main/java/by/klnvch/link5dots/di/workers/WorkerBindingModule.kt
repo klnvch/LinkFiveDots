@@ -31,7 +31,7 @@ import dagger.Module
 import dagger.multibindings.IntoMap
 
 @Module
-abstract class SyncHistoryWorkerModule {
+abstract class WorkerBindingModule {
     @Binds
     @IntoMap
     @WorkManagerKey(SyncHistoryWorker::class)
