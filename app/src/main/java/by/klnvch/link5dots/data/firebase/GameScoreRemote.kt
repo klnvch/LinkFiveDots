@@ -26,7 +26,10 @@ package by.klnvch.link5dots.data.firebase
 
 import by.klnvch.link5dots.domain.models.GameResult
 import by.klnvch.link5dots.domain.models.GameScore
+import com.google.firebase.database.Exclude
+import com.google.firebase.database.IgnoreExtraProperties
 
+@IgnoreExtraProperties
 data class GameScoreRemote(
     var userName: String? = null,
     var userId: String? = null,
@@ -42,8 +45,10 @@ data class GameScoreRemote(
         gameScore.timestamp
     )
 
+    @Exclude
     fun getDuration() = score % L_1000000
 
+    @Exclude
     fun getStatus(): GameResult {
         val temp = score / L_1000000
         return if (temp > L_2000) {
@@ -53,6 +58,7 @@ data class GameScoreRemote(
         }
     }
 
+    @Exclude
     fun getSize(): Int {
         val temp = score / L_1000000
         return if (temp > L_2000) {
