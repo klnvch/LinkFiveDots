@@ -27,17 +27,16 @@ package by.klnvch.link5dots.ui.settings
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import by.klnvch.link5dots.domain.usecases.GetLanguageChangesUseCase
-import by.klnvch.link5dots.domain.usecases.GetNightModeChangesUseCase
 import by.klnvch.link5dots.domain.usecases.ResetAllDataUseCase
+import by.klnvch.link5dots.domain.usecases.SyncNightModeUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class SettingsViewModel @Inject constructor(
     private val resetAllDataUseCase: ResetAllDataUseCase,
-    private val getNightModeChangesUseCase: GetNightModeChangesUseCase,
+    private val syncNightModeUseCase: SyncNightModeUseCase,
     private val getLanguageChangesUseCase: GetLanguageChangesUseCase,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(SettingsViewState.READY)
@@ -45,7 +44,7 @@ class SettingsViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            getNightModeChangesUseCase.isChanged().collect()
+            syncNightModeUseCase.sync()
         }
 
         viewModelScope.launch {

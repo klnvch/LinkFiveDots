@@ -26,15 +26,13 @@ package by.klnvch.link5dots.domain.usecases
 
 import by.klnvch.link5dots.domain.repositories.NightModeManager
 import by.klnvch.link5dots.domain.repositories.Settings
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-class GetNightModeChangesUseCase @Inject constructor(
+class SyncNightModeUseCase @Inject constructor(
     private val settings: Settings,
     private val nighModeManager: NightModeManager
-) {
-    fun isChanged(): Flow<Boolean> {
-        return settings.getNightMode().map { nighModeManager.set(it) }
+) : SyncUseCase {
+    override suspend fun sync() {
+        return settings.getNightMode().collect { nighModeManager.set(it) }
     }
 }
