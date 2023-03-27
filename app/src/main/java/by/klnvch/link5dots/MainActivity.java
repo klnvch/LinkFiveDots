@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2017 klnvch
+ * Copyright (c) 2023 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,14 +24,20 @@
 
 package by.klnvch.link5dots;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import javax.inject.Inject;
+
 import by.klnvch.link5dots.dialogs.EndGameDialog;
+import by.klnvch.link5dots.domain.models.GameScore;
+import by.klnvch.link5dots.domain.usecases.SaveScoreUseCase;
 import by.klnvch.link5dots.models.Dot;
-import by.klnvch.link5dots.models.HighScore;
 import by.klnvch.link5dots.models.Room;
 import by.klnvch.link5dots.models.User;
 import by.klnvch.link5dots.ui.scores.ScoresActivity;
@@ -39,9 +45,10 @@ import by.klnvch.link5dots.utils.ActivityUtils;
 import by.klnvch.link5dots.utils.AnalyticsEvents;
 import by.klnvch.link5dots.utils.RoomUtils;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 public final class MainActivity extends BaseActivity {
+
+    @Inject
+    SaveScoreUseCase saveScoreUseCase;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -68,7 +75,7 @@ public final class MainActivity extends BaseActivity {
 
         mFirebaseAnalytics.logEvent(AnalyticsEvents.EVENT_GAME_FINISHED, null);
 
-        final HighScore highScore = RoomUtils.getHighScore(mRoom, getUser());
+        final GameScore highScore = RoomUtils.getHighScore(mRoom, getUser());
 
         final EndGameDialog dialog = EndGameDialog.newInstance(highScore, false)
                 .setOnNewGameListener(this::newGame)
@@ -90,12 +97,8 @@ public final class MainActivity extends BaseActivity {
         return RoomUtils.createBotGame(host, User.newUser(getString(R.string.computer)));
     }
 
-    private void moveToScores(@NonNull HighScore highScore) {
-        checkNotNull(getUser());
-
-        highScore.setUsername(getUser().getName());
-        final Intent intent = new Intent(this, ScoresActivity.class);
-        intent.putExtra(HighScore.TAG, highScore);
-        startActivity(intent);
+    private void moveToScores(@NonNull GameScore score) {
+        saveScoreUseCase.save(score);
+        startActivity(new Intent(this, ScoresActivity.class));
     }
 }

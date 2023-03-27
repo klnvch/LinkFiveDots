@@ -26,4 +26,5 @@ package by.klnvch.link5dots.domain.repositories
 
 interface DeviceInfo {
     fun isTest(): Boolean
+    fun getAndroidId(): String
 }

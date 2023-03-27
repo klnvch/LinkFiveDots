@@ -22,11 +22,28 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.domain.repositories
+package by.klnvch.link5dots.domain.usecases
 
-interface FirebaseManager {
-    fun isSupported(): Boolean
-    suspend fun signInAnonymously()
-    fun signOut()
-    fun getUserId(): String?
+import by.klnvch.link5dots.domain.repositories.FirebaseManager
+import by.klnvch.link5dots.domain.repositories.GameScoreRemoteSource
+import javax.inject.Inject
+
+class GetScorePathUseCase @Inject constructor(
+    private val firebaseManager: FirebaseManager,
+    private val gameScoreRemoteSource: GameScoreRemoteSource,
+) {
+    suspend fun signInAndGet(): String {
+        if (firebaseManager.isSupported()) {
+            firebaseManager.signInAnonymously()
+            return gameScoreRemoteSource.getHighScorePath()
+        } else {
+            throw NotSupportedError()
+        }
+    }
+
+    fun signOut() {
+        firebaseManager.signOut()
+    }
 }
+
+class NotSupportedError : Error()

@@ -22,11 +22,27 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.domain.repositories
+package by.klnvch.link5dots.domain.usecases
 
-interface FirebaseManager {
-    fun isSupported(): Boolean
-    suspend fun signInAnonymously()
-    fun signOut()
-    fun getUserId(): String?
+import by.klnvch.link5dots.data.firebase.GameScoreRemote
+import by.klnvch.link5dots.domain.models.GameScore
+import by.klnvch.link5dots.domain.repositories.DeviceInfo
+import by.klnvch.link5dots.domain.repositories.FirebaseManager
+import by.klnvch.link5dots.domain.repositories.GameScoreRemoteSource
+import javax.inject.Inject
+
+// TODO: add isSupported and login
+class SaveScoreUseCase @Inject constructor(
+    private val deviceInfo: DeviceInfo,
+    private val firebaseManager: FirebaseManager,
+    private val gameScoreRemoteSource: GameScoreRemoteSource,
+) {
+    fun save(gameScore: GameScore) {
+        val deviceId = deviceInfo.getAndroidId()
+        val userId = firebaseManager.getUserId()
+        if (userId != null) {
+            val scoreRemote = GameScoreRemote(gameScore, userId, deviceId)
+            gameScoreRemoteSource.save(scoreRemote)
+        }
+    }
 }

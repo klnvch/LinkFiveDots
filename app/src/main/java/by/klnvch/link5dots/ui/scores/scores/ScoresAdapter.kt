@@ -27,17 +27,17 @@ package by.klnvch.link5dots.ui.scores.scores
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import by.klnvch.link5dots.data.firebase.GameScoreRemote
 import by.klnvch.link5dots.databinding.ItemHighScoreBinding
-import by.klnvch.link5dots.models.HighScore
 import com.firebase.ui.database.FirebaseRecyclerAdapter
 import com.firebase.ui.database.FirebaseRecyclerOptions
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.Query
 
-class ScoresAdapter(options: FirebaseRecyclerOptions<HighScore>) :
-    FirebaseRecyclerAdapter<HighScore, ScoresAdapter.HighScoreHolder>(options) {
+class ScoresAdapter(options: FirebaseRecyclerOptions<GameScoreRemote>) :
+    FirebaseRecyclerAdapter<GameScoreRemote, ScoresAdapter.HighScoreHolder>(options) {
 
-    override fun onBindViewHolder(holder: HighScoreHolder, position: Int, model: HighScore) {
+    override fun onBindViewHolder(holder: HighScoreHolder, position: Int, model: GameScoreRemote) {
         holder.binding.viewState = HighScoreViewState(position, model)
     }
 
@@ -55,13 +55,14 @@ class ScoresAdapter(options: FirebaseRecyclerOptions<HighScore>) :
         private fun getScoresQuery(highScorePath: String): Query {
             return FirebaseDatabase.getInstance().reference
                 .child(highScorePath)
+                .orderByChild("score")
                 .limitToLast(LIMIT_TO_FIRST)
         }
 
         fun create(highScorePath: String): ScoresAdapter {
             return ScoresAdapter(
-                FirebaseRecyclerOptions.Builder<HighScore>()
-                    .setQuery(getScoresQuery(highScorePath), HighScore::class.java)
+                FirebaseRecyclerOptions.Builder<GameScoreRemote>()
+                    .setQuery(getScoresQuery(highScorePath), GameScoreRemote::class.java)
                     .build()
             )
         }

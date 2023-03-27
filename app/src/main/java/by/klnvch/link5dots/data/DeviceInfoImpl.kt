@@ -32,10 +32,9 @@ import by.klnvch.link5dots.utils.TestDevices
 
 @SuppressLint("HardwareIds")
 class DeviceInfoImpl constructor(private val context: Context) : DeviceInfo {
-    override fun isTest(): Boolean {
-        val androidID = Settings.Secure.getString(
-            context.contentResolver, Settings.Secure.ANDROID_ID
-        )
-        return TestDevices.TEST_DEVICES.contains(androidID)
-    }
+    override fun isTest() = TestDevices.TEST_DEVICES.contains(getAndroidId())
+
+    override fun getAndroidId(): String =
+        Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
+
 }

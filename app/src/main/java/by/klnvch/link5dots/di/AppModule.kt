@@ -37,6 +37,7 @@ import by.klnvch.link5dots.data.DeviceInfoImpl
 import by.klnvch.link5dots.data.NightModeManagerImpl
 import by.klnvch.link5dots.data.db.AppDatabase
 import by.klnvch.link5dots.data.firebase.FirebaseManagerImpl
+import by.klnvch.link5dots.data.firebase.GameScoreRemoteSourceImpl
 import by.klnvch.link5dots.data.settings.PreferenceDataStoreImpl
 import by.klnvch.link5dots.data.settings.SettingsImpl
 import by.klnvch.link5dots.data.network.NetworkService
@@ -116,4 +117,8 @@ class AppModule {
     @ApplicationScope
     @Provides
     fun provideFirebaseManager(app: Application): FirebaseManager = FirebaseManagerImpl(app)
+
+    @ApplicationScope
+    @Provides
+    fun provideGameScoreRemoteSource(): GameScoreRemoteSource = GameScoreRemoteSourceImpl()
 }

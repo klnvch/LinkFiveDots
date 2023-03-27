@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2017 klnvch
+ * Copyright (c) 2023 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,9 +28,10 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
 import by.klnvch.link5dots.dialogs.EndGameDialog;
+import by.klnvch.link5dots.domain.models.GameScore;
 import by.klnvch.link5dots.models.Dot;
-import by.klnvch.link5dots.models.HighScore;
 import by.klnvch.link5dots.models.Room;
 import by.klnvch.link5dots.models.User;
 import by.klnvch.link5dots.utils.ActivityUtils;
@@ -59,7 +60,7 @@ public class TwoPlayersActivity extends BaseActivity {
     public void onGameFinished() {
         if (isFinishing()) return;
 
-        final HighScore highScore = RoomUtils.getHighScore(mRoom, null);
+        final GameScore highScore = RoomUtils.getHighScore(mRoom, null);
 
         final EndGameDialog dialog = EndGameDialog.newInstance(highScore, true)
                 .setOnNewGameListener(this::newGame)

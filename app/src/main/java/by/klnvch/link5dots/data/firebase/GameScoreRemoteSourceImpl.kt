@@ -22,11 +22,33 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.domain.repositories
+package by.klnvch.link5dots.data.firebase
 
-interface FirebaseManager {
-    fun isSupported(): Boolean
-    suspend fun signInAnonymously()
-    fun signOut()
-    fun getUserId(): String?
+import android.util.Log
+import by.klnvch.link5dots.BuildConfig
+import by.klnvch.link5dots.domain.repositories.GameScoreRemoteSource
+import com.google.firebase.crashlytics.FirebaseCrashlytics
+import com.google.firebase.database.FirebaseDatabase
+
+class GameScoreRemoteSourceImpl : GameScoreRemoteSource {
+    override fun getHighScorePath(): String {
+        return if (BuildConfig.DEBUG) "high_scores_debug" else "high_scores"
+    }
+
+    override fun save(score: GameScoreRemote) {
+        val mDatabase = FirebaseDatabase.getInstance().reference.child(getHighScorePath())
+        val key = mDatabase.push().key
+
+        if (key != null) {
+            mDatabase
+                .child(key)
+                .setValue(score)
+                .addOnCompleteListener { task ->
+                    Log.d("FirebaseUtils", "publishScore: " + task.exception)
+                }
+        } else {
+            FirebaseCrashlytics.getInstance()
+                .recordException(NullPointerException("Firebase key is null"))
+        }
+    }
 }

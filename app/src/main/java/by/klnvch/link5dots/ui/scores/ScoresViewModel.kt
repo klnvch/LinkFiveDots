@@ -28,11 +28,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import by.klnvch.link5dots.di.viewmodels.AssistedSavedStateViewModelFactory
-import by.klnvch.link5dots.domain.repositories.FirebaseManager
-import by.klnvch.link5dots.domain.usecases.DeleteRoomUseCase
-import by.klnvch.link5dots.domain.usecases.GetRoomsUseCase
-import by.klnvch.link5dots.domain.usecases.InsertRoomUseCase
-import by.klnvch.link5dots.models.HighScore
+import by.klnvch.link5dots.domain.usecases.*
 import by.klnvch.link5dots.models.Room
 import by.klnvch.link5dots.ui.scores.history.HistoryViewState
 import by.klnvch.link5dots.ui.scores.scores.FirebaseState
@@ -49,7 +45,7 @@ class ScoresViewModel @AssistedInject constructor(
     private val deleteRoomUseCase: DeleteRoomUseCase,
     private val insertRoomUseCase: InsertRoomUseCase,
     private val getRoomsUseCase: GetRoomsUseCase,
-    private val firebaseManager: FirebaseManager,
+    private val getScorePathUseCase: GetScorePathUseCase,
 ) : ViewModel() {
     private val _historyUiState = MutableStateFlow(HistoryViewState.initial())
     val historyUiState: StateFlow<HistoryViewState> = _historyUiState
@@ -63,16 +59,13 @@ class ScoresViewModel @AssistedInject constructor(
         }
 
         viewModelScope.launch {
-            if (firebaseManager.isSupported()) {
-                try {
-                    firebaseManager.signInAnonymously()
-                    val highScorePath = firebaseManager.getHighScorePath()
-                    _scoresUiState.value = ScoresViewState(FirebaseState.SIGNED_IN, highScorePath)
-                } catch (e: Error) {
-                    _scoresUiState.value = ScoresViewState(FirebaseState.ERROR)
-                }
-            } else {
+            try {
+                val scorePath = getScorePathUseCase.signInAndGet()
+                _scoresUiState.value = ScoresViewState(FirebaseState.SIGNED_IN, scorePath)
+            } catch (e: NotSupportedError) {
                 _scoresUiState.value = ScoresViewState(FirebaseState.NOT_SUPPORTED)
+            } catch (e: Error) {
+                _scoresUiState.value = ScoresViewState(FirebaseState.ERROR)
             }
         }
     }
@@ -98,11 +91,7 @@ class ScoresViewModel @AssistedInject constructor(
     }
 
     fun signOut() {
-        firebaseManager.signOut()
-    }
-
-    fun saveScore(score: HighScore) {
-        firebaseManager.saveScore(score)
+        getScorePathUseCase.signOut()
     }
 
     companion object {

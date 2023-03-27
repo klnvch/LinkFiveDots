@@ -35,8 +35,10 @@ import java.util.Locale;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import by.klnvch.link5dots.domain.models.GameResult;
+import by.klnvch.link5dots.domain.models.GameScore;
 import by.klnvch.link5dots.models.Dot;
-import by.klnvch.link5dots.models.HighScore;
 import by.klnvch.link5dots.models.Room;
 import by.klnvch.link5dots.models.User;
 
@@ -215,7 +217,7 @@ public class RoomUtils {
     }
 
     @NonNull
-    public static HighScore getHighScore(@NonNull Room room, @Nullable User user) {
+    public static GameScore getHighScore(@NonNull Room room, @Nullable User user) {
         checkNotNull(room);
 
         final Dot lastDot = DotsArrayUtils.getLastDot(room.getDots());
@@ -224,13 +226,15 @@ public class RoomUtils {
         final int movesDone = lastDot.getId() + 1;
 
         if (user != null) {
+            final GameResult gameResult;
             if (lastDot.getType() == getHostDotType(room, user)) {
-                return new HighScore(movesDone, time, HighScore.WON);
+                gameResult = GameResult.WON;
             } else {
-                return new HighScore(movesDone, time, HighScore.LOST);
+                gameResult = GameResult.LOST;
             }
+            return new GameScore(user.getName(), movesDone, time, gameResult, System.currentTimeMillis());
         } else {
-            return new HighScore(movesDone, time, -1);
+            return new GameScore("", movesDone, time, GameResult.LOST, System.currentTimeMillis());
         }
     }
 

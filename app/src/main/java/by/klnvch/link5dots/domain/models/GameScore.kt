@@ -22,11 +22,16 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.domain.repositories
+package by.klnvch.link5dots.domain.models
 
-interface FirebaseManager {
-    fun isSupported(): Boolean
-    suspend fun signInAnonymously()
-    fun signOut()
-    fun getUserId(): String?
+data class GameScore(
+    val userName: String,
+    val size: Int,
+    val duration: Long,
+    val status: GameResult,
+    val timestamp: Long
+)
+
+enum class GameResult {
+    WON, LOST
 }

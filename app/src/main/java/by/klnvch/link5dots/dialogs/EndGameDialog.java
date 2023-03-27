@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2017 klnvch
+ * Copyright (c) 2023 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -32,13 +32,15 @@ import android.text.format.DateUtils;
 import android.view.View;
 import android.widget.TextView;
 
-import com.google.firebase.analytics.FirebaseAnalytics;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
+
+import com.google.firebase.analytics.FirebaseAnalytics;
+
 import by.klnvch.link5dots.R;
-import by.klnvch.link5dots.models.HighScore;
+import by.klnvch.link5dots.domain.models.GameResult;
+import by.klnvch.link5dots.domain.models.GameScore;
 import by.klnvch.link5dots.utils.AnalyticsEvents;
 
 public final class EndGameDialog extends DialogFragment implements DialogInterface.OnClickListener {
@@ -58,15 +60,15 @@ public final class EndGameDialog extends DialogFragment implements DialogInterfa
     /**
      * Creates dialog showing the end of the game
      *
-     * @param highScore    result of a game
+     * @param score        result of a game
      * @param ignoreResult ignore won or lost state of the game
      * @return dialog instance
      */
     @NonNull
-    public static EndGameDialog newInstance(@NonNull HighScore highScore, boolean ignoreResult) {
-        final Boolean isWon = ignoreResult ? null : highScore.getStatus() == HighScore.WON;
-        final int movesNumber = highScore.getMoves();
-        final long elapsedTime = highScore.getTime();
+    public static EndGameDialog newInstance(@NonNull GameScore score, boolean ignoreResult) {
+        final Boolean isWon = ignoreResult ? null : score.getStatus() == GameResult.WON;
+        final int movesNumber = score.getSize();
+        final long elapsedTime = score.getDuration();
 
         final Bundle args = new Bundle();
         args.putSerializable(KEY_IS_WON, isWon);

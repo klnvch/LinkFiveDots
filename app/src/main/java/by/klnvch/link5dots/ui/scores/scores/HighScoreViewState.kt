@@ -24,7 +24,8 @@
 
 package by.klnvch.link5dots.ui.scores.scores
 
-import by.klnvch.link5dots.models.HighScore
+import by.klnvch.link5dots.data.firebase.GameScoreRemote
+import by.klnvch.link5dots.domain.models.GameResult
 import by.klnvch.link5dots.utils.FormatUtils.formatDuration
 
 data class HighScoreViewState(
@@ -32,13 +33,13 @@ data class HighScoreViewState(
     val userName: String,
     val size: String,
     val duration: String,
-    val status: Int
+    val status: GameResult
 ) {
-    constructor(position: Int, highScore: HighScore) : this(
+    constructor(position: Int, score: GameScoreRemote) : this(
         "${position + 1}.",
-        highScore.username ?: "",
-        highScore.moves.toString(),
-        highScore.time.formatDuration(),
-        highScore.status
+        score.userName ?: "",
+        score.getSize().toString(),
+        score.getDuration().formatDuration(),
+        score.getStatus()
     )
 }

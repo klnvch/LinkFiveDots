@@ -38,9 +38,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import by.klnvch.link5dots.R
 import by.klnvch.link5dots.databinding.FragmentScoresBinding
 import by.klnvch.link5dots.di.viewmodels.SavedStateViewModelFactory
-import by.klnvch.link5dots.models.HighScore
+import by.klnvch.link5dots.domain.models.GameResult
 import by.klnvch.link5dots.ui.scores.ScoresViewModel
-import by.klnvch.link5dots.utils.IntentExt.getHighScore
 import dagger.android.support.DaggerFragment
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -95,22 +94,16 @@ class ScoresFragment : DaggerFragment() {
 
         if (viewState.firebaseState == FirebaseState.SIGNED_IN) {
             scoresAdapter.startListening()
-            // send score if necessary
-            val highScore = activity?.intent?.getHighScore()
-            if (highScore != null) {
-                activity?.intent?.removeExtra(HighScore.TAG)
-                viewModel.saveScore(highScore)
-            }
         }
     }
 
     companion object {
         @JvmStatic
         @BindingAdapter("highScoreStatus")
-        fun setHighScoreStatus(textView: TextView, status: Int?) {
+        fun setHighScoreStatus(textView: TextView, status: GameResult?) {
             when (status) {
-                HighScore.WON -> textView.setText(R.string.scores_won)
-                HighScore.LOST -> textView.setText(R.string.scores_lost)
+                GameResult.WON -> textView.setText(R.string.scores_won)
+                GameResult.LOST -> textView.setText(R.string.scores_lost)
                 else -> textView.setText(R.string.status)
             }
         }

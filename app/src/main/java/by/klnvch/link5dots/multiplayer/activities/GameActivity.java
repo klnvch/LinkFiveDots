@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2017 klnvch
+ * Copyright (c) 2023 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -51,8 +51,8 @@ import java.util.List;
 import by.klnvch.link5dots.GameFragment;
 import by.klnvch.link5dots.R;
 import by.klnvch.link5dots.dialogs.EndGameDialog;
+import by.klnvch.link5dots.domain.models.GameScore;
 import by.klnvch.link5dots.models.Dot;
-import by.klnvch.link5dots.models.HighScore;
 import by.klnvch.link5dots.models.Room;
 import by.klnvch.link5dots.models.User;
 import by.klnvch.link5dots.multiplayer.adapters.TargetAdapterInterface;
@@ -359,7 +359,7 @@ public abstract class GameActivity extends DaggerAppCompatActivity implements
         checkNotNull(mService.getRoom());
         checkNotNull(mService.getUser());
 
-        final HighScore highScore = RoomUtils.getHighScore(mService.getRoom(), mService.getUser());
+        final GameScore highScore = RoomUtils.getHighScore(mService.getRoom(), mService.getUser());
 
         final EndGameDialog dialog = EndGameDialog.newInstance(highScore, false)
                 .setOnNewGameListener(this::newGame);
