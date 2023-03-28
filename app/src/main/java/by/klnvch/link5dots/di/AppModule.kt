@@ -33,6 +33,7 @@ import androidx.preference.PreferenceDataStore
 import androidx.room.Room
 import by.klnvch.link5dots.data.*
 import by.klnvch.link5dots.data.db.AppDatabase
+import by.klnvch.link5dots.data.firebase.AnalyticsImpl
 import by.klnvch.link5dots.data.firebase.FirebaseManagerImpl
 import by.klnvch.link5dots.data.firebase.GameScoreRemoteSourceImpl
 import by.klnvch.link5dots.data.settings.PreferenceDataStoreImpl
@@ -116,4 +117,8 @@ class AppModule {
     @ApplicationScope
     @Provides
     fun provideGameScoreRemoteSource(): GameScoreRemoteSource = GameScoreRemoteSourceImpl()
+
+    @ApplicationScope
+    @Provides
+    fun provideAnalytics(app: Application): Analytics = AnalyticsImpl(app)
 }

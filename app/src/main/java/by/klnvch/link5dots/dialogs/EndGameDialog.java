@@ -41,7 +41,7 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 import by.klnvch.link5dots.R;
 import by.klnvch.link5dots.domain.models.GameResult;
 import by.klnvch.link5dots.domain.models.GameScore;
-import by.klnvch.link5dots.utils.AnalyticsEvents;
+import by.klnvch.link5dots.domain.repositories.Analytics;
 
 public final class EndGameDialog extends DialogFragment implements DialogInterface.OnClickListener {
 
@@ -133,19 +133,19 @@ public final class EndGameDialog extends DialogFragment implements DialogInterfa
         switch (which) {
             case DialogInterface.BUTTON_POSITIVE:
                 if (mListenerNew != null) {
-                    mFirebaseAnalytics.logEvent(AnalyticsEvents.EVENT_NEW_GAME, null);
+                    mFirebaseAnalytics.logEvent(Analytics.EVENT_NEW_GAME, null);
                     mListenerNew.onNewGame();
                 }
                 break;
             case DialogInterface.BUTTON_NEGATIVE:
                 if (mListenerUndo != null) {
-                    mFirebaseAnalytics.logEvent(AnalyticsEvents.EVENT_UNDO_MOVE, null);
+                    mFirebaseAnalytics.logEvent(Analytics.EVENT_UNDO_MOVE, null);
                     mListenerUndo.onUndoMove();
                 }
                 break;
             case DialogInterface.BUTTON_NEUTRAL:
                 if (mListenerScore != null) {
-                    mFirebaseAnalytics.logEvent(AnalyticsEvents.EVENT_PUBLISH_SCORE, null);
+                    mFirebaseAnalytics.logEvent(Analytics.EVENT_PUBLISH_SCORE, null);
                     mListenerScore.onScore();
                 }
                 break;

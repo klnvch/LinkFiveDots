@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2017 klnvch
+ * Copyright (c) 2023 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,14 +22,18 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.utils;
+package by.klnvch.link5dots.domain.repositories
 
-public class AnalyticsEvents {
-    public static final String EVENT_NEW_GAME = "new_game";
-    public static final String EVENT_GENERATE_GAME = "generate_game";
-    public static final String EVENT_UNDO_MOVE = "undo_move";
-    public static final String EVENT_PUBLISH_SCORE = "publish_score";
-    public static final String EVENT_GAME_FINISHED = "game_finished";
-    public static final String EVENT_NEW_MOVE = "new_move";
-    public static final String EVENT_SEARCH = "search";
+interface Analytics {
+    fun logEvent(event: String)
+
+    companion object {
+        const val EVENT_NEW_GAME = "new_game"
+        const val EVENT_GENERATE_GAME = "generate_game"
+        const val EVENT_UNDO_MOVE = "undo_move"
+        const val EVENT_PUBLISH_SCORE = "publish_score"
+        const val EVENT_GAME_FINISHED = "game_finished"
+        const val EVENT_NEW_MOVE = "new_move"
+        const val EVENT_SEARCH = "search"
+    }
 }

@@ -36,13 +36,13 @@ import javax.inject.Inject;
 
 import by.klnvch.link5dots.dialogs.EndGameDialog;
 import by.klnvch.link5dots.domain.models.GameScore;
+import by.klnvch.link5dots.domain.repositories.Analytics;
 import by.klnvch.link5dots.domain.usecases.SaveScoreUseCase;
 import by.klnvch.link5dots.models.Dot;
 import by.klnvch.link5dots.models.Room;
 import by.klnvch.link5dots.models.User;
 import by.klnvch.link5dots.ui.scores.ScoresActivity;
 import by.klnvch.link5dots.utils.ActivityUtils;
-import by.klnvch.link5dots.utils.AnalyticsEvents;
 import by.klnvch.link5dots.utils.RoomUtils;
 
 public final class MainActivity extends BaseActivity {
@@ -71,7 +71,7 @@ public final class MainActivity extends BaseActivity {
     public void onMoveDone(@NonNull Dot dot) {
         Room room = getRoom();
         if (room != null) {
-            mFirebaseAnalytics.logEvent(AnalyticsEvents.EVENT_NEW_MOVE, null);
+            getAnalytics().logEvent(Analytics.EVENT_NEW_MOVE);
             mGameFragment.update(RoomUtils.addDotWithBotAnswer(room, dot));
         }
     }
@@ -80,7 +80,7 @@ public final class MainActivity extends BaseActivity {
     public void onGameFinished() {
         Room room = getRoom();
         if (room != null && !isFinishing()) {
-            mFirebaseAnalytics.logEvent(AnalyticsEvents.EVENT_GAME_FINISHED, null);
+            getAnalytics().logEvent(Analytics.EVENT_GAME_FINISHED);
 
             final GameScore highScore = RoomUtils.getHighScore(room, getUser());
 

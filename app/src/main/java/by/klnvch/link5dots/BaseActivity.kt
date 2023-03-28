@@ -31,13 +31,12 @@ import androidx.lifecycle.lifecycleScope
 import by.klnvch.link5dots.GameFragment.OnGameListener
 import by.klnvch.link5dots.dialogs.NewGameDialog
 import by.klnvch.link5dots.dialogs.NewGameDialog.OnSeedNewGameListener
+import by.klnvch.link5dots.domain.repositories.Analytics
 import by.klnvch.link5dots.domain.repositories.RoomDao
 import by.klnvch.link5dots.domain.repositories.Settings
 import by.klnvch.link5dots.models.Room
 import by.klnvch.link5dots.models.User
-import by.klnvch.link5dots.utils.AnalyticsEvents
 import by.klnvch.link5dots.utils.RoomUtils
-import com.google.firebase.analytics.FirebaseAnalytics
 import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
@@ -48,7 +47,9 @@ import javax.inject.Inject
 abstract class BaseActivity : DaggerAppCompatActivity(), OnGameListener, OnSeedNewGameListener {
     protected lateinit var mGameFragment: GameFragment
     protected var room: Room? = null
-    protected lateinit var mFirebaseAnalytics: FirebaseAnalytics
+
+    @Inject
+    lateinit var analytics: Analytics
 
     @Inject
     lateinit var settings: Settings
@@ -60,7 +61,6 @@ abstract class BaseActivity : DaggerAppCompatActivity(), OnGameListener, OnSeedN
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
         mGameFragment = supportFragmentManager.findFragmentById(R.id.fragment) as GameFragment
-        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this)
 
         lifecycleScope.launch {
             val room = roomDao.getRecentRoomByType(getRoomType()).firstOrNull()
@@ -90,12 +90,12 @@ abstract class BaseActivity : DaggerAppCompatActivity(), OnGameListener, OnSeedN
                 return true
             }
             R.id.menu_undo -> {
-                log(AnalyticsEvents.EVENT_UNDO_MOVE)
+                analytics.logEvent(Analytics.EVENT_UNDO_MOVE)
                 undoLastMove()
                 return true
             }
             R.id.menu_new_game -> {
-                log(AnalyticsEvents.EVENT_NEW_GAME)
+                analytics.logEvent(Analytics.EVENT_NEW_GAME)
                 newGame()
                 return true
             }
@@ -107,7 +107,7 @@ abstract class BaseActivity : DaggerAppCompatActivity(), OnGameListener, OnSeedN
     }
 
     override fun onSearchRequested(): Boolean {
-        log(AnalyticsEvents.EVENT_SEARCH)
+        analytics.logEvent(Analytics.EVENT_SEARCH)
         searchLastMove()
         return true
     }
@@ -125,6 +125,7 @@ abstract class BaseActivity : DaggerAppCompatActivity(), OnGameListener, OnSeedN
     override fun onSeedNewGame(seed: Long?) {
         val room = this.room
         if (room != null) {
+            analytics.logEvent(Analytics.EVENT_GENERATE_GAME)
             mGameFragment.update(RoomUtils.newGame(room, seed))
         }
     }
@@ -135,10 +136,6 @@ abstract class BaseActivity : DaggerAppCompatActivity(), OnGameListener, OnSeedN
 
     private fun updateRoom(room: Room) {
         mGameFragment.update(room.also { this.room = it })
-    }
-
-    private fun log(event: String) {
-        mFirebaseAnalytics.logEvent(event, null)
     }
 
     protected abstract fun createRoom(host: User?): Room
