@@ -49,10 +49,12 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:localeConfig="@xml/locale_config"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        tools:ignore="AllowBackup,GoogleAppIndexingWarning">
+        tools:ignore="AllowBackup,GoogleAppIndexingWarning"
+        tools:targetApi="tiramisu">
 
         <service android:name="by.klnvch.link5dots.multiplayer.services.GameServiceBluetooth" />
         <service android:name="by.klnvch.link5dots.multiplayer.services.GameServiceNsd" />
@@ -165,6 +167,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="by.klnvch.link5dots.ui.menu.MenuActivity" />
         </activity>
+
+        <service
+            android:name="androidx.appcompat.app.AppLocalesMetadataHolderService"
+            android:enabled="false"
+            android:exported="false">
+            <meta-data
+                android:name="autoStoreLocales"
+                android:value="true" />
+        </service>
     </application>
 
 </manifest>

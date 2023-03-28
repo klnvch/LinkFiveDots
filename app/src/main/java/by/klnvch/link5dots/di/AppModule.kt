@@ -31,10 +31,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.preference.PreferenceDataStore
 import androidx.room.Room
-import by.klnvch.link5dots.data.ActivitiesMemoryImpl
-import by.klnvch.link5dots.data.CrashRepositoryImpl
-import by.klnvch.link5dots.data.DeviceInfoImpl
-import by.klnvch.link5dots.data.NightModeManagerImpl
+import by.klnvch.link5dots.data.*
 import by.klnvch.link5dots.data.db.AppDatabase
 import by.klnvch.link5dots.data.firebase.FirebaseManagerImpl
 import by.klnvch.link5dots.data.firebase.GameScoreRemoteSourceImpl
@@ -105,6 +102,10 @@ class AppModule {
     @ApplicationScope
     @Provides
     fun provideNighModeManager(): NightModeManager = NightModeManagerImpl()
+
+    @ApplicationScope
+    @Provides
+    fun provideLanguageManager(): LanguageManager = LanguageManagerImpl()
 
     @ApplicationScope
     @Provides

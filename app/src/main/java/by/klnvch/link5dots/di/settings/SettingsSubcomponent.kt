@@ -33,7 +33,6 @@ import dagger.android.AndroidInjector
     modules = [
         SettingsFragmentBuildersModule::class,
         SettingsViewModelsModule::class,
-        LanguageModule::class
     ]
 )
 interface SettingsSubcomponent : AndroidInjector<SettingsActivity> {

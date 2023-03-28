@@ -26,15 +26,13 @@ package by.klnvch.link5dots.domain.usecases
 
 import by.klnvch.link5dots.domain.repositories.LanguageManager
 import by.klnvch.link5dots.domain.repositories.Settings
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-class GetLanguageChangesUseCase @Inject constructor(
+class SyncLanguageUseCase @Inject constructor(
     private val settings: Settings,
     private val languageManager: LanguageManager
-) {
-    fun isChanged(): Flow<Boolean> {
-        return settings.getLanguage().map { languageManager.set(it) }
+) : SyncUseCase {
+    override suspend fun sync() {
+        settings.getLanguage().collect { languageManager.set(it) }
     }
 }

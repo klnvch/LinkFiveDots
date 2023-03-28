@@ -25,6 +25,6 @@
 package by.klnvch.link5dots.domain.repositories
 
 interface LanguageManager {
-    fun set(language: String?): Boolean
+    fun set(language: String)
     fun reset()
 }

@@ -24,47 +24,24 @@
 
 package by.klnvch.link5dots.data
 
-import android.annotation.SuppressLint
-import android.content.Context
-import android.content.res.Configuration
-import android.content.res.Resources
-import android.os.Build
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.os.LocaleListCompat
 import by.klnvch.link5dots.domain.repositories.LanguageManager
-import java.util.*
 
-class LanguageManagerImpl(private val context: Context) : LanguageManager {
-    override fun set(language: String?): Boolean {
-        if (!language.isNullOrEmpty()) {
-            val resources = context.resources
-            val currentLanguage = resources.configuration.locale.language
-            if (language != currentLanguage) {
-                changeLanguage(context, language)
-                return true
-            }
+
+class LanguageManagerImpl : LanguageManager {
+    override fun set(language: String) {
+        if (language.isNotEmpty()) {
+            val appLocale: LocaleListCompat = LocaleListCompat.forLanguageTags(language)
+            AppCompatDelegate.setApplicationLocales(appLocale)
+        } else {
+            AppCompatDelegate.setApplicationLocales(
+                LocaleListCompat.getEmptyLocaleList()
+            )
         }
-        return false
     }
 
     override fun reset() {
-        val locale = Resources.getSystem().configuration.locale
-        Locale.setDefault(locale)
-        val config = Configuration(context.resources.configuration)
-        config.locale = locale
-        context.resources.updateConfiguration(config, context.resources.displayMetrics)
-    }
-
-    @SuppressLint("ObsoleteSdkInt")
-    private fun changeLanguage(context: Context, language: String) {
-        val locale = Locale(language)
-        Locale.setDefault(locale)
-        //
-        val resources = context.resources
-        val config = Configuration(resources.configuration)
-        if (Build.VERSION.SDK_INT >= 17) {
-            config.setLocale(locale)
-        } else {
-            config.locale = locale
-        }
-        resources.updateConfiguration(config, resources.displayMetrics)
+        set("")
     }
 }
