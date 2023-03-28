@@ -33,9 +33,6 @@ interface RoomDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(room: Room)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertRoom(room: Room)
-
     @Update(onConflict = OnConflictStrategy.REPLACE)
     suspend fun updateRoom(room: Room)
 
@@ -53,4 +50,7 @@ interface RoomDao {
 
     @Query("DELETE FROM rooms")
     suspend fun deleteAll()
+
+    @Query("SELECT * FROM rooms WHERE type = :type ORDER BY timestamp DESC LIMIT 1")
+    suspend fun getRecentRoomByType(type: Int): List<Room>
 }

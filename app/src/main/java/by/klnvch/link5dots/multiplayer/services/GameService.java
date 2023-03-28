@@ -57,7 +57,6 @@ import by.klnvch.link5dots.multiplayer.utils.OnTargetCreatedListener;
 import by.klnvch.link5dots.multiplayer.utils.OnTargetDeletedListener;
 import by.klnvch.link5dots.utils.RoomUtils;
 import dagger.android.DaggerService;
-import io.reactivex.disposables.CompositeDisposable;
 
 public abstract class GameService extends DaggerService implements GameServiceInterface,
         OnTargetCreatedListener, OnTargetDeletedListener,
@@ -65,7 +64,6 @@ public abstract class GameService extends DaggerService implements GameServiceIn
         OnRoomConnectedListener, OnRoomUpdatedListener {
 
     private static final String TAG = "GameService";
-    protected final CompositeDisposable mDisposables = new CompositeDisposable();
     private final IBinder mBinder = new LocalBinder();
     private final GameState mState = new GameState();
     ScannerInterface mScanner;
@@ -105,7 +103,6 @@ public abstract class GameService extends DaggerService implements GameServiceIn
         Log.d(TAG, "onDestroy");
 
         mScanner.stopScan();
-        mDisposables.clear();
         super.onDestroy();
     }
 

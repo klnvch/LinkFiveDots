@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2017 klnvch
+ * Copyright (c) 2023 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -38,6 +38,7 @@ import androidx.annotation.Nullable;
 
 import by.klnvch.link5dots.domain.models.GameResult;
 import by.klnvch.link5dots.domain.models.GameScore;
+import by.klnvch.link5dots.domain.models.RoomExt;
 import by.klnvch.link5dots.models.Dot;
 import by.klnvch.link5dots.models.Room;
 import by.klnvch.link5dots.models.User;
@@ -124,18 +125,11 @@ public class RoomUtils {
         return room;
     }
 
-    public static boolean isEmpty(@NonNull Room room) {
-        checkNotNull(room);
-
-        final ArrayList<Dot> dots = room.getDots();
-        return dots == null || dots.isEmpty();
-    }
-
     @NonNull
     public static Room undo(@NonNull Room room) {
         checkNotNull(room);
 
-        if (!isEmpty(room)) {
+        if (RoomExt.isNotEmpty(room)) {
             final ArrayList<Dot> dots = room.getDots();
             dots.remove(dots.size() - 1);
             room.setDots(dots);
@@ -169,19 +163,6 @@ public class RoomUtils {
         return room;
     }
 
-    private static long getDuration(@NonNull Room room) {
-        checkNotNull(room);
-        if (!isEmpty(room)) {
-            final Dot lastDot = DotsArrayUtils.getLastDot(room.getDots());
-            return (lastDot.getTimestamp() - room.getTimestamp());
-        }
-        return 0;
-    }
-
-    public static long getDurationInSeconds(@NonNull Room room) {
-        return getDuration(room) / 1000;
-    }
-
     public static String formatStartTime(@NonNull Room room) {
         checkNotNull(room);
 
@@ -204,7 +185,7 @@ public class RoomUtils {
     private static Integer getLastDotType(@NonNull Room room) {
         checkNotNull(room);
 
-        if (!isEmpty(room)) {
+        if (RoomExt.isNotEmpty(room)) {
             return DotsArrayUtils.getLastDot(room.getDots()).getType();
         }
         return null;

@@ -26,7 +26,6 @@ package by.klnvch.link5dots
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.widget.TextView
 import androidx.annotation.DrawableRes
@@ -36,23 +35,18 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import by.klnvch.link5dots.databinding.GameBoardBinding
 import by.klnvch.link5dots.domain.models.DotsType
+import by.klnvch.link5dots.domain.models.RoomExt.isNotEmpty
 import by.klnvch.link5dots.domain.repositories.RoomDao
 import by.klnvch.link5dots.domain.repositories.Settings
 import by.klnvch.link5dots.models.*
 import by.klnvch.link5dots.utils.RoomUtils
-import com.google.firebase.crashlytics.FirebaseCrashlytics
 import dagger.android.support.DaggerFragment
-import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class GameFragment : DaggerFragment() {
-    private val mDisposables = CompositeDisposable()
     private lateinit var mListener: OnGameListener
     private lateinit var binding: GameBoardBinding
 
@@ -117,11 +111,6 @@ class GameFragment : DaggerFragment() {
         super.onSaveInstanceState(outState)
     }
 
-    override fun onDestroyView() {
-        mDisposables.clear()
-        super.onDestroyView()
-    }
-
     private fun setDotsType(dotsType: Int) {
         binding.gameView.init(requireContext(), dotsType)
 
@@ -165,15 +154,9 @@ class GameFragment : DaggerFragment() {
         }
 
         // add non-empty to the database
-        mDisposables.add(Observable.just(room)
-            .filter { !RoomUtils.isEmpty(it) }
-            .doOnNext { roomDao.insertRoom(it) }
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(
-                { Log.d(TAG, MSG_DB_INSERT_SUCCESS) },
-                { FirebaseCrashlytics.getInstance().recordException(it) })
-        )
+        lifecycleScope.launch {
+            roomDao.insert(room)
+        }
     }
 
     fun reset() {
@@ -204,6 +187,5 @@ class GameFragment : DaggerFragment() {
     companion object {
         const val TAG = "GameFragment"
         private const val KEY_VIEW_STATE = "KEY_VIEW_STATE"
-        private const val MSG_DB_INSERT_SUCCESS = "room inserted successfully"
     }
 }

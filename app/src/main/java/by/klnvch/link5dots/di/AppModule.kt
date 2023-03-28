@@ -40,7 +40,6 @@ import by.klnvch.link5dots.data.settings.SettingsImpl
 import by.klnvch.link5dots.data.network.NetworkService
 import by.klnvch.link5dots.data.network.RoomRemoteSourceImpl
 import by.klnvch.link5dots.domain.repositories.*
-import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import dagger.Module
 import dagger.Provides
 import retrofit2.Retrofit
@@ -57,7 +56,6 @@ class AppModule {
         return Retrofit.Builder()
             .baseUrl("https://link-five-dots.firebaseio.com/")
             .addConverterFactory(GsonConverterFactory.create())
-            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .build()
             .create(NetworkService::class.java)
     }
@@ -94,10 +92,6 @@ class AppModule {
     @Provides
     fun providePreferenceDataStore(app: Application): PreferenceDataStore =
         PreferenceDataStoreImpl(app.dataStore)
-
-    @ApplicationScope
-    @Provides
-    fun provideActivitiesMemory(app: Application): ActivitiesMemory = ActivitiesMemoryImpl(app)
 
     @ApplicationScope
     @Provides

@@ -30,4 +30,7 @@ object RoomExt {
     fun Room.getDuration(): Long {
         return (dots.lastOrNull()?.timestamp ?: timestamp) - timestamp
     }
+
+    @JvmStatic
+    fun Room.isNotEmpty() = !dots.isNullOrEmpty()
 }

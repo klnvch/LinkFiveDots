@@ -29,7 +29,6 @@ import javax.inject.Inject
 
 class ResetAllDataUseCase @Inject constructor(
     private val settings: Settings,
-    private val activitiesMemory: ActivitiesMemory,
     private val roomDao: RoomDao,
     private val nighModeManager: NightModeManager,
     private val languageManager: LanguageManager
@@ -37,7 +36,6 @@ class ResetAllDataUseCase @Inject constructor(
     suspend fun reset() {
         settings.reset()
         roomDao.deleteAll()
-        activitiesMemory.reset()
         nighModeManager.reset()
         languageManager.reset()
     }

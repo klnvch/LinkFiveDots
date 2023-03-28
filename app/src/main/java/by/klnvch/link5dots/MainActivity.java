@@ -59,34 +59,45 @@ public final class MainActivity extends BaseActivity {
     @Nullable
     @Override
     public User getUser() {
-        return mRoom.getUser1();
+        Room room = getRoom();
+        if (room != null) {
+            return room.getUser1();
+        } else {
+            return null;
+        }
     }
 
     @Override
     public void onMoveDone(@NonNull Dot dot) {
-        mFirebaseAnalytics.logEvent(AnalyticsEvents.EVENT_NEW_MOVE, null);
-
-        mGameFragment.update(RoomUtils.addDotWithBotAnswer(mRoom, dot));
+        Room room = getRoom();
+        if (room != null) {
+            mFirebaseAnalytics.logEvent(AnalyticsEvents.EVENT_NEW_MOVE, null);
+            mGameFragment.update(RoomUtils.addDotWithBotAnswer(room, dot));
+        }
     }
 
     @Override
     public void onGameFinished() {
-        if (isFinishing()) return;
+        Room room = getRoom();
+        if (room != null && !isFinishing()) {
+            mFirebaseAnalytics.logEvent(AnalyticsEvents.EVENT_GAME_FINISHED, null);
 
-        mFirebaseAnalytics.logEvent(AnalyticsEvents.EVENT_GAME_FINISHED, null);
+            final GameScore highScore = RoomUtils.getHighScore(room, getUser());
 
-        final GameScore highScore = RoomUtils.getHighScore(mRoom, getUser());
-
-        final EndGameDialog dialog = EndGameDialog.newInstance(highScore, false)
-                .setOnNewGameListener(this::newGame)
-                .setOnUndoMoveListener(this::undoLastMove)
-                .setOnScoreListener(() -> moveToScores(highScore));
-        ActivityUtils.showDialog(getSupportFragmentManager(), dialog, EndGameDialog.TAG);
+            final EndGameDialog dialog = EndGameDialog.newInstance(highScore, false)
+                    .setOnNewGameListener(this::newGame)
+                    .setOnUndoMoveListener(this::undoLastMove)
+                    .setOnScoreListener(() -> moveToScores(highScore));
+            ActivityUtils.showDialog(getSupportFragmentManager(), dialog, EndGameDialog.TAG);
+        }
     }
 
     @Override
     protected void undoLastMove() {
-        mGameFragment.update(RoomUtils.undo(RoomUtils.undo(mRoom)));
+        Room room = getRoom();
+        if (room != null) {
+            mGameFragment.update(RoomUtils.undo(RoomUtils.undo(room)));
+        }
     }
 
     @NonNull
@@ -100,5 +111,10 @@ public final class MainActivity extends BaseActivity {
     private void moveToScores(@NonNull GameScore score) {
         saveScoreUseCase.save(score);
         startActivity(new Intent(this, ScoresActivity.class));
+    }
+
+    @Override
+    protected int getRoomType() {
+        return Room.TYPE_BOT;
     }
 }

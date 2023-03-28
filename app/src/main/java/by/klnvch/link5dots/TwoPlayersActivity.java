@@ -53,29 +53,41 @@ public class TwoPlayersActivity extends BaseActivity {
 
     @Override
     public void onMoveDone(@NonNull Dot dot) {
-        mGameFragment.update(RoomUtils.addDotAsAnotherType(mRoom, dot));
+        Room room = getRoom();
+        if (room != null) {
+            mGameFragment.update(RoomUtils.addDotAsAnotherType(room, dot));
+        }
     }
 
     @Override
     public void onGameFinished() {
-        if (isFinishing()) return;
+        Room room = getRoom();
+        if (room != null && !isFinishing()) {
+            final GameScore highScore = RoomUtils.getHighScore(getRoom(), null);
 
-        final GameScore highScore = RoomUtils.getHighScore(mRoom, null);
-
-        final EndGameDialog dialog = EndGameDialog.newInstance(highScore, true)
-                .setOnNewGameListener(this::newGame)
-                .setOnUndoMoveListener(this::undoLastMove);
-        ActivityUtils.showDialog(getSupportFragmentManager(), dialog, EndGameDialog.TAG);
+            final EndGameDialog dialog = EndGameDialog.newInstance(highScore, true)
+                    .setOnNewGameListener(this::newGame)
+                    .setOnUndoMoveListener(this::undoLastMove);
+            ActivityUtils.showDialog(getSupportFragmentManager(), dialog, EndGameDialog.TAG);
+        }
     }
 
     @Override
     protected void undoLastMove() {
-        mGameFragment.update(RoomUtils.undo(mRoom));
+        Room room = getRoom();
+        if (room != null) {
+            mGameFragment.update(RoomUtils.undo(room));
+        }
     }
 
     @NonNull
     @Override
     protected Room createRoom(@Nullable User user) {
         return RoomUtils.createTwoGame();
+    }
+
+    @Override
+    protected int getRoomType() {
+        return Room.TYPE_TWO_PLAYERS;
     }
 }
