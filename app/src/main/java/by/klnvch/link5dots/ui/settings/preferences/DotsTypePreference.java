@@ -32,6 +32,7 @@ import android.util.AttributeSet;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceViewHolder;
 
@@ -44,6 +45,7 @@ public class DotsTypePreference extends Preference {
     private static final int DEFAULT_VALUE = DotsType.ORIGINAL;
 
     private int mCurrentValue;
+    private boolean mCurrentValueSet;
 
     public DotsTypePreference(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
@@ -88,6 +90,14 @@ public class DotsTypePreference extends Preference {
     }
 
     @Override
+    protected void onSetInitialValue(@Nullable Object defaultValue) {
+        if (defaultValue == null) {
+            defaultValue = DEFAULT_VALUE;
+        }
+        setCurrentValue(getPersistedInt((Integer) defaultValue));
+    }
+
+    @Override
     protected void onClick() {
         final int newValue;
         switch (mCurrentValue) {
@@ -99,13 +109,22 @@ public class DotsTypePreference extends Preference {
                 newValue = DotsType.CROSS_AND_RING;
         }
 
-        if (!callChangeListener(newValue)) {
-            return;
+        if (callChangeListener(newValue)) {
+            setCurrentValue(newValue);
         }
+    }
 
-        mCurrentValue = newValue;
-        persistInt(mCurrentValue);
-        notifyChanged();
+    private void setCurrentValue(int currentValue) {
+        final boolean changed = mCurrentValue != currentValue;
+        if (changed || !mCurrentValueSet) {
+            mCurrentValue = currentValue;
+            mCurrentValueSet = true;
+            persistInt(currentValue);
+            if (changed) {
+                notifyDependencyChange(shouldDisableDependents());
+                notifyChanged();
+            }
+        }
     }
 
     @Override
@@ -140,6 +159,7 @@ public class DotsTypePreference extends Preference {
                     public SavedState createFromParcel(Parcel in) {
                         return new SavedState(in);
                     }
+
                     public SavedState[] newArray(int size) {
                         return new SavedState[size];
                     }
