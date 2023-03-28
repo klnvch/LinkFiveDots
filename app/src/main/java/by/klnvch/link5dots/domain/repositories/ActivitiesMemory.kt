@@ -24,5 +24,5 @@
 package by.klnvch.link5dots.domain.repositories
 
 interface ActivitiesMemory {
-    fun reset()
+    suspend fun reset()
 }

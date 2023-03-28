@@ -27,9 +27,11 @@ import android.content.Context
 import by.klnvch.link5dots.MainActivity
 import by.klnvch.link5dots.TwoPlayersActivity
 import by.klnvch.link5dots.domain.repositories.ActivitiesMemory
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class ActivitiesMemoryImpl(private val context: Context) : ActivitiesMemory {
-    override fun reset() {
+    override suspend fun reset() = withContext(Dispatchers.IO) {
         context.getSharedPreferences(MainActivity::class.java.name, Context.MODE_PRIVATE)
             .edit().clear().apply()
         context.getSharedPreferences(TwoPlayersActivity::class.java.name, Context.MODE_PRIVATE)

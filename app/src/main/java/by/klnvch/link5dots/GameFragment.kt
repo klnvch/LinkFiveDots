@@ -33,9 +33,10 @@ import androidx.annotation.DrawableRes
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
 import by.klnvch.link5dots.databinding.GameBoardBinding
-import by.klnvch.link5dots.domain.repositories.RoomDao
 import by.klnvch.link5dots.domain.models.DotsType
+import by.klnvch.link5dots.domain.repositories.RoomDao
 import by.klnvch.link5dots.domain.repositories.Settings
 import by.klnvch.link5dots.models.*
 import by.klnvch.link5dots.utils.RoomUtils
@@ -45,7 +46,6 @@ import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -86,7 +86,7 @@ class GameFragment : DaggerFragment() {
                 GameViewState.fromJson(savedInstanceState.getString(KEY_VIEW_STATE))
         }
 
-        CoroutineScope(Dispatchers.IO).launch {
+        lifecycleScope.launch {
             settings.getDotsType().collect {
                 withContext(Dispatchers.Main) {
                     setDotsType(it)
@@ -151,11 +151,11 @@ class GameFragment : DaggerFragment() {
             val hostDotType = RoomUtils.getHostDotType(room, user)
 
             if (hostDotType == Dot.HOST) {
-                binding.textUser1.text = user1?.name
-                binding.textUser2.text = user2?.name
+                binding.textUser1.text = user1?.name?.ifEmpty { getString(R.string.unknown) }
+                binding.textUser2.text = user2?.name?.ifEmpty { getString(R.string.unknown) }
             } else {
-                binding.textUser1.text = user2?.name
-                binding.textUser2.text = user1?.name
+                binding.textUser1.text = user2?.name?.ifEmpty { getString(R.string.unknown) }
+                binding.textUser2.text = user1?.name?.ifEmpty { getString(R.string.unknown) }
             }
 
             binding.gameView.setGameState(Game.createGame(room.dots, hostDotType))
