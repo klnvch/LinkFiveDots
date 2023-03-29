@@ -32,8 +32,11 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.runBlocking
+import javax.inject.Inject
 
-class SettingsImpl(private val dataStore: DataStore<Preferences>) : Settings {
+class SettingsImpl @Inject constructor(
+    private val dataStore: DataStore<Preferences>
+) : Settings {
 
     companion object {
         private val USER_NAME = stringPreferencesKey(Settings.KEY_USER_NAME)

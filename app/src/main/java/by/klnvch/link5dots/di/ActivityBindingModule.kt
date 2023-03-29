@@ -37,27 +37,27 @@ import dagger.android.ContributesAndroidInjector
 @Module
 abstract class ActivityBindingModule {
 
-    @ActivityScoped
+    @ActivityScope
     @ContributesAndroidInjector(modules = [(FragmentBuildersModule::class)])
     abstract fun gameInfoActivity(): GameInfoActivity
 
-    @ActivityScoped
+    @ActivityScope
     @ContributesAndroidInjector(modules = [(FragmentBuildersModule::class)])
     abstract fun twoPlayersActivity(): TwoPlayersActivity
 
-    @ActivityScoped
+    @ActivityScope
     @ContributesAndroidInjector(modules = [(FragmentBuildersModule::class)])
     abstract fun mainActivity(): MainActivity
 
-    @ActivityScoped
+    @ActivityScope
     @ContributesAndroidInjector(modules = [(FragmentBuildersModule::class)])
     abstract fun gameActivityBluetooth(): GameActivityBluetooth
 
-    @ActivityScoped
+    @ActivityScope
     @ContributesAndroidInjector(modules = [(FragmentBuildersModule::class)])
     abstract fun gameActivityNsd(): GameActivityNsd
 
-    @ActivityScoped
+    @ActivityScope
     @ContributesAndroidInjector(modules = [(FragmentBuildersModule::class)])
     abstract fun gameActivityOnline(): GameActivityOnline
 }

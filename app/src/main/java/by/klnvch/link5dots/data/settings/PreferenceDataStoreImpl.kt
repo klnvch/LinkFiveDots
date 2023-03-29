@@ -33,9 +33,11 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import javax.inject.Inject
 
-class PreferenceDataStoreImpl(private val dataStore: DataStore<Preferences>) :
-    PreferenceDataStore() {
+class PreferenceDataStoreImpl @Inject constructor(
+    private val dataStore: DataStore<Preferences>
+) : PreferenceDataStore() {
 
     override fun getString(key: String, defValue: String?): String? {
         return runBlocking {

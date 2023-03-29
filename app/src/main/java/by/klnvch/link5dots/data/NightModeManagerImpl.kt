@@ -27,8 +27,9 @@ package by.klnvch.link5dots.data
 import androidx.appcompat.app.AppCompatDelegate
 import by.klnvch.link5dots.domain.models.NightMode
 import by.klnvch.link5dots.domain.repositories.NightModeManager
+import javax.inject.Inject
 
-class NightModeManagerImpl : NightModeManager {
+class NightModeManagerImpl @Inject constructor() : NightModeManager {
     override fun set(nightMode: String): Boolean {
         val newNightMode = map(nightMode)
         val oldNightMode = AppCompatDelegate.getDefaultNightMode()

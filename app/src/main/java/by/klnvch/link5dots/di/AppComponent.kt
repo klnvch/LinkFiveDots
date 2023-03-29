@@ -34,11 +34,15 @@ import dagger.BindsInstance
 import dagger.Component
 import dagger.android.AndroidInjector
 import dagger.android.support.AndroidSupportInjectionModule
+import javax.inject.Singleton
 
-@ApplicationScope
+@Singleton
 @Component(
     modules = [
-        AppModule::class,
+        AppBindingModule::class,
+        NetworkModule::class,
+        DatabaseModule::class,
+        DataStoreModule::class,
         ServiceBindingModule::class,
         ActivityBindingModule::class,
         AndroidSupportInjectionModule::class,

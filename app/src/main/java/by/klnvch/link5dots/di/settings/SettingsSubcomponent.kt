@@ -24,11 +24,12 @@
 
 package by.klnvch.link5dots.di.settings
 
+import by.klnvch.link5dots.di.ActivityScope
 import by.klnvch.link5dots.ui.settings.SettingsActivity
 import dagger.Subcomponent
 import dagger.android.AndroidInjector
 
-@SettingsScope
+@ActivityScope
 @Subcomponent(
     modules = [
         SettingsFragmentBuildersModule::class,

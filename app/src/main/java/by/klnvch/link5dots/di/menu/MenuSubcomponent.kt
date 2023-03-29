@@ -24,11 +24,12 @@
 
 package by.klnvch.link5dots.di.menu
 
+import by.klnvch.link5dots.di.ActivityScope
 import by.klnvch.link5dots.ui.menu.MenuActivity
 import dagger.Subcomponent
 import dagger.android.AndroidInjector
 
-@MenuScope
+@ActivityScope
 @Subcomponent(
     modules = [
         MenuFragmentBuildersModule::class,

@@ -27,8 +27,11 @@ package by.klnvch.link5dots.data.firebase
 import android.content.Context
 import by.klnvch.link5dots.domain.repositories.Analytics
 import com.google.firebase.analytics.FirebaseAnalytics
+import javax.inject.Inject
 
-class AnalyticsImpl constructor(private val context: Context): Analytics {
+class AnalyticsImpl @Inject constructor(
+    private val context: Context
+) : Analytics {
     override fun logEvent(event: String) {
         FirebaseAnalytics.getInstance(context).logEvent(event, null)
     }

@@ -28,11 +28,11 @@ import android.content.Context
 import androidx.work.ListenableWorker
 import androidx.work.WorkerFactory
 import androidx.work.WorkerParameters
-import by.klnvch.link5dots.di.ApplicationScope
 import javax.inject.Inject
 import javax.inject.Provider
+import javax.inject.Singleton
 
-@ApplicationScope
+@Singleton
 class DaggerWorkerFactory @Inject constructor(
     private val workerSubcomponent: WorkerSubcomponent.Builder
 ) : WorkerFactory() {

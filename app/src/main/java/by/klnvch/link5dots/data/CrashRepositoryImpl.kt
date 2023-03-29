@@ -26,8 +26,9 @@ package by.klnvch.link5dots.data
 
 import by.klnvch.link5dots.domain.repositories.CrashRepository
 import com.google.firebase.crashlytics.FirebaseCrashlytics
+import javax.inject.Inject
 
-class CrashRepositoryImpl : CrashRepository {
+class CrashRepositoryImpl @Inject constructor() : CrashRepository {
     override fun save(throwable: Throwable) {
         FirebaseCrashlytics.getInstance().recordException(throwable)
     }

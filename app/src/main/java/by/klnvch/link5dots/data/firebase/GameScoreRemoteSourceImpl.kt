@@ -29,8 +29,9 @@ import by.klnvch.link5dots.BuildConfig
 import by.klnvch.link5dots.domain.repositories.GameScoreRemoteSource
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.firebase.database.FirebaseDatabase
+import javax.inject.Inject
 
-class GameScoreRemoteSourceImpl : GameScoreRemoteSource {
+class GameScoreRemoteSourceImpl @Inject constructor() : GameScoreRemoteSource {
     override fun getHighScorePath(): String {
         return if (BuildConfig.DEBUG) "high_scores_debug" else "high_scores"
     }

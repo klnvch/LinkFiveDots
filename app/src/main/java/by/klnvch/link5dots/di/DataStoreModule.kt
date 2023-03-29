@@ -22,10 +22,23 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.di.settings
+package by.klnvch.link5dots.di
 
-import javax.inject.Scope
+import android.app.Application
+import android.content.Context
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStore
+import dagger.Module
+import dagger.Provides
+import javax.inject.Singleton
 
-@Scope
-@Retention(AnnotationRetention.RUNTIME)
-annotation class SettingsScope
+
+val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
+
+@Module
+class DataStoreModule {
+    @Singleton
+    @Provides
+    fun provideDatabase(app: Application) = app.dataStore
+}

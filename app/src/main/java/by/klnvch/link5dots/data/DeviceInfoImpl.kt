@@ -29,9 +29,12 @@ import android.content.Context
 import android.provider.Settings
 import by.klnvch.link5dots.domain.repositories.DeviceInfo
 import by.klnvch.link5dots.utils.TestDevices
+import javax.inject.Inject
 
 @SuppressLint("HardwareIds")
-class DeviceInfoImpl constructor(private val context: Context) : DeviceInfo {
+class DeviceInfoImpl @Inject constructor(
+    private val context: Context
+) : DeviceInfo {
     override fun isTest() = TestDevices.TEST_DEVICES.contains(getAndroidId())
 
     override fun getAndroidId(): String =

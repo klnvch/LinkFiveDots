@@ -24,11 +24,12 @@
 
 package by.klnvch.link5dots.di.scores
 
+import by.klnvch.link5dots.di.ActivityScope
 import by.klnvch.link5dots.ui.scores.ScoresActivity
 import dagger.Subcomponent
 import dagger.android.AndroidInjector
 
-@ScoresScope
+@ActivityScope
 @Subcomponent(
     modules = [
         ScoresFragmentBuildersModule::class,

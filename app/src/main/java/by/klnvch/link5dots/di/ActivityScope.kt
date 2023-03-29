@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 klnvch
+ * Copyright (c) 2017 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,5 +27,5 @@ package by.klnvch.link5dots.di
 import javax.inject.Scope
 
 @Scope
-@Retention
-annotation class ApplicationScope
+@Retention(AnnotationRetention.RUNTIME)
+annotation class ActivityScope

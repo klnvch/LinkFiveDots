@@ -32,10 +32,13 @@ import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.suspendCancellableCoroutine
+import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
-class FirebaseManagerImpl(private val context: Context) : FirebaseManager {
+class FirebaseManagerImpl @Inject constructor(
+    private val context: Context
+) : FirebaseManager {
 
     override fun isSupported(): Boolean {
         return GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(context) ==

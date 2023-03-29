@@ -27,9 +27,10 @@ package by.klnvch.link5dots.data
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.LocaleListCompat
 import by.klnvch.link5dots.domain.repositories.LanguageManager
+import javax.inject.Inject
 
 
-class LanguageManagerImpl : LanguageManager {
+class LanguageManagerImpl @Inject constructor() : LanguageManager {
     override fun set(language: String) {
         if (language.isNotEmpty()) {
             val appLocale: LocaleListCompat = LocaleListCompat.forLanguageTags(language)

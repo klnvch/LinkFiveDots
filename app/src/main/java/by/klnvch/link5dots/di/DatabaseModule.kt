@@ -22,10 +22,31 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.di.scores
+package by.klnvch.link5dots.di
 
-import javax.inject.Scope
+import android.app.Application
+import androidx.room.Room
+import by.klnvch.link5dots.data.db.AppDatabase
+import by.klnvch.link5dots.domain.repositories.RoomDao
+import dagger.Module
+import dagger.Provides
+import javax.inject.Singleton
 
-@Scope
-@Retention(AnnotationRetention.RUNTIME)
-annotation class ScoresScope
+@Module
+class DatabaseModule {
+    @Singleton
+    @Provides
+    fun provideDatabase(app: Application): AppDatabase {
+        return Room
+            .databaseBuilder(app, AppDatabase::class.java, AppDatabase.DB_NAME)
+            .addMigrations(AppDatabase.MIGRATION_1_2)
+            .addMigrations(AppDatabase.MIGRATION_2_3)
+            .addMigrations(AppDatabase.MIGRATION_3_4)
+            .build()
+    }
+
+
+    @Singleton
+    @Provides
+    fun provideRoomDao(appDatabase: AppDatabase): RoomDao = appDatabase.roomDao()
+}

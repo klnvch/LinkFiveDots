@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2017 klnvch
+ * Copyright (c) 2023 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,8 +24,22 @@
 
 package by.klnvch.link5dots.di
 
-import javax.inject.Scope
+import by.klnvch.link5dots.data.network.NetworkService
+import dagger.Module
+import dagger.Provides
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Singleton
 
-@Scope
-@Retention(AnnotationRetention.RUNTIME)
-annotation class ActivityScoped
+@Module
+class NetworkModule {
+    @Singleton
+    @Provides
+    fun provideNetworkService(): NetworkService {
+        return Retrofit.Builder()
+            .baseUrl("https://link-five-dots.firebaseio.com/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(NetworkService::class.java)
+    }
+}
