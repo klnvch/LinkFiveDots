@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 klnvch
+ * Copyright (c) 2017 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,32 +22,17 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.di
+package by.klnvch.link5dots.ui
 
-import by.klnvch.link5dots.multiplayer.activities.GameActivityBluetooth
-import by.klnvch.link5dots.multiplayer.activities.GameActivityNsd
-import by.klnvch.link5dots.multiplayer.activities.GameActivityOnline
-import by.klnvch.link5dots.ui.scores.history.GameInfoActivity
-import dagger.Module
-import dagger.android.ContributesAndroidInjector
+import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
+import by.klnvch.link5dots.R
 
+class HowToActivity : AppCompatActivity() {
 
-@Module
-abstract class ActivityBindingModule {
-
-    @ActivityScope
-    @ContributesAndroidInjector(modules = [(FragmentBuildersModule::class)])
-    abstract fun gameInfoActivity(): GameInfoActivity
-
-    @ActivityScope
-    @ContributesAndroidInjector(modules = [(FragmentBuildersModule::class)])
-    abstract fun gameActivityBluetooth(): GameActivityBluetooth
-
-    @ActivityScope
-    @ContributesAndroidInjector(modules = [(FragmentBuildersModule::class)])
-    abstract fun gameActivityNsd(): GameActivityNsd
-
-    @ActivityScope
-    @ContributesAndroidInjector(modules = [(FragmentBuildersModule::class)])
-    abstract fun gameActivityOnline(): GameActivityOnline
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_how_to)
+        setTitle(R.string.help)
+    }
 }

@@ -22,32 +22,11 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.di
+package by.klnvch.link5dots.domain.models
 
-import by.klnvch.link5dots.multiplayer.activities.GameActivityBluetooth
-import by.klnvch.link5dots.multiplayer.activities.GameActivityNsd
-import by.klnvch.link5dots.multiplayer.activities.GameActivityOnline
-import by.klnvch.link5dots.ui.scores.history.GameInfoActivity
-import dagger.Module
-import dagger.android.ContributesAndroidInjector
-
-
-@Module
-abstract class ActivityBindingModule {
-
-    @ActivityScope
-    @ContributesAndroidInjector(modules = [(FragmentBuildersModule::class)])
-    abstract fun gameInfoActivity(): GameInfoActivity
-
-    @ActivityScope
-    @ContributesAndroidInjector(modules = [(FragmentBuildersModule::class)])
-    abstract fun gameActivityBluetooth(): GameActivityBluetooth
-
-    @ActivityScope
-    @ContributesAndroidInjector(modules = [(FragmentBuildersModule::class)])
-    abstract fun gameActivityNsd(): GameActivityNsd
-
-    @ActivityScope
-    @ContributesAndroidInjector(modules = [(FragmentBuildersModule::class)])
-    abstract fun gameActivityOnline(): GameActivityOnline
+object RoomState {
+    const val CREATED = 0
+    const val DELETED = 1
+    const val STARTED = 2
+    const val FINISHED = 3
 }

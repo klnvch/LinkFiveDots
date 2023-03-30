@@ -22,32 +22,27 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.di
+package by.klnvch.link5dots.ui.game.end
 
-import by.klnvch.link5dots.multiplayer.activities.GameActivityBluetooth
-import by.klnvch.link5dots.multiplayer.activities.GameActivityNsd
-import by.klnvch.link5dots.multiplayer.activities.GameActivityOnline
-import by.klnvch.link5dots.ui.scores.history.GameInfoActivity
-import dagger.Module
-import dagger.android.ContributesAndroidInjector
+import by.klnvch.link5dots.R
+import by.klnvch.link5dots.domain.models.BotGameScore
+import by.klnvch.link5dots.domain.models.GameResult
+import by.klnvch.link5dots.domain.models.SimpleGameScore
+import by.klnvch.link5dots.utils.FormatUtils.formatDuration
 
-
-@Module
-abstract class ActivityBindingModule {
-
-    @ActivityScope
-    @ContributesAndroidInjector(modules = [(FragmentBuildersModule::class)])
-    abstract fun gameInfoActivity(): GameInfoActivity
-
-    @ActivityScope
-    @ContributesAndroidInjector(modules = [(FragmentBuildersModule::class)])
-    abstract fun gameActivityBluetooth(): GameActivityBluetooth
-
-    @ActivityScope
-    @ContributesAndroidInjector(modules = [(FragmentBuildersModule::class)])
-    abstract fun gameActivityNsd(): GameActivityNsd
-
-    @ActivityScope
-    @ContributesAndroidInjector(modules = [(FragmentBuildersModule::class)])
-    abstract fun gameActivityOnline(): GameActivityOnline
+data class EndGameViewState(
+    val title: Int?,
+    val size: String,
+    val duration: String,
+    val isShareable: Boolean,
+) {
+    constructor(score: SimpleGameScore) : this(
+        if (score is BotGameScore) when (score.status) {
+            GameResult.WON -> R.string.end_win
+            GameResult.LOST -> R.string.end_lose
+        } else null,
+        score.size.toString(),
+        score.duration.formatDuration(),
+        score is BotGameScore
+    )
 }

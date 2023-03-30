@@ -30,6 +30,7 @@ import java.util.Random;
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 
 import static com.google.android.gms.common.internal.Preconditions.checkNotNull;
 
@@ -42,6 +43,12 @@ public class User implements Serializable {
     private String name;
 
     public User() {
+    }
+
+    @Ignore
+    public User(String id, String name) {
+        this.id = id;
+        this.name = name;
     }
 
     @NonNull

@@ -24,7 +24,12 @@
 
 package by.klnvch.link5dots.utils;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import android.graphics.Point;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import java.text.Format;
 import java.text.SimpleDateFormat;
@@ -33,17 +38,14 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
+import by.klnvch.link5dots.domain.models.BotGameScore;
 import by.klnvch.link5dots.domain.models.GameResult;
-import by.klnvch.link5dots.domain.models.GameScore;
 import by.klnvch.link5dots.domain.models.RoomExt;
+import by.klnvch.link5dots.domain.models.RoomState;
+import by.klnvch.link5dots.domain.models.RoomType;
 import by.klnvch.link5dots.models.Dot;
 import by.klnvch.link5dots.models.Room;
 import by.klnvch.link5dots.models.User;
-
-import static com.google.common.base.Preconditions.checkNotNull;
 
 public class RoomUtils {
 
@@ -63,12 +65,12 @@ public class RoomUtils {
 
         final Room room = new Room();
         room.setKey(MathUtils.generateKey());
-        room.setState(Room.STATE_CREATED);
+        room.setState(RoomState.CREATED);
         room.setTimestamp(System.currentTimeMillis());
         room.setDots(new ArrayList<>());
         room.setUser1(user1);
         room.setUser2(user2);
-        room.setType(Room.TYPE_BOT);
+        room.setType(RoomType.BOT);
         room.setSend(false);
         room.setTest(false);
         return room;
@@ -83,12 +85,12 @@ public class RoomUtils {
     public static Room createTwoGame() {
         final Room room = new Room();
         room.setKey(MathUtils.generateKey());
-        room.setState(Room.STATE_CREATED);
+        room.setState(RoomState.CREATED);
         room.setTimestamp(System.currentTimeMillis());
         room.setDots(new ArrayList<>());
         room.setUser1(null);
         room.setUser2(null);
-        room.setType(Room.TYPE_TWO_PLAYERS);
+        room.setType(RoomType.TWO_PLAYERS);
         room.setSend(false);
         room.setTest(false);
         return room;
@@ -100,7 +102,7 @@ public class RoomUtils {
 
         final Room room = new Room();
         room.setKey(MathUtils.generateKey());
-        room.setState(Room.STATE_CREATED);
+        room.setState(RoomState.CREATED);
         room.setTimestamp(System.currentTimeMillis());
         room.setDots(new ArrayList<>());
         room.setUser1(user);
@@ -119,9 +121,9 @@ public class RoomUtils {
         final Room room = new Room();
         room.setKey(key);
         room.setTimestamp(System.currentTimeMillis());
-        room.setState(Room.STATE_CREATED);
+        room.setState(RoomState.CREATED);
         room.setUser1(user);
-        room.setType(Room.TYPE_ONLINE);
+        room.setType(RoomType.ONLINE);
         return room;
     }
 
@@ -197,8 +199,9 @@ public class RoomUtils {
         return host.equals(room.getUser1()) ? Dot.HOST : Dot.GUEST;
     }
 
+    @Deprecated
     @NonNull
-    public static GameScore getHighScore(@NonNull Room room, @Nullable User user) {
+    public static BotGameScore getHighScore(@NonNull Room room, @Nullable User user) {
         checkNotNull(room);
 
         final Dot lastDot = DotsArrayUtils.getLastDot(room.getDots());
@@ -213,9 +216,9 @@ public class RoomUtils {
             } else {
                 gameResult = GameResult.LOST;
             }
-            return new GameScore(user.getName(), movesDone, time, gameResult, System.currentTimeMillis());
+            return new BotGameScore(movesDone, time, lastDot.getTimestamp(), gameResult);
         } else {
-            return new GameScore("", movesDone, time, GameResult.LOST, System.currentTimeMillis());
+            return new BotGameScore(movesDone, time, lastDot.getTimestamp(), GameResult.LOST);
         }
     }
 

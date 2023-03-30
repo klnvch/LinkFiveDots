@@ -22,32 +22,37 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.di
+package by.klnvch.link5dots.domain.models
 
-import by.klnvch.link5dots.multiplayer.activities.GameActivityBluetooth
-import by.klnvch.link5dots.multiplayer.activities.GameActivityNsd
-import by.klnvch.link5dots.multiplayer.activities.GameActivityOnline
-import by.klnvch.link5dots.ui.scores.history.GameInfoActivity
-import dagger.Module
-import dagger.android.ContributesAndroidInjector
+import by.klnvch.link5dots.domain.models.RoomExt.getDuration
+import by.klnvch.link5dots.models.Dot
+import by.klnvch.link5dots.models.Room
+import by.klnvch.link5dots.utils.RoomUtils
+import javax.inject.Inject
 
+class TwoPlayersGameRules @Inject constructor() : GameRules() {
+    override val type = RoomType.TWO_PLAYERS
 
-@Module
-abstract class ActivityBindingModule {
+    override fun init(room: Room?): Room {
+        room?.user1 = null
+        room?.user2 = null
+        this.room = room ?: RoomUtils.createTwoGame()
+        return this.room
+    }
 
-    @ActivityScope
-    @ContributesAndroidInjector(modules = [(FragmentBuildersModule::class)])
-    abstract fun gameInfoActivity(): GameInfoActivity
+    override fun addDot(dot: Dot): Room {
+        return RoomUtils.addDotAsAnotherType(room, dot)
+    }
 
-    @ActivityScope
-    @ContributesAndroidInjector(modules = [(FragmentBuildersModule::class)])
-    abstract fun gameActivityBluetooth(): GameActivityBluetooth
+    override fun undo(): Room {
+        return RoomUtils.undo(room)
+    }
 
-    @ActivityScope
-    @ContributesAndroidInjector(modules = [(FragmentBuildersModule::class)])
-    abstract fun gameActivityNsd(): GameActivityNsd
-
-    @ActivityScope
-    @ContributesAndroidInjector(modules = [(FragmentBuildersModule::class)])
-    abstract fun gameActivityOnline(): GameActivityOnline
+    override fun getScore(): SimpleGameScore {
+        return SimpleGameScore(
+            room.dots.size,
+            room.getDuration(),
+            room.dots.last().timestamp,
+        )
+    }
 }

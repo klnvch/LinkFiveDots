@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2017 klnvch
+ * Copyright (c) 2023 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,16 +25,15 @@
 package by.klnvch.link5dots.ui.scores.history
 
 import android.os.Bundle
+import android.view.MenuItem
 import android.view.View
-import by.klnvch.link5dots.GameFragment
 import by.klnvch.link5dots.R
 import by.klnvch.link5dots.databinding.ActivityGameBinding
-import by.klnvch.link5dots.models.Dot
-import by.klnvch.link5dots.models.User
+import by.klnvch.link5dots.GameFragment
 import by.klnvch.link5dots.utils.IntentExt.getRoom
 import dagger.android.support.DaggerAppCompatActivity
 
-class GameInfoActivity : DaggerAppCompatActivity(), GameFragment.OnGameListener {
+class GameInfoActivity : DaggerAppCompatActivity() {
     private lateinit var binding: ActivityGameBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,13 +53,13 @@ class GameInfoActivity : DaggerAppCompatActivity(), GameFragment.OnGameListener 
         }
     }
 
-    override fun onMoveDone(dot: Dot) {
-    }
-
-    override fun onGameFinished() {
-    }
-
-    override fun getUser(): User? {
-        return intent.getRoom()?.user1
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            android.R.id.home -> {
+                onBackPressedDispatcher.onBackPressed()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 }

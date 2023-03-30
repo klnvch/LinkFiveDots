@@ -52,7 +52,7 @@
     </fragment>
     <activity
         android:id="@+id/mainActivity"
-        android:name="by.klnvch.link5dots.MainActivity"
+        android:name="by.klnvch.link5dots.ui.game.BotGameActivity"
         android:label="@string/app_name" />
     <activity
         android:id="@+id/scoresActivity"
@@ -64,11 +64,11 @@
         android:label="@string/username" />
     <activity
         android:id="@+id/howToActivity"
-        android:name="by.klnvch.link5dots.HowToActivity"
+        android:name="by.klnvch.link5dots.ui.HowToActivity"
         android:label="@string/help" />
     <activity
         android:id="@+id/twoPlayersActivity"
-        android:name="by.klnvch.link5dots.TwoPlayersActivity"
+        android:name="by.klnvch.link5dots.ui.game.TwoPlayersGameActivity"
         android:label="@string/menu_two_players" />
     <activity
         android:id="@+id/settingsActivity"
@@ -76,7 +76,7 @@
         android:label="@string/settings" />
     <activity
         android:id="@+id/infoActivity"
-        android:name="by.klnvch.link5dots.InfoActivity"
+        android:name="by.klnvch.link5dots.ui.InfoActivity"
         android:label="@string/application_info_label"
         tools:layout="@layout/activity_info" />
     <activity

@@ -34,8 +34,10 @@ import androidx.core.view.MenuProvider
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import by.klnvch.link5dots.databinding.GameBoardBinding
+import by.klnvch.link5dots.domain.models.BotUser
+import by.klnvch.link5dots.domain.models.DeviceOwnerUser
 import by.klnvch.link5dots.domain.models.DotsType
-import by.klnvch.link5dots.domain.models.RoomExt.isNotEmpty
+import by.klnvch.link5dots.domain.repositories.Analytics
 import by.klnvch.link5dots.domain.repositories.RoomDao
 import by.klnvch.link5dots.domain.repositories.Settings
 import by.klnvch.link5dots.models.*
@@ -47,7 +49,7 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class GameFragment : DaggerFragment() {
-    private lateinit var mListener: OnGameListener
+    private var mListener: OnGameListener? = null
     private lateinit var binding: GameBoardBinding
 
     @Inject
@@ -56,9 +58,14 @@ class GameFragment : DaggerFragment() {
     @Inject
     lateinit var settings: Settings
 
+    @Inject
+    lateinit var analytics: Analytics
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        mListener = context as OnGameListener
+        if (context is OnGameListener) {
+            mListener = context
+        }
     }
 
     override fun onCreateView(
@@ -128,23 +135,20 @@ class GameFragment : DaggerFragment() {
     }
 
     fun update(room: Room) {
-
-        val user = mListener.getUser()
-
-        if (user != null) {
+        if (room.user1 != null) {
             binding.gameInfo.visibility = View.VISIBLE
 
             val user1 = room.user1
             val user2 = room.user2
 
-            val hostDotType = RoomUtils.getHostDotType(room, user)
+            val hostDotType = RoomUtils.getHostDotType(room, room.user1)
 
             if (hostDotType == Dot.HOST) {
-                binding.textUser1.text = user1?.name?.ifEmpty { getString(R.string.unknown) }
-                binding.textUser2.text = user2?.name?.ifEmpty { getString(R.string.unknown) }
+                binding.textUser1.text = getUserName(user1)
+                binding.textUser2.text = getUserName(user2)
             } else {
-                binding.textUser1.text = user2?.name?.ifEmpty { getString(R.string.unknown) }
-                binding.textUser2.text = user1?.name?.ifEmpty { getString(R.string.unknown) }
+                binding.textUser1.text = getUserName(user2)
+                binding.textUser2.text = getUserName(user1)
             }
 
             binding.gameView.setGameState(Game.createGame(room.dots, hostDotType))
@@ -159,19 +163,30 @@ class GameFragment : DaggerFragment() {
         }
     }
 
+    private fun getUserName(user: User?): String? {
+        return when (user) {
+            is BotUser -> getString(R.string.computer)
+            is DeviceOwnerUser -> settings.getUserNameBlocking()
+                .ifEmpty { getString(R.string.unknown) }
+            null -> null
+            else -> user.name
+        }
+    }
+
     fun reset() {
         binding.gameView.newGame(null)
     }
 
     private fun onMoveDone(dot: Dot) {
-        mListener.onMoveDone(dot)
+        mListener?.onMoveDone(dot)
     }
 
     private fun onGameFinished() {
-        mListener.onGameFinished()
+        mListener?.onGameFinished()
     }
 
     fun focus(): Boolean {
+        analytics.logEvent(Analytics.EVENT_SEARCH)
         binding.gameView.focus()
         return true
     }

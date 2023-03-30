@@ -24,14 +24,9 @@
 
 package by.klnvch.link5dots.domain.models
 
-data class GameScore(
-    val userName: String,
-    val size: Int,
-    val duration: Long,
-    val status: GameResult,
-    val timestamp: Long
-)
+open class SimpleGameScore(val size: Int, val duration: Long, val timestamp: Long)
 
-enum class GameResult {
-    WON, LOST
-}
+class BotGameScore(size: Int, duration: Long, timestamp: Long, val status: GameResult) :
+    SimpleGameScore(size, duration, timestamp)
+
+enum class GameResult { WON, LOST }

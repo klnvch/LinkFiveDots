@@ -27,11 +27,12 @@ package by.klnvch.link5dots.multiplayer.factories;
 import android.content.Context;
 import android.content.Intent;
 
+import androidx.annotation.NonNull;
+
 import java.io.IOException;
 
-import androidx.annotation.NonNull;
 import by.klnvch.link5dots.R;
-import by.klnvch.link5dots.models.Room;
+import by.klnvch.link5dots.domain.models.RoomType;
 import by.klnvch.link5dots.multiplayer.activities.PickerFragment;
 import by.klnvch.link5dots.multiplayer.activities.PickerFragmentBluetooth;
 import by.klnvch.link5dots.multiplayer.adapters.PickerAdapterBluetooth;
@@ -67,7 +68,7 @@ public class FactoryBluetooth implements FactoryServiceInterface, FactoryActivit
 
     @Override
     public int getRoomType() {
-        return Room.TYPE_BLUETOOTH;
+        return RoomType.BLUETOOTH;
     }
 
     @NonNull

@@ -25,10 +25,12 @@
 package by.klnvch.link5dots.domain.usecases
 
 import by.klnvch.link5dots.data.firebase.GameScoreRemote
-import by.klnvch.link5dots.domain.models.GameScore
+import by.klnvch.link5dots.domain.models.BotGameScore
 import by.klnvch.link5dots.domain.repositories.DeviceInfo
 import by.klnvch.link5dots.domain.repositories.FirebaseManager
 import by.klnvch.link5dots.domain.repositories.GameScoreRemoteSource
+import by.klnvch.link5dots.domain.repositories.Settings
+import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
 // TODO: add isSupported and login
@@ -36,12 +38,14 @@ class SaveScoreUseCase @Inject constructor(
     private val deviceInfo: DeviceInfo,
     private val firebaseManager: FirebaseManager,
     private val gameScoreRemoteSource: GameScoreRemoteSource,
+    private val settings: Settings,
 ) {
-    fun save(gameScore: GameScore) {
+    suspend fun save(score: BotGameScore) {
         val deviceId = deviceInfo.getAndroidId()
         val userId = firebaseManager.getUserId()
+        val userName = settings.getUserName().first()
         if (userId != null) {
-            val scoreRemote = GameScoreRemote(gameScore, userId, deviceId)
+            val scoreRemote = GameScoreRemote(score, userName, userId, deviceId)
             gameScoreRemoteSource.save(scoreRemote)
         }
     }

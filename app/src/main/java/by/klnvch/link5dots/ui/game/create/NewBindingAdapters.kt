@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2017 klnvch
+ * Copyright (c) 2023 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,16 +22,16 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots
+package by.klnvch.link5dots.ui.game.create
 
-import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import android.widget.EditText
+import androidx.databinding.BindingAdapter
 
-class HowToActivity : AppCompatActivity() {
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_how_to)
-        setTitle(R.string.help)
+object NewBindingAdapters {
+    @JvmStatic
+    @BindingAdapter("setTextAndSelect")
+    fun EditText.setTextAndSelect(text: String) {
+        setText(text)
+        setSelection(text.length)
     }
 }

@@ -24,8 +24,8 @@
 
 package by.klnvch.link5dots.data.firebase
 
+import by.klnvch.link5dots.domain.models.BotGameScore
 import by.klnvch.link5dots.domain.models.GameResult
-import by.klnvch.link5dots.domain.models.GameScore
 import com.google.firebase.database.Exclude
 import com.google.firebase.database.IgnoreExtraProperties
 
@@ -37,12 +37,12 @@ data class GameScoreRemote(
     var score: Long = 0,
     var timestamp: Long? = null,
 ) {
-    constructor(gameScore: GameScore, userId: String, androidId: String) : this(
-        gameScore.userName,
+    constructor(score: BotGameScore, userName: String, userId: String, androidId: String) : this(
+        userName,
         userId,
         androidId,
-        gameScore.calcScore(),
-        gameScore.timestamp
+        score.calcScore(),
+        score.timestamp
     )
 
     @Exclude
@@ -75,7 +75,7 @@ data class GameScoreRemote(
         private const val L_967295 = 967295L
         private const val L_1000000 = 1000000L
 
-        private fun GameScore.calcScore(): Long {
+        private fun BotGameScore.calcScore(): Long {
             val tempTime = if (duration < L_1) L_1
             else if (duration > L_967295) L_967295
             else duration

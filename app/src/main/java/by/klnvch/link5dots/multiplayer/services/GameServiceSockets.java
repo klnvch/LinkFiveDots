@@ -37,6 +37,7 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 import java.io.IOException;
 
+import by.klnvch.link5dots.domain.models.RoomState;
 import by.klnvch.link5dots.models.Room;
 import by.klnvch.link5dots.multiplayer.sockets.ServerSocketDecorator;
 import by.klnvch.link5dots.multiplayer.sockets.SocketDecorator;
@@ -178,10 +179,10 @@ public abstract class GameServiceSockets extends GameService
     protected void updateRoomLocally(@NonNull Room room) {
         checkNotNull(room);
 
-        if (room.getState() == Room.STATE_STARTED) {
+        if (room.getState() == RoomState.STARTED) {
             sendMsg(room);
         } else if (!room.getUser1().equals(getUser()) && room.getUser2() == null) {
-            room.setState(Room.STATE_STARTED);
+            room.setState(RoomState.STARTED);
             room.setUser2(getUser());
             updateRoomRemotely(room);
         }

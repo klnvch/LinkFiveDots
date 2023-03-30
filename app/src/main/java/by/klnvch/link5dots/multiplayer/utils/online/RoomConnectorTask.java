@@ -30,6 +30,8 @@ import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Transaction;
 
 import androidx.annotation.NonNull;
+
+import by.klnvch.link5dots.domain.models.RoomState;
 import by.klnvch.link5dots.models.Room;
 import by.klnvch.link5dots.models.User;
 import by.klnvch.link5dots.multiplayer.utils.OnRoomConnectedListener;
@@ -54,7 +56,7 @@ public class RoomConnectorTask {
                         checkNotNull(room);
 
                         room.setUser2(user);
-                        room.setState(Room.STATE_STARTED);
+                        room.setState(RoomState.STARTED);
 
                         currentData.setValue(room);
                         return Transaction.success(currentData);

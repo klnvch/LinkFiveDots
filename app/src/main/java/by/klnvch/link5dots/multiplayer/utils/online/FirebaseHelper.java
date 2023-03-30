@@ -24,7 +24,11 @@
 
 package by.klnvch.link5dots.multiplayer.utils.online;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import android.content.Context;
+
+import androidx.annotation.NonNull;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -32,11 +36,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
-import androidx.annotation.NonNull;
 import by.klnvch.link5dots.BuildConfig;
-import by.klnvch.link5dots.models.Room;
-
-import static com.google.common.base.Preconditions.checkNotNull;
+import by.klnvch.link5dots.domain.models.RoomState;
 
 public class FirebaseHelper {
     private static final String CHILD_ROOM = BuildConfig.DEBUG ? "rooms_debug" : "rooms";
@@ -56,7 +57,7 @@ public class FirebaseHelper {
     public static Query getRoomsQuery() {
         return getReference()
                 .orderByChild(CHILD_STATE)
-                .equalTo(Room.STATE_CREATED);
+                .equalTo(RoomState.CREATED);
     }
 
     @NonNull

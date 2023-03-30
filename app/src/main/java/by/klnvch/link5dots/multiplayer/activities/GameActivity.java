@@ -51,7 +51,7 @@ import java.util.List;
 import by.klnvch.link5dots.GameFragment;
 import by.klnvch.link5dots.R;
 import by.klnvch.link5dots.dialogs.EndGameDialog;
-import by.klnvch.link5dots.domain.models.GameScore;
+import by.klnvch.link5dots.domain.models.BotGameScore;
 import by.klnvch.link5dots.models.Dot;
 import by.klnvch.link5dots.models.Room;
 import by.klnvch.link5dots.models.User;
@@ -359,7 +359,7 @@ public abstract class GameActivity extends DaggerAppCompatActivity implements
         checkNotNull(mService.getRoom());
         checkNotNull(mService.getUser());
 
-        final GameScore highScore = RoomUtils.getHighScore(mService.getRoom(), mService.getUser());
+        final BotGameScore highScore = RoomUtils.getHighScore(mService.getRoom(), mService.getUser());
 
         final EndGameDialog dialog = EndGameDialog.newInstance(highScore, false)
                 .setOnNewGameListener(this::newGame);

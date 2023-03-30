@@ -27,11 +27,12 @@ package by.klnvch.link5dots.multiplayer.factories;
 import android.content.Context;
 import android.content.Intent;
 
+import androidx.annotation.NonNull;
+
 import java.io.IOException;
 
-import androidx.annotation.NonNull;
 import by.klnvch.link5dots.R;
-import by.klnvch.link5dots.models.Room;
+import by.klnvch.link5dots.domain.models.RoomType;
 import by.klnvch.link5dots.multiplayer.activities.PickerFragment;
 import by.klnvch.link5dots.multiplayer.adapters.PickerAdapterNsd;
 import by.klnvch.link5dots.multiplayer.adapters.TargetAdapterInterface;
@@ -66,7 +67,7 @@ public class FactoryNsd implements FactoryServiceInterface, FactoryActivityInter
 
     @Override
     public int getRoomType() {
-        return Room.TYPE_NSD;
+        return RoomType.NSD;
     }
 
     @NonNull

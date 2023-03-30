@@ -22,32 +22,22 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.di
+package by.klnvch.link5dots.di.game
 
-import by.klnvch.link5dots.multiplayer.activities.GameActivityBluetooth
-import by.klnvch.link5dots.multiplayer.activities.GameActivityNsd
-import by.klnvch.link5dots.multiplayer.activities.GameActivityOnline
-import by.klnvch.link5dots.ui.scores.history.GameInfoActivity
+import by.klnvch.link5dots.GameFragment
+import by.klnvch.link5dots.ui.game.end.EndGameDialog
+import by.klnvch.link5dots.ui.game.create.NewGameDialog
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
-
 @Module
-abstract class ActivityBindingModule {
+abstract class GameFragmentBuilderModule {
+    @ContributesAndroidInjector
+    abstract fun bindGameFragment(): GameFragment
 
-    @ActivityScope
-    @ContributesAndroidInjector(modules = [(FragmentBuildersModule::class)])
-    abstract fun gameInfoActivity(): GameInfoActivity
+    @ContributesAndroidInjector
+    abstract fun bindEndGameDialog(): EndGameDialog
 
-    @ActivityScope
-    @ContributesAndroidInjector(modules = [(FragmentBuildersModule::class)])
-    abstract fun gameActivityBluetooth(): GameActivityBluetooth
-
-    @ActivityScope
-    @ContributesAndroidInjector(modules = [(FragmentBuildersModule::class)])
-    abstract fun gameActivityNsd(): GameActivityNsd
-
-    @ActivityScope
-    @ContributesAndroidInjector(modules = [(FragmentBuildersModule::class)])
-    abstract fun gameActivityOnline(): GameActivityOnline
+    @ContributesAndroidInjector
+    abstract fun bindNewGameDialog(): NewGameDialog
 }

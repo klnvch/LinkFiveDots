@@ -22,32 +22,26 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.di
+package by.klnvch.link5dots.domain.models
 
-import by.klnvch.link5dots.multiplayer.activities.GameActivityBluetooth
-import by.klnvch.link5dots.multiplayer.activities.GameActivityNsd
-import by.klnvch.link5dots.multiplayer.activities.GameActivityOnline
-import by.klnvch.link5dots.ui.scores.history.GameInfoActivity
-import dagger.Module
-import dagger.android.ContributesAndroidInjector
+import by.klnvch.link5dots.models.Dot
+import by.klnvch.link5dots.models.Room
+import by.klnvch.link5dots.models.User
+import by.klnvch.link5dots.utils.RoomUtils
 
+abstract class GameRules {
+    protected lateinit var room: Room
+    abstract val type: Int
 
-@Module
-abstract class ActivityBindingModule {
+    abstract fun init(room: Room?): Room
 
-    @ActivityScope
-    @ContributesAndroidInjector(modules = [(FragmentBuildersModule::class)])
-    abstract fun gameInfoActivity(): GameInfoActivity
+    abstract fun addDot(dot: Dot): Room
 
-    @ActivityScope
-    @ContributesAndroidInjector(modules = [(FragmentBuildersModule::class)])
-    abstract fun gameActivityBluetooth(): GameActivityBluetooth
+    abstract fun undo(): Room
 
-    @ActivityScope
-    @ContributesAndroidInjector(modules = [(FragmentBuildersModule::class)])
-    abstract fun gameActivityNsd(): GameActivityNsd
+    fun newGame(seed: Long?): Room {
+        return RoomUtils.newGame(room, seed)
+    }
 
-    @ActivityScope
-    @ContributesAndroidInjector(modules = [(FragmentBuildersModule::class)])
-    abstract fun gameActivityOnline(): GameActivityOnline
+    abstract fun getScore(): SimpleGameScore
 }

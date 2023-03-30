@@ -32,6 +32,8 @@ import com.google.firebase.database.ValueEventListener;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import by.klnvch.link5dots.domain.models.RoomState;
 import by.klnvch.link5dots.models.Room;
 import by.klnvch.link5dots.models.User;
 import by.klnvch.link5dots.multiplayer.services.GameServiceOnline;
@@ -57,10 +59,10 @@ public class RoomCreatorTask {
             checkNotNull(state);
 
             switch (state) {
-                case Room.STATE_CREATED:
+                case RoomState.CREATED:
                     mCreatedListener.onTargetCreated(new TargetOnline(mRoom));
                     break;
-                case Room.STATE_STARTED:
+                case RoomState.STARTED:
                     mConnectedListener.onRoomConnected(mRoom);
                     stopObserving();
                     break;
@@ -107,11 +109,11 @@ public class RoomCreatorTask {
     }
 
     public void finishRoom() {
-        deleteRoom(null, Room.STATE_FINISHED);
+        deleteRoom(null, RoomState.FINISHED);
     }
 
     public void deleteRoom(@Nullable OnTargetDeletedListener listener) {
-        deleteRoom(listener, Room.STATE_DELETED);
+        deleteRoom(listener, RoomState.DELETED);
     }
 
     private void deleteRoom(@Nullable OnTargetDeletedListener listener, int state) {

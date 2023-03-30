@@ -25,6 +25,7 @@
 package by.klnvch.link5dots.ui.scores.history
 
 import by.klnvch.link5dots.R
+import by.klnvch.link5dots.domain.models.RoomType
 import by.klnvch.link5dots.domain.models.RoomExt.getDuration
 import by.klnvch.link5dots.models.Room
 import by.klnvch.link5dots.utils.FormatUtils.formatDateTime
@@ -50,11 +51,11 @@ data class HistoryItemViewState(
     companion object {
         fun Int.toStringRes(): Int {
             return when (this) {
-                Room.TYPE_BLUETOOTH -> R.string.bluetooth
-                Room.TYPE_NSD -> R.string.menu_local_network
-                Room.TYPE_ONLINE -> R.string.menu_online_game
-                Room.TYPE_TWO_PLAYERS -> R.string.menu_two_players
-                Room.TYPE_BOT -> R.string.app_name
+                RoomType.BLUETOOTH -> R.string.bluetooth
+                RoomType.NSD -> R.string.menu_local_network
+                RoomType.ONLINE -> R.string.menu_online_game
+                RoomType.TWO_PLAYERS -> R.string.menu_two_players
+                RoomType.BOT -> R.string.app_name
                 else -> R.string.unknown
             }
         }

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2017 klnvch
+ * Copyright (c) 2023 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -40,18 +40,6 @@ import androidx.room.PrimaryKey;
 @Entity(tableName = "rooms")
 @IgnoreExtraProperties
 public class Room implements Serializable {
-
-    public static final int STATE_CREATED = 0;
-    public static final int STATE_DELETED = 1;
-    public static final int STATE_STARTED = 2;
-    public static final int STATE_FINISHED = 3;
-
-    public static final int TYPE_BLUETOOTH = 1;
-    public static final int TYPE_NSD = 2;
-    public static final int TYPE_ONLINE = 3;
-    public static final int TYPE_TWO_PLAYERS = 4;
-    public static final int TYPE_BOT = 5;
-
     @PrimaryKey
     @NonNull
     private String key;

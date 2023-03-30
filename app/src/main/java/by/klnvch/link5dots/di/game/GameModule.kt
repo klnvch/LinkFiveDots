@@ -22,32 +22,30 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.di
+package by.klnvch.link5dots.di.game
 
-import by.klnvch.link5dots.multiplayer.activities.GameActivityBluetooth
-import by.klnvch.link5dots.multiplayer.activities.GameActivityNsd
-import by.klnvch.link5dots.multiplayer.activities.GameActivityOnline
-import by.klnvch.link5dots.ui.scores.history.GameInfoActivity
+import by.klnvch.link5dots.ui.game.BotGameActivity
+import by.klnvch.link5dots.ui.game.TwoPlayersGameActivity
+import dagger.Binds
 import dagger.Module
-import dagger.android.ContributesAndroidInjector
+import dagger.android.AndroidInjector
+import dagger.multibindings.ClassKey
+import dagger.multibindings.IntoMap
 
+@Module(
+    subcomponents = [
+        BotGameSubcomponent::class,
+        TwoPlayersGameSubcomponent::class,
+    ]
+)
+internal abstract class GameModule {
+    @Binds
+    @IntoMap
+    @ClassKey(BotGameActivity::class)
+    abstract fun bindBotGameSubcomponentFactory(factory: BotGameSubcomponent.Factory): AndroidInjector.Factory<*>
 
-@Module
-abstract class ActivityBindingModule {
-
-    @ActivityScope
-    @ContributesAndroidInjector(modules = [(FragmentBuildersModule::class)])
-    abstract fun gameInfoActivity(): GameInfoActivity
-
-    @ActivityScope
-    @ContributesAndroidInjector(modules = [(FragmentBuildersModule::class)])
-    abstract fun gameActivityBluetooth(): GameActivityBluetooth
-
-    @ActivityScope
-    @ContributesAndroidInjector(modules = [(FragmentBuildersModule::class)])
-    abstract fun gameActivityNsd(): GameActivityNsd
-
-    @ActivityScope
-    @ContributesAndroidInjector(modules = [(FragmentBuildersModule::class)])
-    abstract fun gameActivityOnline(): GameActivityOnline
+    @Binds
+    @IntoMap
+    @ClassKey(TwoPlayersGameActivity::class)
+    abstract fun bindTwoPlayersGameSubcomponentFactory(factory: TwoPlayersGameSubcomponent.Factory): AndroidInjector.Factory<*>
 }

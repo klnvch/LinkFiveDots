@@ -22,32 +22,38 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.di
+package by.klnvch.link5dots.domain.models
 
-import by.klnvch.link5dots.multiplayer.activities.GameActivityBluetooth
-import by.klnvch.link5dots.multiplayer.activities.GameActivityNsd
-import by.klnvch.link5dots.multiplayer.activities.GameActivityOnline
-import by.klnvch.link5dots.ui.scores.history.GameInfoActivity
-import dagger.Module
-import dagger.android.ContributesAndroidInjector
+import by.klnvch.link5dots.domain.models.RoomExt.getDuration
+import by.klnvch.link5dots.models.Dot
+import by.klnvch.link5dots.models.Room
+import by.klnvch.link5dots.utils.RoomUtils
+import javax.inject.Inject
 
+class BotGameRules @Inject constructor() : GameRules() {
+    override val type = RoomType.BOT
 
-@Module
-abstract class ActivityBindingModule {
+    override fun init(room: Room?): Room {
+        room?.user1 = DeviceOwnerUser()
+        room?.user2 = BotUser()
+        this.room = room ?: RoomUtils.createBotGame(DeviceOwnerUser(), BotUser())
+        return this.room
+    }
 
-    @ActivityScope
-    @ContributesAndroidInjector(modules = [(FragmentBuildersModule::class)])
-    abstract fun gameInfoActivity(): GameInfoActivity
+    override fun addDot(dot: Dot): Room {
+        return RoomUtils.addDotWithBotAnswer(room, dot)
+    }
 
-    @ActivityScope
-    @ContributesAndroidInjector(modules = [(FragmentBuildersModule::class)])
-    abstract fun gameActivityBluetooth(): GameActivityBluetooth
+    override fun undo(): Room {
+        return RoomUtils.undo(RoomUtils.undo(room))
+    }
 
-    @ActivityScope
-    @ContributesAndroidInjector(modules = [(FragmentBuildersModule::class)])
-    abstract fun gameActivityNsd(): GameActivityNsd
-
-    @ActivityScope
-    @ContributesAndroidInjector(modules = [(FragmentBuildersModule::class)])
-    abstract fun gameActivityOnline(): GameActivityOnline
+    override fun getScore(): SimpleGameScore {
+        return BotGameScore(
+            room.dots.size,
+            room.getDuration(),
+            room.dots.last().timestamp,
+            if (room.dots.last().type == Dot.HOST) GameResult.WON else GameResult.LOST
+        )
+    }
 }

@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots
+package by.klnvch.link5dots.ui
 
 import android.content.*
 import android.net.Uri
@@ -31,6 +31,8 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import by.klnvch.link5dots.BuildConfig
+import by.klnvch.link5dots.R
 import by.klnvch.link5dots.databinding.ActivityInfoBinding
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 

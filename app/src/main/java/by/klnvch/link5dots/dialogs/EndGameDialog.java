@@ -39,10 +39,11 @@ import androidx.fragment.app.DialogFragment;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import by.klnvch.link5dots.R;
+import by.klnvch.link5dots.domain.models.BotGameScore;
 import by.klnvch.link5dots.domain.models.GameResult;
-import by.klnvch.link5dots.domain.models.GameScore;
 import by.klnvch.link5dots.domain.repositories.Analytics;
 
+@Deprecated
 public final class EndGameDialog extends DialogFragment implements DialogInterface.OnClickListener {
 
     public static final String TAG = "EndGameDialog";
@@ -61,11 +62,10 @@ public final class EndGameDialog extends DialogFragment implements DialogInterfa
      * Creates dialog showing the end of the game
      *
      * @param score        result of a game
-     * @param ignoreResult ignore won or lost state of the game
      * @return dialog instance
      */
     @NonNull
-    public static EndGameDialog newInstance(@NonNull GameScore score, boolean ignoreResult) {
+    public static EndGameDialog newInstance(@NonNull BotGameScore score, boolean ignoreResult) {
         final Boolean isWon = ignoreResult ? null : score.getStatus() == GameResult.WON;
         final int movesNumber = score.getSize();
         final long elapsedTime = score.getDuration();
