@@ -24,29 +24,48 @@
 
 package by.klnvch.link5dots.domain.models
 
-import by.klnvch.link5dots.domain.models.RoomExt.getDuration
-import by.klnvch.link5dots.models.Dot
-import by.klnvch.link5dots.models.Room
-import by.klnvch.link5dots.utils.RoomUtils
+import by.klnvch.link5dots.utils.DotsArrayUtils
 import javax.inject.Inject
 
-class BotGameRules @Inject constructor() : GameRules() {
+class BotGameRules @Inject constructor(
+    roomKeyGenerator: RoomKeyGenerator,
+    initialGameGenerator: InitialGameGenerator,
+    private val bot: Bot,
+) : GameRules(roomKeyGenerator, initialGameGenerator) {
     override val type = RoomType.BOT
 
-    override fun init(room: Room?): Room {
-        room?.user1 = DeviceOwnerUser()
-        room?.user2 = BotUser()
-        this.room = room ?: RoomUtils.createBotGame(DeviceOwnerUser(), BotUser())
+    override fun init(room: IRoom?): Room {
+        if (room != null) {
+            this.room = Room(room).copy(user1 = DeviceOwnerUser, user2 = BotUser)
+        } else {
+            this.room = createGame()
+        }
         return this.room
     }
 
-    override fun addDot(dot: Dot): Room {
-        return RoomUtils.addDotWithBotAnswer(room, dot)
+    override fun addDot(p: Point): Room {
+        room.add(Dot(p, room.dots.size, Dot.HOST, System.currentTimeMillis()))
+        if (DotsArrayUtils.findWinningLine(room.dots) == null) {
+            val botDot = bot.findAnswer(room.dots)
+            room.add(botDot.copy(type = Dot.GUEST))
+        }
+        return room
     }
 
     override fun undo(): Room {
-        return RoomUtils.undo(RoomUtils.undo(room))
+        room.undo()
+        room.undo()
+        return room
     }
+
+    override fun createGame(): Room = Room(
+        roomKeyGenerator.get(),
+        System.currentTimeMillis(),
+        mutableListOf(),
+        DeviceOwnerUser,
+        BotUser,
+        RoomType.BOT,
+    )
 
     override fun getScore(): SimpleGameScore {
         return BotGameScore(

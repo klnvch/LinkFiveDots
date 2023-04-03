@@ -37,8 +37,9 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 import java.io.IOException;
 
+import by.klnvch.link5dots.domain.models.NetworkRoom;
+import by.klnvch.link5dots.domain.models.NetworkUser;
 import by.klnvch.link5dots.domain.models.RoomState;
-import by.klnvch.link5dots.models.Room;
 import by.klnvch.link5dots.multiplayer.sockets.ServerSocketDecorator;
 import by.klnvch.link5dots.multiplayer.sockets.SocketDecorator;
 import by.klnvch.link5dots.multiplayer.targets.Target;
@@ -169,27 +170,25 @@ public abstract class GameServiceSockets extends GameService
 
     @Override
     public void newGame() {
-        final Room room = getRoom();
+        final NetworkRoom room = getRoom();
         checkNotNull(room);
         RoomUtils.newGame(room, null);
         updateRoomRemotely(room);
     }
 
     @Override
-    protected void updateRoomLocally(@NonNull Room room) {
+    protected void updateRoomLocally(@NonNull NetworkRoom room) {
         checkNotNull(room);
-
+        final NetworkUser currentUser = getUser();
         if (room.getState() == RoomState.STARTED) {
             sendMsg(room);
-        } else if (!room.getUser1().equals(getUser()) && room.getUser2() == null) {
-            room.setState(RoomState.STARTED);
-            room.setUser2(getUser());
-            updateRoomRemotely(room);
+        } else if (!currentUser.equals(room.getUser1()) && room.getUser2() == null) {
+            updateRoomRemotely(room.copy(room.getKey(), room.getTimestamp(), room.getDots(), room.getUser1(), currentUser, room.getType(), RoomState.STARTED));
         }
     }
 
     @Override
-    protected void updateRoomRemotely(@NonNull Room room) {
+    protected void updateRoomRemotely(@NonNull NetworkRoom room) {
         checkNotNull(room);
         checkState(mSocketThread instanceof ConnectedThread);
 
@@ -199,7 +198,7 @@ public abstract class GameServiceSockets extends GameService
 
     @CallSuper
     @Override
-    protected void startGame(@Nullable Room room) {
+    protected void startGame(@Nullable NetworkRoom room) {
         // it is always null for sockets
         checkState(room == null);
         // null can happen only on the client side

@@ -26,9 +26,11 @@ package by.klnvch.link5dots.multiplayer.services;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import by.klnvch.link5dots.models.Dot;
-import by.klnvch.link5dots.models.Room;
-import by.klnvch.link5dots.models.User;
+
+import by.klnvch.link5dots.domain.models.NetworkRoom;
+import by.klnvch.link5dots.domain.models.NetworkUser;
+import by.klnvch.link5dots.domain.models.Point;
+import by.klnvch.link5dots.data.db.UserLocal;
 import by.klnvch.link5dots.multiplayer.adapters.TargetAdapterInterface;
 import by.klnvch.link5dots.multiplayer.targets.Target;
 import by.klnvch.link5dots.multiplayer.utils.GameState;
@@ -46,10 +48,10 @@ public interface GameServiceInterface {
     void connect(@NonNull Target target);
 
     @NonNull
-    User getUser();
+    NetworkUser getUser();
 
     @Nullable
-    Room getRoom();
+    NetworkRoom getRoom();
 
     @NonNull
     GameState getState();
@@ -62,7 +64,7 @@ public interface GameServiceInterface {
 
     void reset();
 
-    void addDot(@NonNull Dot dot);
+    void addDot(@NonNull Point p);
 
     void newGame();
 }

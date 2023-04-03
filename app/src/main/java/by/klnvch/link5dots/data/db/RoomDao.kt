@@ -22,19 +22,40 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.ui.scores.history
+package by.klnvch.link5dots.data.db
 
-import android.view.View
-import by.klnvch.link5dots.data.StringProvider
-import by.klnvch.link5dots.domain.models.IRoom
+import androidx.room.*
+import kotlinx.coroutines.flow.Flow
 
-data class HistoryViewState(val items: List<HistoryItemViewState>) {
-    constructor(rooms: List<IRoom>, userName: String, stringProvider: StringProvider)
-            : this(rooms.map { HistoryItemViewState(it, userName, stringProvider) })
+@Dao
+interface RoomDao {
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insert(room: RoomLocal)
 
-    val errorMessageVisibility = if (items.isEmpty()) View.VISIBLE else View.GONE
+    @Update(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun updateRoom(room: RoomLocal)
 
-    companion object {
-        fun initial() = HistoryViewState(emptyList())
-    }
+    @Delete
+    suspend fun delete(room: RoomLocal)
+
+    @Query("DELETE FROM rooms WHERE key = :key")
+    suspend fun deleteById(key: String)
+
+    @Query("SELECT * FROM rooms ORDER BY timestamp DESC")
+    fun getAll(): Flow<List<RoomLocal>>
+
+    @Query("SELECT * FROM rooms WHERE is_send = 0 ORDER BY timestamp DESC")
+    suspend fun getNotSent(): List<RoomLocal>
+
+    @Query("UPDATE rooms SET is_send = 1 WHERE key = :key")
+    suspend fun setSent(key: String)
+
+    @Query("DELETE FROM rooms")
+    suspend fun deleteAll()
+
+    @Query("SELECT * FROM rooms WHERE type = :type ORDER BY timestamp DESC LIMIT 1")
+    suspend fun getRecentByType(type: Int): List<RoomLocal>
+
+    @Query("SELECT * FROM rooms WHERE key = :key LIMIT 1")
+    suspend fun getByKey(key: String): List<RoomLocal>
 }

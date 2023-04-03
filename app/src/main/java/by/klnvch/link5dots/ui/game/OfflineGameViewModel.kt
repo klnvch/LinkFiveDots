@@ -28,34 +28,28 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import by.klnvch.link5dots.domain.models.BotGameScore
-import by.klnvch.link5dots.domain.models.GameRules
+import by.klnvch.link5dots.domain.models.*
 import by.klnvch.link5dots.domain.repositories.Analytics
-import by.klnvch.link5dots.domain.repositories.RoomDao
-import by.klnvch.link5dots.domain.repositories.Settings
+import by.klnvch.link5dots.domain.repositories.RoomLocalDataSource
 import by.klnvch.link5dots.domain.usecases.SaveScoreUseCase
-import by.klnvch.link5dots.models.Dot
-import by.klnvch.link5dots.models.Room
-import by.klnvch.link5dots.models.User
-import by.klnvch.link5dots.ui.game.end.EndGameViewState
 import by.klnvch.link5dots.ui.game.create.NewGameViewState
-import kotlinx.coroutines.flow.first
+import by.klnvch.link5dots.ui.game.end.EndGameViewState
 import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
 
 class OfflineGameViewModel @Inject constructor(
     private val gameRules: GameRules,
-    private val roomDao: RoomDao,
+    private val roomLocalDataSource: RoomLocalDataSource,
     private val analytics: Analytics,
     private val saveScoreUseCase: SaveScoreUseCase,
 ) : ViewModel() {
-    private val _room: MutableLiveData<Room?> = MutableLiveData()
-    val room: LiveData<Room?> = _room
+    private val _room: MutableLiveData<IRoom?> = MutableLiveData()
+    val room: LiveData<IRoom?> = _room
 
     init {
         viewModelScope.launch {
-            val room = roomDao.getRecentRoomByType(gameRules.type).firstOrNull()
+            val room = roomLocalDataSource.getRecentByType(gameRules.type).firstOrNull()
             _room.value = gameRules.init(room)
         }
     }
@@ -66,13 +60,11 @@ class OfflineGameViewModel @Inject constructor(
     }
 
     fun newGame(seed: Long?) {
-        if (seed != null) analytics.logEvent(Analytics.EVENT_GENERATE_GAME)
-        else analytics.logEvent(Analytics.EVENT_NEW_GAME)
-
+        analytics.logEvent(if (seed != null) Analytics.EVENT_GENERATE_GAME else Analytics.EVENT_NEW_GAME)
         _room.value = gameRules.newGame(seed)
     }
 
-    fun addDot(dot: Dot) {
+    fun addDot(dot: Point) {
         analytics.logEvent(Analytics.EVENT_NEW_MOVE)
         _room.value = gameRules.addDot(dot)
     }

@@ -30,7 +30,8 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import by.klnvch.link5dots.models.Room;
+
+import by.klnvch.link5dots.domain.models.NetworkRoom;
 import by.klnvch.link5dots.multiplayer.targets.Target;
 import by.klnvch.link5dots.multiplayer.targets.TargetOnline;
 import by.klnvch.link5dots.multiplayer.utils.online.RoomConnectorTask;
@@ -99,7 +100,7 @@ public class GameServiceOnline extends GameService {
     public void connect(@NonNull Target target) {
         super.connect(target);
 
-        final Room room = ((TargetOnline) target).getTarget();
+        final NetworkRoom room = ((TargetOnline) target).getTarget();
         RoomConnectorTask.connectRoom(room.getKey(), getUser(), this);
     }
 
@@ -128,7 +129,7 @@ public class GameServiceOnline extends GameService {
 
     @Override
     public void onTargetCreated(@NonNull Target target) {
-        final Room room = ((TargetOnline) target).getTarget();
+        final NetworkRoom room = ((TargetOnline) target).getTarget();
         setRoom(room);
 
         super.onTargetCreated(target);
@@ -142,17 +143,17 @@ public class GameServiceOnline extends GameService {
     }
 
     @Override
-    protected void updateRoomLocally(@NonNull Room room) {
+    protected void updateRoomLocally(@NonNull NetworkRoom room) {
         sendMsg(room);
     }
 
     @Override
-    protected void updateRoomRemotely(@NonNull Room room) {
+    protected void updateRoomRemotely(@NonNull NetworkRoom room) {
         UpdateRoomTask.updateRoom(this, room);
     }
 
     @Override
-    protected void startGame(@Nullable Room room) {
+    protected void startGame(@Nullable NetworkRoom room) {
         checkNotNull(room);
 
         setRoom(room);

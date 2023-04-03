@@ -22,19 +22,11 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.ui.scores.history
+package by.klnvch.link5dots.domain.usecases
 
-import android.view.View
-import by.klnvch.link5dots.data.StringProvider
-import by.klnvch.link5dots.domain.models.IRoom
+import by.klnvch.link5dots.domain.repositories.RoomLocalDataSource
+import javax.inject.Inject
 
-data class HistoryViewState(val items: List<HistoryItemViewState>) {
-    constructor(rooms: List<IRoom>, userName: String, stringProvider: StringProvider)
-            : this(rooms.map { HistoryItemViewState(it, userName, stringProvider) })
-
-    val errorMessageVisibility = if (items.isEmpty()) View.VISIBLE else View.GONE
-
-    companion object {
-        fun initial() = HistoryViewState(emptyList())
-    }
+class GetRoomUseCase @Inject constructor(private val roomLocalDataSource: RoomLocalDataSource) {
+    suspend fun get(key: String) = roomLocalDataSource.getByKey(key)
 }

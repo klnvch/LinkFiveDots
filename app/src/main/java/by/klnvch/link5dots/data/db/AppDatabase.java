@@ -31,10 +31,7 @@ import androidx.room.TypeConverters;
 import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-import by.klnvch.link5dots.domain.repositories.RoomDao;
-import by.klnvch.link5dots.models.Room;
-
-@Database(entities = {Room.class}, version = 4)
+@Database(entities = {RoomLocal.class}, version = 4)
 @TypeConverters({Converters.class})
 public abstract class AppDatabase extends RoomDatabase {
     public static final String DB_NAME = "DB";

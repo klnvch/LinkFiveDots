@@ -24,10 +24,10 @@
 
 package by.klnvch.link5dots.domain.usecases
 
-import by.klnvch.link5dots.domain.repositories.RoomDao
-import by.klnvch.link5dots.models.Room
+import by.klnvch.link5dots.domain.models.IRoom
+import by.klnvch.link5dots.domain.repositories.RoomLocalDataSource
 import javax.inject.Inject
 
-class DeleteRoomUseCase @Inject constructor(private val roomDao: RoomDao) {
-    suspend fun delete(room: Room) = roomDao.delete(room)
+class DeleteRoomUseCase @Inject constructor(private val roomLocalDataSource: RoomLocalDataSource) {
+    suspend fun delete(room: IRoom) = roomLocalDataSource.delete(room)
 }

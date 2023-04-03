@@ -34,14 +34,13 @@ import androidx.core.view.MenuProvider
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import by.klnvch.link5dots.databinding.GameBoardBinding
-import by.klnvch.link5dots.domain.models.BotUser
-import by.klnvch.link5dots.domain.models.DeviceOwnerUser
-import by.klnvch.link5dots.domain.models.DotsType
+import by.klnvch.link5dots.domain.models.*
+import by.klnvch.link5dots.domain.models.RoomExt.getHostDotType
 import by.klnvch.link5dots.domain.repositories.Analytics
-import by.klnvch.link5dots.domain.repositories.RoomDao
+import by.klnvch.link5dots.domain.repositories.RoomLocalDataSource
 import by.klnvch.link5dots.domain.repositories.Settings
-import by.klnvch.link5dots.models.*
-import by.klnvch.link5dots.utils.RoomUtils
+import by.klnvch.link5dots.models.Game
+import by.klnvch.link5dots.models.GameViewState
 import dagger.android.support.DaggerFragment
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -53,7 +52,7 @@ class GameFragment : DaggerFragment() {
     private lateinit var binding: GameBoardBinding
 
     @Inject
-    lateinit var roomDao: RoomDao
+    lateinit var roomLocalDataSource: RoomLocalDataSource
 
     @Inject
     lateinit var settings: Settings
@@ -134,14 +133,14 @@ class GameFragment : DaggerFragment() {
         view.setCompoundDrawablesWithIntrinsicBounds(drawable, 0, 0, 0)
     }
 
-    fun update(room: Room) {
-        if (room.user1 != null) {
+    fun update(room: IRoom) {
+        val user1 = room.user1
+        val user2 = room.user2
+
+        if (user1 != null) {
             binding.gameInfo.visibility = View.VISIBLE
 
-            val user1 = room.user1
-            val user2 = room.user2
-
-            val hostDotType = RoomUtils.getHostDotType(room, room.user1)
+            val hostDotType = room.getHostDotType(user1)
 
             if (hostDotType == Dot.HOST) {
                 binding.textUser1.text = getUserName(user1)
@@ -159,17 +158,17 @@ class GameFragment : DaggerFragment() {
 
         // add non-empty to the database
         lifecycleScope.launch {
-            roomDao.insert(room)
+            roomLocalDataSource.save(room)
         }
     }
 
-    private fun getUserName(user: User?): String? {
+    private fun getUserName(user: IUser?): String? {
         return when (user) {
             is BotUser -> getString(R.string.computer)
+            is NetworkUser -> user.name
             is DeviceOwnerUser -> settings.getUserNameBlocking()
                 .ifEmpty { getString(R.string.unknown) }
-            null -> null
-            else -> user.name
+            else -> null
         }
     }
 
@@ -177,7 +176,7 @@ class GameFragment : DaggerFragment() {
         binding.gameView.newGame(null)
     }
 
-    private fun onMoveDone(dot: Dot) {
+    private fun onMoveDone(dot: Point) {
         mListener?.onMoveDone(dot)
     }
 
@@ -192,9 +191,9 @@ class GameFragment : DaggerFragment() {
     }
 
     interface OnGameListener {
-        fun getUser(): User?
+        fun getUser(): IUser?
 
-        fun onMoveDone(dot: Dot)
+        fun onMoveDone(dot: Point)
 
         fun onGameFinished()
     }

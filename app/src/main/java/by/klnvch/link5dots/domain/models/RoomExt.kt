@@ -24,13 +24,13 @@
 
 package by.klnvch.link5dots.domain.models
 
-import by.klnvch.link5dots.models.Room
-
 object RoomExt {
-    fun Room.getDuration(): Long {
-        return (dots.lastOrNull()?.timestamp ?: timestamp) - timestamp
-    }
 
     @JvmStatic
-    fun Room.isNotEmpty() = !dots.isNullOrEmpty()
+    fun IRoom.isNotEmpty() = dots.isNotEmpty()
+
+    @JvmStatic
+    fun IRoom.getHostDotType(host: IUser): Int {
+        return if (host == user1) Dot.HOST else Dot.GUEST
+    }
 }

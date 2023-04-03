@@ -26,12 +26,11 @@ package by.klnvch.link5dots.ui.scores.history
 
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
-import by.klnvch.link5dots.models.Room
 
 object HistoryBindingAdapters {
     @JvmStatic
-    @BindingAdapter("rooms")
-    fun RecyclerView.setRooms(rooms: List<Room>) {
+    @BindingAdapter("items")
+    fun RecyclerView.setItems(rooms: List<HistoryItemViewState>) {
         val adapter = adapter as HistoryAdapter
         adapter.submitList(rooms)
     }

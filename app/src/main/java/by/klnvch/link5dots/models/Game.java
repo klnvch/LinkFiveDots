@@ -24,16 +24,17 @@
 
 package by.klnvch.link5dots.models;
 
-import android.graphics.Point;
+import androidx.annotation.IntDef;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import androidx.annotation.IntDef;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import by.klnvch.link5dots.domain.models.Dot;
+import by.klnvch.link5dots.domain.models.InitialGameGenerator;
+import by.klnvch.link5dots.domain.models.Point;
 import by.klnvch.link5dots.utils.DotsArrayUtils;
-import by.klnvch.link5dots.utils.RandomGenerator;
 
 public class Game {
 
@@ -53,7 +54,7 @@ public class Game {
 
         for (int i = 0; i < N; i++)
             for (int j = 0; j < M; j++)
-                net[i][j] = new Dot(i, j);
+                net[i][j] = new Dot(i, j, -1, Dot.EMPTY, System.currentTimeMillis());
     }
 
     private Game() {
@@ -62,7 +63,7 @@ public class Game {
 
         for (int i = 0; i < N; i++)
             for (int j = 0; j < M; j++)
-                net[i][j] = new Dot(i, j);
+                net[i][j] = new Dot(i, j, -1, Dot.EMPTY, System.currentTimeMillis());
     }
 
     /***
@@ -95,16 +96,17 @@ public class Game {
         Game game = new Game();
 
         if (seed != null) {
-            List<Point> points = RandomGenerator.generateUniqueSixDots(seed);
+            InitialGameGenerator initialGameGenerator = new InitialGameGenerator();
+            List<Point> points = initialGameGenerator.get(seed);
             for (int i = 0; i != points.size(); ++i) {
                 Point p = points.get(i);
-                int x = 8 + p.x;
-                int y = 8 + p.y;
+                int x = 8 + p.getX();
+                int y = 8 + p.getY();
 
-                game.net[x][y].setType(i % 2 == 0 ? Dot.HOST : Dot.GUEST);
-                game.net[x][y].setId(i);
-                game.net[x][y].setTimestamp(System.currentTimeMillis() / 1000);
-                game.dots.add(game.net[x][y]);
+                final Dot newDot = new Dot(x, y, i, i % 2 == 0 ? Dot.HOST : Dot.GUEST, System.currentTimeMillis() / 1000);
+
+                game.net[x][y] = newDot;
+                game.dots.add(newDot);
             }
         }
         return game;

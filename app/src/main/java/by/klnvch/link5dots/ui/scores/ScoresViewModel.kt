@@ -27,9 +27,11 @@ package by.klnvch.link5dots.ui.scores
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import by.klnvch.link5dots.data.StringProvider
 import by.klnvch.link5dots.di.viewmodels.AssistedSavedStateViewModelFactory
+import by.klnvch.link5dots.domain.models.IRoom
+import by.klnvch.link5dots.domain.repositories.Settings
 import by.klnvch.link5dots.domain.usecases.*
-import by.klnvch.link5dots.models.Room
 import by.klnvch.link5dots.ui.scores.history.HistoryViewState
 import by.klnvch.link5dots.ui.scores.scores.FirebaseState
 import by.klnvch.link5dots.ui.scores.scores.ScoresViewState
@@ -38,6 +40,7 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 
 class ScoresViewModel @AssistedInject constructor(
@@ -46,6 +49,8 @@ class ScoresViewModel @AssistedInject constructor(
     private val insertRoomUseCase: InsertRoomUseCase,
     private val getRoomsUseCase: GetRoomsUseCase,
     private val getScorePathUseCase: GetScorePathUseCase,
+    private val settings: Settings,
+    private val stringProvider: StringProvider,
 ) : ViewModel() {
     private val _historyUiState = MutableStateFlow(HistoryViewState.initial())
     val historyUiState: StateFlow<HistoryViewState> = _historyUiState
@@ -55,7 +60,9 @@ class ScoresViewModel @AssistedInject constructor(
 
     init {
         viewModelScope.launch {
-            getRoomsUseCase.get().collect { _historyUiState.value = HistoryViewState(it) }
+            getRoomsUseCase.get().combine(settings.getUserName()) { rooms, userName ->
+                HistoryViewState(rooms, userName, stringProvider)
+            }.collect { _historyUiState.value = it }
         }
 
         viewModelScope.launch {
@@ -78,13 +85,13 @@ class ScoresViewModel @AssistedInject constructor(
         savedStateHandle[CURRENT_TAB_POSITION_KEY] = currentItem
     }
 
-    fun deleteRoom(room: Room) {
+    fun deleteRoom(room: IRoom) {
         viewModelScope.launch {
             deleteRoomUseCase.delete(room)
         }
     }
 
-    fun insertRoom(room: Room) {
+    fun insertRoom(room: IRoom) {
         viewModelScope.launch {
             insertRoomUseCase.insert(room)
         }

@@ -24,24 +24,24 @@
 
 package by.klnvch.link5dots.multiplayer.utils.online;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
+import androidx.annotation.NonNull;
+
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Transaction;
 
-import androidx.annotation.NonNull;
-
+import by.klnvch.link5dots.domain.models.NetworkRoom;
+import by.klnvch.link5dots.domain.models.NetworkUser;
 import by.klnvch.link5dots.domain.models.RoomState;
-import by.klnvch.link5dots.models.Room;
-import by.klnvch.link5dots.models.User;
 import by.klnvch.link5dots.multiplayer.utils.OnRoomConnectedListener;
-
-import static com.google.common.base.Preconditions.checkNotNull;
 
 public class RoomConnectorTask {
 
     public static void connectRoom(@NonNull String roomKey,
-                                   @NonNull User user,
+                                   @NonNull NetworkUser user,
                                    @NonNull OnRoomConnectedListener listener) {
         checkNotNull(roomKey);
         checkNotNull(user);
@@ -52,20 +52,16 @@ public class RoomConnectorTask {
                     @NonNull
                     @Override
                     public Transaction.Result doTransaction(@NonNull MutableData currentData) {
-                        final Room room = currentData.getValue(Room.class);
+                        final NetworkRoom room = currentData.getValue(NetworkRoom.class);
                         checkNotNull(room);
-
-                        room.setUser2(user);
-                        room.setState(RoomState.STARTED);
-
-                        currentData.setValue(room);
+                        currentData.setValue(room.copy(room.getKey(), room.getTimestamp(), room.getDots(), room.getUser1(), user, room.getType(), RoomState.STARTED));
                         return Transaction.success(currentData);
                     }
 
                     @Override
                     public void onComplete(DatabaseError error, boolean committed, DataSnapshot currentData) {
                         if (committed) {
-                            final Room room = currentData.getValue(Room.class);
+                            final NetworkRoom room = currentData.getValue(NetworkRoom.class);
                             checkNotNull(room);
 
                             listener.onRoomConnected(room);

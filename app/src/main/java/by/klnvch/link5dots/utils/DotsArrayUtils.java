@@ -6,7 +6,7 @@ import androidx.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-import by.klnvch.link5dots.models.Dot;
+import by.klnvch.link5dots.domain.models.Dot;
 
 public class DotsArrayUtils {
     private static final int N = 20;
@@ -17,7 +17,7 @@ public class DotsArrayUtils {
     private static void clearNet() {
         for (int i = 0; i < N; i++)
             for (int j = 0; j < M; j++)
-                net[i][j] = new Dot(i, j);
+                net[i][j] = new Dot(i, j, -1, Dot.EMPTY, System.currentTimeMillis());
     }
 
     @Nullable

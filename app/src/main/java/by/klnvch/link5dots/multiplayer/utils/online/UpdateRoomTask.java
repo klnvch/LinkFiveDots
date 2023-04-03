@@ -24,19 +24,20 @@
 
 package by.klnvch.link5dots.multiplayer.utils.online;
 
+import androidx.annotation.NonNull;
+
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Transaction;
 
-import androidx.annotation.NonNull;
-import by.klnvch.link5dots.models.Room;
+import by.klnvch.link5dots.domain.models.NetworkRoom;
 import by.klnvch.link5dots.multiplayer.utils.OnRoomUpdatedListener;
 
 public class UpdateRoomTask {
 
     public static void updateRoom(@NonNull OnRoomUpdatedListener listener,
-                                  @NonNull Room room) {
+                                  @NonNull NetworkRoom room) {
         FirebaseHelper.getRoomReference(room.getKey())
                 .runTransaction(new Transaction.Handler() {
                     @NonNull
@@ -49,7 +50,7 @@ public class UpdateRoomTask {
                     @Override
                     public void onComplete(DatabaseError error, boolean committed, DataSnapshot currentData) {
                         if (committed) {
-                            final Room room = currentData.getValue(Room.class);
+                            final NetworkRoom room = currentData.getValue(NetworkRoom.class);
                             if (room != null) {
                                 listener.onRoomUpdated(room, null);
                             } else {

@@ -22,19 +22,18 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.ui.scores.history
+package by.klnvch.link5dots.data.network
 
-import android.view.View
-import by.klnvch.link5dots.data.StringProvider
-import by.klnvch.link5dots.domain.models.IRoom
+import by.klnvch.link5dots.domain.models.Dot
 
-data class HistoryViewState(val items: List<HistoryItemViewState>) {
-    constructor(rooms: List<IRoom>, userName: String, stringProvider: StringProvider)
-            : this(rooms.map { HistoryItemViewState(it, userName, stringProvider) })
+data class UserRemote(val id: String, val name: String?)
 
-    val errorMessageVisibility = if (items.isEmpty()) View.VISIBLE else View.GONE
-
-    companion object {
-        fun initial() = HistoryViewState(emptyList())
-    }
-}
+data class RoomRemote(
+    val key: String,
+    val timestamp: Long,
+    val dots: List<Dot>,
+    val user1: UserRemote?,
+    val user2: UserRemote?,
+    val type: Int,
+    val isTest: Boolean,
+)

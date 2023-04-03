@@ -22,19 +22,17 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.ui.scores.history
+package by.klnvch.link5dots.domain.repositories
 
-import android.view.View
-import by.klnvch.link5dots.data.StringProvider
 import by.klnvch.link5dots.domain.models.IRoom
+import kotlinx.coroutines.flow.Flow
 
-data class HistoryViewState(val items: List<HistoryItemViewState>) {
-    constructor(rooms: List<IRoom>, userName: String, stringProvider: StringProvider)
-            : this(rooms.map { HistoryItemViewState(it, userName, stringProvider) })
-
-    val errorMessageVisibility = if (items.isEmpty()) View.VISIBLE else View.GONE
-
-    companion object {
-        fun initial() = HistoryViewState(emptyList())
-    }
+interface RoomLocalDataSource {
+    suspend fun save(room: IRoom)
+    suspend fun delete(room: IRoom)
+    suspend fun getNotSent(): List<IRoom>
+    suspend fun setSent(room: IRoom)
+    suspend fun getRecentByType(type: Int): List<IRoom>
+    suspend fun getByKey(key: String): IRoom?
+    fun getAll(): Flow<List<IRoom>>
 }

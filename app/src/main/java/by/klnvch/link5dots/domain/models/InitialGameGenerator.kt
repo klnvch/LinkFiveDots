@@ -22,19 +22,20 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.ui.scores.history
+package by.klnvch.link5dots.domain.models
 
-import android.view.View
-import by.klnvch.link5dots.data.StringProvider
-import by.klnvch.link5dots.domain.models.IRoom
+import javax.inject.Inject
+import kotlin.random.Random
 
-data class HistoryViewState(val items: List<HistoryItemViewState>) {
-    constructor(rooms: List<IRoom>, userName: String, stringProvider: StringProvider)
-            : this(rooms.map { HistoryItemViewState(it, userName, stringProvider) })
-
-    val errorMessageVisibility = if (items.isEmpty()) View.VISIBLE else View.GONE
-
-    companion object {
-        fun initial() = HistoryViewState(emptyList())
+class InitialGameGenerator @Inject constructor() {
+    fun get(seed: Long): List<Point> {
+        val points = mutableListOf<Point>()
+        for (i in 0..4) {
+            for (j in 0..4) {
+                points.add(Point(i, j))
+            }
+        }
+        points.shuffle(Random(seed))
+        return points.subList(0, 6)
     }
 }

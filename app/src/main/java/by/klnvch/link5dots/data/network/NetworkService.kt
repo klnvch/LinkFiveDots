@@ -24,12 +24,15 @@
 
 package by.klnvch.link5dots.data.network
 
-import by.klnvch.link5dots.models.Room
 import retrofit2.http.Body
 import retrofit2.http.PUT
 import retrofit2.http.Path
 
 interface NetworkService {
     @PUT("{table}/{key}.json")
-    suspend fun addRoom(@Path("table") table: String, @Path("key") key: String, @Body room: Room)
+    suspend fun addRoom(
+        @Path("table") table: String,
+        @Path("key") key: String,
+        @Body room: RoomRemote
+    )
 }

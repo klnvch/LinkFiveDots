@@ -24,24 +24,39 @@
 
 package by.klnvch.link5dots.domain.models
 
-import by.klnvch.link5dots.models.Dot
-import by.klnvch.link5dots.models.Room
-import by.klnvch.link5dots.models.User
-import by.klnvch.link5dots.utils.RoomUtils
-
-abstract class GameRules {
+abstract class GameRules(
+    protected val roomKeyGenerator: RoomKeyGenerator,
+    private val initialGameGenerator: InitialGameGenerator,
+) {
     protected lateinit var room: Room
     abstract val type: Int
 
-    abstract fun init(room: Room?): Room
+    abstract fun init(room: IRoom?): Room
 
-    abstract fun addDot(dot: Dot): Room
+    abstract fun addDot(p: Point): Room
 
     abstract fun undo(): Room
 
+    protected abstract fun createGame(): Room
+
     fun newGame(seed: Long?): Room {
-        return RoomUtils.newGame(room, seed)
+        this.room = createGame()
+        generateDots(seed)
+        return room
     }
 
     abstract fun getScore(): SimpleGameScore
+
+    private fun generateDots(seed: Long?) {
+        if (seed != null) {
+            val tp = Point(8, 8)
+            initialGameGenerator.get(seed)
+                .map { it.translate(tp) }
+                .withIndex()
+                .forEach { (i, p) ->
+                    val type = if (i % 2 == 0) Dot.HOST else Dot.GUEST
+                    room.add(Dot(p, i, type, System.currentTimeMillis()))
+                }
+        }
+    }
 }

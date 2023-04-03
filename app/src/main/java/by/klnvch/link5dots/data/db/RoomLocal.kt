@@ -22,19 +22,28 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.ui.scores.history
+package by.klnvch.link5dots.data.db
 
-import android.view.View
-import by.klnvch.link5dots.data.StringProvider
-import by.klnvch.link5dots.domain.models.IRoom
+import androidx.room.ColumnInfo
+import androidx.room.Embedded
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import by.klnvch.link5dots.domain.models.Dot
 
-data class HistoryViewState(val items: List<HistoryItemViewState>) {
-    constructor(rooms: List<IRoom>, userName: String, stringProvider: StringProvider)
-            : this(rooms.map { HistoryItemViewState(it, userName, stringProvider) })
+data class UserLocal(
+    @ColumnInfo(name = "id") val id: String?,
+    @ColumnInfo(name = "name") val name: String?
+)
 
-    val errorMessageVisibility = if (items.isEmpty()) View.VISIBLE else View.GONE
-
-    companion object {
-        fun initial() = HistoryViewState(emptyList())
-    }
-}
+@Entity(tableName = "rooms")
+data class RoomLocal(
+    @PrimaryKey val key: String,
+    @ColumnInfo(name = "timestamp") val timestamp: Long,
+    @ColumnInfo(name = "dots") val dots: List<Dot>?,
+    @Embedded(prefix = "user_1_") val user1: UserLocal?,
+    @Embedded(prefix = "user_2_") val user2: UserLocal?,
+    @ColumnInfo(name = "type") val type: Int,
+    @ColumnInfo(name = "is_send") val isSend: Boolean,
+    @ColumnInfo(name = "state") val _removed_1: Int,
+    @ColumnInfo(name = "is_test") val _removed_2: Boolean,
+)

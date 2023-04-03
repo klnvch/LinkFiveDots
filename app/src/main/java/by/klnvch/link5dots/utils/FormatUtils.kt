@@ -29,6 +29,7 @@ import java.util.*
 import kotlin.time.Duration.Companion.milliseconds
 
 object FormatUtils {
+
     fun Long.formatDuration(): String {
         return milliseconds.toComponents { hours, minutes, seconds, _ ->
             if (hours > 0) "%02d:%02d:%02d".format(hours, minutes, seconds)
@@ -36,6 +37,7 @@ object FormatUtils {
         }
     }
 
+    @JvmStatic
     fun Long.formatDateTime(): String {
         val timeFormat = SimpleDateFormat("MMM-dd HH:mm", Locale.getDefault())
         return timeFormat.format(Date(this))

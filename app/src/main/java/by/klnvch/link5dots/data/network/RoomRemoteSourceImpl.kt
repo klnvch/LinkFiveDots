@@ -25,15 +25,16 @@
 package by.klnvch.link5dots.data.network
 
 import by.klnvch.link5dots.BuildConfig
+import by.klnvch.link5dots.domain.models.IRoom
 import by.klnvch.link5dots.domain.repositories.RoomRemoteSource
-import by.klnvch.link5dots.models.Room
 import javax.inject.Inject
 
 class RoomRemoteSourceImpl @Inject constructor(
-    private val networkService: NetworkService
+    private val networkService: NetworkService,
+    private val mapper: RoomRemoteMapper,
 ) : RoomRemoteSource {
-    override suspend fun save(room: Room) {
-        return networkService.addRoom(HISTORY_TABLE, room.key, room)
+    override suspend fun save(room: IRoom, isTest: Boolean) {
+        return networkService.addRoom(HISTORY_TABLE, room.key, mapper.map(room, isTest))
     }
 
     companion object {

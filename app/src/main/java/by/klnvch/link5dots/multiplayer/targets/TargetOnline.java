@@ -25,25 +25,33 @@
 package by.klnvch.link5dots.multiplayer.targets;
 
 import androidx.annotation.NonNull;
-import by.klnvch.link5dots.models.Room;
-import by.klnvch.link5dots.utils.RoomUtils;
 
-public final class TargetOnline extends Target<Room> {
+import by.klnvch.link5dots.domain.models.NetworkRoom;
+import by.klnvch.link5dots.domain.models.NetworkUser;
+import by.klnvch.link5dots.utils.FormatUtils;
 
-    public TargetOnline(@NonNull Room target) {
+public final class TargetOnline extends Target<NetworkRoom> {
+
+    public TargetOnline(@NonNull NetworkRoom target) {
         super(target);
     }
 
     @NonNull
     @Override
     public String getShortName() {
-        return getTarget().getUser1().getName();
+        final NetworkUser user = getTarget().getUser1();
+        if (user != null) return user.getName();
+        else return "-";
     }
 
     @NonNull
     @Override
     public String getLongName() {
-        final Room room = getTarget();
-        return RoomUtils.formatStartTime(room) + '\n' + room.getUser1().getName();
+        final NetworkRoom room = getTarget();
+        final String time = FormatUtils.formatDateTime(room.getTimestamp());
+        final String name;
+        if (room.getUser1() != null) name = room.getUser1().getName();
+        else name = "-";
+        return time + '\n' + name;
     }
 }

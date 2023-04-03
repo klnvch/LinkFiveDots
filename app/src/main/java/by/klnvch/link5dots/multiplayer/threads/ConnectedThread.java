@@ -28,17 +28,21 @@ import android.net.TrafficStats;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+import com.google.gson.Gson;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import by.klnvch.link5dots.models.Room;
+import by.klnvch.link5dots.domain.models.NetworkRoom;
 import by.klnvch.link5dots.multiplayer.sockets.SocketDecorator;
 import by.klnvch.link5dots.multiplayer.utils.OnRoomConnectedListener;
 import by.klnvch.link5dots.multiplayer.utils.OnRoomUpdatedListener;
+import by.klnvch.link5dots.multiplayer.utils.RoomJsonMapper;
 
 /**
  * This thread runs during a connection with a remote device.
@@ -51,6 +55,8 @@ public class ConnectedThread extends Thread {
     private final SocketDecorator mSocket;
     private final WeakReference<OnRoomConnectedListener> mConnectedListener;
     private final WeakReference<OnRoomUpdatedListener> mUpdatedListener;
+
+    private final RoomJsonMapper mapper = new RoomJsonMapper(new Gson());
 
     private DataOutputStream mOutputStream;
 
@@ -96,12 +102,12 @@ public class ConnectedThread extends Thread {
 
         // Keep listening to the InputStream while connected
         while (true) {
-            Room room = null;
+            NetworkRoom room = null;
 
             // Read from the InputStream
             try {
                 final String msg = mInputStream.readUTF();
-                room = Room.fromJson(msg);
+                room = mapper.toRoom(msg);
             } catch (Exception e) {
                 exception = e;
             }
@@ -121,7 +127,7 @@ public class ConnectedThread extends Thread {
      *
      * @param room The room to write
      */
-    public void write(@NonNull Room room) {
+    public void write(@NonNull NetworkRoom room) {
         // NetworkOnMainThreadException - StrictMode$AndroidBlockGuardPolicy.onNetwork
         new WriterTask(this).execute(room);
     }
@@ -136,7 +142,7 @@ public class ConnectedThread extends Thread {
         }
     }
 
-    private boolean notifyUpdatedListener(@Nullable Room room, @Nullable Exception exception) {
+    private boolean notifyUpdatedListener(@Nullable NetworkRoom room, @Nullable Exception exception) {
         final OnRoomUpdatedListener updatedListener = mUpdatedListener.get();
         if (updatedListener != null) {
             if (exception != null) {
@@ -153,7 +159,7 @@ public class ConnectedThread extends Thread {
         }
     }
 
-    private static class WriterTask extends AsyncTask<Room, Void, Void> {
+    private static class WriterTask extends AsyncTask<NetworkRoom, Void, Void> {
         private final WeakReference<ConnectedThread> mThreadRef;
 
         private WriterTask(@NonNull ConnectedThread thread) {
@@ -161,12 +167,12 @@ public class ConnectedThread extends Thread {
         }
 
         @Override
-        protected Void doInBackground(Room... params) {
+        protected Void doInBackground(NetworkRoom... params) {
             final ConnectedThread thread = mThreadRef.get();
             if (thread != null) {
                 try {
-                    final Room room = params[0];
-                    final String json = room.toJson();
+                    final NetworkRoom room = params[0];
+                    final String json = thread.mapper.toJson(room);
 
                     thread.mOutputStream.writeUTF(json);
                     thread.mOutputStream.flush();

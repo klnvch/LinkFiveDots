@@ -30,11 +30,10 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import by.klnvch.link5dots.databinding.ItemHistoryBinding
-import by.klnvch.link5dots.models.Room
 
 class HistoryAdapter(
     private val onItemSelectedListener: OnItemSelectedListener
-) : ListAdapter<Room, HistoryAdapter.HighScoreHolder>(DiffCallback()) {
+) : ListAdapter<HistoryItemViewState, HistoryAdapter.HighScoreHolder>(DiffCallback()) {
     init {
         setHasStableIds(true)
     }
@@ -45,17 +44,22 @@ class HistoryAdapter(
     }
 
     override fun onBindViewHolder(holder: HighScoreHolder, position: Int) {
-        val room = getItem(position)
-        holder.binding.viewState = HistoryItemViewState(room)
-        holder.binding.root.setOnClickListener { onItemSelectedListener.onItemSelected(room) }
+        val viewState = getItem(position)
+        holder.binding.viewState = viewState
+        holder.binding.root.setOnClickListener { onItemSelectedListener.onItemSelected(viewState.room) }
     }
 
-    override fun getItemId(position: Int) = getItem(position).timestamp
+    override fun getItemId(position: Int) = getItem(position).room.timestamp
 
     class HighScoreHolder(val binding: ItemHistoryBinding) : RecyclerView.ViewHolder(binding.root)
 
-    private class DiffCallback : DiffUtil.ItemCallback<Room>() {
-        override fun areItemsTheSame(oldItem: Room, newItem: Room) = oldItem.key == newItem.key
-        override fun areContentsTheSame(oldItem: Room, newItem: Room) = oldItem == newItem
+    private class DiffCallback : DiffUtil.ItemCallback<HistoryItemViewState>() {
+        override fun areItemsTheSame(oldItem: HistoryItemViewState, newItem: HistoryItemViewState) =
+            oldItem.room.key == newItem.room.key
+
+        override fun areContentsTheSame(
+            oldItem: HistoryItemViewState,
+            newItem: HistoryItemViewState
+        ) = oldItem.room.key == newItem.room.key && oldItem.room.dots == newItem.room.dots
     }
 }

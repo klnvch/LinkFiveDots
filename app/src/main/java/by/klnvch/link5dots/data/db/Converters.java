@@ -27,20 +27,21 @@ package by.klnvch.link5dots.data.db;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import androidx.room.TypeConverter;
-import by.klnvch.link5dots.models.Dot;
+
+import by.klnvch.link5dots.domain.models.Dot;
 
 public class Converters {
     @TypeConverter
-    public static String listToString(ArrayList<Dot> dots) {
+    public static String listToString(List<Dot> dots) {
         return dots == null ? null : new Gson().toJson(dots);
     }
 
     @TypeConverter
-    public static ArrayList<Dot> stringToString(String dots) {
-        return dots == null ? null : new Gson().fromJson(dots, new TypeToken<ArrayList<Dot>>() {
+    public static List<Dot> stringToList(String dots) {
+        return dots == null ? null : new Gson().fromJson(dots, new TypeToken<List<Dot>>() {
         }.getType());
     }
 }

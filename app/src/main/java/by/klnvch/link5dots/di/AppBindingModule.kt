@@ -31,6 +31,7 @@ import by.klnvch.link5dots.data.CrashRepositoryImpl
 import by.klnvch.link5dots.data.DeviceInfoImpl
 import by.klnvch.link5dots.data.LanguageManagerImpl
 import by.klnvch.link5dots.data.NightModeManagerImpl
+import by.klnvch.link5dots.data.db.RoomLocalDataSourceImpl
 import by.klnvch.link5dots.data.firebase.AnalyticsImpl
 import by.klnvch.link5dots.data.firebase.FirebaseManagerImpl
 import by.klnvch.link5dots.data.firebase.GameScoreRemoteSourceImpl
@@ -48,6 +49,10 @@ interface AppBindingModule {
     @Singleton
     @Binds
     fun bindRoomRemoteSource(impl: RoomRemoteSourceImpl): RoomRemoteSource
+
+    @Singleton
+    @Binds
+    fun bindRoomLocalDataSource(impl: RoomLocalDataSourceImpl): RoomLocalDataSource
 
     @Singleton
     @Binds

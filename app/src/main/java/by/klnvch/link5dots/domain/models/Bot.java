@@ -22,15 +22,14 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.utils;
+package by.klnvch.link5dots.domain.models;
+
+import androidx.annotation.NonNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import androidx.annotation.NonNull;
-import by.klnvch.link5dots.models.Dot;
-
-import static com.google.common.base.Preconditions.checkNotNull;
+import javax.inject.Inject;
 
 public class Bot {
 
@@ -38,8 +37,8 @@ public class Bot {
     private static final int M = 20;
 
     //temporary table for dots rate
-    private static final int[][] net1 = new int[N][M];
-    private static final int[][] net2 = new int[N][M];
+    private final int[][] net1 = new int[N][M];
+    private final int[][] net2 = new int[N][M];
 
     //masks
     private static final int[][] masks = new int[][]{
@@ -89,13 +88,16 @@ public class Bot {
             new int[]{3, 3, 3, 3, 1, 1, 0, 0, 1}
     };
 
-    static Dot findAnswer(@NonNull List<Dot> dots) {
-        checkNotNull(dots);
+    @Inject
+    public Bot() {
+    }
 
+    @NonNull
+    public Dot findAnswer(@NonNull List<Dot> dots) {
         final Dot[][] net = new Dot[N][N];
         for (int i = 0; i < N; i++)
             for (int j = 0; j < M; j++)
-                net[i][j] = new Dot(i, j);
+                net[i][j] = new Dot(i, j, -1, Dot.EMPTY, System.currentTimeMillis());
 
         for (Dot dot : dots) {
             net[dot.getX()][dot.getY()] = dot;
@@ -142,7 +144,6 @@ public class Bot {
         ArrayList<Dot> resultList = new ArrayList<>();
 
         if (maxBotRate >= maxUserRate) {
-
             for (Dot dot : listBot) {
                 if (max == net1[dot.getX()][dot.getY()]) {
                     resultList.add(dot);
@@ -152,9 +153,7 @@ public class Bot {
                     resultList.add(dot);
                 }
             }
-
         } else {
-
             for (Dot dot : listUser) {
                 if (max == net2[dot.getX()][dot.getY()]) {
                     resultList.add(dot);
@@ -179,13 +178,14 @@ public class Bot {
             }
         }
 
-        return result;
+        if (result == null) {
+            throw new RuntimeException("Bot error");
+        }
 
+        return result;
     }
 
-
-    private static float getDotRate(Dot[][] net, Dot dot, int type) {
-
+    private float getDotRate(Dot[][] net, Dot dot, int type) {
         int[] array2 = new int[4];
         //
         array2[0] = (int) getDotRateInLine(net, dot, type, 1, 0);
@@ -215,8 +215,7 @@ public class Bot {
         return array2[0] + array2[1] + array2[2] + array2[3];
     }
 
-    private static int getDensity(Dot[][] net, int x, int y) {
-
+    private int getDensity(Dot[][] net, int x, int y) {
         int result = 0;
 
         for (int i = -4; i != 5; ++i) {
@@ -238,12 +237,11 @@ public class Bot {
         return result;
     }
 
-    private static boolean isInBound(int x, int y) {
+    private boolean isInBound(int x, int y) {
         return x >= 0 && y >= 0 && x < N && y < M;
     }
 
-    private static float getDotRateInLine(Dot[][] net, Dot dot, int type, int dx, int dy) {
-
+    private float getDotRateInLine(Dot[][] net, Dot dot, int type, int dx, int dy) {
         int x = dot.getX();
         int y = dot.getY();
 
@@ -297,9 +295,7 @@ public class Bot {
      * check line in masks array and if it matches return line rate
      * in the other case return -1.0f
      */
-    private static float checkMasks(int[] line, int type) {
-
-
+    private float checkMasks(int[] line, int type) {
         for (int i = 0; i != 5; ++i) {
             if (checkMasks(line, masks[i], type)) return 100.0f;
         }
@@ -328,7 +324,7 @@ public class Bot {
      *
      * if line satisfy to mask return true
      */
-    private static boolean checkMasks(int[] line, int[] mask, int type) {
+    private boolean checkMasks(int[] line, int[] mask, int type) {
         //type - my dots number
         for (int i = 0; i != 9; ++i) {
             switch (mask[i]) {

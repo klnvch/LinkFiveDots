@@ -27,7 +27,7 @@ package by.klnvch.link5dots.di
 import android.app.Application
 import androidx.room.Room
 import by.klnvch.link5dots.data.db.AppDatabase
-import by.klnvch.link5dots.domain.repositories.RoomDao
+import by.klnvch.link5dots.data.db.RoomDao
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton

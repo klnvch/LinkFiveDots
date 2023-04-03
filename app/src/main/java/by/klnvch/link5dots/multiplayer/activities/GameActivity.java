@@ -52,9 +52,10 @@ import by.klnvch.link5dots.GameFragment;
 import by.klnvch.link5dots.R;
 import by.klnvch.link5dots.dialogs.EndGameDialog;
 import by.klnvch.link5dots.domain.models.BotGameScore;
-import by.klnvch.link5dots.models.Dot;
-import by.klnvch.link5dots.models.Room;
-import by.klnvch.link5dots.models.User;
+import by.klnvch.link5dots.domain.models.NetworkRoom;
+import by.klnvch.link5dots.domain.models.Dot;
+import by.klnvch.link5dots.domain.models.NetworkUser;
+import by.klnvch.link5dots.domain.models.Point;
 import by.klnvch.link5dots.multiplayer.adapters.TargetAdapterInterface;
 import by.klnvch.link5dots.multiplayer.factories.FactoryActivityInterface;
 import by.klnvch.link5dots.multiplayer.factories.FactoryProvider;
@@ -88,7 +89,7 @@ public abstract class GameActivity extends DaggerAppCompatActivity implements
             onMessageEvent(state);
 
             if (mGameFragment != null) {
-                final Room room = mService.getRoom();
+                final NetworkRoom room = mService.getRoom();
                 checkNotNull(room);
                 onMessageEvent(room);
             }
@@ -167,9 +168,9 @@ public abstract class GameActivity extends DaggerAppCompatActivity implements
 
         if (gameFragment != null && gameFragment.isVisible()) {
             if (mService != null) {
-                final Room room = mService.getRoom();
+                final NetworkRoom room = mService.getRoom();
                 if (room != null) {
-                    final User anotherUser = RoomUtils.getAnotherUser(room, mService.getUser());
+                    final NetworkUser anotherUser = RoomUtils.getAnotherUser(room, mService.getUser());
 
                     final String msg = getString(R.string.is_disconnect_question, anotherUser.getName());
                     new AlertDialog.Builder(this)
@@ -204,7 +205,7 @@ public abstract class GameActivity extends DaggerAppCompatActivity implements
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(@NonNull Room room) {
+    public void onMessageEvent(@NonNull NetworkRoom room) {
         Log.d(TAG, "onMessageEvent: " + room);
 
         checkNotNull(mService);
@@ -216,7 +217,7 @@ public abstract class GameActivity extends DaggerAppCompatActivity implements
         // update title
         //
         final List<Dot> dots = room.getDots();
-        if (dots == null || dots.size() == 0) {
+        if (dots.size() == 0) {
             setTitle(R.string.bt_message_your_turn);
         } else {
             final int hostDotType =
@@ -343,13 +344,13 @@ public abstract class GameActivity extends DaggerAppCompatActivity implements
 
     @NonNull
     @Override
-    public User getUser() {
+    public NetworkUser getUser() {
         return mService.getUser();
     }
 
     @Override
-    public void onMoveDone(@NonNull Dot dot) {
-        mService.addDot(checkNotNull(dot));
+    public void onMoveDone(@NonNull Point p) {
+        mService.addDot(p);
     }
 
     @Override

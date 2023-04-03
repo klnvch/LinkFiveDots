@@ -25,23 +25,24 @@
 package by.klnvch.link5dots.ui.scores.history
 
 import by.klnvch.link5dots.R
-import by.klnvch.link5dots.domain.models.RoomType
-import by.klnvch.link5dots.domain.models.RoomExt.getDuration
-import by.klnvch.link5dots.models.Room
+import by.klnvch.link5dots.data.StringProvider
+import by.klnvch.link5dots.domain.models.*
 import by.klnvch.link5dots.utils.FormatUtils.formatDateTime
 import by.klnvch.link5dots.utils.FormatUtils.formatDuration
 
 data class HistoryItemViewState(
+    val room: IRoom,
     val userName1: String?,
     val userName2: String?,
     val startTime: String,
     val duration: String,
     val size: String,
-    val typeStringRes: Int
+    val typeStringRes: Int,
 ) {
-    constructor(room: Room) : this(
-        room.user1?.name,
-        room.user2?.name,
+    constructor(room: IRoom, userName: String, stringProvider: StringProvider) : this(
+        room,
+        room.user1?.map(userName, stringProvider),
+        room.user2?.map(userName, stringProvider),
         room.timestamp.formatDateTime(),
         room.getDuration().formatDuration(),
         room.dots.size.toString(),
@@ -49,14 +50,22 @@ data class HistoryItemViewState(
     )
 
     companion object {
-        fun Int.toStringRes(): Int {
+        private fun Int.toStringRes(): Int {
             return when (this) {
                 RoomType.BLUETOOTH -> R.string.bluetooth
                 RoomType.NSD -> R.string.menu_local_network
                 RoomType.ONLINE -> R.string.menu_online_game
                 RoomType.TWO_PLAYERS -> R.string.menu_two_players
-                RoomType.BOT -> R.string.app_name
+                RoomType.BOT -> R.string.menu_single_player
                 else -> R.string.unknown
+            }
+        }
+
+        private fun IUser.map(userName: String, stringProvider: StringProvider): String {
+            return when (this) {
+                is DeviceOwnerUser -> userName.ifEmpty { stringProvider.getString(R.string.unknown) }
+                is BotUser -> stringProvider.getString(R.string.computer)
+                is NetworkUser -> name
             }
         }
     }

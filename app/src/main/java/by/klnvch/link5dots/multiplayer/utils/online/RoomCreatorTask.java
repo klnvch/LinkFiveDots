@@ -24,18 +24,21 @@
 
 package by.klnvch.link5dots.multiplayer.utils.online;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.checkState;
+
 import android.util.Log;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
+import by.klnvch.link5dots.domain.models.NetworkRoom;
+import by.klnvch.link5dots.domain.models.NetworkUser;
 import by.klnvch.link5dots.domain.models.RoomState;
-import by.klnvch.link5dots.models.Room;
-import by.klnvch.link5dots.models.User;
 import by.klnvch.link5dots.multiplayer.services.GameServiceOnline;
 import by.klnvch.link5dots.multiplayer.targets.TargetOnline;
 import by.klnvch.link5dots.multiplayer.utils.OnRoomConnectedListener;
@@ -43,12 +46,9 @@ import by.klnvch.link5dots.multiplayer.utils.OnTargetCreatedListener;
 import by.klnvch.link5dots.multiplayer.utils.OnTargetDeletedListener;
 import by.klnvch.link5dots.utils.RoomUtils;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Preconditions.checkState;
-
 public class RoomCreatorTask {
 
-    private Room mRoom;
+    private NetworkRoom mRoom;
     private OnTargetCreatedListener mCreatedListener;
     private OnRoomConnectedListener mConnectedListener;
 
@@ -79,7 +79,7 @@ public class RoomCreatorTask {
 
     public void createRoom(@NonNull OnTargetCreatedListener createdListener,
                            @NonNull OnRoomConnectedListener connectedListener,
-                           @NonNull User user) {
+                           @NonNull NetworkUser user) {
         checkNotNull(createdListener);
         checkNotNull(connectedListener);
         checkNotNull(user);

@@ -24,49 +24,50 @@
 
 package by.klnvch.link5dots.multiplayer.adapters;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DatabaseError;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.RecyclerView;
 import by.klnvch.link5dots.R;
-import by.klnvch.link5dots.models.Room;
+import by.klnvch.link5dots.domain.models.NetworkRoom;
 import by.klnvch.link5dots.multiplayer.services.GameServiceOnline;
 import by.klnvch.link5dots.multiplayer.targets.TargetOnline;
 import by.klnvch.link5dots.multiplayer.utils.online.FirebaseHelper;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
-public class PickerAdapterOnline extends FirebaseRecyclerAdapter<Room, TargetHolder>
+public class PickerAdapterOnline extends FirebaseRecyclerAdapter<NetworkRoom, TargetHolder>
         implements TargetAdapterInterface, ScannerInterface {
 
     private OnItemClickListener mOnItemClickListener = null;
     private OnEmptyStateListener mOnEmptyStateListener = null;
     private OnScanStoppedListener mOnScanStoppedListener;
 
-    private PickerAdapterOnline(@NonNull FirebaseRecyclerOptions<Room> options) {
+    private PickerAdapterOnline(@NonNull FirebaseRecyclerOptions<NetworkRoom> options) {
         super(options);
     }
 
     @NonNull
     public static PickerAdapterOnline createAdapter() {
-        final FirebaseRecyclerOptions<Room> options =
-                new FirebaseRecyclerOptions.Builder<Room>()
-                        .setQuery(FirebaseHelper.getRoomsQuery(), Room.class)
+        final FirebaseRecyclerOptions<NetworkRoom> options =
+                new FirebaseRecyclerOptions.Builder<NetworkRoom>()
+                        .setQuery(FirebaseHelper.getRoomsQuery(), NetworkRoom.class)
                         .build();
 
         return new PickerAdapterOnline(options);
     }
 
     @Override
-    protected void onBindViewHolder(@NonNull TargetHolder holder, int position, @NonNull Room room) {
+    protected void onBindViewHolder(@NonNull TargetHolder holder, int position, @NonNull NetworkRoom room) {
         holder.setDestination(new TargetOnline(room));
     }
 

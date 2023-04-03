@@ -26,165 +26,97 @@ package by.klnvch.link5dots.utils;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import android.graphics.Point;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import java.text.Format;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import by.klnvch.link5dots.domain.models.BotGameScore;
+import by.klnvch.link5dots.domain.models.Dot;
 import by.klnvch.link5dots.domain.models.GameResult;
+import by.klnvch.link5dots.domain.models.IRoom;
+import by.klnvch.link5dots.domain.models.InitialGameGenerator;
+import by.klnvch.link5dots.domain.models.NetworkRoom;
+import by.klnvch.link5dots.domain.models.NetworkUser;
+import by.klnvch.link5dots.domain.models.Point;
 import by.klnvch.link5dots.domain.models.RoomExt;
+import by.klnvch.link5dots.domain.models.RoomKeyGenerator;
 import by.klnvch.link5dots.domain.models.RoomState;
 import by.klnvch.link5dots.domain.models.RoomType;
-import by.klnvch.link5dots.models.Dot;
-import by.klnvch.link5dots.models.Room;
-import by.klnvch.link5dots.models.User;
 
 public class RoomUtils {
 
-    private static final String TIME_TEMPLATE = "MMM-dd HH:mm";
-
-    /**
-     * Creates game with AI
-     *
-     * @param user1 user
-     * @param user2 bot
-     * @return game with AI
-     */
     @NonNull
-    public static Room createBotGame(@NonNull User user1, @NonNull User user2) {
-        checkNotNull(user1);
-        checkNotNull(user2);
-
-        final Room room = new Room();
-        room.setKey(MathUtils.generateKey());
-        room.setState(RoomState.CREATED);
-        room.setTimestamp(System.currentTimeMillis());
-        room.setDots(new ArrayList<>());
-        room.setUser1(user1);
-        room.setUser2(user2);
-        room.setType(RoomType.BOT);
-        room.setSend(false);
-        room.setTest(false);
-        return room;
-    }
-
-    /**
-     * Creates game for two players on the same device
-     *
-     * @return game for two players on the same device
-     */
-    @NonNull
-    public static Room createTwoGame() {
-        final Room room = new Room();
-        room.setKey(MathUtils.generateKey());
-        room.setState(RoomState.CREATED);
-        room.setTimestamp(System.currentTimeMillis());
-        room.setDots(new ArrayList<>());
-        room.setUser1(null);
-        room.setUser2(null);
-        room.setType(RoomType.TWO_PLAYERS);
-        room.setSend(false);
-        room.setTest(false);
-        return room;
+    public static NetworkRoom createMultiplayerGame(@NonNull NetworkUser user, int type) {
+        final RoomKeyGenerator roomKeyGenerator = new RoomKeyGenerator();
+        return new NetworkRoom(
+                roomKeyGenerator.get(),
+                System.currentTimeMillis(),
+                new ArrayList<>(),
+                user,
+                null,
+                type,
+                RoomState.CREATED
+        );
     }
 
     @NonNull
-    public static Room createMultiplayerGame(@NonNull User user, int type) {
-        checkNotNull(user);
-
-        final Room room = new Room();
-        room.setKey(MathUtils.generateKey());
-        room.setState(RoomState.CREATED);
-        room.setTimestamp(System.currentTimeMillis());
-        room.setDots(new ArrayList<>());
-        room.setUser1(user);
-        room.setUser2(null);
-        room.setType(type);
-        room.setSend(false);
-        room.setTest(false);
-        return room;
+    public static NetworkRoom createOnlineGame(@NonNull String key, @NonNull NetworkUser user) {
+        return new NetworkRoom(
+                key,
+                System.currentTimeMillis(),
+                new ArrayList<>(),
+                user,
+                null,
+                RoomType.ONLINE,
+                RoomState.CREATED
+        );
     }
 
     @NonNull
-    public static Room createOnlineGame(@NonNull String key, @NonNull User user) {
-        checkNotNull(key);
-        checkNotNull(user);
-
-        final Room room = new Room();
-        room.setKey(key);
-        room.setTimestamp(System.currentTimeMillis());
-        room.setState(RoomState.CREATED);
-        room.setUser1(user);
-        room.setType(RoomType.ONLINE);
-        return room;
-    }
-
-    @NonNull
-    public static Room undo(@NonNull Room room) {
-        checkNotNull(room);
-
-        if (RoomExt.isNotEmpty(room)) {
-            final ArrayList<Dot> dots = room.getDots();
-            dots.remove(dots.size() - 1);
-            room.setDots(dots);
-        }
-
-        return room;
-    }
-
-    @NonNull
-    public static Room newGame(@NonNull Room room, @Nullable Long seed) {
-        checkNotNull(room);
-
-        room.setKey(MathUtils.generateKey());
-        room.setTimestamp(System.currentTimeMillis());
-        room.setDots(new ArrayList<>());
-        room.setSend(false);
+    public static NetworkRoom newGame(@NonNull NetworkRoom room, @Nullable Long seed) {
+        final ArrayList<Dot> dots = new ArrayList<>();
 
         if (seed != null) {
-            final List<Point> points = RandomGenerator.generateUniqueSixDots(seed);
+            final InitialGameGenerator initialGameGenerator = new InitialGameGenerator();
+            final List<Point> points = initialGameGenerator.get(seed);
 
             for (int i = 0; i != points.size(); ++i) {
                 final Point p = points.get(i);
-                final int x = 8 + p.x;
-                final int y = 8 + p.y;
-                final Dot dot = new Dot(x, y);
+                final int x = 8 + p.getX();
+                final int y = 8 + p.getY();
+                final Point dot = new Point(x, y);
 
-                addDot(room, dot, i % 2 == 0 ? Dot.HOST : Dot.GUEST);
+                addDot(dots, dot, i % 2 == 0 ? Dot.HOST : Dot.GUEST);
             }
         }
 
-        return room;
-    }
-
-    public static String formatStartTime(@NonNull Room room) {
-        checkNotNull(room);
-
-        final Format timeFormat = new SimpleDateFormat(TIME_TEMPLATE, Locale.getDefault());
-        return timeFormat.format(new Date(room.getTimestamp()));
+        final RoomKeyGenerator roomKeyGenerator = new RoomKeyGenerator();
+        return new NetworkRoom(
+                roomKeyGenerator.get(),
+                System.currentTimeMillis(),
+                dots,
+                room.getUser1(),
+                room.getUser2(),
+                room.getType(),
+                room.getState()
+        );
     }
 
     @NonNull
-    public static User getAnotherUser(@NonNull Room room, @NonNull User user) {
+    public static NetworkUser getAnotherUser(@NonNull NetworkRoom room, @NonNull NetworkUser user) {
         checkNotNull(room);
         checkNotNull(user);
 
-        if (room.getUser1().equals(user))
+        if (user.equals(room.getUser1()))
             return room.getUser2();
         else
             return room.getUser1();
     }
 
     @Nullable
-    private static Integer getLastDotType(@NonNull Room room) {
+    private static Integer getLastDotType(@NonNull IRoom room) {
         checkNotNull(room);
 
         if (RoomExt.isNotEmpty(room)) {
@@ -193,15 +125,9 @@ public class RoomUtils {
         return null;
     }
 
-    public static int getHostDotType(@NonNull Room room, @NonNull User host) {
-        checkNotNull(room);
-
-        return host.equals(room.getUser1()) ? Dot.HOST : Dot.GUEST;
-    }
-
     @Deprecated
     @NonNull
-    public static BotGameScore getHighScore(@NonNull Room room, @Nullable User user) {
+    public static BotGameScore getHighScore(@NonNull NetworkRoom room, @Nullable NetworkUser user) {
         checkNotNull(room);
 
         final Dot lastDot = DotsArrayUtils.getLastDot(room.getDots());
@@ -211,7 +137,7 @@ public class RoomUtils {
 
         if (user != null) {
             final GameResult gameResult;
-            if (lastDot.getType() == getHostDotType(room, user)) {
+            if (lastDot.getType() == RoomExt.getHostDotType(room, user)) {
                 gameResult = GameResult.WON;
             } else {
                 gameResult = GameResult.LOST;
@@ -223,62 +149,19 @@ public class RoomUtils {
     }
 
     @NonNull
-    public static Room addDotWithBotAnswer(@NonNull Room room, @NonNull Dot dot) {
-        checkNotNull(room);
-        checkNotNull(dot);
-
-        addDot(room, dot, Dot.HOST);
-        if (DotsArrayUtils.findWinningLine(room.getDots()) == null) {
-            addDot(room, Bot.findAnswer(room.getDots()), Dot.GUEST);
-        }
-
-        return room;
-    }
-
-    @NonNull
-    public static Room addDotAsAnotherType(@NonNull Room room, @NonNull Dot dot) {
-        checkNotNull(room);
-        checkNotNull(dot);
-
+    public static NetworkRoom addDotMultiplayer(@NonNull NetworkRoom room, @NonNull NetworkUser user, @NonNull Point p) {
         final Integer lastDotType = getLastDotType(room);
-        if (lastDotType == null || lastDotType != Dot.HOST)
-            addDot(room, dot, Dot.HOST);
-        else
-            addDot(room, dot, Dot.GUEST);
+        final int hostDotType = RoomExt.getHostDotType(room, user);
 
-        return room;
-    }
-
-    @NonNull
-    public static Room addDotMultiplayer(@NonNull Room room, @NonNull User user, @NonNull Dot dot) {
-        checkNotNull(room);
-        checkNotNull(user);
-        checkNotNull(dot);
-
-        final Integer lastDotType = getLastDotType(room);
-        final int hostDotType = getHostDotType(room, user);
-
+        final ArrayList<Dot> dots = new ArrayList<>(room.getDots());
         if (lastDotType == null || lastDotType != hostDotType) {
-            addDot(room, dot, hostDotType);
+            addDot(dots, p, hostDotType);
         }
 
-        return room;
+        return new NetworkRoom(room.getKey(), room.getTimestamp(), dots, room.getUser1(), room.getUser2(), room.getType(), room.getState());
     }
 
-    private static void addDot(@NonNull Room room, @NonNull Dot dot, int type) {
-        checkNotNull(room);
-        checkNotNull(dot);
-        // get array of dots
-        ArrayList<Dot> dots = room.getDots();
-        if (dots == null) dots = new ArrayList<>();
-        // update dot
-        dot.setTimestamp(System.currentTimeMillis());
-        dot.setId(dots.size());
-        dot.setType(type);
-        // add dot to the end
-        dots.add(dot);
-        // save array of dots
-        room.setDots(dots);
-        room.setSend(false);
+    private static void addDot(@NonNull ArrayList<Dot> dots, @NonNull Point p, int type) {
+        dots.add(new Dot(p.getX(), p.getY(), dots.size(), type, System.currentTimeMillis()));
     }
 }

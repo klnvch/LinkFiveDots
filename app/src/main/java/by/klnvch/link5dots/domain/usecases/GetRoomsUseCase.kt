@@ -24,9 +24,9 @@
 
 package by.klnvch.link5dots.domain.usecases
 
-import by.klnvch.link5dots.domain.repositories.RoomDao
+import by.klnvch.link5dots.domain.repositories.RoomLocalDataSource
 import javax.inject.Inject
 
-class GetRoomsUseCase @Inject constructor(private val roomDao: RoomDao) {
-    fun get() = roomDao.getAll()
+class GetRoomsUseCase @Inject constructor(private val roomLocalDataSource: RoomLocalDataSource) {
+    fun get() = roomLocalDataSource.getAll()
 }

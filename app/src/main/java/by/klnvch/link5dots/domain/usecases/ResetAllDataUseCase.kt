@@ -24,6 +24,7 @@
 
 package by.klnvch.link5dots.domain.usecases
 
+import by.klnvch.link5dots.data.db.RoomDao
 import by.klnvch.link5dots.domain.repositories.*
 import javax.inject.Inject
 

@@ -24,8 +24,8 @@
 
 package by.klnvch.link5dots.domain.repositories
 
-import by.klnvch.link5dots.models.Room
+import by.klnvch.link5dots.domain.models.IRoom
 
 interface RoomRemoteSource {
-    suspend fun save(room: Room)
+    suspend fun save(room: IRoom, isTest: Boolean)
 }

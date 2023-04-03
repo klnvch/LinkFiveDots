@@ -46,7 +46,8 @@ import androidx.core.content.ContextCompat;
 import java.util.ArrayList;
 
 import by.klnvch.link5dots.domain.models.DotsType;
-import by.klnvch.link5dots.models.Dot;
+import by.klnvch.link5dots.domain.models.Dot;
+import by.klnvch.link5dots.domain.models.Point;
 import by.klnvch.link5dots.models.Game;
 import by.klnvch.link5dots.models.GameViewState;
 import by.klnvch.link5dots.utils.BitmapCreator;
@@ -350,7 +351,7 @@ public class GameView extends View {
     }
 
     public interface OnMoveDoneListener {
-        void onMoveDone(@NonNull Dot dot);
+        void onMoveDone(@NonNull Point dot);
     }
 
     public interface OnGameEndListener {
@@ -379,7 +380,7 @@ public class GameView extends View {
                 final int y = MathUtils.findClosestIndex(mLineLocations, point.y);
 
                 if (mOnMoveDoneListener != null && mGameState.checkCorrectness(x, y)) {
-                    mOnMoveDoneListener.onMoveDone(new Dot(x, y));
+                    mOnMoveDoneListener.onMoveDone(new Point(x, y));
                 } else {
                     Log.e(TAG, "listener is null");
                 }

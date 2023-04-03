@@ -24,19 +24,20 @@
 
 package by.klnvch.link5dots.multiplayer.utils.online;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.checkState;
+
 import android.util.Log;
+
+import androidx.annotation.NonNull;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
-import androidx.annotation.NonNull;
-import by.klnvch.link5dots.models.Room;
+import by.klnvch.link5dots.domain.models.NetworkRoom;
 import by.klnvch.link5dots.multiplayer.services.GameServiceOnline;
 import by.klnvch.link5dots.multiplayer.utils.OnRoomUpdatedListener;
-
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Preconditions.checkState;
 
 public class RoomEventListener implements ValueEventListener {
 
@@ -77,7 +78,7 @@ public class RoomEventListener implements ValueEventListener {
     @Override
     public void onDataChange(@NonNull DataSnapshot snapshot) {
         if (mListener != null) {
-            final Room room = snapshot.getValue(Room.class);
+            final NetworkRoom room = snapshot.getValue(NetworkRoom.class);
             checkNotNull(room);
 
             mListener.onRoomUpdated(room, null);

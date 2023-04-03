@@ -24,29 +24,43 @@
 
 package by.klnvch.link5dots.domain.models
 
-import by.klnvch.link5dots.domain.models.RoomExt.getDuration
-import by.klnvch.link5dots.models.Dot
-import by.klnvch.link5dots.models.Room
-import by.klnvch.link5dots.utils.RoomUtils
 import javax.inject.Inject
 
-class TwoPlayersGameRules @Inject constructor() : GameRules() {
+class TwoPlayersGameRules @Inject constructor(
+    roomKeyGenerator: RoomKeyGenerator,
+    initialGameGenerator: InitialGameGenerator,
+) : GameRules(roomKeyGenerator, initialGameGenerator) {
     override val type = RoomType.TWO_PLAYERS
 
-    override fun init(room: Room?): Room {
-        room?.user1 = null
-        room?.user2 = null
-        this.room = room ?: RoomUtils.createTwoGame()
+    override fun init(room: IRoom?): Room {
+        if (room != null) {
+            this.room = Room(room).copy(user1 = null, user2 = null)
+        } else {
+            this.room = createGame()
+        }
         return this.room
     }
 
-    override fun addDot(dot: Dot): Room {
-        return RoomUtils.addDotAsAnotherType(room, dot)
+    override fun addDot(p: Point): Room {
+        val lastDotType = this.room.dots.lastOrNull()?.type ?: Dot.GUEST
+        val type = if (lastDotType == Dot.GUEST) Dot.HOST else Dot.GUEST
+        room.add(Dot(p, room.dots.size, type, System.currentTimeMillis()))
+        return room
     }
 
     override fun undo(): Room {
-        return RoomUtils.undo(room)
+        room.undo()
+        return room
     }
+
+    override fun createGame(): Room = Room(
+        roomKeyGenerator.get(),
+        System.currentTimeMillis(),
+        mutableListOf(),
+        null,
+        null,
+        RoomType.TWO_PLAYERS,
+    )
 
     override fun getScore(): SimpleGameScore {
         return SimpleGameScore(

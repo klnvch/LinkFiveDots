@@ -24,13 +24,12 @@
 
 package by.klnvch.link5dots.ui.scores.history
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -39,8 +38,9 @@ import androidx.recyclerview.widget.RecyclerView
 import by.klnvch.link5dots.R
 import by.klnvch.link5dots.databinding.FragmentHistoryBinding
 import by.klnvch.link5dots.di.viewmodels.SavedStateViewModelFactory
-import by.klnvch.link5dots.models.Room
+import by.klnvch.link5dots.domain.models.IRoom
 import by.klnvch.link5dots.ui.scores.ScoresViewModel
+import by.klnvch.link5dots.ui.scores.history.GameInfoActivity.Companion.launchGameInfoActivity
 import com.google.android.material.snackbar.Snackbar
 import dagger.android.support.DaggerFragment
 import kotlinx.coroutines.launch
@@ -50,10 +50,10 @@ import javax.inject.Inject
 class HistoryFragment : DaggerFragment(), OnItemSelectedListener {
     private lateinit var binding: FragmentHistoryBinding
 
-    private lateinit var viewModel: ScoresViewModel
-
     @Inject
     lateinit var viewModelFactory: SavedStateViewModelFactory
+
+    private val viewModel: ScoresViewModel by activityViewModels { viewModelFactory }
 
     private lateinit var historyAdapter: HistoryAdapter
 
@@ -84,7 +84,7 @@ class HistoryFragment : DaggerFragment(), OnItemSelectedListener {
         val swipeHandler = object : SwipeToDeleteCallback() {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val position = viewHolder.bindingAdapterPosition
-                val room = historyAdapter.currentList[position]
+                val room = historyAdapter.currentList[position].room
                 viewModel.deleteRoom(room)
                 val msg = getString(R.string.deleted_toast, position.toString())
                 Snackbar.make(binding.recyclerView, msg, Snackbar.LENGTH_LONG)
@@ -99,9 +99,6 @@ class HistoryFragment : DaggerFragment(), OnItemSelectedListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel =
-            ViewModelProvider(requireActivity(), viewModelFactory)[ScoresViewModel::class.java]
-
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.historyUiState.collect { binding.viewState = it }
@@ -109,7 +106,5 @@ class HistoryFragment : DaggerFragment(), OnItemSelectedListener {
         }
     }
 
-    override fun onItemSelected(room: Room) {
-        startActivity(Intent(context, GameInfoActivity::class.java).putExtra("room", room))
-    }
+    override fun onItemSelected(room: IRoom) = launchGameInfoActivity(room)
 }

@@ -22,19 +22,50 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.ui.scores.history
+package by.klnvch.link5dots.domain.models
 
-import android.view.View
-import by.klnvch.link5dots.data.StringProvider
-import by.klnvch.link5dots.domain.models.IRoom
+sealed interface IRoom {
+    val key: String
+    val timestamp: Long
+    val dots: List<Dot>
+    val user1: IUser?
+    val user2: IUser?
+    val type: Int
+    fun getDuration() = (dots.lastOrNull()?.timestamp ?: timestamp) - timestamp
+}
 
-data class HistoryViewState(val items: List<HistoryItemViewState>) {
-    constructor(rooms: List<IRoom>, userName: String, stringProvider: StringProvider)
-            : this(rooms.map { HistoryItemViewState(it, userName, stringProvider) })
+data class Room(
+    override val key: String,
+    override val timestamp: Long,
+    override val dots: MutableList<Dot>,
+    override val user1: IUser?,
+    override val user2: IUser?,
+    override val type: Int,
+) : IRoom {
+    constructor(room: IRoom) : this(
+        room.key,
+        room.timestamp,
+        room.dots.toMutableList(),
+        room.user1,
+        room.user2,
+        room.type,
+    )
 
-    val errorMessageVisibility = if (items.isEmpty()) View.VISIBLE else View.GONE
+    fun add(dot: Dot) {
+        dots.add(dot)
+    }
 
-    companion object {
-        fun initial() = HistoryViewState(emptyList())
+    fun undo() {
+        dots.removeLast()
     }
 }
+
+data class NetworkRoom(
+    override val key: String,
+    override val timestamp: Long,
+    override val dots: List<Dot>,
+    override val user1: NetworkUser?,
+    override val user2: NetworkUser?,
+    override val type: Int,
+    val state: Int,
+) : IRoom

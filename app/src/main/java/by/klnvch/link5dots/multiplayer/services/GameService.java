@@ -38,12 +38,14 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.util.Random;
+
 import javax.inject.Inject;
 
+import by.klnvch.link5dots.domain.models.NetworkRoom;
+import by.klnvch.link5dots.domain.models.NetworkUser;
+import by.klnvch.link5dots.domain.models.Point;
 import by.klnvch.link5dots.domain.repositories.Settings;
-import by.klnvch.link5dots.models.Dot;
-import by.klnvch.link5dots.models.Room;
-import by.klnvch.link5dots.models.User;
 import by.klnvch.link5dots.multiplayer.adapters.OnScanStoppedListener;
 import by.klnvch.link5dots.multiplayer.adapters.ScannerInterface;
 import by.klnvch.link5dots.multiplayer.adapters.TargetAdapterInterface;
@@ -71,8 +73,8 @@ public abstract class GameService extends DaggerService implements GameServiceIn
     @Inject
     Settings settings;
     private TargetAdapterInterface mAdapter;
-    private User mUser;
-    private Room mRoom = null;
+    private NetworkUser mUser;
+    private NetworkRoom mRoom = null;
 
     @Override
     public void onCreate() {
@@ -82,7 +84,8 @@ public abstract class GameService extends DaggerService implements GameServiceIn
         mFactory = FactoryProvider.getServiceFactory(this.getClass());
         mAdapter = mFactory.getAdapter(this);
         mScanner = (ScannerInterface) mAdapter;
-        mUser = User.newUser(settings.getUserNameBlocking());
+        final String id = Long.toHexString(System.currentTimeMillis()) + '_' + Long.toHexString(new Random().nextLong());
+        mUser = new NetworkUser(id, settings.getUserNameBlocking());
     }
 
     @Override
@@ -145,17 +148,17 @@ public abstract class GameService extends DaggerService implements GameServiceIn
 
     @NonNull
     @Override
-    public User getUser() {
+    public NetworkUser getUser() {
         return mUser;
     }
 
     @Nullable
     @Override
-    public Room getRoom() {
+    public NetworkRoom getRoom() {
         return mRoom;
     }
 
-    void setRoom(@Nullable Room mRoom) {
+    void setRoom(@Nullable NetworkRoom mRoom) {
         this.mRoom = mRoom;
     }
 
@@ -181,9 +184,9 @@ public abstract class GameService extends DaggerService implements GameServiceIn
     }
 
     @Override
-    public void addDot(@NonNull Dot dot) {
+    public void addDot(@NonNull Point p) {
         if (mRoom != null) {
-            updateRoomRemotely(RoomUtils.addDotMultiplayer(mRoom, mUser, dot));
+            updateRoomRemotely(RoomUtils.addDotMultiplayer(mRoom, mUser, p));
         }
     }
 
@@ -204,15 +207,15 @@ public abstract class GameService extends DaggerService implements GameServiceIn
         EventBus.getDefault().post(state);
     }
 
-    void sendMsg(@NonNull Room room) {
+    void sendMsg(@NonNull NetworkRoom room) {
         EventBus.getDefault().post(room);
     }
 
-    protected abstract void updateRoomLocally(@NonNull Room room);
+    protected abstract void updateRoomLocally(@NonNull NetworkRoom room);
 
-    protected abstract void updateRoomRemotely(@NonNull Room room);
+    protected abstract void updateRoomRemotely(@NonNull NetworkRoom room);
 
-    protected abstract void startGame(@Nullable Room room);
+    protected abstract void startGame(@Nullable NetworkRoom room);
 
     @CallSuper
     @Override
@@ -246,7 +249,7 @@ public abstract class GameService extends DaggerService implements GameServiceIn
     }
 
     @Override
-    public final void onRoomConnected(@Nullable Room room) {
+    public final void onRoomConnected(@Nullable NetworkRoom room) {
         Log.d(TAG, "onRoomConnected");
 
         mScanner.stopScan();
@@ -264,7 +267,7 @@ public abstract class GameService extends DaggerService implements GameServiceIn
     }
 
     @Override
-    public void onRoomUpdated(@Nullable Room room, @Nullable Exception exception) {
+    public void onRoomUpdated(@Nullable NetworkRoom room, @Nullable Exception exception) {
         Log.d(TAG, "onRoomUpdated: " + exception);
 
         if (room != null && exception == null) {

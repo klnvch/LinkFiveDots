@@ -24,8 +24,8 @@
 
 package by.klnvch.link5dots.ui.scores.history
 
-import by.klnvch.link5dots.models.Room
+import by.klnvch.link5dots.domain.models.IRoom
 
 interface OnItemSelectedListener {
-    fun onItemSelected(room: Room)
+    fun onItemSelected(room: IRoom)
 }

@@ -22,19 +22,20 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.ui.scores.history
+package by.klnvch.link5dots.domain.models
 
-import android.view.View
-import by.klnvch.link5dots.data.StringProvider
-import by.klnvch.link5dots.domain.models.IRoom
-
-data class HistoryViewState(val items: List<HistoryItemViewState>) {
-    constructor(rooms: List<IRoom>, userName: String, stringProvider: StringProvider)
-            : this(rooms.map { HistoryItemViewState(it, userName, stringProvider) })
-
-    val errorMessageVisibility = if (items.isEmpty()) View.VISIBLE else View.GONE
+data class Dot(
+    val x: Int,
+    val y: Int,
+    val id: Int,
+    val type: Int,
+    val timestamp: Long,
+) {
+    constructor(p: Point, id: Int, type: Int, timestamp: Long) : this(p.x, p.y, id, type, timestamp)
 
     companion object {
-        fun initial() = HistoryViewState(emptyList())
+        const val EMPTY = 1
+        const val HOST = 2
+        const val GUEST = 4
     }
 }

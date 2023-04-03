@@ -22,19 +22,43 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.ui.scores.history
+package by.klnvch.link5dots.data.db
 
-import android.view.View
-import by.klnvch.link5dots.data.StringProvider
 import by.klnvch.link5dots.domain.models.IRoom
+import by.klnvch.link5dots.domain.repositories.RoomLocalDataSource
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
+import javax.inject.Inject
 
-data class HistoryViewState(val items: List<HistoryItemViewState>) {
-    constructor(rooms: List<IRoom>, userName: String, stringProvider: StringProvider)
-            : this(rooms.map { HistoryItemViewState(it, userName, stringProvider) })
+class RoomLocalDataSourceImpl @Inject constructor(
+    private val roomDao: RoomDao,
+    private val mapper: RoomLocalMapper,
+) : RoomLocalDataSource {
+    override suspend fun save(room: IRoom) {
+        roomDao.insert(mapper.map(room))
+    }
 
-    val errorMessageVisibility = if (items.isEmpty()) View.VISIBLE else View.GONE
+    override suspend fun delete(room: IRoom) {
+        roomDao.deleteById(room.key)
+    }
 
-    companion object {
-        fun initial() = HistoryViewState(emptyList())
+    override suspend fun getNotSent(): List<IRoom> {
+        return roomDao.getNotSent().map { mapper.map(it) }
+    }
+
+    override suspend fun setSent(room: IRoom) {
+        roomDao.setSent(room.key)
+    }
+
+    override suspend fun getRecentByType(type: Int): List<IRoom> {
+        return roomDao.getRecentByType(type).map { mapper.map(it) }
+    }
+
+    override suspend fun getByKey(key: String): IRoom? {
+        return roomDao.getByKey(key).map { mapper.map(it) }.firstOrNull()
+    }
+
+    override fun getAll(): Flow<List<IRoom>> {
+        return roomDao.getAll().map { list -> list.map { mapper.map(it) } }
     }
 }

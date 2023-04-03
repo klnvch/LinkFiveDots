@@ -24,28 +24,53 @@
 
 package by.klnvch.link5dots.ui.scores.history
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import by.klnvch.link5dots.GameFragment
 import by.klnvch.link5dots.R
 import by.klnvch.link5dots.databinding.ActivityGameBinding
-import by.klnvch.link5dots.GameFragment
-import by.klnvch.link5dots.utils.IntentExt.getRoom
+import by.klnvch.link5dots.domain.models.IRoom
+import by.klnvch.link5dots.domain.usecases.GetRoomUseCase
 import dagger.android.support.DaggerAppCompatActivity
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
 class GameInfoActivity : DaggerAppCompatActivity() {
     private lateinit var binding: ActivityGameBinding
+
+    @Inject
+    lateinit var getRoomUseCase: GetRoomUseCase
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityGameBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setTitle(R.string.application_info_label)
+
+        val key = intent.getStringExtra("key")
+        if (key != null) {
+            lifecycleScope.launch {
+                repeatOnLifecycle(Lifecycle.State.STARTED) {
+                    val room = getRoomUseCase.get(key)
+                    withContext(Dispatchers.Main) {
+                        update(room)
+                    }
+                }
+            }
+        } else {
+            update(null)
+        }
     }
 
-    override fun onStart() {
-        super.onStart()
-        val room = intent.getRoom()
+    private fun update(room: IRoom?) {
         if (room != null) {
             (binding.fragment.getFragment() as GameFragment).update(room)
         } else {
@@ -60,6 +85,12 @@ class GameInfoActivity : DaggerAppCompatActivity() {
                 true
             }
             else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    companion object {
+        fun Fragment.launchGameInfoActivity(room: IRoom) {
+            startActivity(Intent(context, GameInfoActivity::class.java).putExtra("key", room.key))
         }
     }
 }

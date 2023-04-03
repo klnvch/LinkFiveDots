@@ -22,19 +22,44 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.ui.scores.history
+package by.klnvch.link5dots.data.db
 
-import android.view.View
-import by.klnvch.link5dots.data.StringProvider
-import by.klnvch.link5dots.domain.models.IRoom
+import by.klnvch.link5dots.domain.models.*
+import javax.inject.Inject
 
-data class HistoryViewState(val items: List<HistoryItemViewState>) {
-    constructor(rooms: List<IRoom>, userName: String, stringProvider: StringProvider)
-            : this(rooms.map { HistoryItemViewState(it, userName, stringProvider) })
+class RoomLocalMapper @Inject constructor() {
+    fun map(room: IRoom) = RoomLocal(
+        room.key,
+        room.timestamp,
+        room.dots,
+        map(room.user1),
+        map(room.user2),
+        room.type,
+        false,
+        -1,
+        false,
+    )
 
-    val errorMessageVisibility = if (items.isEmpty()) View.VISIBLE else View.GONE
+    fun map(local: RoomLocal): IRoom = Room(
+        local.key,
+        local.timestamp,
+        local.dots?.toMutableList() ?: mutableListOf(),
+        map(local.user1),
+        map(local.user2),
+        local.type
+    )
 
-    companion object {
-        fun initial() = HistoryViewState(emptyList())
+    private fun map(user: IUser?) = when (user) {
+        is BotUser -> UserLocal("bot", null)
+        is DeviceOwnerUser -> UserLocal("host", null)
+        is NetworkUser -> UserLocal("", user.name)
+        else -> null
+    }
+
+    private fun map(user: UserLocal?): IUser? = when (user?.id) {
+        "bot" -> BotUser
+        "host" -> DeviceOwnerUser
+        null -> null
+        else -> if (user.name.isNullOrEmpty()) null else NetworkUser(user.id, user.name)
     }
 }

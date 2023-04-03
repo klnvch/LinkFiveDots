@@ -25,8 +25,9 @@
 package by.klnvch.link5dots.multiplayer.utils;
 
 import androidx.annotation.Nullable;
-import by.klnvch.link5dots.models.Room;
+
+import by.klnvch.link5dots.domain.models.NetworkRoom;
 
 public interface OnRoomUpdatedListener {
-    void onRoomUpdated(@Nullable Room room, @Nullable Exception exception);
+    void onRoomUpdated(@Nullable NetworkRoom room, @Nullable Exception exception);
 }

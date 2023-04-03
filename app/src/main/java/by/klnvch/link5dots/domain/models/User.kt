@@ -24,7 +24,7 @@
 
 package by.klnvch.link5dots.domain.models
 
-import by.klnvch.link5dots.models.User
-
-class BotUser : User("bot", null)
-class DeviceOwnerUser : User("host", null)
+sealed interface IUser
+object BotUser : IUser
+object DeviceOwnerUser : IUser
+data class NetworkUser(val id: String, val name: String) : IUser

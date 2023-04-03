@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2017 klnvch
+ * Copyright (c) 2023 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,31 +22,8 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.utils;
+package by.klnvch.link5dots.domain.models
 
-import android.graphics.Point;
+data class Point(val x: Int, val y: Int)
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
-
-import androidx.annotation.NonNull;
-
-public class RandomGenerator {
-
-    @NonNull
-    public static List<Point> generateUniqueSixDots(long seed) {
-        final ArrayList<Point> points = new ArrayList<>(25);
-
-        for (int i = 0; i != 5; ++i) {
-            for (int j = 0; j != 5; ++j) {
-                points.add(new Point(i, j));
-            }
-        }
-
-        Collections.shuffle(points, new Random(seed));
-
-        return points.subList(0, 6);
-    }
-}
+fun Point.translate(tp: Point) = Point(x + tp.x, y + tp.y)

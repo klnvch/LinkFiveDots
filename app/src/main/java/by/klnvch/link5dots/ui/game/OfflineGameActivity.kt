@@ -32,8 +32,8 @@ import androidx.lifecycle.ViewModelProvider
 import by.klnvch.link5dots.GameFragment
 import by.klnvch.link5dots.GameFragment.OnGameListener
 import by.klnvch.link5dots.R
-import by.klnvch.link5dots.models.Dot
-import by.klnvch.link5dots.models.User
+import by.klnvch.link5dots.domain.models.IUser
+import by.klnvch.link5dots.domain.models.Point
 import by.klnvch.link5dots.ui.game.create.NewGameDialog
 import by.klnvch.link5dots.ui.game.end.EndGameDialog
 import dagger.android.support.DaggerAppCompatActivity
@@ -89,11 +89,11 @@ abstract class OfflineGameActivity : DaggerAppCompatActivity(), OnGameListener {
         return true
     }
 
-    override fun getUser(): User? {
+    override fun getUser(): IUser? {
         return null
     }
 
-    override fun onMoveDone(dot: Dot) {
+    override fun onMoveDone(dot: Point) {
         viewModel.addDot(dot)
     }
 
