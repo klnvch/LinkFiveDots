@@ -46,7 +46,7 @@ import kotlinx.coroutines.launch
 class ScoresViewModel @AssistedInject constructor(
     @Assisted private val savedStateHandle: SavedStateHandle,
     private val deleteRoomUseCase: DeleteRoomUseCase,
-    private val insertRoomUseCase: InsertRoomUseCase,
+    private val saveRoomUseCase: SaveRoomUseCase,
     private val getRoomsUseCase: GetRoomsUseCase,
     private val getScorePathUseCase: GetScorePathUseCase,
     private val settings: Settings,
@@ -93,7 +93,7 @@ class ScoresViewModel @AssistedInject constructor(
 
     fun insertRoom(room: IRoom) {
         viewModelScope.launch {
-            insertRoomUseCase.insert(room)
+            saveRoomUseCase.save(room)
         }
     }
 

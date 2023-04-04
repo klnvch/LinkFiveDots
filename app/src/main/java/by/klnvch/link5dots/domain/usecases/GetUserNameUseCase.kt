@@ -27,6 +27,6 @@ package by.klnvch.link5dots.domain.usecases
 import by.klnvch.link5dots.domain.repositories.Settings
 import javax.inject.Inject
 
-class GetUserNameChangesUseCase @Inject constructor(val settings: Settings) {
+class GetUserNameUseCase @Inject constructor(val settings: Settings) {
     fun get() = settings.getUserName()
 }

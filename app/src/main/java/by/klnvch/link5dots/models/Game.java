@@ -34,7 +34,7 @@ import java.util.List;
 import by.klnvch.link5dots.domain.models.Dot;
 import by.klnvch.link5dots.domain.models.InitialGameGenerator;
 import by.klnvch.link5dots.domain.models.Point;
-import by.klnvch.link5dots.utils.DotsArrayUtils;
+import by.klnvch.link5dots.domain.models.DotsArrayUtils;
 
 public class Game {
 

@@ -29,7 +29,6 @@ import by.klnvch.link5dots.domain.models.Dot
 data class UserRemote(val id: String, val name: String?)
 
 data class RoomRemote(
-    val key: String,
     val timestamp: Long,
     val dots: List<Dot>,
     val user1: UserRemote?,

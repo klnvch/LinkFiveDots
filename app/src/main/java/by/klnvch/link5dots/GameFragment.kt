@@ -37,8 +37,8 @@ import by.klnvch.link5dots.databinding.GameBoardBinding
 import by.klnvch.link5dots.domain.models.*
 import by.klnvch.link5dots.domain.models.RoomExt.getHostDotType
 import by.klnvch.link5dots.domain.repositories.Analytics
-import by.klnvch.link5dots.domain.repositories.RoomLocalDataSource
 import by.klnvch.link5dots.domain.repositories.Settings
+import by.klnvch.link5dots.domain.usecases.SaveRoomUseCase
 import by.klnvch.link5dots.models.Game
 import by.klnvch.link5dots.models.GameViewState
 import dagger.android.support.DaggerFragment
@@ -52,7 +52,7 @@ class GameFragment : DaggerFragment() {
     private lateinit var binding: GameBoardBinding
 
     @Inject
-    lateinit var roomLocalDataSource: RoomLocalDataSource
+    lateinit var saveRoomUseCase: SaveRoomUseCase
 
     @Inject
     lateinit var settings: Settings
@@ -156,9 +156,8 @@ class GameFragment : DaggerFragment() {
             binding.gameView.setGameState(Game.createGame(room.dots, Dot.HOST))
         }
 
-        // add non-empty to the database
         lifecycleScope.launch {
-            roomLocalDataSource.save(room)
+            saveRoomUseCase.save(room)
         }
     }
 

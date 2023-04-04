@@ -34,6 +34,7 @@ import java.util.List;
 
 import by.klnvch.link5dots.domain.models.BotGameScore;
 import by.klnvch.link5dots.domain.models.Dot;
+import by.klnvch.link5dots.domain.models.DotsArrayUtils;
 import by.klnvch.link5dots.domain.models.GameResult;
 import by.klnvch.link5dots.domain.models.IRoom;
 import by.klnvch.link5dots.domain.models.InitialGameGenerator;

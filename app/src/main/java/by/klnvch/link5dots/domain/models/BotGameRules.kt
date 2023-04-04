@@ -24,7 +24,6 @@
 
 package by.klnvch.link5dots.domain.models
 
-import by.klnvch.link5dots.utils.DotsArrayUtils
 import javax.inject.Inject
 
 class BotGameRules @Inject constructor(

@@ -25,17 +25,17 @@
 package by.klnvch.link5dots.domain.usecases
 
 import by.klnvch.link5dots.domain.repositories.FirebaseManager
-import by.klnvch.link5dots.domain.repositories.GameScoreRemoteSource
+import by.klnvch.link5dots.domain.repositories.GameScoreRepository
 import javax.inject.Inject
 
 class GetScorePathUseCase @Inject constructor(
     private val firebaseManager: FirebaseManager,
-    private val gameScoreRemoteSource: GameScoreRemoteSource,
+    private val gameScoreRepository: GameScoreRepository,
 ) {
     suspend fun signInAndGet(): String {
         if (firebaseManager.isSupported()) {
             firebaseManager.signInAnonymously()
-            return gameScoreRemoteSource.getHighScorePath()
+            return gameScoreRepository.getHighScorePath()
         } else {
             throw NotSupportedError()
         }

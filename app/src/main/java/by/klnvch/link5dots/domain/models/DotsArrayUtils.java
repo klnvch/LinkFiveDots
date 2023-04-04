@@ -1,12 +1,10 @@
-package by.klnvch.link5dots.utils;
+package by.klnvch.link5dots.domain.models;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import by.klnvch.link5dots.domain.models.Dot;
 
 public class DotsArrayUtils {
     private static final int N = 20;
@@ -44,7 +42,7 @@ public class DotsArrayUtils {
     }
 
     @NonNull
-    static Dot getLastDot(@NonNull List<Dot> dots) {
+    public static Dot getLastDot(@NonNull List<Dot> dots) {
         return dots.get(dots.size() - 1);
     }
 

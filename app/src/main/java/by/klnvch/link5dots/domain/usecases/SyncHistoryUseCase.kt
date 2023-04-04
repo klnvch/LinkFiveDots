@@ -25,27 +25,18 @@
 package by.klnvch.link5dots.domain.usecases
 
 import android.util.Log
-import by.klnvch.link5dots.domain.repositories.CrashRepository
-import by.klnvch.link5dots.domain.repositories.DeviceInfo
-import by.klnvch.link5dots.domain.repositories.RoomLocalDataSource
-import by.klnvch.link5dots.domain.repositories.RoomRemoteSource
+import by.klnvch.link5dots.domain.repositories.*
 import javax.inject.Inject
 
 class SyncHistoryUseCase @Inject constructor(
-    private val roomLocalDataSource: RoomLocalDataSource,
-    private val deviceInfo: DeviceInfo,
-    private val roomRemoteSource: RoomRemoteSource,
+    private val roomRepository: RoomRepository,
     private val crashRepository: CrashRepository,
-) {
-    suspend fun sync() {
-        val isTest = deviceInfo.isTest()
+    private val deviceInfo: DeviceInfo,
+) : SyncUseCase {
+    override suspend fun sync() {
+        val isTestDevice = deviceInfo.isTest()
         try {
-            roomLocalDataSource
-                .getNotSent()
-                .forEach {
-                    roomRemoteSource.save(it, isTest)
-                    roomLocalDataSource.setSent(it)
-                }
+            roomRepository.sync(isTestDevice)
             Log.d(TAG, MSG_SENT)
         } catch (e: Error) {
             Log.e(TAG, MSG_FAIL, e)

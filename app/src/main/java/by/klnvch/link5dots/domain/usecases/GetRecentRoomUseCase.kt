@@ -22,17 +22,11 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.domain.repositories
+package by.klnvch.link5dots.domain.usecases
 
-import by.klnvch.link5dots.domain.models.IRoom
-import kotlinx.coroutines.flow.Flow
+import by.klnvch.link5dots.domain.repositories.RoomRepository
+import javax.inject.Inject
 
-interface RoomLocalDataSource {
-    suspend fun save(room: IRoom)
-    suspend fun delete(room: IRoom)
-    suspend fun getNotSent(): List<IRoom>
-    suspend fun setSent(room: IRoom)
-    suspend fun getRecentByType(type: Int): List<IRoom>
-    suspend fun getByKey(key: String): IRoom?
-    fun getAll(): Flow<List<IRoom>>
+class GetRecentRoomUseCase @Inject constructor(private val roomRepository: RoomRepository) {
+    suspend fun get(type: Int) = roomRepository.getRecentByType(type)
 }

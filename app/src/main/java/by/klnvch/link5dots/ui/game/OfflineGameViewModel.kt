@@ -28,9 +28,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import by.klnvch.link5dots.domain.models.*
+import by.klnvch.link5dots.domain.models.BotGameScore
+import by.klnvch.link5dots.domain.models.GameRules
+import by.klnvch.link5dots.domain.models.IRoom
+import by.klnvch.link5dots.domain.models.Point
 import by.klnvch.link5dots.domain.repositories.Analytics
-import by.klnvch.link5dots.domain.repositories.RoomLocalDataSource
+import by.klnvch.link5dots.domain.usecases.GetRecentRoomUseCase
 import by.klnvch.link5dots.domain.usecases.SaveScoreUseCase
 import by.klnvch.link5dots.ui.game.create.NewGameViewState
 import by.klnvch.link5dots.ui.game.end.EndGameViewState
@@ -40,7 +43,7 @@ import javax.inject.Inject
 
 class OfflineGameViewModel @Inject constructor(
     private val gameRules: GameRules,
-    private val roomLocalDataSource: RoomLocalDataSource,
+    private val getRecentRoomUseCase: GetRecentRoomUseCase,
     private val analytics: Analytics,
     private val saveScoreUseCase: SaveScoreUseCase,
 ) : ViewModel() {
@@ -49,7 +52,7 @@ class OfflineGameViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            val room = roomLocalDataSource.getRecentByType(gameRules.type).firstOrNull()
+            val room = getRecentRoomUseCase.get(gameRules.type)
             _room.value = gameRules.init(room)
         }
     }

@@ -27,15 +27,10 @@ package by.klnvch.link5dots.di
 import android.app.Application
 import android.content.Context
 import androidx.preference.PreferenceDataStore
-import by.klnvch.link5dots.data.CrashRepositoryImpl
-import by.klnvch.link5dots.data.DeviceInfoImpl
-import by.klnvch.link5dots.data.LanguageManagerImpl
-import by.klnvch.link5dots.data.NightModeManagerImpl
-import by.klnvch.link5dots.data.db.RoomLocalDataSourceImpl
+import by.klnvch.link5dots.data.*
 import by.klnvch.link5dots.data.firebase.AnalyticsImpl
 import by.klnvch.link5dots.data.firebase.FirebaseManagerImpl
-import by.klnvch.link5dots.data.firebase.GameScoreRemoteSourceImpl
-import by.klnvch.link5dots.data.network.RoomRemoteSourceImpl
+import by.klnvch.link5dots.data.GameScoreRepositoryImpl
 import by.klnvch.link5dots.data.settings.PreferenceDataStoreImpl
 import by.klnvch.link5dots.data.settings.SettingsImpl
 import by.klnvch.link5dots.domain.repositories.*
@@ -45,14 +40,6 @@ import javax.inject.Singleton
 
 @Module
 interface AppBindingModule {
-
-    @Singleton
-    @Binds
-    fun bindRoomRemoteSource(impl: RoomRemoteSourceImpl): RoomRemoteSource
-
-    @Singleton
-    @Binds
-    fun bindRoomLocalDataSource(impl: RoomLocalDataSourceImpl): RoomLocalDataSource
 
     @Singleton
     @Binds
@@ -88,9 +75,13 @@ interface AppBindingModule {
 
     @Singleton
     @Binds
-    fun bindGameScoreRemoteSource(impl: GameScoreRemoteSourceImpl): GameScoreRemoteSource
+    fun bindGameScoreRemoteSource(impl: GameScoreRepositoryImpl): GameScoreRepository
 
     @Singleton
     @Binds
     fun bindAnalytics(impl: AnalyticsImpl): Analytics
+
+    @Singleton
+    @Binds
+    fun bindRoomRepository(impl: RoomRepositoryImpl): RoomRepository
 }

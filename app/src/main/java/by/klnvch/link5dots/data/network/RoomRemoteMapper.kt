@@ -6,7 +6,6 @@ import javax.inject.Inject
 class RoomRemoteMapper @Inject constructor() {
     fun map(room: IRoom, isTest: Boolean): RoomRemote {
         return RoomRemote(
-            room.key,
             room.timestamp,
             room.dots,
             map(room.user1),

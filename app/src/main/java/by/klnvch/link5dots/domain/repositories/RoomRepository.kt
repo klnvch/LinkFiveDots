@@ -22,43 +22,17 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.data.db
+package by.klnvch.link5dots.domain.repositories
 
 import by.klnvch.link5dots.domain.models.IRoom
-import by.klnvch.link5dots.domain.repositories.RoomLocalDataSource
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
-import javax.inject.Inject
 
-class RoomLocalDataSourceImpl @Inject constructor(
-    private val roomDao: RoomDao,
-    private val mapper: RoomLocalMapper,
-) : RoomLocalDataSource {
-    override suspend fun save(room: IRoom) {
-        roomDao.insert(mapper.map(room))
-    }
-
-    override suspend fun delete(room: IRoom) {
-        roomDao.deleteById(room.key)
-    }
-
-    override suspend fun getNotSent(): List<IRoom> {
-        return roomDao.getNotSent().map { mapper.map(it) }
-    }
-
-    override suspend fun setSent(room: IRoom) {
-        roomDao.setSent(room.key)
-    }
-
-    override suspend fun getRecentByType(type: Int): List<IRoom> {
-        return roomDao.getRecentByType(type).map { mapper.map(it) }
-    }
-
-    override suspend fun getByKey(key: String): IRoom? {
-        return roomDao.getByKey(key).map { mapper.map(it) }.firstOrNull()
-    }
-
-    override fun getAll(): Flow<List<IRoom>> {
-        return roomDao.getAll().map { list -> list.map { mapper.map(it) } }
-    }
+interface RoomRepository {
+    suspend fun sync(isTestDevice: Boolean)
+    suspend fun save(room: IRoom)
+    suspend fun delete(room: IRoom)
+    fun getAll(): Flow<List<IRoom>>
+    suspend fun getByKey(key: String): IRoom?
+    suspend fun getRecentByType(type: Int): IRoom?
+    suspend fun deleteAll()
 }

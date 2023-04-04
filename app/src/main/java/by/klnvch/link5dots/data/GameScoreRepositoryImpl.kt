@@ -22,28 +22,31 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.data.firebase
+package by.klnvch.link5dots.data
 
 import android.util.Log
 import by.klnvch.link5dots.BuildConfig
-import by.klnvch.link5dots.domain.repositories.GameScoreRemoteSource
+import by.klnvch.link5dots.data.firebase.GameScoreRemote
+import by.klnvch.link5dots.domain.models.BotGameScore
+import by.klnvch.link5dots.domain.repositories.GameScoreRepository
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.firebase.database.FirebaseDatabase
 import javax.inject.Inject
 
-class GameScoreRemoteSourceImpl @Inject constructor() : GameScoreRemoteSource {
+class GameScoreRepositoryImpl @Inject constructor() : GameScoreRepository {
     override fun getHighScorePath(): String {
         return if (BuildConfig.DEBUG) "high_scores_debug" else "high_scores"
     }
 
-    override fun save(score: GameScoreRemote) {
+    override fun save(score: BotGameScore, userName: String, userId: String, androidId: String) {
+        val scoreRemote = GameScoreRemote(score, userName, userId, androidId)
         val mDatabase = FirebaseDatabase.getInstance().reference.child(getHighScorePath())
         val key = mDatabase.push().key
 
         if (key != null) {
             mDatabase
                 .child(key)
-                .setValue(score)
+                .setValue(scoreRemote)
                 .addOnCompleteListener { task ->
                     Log.d("FirebaseUtils", "publishScore: " + task.exception)
                 }

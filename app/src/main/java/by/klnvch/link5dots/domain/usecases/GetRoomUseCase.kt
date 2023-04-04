@@ -24,9 +24,9 @@
 
 package by.klnvch.link5dots.domain.usecases
 
-import by.klnvch.link5dots.domain.repositories.RoomLocalDataSource
+import by.klnvch.link5dots.domain.repositories.RoomRepository
 import javax.inject.Inject
 
-class GetRoomUseCase @Inject constructor(private val roomLocalDataSource: RoomLocalDataSource) {
-    suspend fun get(key: String) = roomLocalDataSource.getByKey(key)
+class GetRoomUseCase @Inject constructor(private val roomRepository: RoomRepository) {
+    suspend fun get(key: String) = roomRepository.getByKey(key)
 }
