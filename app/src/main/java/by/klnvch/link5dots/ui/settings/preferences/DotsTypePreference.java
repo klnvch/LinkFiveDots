@@ -25,7 +25,6 @@
 package by.klnvch.link5dots.ui.settings.preferences;
 
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.AttributeSet;
@@ -37,14 +36,15 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceViewHolder;
 
 import by.klnvch.link5dots.R;
-import by.klnvch.link5dots.domain.models.DotsType;
+import by.klnvch.link5dots.data.settings.SettingsMapper;
+import by.klnvch.link5dots.domain.models.DotsStyleType;
 
 @SuppressWarnings({"unused"})
 public class DotsTypePreference extends Preference {
+    private static final SettingsMapper mapper = new SettingsMapper();
+    private static final DotsStyleType DEFAULT_VALUE = DotsStyleType.ORIGINAL;
 
-    private static final int DEFAULT_VALUE = DotsType.ORIGINAL;
-
-    private int mCurrentValue;
+    private DotsStyleType mCurrentValue;
     private boolean mCurrentValueSet;
 
     public DotsTypePreference(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
@@ -73,11 +73,11 @@ public class DotsTypePreference extends Preference {
         final ImageView dot1 = (ImageView) holder.findViewById(R.id.dot_1);
         final ImageView dot2 = (ImageView) holder.findViewById(R.id.dot_2);
         switch (mCurrentValue) {
-            case DotsType.CROSS_AND_RING:
+            case CROSS_AND_RING:
                 dot1.setImageResource(R.drawable.game_dot_cross_red);
                 dot2.setImageResource(R.drawable.game_dot_ring_blue);
                 break;
-            case DotsType.ORIGINAL:
+            case ORIGINAL:
             default:
                 dot1.setImageResource(R.drawable.game_dot_circle_red);
                 dot2.setImageResource(R.drawable.game_dot_circle_blue);
@@ -85,28 +85,24 @@ public class DotsTypePreference extends Preference {
     }
 
     @Override
-    protected Object onGetDefaultValue(TypedArray a, int index) {
-        return a.getInteger(index, DEFAULT_VALUE);
-    }
-
-    @Override
     protected void onSetInitialValue(@Nullable Object defaultValue) {
         if (defaultValue == null) {
-            defaultValue = DEFAULT_VALUE;
+            defaultValue = mapper.map(DEFAULT_VALUE);
         }
-        setCurrentValue(getPersistedInt((Integer) defaultValue));
+        final int persistedValue = getPersistedInt((Integer) defaultValue);
+        setCurrentValue(mapper.map(persistedValue));
     }
 
     @Override
     protected void onClick() {
-        final int newValue;
+        final DotsStyleType newValue;
         switch (mCurrentValue) {
-            case DotsType.CROSS_AND_RING:
-                newValue = DotsType.ORIGINAL;
+            case CROSS_AND_RING:
+                newValue = DotsStyleType.ORIGINAL;
                 break;
-            case DotsType.ORIGINAL:
+            case ORIGINAL:
             default:
-                newValue = DotsType.CROSS_AND_RING;
+                newValue = DotsStyleType.CROSS_AND_RING;
         }
 
         if (callChangeListener(newValue)) {
@@ -114,12 +110,12 @@ public class DotsTypePreference extends Preference {
         }
     }
 
-    private void setCurrentValue(int currentValue) {
+    private void setCurrentValue(DotsStyleType currentValue) {
         final boolean changed = mCurrentValue != currentValue;
         if (changed || !mCurrentValueSet) {
             mCurrentValue = currentValue;
             mCurrentValueSet = true;
-            persistInt(currentValue);
+            persistInt(mapper.map(currentValue));
             if (changed) {
                 notifyDependencyChange(shouldDisableDependents());
                 notifyChanged();
@@ -135,7 +131,7 @@ public class DotsTypePreference extends Preference {
         }
 
         final SavedState myState = new SavedState(superState);
-        myState.value = mCurrentValue;
+        myState.value = mapper.map(mCurrentValue);
         return myState;
     }
 
@@ -149,7 +145,7 @@ public class DotsTypePreference extends Preference {
         // Restore the instance state
         SavedState myState = (SavedState) state;
         super.onRestoreInstanceState(myState.getSuperState());
-        mCurrentValue = myState.value;
+        mCurrentValue = mapper.map(myState.value);
         notifyChanged();
     }
 

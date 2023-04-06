@@ -26,7 +26,7 @@ package by.klnvch.link5dots.data.settings
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.*
-import by.klnvch.link5dots.domain.models.DotsType
+import by.klnvch.link5dots.domain.models.DotsStyleType
 import by.klnvch.link5dots.domain.repositories.Settings
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
@@ -35,7 +35,8 @@ import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 class SettingsImpl @Inject constructor(
-    private val dataStore: DataStore<Preferences>
+    private val dataStore: DataStore<Preferences>,
+    private val mapper: SettingsMapper,
 ) : Settings {
 
     companion object {
@@ -50,7 +51,6 @@ class SettingsImpl @Inject constructor(
         private const val DEFAULT_LANGUAGE = ""
         private const val DEFAULT_VIBRATION = true
         private const val DEFAULT_NIGHT_MODE = ""
-        private const val DEFAULT_DOTS_TYPE = DotsType.ORIGINAL
         private const val DEFAULT_FIRST_RUN = false
     }
 
@@ -81,7 +81,7 @@ class SettingsImpl @Inject constructor(
         .distinctUntilChanged()
 
     override fun getDotsType() = dataStore.data
-        .map { it[DOTS_TYPE] ?: DEFAULT_DOTS_TYPE }
+        .map { mapper.map(it[DOTS_TYPE]) }
         .distinctUntilChanged()
 
     override fun getNightMode() = dataStore.data
@@ -94,7 +94,7 @@ class SettingsImpl @Inject constructor(
             it[LANGUAGE] = DEFAULT_LANGUAGE
             it[VIBRATION] = DEFAULT_VIBRATION
             it[NIGHT_MODE] = DEFAULT_NIGHT_MODE
-            it[DOTS_TYPE] = DEFAULT_DOTS_TYPE
+            it[DOTS_TYPE] = mapper.map(null as DotsStyleType?)
             it[FIRST_RUN] = DEFAULT_FIRST_RUN
         }
     }

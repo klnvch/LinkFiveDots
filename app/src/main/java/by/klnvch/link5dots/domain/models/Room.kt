@@ -32,6 +32,30 @@ sealed interface IRoom {
     val user2: IUser?
     val type: Int
     fun getDuration() = (dots.lastOrNull()?.timestamp ?: timestamp) - timestamp
+
+    fun getWinningLine(): WinningLine? {
+        if (dots.size < 9) return null
+
+        val lastDot = getLatsDot()!!
+        val points = dots.filter { it.type == lastDot.type }.map { Point(it.x, it.y) }
+
+        // y = x + (py - px)
+        // y = -x + (py + px)
+        // y = py
+        // x = px
+        val line = points.findMaxLine { it.y == it.x + (lastDot.y - lastDot.x) }
+            ?: points.findMaxLine { it.y == -it.x + (lastDot.y + lastDot.x) }
+            ?: points.findMaxLine { it.y == lastDot.y }
+            ?: points.map { it.invert() }.findMaxLine { it.y == lastDot.x }?.map { it.invert() }
+
+        return if (line != null) WinningLine(line, lastDot.type) else null
+    }
+
+    fun isNotOver() = getWinningLine() == null
+
+    fun getLatsDot() = dots.lastOrNull()
+
+    fun isFree(p: Point) = dots.find { it.x == p.x && it.y == p.y } == null
 }
 
 data class Room(
@@ -69,3 +93,14 @@ data class NetworkRoom(
     override val type: Int,
     val state: Int,
 ) : IRoom
+
+
+private inline fun List<Point>.findMaxLine(predicate: (Point) -> Boolean): List<Point>? = this
+    .filter { p -> predicate(p) }
+    .sortedBy { it.x }
+    .fold<Point, List<Point>>(emptyList()) { acc, next ->
+        if (acc.isEmpty()) listOf(next)
+        else if (acc.last().x + 1 == next.x) acc + next
+        else if (acc.size >= 5) acc
+        else listOf(next)
+    }.takeIf { it.size >= 5 }

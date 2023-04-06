@@ -66,8 +66,7 @@ class RoomRepositoryImpl @Inject constructor(
 
     override suspend fun getRecentByType(type: Int) = roomLocalSource
         .getRecentByType(type)
-        .map { roomLocalMapper.map(it) }
-        .firstOrNull()
+        .map { list -> list.map { roomLocalMapper.map(it) }.firstOrNull() }
 
     override suspend fun deleteAll() = roomLocalSource.deleteAll()
 

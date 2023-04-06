@@ -32,11 +32,11 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import by.klnvch.link5dots.GameFragment
 import by.klnvch.link5dots.R
-import by.klnvch.link5dots.databinding.ActivityGameBinding
+import by.klnvch.link5dots.databinding.ActivityGameOldBinding
 import by.klnvch.link5dots.domain.models.IRoom
 import by.klnvch.link5dots.domain.usecases.GetRoomUseCase
+import by.klnvch.link5dots.multiplayer.activities.GameFragment
 import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -44,14 +44,14 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class GameInfoActivity : DaggerAppCompatActivity() {
-    private lateinit var binding: ActivityGameBinding
+    private lateinit var binding: ActivityGameOldBinding
 
     @Inject
     lateinit var getRoomUseCase: GetRoomUseCase
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityGameBinding.inflate(layoutInflater)
+        binding = ActivityGameOldBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setTitle(R.string.application_info_label)
 

@@ -27,15 +27,31 @@ package by.klnvch.link5dots.domain.models
 data class Dot(
     val x: Int,
     val y: Int,
-    val id: Int,
     val type: Int,
     val timestamp: Long,
 ) {
-    constructor(p: Point, id: Int, type: Int, timestamp: Long) : this(p.x, p.y, id, type, timestamp)
+    constructor(p: Point, type: Int, timestamp: Long) : this(p.x, p.y, type, timestamp)
 
     companion object {
         const val EMPTY = 1
         const val HOST = 2
         const val GUEST = 4
     }
+}
+
+data class WinningLine(private val points: List<Point>, val type: Int) {
+    val size = points.size
+    operator fun get(i: Int) = points[i]
+    private val first = points.first()
+    private val last = points.last()
+    val orientation = when {
+        first.y == last.y -> WinningLineOrientation.HORIZONTAL
+        first.x == last.x -> WinningLineOrientation.VERTICAL
+        (first.x - last.x) * (first.y - last.y) < 0 -> WinningLineOrientation.DIAGONAL_LEFT
+        else -> WinningLineOrientation.DIAGONAL_RIGHT
+    }
+}
+
+enum class WinningLineOrientation {
+    HORIZONTAL, VERTICAL, DIAGONAL_LEFT, DIAGONAL_RIGHT
 }

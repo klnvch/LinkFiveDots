@@ -24,9 +24,9 @@
 
 package by.klnvch.link5dots.di.game
 
-import by.klnvch.link5dots.GameFragment
-import by.klnvch.link5dots.ui.game.end.EndGameDialog
+import by.klnvch.link5dots.ui.game.GameFragment
 import by.klnvch.link5dots.ui.game.create.NewGameDialog
+import by.klnvch.link5dots.ui.game.end.EndGameDialog
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 

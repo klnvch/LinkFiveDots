@@ -24,19 +24,22 @@
 
 package by.klnvch.link5dots.ui.game
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import by.klnvch.link5dots.domain.models.BotGameScore
 import by.klnvch.link5dots.domain.models.GameRules
-import by.klnvch.link5dots.domain.models.IRoom
 import by.klnvch.link5dots.domain.models.Point
 import by.klnvch.link5dots.domain.repositories.Analytics
+import by.klnvch.link5dots.domain.repositories.Settings
 import by.klnvch.link5dots.domain.usecases.GetRecentRoomUseCase
+import by.klnvch.link5dots.domain.usecases.GetUserNameUseCase
+import by.klnvch.link5dots.domain.usecases.SaveRoomUseCase
 import by.klnvch.link5dots.domain.usecases.SaveScoreUseCase
 import by.klnvch.link5dots.ui.game.create.NewGameViewState
 import by.klnvch.link5dots.ui.game.end.EndGameViewState
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
@@ -44,32 +47,51 @@ import javax.inject.Inject
 class OfflineGameViewModel @Inject constructor(
     private val gameRules: GameRules,
     private val getRecentRoomUseCase: GetRecentRoomUseCase,
+    private val saveRoomUseCase: SaveRoomUseCase,
     private val analytics: Analytics,
     private val saveScoreUseCase: SaveScoreUseCase,
+    private val settings: Settings,
+    private val getUserNameUseCase: GetUserNameUseCase,
 ) : ViewModel() {
-    private val _room: MutableLiveData<IRoom?> = MutableLiveData()
-    val room: LiveData<IRoom?> = _room
+    private val _uiState = MutableStateFlow(GameViewState.default())
+    val uiState: StateFlow<GameViewState> = _uiState
 
     init {
         viewModelScope.launch {
-            val room = getRecentRoomUseCase.get(gameRules.type)
-            _room.value = gameRules.init(room)
+            getRecentRoomUseCase.get(gameRules.type).collect { room ->
+                val type = settings.getDotsType().first()
+                val user1Name = getUserNameUseCase.get(room?.user1)
+                val user2Name = getUserNameUseCase.get(room?.user2)
+                _uiState.value = GameViewState(type, user1Name, user2Name, gameRules.init(room))
+            }
         }
     }
 
     fun undoLastMove() {
         analytics.logEvent(Analytics.EVENT_UNDO_MOVE)
-        _room.value = gameRules.undo()
+
+        viewModelScope.launch {
+            val room = gameRules.undo()
+            saveRoomUseCase.save(room)
+        }
     }
 
     fun newGame(seed: Long?) {
         analytics.logEvent(if (seed != null) Analytics.EVENT_GENERATE_GAME else Analytics.EVENT_NEW_GAME)
-        _room.value = gameRules.newGame(seed)
+
+        viewModelScope.launch {
+            val room = gameRules.newGame(seed)
+            saveRoomUseCase.save(room)
+        }
     }
 
     fun addDot(dot: Point) {
         analytics.logEvent(Analytics.EVENT_NEW_MOVE)
-        _room.value = gameRules.addDot(dot)
+
+        viewModelScope.launch {
+            val room = gameRules.addDot(dot)
+            saveRoomUseCase.save(room)
+        }
     }
 
     fun getEndGameViewState(): EndGameViewState {

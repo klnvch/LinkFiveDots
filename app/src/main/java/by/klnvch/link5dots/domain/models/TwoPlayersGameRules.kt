@@ -29,7 +29,8 @@ import javax.inject.Inject
 class TwoPlayersGameRules @Inject constructor(
     roomKeyGenerator: RoomKeyGenerator,
     initialGameGenerator: InitialGameGenerator,
-) : GameRules(roomKeyGenerator, initialGameGenerator) {
+    board: Board,
+) : GameRules(roomKeyGenerator, initialGameGenerator, board) {
     override val type = RoomType.TWO_PLAYERS
 
     override fun init(room: IRoom?): Room {
@@ -41,11 +42,10 @@ class TwoPlayersGameRules @Inject constructor(
         return this.room
     }
 
-    override fun addDot(p: Point): Room {
-        val lastDotType = this.room.dots.lastOrNull()?.type ?: Dot.GUEST
+    override fun addInternal(p: Point) {
+        val lastDotType = room.dots.lastOrNull()?.type ?: Dot.GUEST
         val type = if (lastDotType == Dot.GUEST) Dot.HOST else Dot.GUEST
-        room.add(Dot(p, room.dots.size, type, System.currentTimeMillis()))
-        return room
+        room.add(Dot(p, type, System.currentTimeMillis()))
     }
 
     override fun undo(): Room {

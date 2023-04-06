@@ -28,10 +28,9 @@ import android.view.View
 import by.klnvch.link5dots.data.StringProvider
 import by.klnvch.link5dots.domain.models.IRoom
 
-data class HistoryViewState(val items: List<HistoryItemViewState>) {
-    constructor(rooms: List<IRoom>, userName: String, stringProvider: StringProvider)
-            : this(rooms.map { HistoryItemViewState(it, userName, stringProvider) })
-
+data class HistoryViewState(
+    val items: List<HistoryItemViewState>
+) {
     val errorMessageVisibility = if (items.isEmpty()) View.VISIBLE else View.GONE
 
     companion object {

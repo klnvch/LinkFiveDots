@@ -21,9 +21,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
 package by.klnvch.link5dots.domain.models
 
-object DotsType {
-    const val ORIGINAL = 1
-    const val CROSS_AND_RING = 2
+import javax.inject.Inject
+
+class Board @Inject constructor() {
+
+    val width = BOARD_SIZE
+    val height = BOARD_SIZE
+
+    fun isInside(p: Point): Boolean {
+        return p.x in 0 until width && p.y in 0 until height
+    }
+
+    companion object {
+        const val BOARD_SIZE = 20
+    }
 }

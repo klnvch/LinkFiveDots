@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2017 klnvch
+ * Copyright (c) 2023 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,27 +22,6 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.utils;
+package by.klnvch.link5dots.domain.models
 
-public class MathUtils {
-
-    /**
-     * Finds index of closest element from an array to the specified value
-     *
-     * @param array an array
-     * @param value value
-     * @return index from an the array
-     */
-    public static int findClosestIndex(float[] array, float value) {
-        int result = 0;
-        float min = Float.MAX_VALUE;
-        for (int i = 0; i != array.length; ++i) {
-            final float dist = Math.abs(value - array[i]);
-            if (min > dist) {
-                min = dist;
-                result = i;
-            }
-        }
-        return result;
-    }
-}
+enum class DotsStyleType { ORIGINAL, CROSS_AND_RING }

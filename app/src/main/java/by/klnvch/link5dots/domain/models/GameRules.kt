@@ -27,13 +27,22 @@ package by.klnvch.link5dots.domain.models
 abstract class GameRules(
     protected val roomKeyGenerator: RoomKeyGenerator,
     private val initialGameGenerator: InitialGameGenerator,
+    private val board: Board,
 ) {
     protected lateinit var room: Room
     abstract val type: Int
 
     abstract fun init(room: IRoom?): Room
 
-    abstract fun addDot(p: Point): Room
+    fun addDot(p: Point): Room? {
+        if (board.isInside(p) && room.isFree(p) && room.isNotOver()) {
+            addInternal(p)
+            return room
+        }
+        return null
+    }
+
+    abstract fun addInternal(p: Point)
 
     abstract fun undo(): Room
 
@@ -55,7 +64,7 @@ abstract class GameRules(
                 .withIndex()
                 .forEach { (i, p) ->
                     val type = if (i % 2 == 0) Dot.HOST else Dot.GUEST
-                    room.add(Dot(p, i, type, System.currentTimeMillis()))
+                    room.add(Dot(p, type, System.currentTimeMillis()))
                 }
         }
     }

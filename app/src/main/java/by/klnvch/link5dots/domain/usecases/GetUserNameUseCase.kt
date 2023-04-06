@@ -24,9 +24,27 @@
 
 package by.klnvch.link5dots.domain.usecases
 
+import by.klnvch.link5dots.R
+import by.klnvch.link5dots.domain.models.BotUser
+import by.klnvch.link5dots.domain.models.DeviceOwnerUser
+import by.klnvch.link5dots.domain.models.IUser
+import by.klnvch.link5dots.domain.models.NetworkUser
 import by.klnvch.link5dots.domain.repositories.Settings
+import by.klnvch.link5dots.domain.repositories.StringRepository
+import kotlinx.coroutines.flow.firstOrNull
 import javax.inject.Inject
 
-class GetUserNameUseCase @Inject constructor(val settings: Settings) {
+class GetUserNameUseCase @Inject constructor(
+    private val settings: Settings,
+    private val stringRepository: StringRepository,
+) {
     fun get() = settings.getUserName()
+
+    suspend fun get(user: IUser?) = when (user) {
+        is BotUser -> stringRepository.getString(R.string.computer)
+        is NetworkUser -> user.name
+        is DeviceOwnerUser -> settings.getUserName().firstOrNull()
+            ?.ifEmpty { stringRepository.getString(R.string.unknown) }
+        null -> null
+    }
 }

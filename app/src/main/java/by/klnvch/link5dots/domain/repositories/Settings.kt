@@ -24,6 +24,7 @@
 
 package by.klnvch.link5dots.domain.repositories
 
+import by.klnvch.link5dots.domain.models.DotsStyleType
 import kotlinx.coroutines.flow.Flow
 
 interface Settings {
@@ -32,7 +33,7 @@ interface Settings {
     suspend fun setUserName(userName: String)
     fun isFirstRun(): Flow<Boolean>
     suspend fun setFirstRun()
-    fun getDotsType(): Flow<Int>
+    fun getDotsType(): Flow<DotsStyleType>
     fun getLanguage(): Flow<String>
     fun getNightMode(): Flow<String>
     suspend fun reset()

@@ -33,6 +33,6 @@ interface RoomRepository {
     suspend fun delete(room: IRoom)
     fun getAll(): Flow<List<IRoom>>
     suspend fun getByKey(key: String): IRoom?
-    suspend fun getRecentByType(type: Int): IRoom?
+    suspend fun getRecentByType(type: Int): Flow<IRoom?>
     suspend fun deleteAll()
 }

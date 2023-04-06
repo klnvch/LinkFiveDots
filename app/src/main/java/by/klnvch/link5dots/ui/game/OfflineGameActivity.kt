@@ -29,17 +29,12 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.lifecycle.ViewModelProvider
-import by.klnvch.link5dots.GameFragment
-import by.klnvch.link5dots.GameFragment.OnGameListener
 import by.klnvch.link5dots.R
-import by.klnvch.link5dots.domain.models.IUser
-import by.klnvch.link5dots.domain.models.Point
 import by.klnvch.link5dots.ui.game.create.NewGameDialog
-import by.klnvch.link5dots.ui.game.end.EndGameDialog
 import dagger.android.support.DaggerAppCompatActivity
 import javax.inject.Inject
 
-abstract class OfflineGameActivity : DaggerAppCompatActivity(), OnGameListener {
+abstract class OfflineGameActivity : DaggerAppCompatActivity() {
     private lateinit var mGameFragment: GameFragment
 
     @Inject
@@ -52,12 +47,6 @@ abstract class OfflineGameActivity : DaggerAppCompatActivity(), OnGameListener {
         setContentView(R.layout.activity_game)
 
         mGameFragment = supportFragmentManager.findFragmentById(R.id.fragment) as GameFragment
-
-        viewModel.room.observe(this) {
-            if (it != null) {
-                mGameFragment.update(it)
-            }
-        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -87,17 +76,5 @@ abstract class OfflineGameActivity : DaggerAppCompatActivity(), OnGameListener {
     override fun onSearchRequested(): Boolean {
         mGameFragment.focus()
         return true
-    }
-
-    override fun getUser(): IUser? {
-        return null
-    }
-
-    override fun onMoveDone(dot: Point) {
-        viewModel.addDot(dot)
-    }
-
-    override fun onGameFinished() {
-        EndGameDialog().show(supportFragmentManager, EndGameDialog.TAG)
     }
 }

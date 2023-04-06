@@ -84,4 +84,8 @@ interface AppBindingModule {
     @Singleton
     @Binds
     fun bindRoomRepository(impl: RoomRepositoryImpl): RoomRepository
+
+    @Singleton
+    @Binds
+    fun bindStringRepository(impl: StringProvider): StringRepository
 }

@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots
+package by.klnvch.link5dots.multiplayer.activities
 
 import android.content.Context
 import android.os.Bundle
@@ -33,14 +33,15 @@ import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import by.klnvch.link5dots.R
 import by.klnvch.link5dots.databinding.GameBoardBinding
 import by.klnvch.link5dots.domain.models.*
 import by.klnvch.link5dots.domain.models.RoomExt.getHostDotType
 import by.klnvch.link5dots.domain.repositories.Analytics
 import by.klnvch.link5dots.domain.repositories.Settings
 import by.klnvch.link5dots.domain.usecases.SaveRoomUseCase
-import by.klnvch.link5dots.models.Game
 import by.klnvch.link5dots.models.GameViewState
+import by.klnvch.link5dots.ui.game.GameBoardViewState
 import dagger.android.support.DaggerFragment
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -79,7 +80,6 @@ class GameFragment : DaggerFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.gameView.setOnMoveDoneListener { onMoveDone(it) }
-        binding.gameView.setOnGameEndListener { onGameFinished() }
 
         if (savedInstanceState != null) {
             binding.gameView.viewState =
@@ -117,10 +117,10 @@ class GameFragment : DaggerFragment() {
         super.onSaveInstanceState(outState)
     }
 
-    private fun setDotsType(dotsType: Int) {
-        binding.gameView.init(requireContext(), dotsType)
+    private fun setDotsType(dotsType: DotsStyleType) {
+        binding.gameView.setDotsStyleType(dotsType)
 
-        if (dotsType == DotsType.ORIGINAL) {
+        if (dotsType == DotsStyleType.ORIGINAL) {
             setLeftDrawable(binding.textUser1, R.drawable.game_dot_circle_red)
             setLeftDrawable(binding.textUser2, R.drawable.game_dot_circle_blue)
         } else {
@@ -149,12 +149,15 @@ class GameFragment : DaggerFragment() {
                 binding.textUser1.text = getUserName(user2)
                 binding.textUser2.text = getUserName(user1)
             }
-
-            binding.gameView.setGameState(Game.createGame(room.dots, hostDotType))
         } else {
             binding.gameInfo.visibility = View.GONE
-            binding.gameView.setGameState(Game.createGame(room.dots, Dot.HOST))
         }
+
+        binding.gameView.setGameBoardViewState(GameBoardViewState(
+            DotsStyleType.ORIGINAL,
+            room.dots,
+            room.getWinningLine()
+        ))
 
         lifecycleScope.launch {
             saveRoomUseCase.save(room)
@@ -172,15 +175,11 @@ class GameFragment : DaggerFragment() {
     }
 
     fun reset() {
-        binding.gameView.newGame(null)
+        binding.gameView.reset()
     }
 
     private fun onMoveDone(dot: Point) {
         mListener?.onMoveDone(dot)
-    }
-
-    private fun onGameFinished() {
-        mListener?.onGameFinished()
     }
 
     fun focus(): Boolean {

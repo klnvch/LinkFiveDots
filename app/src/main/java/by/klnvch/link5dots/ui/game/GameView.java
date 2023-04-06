@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots;
+package by.klnvch.link5dots.ui.game;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -43,15 +43,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
-import java.util.ArrayList;
-
-import by.klnvch.link5dots.domain.models.DotsType;
+import by.klnvch.link5dots.R;
+import by.klnvch.link5dots.domain.models.Board;
 import by.klnvch.link5dots.domain.models.Dot;
+import by.klnvch.link5dots.domain.models.DotsStyleType;
 import by.klnvch.link5dots.domain.models.Point;
-import by.klnvch.link5dots.models.Game;
+import by.klnvch.link5dots.domain.models.WinningLine;
 import by.klnvch.link5dots.models.GameViewState;
 import by.klnvch.link5dots.utils.BitmapCreator;
-import by.klnvch.link5dots.utils.MathUtils;
 
 public class GameView extends View {
 
@@ -59,10 +58,9 @@ public class GameView extends View {
     /**
      * number of lines vertical or horizontal
      */
-    private final static int GRID_SIZE = 20;
-    private final float[] mLineLocations = new float[GRID_SIZE];
-    private final float[] mDotLocations = new float[GRID_SIZE];
-    private final float[] mArrowLocations = new float[GRID_SIZE];
+    private final float[] mLineLocations = new float[Board.BOARD_SIZE];
+    private final float[] mDotLocations = new float[Board.BOARD_SIZE];
+    private final float[] mArrowLocations = new float[Board.BOARD_SIZE];
     private final Matrix mDrawMatrix = new Matrix();
     /**
      * The background bitmap is paper size pixels wide. This array contains positions of lines of number GRID_SIZE
@@ -85,27 +83,28 @@ public class GameView extends View {
     private float mLineSize;
     private GestureDetector mGestureDetector;
     private ScaleGestureDetector mScaleGestureDetector;
-    private Game mGameState = Game.generateGame(null);
     private GameViewState mViewState = new GameViewState();
+    private GameBoardViewState gameBoardViewState = null;
     private OnMoveDoneListener mOnMoveDoneListener;
-    private OnGameEndListener mOnGameEndListener;
     private Bitmap mWinningLine = null;
-    private float mWinningLineDX = 0;
-    private float mWinningLineDY = 0;
+    private final PointF mWinningLineD = new PointF(0, 0);
 
     public GameView(Context context) {
         super(context);
+        init(context);
     }
 
     public GameView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
+        init(context);
     }
 
     public GameView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        init(context);
     }
 
-    public void init(@NonNull Context context, int dotsType) {
+    private void init(@NonNull Context context) {
         Log.d(TAG, "initGameView");
 
         setFocusable(true);
@@ -120,13 +119,6 @@ public class GameView extends View {
         final int colorRed = ContextCompat.getColor(context, R.color.dot_color_red);
         final int colorBlue = ContextCompat.getColor(context, R.color.dot_color_blue);
         mBitmapPaper = BitmapFactory.decodeResource(getResources(), R.drawable.background);
-        if (dotsType == DotsType.ORIGINAL) {
-            mBitmapUserDot = BitmapCreator.createBitmap(BitmapCreator.DOT, colorRed, density);
-            mBitmapBotDot = BitmapCreator.createBitmap(BitmapCreator.DOT, colorBlue, density);
-        } else {
-            mBitmapUserDot = BitmapCreator.createBitmap(BitmapCreator.CROSS, colorRed, density);
-            mBitmapBotDot = BitmapCreator.createBitmap(BitmapCreator.RING, colorBlue, density);
-        }
 
         userHorLine = BitmapCreator.createBitmap(BitmapCreator.LINE_H, colorRed, density);
         userVerLine = BitmapCreator.createBitmap(BitmapCreator.LINE_V, colorRed, density);
@@ -141,26 +133,37 @@ public class GameView extends View {
         mBitmapArrows = BitmapFactory.decodeResource(getResources(), R.drawable.arrows);
 
         // set bitmap sizes
-        final float dotSize = mBitmapUserDot.getWidth();
         final float arrowsSize = mBitmapArrows.getWidth();
         mPaperSize = mBitmapPaper.getWidth();
         mLineSize = userHorLine.getWidth();
         //
-        for (int i = 0; i != GRID_SIZE; ++i) {
-            mLineLocations[i] = mPaperSize / (2 * GRID_SIZE) + (i * mPaperSize) / GRID_SIZE;
-            mDotLocations[i] = mLineLocations[i] - dotSize / 2.0f;
+        for (int i = 0; i != Board.BOARD_SIZE; ++i) {
+            mLineLocations[i] = mPaperSize / (2 * Board.BOARD_SIZE) + (i * mPaperSize) / Board.BOARD_SIZE;
             mArrowLocations[i] = mLineLocations[i] - arrowsSize / 2.0f;
         }
 
-        invalidate();
+        setDotsStyleType(DotsStyleType.ORIGINAL);
     }
 
     public void setOnMoveDoneListener(@NonNull OnMoveDoneListener listener) {
         this.mOnMoveDoneListener = listener;
     }
 
-    public void setOnGameEndListener(@NonNull OnGameEndListener listener) {
-        this.mOnGameEndListener = listener;
+    public void setDotsStyleType(@Nullable DotsStyleType dotsType) {
+        final float density = getResources().getDisplayMetrics().density;
+        final int colorRed = ContextCompat.getColor(getContext(), R.color.dot_color_red);
+        final int colorBlue = ContextCompat.getColor(getContext(), R.color.dot_color_blue);
+        if (dotsType == DotsStyleType.ORIGINAL) {
+            mBitmapUserDot = BitmapCreator.createBitmap(BitmapCreator.DOT, colorRed, density);
+            mBitmapBotDot = BitmapCreator.createBitmap(BitmapCreator.DOT, colorBlue, density);
+        } else {
+            mBitmapUserDot = BitmapCreator.createBitmap(BitmapCreator.CROSS, colorRed, density);
+            mBitmapBotDot = BitmapCreator.createBitmap(BitmapCreator.RING, colorBlue, density);
+        }
+        final float dotSize = mBitmapUserDot.getWidth();
+        for (int i = 0; i != Board.BOARD_SIZE; ++i) {
+            mDotLocations[i] = mLineLocations[i] - dotSize / 2.0f;
+        }
     }
 
     @Override
@@ -185,44 +188,44 @@ public class GameView extends View {
         canvas.drawBitmap(mBitmapPaper, mViewState.getMatrix(), null);
 
         // Draw dots
-        for (int i = 0; i != GRID_SIZE; ++i) {
-            for (int j = 0; j != GRID_SIZE; ++j) {
+        if (gameBoardViewState != null) {
+            for (Dot dot : gameBoardViewState.getDots()) {
                 mViewState.copyMatrix(mDrawMatrix);
-                mDrawMatrix.preTranslate(mDotLocations[i], mDotLocations[j]);
-                if (mGameState.isHostDot(i, j)) {
+                mDrawMatrix.preTranslate(mDotLocations[dot.getX()], mDotLocations[dot.getY()]);
+                if (dot.getType() == Dot.HOST) {
                     canvas.drawBitmap(mBitmapUserDot, mDrawMatrix, null);
-                }
-                if (mGameState.isGuestDot(i, j)) {
+                } else if (dot.getType() == Dot.GUEST) {
                     canvas.drawBitmap(mBitmapBotDot, mDrawMatrix, null);
                 }
             }
         }
         // Draw dots winning line
-        final ArrayList<Dot> winningLine = isOver();
-        if (winningLine != null) {
+        if (gameBoardViewState != null && gameBoardViewState.getWinningLine() != null) {
             updateWinningLine();
-            for (int lineId = 0; lineId != winningLine.size() - 1; ++lineId) {
+            final WinningLine winningLine = gameBoardViewState.getWinningLine();
+            for (int lineId = 0; lineId != winningLine.getSize() - 1; ++lineId) {
                 final int i = winningLine.get(lineId).getX();
                 final int j = winningLine.get(lineId).getY();
 
-                final float dx = mLineLocations[i] - mWinningLineDX;
-                final float dy = mLineLocations[j] - mWinningLineDY;
+                final float dx = mLineLocations[i] - mWinningLineD.x;
+                final float dy = mLineLocations[j] - mWinningLineD.y;
 
                 mViewState.copyMatrix(mDrawMatrix);
                 mDrawMatrix.preTranslate(dx, dy);
                 canvas.drawBitmap(mWinningLine, mDrawMatrix, null);
             }
         }
-
         // Draw four arrows
-        final Dot lastDot = mGameState.getLastDot();
-        if (lastDot != null) {
-            final int i = lastDot.getX();
-            final int j = lastDot.getY();
+        if (gameBoardViewState != null && gameBoardViewState.getLastDot() != null) {
+            final Dot lastDot = gameBoardViewState.getLastDot();
+            if (lastDot != null) {
+                final int i = lastDot.getX();
+                final int j = lastDot.getY();
 
-            mViewState.copyMatrix(mDrawMatrix);
-            mDrawMatrix.preTranslate(mArrowLocations[i], mArrowLocations[j]);
-            canvas.drawBitmap(mBitmapArrows, mDrawMatrix, null);
+                mViewState.copyMatrix(mDrawMatrix);
+                mDrawMatrix.preTranslate(mArrowLocations[i], mArrowLocations[j]);
+                canvas.drawBitmap(mBitmapArrows, mDrawMatrix, null);
+            }
         }
 
         super.onDraw(canvas);
@@ -246,93 +249,48 @@ public class GameView extends View {
      * Centers screen on the last dot
      */
     public void focus() {
-        final Dot lastDot = mGameState.getLastDot();
-        if (lastDot != null) {
-            final float x = mLineLocations[lastDot.getX()];
-            final float y = mLineLocations[lastDot.getY()];
-            mViewState.focus(x, y, mScreenWidth, mScreenHeight);
-            invalidate();
-        }
-    }
-
-    public void newGame(@Nullable Long seed) {
-        mGameState = Game.generateGame(seed);
-        mViewState.focus(mPaperSize / 2.0f, mPaperSize / 2.0f, mScreenWidth, mScreenHeight);
-        invalidate();
-    }
-
-    @Nullable
-    private ArrayList<Dot> isOver() {
-        final ArrayList<Dot> winningLine = mGameState.isOver();
-        if (winningLine != null) {
-            if (mOnGameEndListener != null) {
-                mOnGameEndListener.onGameEnd();
-            } else {
-                Log.e(TAG, "listener is null");
+        if (gameBoardViewState != null && gameBoardViewState.getLastDot() != null) {
+            final Dot lastDot = gameBoardViewState.getLastDot();
+            if (lastDot != null) {
+                final float x = mLineLocations[lastDot.getX()];
+                final float y = mLineLocations[lastDot.getY()];
+                mViewState.focus(x, y, mScreenWidth, mScreenHeight);
+                invalidate();
             }
         }
-        return winningLine;
+    }
+
+    public void reset() {
+        mViewState.focus(mPaperSize / 2.0f, mPaperSize / 2.0f, mScreenWidth, mScreenHeight);
+        invalidate();
     }
 
     /**
      * do it only when scaling or drawing
      */
     private void updateWinningLine() {
-        Log.d(TAG, "updateWinningLine");
-        final ArrayList<Dot> winningLine = mGameState.isOver();
-        if (winningLine != null) {
-            final Dot firstDot = winningLine.get(0);
-            final Dot lastDot = winningLine.get(winningLine.size() - 1);
+        if (gameBoardViewState != null && gameBoardViewState.getWinningLine() != null) {
+            final WinningLine winningLine = gameBoardViewState.getWinningLine();
+            final boolean isHostWinner = winningLine.getType() == Dot.HOST;
 
-            final int x1 = firstDot.getX();
-            final int y1 = firstDot.getY();
-            final int x2 = lastDot.getX();
-            final int y2 = lastDot.getY();
-
-            final boolean isHostWinner = mGameState.isHostDot(x1, y1);
-
-            if (y1 == y2) {//horizontal line
-                if (isHostWinner) {
-                    mWinningLine = userHorLine;
-                } else {
-                    mWinningLine = botHorLine;
-                }
-                mWinningLineDX = 0;
-                mWinningLineDY = mLineSize / 2.0f;
-            } else if (x1 == x2) {//vertical line
-                if (isHostWinner) {
-                    mWinningLine = userVerLine;
-                } else {
-                    mWinningLine = botVerLine;
-                }
-                mWinningLineDX = mLineSize / 2.0f;
-                mWinningLineDY = 0;
-            } else if (x1 > x2) {//diagonal left to right
-                if (isHostWinner) {
-                    mWinningLine = userDiagonal1Line;
-                } else {
-                    mWinningLine = botDiagonal1Line;
-                }
-                mWinningLineDX = mLineSize;
-                mWinningLineDY = 0;
-            } else { // (x2 > x1) diagonal right to left
-                if (isHostWinner) {
-                    mWinningLine = userDiagonal2Line;
-                } else {
-                    mWinningLine = botDiagonal2Line;
-                }
-                mWinningLineDX = 0;
-                mWinningLineDY = 0;
+            switch (winningLine.getOrientation()) {
+                case HORIZONTAL:
+                    mWinningLine = isHostWinner ? userHorLine : botHorLine;
+                    mWinningLineD.set(0, mLineSize / 2.0f);
+                    break;
+                case VERTICAL:
+                    mWinningLine = isHostWinner ? userVerLine : botVerLine;
+                    mWinningLineD.set(mLineSize / 2.0f, 0);
+                    break;
+                case DIAGONAL_LEFT:
+                    mWinningLine = isHostWinner ? userDiagonal1Line : botDiagonal1Line;
+                    mWinningLineD.set(0, mLineSize);
+                    break;
+                case DIAGONAL_RIGHT:
+                    mWinningLine = isHostWinner ? userDiagonal2Line : botDiagonal2Line;
+                    mWinningLineD.set(0, 0);
+                    break;
             }
-        }
-    }
-
-    public void setGameState(@NonNull Game game) {
-        this.mGameState = game;
-        if (!mViewState.isFocused()) {
-            focus();
-        } else {
-            invalidate();
         }
     }
 
@@ -350,12 +308,31 @@ public class GameView extends View {
         invalidate();
     }
 
-    public interface OnMoveDoneListener {
-        void onMoveDone(@NonNull Point dot);
+    public void setGameBoardViewState(@Nullable GameBoardViewState gameBoardViewState) {
+        this.gameBoardViewState = gameBoardViewState;
+        setDotsStyleType(gameBoardViewState != null ? gameBoardViewState.getDotsStyleType() : null);
+        if (!mViewState.isFocused()) {
+            focus();
+        } else {
+            invalidate();
+        }
     }
 
-    public interface OnGameEndListener {
-        void onGameEnd();
+    public int findClosestIndex(float value) {
+        int result = 0;
+        float min = Float.MAX_VALUE;
+        for (int i = 0; i != mLineLocations.length; ++i) {
+            final float dist = Math.abs(value - mLineLocations[i]);
+            if (min > dist) {
+                min = dist;
+                result = i;
+            }
+        }
+        return result;
+    }
+
+    public interface OnMoveDoneListener {
+        void onMoveDone(@NonNull Point dot);
     }
 
     private class GestureListener extends SimpleOnGestureListener {
@@ -374,16 +351,14 @@ public class GameView extends View {
 
         @Override
         public boolean onSingleTapConfirmed(MotionEvent e) {
-            if (mGameState.isOver() == null) {
-                final PointF point = mViewState.invertMapPoint(e.getX(), e.getY());
-                final int x = MathUtils.findClosestIndex(mLineLocations, point.x);
-                final int y = MathUtils.findClosestIndex(mLineLocations, point.y);
+            final PointF point = mViewState.invertMapPoint(e.getX(), e.getY());
+            final int x = findClosestIndex(point.x);
+            final int y = findClosestIndex(point.y);
 
-                if (mOnMoveDoneListener != null && mGameState.checkCorrectness(x, y)) {
-                    mOnMoveDoneListener.onMoveDone(new Point(x, y));
-                } else {
-                    Log.e(TAG, "listener is null");
-                }
+            if (mOnMoveDoneListener != null) {
+                mOnMoveDoneListener.onMoveDone(new Point(x, y));
+            } else {
+                Log.e(TAG, "listener is null");
             }
             return true;
         }

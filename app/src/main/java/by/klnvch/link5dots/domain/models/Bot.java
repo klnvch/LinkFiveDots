@@ -33,12 +33,10 @@ import javax.inject.Inject;
 
 public class Bot {
 
-    private static final int N = 20;
-    private static final int M = 20;
-
     //temporary table for dots rate
-    private final int[][] net1 = new int[N][M];
-    private final int[][] net2 = new int[N][M];
+    private final int[][] net1;
+    private final int[][] net2;
+    private final Board board;
 
     //masks
     private static final int[][] masks = new int[][]{
@@ -89,15 +87,18 @@ public class Bot {
     };
 
     @Inject
-    public Bot() {
+    public Bot(@NonNull Board board) {
+        this.board = board;
+        net1 = new int[board.getWidth()][board.getHeight()];
+        net2 = new int[board.getWidth()][board.getHeight()];
     }
 
     @NonNull
     public Dot findAnswer(@NonNull List<Dot> dots) {
-        final Dot[][] net = new Dot[N][N];
-        for (int i = 0; i < N; i++)
-            for (int j = 0; j < M; j++)
-                net[i][j] = new Dot(i, j, -1, Dot.EMPTY, System.currentTimeMillis());
+        final Dot[][] net = new Dot[board.getWidth()][board.getHeight()];
+        for (int i = 0; i < board.getWidth(); i++)
+            for (int j = 0; j < board.getHeight(); j++)
+                net[i][j] = new Dot(i, j, Dot.EMPTY, System.currentTimeMillis());
 
         for (Dot dot : dots) {
             net[dot.getX()][dot.getY()] = dot;
@@ -108,8 +109,8 @@ public class Bot {
         float maxBotRate = -1;
         ArrayList<Dot> listBot = new ArrayList<>();
 
-        for (int i = 0; i < N; i++) {
-            for (int j = 0; j < M; j++) {
+        for (int i = 0; i < board.getWidth(); i++) {
+            for (int j = 0; j < board.getHeight(); j++) {
                 if (net[i][j].getType() == Dot.EMPTY) {
                     float userRate = getDotRate(net, net[i][j], Dot.HOST);
                     net1[i][j] = (int) userRate;
@@ -220,7 +221,7 @@ public class Bot {
 
         for (int i = -4; i != 5; ++i) {
             for (int j = -4; j != 5; ++j) {
-                if (isInBound(x + i, y + j) && net[x + i][y + j].getType() == Dot.HOST) {
+                if (board.isInside(new Point(x + i, y + j)) && net[x + i][y + j].getType() == Dot.HOST) {
                     if (i > 3 || i < -3 || j > 3 || j < -3) {
                         result += 1;
                     } else if (i > 2 || i < -2 || j > 2 || j < -2) {
@@ -237,10 +238,6 @@ public class Bot {
         return result;
     }
 
-    private boolean isInBound(int x, int y) {
-        return x >= 0 && y >= 0 && x < N && y < M;
-    }
-
     private float getDotRateInLine(Dot[][] net, Dot dot, int type, int dx, int dy) {
         int x = dot.getX();
         int y = dot.getY();
@@ -249,7 +246,7 @@ public class Bot {
 
         //init the 9-length array with types of dots
         for (int i = -4; i != 5; ++i) {
-            if (isInBound(x + dx * i, y + dy * i)) {
+            if (board.isInside(new Point(x + dx * i, y + dy * i))) {
                 array[i + 4] = net[x + dx * i][y + dy * i].getType();
             } else {
                 array[i + 4] = 0;
@@ -349,15 +346,15 @@ public class Bot {
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder();
-        for (int i = 0; i < N; i++) {
-            for (int j = 0; j < M; j++) {
+        for (int i = 0; i < board.getWidth(); i++) {
+            for (int j = 0; j < board.getHeight(); j++) {
                 result.append(net1[i][j]).append(" ");
             }
             result.append("\n");
         }
         result.append("\n");
-        for (int i = 0; i < N; i++) {
-            for (int j = 0; j < M; j++) {
+        for (int i = 0; i < board.getWidth(); i++) {
+            for (int j = 0; j < board.getHeight(); j++) {
                 result.append(net2[i][j]).append(" ");
             }
             result.append("\n");

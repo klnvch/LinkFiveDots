@@ -54,7 +54,7 @@ interface RoomDao {
     suspend fun deleteAll()
 
     @Query("SELECT * FROM rooms WHERE type = :type ORDER BY timestamp DESC LIMIT 1")
-    suspend fun getRecentByType(type: Int): List<RoomLocal>
+    fun getRecentByType(type: Int): Flow<List<RoomLocal>>
 
     @Query("SELECT * FROM rooms WHERE key = :key LIMIT 1")
     suspend fun getByKey(key: String): List<RoomLocal>

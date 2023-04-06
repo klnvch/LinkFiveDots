@@ -22,15 +22,20 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.domain.models
+package by.klnvch.link5dots.ui.game
 
-import javax.inject.Inject
-import kotlin.random.Random
+import android.widget.TextView
+import androidx.databinding.BindingAdapter
 
-class RoomKeyGenerator @Inject constructor() {
-    fun get(): String {
-        val time = System.currentTimeMillis().toString(16)
-        val random = Random.Default.nextLong().toString(16)
-        return "${time}_${random}"
+object GameBindingAdapters {
+
+    @JvmStatic
+    @BindingAdapter("setLeftDrawable")
+    fun TextView.setLeftDrawable(resId: Int?) {
+        if (resId != null && resId > 0) {
+            setCompoundDrawablesWithIntrinsicBounds(resId, 0, 0, 0)
+        } else {
+            setCompoundDrawablesRelativeWithIntrinsicBounds(null, null, null, null)
+        }
     }
 }

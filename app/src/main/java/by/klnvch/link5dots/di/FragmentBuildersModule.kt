@@ -24,7 +24,7 @@
 
 package by.klnvch.link5dots.di
 
-import by.klnvch.link5dots.GameFragment
+import by.klnvch.link5dots.multiplayer.activities.GameFragment
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 

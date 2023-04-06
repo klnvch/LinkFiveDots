@@ -34,7 +34,6 @@ import java.util.List;
 
 import by.klnvch.link5dots.domain.models.BotGameScore;
 import by.klnvch.link5dots.domain.models.Dot;
-import by.klnvch.link5dots.domain.models.DotsArrayUtils;
 import by.klnvch.link5dots.domain.models.GameResult;
 import by.klnvch.link5dots.domain.models.IRoom;
 import by.klnvch.link5dots.domain.models.InitialGameGenerator;
@@ -118,23 +117,17 @@ public class RoomUtils {
 
     @Nullable
     private static Integer getLastDotType(@NonNull IRoom room) {
-        checkNotNull(room);
-
-        if (RoomExt.isNotEmpty(room)) {
-            return DotsArrayUtils.getLastDot(room.getDots()).getType();
-        }
-        return null;
+        final Dot lastDot = room.getLatsDot();
+        return lastDot != null ? lastDot.getType() : null;
     }
 
     @Deprecated
     @NonNull
     public static BotGameScore getHighScore(@NonNull NetworkRoom room, @Nullable NetworkUser user) {
-        checkNotNull(room);
-
-        final Dot lastDot = DotsArrayUtils.getLastDot(room.getDots());
+        final Dot lastDot = room.getLatsDot();
 
         final long time = (lastDot.getTimestamp() - room.getTimestamp()) / 1000;
-        final int movesDone = lastDot.getId() + 1;
+        final int movesDone = room.getDots().size();
 
         if (user != null) {
             final GameResult gameResult;
@@ -163,6 +156,6 @@ public class RoomUtils {
     }
 
     private static void addDot(@NonNull ArrayList<Dot> dots, @NonNull Point p, int type) {
-        dots.add(new Dot(p.getX(), p.getY(), dots.size(), type, System.currentTimeMillis()));
+        dots.add(new Dot(p.getX(), p.getY(), type, System.currentTimeMillis()));
     }
 }

@@ -27,11 +27,10 @@ package by.klnvch.link5dots.ui.scores
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import by.klnvch.link5dots.data.StringProvider
 import by.klnvch.link5dots.di.viewmodels.AssistedSavedStateViewModelFactory
 import by.klnvch.link5dots.domain.models.IRoom
-import by.klnvch.link5dots.domain.repositories.Settings
 import by.klnvch.link5dots.domain.usecases.*
+import by.klnvch.link5dots.ui.scores.history.HistoryItemViewState
 import by.klnvch.link5dots.ui.scores.history.HistoryViewState
 import by.klnvch.link5dots.ui.scores.scores.FirebaseState
 import by.klnvch.link5dots.ui.scores.scores.ScoresViewState
@@ -40,7 +39,6 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 
 class ScoresViewModel @AssistedInject constructor(
@@ -49,8 +47,7 @@ class ScoresViewModel @AssistedInject constructor(
     private val saveRoomUseCase: SaveRoomUseCase,
     private val getRoomsUseCase: GetRoomsUseCase,
     private val getScorePathUseCase: GetScorePathUseCase,
-    private val settings: Settings,
-    private val stringProvider: StringProvider,
+    private val getUserNameUseCase: GetUserNameUseCase,
 ) : ViewModel() {
     private val _historyUiState = MutableStateFlow(HistoryViewState.initial())
     val historyUiState: StateFlow<HistoryViewState> = _historyUiState
@@ -60,9 +57,13 @@ class ScoresViewModel @AssistedInject constructor(
 
     init {
         viewModelScope.launch {
-            getRoomsUseCase.get().combine(settings.getUserName()) { rooms, userName ->
-                HistoryViewState(rooms, userName, stringProvider)
-            }.collect { _historyUiState.value = it }
+            getRoomsUseCase.get().collect { rooms ->
+                _historyUiState.value = HistoryViewState(rooms.map {
+                    val user1Name = getUserNameUseCase.get(it.user1)
+                    val user2Name = getUserNameUseCase.get(it.user2)
+                    HistoryItemViewState(it, user1Name, user2Name)
+                })
+            }
         }
 
         viewModelScope.launch {

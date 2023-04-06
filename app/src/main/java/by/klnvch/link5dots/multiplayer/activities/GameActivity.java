@@ -48,7 +48,6 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
 
-import by.klnvch.link5dots.GameFragment;
 import by.klnvch.link5dots.R;
 import by.klnvch.link5dots.dialogs.EndGameDialog;
 import by.klnvch.link5dots.domain.models.BotGameScore;

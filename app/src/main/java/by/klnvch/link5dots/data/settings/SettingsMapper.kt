@@ -22,15 +22,19 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.domain.models
+package by.klnvch.link5dots.data.settings
 
+import by.klnvch.link5dots.domain.models.DotsStyleType
 import javax.inject.Inject
-import kotlin.random.Random
 
-class RoomKeyGenerator @Inject constructor() {
-    fun get(): String {
-        val time = System.currentTimeMillis().toString(16)
-        val random = Random.Default.nextLong().toString(16)
-        return "${time}_${random}"
+class SettingsMapper @Inject constructor() {
+    fun map(type: DotsStyleType?) = when (type) {
+        DotsStyleType.CROSS_AND_RING -> 2
+        else -> 1
+    }
+
+    fun map(type: Int?) = when (type) {
+        2 -> DotsStyleType.CROSS_AND_RING
+        else -> DotsStyleType.ORIGINAL
     }
 }

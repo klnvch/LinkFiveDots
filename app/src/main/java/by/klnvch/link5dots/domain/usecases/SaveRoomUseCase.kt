@@ -30,8 +30,8 @@ import by.klnvch.link5dots.domain.repositories.RoomRepository
 import javax.inject.Inject
 
 class SaveRoomUseCase @Inject constructor(private val roomRepository: RoomRepository) {
-    suspend fun save(room: IRoom) {
-        if (room.isNotEmpty()) {
+    suspend fun save(room: IRoom?) {
+        if (room?.isNotEmpty() == true) {
             roomRepository.save(room)
         }
     }

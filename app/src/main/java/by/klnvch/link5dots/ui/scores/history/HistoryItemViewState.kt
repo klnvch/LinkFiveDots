@@ -25,8 +25,8 @@
 package by.klnvch.link5dots.ui.scores.history
 
 import by.klnvch.link5dots.R
-import by.klnvch.link5dots.data.StringProvider
-import by.klnvch.link5dots.domain.models.*
+import by.klnvch.link5dots.domain.models.IRoom
+import by.klnvch.link5dots.domain.models.RoomType
 import by.klnvch.link5dots.utils.FormatUtils.formatDateTime
 import by.klnvch.link5dots.utils.FormatUtils.formatDuration
 
@@ -39,10 +39,10 @@ data class HistoryItemViewState(
     val size: String,
     val typeStringRes: Int,
 ) {
-    constructor(room: IRoom, userName: String, stringProvider: StringProvider) : this(
+    constructor(room: IRoom, user1Name: String?, userName2: String?) : this(
         room,
-        room.user1?.map(userName, stringProvider),
-        room.user2?.map(userName, stringProvider),
+        user1Name,
+        userName2,
         room.timestamp.formatDateTime(),
         room.getDuration().formatDuration(),
         room.dots.size.toString(),
@@ -58,14 +58,6 @@ data class HistoryItemViewState(
                 RoomType.TWO_PLAYERS -> R.string.menu_two_players
                 RoomType.BOT -> R.string.menu_single_player
                 else -> R.string.unknown
-            }
-        }
-
-        private fun IUser.map(userName: String, stringProvider: StringProvider): String {
-            return when (this) {
-                is DeviceOwnerUser -> userName.ifEmpty { stringProvider.getString(R.string.unknown) }
-                is BotUser -> stringProvider.getString(R.string.computer)
-                is NetworkUser -> name
             }
         }
     }

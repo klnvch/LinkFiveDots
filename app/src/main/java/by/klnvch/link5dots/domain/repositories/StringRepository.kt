@@ -22,15 +22,8 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.domain.models
+package by.klnvch.link5dots.domain.repositories
 
-import javax.inject.Inject
-import kotlin.random.Random
-
-class RoomKeyGenerator @Inject constructor() {
-    fun get(): String {
-        val time = System.currentTimeMillis().toString(16)
-        val random = Random.Default.nextLong().toString(16)
-        return "${time}_${random}"
-    }
+interface StringRepository {
+    fun getString(resId: Int): String
 }

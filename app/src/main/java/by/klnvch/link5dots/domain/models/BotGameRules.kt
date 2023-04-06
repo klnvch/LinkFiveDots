@@ -29,8 +29,9 @@ import javax.inject.Inject
 class BotGameRules @Inject constructor(
     roomKeyGenerator: RoomKeyGenerator,
     initialGameGenerator: InitialGameGenerator,
+    board: Board,
     private val bot: Bot,
-) : GameRules(roomKeyGenerator, initialGameGenerator) {
+) : GameRules(roomKeyGenerator, initialGameGenerator, board) {
     override val type = RoomType.BOT
 
     override fun init(room: IRoom?): Room {
@@ -42,13 +43,12 @@ class BotGameRules @Inject constructor(
         return this.room
     }
 
-    override fun addDot(p: Point): Room {
-        room.add(Dot(p, room.dots.size, Dot.HOST, System.currentTimeMillis()))
-        if (DotsArrayUtils.findWinningLine(room.dots) == null) {
+    override fun addInternal(p: Point) {
+        room.add(Dot(p, Dot.HOST, System.currentTimeMillis()))
+        if (room.isNotOver()) {
             val botDot = bot.findAnswer(room.dots)
             room.add(botDot.copy(type = Dot.GUEST))
         }
-        return room
     }
 
     override fun undo(): Room {
