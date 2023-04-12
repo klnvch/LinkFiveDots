@@ -22,14 +22,24 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.ui.game
+package by.klnvch.link5dots.di.game.bot
 
-import android.os.Bundle
-import by.klnvch.link5dots.R
+import by.klnvch.link5dots.di.ActivityScope
+import by.klnvch.link5dots.di.game.GameFragmentBuilderModule
+import by.klnvch.link5dots.di.game.GameViewModelsModule
+import by.klnvch.link5dots.ui.game.activities.BotGameActivity
+import dagger.Subcomponent
+import dagger.android.AndroidInjector
 
-class TwoPlayersGameActivity : OfflineGameActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setTitle(R.string.menu_two_players)
-    }
+@ActivityScope
+@Subcomponent(
+    modules = [
+        GameViewModelsModule::class,
+        GameFragmentBuilderModule::class,
+        BotGameRulesModule::class,
+    ]
+)
+interface BotGameSubcomponent : AndroidInjector<BotGameActivity> {
+    @Subcomponent.Factory
+    interface Factory : AndroidInjector.Factory<BotGameActivity>
 }

@@ -21,18 +21,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+package by.klnvch.link5dots.ui.game.activities
 
-package by.klnvch.link5dots.domain.repositories
+import android.os.Bundle
+import by.klnvch.link5dots.R
+import by.klnvch.link5dots.domain.models.RoomType
+import by.klnvch.link5dots.domain.usecases.room.GetRoomUseCase
 
-import by.klnvch.link5dots.domain.models.IRoom
-import kotlinx.coroutines.flow.Flow
+class BotGameActivity : OfflineGameActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setTitle(R.string.app_name)
+    }
 
-interface RoomRepository {
-    suspend fun sync(isTestDevice: Boolean)
-    suspend fun save(room: IRoom)
-    suspend fun delete(room: IRoom)
-    fun getAll(): Flow<List<IRoom>>
-    fun getByKey(key: String): Flow<IRoom?>
-    fun getRecentByType(type: Int): Flow<IRoom?>
-    suspend fun deleteAll()
+    override fun getParam() = GetRoomUseCase.RoomByType(RoomType.BOT)
 }

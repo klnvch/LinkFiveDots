@@ -22,11 +22,24 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.domain.usecases
+package by.klnvch.link5dots.domain.usecases.room
 
+import by.klnvch.link5dots.domain.models.IRoom
 import by.klnvch.link5dots.domain.repositories.RoomRepository
+import by.klnvch.link5dots.domain.usecases.GetUseCase
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class GetRoomUseCase @Inject constructor(private val roomRepository: RoomRepository) {
-    suspend fun get(key: String) = roomRepository.getByKey(key)
+class GetRoomUseCase @Inject constructor(
+    private val roomRepository: RoomRepository
+) : GetUseCase<IRoom, GetRoomUseCase.RoomParam> {
+
+    override fun get(param: RoomParam): Flow<IRoom?> = when (param) {
+        is RoomByType -> roomRepository.getRecentByType(param.type)
+        is RoomByKey -> roomRepository.getByKey(param.key)
+    }
+
+    sealed interface RoomParam
+    data class RoomByType(val type: Int) : RoomParam
+    data class RoomByKey(val key: String) : RoomParam
 }

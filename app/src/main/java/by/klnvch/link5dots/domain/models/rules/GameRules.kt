@@ -22,7 +22,9 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.domain.models
+package by.klnvch.link5dots.domain.models.rules
+
+import by.klnvch.link5dots.domain.models.*
 
 abstract class GameRules(
     protected val roomKeyGenerator: RoomKeyGenerator,
@@ -30,7 +32,6 @@ abstract class GameRules(
     private val board: Board,
 ) {
     protected lateinit var room: Room
-    abstract val type: Int
 
     abstract fun init(room: IRoom?): Room
 

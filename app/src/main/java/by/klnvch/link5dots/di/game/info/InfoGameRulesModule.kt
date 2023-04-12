@@ -22,22 +22,15 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.di.game
+package by.klnvch.link5dots.di.game.info
 
-import by.klnvch.link5dots.di.ActivityScope
-import by.klnvch.link5dots.ui.game.BotGameActivity
-import dagger.Subcomponent
-import dagger.android.AndroidInjector
+import by.klnvch.link5dots.domain.models.rules.GameRules
+import by.klnvch.link5dots.domain.models.rules.InfoGameRules
+import dagger.Binds
+import dagger.Module
 
-@ActivityScope
-@Subcomponent(
-    modules = [
-        GameViewModelsModule::class,
-        GameFragmentBuilderModule::class,
-        BotGameRulesModule::class,
-    ]
-)
-interface BotGameSubcomponent : AndroidInjector<BotGameActivity> {
-    @Subcomponent.Factory
-    interface Factory : AndroidInjector.Factory<BotGameActivity>
+@Module
+interface InfoGameRulesModule {
+    @Binds
+    fun bindInfoGameRules(impl: InfoGameRules): GameRules
 }

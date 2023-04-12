@@ -31,17 +31,13 @@ import androidx.core.view.MenuProvider
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
-import by.klnvch.link5dots.ui.game.GameView.OnMoveDoneListener
 import by.klnvch.link5dots.R
 import by.klnvch.link5dots.databinding.GameBoardBinding
 import by.klnvch.link5dots.domain.models.Point
 import by.klnvch.link5dots.domain.repositories.Analytics
 import by.klnvch.link5dots.models.GameViewState
-import by.klnvch.link5dots.ui.game.end.EndGameDialog
+import by.klnvch.link5dots.ui.game.GameView.OnMoveDoneListener
 import dagger.android.support.DaggerFragment
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class GameFragment : DaggerFragment(), OnMoveDoneListener {
@@ -73,15 +69,8 @@ class GameFragment : DaggerFragment(), OnMoveDoneListener {
                 GameViewState.fromJson(savedInstanceState.getString(KEY_VIEW_STATE))
         }
 
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.uiState.collect {
-                    binding.viewState = it
-                    if (it.boardViewState.isOver) {
-                        onGameEnd()
-                    }
-                }
-            }
+        viewModel.uiState.observe(viewLifecycleOwner) {
+            binding.viewState = it
         }
 
         setupMenu()
@@ -119,5 +108,4 @@ class GameFragment : DaggerFragment(), OnMoveDoneListener {
     }
 
     override fun onMoveDone(dot: Point) = viewModel.addDot(dot)
-    private fun onGameEnd() = EndGameDialog().show(parentFragmentManager, EndGameDialog.TAG)
 }

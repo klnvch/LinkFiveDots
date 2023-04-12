@@ -57,5 +57,5 @@ interface RoomDao {
     fun getRecentByType(type: Int): Flow<List<RoomLocal>>
 
     @Query("SELECT * FROM rooms WHERE key = :key LIMIT 1")
-    suspend fun getByKey(key: String): List<RoomLocal>
+    fun getByKey(key: String): Flow<List<RoomLocal>>
 }

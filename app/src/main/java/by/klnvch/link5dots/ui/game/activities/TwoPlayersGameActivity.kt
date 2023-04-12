@@ -22,15 +22,18 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.di.game
+package by.klnvch.link5dots.ui.game.activities
 
-import by.klnvch.link5dots.domain.models.BotGameRules
-import by.klnvch.link5dots.domain.models.GameRules
-import dagger.Binds
-import dagger.Module
+import android.os.Bundle
+import by.klnvch.link5dots.R
+import by.klnvch.link5dots.domain.models.RoomType
+import by.klnvch.link5dots.domain.usecases.room.GetRoomUseCase
 
-@Module
-interface BotGameRulesModule {
-    @Binds
-    fun bindBotGameRuleModule(impl: BotGameRules): GameRules
+class TwoPlayersGameActivity : OfflineGameActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setTitle(R.string.menu_two_players)
+    }
+
+    override fun getParam() = GetRoomUseCase.RoomByType(RoomType.TWO_PLAYERS)
 }

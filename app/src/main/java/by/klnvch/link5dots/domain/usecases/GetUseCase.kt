@@ -22,15 +22,10 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.di.game
+package by.klnvch.link5dots.domain.usecases
 
-import by.klnvch.link5dots.domain.models.GameRules
-import by.klnvch.link5dots.domain.models.TwoPlayersGameRules
-import dagger.Binds
-import dagger.Module
+import kotlinx.coroutines.flow.Flow
 
-@Module
-interface TwoPlayersGameRulesModule {
-    @Binds
-    fun bindTwoPlayersGameRules(impl: TwoPlayersGameRules): GameRules
+interface GetUseCase<out T, in P> {
+    fun get(param: P): Flow<T?>
 }

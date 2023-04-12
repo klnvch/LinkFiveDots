@@ -40,7 +40,7 @@ import by.klnvch.link5dots.databinding.FragmentHistoryBinding
 import by.klnvch.link5dots.di.viewmodels.SavedStateViewModelFactory
 import by.klnvch.link5dots.domain.models.IRoom
 import by.klnvch.link5dots.ui.scores.ScoresViewModel
-import by.klnvch.link5dots.ui.scores.history.GameInfoActivity.Companion.launchGameInfoActivity
+import by.klnvch.link5dots.ui.game.activities.GameInfoActivity.Companion.launchGameInfoActivity
 import com.google.android.material.snackbar.Snackbar
 import dagger.android.support.DaggerFragment
 import kotlinx.coroutines.launch

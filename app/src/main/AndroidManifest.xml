@@ -87,14 +87,14 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="by.klnvch.link5dots.ui.game.BotGameActivity"
+            android:name="by.klnvch.link5dots.ui.game.activities.BotGameActivity"
             android:launchMode="singleTop">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="by.klnvch.link5dots.ui.menu.MenuActivity" />
         </activity>
         <activity
-            android:name="by.klnvch.link5dots.ui.game.TwoPlayersGameActivity"
+            android:name="by.klnvch.link5dots.ui.game.activities.TwoPlayersGameActivity"
             android:label="@string/menu_two_players"
             android:launchMode="singleTop">
             <meta-data
@@ -136,7 +136,7 @@
                 android:value="by.klnvch.link5dots.ui.menu.MenuActivity" />
         </activity>
         <activity
-            android:name="by.klnvch.link5dots.ui.scores.history.GameInfoActivity"
+            android:name="by.klnvch.link5dots.ui.game.activities.GameInfoActivity"
             android:label="@string/application_info_label"
             android:launchMode="singleTop">
             <meta-data

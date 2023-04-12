@@ -22,20 +22,21 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.domain.models
+package by.klnvch.link5dots.domain.models.rules
 
+import by.klnvch.link5dots.domain.models.*
 import javax.inject.Inject
 
-class TwoPlayersGameRules @Inject constructor(
+class BotGameRules @Inject constructor(
     roomKeyGenerator: RoomKeyGenerator,
     initialGameGenerator: InitialGameGenerator,
     board: Board,
+    private val bot: Bot,
 ) : GameRules(roomKeyGenerator, initialGameGenerator, board) {
-    override val type = RoomType.TWO_PLAYERS
 
     override fun init(room: IRoom?): Room {
         if (room != null) {
-            this.room = Room(room).copy(user1 = null, user2 = null)
+            this.room = Room(room).copy(user1 = DeviceOwnerUser, user2 = BotUser)
         } else {
             this.room = createGame()
         }
@@ -43,12 +44,15 @@ class TwoPlayersGameRules @Inject constructor(
     }
 
     override fun addInternal(p: Point) {
-        val lastDotType = room.dots.lastOrNull()?.type ?: Dot.GUEST
-        val type = if (lastDotType == Dot.GUEST) Dot.HOST else Dot.GUEST
-        room.add(Dot(p, type, System.currentTimeMillis()))
+        room.add(Dot(p, Dot.HOST, System.currentTimeMillis()))
+        if (room.isNotOver()) {
+            val botDot = bot.findAnswer(room.dots)
+            room.add(botDot.copy(type = Dot.GUEST))
+        }
     }
 
     override fun undo(): Room {
+        room.undo()
         room.undo()
         return room
     }
@@ -57,16 +61,17 @@ class TwoPlayersGameRules @Inject constructor(
         roomKeyGenerator.get(),
         System.currentTimeMillis(),
         mutableListOf(),
-        null,
-        null,
-        RoomType.TWO_PLAYERS,
+        DeviceOwnerUser,
+        BotUser,
+        RoomType.BOT,
     )
 
     override fun getScore(): SimpleGameScore {
-        return SimpleGameScore(
+        return BotGameScore(
             room.dots.size,
             room.getDuration(),
             room.dots.last().timestamp,
+            if (room.dots.last().type == Dot.HOST) GameResult.WON else GameResult.LOST
         )
     }
 }

@@ -47,15 +47,6 @@ data class GameViewState(
             room?.getWinningLine(),
         ),
     )
-
-    companion object {
-        fun default() = GameViewState(
-            DotsStyleType.ORIGINAL,
-            null,
-            null,
-            null,
-        )
-    }
 }
 
 data class GameInfoViewState(

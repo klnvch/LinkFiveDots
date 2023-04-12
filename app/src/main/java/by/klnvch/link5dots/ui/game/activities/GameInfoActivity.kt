@@ -22,17 +22,36 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.domain.repositories
+package by.klnvch.link5dots.ui.game.activities
 
+import android.content.Intent
+import android.os.Bundle
+import android.view.Menu
+import androidx.fragment.app.Fragment
+import by.klnvch.link5dots.R
 import by.klnvch.link5dots.domain.models.IRoom
-import kotlinx.coroutines.flow.Flow
+import by.klnvch.link5dots.domain.usecases.room.GetRoomUseCase
 
-interface RoomRepository {
-    suspend fun sync(isTestDevice: Boolean)
-    suspend fun save(room: IRoom)
-    suspend fun delete(room: IRoom)
-    fun getAll(): Flow<List<IRoom>>
-    fun getByKey(key: String): Flow<IRoom?>
-    fun getRecentByType(type: Int): Flow<IRoom?>
-    suspend fun deleteAll()
+class GameInfoActivity : OfflineGameActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setTitle(R.string.application_info_label)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu) = true
+
+    override fun getParam(): GetRoomUseCase.RoomParam {
+        val key = intent.getStringExtra(KEY)
+        if (key != null) return GetRoomUseCase.RoomByKey(key)
+        else throw IllegalArgumentException()
+    }
+
+    override fun onGameEnd() = Unit
+
+    companion object {
+        private const val KEY = "key"
+        fun Fragment.launchGameInfoActivity(room: IRoom) {
+            startActivity(Intent(context, GameInfoActivity::class.java).putExtra(KEY, room.key))
+        }
+    }
 }

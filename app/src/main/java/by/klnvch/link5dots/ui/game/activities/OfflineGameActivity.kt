@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.ui.game
+package by.klnvch.link5dots.ui.game.activities
 
 import android.os.Bundle
 import android.view.Menu
@@ -30,7 +30,11 @@ import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.lifecycle.ViewModelProvider
 import by.klnvch.link5dots.R
+import by.klnvch.link5dots.domain.usecases.room.GetRoomUseCase
+import by.klnvch.link5dots.ui.game.GameFragment
+import by.klnvch.link5dots.ui.game.OfflineGameViewModel
 import by.klnvch.link5dots.ui.game.create.NewGameDialog
+import by.klnvch.link5dots.ui.game.end.EndGameDialog
 import dagger.android.support.DaggerAppCompatActivity
 import javax.inject.Inject
 
@@ -47,10 +51,19 @@ abstract class OfflineGameActivity : DaggerAppCompatActivity() {
         setContentView(R.layout.activity_game)
 
         mGameFragment = supportFragmentManager.findFragmentById(R.id.fragment) as GameFragment
+
+        viewModel.setParam(getParam())
+
+        viewModel.uiState.observe(this) {
+            if (it.boardViewState.isOver) {
+                onGameEnd()
+            }
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_game_offline, menu)
+        super.onCreateOptionsMenu(menu)
         return true
     }
 
@@ -68,7 +81,6 @@ abstract class OfflineGameActivity : DaggerAppCompatActivity() {
                 NewGameDialog().show(supportFragmentManager, NewGameDialog.TAG)
                 true
             }
-            R.id.menu_search -> onSearchRequested()
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -77,4 +89,8 @@ abstract class OfflineGameActivity : DaggerAppCompatActivity() {
         mGameFragment.focus()
         return true
     }
+
+    abstract fun getParam(): GetRoomUseCase.RoomParam
+
+    protected open fun onGameEnd() = EndGameDialog().show(supportFragmentManager, EndGameDialog.TAG)
 }

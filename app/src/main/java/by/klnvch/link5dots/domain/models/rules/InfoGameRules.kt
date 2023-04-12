@@ -22,56 +22,32 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.domain.models
+package by.klnvch.link5dots.domain.models.rules
 
+import by.klnvch.link5dots.domain.models.*
 import javax.inject.Inject
 
-class BotGameRules @Inject constructor(
+class InfoGameRules @Inject constructor(
     roomKeyGenerator: RoomKeyGenerator,
     initialGameGenerator: InitialGameGenerator,
-    board: Board,
-    private val bot: Bot,
+    board: Board
 ) : GameRules(roomKeyGenerator, initialGameGenerator, board) {
-    override val type = RoomType.BOT
 
     override fun init(room: IRoom?): Room {
-        if (room != null) {
-            this.room = Room(room).copy(user1 = DeviceOwnerUser, user2 = BotUser)
-        } else {
-            this.room = createGame()
-        }
+        if (room != null) this.room = Room(room)
+        else throw IllegalStateException()
         return this.room
     }
 
-    override fun addInternal(p: Point) {
-        room.add(Dot(p, Dot.HOST, System.currentTimeMillis()))
-        if (room.isNotOver()) {
-            val botDot = bot.findAnswer(room.dots)
-            room.add(botDot.copy(type = Dot.GUEST))
-        }
-    }
+    override fun addInternal(p: Point) = Unit
 
-    override fun undo(): Room {
-        room.undo()
-        room.undo()
-        return room
-    }
+    override fun undo() = throw IllegalStateException()
 
-    override fun createGame(): Room = Room(
-        roomKeyGenerator.get(),
-        System.currentTimeMillis(),
-        mutableListOf(),
-        DeviceOwnerUser,
-        BotUser,
-        RoomType.BOT,
-    )
+    override fun createGame(): Room {
+        throw IllegalStateException()
+    }
 
     override fun getScore(): SimpleGameScore {
-        return BotGameScore(
-            room.dots.size,
-            room.getDuration(),
-            room.dots.last().timestamp,
-            if (room.dots.last().type == Dot.HOST) GameResult.WON else GameResult.LOST
-        )
+        throw IllegalStateException()
     }
 }

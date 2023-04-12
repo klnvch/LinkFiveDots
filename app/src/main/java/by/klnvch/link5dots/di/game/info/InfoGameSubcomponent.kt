@@ -21,14 +21,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package by.klnvch.link5dots.ui.game
 
-import android.os.Bundle
-import by.klnvch.link5dots.R
+package by.klnvch.link5dots.di.game.info
 
-class BotGameActivity : OfflineGameActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setTitle(R.string.app_name)
-    }
+import by.klnvch.link5dots.di.ActivityScope
+import by.klnvch.link5dots.di.game.GameFragmentBuilderModule
+import by.klnvch.link5dots.di.game.GameViewModelsModule
+import by.klnvch.link5dots.ui.game.activities.GameInfoActivity
+import dagger.Subcomponent
+import dagger.android.AndroidInjector
+
+@ActivityScope
+@Subcomponent(
+    modules = [
+        GameViewModelsModule::class,
+        GameFragmentBuilderModule::class,
+        InfoGameRulesModule::class,
+    ]
+)
+interface InfoGameSubcomponent : AndroidInjector<GameInfoActivity> {
+    @Subcomponent.Factory
+    interface Factory : AndroidInjector.Factory<GameInfoActivity>
 }

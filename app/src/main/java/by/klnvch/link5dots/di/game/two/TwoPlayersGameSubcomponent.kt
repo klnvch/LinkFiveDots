@@ -22,10 +22,12 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.di.game
+package by.klnvch.link5dots.di.game.two
 
 import by.klnvch.link5dots.di.ActivityScope
-import by.klnvch.link5dots.ui.game.TwoPlayersGameActivity
+import by.klnvch.link5dots.di.game.GameFragmentBuilderModule
+import by.klnvch.link5dots.di.game.GameViewModelsModule
+import by.klnvch.link5dots.ui.game.activities.TwoPlayersGameActivity
 import dagger.Subcomponent
 import dagger.android.AndroidInjector
 

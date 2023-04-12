@@ -24,8 +24,12 @@
 
 package by.klnvch.link5dots.di.game
 
-import by.klnvch.link5dots.ui.game.BotGameActivity
-import by.klnvch.link5dots.ui.game.TwoPlayersGameActivity
+import by.klnvch.link5dots.di.game.bot.BotGameSubcomponent
+import by.klnvch.link5dots.di.game.info.InfoGameSubcomponent
+import by.klnvch.link5dots.di.game.two.TwoPlayersGameSubcomponent
+import by.klnvch.link5dots.ui.game.activities.BotGameActivity
+import by.klnvch.link5dots.ui.game.activities.GameInfoActivity
+import by.klnvch.link5dots.ui.game.activities.TwoPlayersGameActivity
 import dagger.Binds
 import dagger.Module
 import dagger.android.AndroidInjector
@@ -36,6 +40,7 @@ import dagger.multibindings.IntoMap
     subcomponents = [
         BotGameSubcomponent::class,
         TwoPlayersGameSubcomponent::class,
+        InfoGameSubcomponent::class,
     ]
 )
 internal abstract class GameModule {
@@ -48,4 +53,9 @@ internal abstract class GameModule {
     @IntoMap
     @ClassKey(TwoPlayersGameActivity::class)
     abstract fun bindTwoPlayersGameSubcomponentFactory(factory: TwoPlayersGameSubcomponent.Factory): AndroidInjector.Factory<*>
+
+    @Binds
+    @IntoMap
+    @ClassKey(GameInfoActivity::class)
+    abstract fun bindInfoGameSubcomponentFactory(factory: InfoGameSubcomponent.Factory): AndroidInjector.Factory<*>
 }

@@ -22,17 +22,15 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.domain.repositories
+package by.klnvch.link5dots.di.game.bot
 
-import by.klnvch.link5dots.domain.models.IRoom
-import kotlinx.coroutines.flow.Flow
+import by.klnvch.link5dots.domain.models.rules.BotGameRules
+import by.klnvch.link5dots.domain.models.rules.GameRules
+import dagger.Binds
+import dagger.Module
 
-interface RoomRepository {
-    suspend fun sync(isTestDevice: Boolean)
-    suspend fun save(room: IRoom)
-    suspend fun delete(room: IRoom)
-    fun getAll(): Flow<List<IRoom>>
-    fun getByKey(key: String): Flow<IRoom?>
-    fun getRecentByType(type: Int): Flow<IRoom?>
-    suspend fun deleteAll()
+@Module
+interface BotGameRulesModule {
+    @Binds
+    fun bindBotGameRuleModule(impl: BotGameRules): GameRules
 }

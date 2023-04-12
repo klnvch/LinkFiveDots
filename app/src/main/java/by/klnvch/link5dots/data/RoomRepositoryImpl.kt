@@ -59,12 +59,11 @@ class RoomRepositoryImpl @Inject constructor(
         .getAll()
         .map { list -> list.map { roomLocalMapper.map(it) } }
 
-    override suspend fun getByKey(key: String) = roomLocalSource
+    override fun getByKey(key: String) = roomLocalSource
         .getByKey(key)
-        .map { roomLocalMapper.map(it) }
-        .firstOrNull()
+        .map { list -> list.map { roomLocalMapper.map(it) }.firstOrNull() }
 
-    override suspend fun getRecentByType(type: Int) = roomLocalSource
+    override fun getRecentByType(type: Int) = roomLocalSource
         .getRecentByType(type)
         .map { list -> list.map { roomLocalMapper.map(it) }.firstOrNull() }
 

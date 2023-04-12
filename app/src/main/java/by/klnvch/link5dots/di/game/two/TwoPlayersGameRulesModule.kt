@@ -22,11 +22,15 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.domain.usecases
+package by.klnvch.link5dots.di.game.two
 
-import by.klnvch.link5dots.domain.repositories.RoomRepository
-import javax.inject.Inject
+import by.klnvch.link5dots.domain.models.rules.GameRules
+import by.klnvch.link5dots.domain.models.rules.TwoPlayersGameRules
+import dagger.Binds
+import dagger.Module
 
-class GetRecentRoomUseCase @Inject constructor(private val roomRepository: RoomRepository) {
-    suspend fun get(type: Int) = roomRepository.getRecentByType(type)
+@Module
+interface TwoPlayersGameRulesModule {
+    @Binds
+    fun bindTwoPlayersGameRules(impl: TwoPlayersGameRules): GameRules
 }
