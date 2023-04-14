@@ -26,23 +26,32 @@ package by.klnvch.link5dots.utils
 
 import android.view.View
 import android.widget.TextView
+import android.widget.ToggleButton
 import androidx.databinding.BindingAdapter
 import by.klnvch.link5dots.R
 
 object BindingUtils {
     @JvmStatic
     @BindingAdapter("android:onLongClick")
-    fun setOnLongClickListener(view: View, func: () -> Unit) {
-        view.setOnLongClickListener {
+    fun View.setOnLongClickListener(func: () -> Unit) =
+        setOnLongClickListener {
             func()
             true
         }
-    }
 
     @JvmStatic
     @BindingAdapter("greetings")
-    fun setGreetings(textView: TextView, text: String) {
-        textView.text = textView.context.getString(R.string.greetings, text)
-        textView.visibility = if (text.isEmpty()) View.GONE else View.VISIBLE
+    fun TextView.setGreetings(greetings: String) {
+        text = context.getString(R.string.greetings, greetings)
+        visibility = if (greetings.isEmpty()) View.GONE else View.VISIBLE
     }
+
+    interface OnToggleButtonClicked {
+        fun onClick(isChecked: Boolean)
+    }
+
+    @JvmStatic
+    @BindingAdapter("android:onClick")
+    fun ToggleButton.setOnClickedListener(listener: OnToggleButtonClicked) =
+        setOnClickListener { listener.onClick(isChecked) }
 }

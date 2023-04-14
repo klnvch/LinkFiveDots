@@ -22,24 +22,13 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.utils
+package by.klnvch.link5dots.domain.usecases.network
 
-import java.text.SimpleDateFormat
-import java.util.*
-import kotlin.time.Duration.Companion.milliseconds
+import by.klnvch.link5dots.domain.repositories.OnlineRoomRepository
+import javax.inject.Inject
 
-object FormatUtils {
-
-    fun Int.formatDuration(): String {
-        return milliseconds.toComponents { hours, minutes, seconds, _ ->
-            if (hours > 0) "%02d:%02d:%02d".format(hours, minutes, seconds)
-            else "%02d:%02d".format(minutes, seconds)
-        }
-    }
-
-    @JvmStatic
-    fun Long.formatDateTime(): String {
-        val timeFormat = SimpleDateFormat("MMM-dd HH:mm", Locale.getDefault())
-        return timeFormat.format(Date(this))
-    }
+class GetOnlineRoomUseCase @Inject constructor(
+    private val onlineRoomRepository: OnlineRoomRepository,
+) {
+    fun get(key: String) = onlineRoomRepository.get(key)
 }

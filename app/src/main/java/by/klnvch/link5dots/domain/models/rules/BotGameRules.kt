@@ -44,7 +44,8 @@ class BotGameRules @Inject constructor(
     }
 
     override fun addInternal(p: Point) {
-        room.add(Dot(p, Dot.HOST, System.currentTimeMillis()))
+        val dt = (System.currentTimeMillis() - room.timestamp).toInt()
+        room.add(Dot(p, Dot.HOST, dt))
         if (room.isNotOver()) {
             val botDot = bot.findAnswer(room.dots)
             room.add(botDot.copy(type = Dot.GUEST))
@@ -70,7 +71,7 @@ class BotGameRules @Inject constructor(
         return BotGameScore(
             room.dots.size,
             room.getDuration(),
-            room.dots.last().timestamp,
+            room.getEndTime(),
             if (room.dots.last().type == Dot.HOST) GameResult.WON else GameResult.LOST
         )
     }

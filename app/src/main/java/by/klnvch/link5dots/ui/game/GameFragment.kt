@@ -73,6 +73,10 @@ class GameFragment : DaggerFragment(), OnMoveDoneListener {
             binding.viewState = it
         }
 
+        viewModel.focusEvent.observe(viewLifecycleOwner) {
+            binding.gameView.focus()
+        }
+
         setupMenu()
     }
 
@@ -84,7 +88,11 @@ class GameFragment : DaggerFragment(), OnMoveDoneListener {
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                 return when (menuItem.itemId) {
-                    R.id.menu_search -> focus()
+                    R.id.menu_search -> {
+                        viewModel.focus()
+                        true
+                    }
+
                     else -> true
                 }
             }
@@ -94,12 +102,6 @@ class GameFragment : DaggerFragment(), OnMoveDoneListener {
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putString(KEY_VIEW_STATE, binding.gameView.viewState.toJson())
         super.onSaveInstanceState(outState)
-    }
-
-    fun focus(): Boolean {
-        analytics.logEvent(Analytics.EVENT_SEARCH)
-        binding.gameView.focus()
-        return true
     }
 
     companion object {

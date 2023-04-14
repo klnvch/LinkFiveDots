@@ -36,6 +36,7 @@ import androidx.annotation.Nullable;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 import java.io.IOException;
+import java.util.Random;
 
 import by.klnvch.link5dots.domain.models.NetworkRoom;
 import by.klnvch.link5dots.domain.models.NetworkUser;
@@ -85,10 +86,21 @@ import by.klnvch.link5dots.utils.RoomUtils;
 public abstract class GameServiceSockets extends GameService
         implements OnSocketConnectedListener {
 
+    private NetworkUser mUser;
+
     private static final String TAG = "MultiplayerService";
     private Thread mSocketThread = null;
 
     private Target mTarget = null;
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+
+
+        final String id = Long.toHexString(System.currentTimeMillis()) + '_' + Long.toHexString(new Random().nextLong());
+        mUser = new NetworkUser(id, settings.getUserNameBlocking());
+    }
 
     @Override
     public void onDestroy() {
@@ -134,7 +146,7 @@ public abstract class GameServiceSockets extends GameService
 
         mSocketThread = null;
         sendMsg(exception);
-        setConnectState(GameState.STATE_NONE);
+        setConnectState(GameState.ConnectState.NONE);
     }
 
     @CallSuper
@@ -237,14 +249,13 @@ public abstract class GameServiceSockets extends GameService
     }
 
     @Override
-    public void onTargetCreationFailed(@NonNull Exception exception) {
-        checkNotNull(exception);
+    public void onTargetCreationFailed(@NonNull Throwable e) {
         checkNotNull(mSocketThread);
 
         mSocketThread.interrupt();
         mSocketThread = null;
 
-        super.onTargetCreationFailed(exception);
+        super.onTargetCreationFailed(e);
     }
 
     @Override
@@ -260,5 +271,11 @@ public abstract class GameServiceSockets extends GameService
         setRoom(null);
 
         super.onTargetDeleted(exception);
+    }
+
+    @NonNull
+    @Override
+    public NetworkUser getUser() {
+        return mUser;
     }
 }

@@ -26,7 +26,7 @@ package by.klnvch.link5dots.domain.repositories
 
 interface FirebaseManager {
     fun isSupported(): Boolean
-    suspend fun signInAnonymously()
+    suspend fun signInAnonymously(): String
     fun signOut()
     fun getUserId(): String?
 }

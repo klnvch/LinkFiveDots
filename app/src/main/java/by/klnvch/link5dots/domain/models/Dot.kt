@@ -28,9 +28,9 @@ data class Dot(
     val x: Int,
     val y: Int,
     val type: Int,
-    val timestamp: Long,
+    val dt: Int,
 ) {
-    constructor(p: Point, type: Int, timestamp: Long) : this(p.x, p.y, type, timestamp)
+    constructor(p: Point, type: Int, dt: Int) : this(p.x, p.y, type, dt)
 
     companion object {
         const val EMPTY = 1

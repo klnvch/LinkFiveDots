@@ -26,6 +26,7 @@ package by.klnvch.link5dots.multiplayer.services;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
 import by.klnvch.link5dots.multiplayer.sockets.ServerSocketDecorator;
 import by.klnvch.link5dots.multiplayer.targets.Target;
 import by.klnvch.link5dots.multiplayer.targets.TargetBluetoothLocal;
@@ -89,7 +90,7 @@ public class GameServiceBluetooth extends GameServiceSockets {
         if (e != null) {
             super.onScanStopped(e);
         } else {
-            setScanState(GameState.STATE_SCAN_DONE);
+            setScanState(GameState.ScanState.DONE);
         }
     }
 }

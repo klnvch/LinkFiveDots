@@ -22,24 +22,12 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.utils
+package by.klnvch.link5dots.ui.game.activities
 
-import java.text.SimpleDateFormat
-import java.util.*
-import kotlin.time.Duration.Companion.milliseconds
+import by.klnvch.link5dots.domain.usecases.room.GetRoomUseCase
 
-object FormatUtils {
-
-    fun Int.formatDuration(): String {
-        return milliseconds.toComponents { hours, minutes, seconds, _ ->
-            if (hours > 0) "%02d:%02d:%02d".format(hours, minutes, seconds)
-            else "%02d:%02d".format(minutes, seconds)
-        }
-    }
-
-    @JvmStatic
-    fun Long.formatDateTime(): String {
-        val timeFormat = SimpleDateFormat("MMM-dd HH:mm", Locale.getDefault())
-        return timeFormat.format(Date(this))
+class OnlineGameActivity: GameActivity() {
+    override fun getParam(): GetRoomUseCase.RoomParam {
+        TODO("Not yet implemented")
     }
 }

@@ -31,7 +31,8 @@ sealed interface IRoom {
     val user1: IUser?
     val user2: IUser?
     val type: Int
-    fun getDuration() = (dots.lastOrNull()?.timestamp ?: timestamp) - timestamp
+    fun getDuration() = dots.lastOrNull()?.dt ?: 0
+    fun getEndTime() = timestamp + getDuration()
 
     fun getWinningLine(): WinningLine? {
         if (dots.size < 9) return null
@@ -88,7 +89,7 @@ data class NetworkRoom(
     override val key: String,
     override val timestamp: Long,
     override val dots: List<Dot>,
-    override val user1: NetworkUser?,
+    override val user1: NetworkUser,
     override val user2: NetworkUser?,
     override val type: Int,
     val state: Int,

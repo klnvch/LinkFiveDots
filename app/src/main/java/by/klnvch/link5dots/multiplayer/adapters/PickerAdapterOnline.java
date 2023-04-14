@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2017 klnvch
+ * Copyright (c) 2023 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -38,37 +38,54 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 
 import by.klnvch.link5dots.R;
-import by.klnvch.link5dots.domain.models.NetworkRoom;
+import by.klnvch.link5dots.data.firebase.OnlineRoomMapper;
+import by.klnvch.link5dots.data.firebase.OnlineRoomRemote;
+import by.klnvch.link5dots.domain.models.RoomState;
 import by.klnvch.link5dots.multiplayer.services.GameServiceOnline;
 import by.klnvch.link5dots.multiplayer.targets.TargetOnline;
-import by.klnvch.link5dots.multiplayer.utils.online.FirebaseHelper;
 
-public class PickerAdapterOnline extends FirebaseRecyclerAdapter<NetworkRoom, TargetHolder>
+public class PickerAdapterOnline extends FirebaseRecyclerAdapter<OnlineRoomRemote, TargetHolder>
         implements TargetAdapterInterface, ScannerInterface {
+    private final OnlineRoomMapper mapper = new OnlineRoomMapper();
 
     private OnItemClickListener mOnItemClickListener = null;
     private OnEmptyStateListener mOnEmptyStateListener = null;
     private OnScanStoppedListener mOnScanStoppedListener;
 
-    private PickerAdapterOnline(@NonNull FirebaseRecyclerOptions<NetworkRoom> options) {
+    private PickerAdapterOnline(@NonNull FirebaseRecyclerOptions<OnlineRoomRemote> options) {
         super(options);
     }
 
     @NonNull
-    public static PickerAdapterOnline createAdapter() {
-        final FirebaseRecyclerOptions<NetworkRoom> options =
-                new FirebaseRecyclerOptions.Builder<NetworkRoom>()
-                        .setQuery(FirebaseHelper.getRoomsQuery(), NetworkRoom.class)
+    public static PickerAdapterOnline createAdapter(@NonNull String path) {
+        final Query query = FirebaseDatabase
+                .getInstance()
+                .getReference()
+                .child(path)
+                .orderByChild("state")
+                .equalTo(RoomState.CREATED);
+
+        final FirebaseRecyclerOptions<OnlineRoomRemote> options =
+                new FirebaseRecyclerOptions.Builder<OnlineRoomRemote>()
+                        .setQuery(query, OnlineRoomRemote.class)
                         .build();
 
         return new PickerAdapterOnline(options);
     }
 
     @Override
-    protected void onBindViewHolder(@NonNull TargetHolder holder, int position, @NonNull NetworkRoom room) {
-        holder.setDestination(new TargetOnline(room));
+    protected void onBindViewHolder(
+            @NonNull TargetHolder holder, int position,
+            @NonNull OnlineRoomRemote room
+    ) {
+        final String key = getRef(position).getKey();
+        if (key != null) {
+            holder.setDestination(new TargetOnline(mapper.map(key, room)));
+        }
     }
 
     @NonNull

@@ -24,6 +24,8 @@
 
 package by.klnvch.link5dots.ui.game
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
@@ -65,6 +67,9 @@ class OfflineGameViewModel @Inject constructor(
                 GameViewState(type, user1Name, user2Name, gameRules.init(room))
             }
         }.asLiveData()
+
+    private val _focusEvent = MutableLiveData<Unit>()
+    val focusEvent: LiveData<Unit> = _focusEvent
 
     fun setParam(param: GetRoomUseCase.RoomParam) {
         viewModelScope.launch { searchQueryFlow.emit(param) }
@@ -112,5 +117,10 @@ class OfflineGameViewModel @Inject constructor(
         viewModelScope.launch {
             saveScoreUseCase.save(score as BotGameScore)
         }
+    }
+
+    fun focus() {
+        analytics.logEvent(Analytics.EVENT_SEARCH)
+        _focusEvent.value = null
     }
 }

@@ -39,6 +39,7 @@ import kotlin.coroutines.resumeWithException
 class FirebaseManagerImpl @Inject constructor(
     private val context: Context
 ) : FirebaseManager {
+    private val auth = FirebaseAuth.getInstance()
 
     override fun isSupported(): Boolean {
         return GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(context) ==
@@ -48,19 +49,17 @@ class FirebaseManagerImpl @Inject constructor(
     override suspend fun signInAnonymously() = suspendCancellableCoroutine { continuation ->
         val listener = OnCompleteListener<AuthResult> {
             if (it.isSuccessful) {
-                continuation.resume(Unit)
+                continuation.resume(it.result.user!!.uid)
             } else {
                 continuation.resumeWithException(it.exception ?: Error("Unknown error"))
             }
         }
 
-        continuation.invokeOnCancellation { FirebaseAuth.getInstance().signOut() }
-        FirebaseAuth.getInstance().signInAnonymously().addOnCompleteListener(listener)
+        continuation.invokeOnCancellation { auth.signOut() }
+        auth.signInAnonymously().addOnCompleteListener(listener)
     }
 
-    override fun signOut() {
-        FirebaseAuth.getInstance().signOut()
-    }
+    override fun signOut() = auth.signOut()
 
-    override fun getUserId(): String? = FirebaseAuth.getInstance().currentUser?.uid
+    override fun getUserId(): String? = auth.currentUser?.uid
 }

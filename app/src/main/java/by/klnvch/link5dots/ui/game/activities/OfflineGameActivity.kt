@@ -25,72 +25,14 @@
 package by.klnvch.link5dots.ui.game.activities
 
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
-import androidx.activity.viewModels
-import androidx.lifecycle.ViewModelProvider
 import by.klnvch.link5dots.R
-import by.klnvch.link5dots.domain.usecases.room.GetRoomUseCase
 import by.klnvch.link5dots.ui.game.GameFragment
-import by.klnvch.link5dots.ui.game.OfflineGameViewModel
-import by.klnvch.link5dots.ui.game.create.NewGameDialog
-import by.klnvch.link5dots.ui.game.end.EndGameDialog
-import dagger.android.support.DaggerAppCompatActivity
-import javax.inject.Inject
 
-abstract class OfflineGameActivity : DaggerAppCompatActivity() {
-    private lateinit var mGameFragment: GameFragment
-
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
-
-    private val viewModel: OfflineGameViewModel by viewModels { viewModelFactory }
-
+abstract class OfflineGameActivity : GameActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_game)
-
-        mGameFragment = supportFragmentManager.findFragmentById(R.id.fragment) as GameFragment
-
-        viewModel.setParam(getParam())
-
-        viewModel.uiState.observe(this) {
-            if (it.boardViewState.isOver) {
-                onGameEnd()
-            }
+        if (savedInstanceState == null) {
+            supportFragmentManager.beginTransaction().add(R.id.fragment, GameFragment()).commit()
         }
     }
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.menu_game_offline, menu)
-        super.onCreateOptionsMenu(menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            android.R.id.home -> {
-                onBackPressedDispatcher.onBackPressed()
-                true
-            }
-            R.id.menu_undo -> {
-                viewModel.undoLastMove()
-                true
-            }
-            R.id.menu_new_game -> {
-                NewGameDialog().show(supportFragmentManager, NewGameDialog.TAG)
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
-    }
-
-    override fun onSearchRequested(): Boolean {
-        mGameFragment.focus()
-        return true
-    }
-
-    abstract fun getParam(): GetRoomUseCase.RoomParam
-
-    protected open fun onGameEnd() = EndGameDialog().show(supportFragmentManager, EndGameDialog.TAG)
 }

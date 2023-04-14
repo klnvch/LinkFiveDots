@@ -28,7 +28,11 @@ import android.content.Context;
 import android.content.Intent;
 
 import androidx.annotation.NonNull;
+
 import by.klnvch.link5dots.R;
+import by.klnvch.link5dots.data.OnlineRoomRepositoryImpl;
+import by.klnvch.link5dots.data.firebase.FirebaseManagerImpl;
+import by.klnvch.link5dots.data.firebase.OnlineRoomMapper;
 import by.klnvch.link5dots.domain.models.RoomType;
 import by.klnvch.link5dots.multiplayer.activities.PickerFragment;
 import by.klnvch.link5dots.multiplayer.adapters.PickerAdapterOnline;
@@ -37,13 +41,13 @@ import by.klnvch.link5dots.multiplayer.services.GameServiceOnline;
 import by.klnvch.link5dots.multiplayer.sockets.ServerSocketDecorator;
 import by.klnvch.link5dots.multiplayer.sockets.SocketDecorator;
 import by.klnvch.link5dots.multiplayer.targets.Target;
-import by.klnvch.link5dots.multiplayer.utils.online.FirebaseHelper;
 
 public class FactoryOnline implements FactoryServiceInterface, FactoryActivityInterface {
+
     @NonNull
     @Override
     public TargetAdapterInterface getAdapter(@NonNull Context context) {
-        return PickerAdapterOnline.createAdapter();
+        return PickerAdapterOnline.createAdapter(new OnlineRoomRepositoryImpl(new OnlineRoomMapper()).getPath());
     }
 
     @NonNull
@@ -71,7 +75,7 @@ public class FactoryOnline implements FactoryServiceInterface, FactoryActivityIn
 
     @Override
     public boolean isValid(@NonNull Context context) {
-        return FirebaseHelper.isSupported(context);
+        return new FirebaseManagerImpl(context).isSupported();
     }
 
     @Override

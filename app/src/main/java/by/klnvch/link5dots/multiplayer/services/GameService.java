@@ -38,12 +38,9 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 import org.greenrobot.eventbus.EventBus;
 
-import java.util.Random;
-
 import javax.inject.Inject;
 
 import by.klnvch.link5dots.domain.models.NetworkRoom;
-import by.klnvch.link5dots.domain.models.NetworkUser;
 import by.klnvch.link5dots.domain.models.Point;
 import by.klnvch.link5dots.domain.repositories.Settings;
 import by.klnvch.link5dots.multiplayer.adapters.OnScanStoppedListener;
@@ -60,10 +57,7 @@ import by.klnvch.link5dots.multiplayer.utils.OnTargetDeletedListener;
 import by.klnvch.link5dots.utils.RoomUtils;
 import dagger.android.DaggerService;
 
-public abstract class GameService extends DaggerService implements GameServiceInterface,
-        OnTargetCreatedListener, OnTargetDeletedListener,
-        OnScanStoppedListener,
-        OnRoomConnectedListener, OnRoomUpdatedListener {
+public abstract class GameService extends DaggerService implements GameServiceInterface, OnTargetCreatedListener, OnTargetDeletedListener, OnScanStoppedListener, OnRoomConnectedListener, OnRoomUpdatedListener {
 
     private static final String TAG = "GameService";
     private final IBinder mBinder = new LocalBinder();
@@ -73,7 +67,6 @@ public abstract class GameService extends DaggerService implements GameServiceIn
     @Inject
     Settings settings;
     private TargetAdapterInterface mAdapter;
-    private NetworkUser mUser;
     private NetworkRoom mRoom = null;
 
     @Override
@@ -84,8 +77,6 @@ public abstract class GameService extends DaggerService implements GameServiceIn
         mFactory = FactoryProvider.getServiceFactory(this.getClass());
         mAdapter = mFactory.getAdapter(this);
         mScanner = (ScannerInterface) mAdapter;
-        final String id = Long.toHexString(System.currentTimeMillis()) + '_' + Long.toHexString(new Random().nextLong());
-        mUser = new NetworkUser(id, settings.getUserNameBlocking());
     }
 
     @Override
@@ -112,24 +103,24 @@ public abstract class GameService extends DaggerService implements GameServiceIn
     @CallSuper
     @Override
     public void createTarget() {
-        setRoomState(GameState.STATE_TARGET_CREATING);
+        setRoomState(GameState.TargetState.CREATING);
     }
 
     @CallSuper
     @Override
     public void deleteTarget() {
-        setRoomState(GameState.STATE_TARGET_DELETING);
+        setRoomState(GameState.TargetState.DELETING);
     }
 
     @Override
     public void startScan() {
-        setScanState(GameState.STATE_SCAN_ON);
+        setScanState(GameState.ScanState.ON);
         mScanner.startScan(this);
     }
 
     @Override
     public void stopScan() {
-        setScanState(GameState.STATE_SCAN_OFF);
+        setScanState(GameState.ScanState.OFF);
         mScanner.stopScan();
     }
 
@@ -137,19 +128,13 @@ public abstract class GameService extends DaggerService implements GameServiceIn
     @Override
     public void connect(@NonNull Target target) {
         checkNotNull(target);
-        setConnectState(GameState.STATE_CONNECTING);
+        setConnectState(GameState.ConnectState.CONNECTING);
     }
 
     @NonNull
     @Override
     public TargetAdapterInterface getAdapter() {
         return mAdapter;
-    }
-
-    @NonNull
-    @Override
-    public NetworkUser getUser() {
-        return mUser;
     }
 
     @Nullable
@@ -162,17 +147,17 @@ public abstract class GameService extends DaggerService implements GameServiceIn
         this.mRoom = mRoom;
     }
 
-    private void setRoomState(@GameState.TargetState int state) {
+    private void setRoomState(GameState.TargetState state) {
         mState.setTargetState(state);
         sendMsg(mState);
     }
 
-    void setScanState(@GameState.ScanState int state) {
+    void setScanState(GameState.ScanState state) {
         mState.setScanState(state);
         sendMsg(mState);
     }
 
-    void setConnectState(@GameState.ConnectState int state) {
+    void setConnectState(GameState.ConnectState state) {
         mState.setConnectState(state);
         sendMsg(mState);
     }
@@ -186,7 +171,7 @@ public abstract class GameService extends DaggerService implements GameServiceIn
     @Override
     public void addDot(@NonNull Point p) {
         if (mRoom != null) {
-            updateRoomRemotely(RoomUtils.addDotMultiplayer(mRoom, mUser, p));
+            updateRoomRemotely(RoomUtils.addDotMultiplayer(mRoom, getUser(), p));
         }
     }
 
@@ -194,7 +179,7 @@ public abstract class GameService extends DaggerService implements GameServiceIn
     @Override
     public void reset() {
         Log.d(TAG, "reset");
-        setConnectState(GameState.STATE_NONE);
+        setConnectState(GameState.ConnectState.NONE);
 
         mRoom = null;
     }
@@ -222,23 +207,23 @@ public abstract class GameService extends DaggerService implements GameServiceIn
     public void onTargetCreated(@NonNull Target target) {
         Log.d(TAG, "onTargetCreated");
 
-        setRoomState(GameState.STATE_TARGET_CREATED);
+        setRoomState(GameState.TargetState.CREATED);
     }
 
     @CallSuper
     @Override
-    public void onTargetCreationFailed(@NonNull Exception exception) {
-        Log.e(TAG, "onTargetCreationFailed: " + exception.getMessage());
-        FirebaseCrashlytics.getInstance().recordException(exception);
+    public void onTargetCreationFailed(@NonNull Throwable e) {
+        Log.e(TAG, "onTargetCreationFailed: " + e.getMessage());
+        FirebaseCrashlytics.getInstance().recordException(e);
 
-        setRoomState(GameState.STATE_TARGET_DELETED);
+        setRoomState(GameState.TargetState.DELETED);
     }
 
     @CallSuper
     @Override
     public void onTargetDeleted(@Nullable Exception exception) {
         Log.d(TAG, "onTargetDeleted: " + exception);
-        setRoomState(GameState.STATE_TARGET_DELETED);
+        setRoomState(GameState.TargetState.DELETED);
     }
 
     @CallSuper
@@ -254,7 +239,7 @@ public abstract class GameService extends DaggerService implements GameServiceIn
 
         mScanner.stopScan();
         startGame(room);
-        setConnectState(GameState.STATE_CONNECTED);
+        setConnectState(GameState.ConnectState.CONNECTED);
     }
 
     @Override
@@ -262,7 +247,7 @@ public abstract class GameService extends DaggerService implements GameServiceIn
         Log.w(TAG, "onRoomConnectFailed: " + exception.getMessage());
 
         FirebaseCrashlytics.getInstance().recordException(exception);
-        setConnectState(GameState.STATE_NONE);
+        setConnectState(GameState.ConnectState.NONE);
         sendMsg(exception);
     }
 
@@ -277,7 +262,7 @@ public abstract class GameService extends DaggerService implements GameServiceIn
             if (exception != null) {
                 FirebaseCrashlytics.getInstance().recordException(exception);
             }
-            setConnectState(GameState.STATE_DISCONNECTED);
+            setConnectState(GameState.ConnectState.DISCONNECTED);
         }
     }
 

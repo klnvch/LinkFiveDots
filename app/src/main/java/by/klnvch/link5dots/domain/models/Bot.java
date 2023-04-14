@@ -98,7 +98,7 @@ public class Bot {
         final Dot[][] net = new Dot[board.getWidth()][board.getHeight()];
         for (int i = 0; i < board.getWidth(); i++)
             for (int j = 0; j < board.getHeight(); j++)
-                net[i][j] = new Dot(i, j, Dot.EMPTY, System.currentTimeMillis());
+                net[i][j] = new Dot(i, j, Dot.EMPTY, 0);
 
         for (Dot dot : dots) {
             net[dot.getX()][dot.getY()] = dot;

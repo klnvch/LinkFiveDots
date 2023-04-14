@@ -44,7 +44,8 @@ class TwoPlayersGameRules @Inject constructor(
     override fun addInternal(p: Point) {
         val lastDotType = room.dots.lastOrNull()?.type ?: Dot.GUEST
         val type = if (lastDotType == Dot.GUEST) Dot.HOST else Dot.GUEST
-        room.add(Dot(p, type, System.currentTimeMillis()))
+        val dt = (System.currentTimeMillis() - room.timestamp).toInt()
+        room.add(Dot(p, type, dt))
     }
 
     override fun undo(): Room {
@@ -65,7 +66,7 @@ class TwoPlayersGameRules @Inject constructor(
         return SimpleGameScore(
             room.dots.size,
             room.getDuration(),
-            room.dots.last().timestamp,
+            room.getEndTime(),
         )
     }
 }

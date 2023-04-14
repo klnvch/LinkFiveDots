@@ -43,7 +43,6 @@ import by.klnvch.link5dots.domain.models.Point;
 import by.klnvch.link5dots.domain.models.RoomExt;
 import by.klnvch.link5dots.domain.models.RoomKeyGenerator;
 import by.klnvch.link5dots.domain.models.RoomState;
-import by.klnvch.link5dots.domain.models.RoomType;
 
 public class RoomUtils {
 
@@ -62,19 +61,6 @@ public class RoomUtils {
     }
 
     @NonNull
-    public static NetworkRoom createOnlineGame(@NonNull String key, @NonNull NetworkUser user) {
-        return new NetworkRoom(
-                key,
-                System.currentTimeMillis(),
-                new ArrayList<>(),
-                user,
-                null,
-                RoomType.ONLINE,
-                RoomState.CREATED
-        );
-    }
-
-    @NonNull
     public static NetworkRoom newGame(@NonNull NetworkRoom room, @Nullable Long seed) {
         final ArrayList<Dot> dots = new ArrayList<>();
 
@@ -88,7 +74,7 @@ public class RoomUtils {
                 final int y = 8 + p.getY();
                 final Point dot = new Point(x, y);
 
-                addDot(dots, dot, i % 2 == 0 ? Dot.HOST : Dot.GUEST);
+                dots.add(new Dot(p.getX(), p.getY(), i % 2 == 0 ? Dot.HOST : Dot.GUEST, 0));
             }
         }
 
@@ -126,19 +112,19 @@ public class RoomUtils {
     public static BotGameScore getHighScore(@NonNull NetworkRoom room, @Nullable NetworkUser user) {
         final Dot lastDot = room.getLatsDot();
 
-        final long time = (lastDot.getTimestamp() - room.getTimestamp()) / 1000;
+        final int time = room.getDuration();
         final int movesDone = room.getDots().size();
 
-        if (user != null) {
+        if (user != null && lastDot != null) {
             final GameResult gameResult;
             if (lastDot.getType() == RoomExt.getHostDotType(room, user)) {
                 gameResult = GameResult.WON;
             } else {
                 gameResult = GameResult.LOST;
             }
-            return new BotGameScore(movesDone, time, lastDot.getTimestamp(), gameResult);
+            return new BotGameScore(movesDone, time, room.getEndTime(), gameResult);
         } else {
-            return new BotGameScore(movesDone, time, lastDot.getTimestamp(), GameResult.LOST);
+            return new BotGameScore(movesDone, time, room.getEndTime(), GameResult.LOST);
         }
     }
 
@@ -149,13 +135,10 @@ public class RoomUtils {
 
         final ArrayList<Dot> dots = new ArrayList<>(room.getDots());
         if (lastDotType == null || lastDotType != hostDotType) {
-            addDot(dots, p, hostDotType);
+            final int dt = (int) (System.currentTimeMillis() - room.getTimestamp());
+            dots.add(new Dot(p.getX(), p.getY(), hostDotType, dt));
         }
 
         return new NetworkRoom(room.getKey(), room.getTimestamp(), dots, room.getUser1(), room.getUser2(), room.getType(), room.getState());
-    }
-
-    private static void addDot(@NonNull ArrayList<Dot> dots, @NonNull Point p, int type) {
-        dots.add(new Dot(p.getX(), p.getY(), type, System.currentTimeMillis()));
     }
 }

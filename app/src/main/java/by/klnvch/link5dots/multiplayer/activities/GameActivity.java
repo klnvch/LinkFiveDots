@@ -46,13 +46,10 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.util.List;
-
 import by.klnvch.link5dots.R;
 import by.klnvch.link5dots.dialogs.EndGameDialog;
 import by.klnvch.link5dots.domain.models.BotGameScore;
 import by.klnvch.link5dots.domain.models.NetworkRoom;
-import by.klnvch.link5dots.domain.models.Dot;
 import by.klnvch.link5dots.domain.models.NetworkUser;
 import by.klnvch.link5dots.domain.models.Point;
 import by.klnvch.link5dots.multiplayer.adapters.TargetAdapterInterface;
@@ -205,29 +202,13 @@ public abstract class GameActivity extends DaggerAppCompatActivity implements
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(@NonNull NetworkRoom room) {
-        Log.d(TAG, "onMessageEvent: " + room);
-
-        checkNotNull(mService);
-        checkNotNull(mGameFragment);
-        checkNotNull(room);
-
         mGameFragment.update(room);
-        //
-        // update title
-        //
-        final List<Dot> dots = room.getDots();
-        if (dots.size() == 0) {
+        final NetworkUser currentUser = mService.getUser();
+        final int size = room.getDots().size();
+        if (size % 2 == 0 && currentUser.getId().equals(room.getUser1().getId())) {
             setTitle(R.string.bt_message_your_turn);
         } else {
-            final int hostDotType =
-                    mService.getUser().equals(room.getUser1()) ? Dot.HOST : Dot.GUEST;
-            final Dot lastDot = dots.get(dots.size() - 1);
-
-            if (lastDot.getType() == hostDotType) {
-                setTitle(R.string.bt_message_opponents_turn);
-            } else {
-                setTitle(R.string.bt_message_your_turn);
-            }
+            setTitle(R.string.bt_message_opponents_turn);
         }
     }
 
@@ -258,30 +239,30 @@ public abstract class GameActivity extends DaggerAppCompatActivity implements
         setTitle(mFactory.getDefaultTitle());
 
         switch (state.getTargetState()) {
-            case GameState.STATE_TARGET_CREATING:
-            case GameState.STATE_TARGET_DELETING:
+            case CREATING:
+            case DELETING:
                 setTitle(R.string.connecting);
                 break;
-            case GameState.STATE_TARGET_CREATED:
+            case CREATED:
                 setTitle(R.string.progress_text);
                 break;
-            case GameState.STATE_NONE:
-            case GameState.STATE_TARGET_DELETED:
+            case NONE:
+            case DELETED:
                 break;
         }
 
         switch (state.getScanState()) {
-            case GameState.STATE_SCAN_ON:
+            case ON:
                 setTitle(R.string.searching);
                 break;
-            case GameState.STATE_NONE:
-            case GameState.STATE_SCAN_DONE:
-            case GameState.STATE_SCAN_OFF:
+            case NONE:
+            case DONE:
+            case OFF:
                 break;
         }
 
         switch (state.getConnectState()) {
-            case GameState.STATE_CONNECTED:
+            case CONNECTED:
                 setTitle(R.string.bt_message_your_turn);
                 if (mGameFragment == null) {
                     mGameFragment = new GameFragment();
@@ -292,13 +273,13 @@ public abstract class GameActivity extends DaggerAppCompatActivity implements
                             .commit();
                 }
                 break;
-            case GameState.STATE_CONNECTING:
+            case CONNECTING:
                 setTitle(R.string.connecting);
                 break;
-            case GameState.STATE_DISCONNECTED:
+            case DISCONNECTED:
                 setTitle(R.string.disconnected);
                 break;
-            case GameState.STATE_NONE:
+            case NONE:
                 break;
         }
     }

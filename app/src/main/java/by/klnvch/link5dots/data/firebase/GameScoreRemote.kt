@@ -46,7 +46,7 @@ data class GameScoreRemote(
     )
 
     @Exclude
-    fun getDuration() = score % L_1000000
+    fun getDuration() = (score % L_1000000).toInt()
 
     @Exclude
     fun getStatus(): GameResult {
@@ -85,9 +85,9 @@ data class GameScoreRemote(
             else size.toLong()
 
             return if (status == GameResult.WON) {
-                tempMoves * L_1000000 + tempTime
+                tempMoves * L_1000000 + tempTime.toLong()
             } else {
-                (L_4294 - tempMoves) * L_1000000 + tempTime
+                (L_4294 - tempMoves) * L_1000000 + tempTime.toLong()
             }
         }
     }

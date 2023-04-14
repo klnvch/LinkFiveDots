@@ -22,24 +22,21 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.utils
+package by.klnvch.link5dots.domain.repositories
 
-import java.text.SimpleDateFormat
-import java.util.*
-import kotlin.time.Duration.Companion.milliseconds
+import by.klnvch.link5dots.domain.models.Dot
+import by.klnvch.link5dots.domain.models.NetworkRoom
+import by.klnvch.link5dots.domain.models.NetworkUser
+import kotlinx.coroutines.flow.Flow
 
-object FormatUtils {
-
-    fun Int.formatDuration(): String {
-        return milliseconds.toComponents { hours, minutes, seconds, _ ->
-            if (hours > 0) "%02d:%02d:%02d".format(hours, minutes, seconds)
-            else "%02d:%02d".format(minutes, seconds)
-        }
-    }
-
-    @JvmStatic
-    fun Long.formatDateTime(): String {
-        val timeFormat = SimpleDateFormat("MMM-dd HH:mm", Locale.getDefault())
-        return timeFormat.format(Date(this))
-    }
+interface OnlineRoomRepository {
+    suspend fun generateKey(): String
+    suspend fun create(room: NetworkRoom)
+    suspend fun updateState(key: String, state: Int)
+    fun getState(key: String): Flow<Int>
+    suspend fun isConnected(): Boolean
+    suspend fun connect(key: String, user2: NetworkUser)
+    fun get(key: String): Flow<NetworkRoom>
+    suspend fun addDot(key: String, position: Int, dot: Dot)
+    val path: String
 }

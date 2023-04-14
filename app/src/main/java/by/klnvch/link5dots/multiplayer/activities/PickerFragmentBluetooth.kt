@@ -71,7 +71,14 @@ class PickerFragmentBluetooth : PickerFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.buttonBluetoothVisibility.visibility = View.VISIBLE
-        binding.buttonBluetoothVisibility.setOnClickListener(this)
+        binding.buttonBluetoothVisibility.setOnClickListener {
+            val intent = Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE)
+                .putExtra(
+                    BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION,
+                    DISCOVERABLE_DURATION_SECONDS
+                )
+            startDiscoverableForResult.launch(intent)
+        }
 
         binding.textBluetoothVisibility.visibility = View.VISIBLE
 
@@ -99,10 +106,10 @@ class PickerFragmentBluetooth : PickerFragment() {
         super.onDestroyView()
     }
 
-    override fun onScanButtonClicked() {
+    override fun onScanButtonClicked(isOn: Boolean) {
         if (context == null) return
 
-        if (mButtonScan.isChecked) {
+        if (isOn) {
             if (isPermissionNeeded && !isPermissionGranted) {
                 requestPermissionLauncher.launch(Manifest.permission.ACCESS_COARSE_LOCATION)
             } else {
@@ -110,19 +117,6 @@ class PickerFragmentBluetooth : PickerFragment() {
             }
         } else {
             mListener.onStopScan()
-        }
-    }
-
-    override fun onClick(v: View) {
-        if (v.id == R.id.buttonBluetoothVisibility) {
-            val intent = Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE)
-                .putExtra(
-                    BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION,
-                    DISCOVERABLE_DURATION_SECONDS
-                )
-            startDiscoverableForResult.launch(intent)
-        } else {
-            super.onClick(v)
         }
     }
 

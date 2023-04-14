@@ -65,7 +65,8 @@ abstract class GameRules(
                 .withIndex()
                 .forEach { (i, p) ->
                     val type = if (i % 2 == 0) Dot.HOST else Dot.GUEST
-                    room.add(Dot(p, type, System.currentTimeMillis()))
+                    val dt = (System.currentTimeMillis() - room.timestamp).toInt()
+                    room.add(Dot(p, type, dt))
                 }
         }
     }

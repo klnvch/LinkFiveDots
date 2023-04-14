@@ -22,24 +22,23 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.utils
+package by.klnvch.link5dots.data.firebase
 
-import java.text.SimpleDateFormat
-import java.util.*
-import kotlin.time.Duration.Companion.milliseconds
+data class OnlineRoomRemote(
+    val state: Int? = null,
+    val dots: List<OnlineDotRemote>? = null,
+    val time: Long? = null,
+    val user1: OnlineRemoteUser? = null,
+    val user2: OnlineRemoteUser? = null,
+)
 
-object FormatUtils {
+data class OnlineDotRemote(
+    val dt: Int? = null,
+    val x: Int? = null,
+    val y: Int? = null,
+)
 
-    fun Int.formatDuration(): String {
-        return milliseconds.toComponents { hours, minutes, seconds, _ ->
-            if (hours > 0) "%02d:%02d:%02d".format(hours, minutes, seconds)
-            else "%02d:%02d".format(minutes, seconds)
-        }
-    }
-
-    @JvmStatic
-    fun Long.formatDateTime(): String {
-        val timeFormat = SimpleDateFormat("MMM-dd HH:mm", Locale.getDefault())
-        return timeFormat.format(Date(this))
-    }
-}
+data class OnlineRemoteUser(
+    val id: String? = null,
+    val name: String? = null,
+)

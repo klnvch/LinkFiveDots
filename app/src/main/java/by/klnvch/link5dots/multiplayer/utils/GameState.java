@@ -24,51 +24,27 @@
 
 package by.klnvch.link5dots.multiplayer.utils;
 
-import androidx.annotation.IntDef;
+import static com.google.common.base.Preconditions.checkState;
+
 import androidx.annotation.NonNull;
 
-import java.lang.annotation.Retention;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.google.common.base.Preconditions.checkState;
-import static java.lang.annotation.RetentionPolicy.SOURCE;
-
 public class GameState {
-    public static final int STATE_NONE = -1;
 
-    public static final int STATE_TARGET_DELETED = 0;
-    public static final int STATE_TARGET_CREATING = 1;
-    public static final int STATE_TARGET_CREATED = 2;
-    public static final int STATE_TARGET_DELETING = 3;
-
-    public static final int STATE_SCAN_OFF = 4;
-    public static final int STATE_SCAN_ON = 5;
-    public static final int STATE_SCAN_DONE = 6;
-
-    public static final int STATE_CONNECTING = 7;
-    public static final int STATE_CONNECTED = 8;
-    public static final int STATE_DISCONNECTED = 9;
-
-    private static final GameState UNDEFINED = new GameState(STATE_NONE, STATE_NONE, STATE_NONE);
-
-    private static final GameState IDLE = new GameState(STATE_TARGET_DELETED, STATE_SCAN_OFF, STATE_NONE);
-
-    private static final GameState TARGET_CREATING = new GameState(STATE_TARGET_CREATING, STATE_NONE, STATE_NONE);
-    private static final GameState TARGET_CREATED = new GameState(STATE_TARGET_CREATED, STATE_NONE, STATE_NONE);
-    private static final GameState TARGET_DELETING = new GameState(STATE_TARGET_DELETING, STATE_NONE, STATE_NONE);
-
-    private static final GameState SCAN_ON = new GameState(STATE_NONE, STATE_SCAN_ON, STATE_NONE);
-    private static final GameState SCAN_DONE = new GameState(STATE_TARGET_DELETED, STATE_SCAN_DONE, STATE_NONE);
-
-    private static final GameState CONNECTING_TARGET = new GameState(STATE_TARGET_CREATED, STATE_NONE, STATE_CONNECTING);
-    private static final GameState CONNECTING_SCAN_ON = new GameState(STATE_NONE, STATE_SCAN_ON, STATE_CONNECTING);
-    private static final GameState CONNECTING_SCAN_DONE = new GameState(STATE_TARGET_DELETED, STATE_SCAN_DONE, STATE_CONNECTING);
-
-    private static final GameState CONNECTED = new GameState(STATE_TARGET_DELETED, STATE_SCAN_OFF, STATE_CONNECTED);
-    private static final GameState DISCONNECTED = new GameState(STATE_TARGET_DELETED, STATE_SCAN_OFF, STATE_DISCONNECTED);
-
-
+    private static final GameState UNDEFINED = new GameState(TargetState.NONE, ScanState.NONE, ConnectState.NONE);
+    private static final GameState IDLE = new GameState(TargetState.DELETED, ScanState.OFF, ConnectState.NONE);
+    private static final GameState TARGET_CREATING = new GameState(TargetState.CREATING, ScanState.NONE, ConnectState.NONE);
+    private static final GameState TARGET_CREATED = new GameState(TargetState.CREATED, ScanState.NONE, ConnectState.NONE);
+    private static final GameState TARGET_DELETING = new GameState(TargetState.DELETING, ScanState.NONE, ConnectState.NONE);
+    private static final GameState SCAN_ON = new GameState(TargetState.NONE, ScanState.ON, ConnectState.NONE);
+    private static final GameState SCAN_DONE = new GameState(TargetState.DELETED, ScanState.DONE, ConnectState.NONE);
+    private static final GameState CONNECTING_TARGET = new GameState(TargetState.CREATED, ScanState.NONE, ConnectState.CONNECTING);
+    private static final GameState CONNECTING_SCAN_ON = new GameState(TargetState.NONE, ScanState.ON, ConnectState.CONNECTING);
+    private static final GameState CONNECTING_SCAN_DONE = new GameState(TargetState.DELETED, ScanState.DONE, ConnectState.CONNECTING);
+    private static final GameState CONNECTED = new GameState(TargetState.DELETED, ScanState.OFF, ConnectState.CONNECTED);
+    private static final GameState DISCONNECTED = new GameState(TargetState.DELETED, ScanState.OFF, ConnectState.DISCONNECTED);
     private static final List<Transition> mAllowedTransitions = Arrays.asList(
             new Transition(UNDEFINED, IDLE),
 
@@ -113,20 +89,19 @@ public class GameState {
             new Transition(DISCONNECTED, DISCONNECTED),
             new Transition(DISCONNECTED, IDLE)
     );
-
-    private int targetState;
-    private int scanState;
-    private int connectState;
+    private TargetState targetState;
+    private ScanState scanState;
+    private ConnectState connectState;
 
     public GameState() {
-        targetState = STATE_TARGET_DELETED;
-        scanState = STATE_SCAN_OFF;
-        connectState = STATE_NONE;
+        targetState = TargetState.DELETED;
+        scanState = ScanState.OFF;
+        connectState = ConnectState.NONE;
     }
 
-    private GameState(@TargetState int targetState,
-                      @ScanState int scanState,
-                      @ConnectState int connectState) {
+    private GameState(TargetState targetState,
+                      ScanState scanState,
+                      ConnectState connectState) {
         this.targetState = targetState;
         this.scanState = scanState;
         this.connectState = connectState;
@@ -151,74 +126,63 @@ public class GameState {
     @NonNull
     @Override
     public String toString() {
-        return '(' + Integer.toString(targetState) + ',' + scanState + ',' + connectState + ')';
+        return '(' + targetState.toString() + ',' + scanState + ',' + connectState + ')';
     }
 
-    @ScanState
-    public int getScanState() {
+    @NonNull
+    public ScanState getScanState() {
         return scanState;
     }
 
-    public void setScanState(@ScanState int scanState) {
-        if (scanState == STATE_SCAN_ON) {
-            check(new GameState(STATE_NONE, scanState, connectState));
-            this.targetState = STATE_NONE;
-            this.scanState = scanState;
+    public void setScanState(ScanState scanState) {
+        if (scanState == ScanState.ON) {
+            check(new GameState(TargetState.NONE, scanState, connectState));
+            this.targetState = TargetState.NONE;
         } else {
-            check(new GameState(STATE_TARGET_DELETED, scanState, connectState));
-            this.targetState = STATE_TARGET_DELETED;
-            this.scanState = scanState;
+            check(new GameState(TargetState.DELETED, scanState, connectState));
+            this.targetState = TargetState.DELETED;
         }
+        this.scanState = scanState;
     }
 
-    @TargetState
-    public int getTargetState() {
+    @NonNull
+    public TargetState getTargetState() {
         return targetState;
     }
 
-    public void setTargetState(@TargetState int targetState) {
-        if (targetState == STATE_TARGET_DELETED) {
-            check(new GameState(targetState, STATE_SCAN_OFF, connectState));
+    public void setTargetState(TargetState targetState) {
+        if (targetState == TargetState.DELETED) {
+            check(new GameState(targetState, ScanState.OFF, connectState));
             this.targetState = targetState;
-            this.scanState = STATE_SCAN_OFF;
+            this.scanState = ScanState.OFF;
         } else {
-            check(new GameState(targetState, STATE_NONE, connectState));
+            check(new GameState(targetState, ScanState.NONE, connectState));
             this.targetState = targetState;
-            this.scanState = STATE_NONE;
+            this.scanState = ScanState.NONE;
         }
     }
 
-    @ConnectState
-    public int getConnectState() {
+    @NonNull
+    public ConnectState getConnectState() {
         return connectState;
     }
 
-    public void setConnectState(@ConnectState int connectState) {
-        if (connectState == STATE_CONNECTED) {
-            check(new GameState(STATE_TARGET_DELETED, STATE_SCAN_OFF, connectState));
-            this.scanState = STATE_SCAN_OFF;
-            this.targetState = STATE_TARGET_DELETED;
-            this.connectState = connectState;
+    public void setConnectState(ConnectState connectState) {
+        if (connectState == ConnectState.CONNECTED) {
+            check(new GameState(TargetState.DELETED, ScanState.OFF, connectState));
+            this.scanState = ScanState.OFF;
+            this.targetState = TargetState.DELETED;
         } else {
             check(new GameState(targetState, scanState, connectState));
-            this.connectState = connectState;
         }
+        this.connectState = connectState;
     }
 
-    @Retention(SOURCE)
-    @IntDef({STATE_NONE, STATE_TARGET_DELETED, STATE_TARGET_CREATING, STATE_TARGET_CREATED, STATE_TARGET_DELETING})
-    public @interface TargetState {
-    }
+    public enum TargetState {NONE, DELETED, CREATING, CREATED, DELETING}
 
-    @Retention(SOURCE)
-    @IntDef({STATE_NONE, STATE_SCAN_OFF, STATE_SCAN_ON, STATE_SCAN_DONE})
-    public @interface ScanState {
-    }
+    public enum ScanState {NONE, OFF, ON, DONE}
 
-    @Retention(SOURCE)
-    @IntDef({STATE_NONE, STATE_CONNECTING, STATE_CONNECTED, STATE_DISCONNECTED})
-    public @interface ConnectState {
-    }
+    public enum ConnectState {NONE, CONNECTING, CONNECTED, DISCONNECTED}
 
     private static class Transition {
         private final GameState mPrevState;
@@ -242,7 +206,7 @@ public class GameState {
         @NonNull
         @Override
         public String toString() {
-            return mPrevState.toString() + '-' + mNextState.toString();
+            return mPrevState.toString() + '-' + mNextState;
         }
     }
 }

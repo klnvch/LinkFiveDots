@@ -30,5 +30,5 @@ import by.klnvch.link5dots.multiplayer.targets.Target;
 public interface OnTargetCreatedListener {
     void onTargetCreated(@NonNull Target target);
 
-    void onTargetCreationFailed(@NonNull Exception exception);
+    void onTargetCreationFailed(@NonNull Throwable e);
 }
