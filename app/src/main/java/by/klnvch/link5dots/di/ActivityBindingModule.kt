@@ -26,7 +26,6 @@ package by.klnvch.link5dots.di
 
 import by.klnvch.link5dots.multiplayer.activities.GameActivityBluetooth
 import by.klnvch.link5dots.multiplayer.activities.GameActivityNsd
-import by.klnvch.link5dots.multiplayer.activities.GameActivityOnline
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
@@ -41,8 +40,4 @@ abstract class ActivityBindingModule {
     @ActivityScope
     @ContributesAndroidInjector(modules = [(FragmentBuildersModule::class)])
     abstract fun gameActivityNsd(): GameActivityNsd
-
-    @ActivityScope
-    @ContributesAndroidInjector(modules = [(FragmentBuildersModule::class)])
-    abstract fun gameActivityOnline(): GameActivityOnline
 }

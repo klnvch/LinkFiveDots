@@ -26,7 +26,7 @@ package by.klnvch.link5dots.ui.game.activities
 import android.os.Bundle
 import by.klnvch.link5dots.R
 import by.klnvch.link5dots.domain.models.RoomType
-import by.klnvch.link5dots.domain.usecases.room.GetRoomUseCase
+import by.klnvch.link5dots.domain.usecases.RoomByType
 
 class BotGameActivity : OfflineGameActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,5 +34,5 @@ class BotGameActivity : OfflineGameActivity() {
         setTitle(R.string.app_name)
     }
 
-    override fun getParam() = GetRoomUseCase.RoomByType(RoomType.BOT)
+    override fun getParam() = RoomByType(RoomType.BOT)
 }

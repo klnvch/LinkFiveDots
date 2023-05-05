@@ -21,14 +21,33 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+package by.klnvch.link5dots.ui.game
 
-package by.klnvch.link5dots.domain.usecases.network
+import by.klnvch.link5dots.R
+import by.klnvch.link5dots.domain.models.NetworkRoom
+import by.klnvch.link5dots.domain.models.RoomState
 
-import by.klnvch.link5dots.domain.repositories.OnlineRoomRepository
-import javax.inject.Inject
+object RoomToTitleMapper {
+    fun roomToTitle(room: NetworkRoom, userId: String): Int {
+        return if (room.user1.id == userId) {
+            map(room, 0)
+        } else if (room.user2?.id == userId) {
+            map(room, 1)
+        } else {
+            0
+        }
+    }
 
-class GetOnlineRoomUseCase @Inject constructor(
-    private val onlineRoomRepository: OnlineRoomRepository,
-) {
-    fun get(key: String) = onlineRoomRepository.get(key)
+    private fun map(room: NetworkRoom, expectedOrder: Int): Int {
+        val order = room.dots.size % 2
+        return if (room.isOver()) {
+            if (order == expectedOrder) R.string.end_lose
+            else R.string.end_win
+        } else if (room.state == RoomState.FINISHED) {
+            R.string.disconnected
+        } else {
+            if (order == expectedOrder) R.string.bt_message_your_turn
+            else R.string.bt_message_opponents_turn
+        }
+    }
 }

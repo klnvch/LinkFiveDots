@@ -21,20 +21,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+package by.klnvch.link5dots.ui.game.picker.adapters
 
-package by.klnvch.link5dots.di.game
-
-import androidx.lifecycle.ViewModel
-import by.klnvch.link5dots.di.viewmodels.ViewModelKey
-import by.klnvch.link5dots.ui.game.OfflineGameViewModel
-import dagger.Binds
-import dagger.Module
-import dagger.multibindings.IntoMap
-
-@Module
-abstract class GameViewModelsModule {
-    @Binds
-    @IntoMap
-    @ViewModelKey(OfflineGameViewModel::class)
-    abstract fun bindMainMenuViewModel(viewModel: OfflineGameViewModel): ViewModel
+interface OnEmptyStateListener {
+    fun onEmptyState(isEmpty: Boolean)
 }

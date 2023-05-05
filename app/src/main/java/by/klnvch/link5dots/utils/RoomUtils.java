@@ -32,6 +32,7 @@ import androidx.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
+import by.klnvch.link5dots.data.TimeRepositoryImpl;
 import by.klnvch.link5dots.domain.models.BotGameScore;
 import by.klnvch.link5dots.domain.models.Dot;
 import by.klnvch.link5dots.domain.models.GameResult;
@@ -48,7 +49,7 @@ public class RoomUtils {
 
     @NonNull
     public static NetworkRoom createMultiplayerGame(@NonNull NetworkUser user, int type) {
-        final RoomKeyGenerator roomKeyGenerator = new RoomKeyGenerator();
+        final RoomKeyGenerator roomKeyGenerator = new RoomKeyGenerator(new TimeRepositoryImpl());
         return new NetworkRoom(
                 roomKeyGenerator.get(),
                 System.currentTimeMillis(),
@@ -78,7 +79,7 @@ public class RoomUtils {
             }
         }
 
-        final RoomKeyGenerator roomKeyGenerator = new RoomKeyGenerator();
+        final RoomKeyGenerator roomKeyGenerator = new RoomKeyGenerator(new TimeRepositoryImpl());
         return new NetworkRoom(
                 roomKeyGenerator.get(),
                 System.currentTimeMillis(),

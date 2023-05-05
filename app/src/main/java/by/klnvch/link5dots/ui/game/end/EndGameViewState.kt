@@ -21,12 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 package by.klnvch.link5dots.ui.game.end
 
 import by.klnvch.link5dots.R
 import by.klnvch.link5dots.domain.models.BotGameScore
 import by.klnvch.link5dots.domain.models.GameResult
+import by.klnvch.link5dots.domain.models.GameScore
+import by.klnvch.link5dots.domain.models.NetworkGameScore
 import by.klnvch.link5dots.domain.models.SimpleGameScore
 import by.klnvch.link5dots.utils.FormatUtils.formatDuration
 
@@ -35,14 +36,31 @@ data class EndGameViewState(
     val size: String,
     val duration: String,
     val isShareable: Boolean,
+    val isUndoMoveSupported: Boolean,
+    val isNewGameSupported: Boolean,
 ) {
-    constructor(score: SimpleGameScore) : this(
-        if (score is BotGameScore) when (score.status) {
-            GameResult.WON -> R.string.end_win
-            GameResult.LOST -> R.string.end_lose
-        } else null,
+    constructor(
+        score: GameScore,
+        isUndoMoveSupported: Boolean,
+        isNewGameSupported: Boolean
+    ) : this(
+        when (score) {
+            is NetworkGameScore -> when (score.status) {
+                GameResult.WON -> R.string.end_win
+                GameResult.LOST -> R.string.end_lose
+            }
+
+            is BotGameScore -> when (score.status) {
+                GameResult.WON -> R.string.end_win
+                GameResult.LOST -> R.string.end_lose
+            }
+
+            is SimpleGameScore -> null
+        },
         score.size.toString(),
         score.duration.formatDuration(),
-        score is BotGameScore
+        score is BotGameScore,
+        isUndoMoveSupported,
+        isNewGameSupported,
     )
 }

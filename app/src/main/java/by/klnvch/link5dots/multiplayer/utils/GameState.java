@@ -34,16 +34,16 @@ import java.util.List;
 public class GameState {
 
     private static final GameState UNDEFINED = new GameState(TargetState.NONE, ScanState.NONE, ConnectState.NONE);
-    private static final GameState IDLE = new GameState(TargetState.DELETED, ScanState.OFF, ConnectState.NONE);
+    public static final GameState IDLE = new GameState(TargetState.DELETED, ScanState.OFF, ConnectState.NONE);
     private static final GameState TARGET_CREATING = new GameState(TargetState.CREATING, ScanState.NONE, ConnectState.NONE);
-    private static final GameState TARGET_CREATED = new GameState(TargetState.CREATED, ScanState.NONE, ConnectState.NONE);
+    public static final GameState TARGET_CREATED = new GameState(TargetState.CREATED, ScanState.NONE, ConnectState.NONE);
     private static final GameState TARGET_DELETING = new GameState(TargetState.DELETING, ScanState.NONE, ConnectState.NONE);
     private static final GameState SCAN_ON = new GameState(TargetState.NONE, ScanState.ON, ConnectState.NONE);
     private static final GameState SCAN_DONE = new GameState(TargetState.DELETED, ScanState.DONE, ConnectState.NONE);
     private static final GameState CONNECTING_TARGET = new GameState(TargetState.CREATED, ScanState.NONE, ConnectState.CONNECTING);
     private static final GameState CONNECTING_SCAN_ON = new GameState(TargetState.NONE, ScanState.ON, ConnectState.CONNECTING);
     private static final GameState CONNECTING_SCAN_DONE = new GameState(TargetState.DELETED, ScanState.DONE, ConnectState.CONNECTING);
-    private static final GameState CONNECTED = new GameState(TargetState.DELETED, ScanState.OFF, ConnectState.CONNECTED);
+    public static final GameState CONNECTED = new GameState(TargetState.DELETED, ScanState.OFF, ConnectState.CONNECTED);
     private static final GameState DISCONNECTED = new GameState(TargetState.DELETED, ScanState.OFF, ConnectState.DISCONNECTED);
     private static final List<Transition> mAllowedTransitions = Arrays.asList(
             new Transition(UNDEFINED, IDLE),

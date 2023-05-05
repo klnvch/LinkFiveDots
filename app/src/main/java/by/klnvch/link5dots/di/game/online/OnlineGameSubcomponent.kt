@@ -22,19 +22,24 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.domain.usecases.network
+package by.klnvch.link5dots.di.game.online
 
-import by.klnvch.link5dots.domain.models.Dot
-import by.klnvch.link5dots.domain.models.IRoom
-import by.klnvch.link5dots.domain.repositories.OnlineRoomRepository
-import javax.inject.Inject
+import by.klnvch.link5dots.di.ActivityScope
+import by.klnvch.link5dots.di.game.GameFragmentBuilderModule
+import by.klnvch.link5dots.di.game.OnlineGameViewModelsModule
+import by.klnvch.link5dots.ui.game.activities.OnlineGameActivity
+import dagger.Subcomponent
+import dagger.android.AndroidInjector
 
-class AddDotUseCase @Inject constructor(
-    private val onlineRoomRepository: OnlineRoomRepository,
-) {
-    suspend fun addDot(room: IRoom, dot: Dot) {
-        val key = room.key
-        val position = room.dots.size
-        onlineRoomRepository.addDot(key, position - 1, dot)
-    }
+@ActivityScope
+@Subcomponent(
+    modules = [
+        OnlineGameViewModelsModule::class,
+        GameFragmentBuilderModule::class,
+        OnlineGameRulesModule::class,
+    ]
+)
+interface OnlineGameSubcomponent : AndroidInjector<OnlineGameActivity> {
+    @Subcomponent.Factory
+    interface Factory : AndroidInjector.Factory<OnlineGameActivity>
 }

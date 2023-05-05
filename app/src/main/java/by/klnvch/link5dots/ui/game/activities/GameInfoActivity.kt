@@ -21,7 +21,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 package by.klnvch.link5dots.ui.game.activities
 
 import android.content.Intent
@@ -30,7 +29,8 @@ import android.view.Menu
 import androidx.fragment.app.Fragment
 import by.klnvch.link5dots.R
 import by.klnvch.link5dots.domain.models.IRoom
-import by.klnvch.link5dots.domain.usecases.room.GetRoomUseCase
+import by.klnvch.link5dots.domain.usecases.RoomByKey
+import by.klnvch.link5dots.domain.usecases.RoomParam
 
 class GameInfoActivity : OfflineGameActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,9 +40,9 @@ class GameInfoActivity : OfflineGameActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu) = true
 
-    override fun getParam(): GetRoomUseCase.RoomParam {
+    override fun getParam(): RoomParam {
         val key = intent.getStringExtra(KEY)
-        if (key != null) return GetRoomUseCase.RoomByKey(key)
+        if (key != null) return RoomByKey(key)
         else throw IllegalArgumentException()
     }
 

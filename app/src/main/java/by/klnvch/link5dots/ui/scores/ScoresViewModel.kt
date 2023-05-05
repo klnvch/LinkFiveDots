@@ -30,6 +30,7 @@ import androidx.lifecycle.viewModelScope
 import by.klnvch.link5dots.di.viewmodels.AssistedSavedStateViewModelFactory
 import by.klnvch.link5dots.domain.models.IRoom
 import by.klnvch.link5dots.domain.usecases.*
+import by.klnvch.link5dots.domain.usecases.GetRoomsUseCase
 import by.klnvch.link5dots.ui.scores.history.HistoryItemViewState
 import by.klnvch.link5dots.ui.scores.history.HistoryViewState
 import by.klnvch.link5dots.ui.scores.scores.FirebaseState

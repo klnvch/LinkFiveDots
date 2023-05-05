@@ -21,16 +21,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 package by.klnvch.link5dots.domain.usecases.network
 
 import by.klnvch.link5dots.domain.models.NetworkRoom
 import by.klnvch.link5dots.domain.models.NetworkUser
+import by.klnvch.link5dots.domain.models.RoomKeyGenerator
 import by.klnvch.link5dots.domain.models.RoomState
 import by.klnvch.link5dots.domain.models.RoomType
 import by.klnvch.link5dots.domain.repositories.FirebaseManager
 import by.klnvch.link5dots.domain.repositories.OnlineRoomRepository
 import by.klnvch.link5dots.domain.repositories.Settings
+import by.klnvch.link5dots.domain.repositories.TimeRepository
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
@@ -38,13 +39,15 @@ class CreateOnlineRoomUseCase @Inject constructor(
     private val firebaseManager: FirebaseManager,
     private val settings: Settings,
     private val onlineRoomRepository: OnlineRoomRepository,
+    private val timeRepository: TimeRepository,
+    private val roomKeyGenerator: RoomKeyGenerator,
 ) {
     suspend fun create(): NetworkRoom {
-        val userId = firebaseManager.getUserId() ?: throw IllegalStateException()
+        val userId = firebaseManager.getUserId() ?: throw UnauthorizedError()
         val userName = settings.getUserName().first()
         val user1 = NetworkUser(userId, userName)
-        val timestamp = System.currentTimeMillis()
-        val key = onlineRoomRepository.generateKey()
+        val timestamp = timeRepository.getCurrentTime()
+        val key = roomKeyGenerator.get()
 
         val room = NetworkRoom(
             key,
@@ -59,7 +62,10 @@ class CreateOnlineRoomUseCase @Inject constructor(
             onlineRoomRepository.create(room)
             return room
         } else {
-            throw Error("Not connected")
+            throw DisconnectedError()
         }
     }
 }
+
+class UnauthorizedError : Error()
+class DisconnectedError : Error()

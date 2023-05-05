@@ -89,7 +89,7 @@
         android:label="GameActivityNsd" />
     <activity
         android:id="@+id/gameActivityOnline"
-        android:name="by.klnvch.link5dots.multiplayer.activities.GameActivityOnline"
+        android:name="by.klnvch.link5dots.ui.game.activities.OnlineGameActivity"
         android:label="activity_online_game"
         tools:layout="@layout/activity_online_game" />
 </navigation>

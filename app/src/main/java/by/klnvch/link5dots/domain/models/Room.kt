@@ -53,6 +53,7 @@ sealed interface IRoom {
     }
 
     fun isNotOver() = getWinningLine() == null
+    fun isOver() = getWinningLine() != null
 
     fun getLatsDot() = dots.lastOrNull()
 

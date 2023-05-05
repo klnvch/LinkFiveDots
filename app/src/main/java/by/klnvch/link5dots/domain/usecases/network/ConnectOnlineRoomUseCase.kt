@@ -21,12 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 package by.klnvch.link5dots.domain.usecases.network
 
-import by.klnvch.link5dots.domain.models.NetworkRoom
 import by.klnvch.link5dots.domain.models.NetworkUser
-import by.klnvch.link5dots.domain.models.RoomState
 import by.klnvch.link5dots.domain.repositories.FirebaseManager
 import by.klnvch.link5dots.domain.repositories.OnlineRoomRepository
 import by.klnvch.link5dots.domain.repositories.Settings
@@ -38,13 +35,12 @@ class ConnectOnlineRoomUseCase @Inject constructor(
     private val settings: Settings,
     private val onlineRoomRepository: OnlineRoomRepository,
 ) {
-    suspend fun connect(room: NetworkRoom): NetworkRoom { // TODO: downgrade to key only
+    suspend fun connect(key: String) {
         val userId = firebaseManager.getUserId() ?: throw IllegalStateException()
         val userName = settings.getUserName().first()
         val user2 = NetworkUser(userId, userName)
         if (onlineRoomRepository.isConnected()) {
-            onlineRoomRepository.connect(room.key, user2)
-            return room.copy(state = RoomState.CREATED, user2 = user2)
+            onlineRoomRepository.connect(key, user2)
         } else {
             throw Error("Not connected")
         }

@@ -21,7 +21,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 package by.klnvch.link5dots.ui.game
 
 import by.klnvch.link5dots.R
@@ -33,6 +32,7 @@ import by.klnvch.link5dots.domain.models.WinningLine
 data class GameViewState(
     val infoViewState: GameInfoViewState,
     val boardViewState: GameBoardViewState,
+    val room: IRoom?
 ) {
     constructor(
         dotsStyleType: DotsStyleType,
@@ -46,7 +46,16 @@ data class GameViewState(
             room?.dots?.toMutableList() ?: emptyList<Dot>(),
             room?.getWinningLine(),
         ),
+        room,
     )
+
+    companion object {
+        fun default() = GameViewState(
+            GameInfoViewState(DotsStyleType.ORIGINAL, null, null),
+            GameBoardViewState(DotsStyleType.ORIGINAL, emptyList(), null),
+            null
+        )
+    }
 }
 
 data class GameInfoViewState(

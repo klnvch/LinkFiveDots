@@ -29,11 +29,11 @@
 
         <variable
             name="viewState"
-            type="by.klnvch.link5dots.multiplayer.activities.PickerViewState" />
+            type="by.klnvch.link5dots.ui.game.picker.PickerViewState" />
 
         <variable
             name="listener"
-            type="by.klnvch.link5dots.multiplayer.activities.OnPickerClickListener" />
+            type="by.klnvch.link5dots.ui.game.picker.OnPickerClickListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -106,11 +106,12 @@
             android:layout_marginLeft="8dp"
             android:enabled="@{viewState.createButtonEnabled}"
             android:maxLines="2"
-            android:text="@string/name_not_set"
             android:visibility="@{viewState.statusVisibility}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/textStatusColon"
-            app:layout_constraintTop_toBottomOf="@+id/textBluetoothVisibility" />
+            app:layout_constraintTop_toBottomOf="@+id/textBluetoothVisibility"
+            app:setRoomSate="@{viewState.targetState}"
+            tools:text="@string/name_not_set" />
 
         <ProgressBar
             android:id="@+id/progressCreate"
@@ -165,7 +166,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/progressScan" />
+            app:layout_constraintTop_toBottomOf="@+id/progressScan"
+            app:setScanning="@{viewState.scanning}" />
 
         <TextView
             android:id="@+id/textWarningEmpty"

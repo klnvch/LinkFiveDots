@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2017 klnvch
+ * Copyright (c) 2023 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,36 +22,8 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.multiplayer.targets;
+package by.klnvch.link5dots.ui.game.picker.adapters
 
-import androidx.annotation.NonNull;
-
-import by.klnvch.link5dots.domain.models.NetworkRoom;
-import by.klnvch.link5dots.domain.models.NetworkUser;
-import by.klnvch.link5dots.utils.FormatUtils;
-
-public final class TargetOnline extends Target<NetworkRoom> {
-
-    public TargetOnline(@NonNull NetworkRoom target) {
-        super(target);
-    }
-
-    @NonNull
-    @Override
-    public String getShortName() {
-        final NetworkUser user = getTarget().getUser1();
-        if (user != null) return user.getName();
-        else return "-";
-    }
-
-    @NonNull
-    @Override
-    public String getLongName() {
-        final NetworkRoom room = getTarget();
-        final String time = FormatUtils.formatDateTime(room.getTimestamp());
-        final String name;
-        if (room.getUser1() != null) name = room.getUser1().getName();
-        else name = "-";
-        return time + '\n' + name;
-    }
+interface OnPickerItemSelected {
+    fun onPickerItemSelected(viewState: PickerItemViewState)
 }

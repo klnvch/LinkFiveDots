@@ -41,6 +41,7 @@ import by.klnvch.link5dots.multiplayer.adapters.OnItemClickListener
 import by.klnvch.link5dots.multiplayer.adapters.TargetAdapterInterface
 import by.klnvch.link5dots.multiplayer.targets.Target
 import by.klnvch.link5dots.multiplayer.utils.GameState
+import by.klnvch.link5dots.ui.game.picker.OnPickerClickListener
 
 open class PickerFragment : Fragment(), OnItemClickListener, OnEmptyStateListener,
     OnPickerClickListener {
@@ -96,7 +97,7 @@ open class PickerFragment : Fragment(), OnItemClickListener, OnEmptyStateListene
     fun setState(state: GameState) {
         if (view == null) return
 
-        binding.viewState = PickerViewState(state)
+        //binding.viewState = PickerViewState(state)
 
         when (state.targetState) {
             GameState.TargetState.NONE,

@@ -21,19 +21,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+package by.klnvch.link5dots.ui.game.error
 
-package by.klnvch.link5dots.di.workers
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import by.klnvch.link5dots.databinding.FragmentMultiplayerErrorBinding
+import dagger.android.support.DaggerFragment
 
-import androidx.work.ListenableWorker
-import by.klnvch.link5dots.workers.SyncHistoryWorker
-import dagger.Binds
-import dagger.Module
-import dagger.multibindings.IntoMap
+class MultiplayerErrorFragment : DaggerFragment(), OnMultiplayerErrorClickListener {
+    private lateinit var binding: FragmentMultiplayerErrorBinding
 
-@Module
-abstract class WorkerBindingModule {
-    @Binds
-    @IntoMap
-    @WorkManagerKey(SyncHistoryWorker::class)
-    abstract fun bindSyncHistoryWorker(worker: SyncHistoryWorker): ListenableWorker
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        binding = FragmentMultiplayerErrorBinding.inflate(inflater, container, false)
+        binding.listener = this
+        return binding.root
+    }
+
+    override fun onErrorAccepted() {
+        requireActivity().finish()
+    }
 }

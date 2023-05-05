@@ -22,27 +22,42 @@
   ~ SOFTWARE.
   -->
 
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/card_view"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_gravity="center"
-    android:layout_margin="4dp"
-    android:background="?android:attr/selectableItemBackground"
-    android:clickable="true"
-    android:focusable="true"
-    android:minHeight="@dimen/clickable_min_size"
-    android:padding="4dp"
-    card_view:cardCornerRadius="8dp"
-    card_view:contentPadding="8dp">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto">
 
-    <TextView
-        android:id="@+id/text"
-        style="@style/TextAppearance.AppCompat.Medium"
+    <data>
+
+        <variable
+            name="viewState"
+            type="by.klnvch.link5dots.ui.game.picker.adapters.PickerItemViewState" />
+
+        <variable
+            name="listener"
+            type="by.klnvch.link5dots.ui.game.picker.adapters.OnPickerItemSelected" />
+    </data>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/card_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:lines="2"
-        android:text="@string/name_not_set" />
+        android:layout_gravity="center"
+        android:layout_margin="4dp"
+        android:background="?android:attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
+        android:minHeight="@dimen/clickable_min_size"
+        android:onClick="@{() -> listener.onPickerItemSelected(viewState)}"
+        android:padding="4dp"
+        card_view:cardCornerRadius="8dp"
+        card_view:contentPadding="8dp">
 
-</androidx.cardview.widget.CardView>
+        <TextView
+            android:id="@+id/text"
+            style="@style/TextAppearance.AppCompat.Medium"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:lines="2"
+            android:text="@{viewState.longName}" />
+
+    </androidx.cardview.widget.CardView>
+</layout>

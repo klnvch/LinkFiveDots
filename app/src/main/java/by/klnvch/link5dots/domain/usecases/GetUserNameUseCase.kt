@@ -21,7 +21,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 package by.klnvch.link5dots.domain.usecases
 
 import by.klnvch.link5dots.R
@@ -42,9 +41,10 @@ class GetUserNameUseCase @Inject constructor(
 
     suspend fun get(user: IUser?) = when (user) {
         is BotUser -> stringRepository.getString(R.string.computer)
-        is NetworkUser -> user.name
+        is NetworkUser -> user.name.ifEmpty { stringRepository.getString(R.string.unknown) }
         is DeviceOwnerUser -> settings.getUserName().firstOrNull()
             ?.ifEmpty { stringRepository.getString(R.string.unknown) }
+
         null -> null
     }
 }

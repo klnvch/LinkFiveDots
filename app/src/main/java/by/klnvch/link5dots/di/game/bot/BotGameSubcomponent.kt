@@ -26,7 +26,7 @@ package by.klnvch.link5dots.di.game.bot
 
 import by.klnvch.link5dots.di.ActivityScope
 import by.klnvch.link5dots.di.game.GameFragmentBuilderModule
-import by.klnvch.link5dots.di.game.GameViewModelsModule
+import by.klnvch.link5dots.di.game.OfflineGameViewModelsModule
 import by.klnvch.link5dots.ui.game.activities.BotGameActivity
 import dagger.Subcomponent
 import dagger.android.AndroidInjector
@@ -34,7 +34,7 @@ import dagger.android.AndroidInjector
 @ActivityScope
 @Subcomponent(
     modules = [
-        GameViewModelsModule::class,
+        OfflineGameViewModelsModule::class,
         GameFragmentBuilderModule::class,
         BotGameRulesModule::class,
     ]

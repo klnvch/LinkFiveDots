@@ -21,16 +21,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 package by.klnvch.link5dots.ui.game
 
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import by.klnvch.link5dots.R
 import by.klnvch.link5dots.databinding.GameBoardBinding
 import by.klnvch.link5dots.domain.models.Point
@@ -38,6 +43,7 @@ import by.klnvch.link5dots.domain.repositories.Analytics
 import by.klnvch.link5dots.models.GameViewState
 import by.klnvch.link5dots.ui.game.GameView.OnMoveDoneListener
 import dagger.android.support.DaggerFragment
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class GameFragment : DaggerFragment(), OnMoveDoneListener {
@@ -46,7 +52,7 @@ class GameFragment : DaggerFragment(), OnMoveDoneListener {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    private val viewModel: OfflineGameViewModel by activityViewModels { viewModelFactory }
+    private lateinit var viewModel: OfflineGameViewModel
 
     @Inject
     lateinit var analytics: Analytics
@@ -56,6 +62,12 @@ class GameFragment : DaggerFragment(), OnMoveDoneListener {
         savedInstanceState: Bundle?
     ): View {
         binding = GameBoardBinding.inflate(inflater, container, false)
+
+        viewModel = ViewModelProvider(
+            requireActivity(),
+            viewModelFactory
+        )[OfflineGameViewModel.KEY, OfflineGameViewModel::class.java]
+
         return binding.root
     }
 
@@ -69,8 +81,12 @@ class GameFragment : DaggerFragment(), OnMoveDoneListener {
                 GameViewState.fromJson(savedInstanceState.getString(KEY_VIEW_STATE))
         }
 
-        viewModel.uiState.observe(viewLifecycleOwner) {
-            binding.viewState = it
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.uiState.collect {
+                    binding.viewState = it
+                }
+            }
         }
 
         viewModel.focusEvent.observe(viewLifecycleOwner) {

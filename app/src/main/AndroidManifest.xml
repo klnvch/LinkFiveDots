@@ -58,7 +58,6 @@
 
         <service android:name="by.klnvch.link5dots.multiplayer.services.GameServiceBluetooth" />
         <service android:name="by.klnvch.link5dots.multiplayer.services.GameServiceNsd" />
-        <service android:name="by.klnvch.link5dots.multiplayer.services.GameServiceOnline" />
 
         <meta-data
             android:name="google_analytics_adid_collection_enabled"
@@ -120,7 +119,7 @@
                 android:value="by.klnvch.link5dots.ui.menu.MenuActivity" />
         </activity>
         <activity
-            android:name="by.klnvch.link5dots.multiplayer.activities.GameActivityOnline"
+            android:name="by.klnvch.link5dots.ui.game.activities.OnlineGameActivity"
             android:label="@string/menu_online_game"
             android:launchMode="singleTop">
             <meta-data

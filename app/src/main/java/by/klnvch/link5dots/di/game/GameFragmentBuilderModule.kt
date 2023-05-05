@@ -27,11 +27,16 @@ package by.klnvch.link5dots.di.game
 import by.klnvch.link5dots.ui.game.GameFragment
 import by.klnvch.link5dots.ui.game.create.NewGameDialog
 import by.klnvch.link5dots.ui.game.end.EndGameDialog
+import by.klnvch.link5dots.ui.game.error.MultiplayerErrorFragment
+import by.klnvch.link5dots.ui.game.picker.PickerFragment
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
 @Module
 abstract class GameFragmentBuilderModule {
+    @ContributesAndroidInjector
+    abstract fun bindPickerFragment(): PickerFragment
+
     @ContributesAndroidInjector
     abstract fun bindGameFragment(): GameFragment
 
@@ -40,4 +45,7 @@ abstract class GameFragmentBuilderModule {
 
     @ContributesAndroidInjector
     abstract fun bindNewGameDialog(): NewGameDialog
+
+    @ContributesAndroidInjector
+    abstract fun bindMultiplayerErrorFragment(): MultiplayerErrorFragment
 }

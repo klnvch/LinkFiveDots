@@ -21,23 +21,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 package by.klnvch.link5dots.ui.game
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import by.klnvch.link5dots.domain.models.BotGameScore
-import by.klnvch.link5dots.domain.models.rules.GameRules
 import by.klnvch.link5dots.domain.models.Point
 import by.klnvch.link5dots.domain.repositories.Analytics
 import by.klnvch.link5dots.domain.repositories.Settings
+import by.klnvch.link5dots.domain.usecases.AddDotUseCase
+import by.klnvch.link5dots.domain.usecases.GetRoomUseCase
 import by.klnvch.link5dots.domain.usecases.GetUserNameUseCase
-import by.klnvch.link5dots.domain.usecases.SaveRoomUseCase
+import by.klnvch.link5dots.domain.usecases.NewGameUseCase
+import by.klnvch.link5dots.domain.usecases.PrepareScoreUseCase
+import by.klnvch.link5dots.domain.usecases.RoomParam
 import by.klnvch.link5dots.domain.usecases.SaveScoreUseCase
-import by.klnvch.link5dots.domain.usecases.room.GetRoomUseCase
+import by.klnvch.link5dots.domain.usecases.UndoMoveUseCase
 import by.klnvch.link5dots.ui.game.create.NewGameViewState
 import by.klnvch.link5dots.ui.game.end.EndGameViewState
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -46,64 +47,73 @@ import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
 
-class OfflineGameViewModel @Inject constructor(
-    private val gameRules: GameRules,
+open class OfflineGameViewModel @Inject constructor(
     private val getRoomUseCase: GetRoomUseCase,
-    private val saveRoomUseCase: SaveRoomUseCase,
+    private val newGameUseCase: NewGameUseCase,
+    private val addDotUseCase: AddDotUseCase,
+    private val undoMoveUseCase: UndoMoveUseCase,
+    private val prepareScoreUseCase: PrepareScoreUseCase,
     private val analytics: Analytics,
     private val saveScoreUseCase: SaveScoreUseCase,
     private val settings: Settings,
     private val getUserNameUseCase: GetUserNameUseCase,
 ) : ViewModel() {
-    private val searchQueryFlow = MutableSharedFlow<GetRoomUseCase.RoomParam>(1)
+    private val _searchQueryFlow = MutableSharedFlow<RoomParam>(1)
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val uiState = searchQueryFlow
-        .flatMapLatest {
-            getRoomUseCase.get(it).map { room ->
-                val type = settings.getDotsType().first()
-                val user1Name = getUserNameUseCase.get(room?.user1)
-                val user2Name = getUserNameUseCase.get(room?.user2)
-                GameViewState(type, user1Name, user2Name, gameRules.init(room))
-            }
-        }.asLiveData()
+    protected val roomFlow = _searchQueryFlow
+        .flatMapLatest { getRoomUseCase.get(it) }
+        .onEach { if (it == null) newGameUseCase.create(0) }
+        .filterNotNull()
+
+    val uiState = roomFlow.map {
+        val type = settings.getDotsType().first()
+        val user1Name = getUserNameUseCase.get(it.user1)
+        val user2Name = getUserNameUseCase.get(it.user2)
+        GameViewState(type, user1Name, user2Name, it)
+    }.stateIn(viewModelScope, SharingStarted.Eagerly, GameViewState.default())
+
+    val scoreUi = roomFlow.map {
+        if (!it.isNotOver()) {
+            val score = prepareScoreUseCase.get(it)
+            EndGameViewState(score, undoMoveUseCase.isSupported, newGameUseCase.isSupported)
+        } else {
+            null
+        }
+    }.stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
     private val _focusEvent = MutableLiveData<Unit>()
     val focusEvent: LiveData<Unit> = _focusEvent
 
-    fun setParam(param: GetRoomUseCase.RoomParam) {
-        viewModelScope.launch { searchQueryFlow.emit(param) }
+    fun setParam(param: RoomParam) {
+        viewModelScope.launch { _searchQueryFlow.emit(param) }
     }
 
     fun undoLastMove() {
         analytics.logEvent(Analytics.EVENT_UNDO_MOVE)
-
         viewModelScope.launch {
-            val room = gameRules.undo()
-            saveRoomUseCase.save(room)
+            val room = roomFlow.firstOrNull()
+            if (room != null) {
+                undoMoveUseCase.undo(room)
+            }
         }
     }
 
     fun newGame(seed: Long?) {
         analytics.logEvent(if (seed != null) Analytics.EVENT_GENERATE_GAME else Analytics.EVENT_NEW_GAME)
-
         viewModelScope.launch {
-            val room = gameRules.newGame(seed)
-            saveRoomUseCase.save(room)
+            newGameUseCase.create(seed)
         }
     }
 
     fun addDot(dot: Point) {
         analytics.logEvent(Analytics.EVENT_NEW_MOVE)
         viewModelScope.launch {
-            val room = gameRules.addDot(dot)
-            saveRoomUseCase.save(room)
+            val room = roomFlow.firstOrNull()
+            if (room != null) {
+                addDotUseCase.addDot(room, dot)
+            }
         }
-    }
-
-    fun getEndGameViewState(): EndGameViewState {
-        val score = gameRules.getScore()
-        return EndGameViewState(score)
     }
 
     fun getNewGameViewState(): NewGameViewState {
@@ -112,15 +122,22 @@ class OfflineGameViewModel @Inject constructor(
     }
 
     fun saveScore() {
-        val score = gameRules.getScore()
         analytics.logEvent(Analytics.EVENT_GAME_FINISHED)
         viewModelScope.launch {
-            saveScoreUseCase.save(score as BotGameScore)
+            val room = roomFlow.firstOrNull()
+            if (room != null) {
+                val score = prepareScoreUseCase.get(room)
+                saveScoreUseCase.save(score as BotGameScore)
+            }
         }
     }
 
     fun focus() {
         analytics.logEvent(Analytics.EVENT_SEARCH)
-        _focusEvent.value = null
+        _focusEvent.value = Unit
+    }
+
+    companion object {
+        const val KEY = "VIEW_MODEL_KEY"
     }
 }

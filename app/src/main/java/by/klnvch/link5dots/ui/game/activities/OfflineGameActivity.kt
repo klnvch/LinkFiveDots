@@ -21,18 +21,36 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 package by.klnvch.link5dots.ui.game.activities
 
 import android.os.Bundle
+import androidx.activity.viewModels
+import androidx.lifecycle.ViewModelProvider
 import by.klnvch.link5dots.R
+import by.klnvch.link5dots.domain.usecases.RoomParam
 import by.klnvch.link5dots.ui.game.GameFragment
+import by.klnvch.link5dots.ui.game.OfflineGameViewModel
+import by.klnvch.link5dots.ui.game.OnlineGameViewModel
 
 abstract class OfflineGameActivity : GameActivity() {
+
+    override lateinit var viewModel: OfflineGameViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        viewModel = ViewModelProvider(
+            this,
+            viewModelFactory
+        )[OfflineGameViewModel.KEY, OfflineGameViewModel::class.java]
+
+        viewModel.setParam(getParam())
+
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction().add(R.id.fragment, GameFragment()).commit()
         }
     }
+
+
+    abstract fun getParam(): RoomParam
 }

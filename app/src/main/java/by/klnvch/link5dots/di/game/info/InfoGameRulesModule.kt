@@ -21,16 +21,35 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 package by.klnvch.link5dots.di.game.info
 
-import by.klnvch.link5dots.domain.models.rules.GameRules
-import by.klnvch.link5dots.domain.models.rules.InfoGameRules
+import by.klnvch.link5dots.domain.usecases.AddDotInfoUseCase
+import by.klnvch.link5dots.domain.usecases.AddDotUseCase
+import by.klnvch.link5dots.domain.usecases.GetOfflineRoomUseCase
+import by.klnvch.link5dots.domain.usecases.GetRoomUseCase
+import by.klnvch.link5dots.domain.usecases.NewGameEmptyUseCase
+import by.klnvch.link5dots.domain.usecases.NewGameUseCase
+import by.klnvch.link5dots.domain.usecases.PrepareScoreOtherUseCase
+import by.klnvch.link5dots.domain.usecases.PrepareScoreUseCase
+import by.klnvch.link5dots.domain.usecases.UndoMoveInfoUseCase
+import by.klnvch.link5dots.domain.usecases.UndoMoveUseCase
 import dagger.Binds
 import dagger.Module
 
 @Module
 interface InfoGameRulesModule {
     @Binds
-    fun bindInfoGameRules(impl: InfoGameRules): GameRules
+    fun bindNewGameUseCase(impl: NewGameEmptyUseCase): NewGameUseCase
+
+    @Binds
+    fun bindGetRoomUseCase(impl: GetOfflineRoomUseCase): GetRoomUseCase
+
+    @Binds
+    fun bindAddDotUseCase(impl: AddDotInfoUseCase): AddDotUseCase
+
+    @Binds
+    fun bindUndoMoveUseCase(impl: UndoMoveInfoUseCase): UndoMoveUseCase
+
+    @Binds
+    fun bindPrepareScoreUseCase(impl: PrepareScoreOtherUseCase): PrepareScoreUseCase
 }

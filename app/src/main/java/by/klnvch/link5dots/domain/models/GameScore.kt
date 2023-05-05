@@ -21,12 +21,37 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 package by.klnvch.link5dots.domain.models
 
-open class SimpleGameScore(val size: Int, val duration: Int, val timestamp: Long)
+sealed interface GameScore {
+    val size: Int
+    val duration: Int
+    val timestamp: Long
+}
 
-class BotGameScore(size: Int, duration: Int, timestamp: Long, val status: GameResult) :
-    SimpleGameScore(size, duration, timestamp)
+class SimpleGameScore(
+    override val size: Int,
+    override val duration: Int,
+    override val timestamp: Long
+) : GameScore
+
+sealed interface RealGameScore : GameScore {
+    val status: GameResult
+}
+
+class BotGameScore(
+    override val size: Int,
+    override val duration: Int,
+    override val timestamp: Long,
+    override val status: GameResult
+) : RealGameScore
+
+class NetworkGameScore(
+    override val size: Int,
+    override val duration: Int,
+    override val timestamp: Long,
+    override val status: GameResult
+) : RealGameScore
+
 
 enum class GameResult { WON, LOST }

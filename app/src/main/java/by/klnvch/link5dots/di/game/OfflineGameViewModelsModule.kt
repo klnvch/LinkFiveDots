@@ -22,18 +22,19 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.multiplayer.activities;
+package by.klnvch.link5dots.di.game
 
-public class GameActivityOnline extends GameActivity {
+import androidx.lifecycle.ViewModel
+import by.klnvch.link5dots.di.viewmodels.ViewModelKey
+import by.klnvch.link5dots.ui.game.OfflineGameViewModel
+import dagger.Binds
+import dagger.Module
+import dagger.multibindings.IntoMap
 
-    @Override
-    public void newGame() {
-        getSupportFragmentManager().popBackStackImmediate();
-        mService.reset();
-    }
-
-    @Override
-    protected boolean isValidFomMainMenuMoved() {
-        return true;
-    }
+@Module
+abstract class OfflineGameViewModelsModule {
+    @Binds
+    @IntoMap
+    @ViewModelKey(OfflineGameViewModel::class)
+    abstract fun bindMainMenuViewModel(viewModel: OfflineGameViewModel): ViewModel
 }

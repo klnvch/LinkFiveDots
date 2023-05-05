@@ -21,16 +21,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 package by.klnvch.link5dots.domain.models
 
+import by.klnvch.link5dots.domain.repositories.TimeRepository
 import javax.inject.Inject
 import kotlin.random.Random
+import kotlin.random.nextUInt
 
-class RoomKeyGenerator @Inject constructor() {
+class RoomKeyGenerator @Inject constructor(
+    private val timeRepository: TimeRepository,
+) {
     fun get(): String {
-        val time = System.currentTimeMillis().toString(16)
-        val random = Random.Default.nextLong().toString(16)
+        val time = timeRepository.getCurrentTime().toString(16)
+        val random = Random.Default.nextUInt().toString(16)
         return "${time}_${random}"
     }
 }

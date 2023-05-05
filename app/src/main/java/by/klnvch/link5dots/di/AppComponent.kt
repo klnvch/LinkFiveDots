@@ -26,6 +26,7 @@ package by.klnvch.link5dots.di
 
 import android.app.Application
 import by.klnvch.link5dots.di.game.GameModule
+import by.klnvch.link5dots.di.game.online.OnlineAdapterModule
 import by.klnvch.link5dots.di.menu.MenuModule
 import by.klnvch.link5dots.di.scores.ScoresModule
 import by.klnvch.link5dots.di.settings.SettingsModule
@@ -52,6 +53,7 @@ import javax.inject.Singleton
         MenuModule::class,
         ScoresModule::class,
         GameModule::class,
+        OnlineAdapterModule::class, // TODO: move it
     ]
 )
 interface AppComponent : AndroidInjector<MyApp> {

@@ -92,4 +92,8 @@ interface AppBindingModule {
     @Singleton
     @Binds
     fun bindOnlineRoomRepository(impl: OnlineRoomRepositoryImpl): OnlineRoomRepository
+
+    @Singleton
+    @Binds
+    fun bindTimeRepository(impl: TimeRepositoryImpl): TimeRepository
 }

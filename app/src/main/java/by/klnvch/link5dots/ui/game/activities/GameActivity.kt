@@ -21,38 +21,41 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 package by.klnvch.link5dots.ui.game.activities
 
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import androidx.activity.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import by.klnvch.link5dots.R
-import by.klnvch.link5dots.domain.usecases.room.GetRoomUseCase
 import by.klnvch.link5dots.ui.game.OfflineGameViewModel
 import by.klnvch.link5dots.ui.game.create.NewGameDialog
 import by.klnvch.link5dots.ui.game.end.EndGameDialog
 import dagger.android.support.DaggerAppCompatActivity
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 abstract class GameActivity : DaggerAppCompatActivity() {
 
     @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
+    protected lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    private val viewModel: OfflineGameViewModel by viewModels { viewModelFactory }
+    protected abstract val viewModel: OfflineGameViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
 
-        viewModel.setParam(getParam())
-
-        viewModel.uiState.observe(this) {
-            if (it.boardViewState.isOver) {
-                onGameEnd()
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.uiState.collect {
+                    if (it.boardViewState.isOver) {
+                        onGameEnd()
+                    }
+                }
             }
         }
     }
@@ -66,17 +69,20 @@ abstract class GameActivity : DaggerAppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             android.R.id.home -> {
-                onBackPressedDispatcher.onBackPressed()
+                finish()
                 true
             }
+
             R.id.menu_undo -> {
                 viewModel.undoLastMove()
                 true
             }
+
             R.id.menu_new_game -> {
                 NewGameDialog().show(supportFragmentManager, NewGameDialog.TAG)
                 true
             }
+
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -85,8 +91,6 @@ abstract class GameActivity : DaggerAppCompatActivity() {
         viewModel.focus()
         return true
     }
-
-    abstract fun getParam(): GetRoomUseCase.RoomParam
 
     protected open fun onGameEnd() = EndGameDialog().show(supportFragmentManager, EndGameDialog.TAG)
 }

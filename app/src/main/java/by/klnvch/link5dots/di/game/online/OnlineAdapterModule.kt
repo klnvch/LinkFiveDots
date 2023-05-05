@@ -22,32 +22,28 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.domain.models.rules
+package by.klnvch.link5dots.di.game.online
 
-import by.klnvch.link5dots.domain.models.*
-import javax.inject.Inject
+import by.klnvch.link5dots.data.firebase.OnlineRoomRemote
+import by.klnvch.link5dots.domain.models.RoomState
+import by.klnvch.link5dots.domain.repositories.OnlineRoomRepository
+import com.firebase.ui.database.FirebaseRecyclerOptions
+import com.google.firebase.database.FirebaseDatabase
+import dagger.Module
+import dagger.Provides
 
-class InfoGameRules @Inject constructor(
-    roomKeyGenerator: RoomKeyGenerator,
-    initialGameGenerator: InitialGameGenerator,
-    board: Board
-) : GameRules(roomKeyGenerator, initialGameGenerator, board) {
-
-    override fun init(room: IRoom?): Room {
-        if (room != null) this.room = Room(room)
-        else throw IllegalStateException()
-        return this.room
-    }
-
-    override fun addInternal(p: Point) = Unit
-
-    override fun undo() = throw IllegalStateException()
-
-    override fun createGame(): Room {
-        throw IllegalStateException()
-    }
-
-    override fun getScore(): SimpleGameScore {
-        throw IllegalStateException()
+@Module
+class OnlineAdapterModule {
+    @Provides
+    fun provideFirebaseOptions(onlineRoomRepository: OnlineRoomRepository): FirebaseRecyclerOptions<OnlineRoomRemote> {
+        val query = FirebaseDatabase
+            .getInstance()
+            .reference
+            .child(onlineRoomRepository.path)
+            .orderByChild("state")
+            .equalTo(RoomState.CREATED.toDouble())
+        return FirebaseRecyclerOptions.Builder<OnlineRoomRemote>()
+            .setQuery(query, OnlineRoomRemote::class.java)
+            .build()
     }
 }

@@ -21,15 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 package by.klnvch.link5dots.ui.game.create
 
 import android.app.Dialog
-import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import by.klnvch.link5dots.R
 import by.klnvch.link5dots.databinding.DialogNewGameBinding
@@ -44,14 +41,15 @@ class NewGameDialog : DaggerDialogFragment(), DialogInterface.OnClickListener {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    private val viewModel: OfflineGameViewModel by activityViewModels { viewModelFactory }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        binding = DialogNewGameBinding.inflate(requireActivity().layoutInflater)
-    }
+    private lateinit var viewModel: OfflineGameViewModel
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        viewModel = ViewModelProvider(
+            requireActivity(),
+            viewModelFactory
+        )[OfflineGameViewModel.KEY, OfflineGameViewModel::class.java]
+
+        binding = DialogNewGameBinding.inflate(requireActivity().layoutInflater)
         binding.viewState = viewModel.getNewGameViewState()
 
         return AlertDialog.Builder(requireContext())

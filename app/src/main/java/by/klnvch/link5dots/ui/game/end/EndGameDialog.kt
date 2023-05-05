@@ -24,12 +24,10 @@
 package by.klnvch.link5dots.ui.game.end
 
 import android.app.Dialog
-import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import by.klnvch.link5dots.R
 import by.klnvch.link5dots.databinding.DialogEndGameBinding
@@ -45,23 +43,32 @@ class EndGameDialog : DaggerDialogFragment(), DialogInterface.OnClickListener {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    private val viewModel: OfflineGameViewModel by activityViewModels { viewModelFactory }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        binding = DialogEndGameBinding.inflate(requireActivity().layoutInflater)
-    }
+    private lateinit var viewModel: OfflineGameViewModel
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val viewState = viewModel.getEndGameViewState()
+        binding = DialogEndGameBinding.inflate(requireActivity().layoutInflater)
+
+        viewModel = ViewModelProvider(
+            requireActivity(),
+            viewModelFactory
+        )[OfflineGameViewModel.KEY, OfflineGameViewModel::class.java]
+
+        val viewState = viewModel.scoreUi.value
         binding.viewState = viewState
 
         val builder = AlertDialog.Builder(requireContext())
             .setView(binding.root)
-            .setTitle(if (viewState.title != null) getString(viewState.title) else null)
-            .setPositiveButton(R.string.new_game, this)
-            .setNegativeButton(R.string.undo, this)
-        if (viewState.isShareable) {
+            .setTitle(if (viewState?.title != null) getString(viewState.title) else null)
+
+        if (viewState?.isNewGameSupported == true) {
+            builder.setPositiveButton(R.string.new_game, this)
+        } else {
+            builder.setPositiveButton(R.string.okay, null)
+        }
+        if (viewState?.isUndoMoveSupported == true) {
+            builder.setNegativeButton(R.string.undo, this)
+        }
+        if (viewState?.isShareable == true) {
             builder.setNeutralButton(R.string.share, this)
         }
         return builder.show()

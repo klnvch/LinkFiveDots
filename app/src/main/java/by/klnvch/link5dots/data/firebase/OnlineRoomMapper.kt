@@ -69,5 +69,5 @@ class OnlineRoomMapper @Inject constructor() {
         else null
     }
 
-    fun map(dot: Dot) = OnlineDotRemote(dot.x, dot.y, dot.dt)
+    fun map(dot: Dot) = OnlineDotRemote(dot.dt, dot.x, dot.y)
 }

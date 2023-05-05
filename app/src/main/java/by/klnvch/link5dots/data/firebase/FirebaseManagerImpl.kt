@@ -47,6 +47,7 @@ class FirebaseManagerImpl @Inject constructor(
     }
 
     override suspend fun signInAnonymously() = suspendCancellableCoroutine { continuation ->
+        // TODO: what if user is null?
         val listener = OnCompleteListener<AuthResult> {
             if (it.isSuccessful) {
                 continuation.resume(it.result.user!!.uid)

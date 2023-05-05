@@ -21,23 +21,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 package by.klnvch.link5dots.multiplayer.factories;
 
 import androidx.annotation.NonNull;
+
 import by.klnvch.link5dots.multiplayer.activities.GameActivityBluetooth;
 import by.klnvch.link5dots.multiplayer.activities.GameActivityNsd;
-import by.klnvch.link5dots.multiplayer.activities.GameActivityOnline;
 import by.klnvch.link5dots.multiplayer.services.GameServiceBluetooth;
 import by.klnvch.link5dots.multiplayer.services.GameServiceNsd;
-import by.klnvch.link5dots.multiplayer.services.GameServiceOnline;
 
 public class FactoryProvider {
     @NonNull
     public static FactoryActivityInterface getActivityFactory(@NonNull Class c) {
-        if (c.equals(GameActivityOnline.class)) {
-            return new FactoryOnline();
-        } else if (c.equals(GameActivityNsd.class)) {
+        if (c.equals(GameActivityNsd.class)) {
             return new FactoryNsd();
         } else if (c.equals(GameActivityBluetooth.class)) {
             return new FactoryBluetooth();
@@ -48,9 +44,7 @@ public class FactoryProvider {
 
     @NonNull
     public static FactoryServiceInterface getServiceFactory(@NonNull Class c) {
-        if (c.equals(GameServiceOnline.class)) {
-            return new FactoryOnline();
-        } else if (c.equals(GameServiceNsd.class)) {
+        if (c.equals(GameServiceNsd.class)) {
             return new FactoryNsd();
         } else if (c.equals(GameServiceBluetooth.class)) {
             return new FactoryBluetooth();

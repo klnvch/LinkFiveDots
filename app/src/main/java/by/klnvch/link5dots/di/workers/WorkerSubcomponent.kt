@@ -26,6 +26,7 @@ package by.klnvch.link5dots.di.workers
 
 import androidx.work.ListenableWorker
 import androidx.work.WorkerParameters
+import by.klnvch.link5dots.workers.WorkerBindingModule
 import dagger.BindsInstance
 import dagger.Subcomponent
 import javax.inject.Provider

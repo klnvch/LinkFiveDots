@@ -21,13 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 package by.klnvch.link5dots.ui.game.activities
 
 import android.os.Bundle
 import by.klnvch.link5dots.R
 import by.klnvch.link5dots.domain.models.RoomType
-import by.klnvch.link5dots.domain.usecases.room.GetRoomUseCase
+import by.klnvch.link5dots.domain.usecases.RoomByType
 
 class TwoPlayersGameActivity : OfflineGameActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,5 +34,5 @@ class TwoPlayersGameActivity : OfflineGameActivity() {
         setTitle(R.string.menu_two_players)
     }
 
-    override fun getParam() = GetRoomUseCase.RoomByType(RoomType.TWO_PLAYERS)
+    override fun getParam() = RoomByType(RoomType.TWO_PLAYERS)
 }

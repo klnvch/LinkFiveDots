@@ -37,14 +37,14 @@ public class TargetHolder extends RecyclerView.ViewHolder implements View.OnClic
     private final TargetAdapterInterface mAdapter;
     private Target mTarget;
 
-    TargetHolder(@NonNull View v, @NonNull TargetAdapterInterface adapter) {
+    public TargetHolder(@NonNull View v, @NonNull TargetAdapterInterface adapter) {
         super(v);
         mAdapter = adapter;
         mTextView = v.findViewById(R.id.text);
         mTextView.setOnClickListener(this);
     }
 
-    void setDestination(@NonNull Target target) {
+    public void setDestination(@NonNull Target target) {
         mTarget = target;
         mTextView.setText(target.getLongName());
     }

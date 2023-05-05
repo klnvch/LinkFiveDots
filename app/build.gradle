@@ -21,7 +21,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
@@ -37,7 +36,7 @@ keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 def retrofit_version = '2.9.0'
 def dagger_version = '2.45'
 def lifecycle_version = '2.6.1'
-def support_version = '1.8.0'
+def support_version = '1.9.0'
 def room_version = '2.5.1'
 def work_version = '2.8.1'
 def nav_version = "2.5.3"
@@ -120,7 +119,7 @@ dependencies {
     implementation "com.google.dagger:dagger:${dagger_version}"
     implementation "com.google.dagger:dagger-android:${dagger_version}"
     implementation "com.google.dagger:dagger-android-support:${dagger_version}"
-    implementation 'com.google.firebase:firebase-crashlytics:18.3.6'
+    implementation 'com.google.firebase:firebase-crashlytics:18.3.7'
     implementation 'com.google.firebase:firebase-analytics:21.2.2'
     annotationProcessor "com.google.dagger:dagger-compiler:${dagger_version}"
     annotationProcessor "com.google.dagger:dagger-android-processor:${dagger_version}"
@@ -138,18 +137,18 @@ dependencies {
     implementation "com.google.android.material:material:${support_version}"
     implementation 'androidx.multidex:multidex:2.0.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.2.0-alpha09'
-    implementation 'androidx.core:core-ktx:1.10.0'
+    implementation 'androidx.core:core-ktx:1.10.1'
     implementation 'androidx.preference:preference-ktx:1.2.0'
     implementation "androidx.datastore:datastore-preferences:1.0.0"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4"
-    runtimeOnly 'org.jetbrains.kotlinx:kotlinx-coroutines-rx2:1.6.4'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.1'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.1'
+    runtimeOnly 'org.jetbrains.kotlinx:kotlinx-coroutines-rx2:1.7.1'
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
     implementation 'com.google.firebase:firebase-core:21.1.1'
-    implementation 'com.google.firebase:firebase-auth:21.3.0'
-    implementation 'com.google.firebase:firebase-database:20.2.0'
-    implementation 'com.google.firebase:firebase-database-ktx:20.2.0'
+    implementation 'com.google.firebase:firebase-auth:22.0.0'
+    implementation 'com.google.firebase:firebase-database:20.2.1'
+    implementation 'com.google.firebase:firebase-database-ktx:20.2.1'
     implementation 'com.firebaseui:firebase-ui-database:8.0.2'
     implementation "org.jetbrains.kotlin:kotlin-stdlib:${kotlin_version}"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${kotlin_version}"

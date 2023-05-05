@@ -22,9 +22,19 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.multiplayer.activities
+package by.klnvch.link5dots.di.game
 
-interface OnPickerClickListener {
-    fun onCreateButtonClicked(isOn: Boolean)
-    fun onScanButtonClicked(isOn: Boolean)
+import androidx.lifecycle.ViewModel
+import by.klnvch.link5dots.di.viewmodels.ViewModelKey
+import by.klnvch.link5dots.ui.game.OnlineGameViewModel
+import dagger.Binds
+import dagger.Module
+import dagger.multibindings.IntoMap
+
+@Module
+abstract class OnlineGameViewModelsModule {
+    @Binds
+    @IntoMap
+    @ViewModelKey(OnlineGameViewModel::class)
+    abstract fun bindMainMenuViewModel(viewModel: OnlineGameViewModel): ViewModel
 }
