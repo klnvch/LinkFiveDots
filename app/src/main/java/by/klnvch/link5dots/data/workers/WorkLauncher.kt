@@ -21,10 +21,28 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package by.klnvch.link5dots.domain.repositories
+package by.klnvch.link5dots.data.workers
 
-interface DeviceInfo {
-    fun isTest(): Boolean
-    fun getAndroidId(): String
-    fun isNsdSupported(): Boolean
+import android.content.Context
+import by.klnvch.link5dots.data.OnlineRoomDescriptor
+import by.klnvch.link5dots.data.workers.CleanUpOnlineRoomWorker.Companion.launchCleanUpOnlineRoomWorker
+import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
+import by.klnvch.link5dots.domain.models.RoomState
+import by.klnvch.link5dots.domain.repositories.OnlineGameWorkLauncher
+import javax.inject.Inject
+import javax.inject.Singleton
+
+@Singleton
+class WorkLauncher @Inject constructor(
+    private val context: Context
+) : OnlineGameWorkLauncher {
+    override fun delete(descriptor: RemoteRoomDescriptor) {
+        val key = (descriptor as OnlineRoomDescriptor).key
+        context.launchCleanUpOnlineRoomWorker(key, RoomState.DELETED)
+    }
+
+    override fun finish(descriptor: RemoteRoomDescriptor) {
+        val key = (descriptor as OnlineRoomDescriptor).key
+        context.launchCleanUpOnlineRoomWorker(key, RoomState.FINISHED)
+    }
 }

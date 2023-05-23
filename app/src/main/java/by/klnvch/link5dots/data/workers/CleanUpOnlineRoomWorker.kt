@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package by.klnvch.link5dots.workers
+package by.klnvch.link5dots.data.workers
 
 import android.content.Context
 import androidx.work.CoroutineWorker
@@ -33,9 +33,9 @@ import by.klnvch.link5dots.domain.usecases.network.UpdateOnlineRoomStateUseCase
 import javax.inject.Inject
 
 class CleanUpOnlineRoomWorker @Inject constructor(
-        appContext: Context,
-        private val params: WorkerParameters,
-        private val updateOnlineRoomStateUseCase: UpdateOnlineRoomStateUseCase,
+    appContext: Context,
+    private val params: WorkerParameters,
+    private val updateOnlineRoomStateUseCase: UpdateOnlineRoomStateUseCase,
 ) : CoroutineWorker(appContext, params) {
     override suspend fun doWork(): Result {
         val key = params.inputData.getString(ROOM_KEY)
@@ -51,9 +51,11 @@ class CleanUpOnlineRoomWorker @Inject constructor(
         private const val ROOM_STATE = "ROOM_STATE"
         fun Context.launchCleanUpOnlineRoomWorker(key: String, state: Int) {
             WorkManager.getInstance(this)
-                    .enqueue(OneTimeWorkRequestBuilder<CleanUpOnlineRoomWorker>()
-                            .setInputData(workDataOf(Pair(ROOM_KEY, key), Pair(ROOM_STATE, state)))
-                            .build())
+                .enqueue(
+                    OneTimeWorkRequestBuilder<CleanUpOnlineRoomWorker>()
+                        .setInputData(workDataOf(Pair(ROOM_KEY, key), Pair(ROOM_STATE, state)))
+                        .build()
+                )
         }
     }
 }

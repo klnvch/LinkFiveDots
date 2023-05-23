@@ -57,7 +57,6 @@
         tools:targetApi="tiramisu">
 
         <service android:name="by.klnvch.link5dots.multiplayer.services.GameServiceBluetooth" />
-        <service android:name="by.klnvch.link5dots.multiplayer.services.GameServiceNsd" />
 
         <meta-data
             android:name="google_analytics_adid_collection_enabled"
@@ -110,7 +109,7 @@
                 android:value="by.klnvch.link5dots.ui.menu.MenuActivity" />
         </activity>
         <activity
-            android:name="by.klnvch.link5dots.multiplayer.activities.GameActivityNsd"
+            android:name="by.klnvch.link5dots.ui.game.activities.NsdGameActivity"
             android:configChanges="orientation|keyboardHidden|locale"
             android:label="@string/menu_local_network"
             android:launchMode="singleTop">

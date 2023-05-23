@@ -21,10 +21,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 package by.klnvch.link5dots.data.firebase
 
 import android.content.Context
+import by.klnvch.link5dots.domain.models.UnauthorizedError
 import by.klnvch.link5dots.domain.repositories.FirebaseManager
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
@@ -39,14 +39,13 @@ import kotlin.coroutines.resumeWithException
 class FirebaseManagerImpl @Inject constructor(
     private val context: Context
 ) : FirebaseManager {
-    private val auth = FirebaseAuth.getInstance()
-
     override fun isSupported(): Boolean {
         return GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(context) ==
                 ConnectionResult.SUCCESS
     }
 
     override suspend fun signInAnonymously() = suspendCancellableCoroutine { continuation ->
+        val auth = FirebaseAuth.getInstance()
         // TODO: what if user is null?
         val listener = OnCompleteListener<AuthResult> {
             if (it.isSuccessful) {
@@ -60,7 +59,8 @@ class FirebaseManagerImpl @Inject constructor(
         auth.signInAnonymously().addOnCompleteListener(listener)
     }
 
-    override fun signOut() = auth.signOut()
+    override fun signOut() = FirebaseAuth.getInstance().signOut()
 
-    override fun getUserId(): String? = auth.currentUser?.uid
+    override fun getUserId() =
+        FirebaseAuth.getInstance().currentUser?.uid ?: throw UnauthorizedError()
 }

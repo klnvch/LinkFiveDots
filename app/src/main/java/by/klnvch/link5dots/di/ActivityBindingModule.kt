@@ -21,11 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 package by.klnvch.link5dots.di
 
 import by.klnvch.link5dots.multiplayer.activities.GameActivityBluetooth
-import by.klnvch.link5dots.multiplayer.activities.GameActivityNsd
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
@@ -36,8 +34,4 @@ abstract class ActivityBindingModule {
     @ActivityScope
     @ContributesAndroidInjector(modules = [(FragmentBuildersModule::class)])
     abstract fun gameActivityBluetooth(): GameActivityBluetooth
-
-    @ActivityScope
-    @ContributesAndroidInjector(modules = [(FragmentBuildersModule::class)])
-    abstract fun gameActivityNsd(): GameActivityNsd
 }

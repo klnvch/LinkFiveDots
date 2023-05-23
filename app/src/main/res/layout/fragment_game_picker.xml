@@ -163,11 +163,11 @@
             android:id="@+id/listTargets"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            app:items="@{viewState.discoveredItems}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/progressScan"
-            app:setScanning="@{viewState.scanning}" />
+            app:layout_constraintTop_toBottomOf="@+id/progressScan" />
 
         <TextView
             android:id="@+id/textWarningEmpty"
@@ -175,7 +175,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/search_no_results"
-            android:visibility="invisible"
+            android:visibility="@{viewState.noResultLabelVisibility}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

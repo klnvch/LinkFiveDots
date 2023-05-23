@@ -21,13 +21,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 package by.klnvch.link5dots.data
 
 import android.content.Context
+import by.klnvch.link5dots.R
 import by.klnvch.link5dots.domain.repositories.StringRepository
 import javax.inject.Inject
 
 class StringProvider @Inject constructor(private val context: Context) : StringRepository {
     override fun getString(resId: Int) = context.getString(resId)
+    override fun getUnknownName() = getString(R.string.unknown)
 }

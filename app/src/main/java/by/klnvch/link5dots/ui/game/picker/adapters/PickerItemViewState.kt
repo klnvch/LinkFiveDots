@@ -23,13 +23,11 @@
  */
 package by.klnvch.link5dots.ui.game.picker.adapters
 
-import by.klnvch.link5dots.utils.FormatUtils.formatDateTime
+import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
 
 data class PickerItemViewState(
-    val key: String,
-    private val time: Long,
-    private val userName: String,
+    val descriptor: RemoteRoomDescriptor,
 ) {
-    val shortName = userName
-    val longName = "${time.formatDateTime()} - $userName"
+    val shortName = descriptor.title
+    val longName = "${descriptor.title} ${descriptor.description}"
 }

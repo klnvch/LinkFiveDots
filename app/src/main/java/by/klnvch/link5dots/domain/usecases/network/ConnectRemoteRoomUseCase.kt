@@ -24,25 +24,43 @@
 package by.klnvch.link5dots.domain.usecases.network
 
 import by.klnvch.link5dots.domain.models.NetworkUser
+import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
 import by.klnvch.link5dots.domain.repositories.FirebaseManager
+import by.klnvch.link5dots.domain.repositories.NsdRoomRepository
 import by.klnvch.link5dots.domain.repositories.OnlineRoomRepository
 import by.klnvch.link5dots.domain.repositories.Settings
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
+abstract class ConnectRemoteRoomUseCase {
+    abstract suspend fun connect(descriptor: RemoteRoomDescriptor)
+}
+
 class ConnectOnlineRoomUseCase @Inject constructor(
     private val firebaseManager: FirebaseManager,
     private val settings: Settings,
     private val onlineRoomRepository: OnlineRoomRepository,
-) {
-    suspend fun connect(key: String) {
-        val userId = firebaseManager.getUserId() ?: throw IllegalStateException()
+) : ConnectRemoteRoomUseCase() {
+    override suspend fun connect(descriptor: RemoteRoomDescriptor) {
+        val userId = firebaseManager.getUserId()
         val userName = settings.getUserName().first()
         val user2 = NetworkUser(userId, userName)
         if (onlineRoomRepository.isConnected()) {
-            onlineRoomRepository.connect(key, user2)
+            onlineRoomRepository.connect(descriptor, user2)
         } else {
             throw Error("Not connected")
         }
+    }
+}
+
+class ConnectNsdRoomUseCase @Inject constructor(
+    private val nsdRoomRepository: NsdRoomRepository,
+    private val settings: Settings,
+) : ConnectRemoteRoomUseCase() {
+    override suspend fun connect(descriptor: RemoteRoomDescriptor) {
+        val userId = settings.getUserId().first()
+        val userName = settings.getUserName().first()
+        val user2 = NetworkUser(userId, userName)
+        nsdRoomRepository.connect(descriptor, user2)
     }
 }

@@ -27,10 +27,10 @@ import by.klnvch.link5dots.domain.models.Board
 import by.klnvch.link5dots.domain.models.Bot
 import by.klnvch.link5dots.domain.models.Dot
 import by.klnvch.link5dots.domain.models.IRoom
-import by.klnvch.link5dots.domain.models.NetworkRoom
+import by.klnvch.link5dots.domain.models.NetworkRoomExtended
 import by.klnvch.link5dots.domain.models.Point
 import by.klnvch.link5dots.domain.models.Room
-import by.klnvch.link5dots.domain.repositories.FirebaseManager
+import by.klnvch.link5dots.domain.repositories.NsdRoomRepository
 import by.klnvch.link5dots.domain.repositories.OnlineRoomRepository
 import by.klnvch.link5dots.domain.repositories.RoomRepository
 import by.klnvch.link5dots.domain.repositories.TimeRepository
@@ -58,25 +58,41 @@ abstract class AddDotRealUseCase constructor(
     abstract suspend fun addInternal(room: IRoom, p: Point, dt: Int)
 }
 
-class AddDotOnlineUseCase @Inject constructor(
+abstract class AddDotMultiplayerUseCase constructor(
     timeRepository: TimeRepository,
     board: Board,
-    private val firebaseManager: FirebaseManager,
-    private val onlineRoomRepository: OnlineRoomRepository,
 ) : AddDotRealUseCase(timeRepository, board) {
+    abstract suspend fun addMultiplayerDot(room: IRoom, dot: Dot)
     override suspend fun addInternal(room: IRoom, p: Point, dt: Int) {
-        val userId = firebaseManager.getUserId() ?: throw IllegalStateException("User is logout")
-        if (room is NetworkRoom) {
-            val (key, _, dots, user1, user2) = room
-            if (user1.id == userId && dots.size % 2 == 0) {
-                onlineRoomRepository.addDot(key, dots.size, Dot(p, Dot.HOST, dt))
-            } else if (user2?.id == userId && dots.size % 2 == 1) {
-                onlineRoomRepository.addDot(key, dots.size, Dot(p, Dot.GUEST, dt))
+        if (room is NetworkRoomExtended) {
+            val (_, _, dots, user1, user2, _, _,  yourId) = room
+            if (user1.id == yourId && dots.size % 2 == 0) {
+                addMultiplayerDot(room, Dot(p, Dot.HOST, dt))
+            } else if (user2?.id == yourId && dots.size % 2 == 1) {
+                addMultiplayerDot(room, Dot(p, Dot.GUEST, dt))
             }
         } else {
             throw IllegalStateException("Wrong room type")
         }
     }
+}
+
+class AddDotOnlineUseCase @Inject constructor(
+    timeRepository: TimeRepository,
+    board: Board,
+    private val repository: OnlineRoomRepository,
+) : AddDotMultiplayerUseCase(timeRepository, board) {
+
+    override suspend fun addMultiplayerDot(room: IRoom, dot: Dot) =
+        repository.addDot(room.key, room.dots.size, dot)
+}
+
+class AddDotNsdUseCase @Inject constructor(
+    timeRepository: TimeRepository,
+    board: Board,
+    private val repository: NsdRoomRepository,
+) : AddDotMultiplayerUseCase(timeRepository, board) {
+    override suspend fun addMultiplayerDot(room: IRoom, dot: Dot) = repository.addDot(dot)
 }
 
 abstract class AddDotOfflineUseCase(

@@ -21,10 +21,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package by.klnvch.link5dots.ui.game.picker.adapters
+package by.klnvch.link5dots.ui.game.activities
 
-interface OnlineRoomScanner {
-    fun startScan()
-    fun stopScan()
-    fun isScanning(): Boolean
+import by.klnvch.link5dots.R
+
+class NsdGameActivity : MultiplayerGameActivity() {
+    override val defaultTitle = R.string.menu_local_network
 }

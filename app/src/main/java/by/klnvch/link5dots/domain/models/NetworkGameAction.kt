@@ -21,29 +21,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+package by.klnvch.link5dots.domain.models
 
-package by.klnvch.link5dots.di.game.online
-
-import by.klnvch.link5dots.data.firebase.OnlineRoomRemote
-import by.klnvch.link5dots.domain.models.RoomState
-import by.klnvch.link5dots.domain.repositories.OnlineRoomRepository
-import com.firebase.ui.database.FirebaseRecyclerOptions
-import com.google.firebase.database.FirebaseDatabase
-import dagger.Module
-import dagger.Provides
-
-@Module
-class OnlineAdapterModule {
-    @Provides
-    fun provideFirebaseOptions(onlineRoomRepository: OnlineRoomRepository): FirebaseRecyclerOptions<OnlineRoomRemote> {
-        val query = FirebaseDatabase
-            .getInstance()
-            .reference
-            .child(onlineRoomRepository.path)
-            .orderByChild("state")
-            .equalTo(RoomState.CREATED.toDouble())
-        return FirebaseRecyclerOptions.Builder<OnlineRoomRemote>()
-            .setQuery(query, OnlineRoomRemote::class.java)
-            .build()
-    }
+enum class NetworkGameAction {
+    GAME_OVER_WIN, GAME_OVER_LOSE, DISCONNECTED, MOVE, WAIT, UNKNOWN
 }

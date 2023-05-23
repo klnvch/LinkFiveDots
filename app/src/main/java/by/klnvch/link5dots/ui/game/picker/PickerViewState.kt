@@ -24,6 +24,7 @@
 package by.klnvch.link5dots.ui.game.picker
 
 import android.view.View
+import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
 import by.klnvch.link5dots.ui.game.picker.adapters.PickerItemViewState
 
 data class PickerViewState(private val state: GameState) {
@@ -58,25 +59,31 @@ data class PickerViewState(private val state: GameState) {
 
     val isScanButtonEnabled = when {
         state.connectState !is ConnectNone -> false
-        state.scanState == ScanState.ON -> true
-        state.scanState == ScanState.OFF -> true
+        state.scanState is ScanOn -> true
+        state.scanState == ScanOff -> true
         else -> false
     }
 
     val isScanButtonChecked = when (state.scanState) {
-        ScanState.ON -> true
+        is ScanOn -> true
         else -> false
     }
 
     val scanProgressVisibility = when (state.scanState) {
-        ScanState.ON -> View.VISIBLE
+        is ScanOn -> View.VISIBLE
         else -> View.INVISIBLE
     }
 
     val isScanning = when (state.scanState) {
-        ScanState.ON -> true
+        is ScanOn -> true
         else -> false
     }
+
+    val noResultLabelVisibility =
+        if (state.scanState is ScanOn && state.scanState.items.isEmpty()) View.VISIBLE
+        else View.GONE
+
+    val discoveredItems = if (state.scanState is ScanOn) state.scanState.items else emptyList()
 
     companion object {
         val INITIAL = PickerViewState(StateInitial())
@@ -84,11 +91,13 @@ data class PickerViewState(private val state: GameState) {
         val ERROR = PickerViewState(StateError())
         val TARGET_CREATING = PickerViewState(StateTargetCreating())
         val TARGET_DELETING = PickerViewState(StateTargetDeleting())
-        fun connected(key: String) = PickerViewState(StateConnected(key))
-        fun created(itemViewState: PickerItemViewState) =
-                PickerViewState(StateTargetCreated(itemViewState))
+        fun connected(descriptor: RemoteRoomDescriptor) =
+            PickerViewState(StateConnected(descriptor))
 
-        val START_SCAN = PickerViewState(StateScanning())
+        fun created(itemViewState: PickerItemViewState) =
+            PickerViewState(StateTargetCreated(itemViewState))
+
+        fun scanning(items: List<PickerItemViewState>) = PickerViewState(StateScanning(items))
         val CONNECTING = PickerViewState(StateConnecting())
         val DISCONNECTED = PickerViewState(StateDisconnected())
     }
@@ -101,36 +110,41 @@ object TargetDeleted : TargetState()
 object TargetCreating : TargetState()
 object TargetDeleting : TargetState()
 class TargetCreated(val itemViewState: PickerItemViewState) : TargetState() {
-    val key = itemViewState.key
+    val descriptor = itemViewState.descriptor
 }
 
-enum class ScanState {
-    NONE, OFF, ON, DONE
-}
+sealed class ScanState
+object ScanNone : ScanState()
+object ScanOff : ScanState()
+data class ScanOn(val items: List<PickerItemViewState>) : ScanState()
+object ScanDone : ScanState()
+
 
 sealed class ConnectState
 object ConnectNone : ConnectState()
 object ConnectConnecting : ConnectState()
-class ConnectConnected(val key: String) : ConnectState()
+class ConnectConnected(val descriptor: RemoteRoomDescriptor) : ConnectState()
 object ConnectDisconnected : ConnectState()
 
 sealed class GameState(
-        val targetState: TargetState,
-        val scanState: ScanState,
-        val connectState: ConnectState,
+    val targetState: TargetState,
+    val scanState: ScanState,
+    val connectState: ConnectState,
 )
 
-private class StateInitial : GameState(TargetNone, ScanState.NONE, ConnectNone)
-private class StateError : GameState(TargetNone, ScanState.NONE, ConnectNone)
-private class StateIdle : GameState(TargetDeleted, ScanState.OFF, ConnectNone)
-private class StateTargetCreating : GameState(TargetCreating, ScanState.NONE, ConnectNone)
+private class StateInitial : GameState(TargetNone, ScanNone, ConnectNone)
+private class StateError : GameState(TargetNone, ScanNone, ConnectNone)
+private class StateIdle : GameState(TargetDeleted, ScanOff, ConnectNone)
+private class StateTargetCreating : GameState(TargetCreating, ScanNone, ConnectNone)
 class StateTargetCreated(itemViewState: PickerItemViewState) :
-        GameState(TargetCreated(itemViewState), ScanState.NONE, ConnectNone)
+    GameState(TargetCreated(itemViewState), ScanNone, ConnectNone)
 
-private class StateTargetDeleting : GameState(TargetDeleting, ScanState.NONE, ConnectNone)
-private class StateConnected(key: String) :
-        GameState(TargetNone, ScanState.NONE, ConnectConnected(key))
+private class StateTargetDeleting : GameState(TargetDeleting, ScanNone, ConnectNone)
+private class StateConnected(descriptor: RemoteRoomDescriptor) :
+    GameState(TargetNone, ScanNone, ConnectConnected(descriptor))
 
-private class StateScanning : GameState(TargetNone, ScanState.ON, ConnectNone)
-private class StateConnecting : GameState(TargetNone, ScanState.NONE, ConnectConnecting)
-private class StateDisconnected : GameState(TargetNone, ScanState.NONE, ConnectDisconnected)
+private class StateScanning(items: List<PickerItemViewState>) :
+    GameState(TargetNone, ScanOn(items), ConnectNone)
+
+private class StateConnecting : GameState(TargetNone, ScanNone, ConnectConnecting)
+private class StateDisconnected : GameState(TargetNone, ScanNone, ConnectDisconnected)

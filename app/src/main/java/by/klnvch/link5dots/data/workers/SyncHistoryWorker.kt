@@ -1,4 +1,4 @@
-package by.klnvch.link5dots.workers
+package by.klnvch.link5dots.data.workers
 
 import android.content.Context
 import androidx.work.CoroutineWorker

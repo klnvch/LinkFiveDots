@@ -25,10 +25,12 @@
 package by.klnvch.link5dots.domain.repositories
 
 import by.klnvch.link5dots.domain.models.DotsStyleType
+import by.klnvch.link5dots.domain.models.NetworkUser
 import kotlinx.coroutines.flow.Flow
 
 interface Settings {
     fun getUserName(): Flow<String>
+    fun getUserId(): Flow<String>
     fun getUserNameBlocking(): String
     suspend fun setUserName(userName: String)
     fun isFirstRun(): Flow<Boolean>
@@ -40,6 +42,7 @@ interface Settings {
 
     companion object {
         const val KEY_USER_NAME = "pref_username"
+        const val KEY_USER_ID = "pref_user_id"
         const val KEY_FIRST_RUN = "FIRST_RUN"
         const val KEY_LANGUAGE = "pref_language"
         const val KEY_VIBRATION = "pref_vibration"

@@ -21,14 +21,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package by.klnvch.link5dots.domain.usecases.network
 
-import by.klnvch.link5dots.domain.models.RoomState
-import by.klnvch.link5dots.workers.WorkLauncher
-import javax.inject.Inject
+package by.klnvch.link5dots.data.workers
 
-class DisconnectOnlineRoomUseCase @Inject constructor(
-    private val workLauncher: WorkLauncher,
-) {
-    fun disconnect(key: String) = workLauncher.cleanUpOnlineRoom(key, RoomState.FINISHED)
+import androidx.work.ListenableWorker
+import by.klnvch.link5dots.di.workers.WorkManagerKey
+import dagger.Binds
+import dagger.Module
+import dagger.multibindings.IntoMap
+
+@Module
+abstract class WorkerBindingModule {
+    @Binds
+    @IntoMap
+    @WorkManagerKey(SyncHistoryWorker::class)
+    abstract fun bindSyncHistoryWorker(worker: SyncHistoryWorker): ListenableWorker
+
+
+    @Binds
+    @IntoMap
+    @WorkManagerKey(CleanUpOnlineRoomWorker::class)
+    abstract fun bindCleanUpOnlineRoomWorker(worker: CleanUpOnlineRoomWorker): ListenableWorker
 }

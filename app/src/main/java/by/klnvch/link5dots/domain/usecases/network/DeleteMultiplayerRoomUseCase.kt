@@ -21,10 +21,28 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package by.klnvch.link5dots.domain.repositories
+package by.klnvch.link5dots.domain.usecases.network
 
-interface DeviceInfo {
-    fun isTest(): Boolean
-    fun getAndroidId(): String
-    fun isNsdSupported(): Boolean
+import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
+import by.klnvch.link5dots.domain.repositories.NsdRoomRepository
+import by.klnvch.link5dots.domain.repositories.OnlineGameWorkLauncher
+import javax.inject.Inject
+
+interface DeleteMultiplayerRoomUseCase {
+    fun delete(descriptor: RemoteRoomDescriptor)
+    fun finish(descriptor: RemoteRoomDescriptor)
+}
+
+class DeleteOnlineRoomUseCase @Inject constructor(
+    private val workLauncher: OnlineGameWorkLauncher,
+) : DeleteMultiplayerRoomUseCase {
+    override fun delete(descriptor: RemoteRoomDescriptor) = workLauncher.delete(descriptor)
+    override fun finish(descriptor: RemoteRoomDescriptor) = workLauncher.finish(descriptor)
+}
+
+class DeleteNsdRoomUseCase @Inject constructor(
+    private val repository: NsdRoomRepository,
+) : DeleteMultiplayerRoomUseCase {
+    override fun delete(descriptor: RemoteRoomDescriptor) = repository.delete()
+    override fun finish(descriptor: RemoteRoomDescriptor) = repository.finish()
 }

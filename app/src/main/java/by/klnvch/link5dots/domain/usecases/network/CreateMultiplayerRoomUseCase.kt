@@ -25,47 +25,75 @@ package by.klnvch.link5dots.domain.usecases.network
 
 import by.klnvch.link5dots.domain.models.NetworkRoom
 import by.klnvch.link5dots.domain.models.NetworkUser
+import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
 import by.klnvch.link5dots.domain.models.RoomKeyGenerator
 import by.klnvch.link5dots.domain.models.RoomState
 import by.klnvch.link5dots.domain.models.RoomType
 import by.klnvch.link5dots.domain.repositories.FirebaseManager
+import by.klnvch.link5dots.domain.repositories.NsdRoomRepository
 import by.klnvch.link5dots.domain.repositories.OnlineRoomRepository
 import by.klnvch.link5dots.domain.repositories.Settings
 import by.klnvch.link5dots.domain.repositories.TimeRepository
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
-class CreateOnlineRoomUseCase @Inject constructor(
-    private val firebaseManager: FirebaseManager,
+abstract class CreateMultiplayerRoomUseCase(
     private val settings: Settings,
-    private val onlineRoomRepository: OnlineRoomRepository,
     private val timeRepository: TimeRepository,
     private val roomKeyGenerator: RoomKeyGenerator,
 ) {
-    suspend fun create(): NetworkRoom {
-        val userId = firebaseManager.getUserId() ?: throw UnauthorizedError()
+    suspend fun create(): RemoteRoomDescriptor {
         val userName = settings.getUserName().first()
-        val user1 = NetworkUser(userId, userName)
         val timestamp = timeRepository.getCurrentTime()
         val key = roomKeyGenerator.get()
-
         val room = NetworkRoom(
             key,
             timestamp,
             emptyList(),
-            user1,
+            getUser1(userName),
             null,
-            RoomType.ONLINE,
+            type,
             RoomState.CREATED
         )
-        if (onlineRoomRepository.isConnected()) {
-            onlineRoomRepository.create(room)
-            return room
-        } else {
-            throw DisconnectedError()
-        }
+        return create(room)
     }
+
+    abstract suspend fun create(room: NetworkRoom): RemoteRoomDescriptor
+    abstract suspend fun getUser1(userName: String): NetworkUser
+    abstract val type: Int
 }
 
-class UnauthorizedError : Error()
+class CreateOnlineRoomUseCase @Inject constructor(
+    private val repository: OnlineRoomRepository,
+    private val firebaseManager: FirebaseManager,
+    settings: Settings,
+    timeRepository: TimeRepository,
+    roomKeyGenerator: RoomKeyGenerator,
+) : CreateMultiplayerRoomUseCase(settings, timeRepository, roomKeyGenerator) {
+    override suspend fun create(room: NetworkRoom) =
+        if (repository.isConnected()) repository.create(room)
+        else throw DisconnectedError()
+
+    override suspend fun getUser1(userName: String) =
+        NetworkUser(firebaseManager.getUserId(), userName)
+
+    override val type = RoomType.ONLINE
+}
+
+class CreateNsdRoomUseCase @Inject constructor(
+    private val repository: NsdRoomRepository,
+    private val settings: Settings,
+    timeRepository: TimeRepository,
+    roomKeyGenerator: RoomKeyGenerator,
+) : CreateMultiplayerRoomUseCase(settings, timeRepository, roomKeyGenerator) {
+    override suspend fun create(room: NetworkRoom) = repository.create(room)
+    override suspend fun getUser1(userName: String): NetworkUser {
+        val userId = settings.getUserId().first()
+        return NetworkUser(userId, userName)
+    }
+
+    override val type = RoomType.NSD
+
+}
+
 class DisconnectedError : Error()

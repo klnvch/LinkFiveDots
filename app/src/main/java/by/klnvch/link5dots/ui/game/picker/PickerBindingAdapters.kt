@@ -27,7 +27,8 @@ import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import by.klnvch.link5dots.R
-import by.klnvch.link5dots.ui.game.picker.adapters.OnlineRoomScanner
+import by.klnvch.link5dots.ui.game.picker.adapters.PickerAdapter
+import by.klnvch.link5dots.ui.game.picker.adapters.PickerItemViewState
 
 object PickerBindingAdapters {
     @JvmStatic
@@ -40,15 +41,11 @@ object PickerBindingAdapters {
     }
 
     @JvmStatic
-    @BindingAdapter("setScanning")
-    fun RecyclerView.setScanning(isScanning: Boolean) {
-        val adapter = this.adapter
-        if (adapter is OnlineRoomScanner) {
-            if (isScanning) {
-                adapter.startScan()
-            } else {
-                adapter.stopScan()
-            }
+    @BindingAdapter("items")
+    fun RecyclerView.setItems(items: List<PickerItemViewState>) {
+        val currentAdapter = adapter
+        if (currentAdapter is PickerAdapter) {
+            currentAdapter.submitList(items)
         }
     }
 }

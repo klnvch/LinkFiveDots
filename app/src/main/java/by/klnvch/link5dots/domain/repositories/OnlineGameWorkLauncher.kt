@@ -23,8 +23,9 @@
  */
 package by.klnvch.link5dots.domain.repositories
 
-interface DeviceInfo {
-    fun isTest(): Boolean
-    fun getAndroidId(): String
-    fun isNsdSupported(): Boolean
+import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
+
+interface OnlineGameWorkLauncher {
+    fun delete(descriptor: RemoteRoomDescriptor)
+    fun finish(descriptor: RemoteRoomDescriptor)
 }

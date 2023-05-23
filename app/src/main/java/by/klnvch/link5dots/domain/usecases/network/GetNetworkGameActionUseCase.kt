@@ -23,26 +23,29 @@
  */
 package by.klnvch.link5dots.domain.usecases.network
 
-import by.klnvch.link5dots.data.OnlineRoomDescriptor
-import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
-import by.klnvch.link5dots.domain.repositories.NsdRoomRepository
-import by.klnvch.link5dots.domain.repositories.OnlineRoomRepository
-import kotlinx.coroutines.flow.Flow
+import by.klnvch.link5dots.domain.models.IRoom
+import by.klnvch.link5dots.domain.models.NetworkGameAction
+import by.klnvch.link5dots.domain.models.NetworkRoomExtended
+import by.klnvch.link5dots.domain.models.RoomState
 import javax.inject.Inject
 
-abstract class GetMultiplayerRoomStateUseCase {
-    abstract fun get(descriptor: RemoteRoomDescriptor): Flow<Int>
-}
+class GetNetworkGameActionUseCase @Inject constructor() {
+    fun get(room: IRoom): NetworkGameAction {
+        return if (room is NetworkRoomExtended)
+            if (room.user1.id == room.yourId) map(room, 0)
+            else if (room.user2?.id == room.yourId) map(room, 1)
+            else NetworkGameAction.UNKNOWN
+        else
+            throw IllegalStateException("Wrong room type")
+    }
 
-class GetOnlineRoomStateUseCase @Inject constructor(
-    private val repository: OnlineRoomRepository,
-) : GetMultiplayerRoomStateUseCase() {
-    override fun get(descriptor: RemoteRoomDescriptor) =
-        repository.getState((descriptor as OnlineRoomDescriptor).key)
-}
-
-class GetNsdRoomStateUseCase @Inject constructor(
-    private val repository: NsdRoomRepository,
-) : GetMultiplayerRoomStateUseCase() {
-    override fun get(descriptor: RemoteRoomDescriptor) = repository.getState()
+    private fun map(room: NetworkRoomExtended, expectedOrder: Int): NetworkGameAction {
+        val order = room.dots.size % 2
+        return if (room.isOver())
+            if (order == expectedOrder) NetworkGameAction.GAME_OVER_LOSE
+            else NetworkGameAction.GAME_OVER_WIN
+        else if (room.state == RoomState.FINISHED) NetworkGameAction.DISCONNECTED
+        else if (order == expectedOrder) NetworkGameAction.MOVE
+        else NetworkGameAction.WAIT
+    }
 }

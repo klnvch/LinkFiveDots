@@ -21,7 +21,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 package by.klnvch.link5dots.multiplayer.factories;
 
 import android.content.Context;
@@ -29,6 +28,7 @@ import android.content.Context;
 import java.io.IOException;
 
 import androidx.annotation.NonNull;
+
 import by.klnvch.link5dots.multiplayer.adapters.TargetAdapterInterface;
 import by.klnvch.link5dots.multiplayer.sockets.ServerSocketDecorator;
 import by.klnvch.link5dots.multiplayer.sockets.SocketDecorator;

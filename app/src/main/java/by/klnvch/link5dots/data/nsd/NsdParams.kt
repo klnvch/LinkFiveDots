@@ -21,10 +21,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package by.klnvch.link5dots.domain.repositories
+package by.klnvch.link5dots.data.nsd
 
-interface DeviceInfo {
-    fun isTest(): Boolean
-    fun getAndroidId(): String
-    fun isNsdSupported(): Boolean
+object NsdParams {
+    const val SERVICE_NAME = "Link Five Dots"
+    const val SERVICE_TYPE = "_http._tcp."
+    const val TAG = "NSD"
 }

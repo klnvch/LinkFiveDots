@@ -23,19 +23,31 @@
  */
 package by.klnvch.link5dots.domain.usecases.network
 
+import by.klnvch.link5dots.domain.repositories.DeviceInfo
 import by.klnvch.link5dots.domain.repositories.FirebaseManager
 import javax.inject.Inject
 
-class InitUseCase @Inject constructor(
+abstract class InitMultiplayerUseCase {
+    abstract suspend fun init()
+}
+
+class InitOnlineUseCase @Inject constructor(
     private val firebaseManager: FirebaseManager
-) {
-    suspend fun init() {
+) : InitMultiplayerUseCase() {
+    override suspend fun init() {
         if (firebaseManager.isSupported()) {
             firebaseManager.signInAnonymously()
         } else {
             throw UnsupportedError()
         }
     }
+}
+
+class InitNsdUseCase @Inject constructor(
+    private val deviceInfo: DeviceInfo,
+) : InitMultiplayerUseCase() {
+    override suspend fun init() =
+        if (deviceInfo.isNsdSupported()) Unit else throw UnsupportedError()
 }
 
 class UnsupportedError : Error()

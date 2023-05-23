@@ -31,8 +31,10 @@ import by.klnvch.link5dots.data.*
 import by.klnvch.link5dots.data.firebase.AnalyticsImpl
 import by.klnvch.link5dots.data.firebase.FirebaseManagerImpl
 import by.klnvch.link5dots.data.GameScoreRepositoryImpl
+import by.klnvch.link5dots.data.nsd.NsdRoomRepositoryImpl
 import by.klnvch.link5dots.data.settings.PreferenceDataStoreImpl
 import by.klnvch.link5dots.data.settings.SettingsImpl
+import by.klnvch.link5dots.data.workers.WorkLauncher
 import by.klnvch.link5dots.domain.repositories.*
 import dagger.Binds
 import dagger.Module
@@ -95,5 +97,13 @@ interface AppBindingModule {
 
     @Singleton
     @Binds
+    fun bindNsdRoomRepository(impl: NsdRoomRepositoryImpl): NsdRoomRepository
+
+    @Singleton
+    @Binds
     fun bindTimeRepository(impl: TimeRepositoryImpl): TimeRepository
+
+    @Singleton
+    @Binds
+    fun bindOnlineGameWorkLauncher(impl: WorkLauncher): OnlineGameWorkLauncher
 }

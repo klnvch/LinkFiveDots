@@ -23,6 +23,8 @@
  */
 package by.klnvch.link5dots.ui.game.activities
 
-enum class MultiplayerNavigationEvent {
-    PICKER, GAME, ERROR
-}
+sealed interface MultiplayerNavigationEvent
+object PickerScreen : MultiplayerNavigationEvent
+object GameScreen : MultiplayerNavigationEvent
+object InitError : MultiplayerNavigationEvent
+data class ConnectError(val dst: String) : MultiplayerNavigationEvent

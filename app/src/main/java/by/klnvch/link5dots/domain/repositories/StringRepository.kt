@@ -26,4 +26,5 @@ package by.klnvch.link5dots.domain.repositories
 
 interface StringRepository {
     fun getString(resId: Int): String
+    fun getUnknownName(): String
 }

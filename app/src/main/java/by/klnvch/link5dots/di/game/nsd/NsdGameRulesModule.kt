@@ -21,11 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package by.klnvch.link5dots.di.game.online
+package by.klnvch.link5dots.di.game.nsd
 
-import by.klnvch.link5dots.domain.usecases.AddDotOnlineUseCase
+import by.klnvch.link5dots.domain.usecases.AddDotNsdUseCase
 import by.klnvch.link5dots.domain.usecases.AddDotUseCase
-import by.klnvch.link5dots.domain.usecases.GetRoomOnlineUseCase
+import by.klnvch.link5dots.domain.usecases.GetRoomNsdUseCase
 import by.klnvch.link5dots.domain.usecases.GetRoomUseCase
 import by.klnvch.link5dots.domain.usecases.NewGameEmptyUseCase
 import by.klnvch.link5dots.domain.usecases.NewGameUseCase
@@ -33,33 +33,33 @@ import by.klnvch.link5dots.domain.usecases.PrepareScoreMultiplayerUseCase
 import by.klnvch.link5dots.domain.usecases.PrepareScoreUseCase
 import by.klnvch.link5dots.domain.usecases.UndoMoveInfoUseCase
 import by.klnvch.link5dots.domain.usecases.UndoMoveUseCase
-import by.klnvch.link5dots.domain.usecases.network.ConnectOnlineRoomUseCase
+import by.klnvch.link5dots.domain.usecases.network.ConnectNsdRoomUseCase
 import by.klnvch.link5dots.domain.usecases.network.ConnectRemoteRoomUseCase
 import by.klnvch.link5dots.domain.usecases.network.CreateMultiplayerRoomUseCase
-import by.klnvch.link5dots.domain.usecases.network.CreateOnlineRoomUseCase
+import by.klnvch.link5dots.domain.usecases.network.CreateNsdRoomUseCase
 import by.klnvch.link5dots.domain.usecases.network.DeleteMultiplayerRoomUseCase
-import by.klnvch.link5dots.domain.usecases.network.DeleteOnlineRoomUseCase
+import by.klnvch.link5dots.domain.usecases.network.DeleteNsdRoomUseCase
 import by.klnvch.link5dots.domain.usecases.network.GetMultiplayerRoomStateUseCase
-import by.klnvch.link5dots.domain.usecases.network.GetOnlineRoomStateUseCase
+import by.klnvch.link5dots.domain.usecases.network.GetNsdRoomStateUseCase
 import by.klnvch.link5dots.domain.usecases.network.InitMultiplayerUseCase
-import by.klnvch.link5dots.domain.usecases.network.InitOnlineUseCase
-import by.klnvch.link5dots.domain.usecases.network.OnlineScanUseCase
+import by.klnvch.link5dots.domain.usecases.network.InitNsdUseCase
+import by.klnvch.link5dots.domain.usecases.network.NsdScanUseCase
 import by.klnvch.link5dots.domain.usecases.network.ScanUseCase
 import by.klnvch.link5dots.domain.usecases.network.UpdateMultiplayerRoomStateUseCase
-import by.klnvch.link5dots.domain.usecases.network.UpdateOnlineRoomStateUseCase
+import by.klnvch.link5dots.domain.usecases.network.UpdateNsdRoomStateUseCase
 import dagger.Binds
 import dagger.Module
 
 @Module
-interface OnlineGameRulesModule {
+interface NsdGameRulesModule {
     @Binds
-    fun bindGetRoomUseCase(impl: GetRoomOnlineUseCase): GetRoomUseCase
+    fun bindGetRoomUseCase(impl: GetRoomNsdUseCase): GetRoomUseCase
 
     @Binds
     fun bindNewGameUseCase(impl: NewGameEmptyUseCase): NewGameUseCase
 
     @Binds
-    fun bindAddDotUseCase(impl: AddDotOnlineUseCase): AddDotUseCase
+    fun bindAddDotUseCase(impl: AddDotNsdUseCase): AddDotUseCase
 
     @Binds
     fun bindUndoMoveUseCase(impl: UndoMoveInfoUseCase): UndoMoveUseCase
@@ -68,23 +68,23 @@ interface OnlineGameRulesModule {
     fun bindPrepareScoreUseCase(impl: PrepareScoreMultiplayerUseCase): PrepareScoreUseCase
 
     @Binds
-    fun bindInitMultiplayerUseCase(impl: InitOnlineUseCase): InitMultiplayerUseCase
+    fun bindInitMultiplayerUseCase(impl: InitNsdUseCase): InitMultiplayerUseCase
 
     @Binds
-    fun bindCreateMultiplayerRoomUseCase(impl: CreateOnlineRoomUseCase): CreateMultiplayerRoomUseCase
+    fun bindCreateMultiplayerRoomUseCase(impl: CreateNsdRoomUseCase): CreateMultiplayerRoomUseCase
 
     @Binds
-    fun bindGetMultiplayerRoomStateUseCase(impl: GetOnlineRoomStateUseCase): GetMultiplayerRoomStateUseCase
+    fun bindGetMultiplayerRoomStateUseCase(impl: GetNsdRoomStateUseCase): GetMultiplayerRoomStateUseCase
 
     @Binds
-    fun bindScanUseCase(impl: OnlineScanUseCase): ScanUseCase
+    fun bindUpdateMultiplayerRoomStateUseCase(impl: UpdateNsdRoomStateUseCase): UpdateMultiplayerRoomStateUseCase
 
     @Binds
-    fun bindUpdateMultiplayerRoomStateUseCase(impl: UpdateOnlineRoomStateUseCase): UpdateMultiplayerRoomStateUseCase
+    fun bindScanUseCase(impl: NsdScanUseCase): ScanUseCase
 
     @Binds
-    fun bindConnectRemoteRoomUseCase(impl: ConnectOnlineRoomUseCase): ConnectRemoteRoomUseCase
+    fun bindConnectRemoteRoomUseCase(impl: ConnectNsdRoomUseCase): ConnectRemoteRoomUseCase
 
     @Binds
-    fun bindDeleteMultiplayerRoomUseCase(impl: DeleteOnlineRoomUseCase): DeleteMultiplayerRoomUseCase
+    fun bindDeleteMultiplayerRoomUseCase(impl: DeleteNsdRoomUseCase): DeleteMultiplayerRoomUseCase
 }

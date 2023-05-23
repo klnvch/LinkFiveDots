@@ -24,9 +24,6 @@
 
 package by.klnvch.link5dots.multiplayer.services;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Preconditions.checkState;
-
 import android.util.Log;
 
 import androidx.annotation.CallSuper;
@@ -97,7 +94,6 @@ public abstract class GameServiceSockets extends GameService
     public void onCreate() {
         super.onCreate();
 
-
         final String id = Long.toHexString(System.currentTimeMillis()) + '_' + Long.toHexString(new Random().nextLong());
         mUser = new NetworkUser(id, settings.getUserNameBlocking());
     }
@@ -114,9 +110,6 @@ public abstract class GameServiceSockets extends GameService
     @CallSuper
     @Override
     public void connect(@NonNull Target target) {
-        checkNotNull(target);
-        checkState(mSocketThread == null);
-
         final SocketDecorator.Builder builder = mFactory.getSocketBuilder(target);
         mSocketThread = new ConnectThread(this, builder);
         mSocketThread.start();
@@ -126,9 +119,6 @@ public abstract class GameServiceSockets extends GameService
 
     @Override
     public void onSocketConnected(@NonNull SocketDecorator socket) {
-        checkNotNull(socket);
-        checkNotNull(mSocketThread);
-
         Log.d(TAG, "onSocketConnected");
 
         mSocketThread = new ConnectedThread(this, this, socket);
@@ -138,9 +128,6 @@ public abstract class GameServiceSockets extends GameService
     @CallSuper
     @Override
     public void onSocketFailed(@NonNull Exception exception) {
-        checkNotNull(exception);
-        checkNotNull(mSocketThread);
-
         Log.e(TAG, "onSocketFailed: " + exception.getMessage());
         FirebaseCrashlytics.getInstance().recordException(exception);
 
@@ -151,21 +138,15 @@ public abstract class GameServiceSockets extends GameService
 
     @CallSuper
     void onServerSocketCreated(@NonNull ServerSocketDecorator serverSocket) {
-        checkNotNull(serverSocket);
-
         Log.d(TAG, "onServerSocketCreated");
     }
 
     private void onServerSocketFailed(@NonNull Exception exception) {
-        checkNotNull(exception);
-
         Log.e(TAG, "onServerSocketFailed: " + exception.getMessage());
     }
 
     @Override
     public void createTarget() {
-        checkState(mSocketThread == null);
-
         try {
             final ServerSocketDecorator serverSocket = mFactory.getServerSocket();
 
@@ -183,14 +164,12 @@ public abstract class GameServiceSockets extends GameService
     @Override
     public void newGame() {
         final NetworkRoom room = getRoom();
-        checkNotNull(room);
         RoomUtils.newGame(room, null);
         updateRoomRemotely(room);
     }
 
     @Override
     protected void updateRoomLocally(@NonNull NetworkRoom room) {
-        checkNotNull(room);
         final NetworkUser currentUser = getUser();
         if (room.getState() == RoomState.STARTED) {
             sendMsg(room);
@@ -201,9 +180,6 @@ public abstract class GameServiceSockets extends GameService
 
     @Override
     protected void updateRoomRemotely(@NonNull NetworkRoom room) {
-        checkNotNull(room);
-        checkState(mSocketThread instanceof ConnectedThread);
-
         final ConnectedThread connectedThread = (ConnectedThread) mSocketThread;
         connectedThread.write(room);
     }
@@ -211,8 +187,6 @@ public abstract class GameServiceSockets extends GameService
     @CallSuper
     @Override
     protected void startGame(@Nullable NetworkRoom room) {
-        // it is always null for sockets
-        checkState(room == null);
         // null can happen only on the client side
         if (getRoom() != null) {
             updateRoomRemotely(getRoom());
@@ -222,8 +196,6 @@ public abstract class GameServiceSockets extends GameService
     @CallSuper
     @Override
     public void reset() {
-        checkNotNull(mSocketThread);
-
         mSocketThread.interrupt();
         mSocketThread = null;
 
@@ -240,8 +212,6 @@ public abstract class GameServiceSockets extends GameService
 
     @Override
     public void onTargetCreated(@NonNull Target target) {
-        checkNotNull(target);
-
         mTarget = target;
         setRoom(RoomUtils.createMultiplayerGame(getUser(), mFactory.getRoomType()));
 
@@ -250,8 +220,6 @@ public abstract class GameServiceSockets extends GameService
 
     @Override
     public void onTargetCreationFailed(@NonNull Throwable e) {
-        checkNotNull(mSocketThread);
-
         mSocketThread.interrupt();
         mSocketThread = null;
 
@@ -260,10 +228,6 @@ public abstract class GameServiceSockets extends GameService
 
     @Override
     public void onTargetDeleted(@Nullable Exception exception) {
-        checkNotNull(mSocketThread);
-        checkNotNull(mTarget);
-        checkNotNull(getRoom());
-
         mSocketThread.interrupt();
         mSocketThread = null;
 

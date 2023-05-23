@@ -25,7 +25,7 @@ package by.klnvch.link5dots.di.game.info
 
 import by.klnvch.link5dots.domain.usecases.AddDotInfoUseCase
 import by.klnvch.link5dots.domain.usecases.AddDotUseCase
-import by.klnvch.link5dots.domain.usecases.GetOfflineRoomUseCase
+import by.klnvch.link5dots.domain.usecases.GetRoomOfflineUseCase
 import by.klnvch.link5dots.domain.usecases.GetRoomUseCase
 import by.klnvch.link5dots.domain.usecases.NewGameEmptyUseCase
 import by.klnvch.link5dots.domain.usecases.NewGameUseCase
@@ -39,10 +39,9 @@ import dagger.Module
 @Module
 interface InfoGameRulesModule {
     @Binds
-    fun bindNewGameUseCase(impl: NewGameEmptyUseCase): NewGameUseCase
-
+    fun bindGetRoomUseCase(impl: GetRoomOfflineUseCase): GetRoomUseCase
     @Binds
-    fun bindGetRoomUseCase(impl: GetOfflineRoomUseCase): GetRoomUseCase
+    fun bindNewGameUseCase(impl: NewGameEmptyUseCase): NewGameUseCase
 
     @Binds
     fun bindAddDotUseCase(impl: AddDotInfoUseCase): AddDotUseCase

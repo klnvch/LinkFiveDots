@@ -23,8 +23,6 @@
  */
 package by.klnvch.link5dots.multiplayer.activities;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -67,7 +65,7 @@ public abstract class GameActivity extends DaggerAppCompatActivity implements
         PickerFragment.OnPickerListener,
         GameFragment.OnGameListener {
 
-    private static final String TAG = "NsdGameActivity";
+    private static final String TAG = "GameActivity";
     protected GameFragment mGameFragment = null;
     GameServiceInterface mService = null; // can be null
     private FactoryActivityInterface mFactory;
@@ -85,7 +83,6 @@ public abstract class GameActivity extends DaggerAppCompatActivity implements
 
             if (mGameFragment != null) {
                 final NetworkRoom room = mService.getRoom();
-                checkNotNull(room);
                 onMessageEvent(room);
             }
         }
@@ -227,9 +224,6 @@ public abstract class GameActivity extends DaggerAppCompatActivity implements
         Log.d(TAG, "onMessageEvent: " + state);
 
         final PickerFragment pickerFragment = getPickerFragment();
-        checkNotNull(pickerFragment);
-        checkNotNull(state);
-
         pickerFragment.setState(state);
 
         //
@@ -311,7 +305,6 @@ public abstract class GameActivity extends DaggerAppCompatActivity implements
     @NonNull
     @Override
     public String getTargetLongName() {
-        checkNotNull(mService.getTarget());
         return mService.getTarget().getLongName();
     }
 
@@ -335,9 +328,6 @@ public abstract class GameActivity extends DaggerAppCompatActivity implements
     @Override
     public void onGameFinished() {
         if (isFinishing()) return;
-
-        checkNotNull(mService.getRoom());
-        checkNotNull(mService.getUser());
 
         final BotGameScore highScore = RoomUtils.getHighScore(mService.getRoom(), mService.getUser());
 

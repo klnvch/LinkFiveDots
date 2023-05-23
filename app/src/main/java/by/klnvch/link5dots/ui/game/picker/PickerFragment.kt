@@ -38,9 +38,8 @@ import by.klnvch.link5dots.R
 import by.klnvch.link5dots.databinding.FragmentGamePickerBinding
 import by.klnvch.link5dots.ui.game.OfflineGameViewModel
 import by.klnvch.link5dots.ui.game.OnlineGameViewModel
-import by.klnvch.link5dots.ui.game.picker.adapters.EmptyStateMediator
 import by.klnvch.link5dots.ui.game.picker.adapters.OnPickerItemSelected
-import by.klnvch.link5dots.ui.game.picker.adapters.PickerAdapterOnline
+import by.klnvch.link5dots.ui.game.picker.adapters.PickerAdapter
 import by.klnvch.link5dots.ui.game.picker.adapters.PickerItemViewState
 import dagger.android.support.DaggerFragment
 import kotlinx.coroutines.launch
@@ -55,27 +54,22 @@ open class PickerFragment : DaggerFragment(), OnPickerClickListener, OnPickerIte
 
     private lateinit var viewModel: OnlineGameViewModel
 
-    @Inject
-    lateinit var adapter: PickerAdapterOnline
-
     @CallSuper
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View {
         viewModel = ViewModelProvider(
-                requireActivity(),
-                viewModelFactory
+            requireActivity(),
+            viewModelFactory
         )[OfflineGameViewModel.KEY, OnlineGameViewModel::class.java]
 
         binding = FragmentGamePickerBinding.inflate(inflater, container, false)
         binding.listener = this
         binding.listTargets.setHasFixedSize(true)
         binding.listTargets.layoutManager = LinearLayoutManager(context)
-        adapter.itemClickListener = this
-        binding.listTargets.adapter = adapter
-        EmptyStateMediator(adapter, binding.textWarningEmpty).attach()
+        binding.listTargets.adapter = PickerAdapter(this)
         return binding.root
     }
 
@@ -96,10 +90,10 @@ open class PickerFragment : DaggerFragment(), OnPickerClickListener, OnPickerIte
     override fun onPickerItemSelected(viewState: PickerItemViewState) {
         val msg = getString(R.string.connection_dialog_text, viewState.shortName)
         AlertDialog.Builder(requireContext())
-                .setMessage(msg)
-                .setPositiveButton(R.string.yes) { _, _ -> viewModel.connect(viewState.key) }
-                .setNegativeButton(R.string.no, null)
-                .show()
+            .setMessage(msg)
+            .setPositiveButton(R.string.yes) { _, _ -> viewModel.connect(viewState.descriptor) }
+            .setNegativeButton(R.string.no, null)
+            .show()
     }
 
     override fun onCreateButtonClicked(isOn: Boolean) {
@@ -108,13 +102,13 @@ open class PickerFragment : DaggerFragment(), OnPickerClickListener, OnPickerIte
         } else {
             val viewState = binding.viewState
             if (viewState != null && viewState.targetState is TargetCreated) {
-                viewModel.deleteRoom(viewState.targetState.itemViewState.key)
+                viewModel.deleteRoom(viewState.targetState.itemViewState.descriptor)
             }
         }
     }
 
     override fun onScanButtonClicked(isOn: Boolean) =
-            if (isOn) viewModel.startScan() else viewModel.stopScan()
+        if (isOn) viewModel.startScan() else viewModel.stopScan()
 
     companion object {
         const val TAG = "OnlineGamePickerFr"

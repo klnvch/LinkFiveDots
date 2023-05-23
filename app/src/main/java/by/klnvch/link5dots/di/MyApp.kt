@@ -30,7 +30,7 @@ import androidx.multidex.MultiDex
 import androidx.work.*
 import by.klnvch.link5dots.BuildConfig
 import by.klnvch.link5dots.di.workers.DaggerWorkerFactory
-import by.klnvch.link5dots.workers.SyncHistoryWorker
+import by.klnvch.link5dots.data.workers.SyncHistoryWorker
 import dagger.android.AndroidInjector
 import dagger.android.DaggerApplication
 import java.util.concurrent.TimeUnit

@@ -21,7 +21,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 package by.klnvch.link5dots.domain.usecases
 
 import by.klnvch.link5dots.domain.models.BotGameScore
@@ -43,8 +42,6 @@ class SaveScoreUseCase @Inject constructor(
         val deviceId = deviceInfo.getAndroidId()
         val userId = firebaseManager.getUserId()
         val userName = settings.getUserName().first()
-        if (userId != null) {
-            gameScoreRepository.save(score, userName, userId, deviceId)
-        }
+        gameScoreRepository.save(score, userName, userId, deviceId)
     }
 }

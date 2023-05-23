@@ -23,34 +23,39 @@
  */
 package by.klnvch.link5dots.ui.game
 
+import android.util.Log
 import androidx.lifecycle.viewModelScope
 import by.klnvch.link5dots.R
-import by.klnvch.link5dots.domain.models.NetworkRoom
+import by.klnvch.link5dots.domain.models.NetworkRoomExtended
+import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
 import by.klnvch.link5dots.domain.models.RoomState
 import by.klnvch.link5dots.domain.repositories.Analytics
-import by.klnvch.link5dots.domain.repositories.FirebaseManager
 import by.klnvch.link5dots.domain.repositories.Settings
 import by.klnvch.link5dots.domain.usecases.AddDotUseCase
 import by.klnvch.link5dots.domain.usecases.GetRoomUseCase
 import by.klnvch.link5dots.domain.usecases.GetUserNameUseCase
 import by.klnvch.link5dots.domain.usecases.NewGameUseCase
 import by.klnvch.link5dots.domain.usecases.PrepareScoreUseCase
-import by.klnvch.link5dots.domain.usecases.RoomByKey
+import by.klnvch.link5dots.domain.usecases.RoomByDescriptor
 import by.klnvch.link5dots.domain.usecases.SaveScoreUseCase
 import by.klnvch.link5dots.domain.usecases.UndoMoveUseCase
-import by.klnvch.link5dots.domain.usecases.network.ConnectOnlineRoomUseCase
-import by.klnvch.link5dots.domain.usecases.network.CreateOnlineRoomUseCase
-import by.klnvch.link5dots.domain.usecases.network.DisconnectOnlineRoomUseCase
-import by.klnvch.link5dots.domain.usecases.network.GetOnlineRoomStateUseCase
-import by.klnvch.link5dots.domain.usecases.network.InitUseCase
-import by.klnvch.link5dots.domain.usecases.network.UpdateOnlineRoomStateUseCase
-import by.klnvch.link5dots.ui.game.RoomToTitleMapper.roomToTitle
+import by.klnvch.link5dots.domain.usecases.network.ConnectRemoteRoomUseCase
+import by.klnvch.link5dots.domain.usecases.network.CreateMultiplayerRoomUseCase
+import by.klnvch.link5dots.domain.usecases.network.DeleteMultiplayerRoomUseCase
+import by.klnvch.link5dots.domain.usecases.network.GetMultiplayerRoomStateUseCase
+import by.klnvch.link5dots.domain.usecases.network.GetNetworkGameActionUseCase
+import by.klnvch.link5dots.domain.usecases.network.InitMultiplayerUseCase
+import by.klnvch.link5dots.domain.usecases.network.ScanUseCase
+import by.klnvch.link5dots.ui.game.RoomToTitleMapper.actionToTitle
+import by.klnvch.link5dots.ui.game.activities.ConnectError
+import by.klnvch.link5dots.ui.game.activities.GameScreen
+import by.klnvch.link5dots.ui.game.activities.InitError
 import by.klnvch.link5dots.ui.game.activities.MultiplayerNavigationEvent
 import by.klnvch.link5dots.ui.game.picker.ConnectConnected
 import by.klnvch.link5dots.ui.game.picker.ConnectConnecting
 import by.klnvch.link5dots.ui.game.picker.ConnectDisconnected
 import by.klnvch.link5dots.ui.game.picker.PickerViewState
-import by.klnvch.link5dots.ui.game.picker.ScanState
+import by.klnvch.link5dots.ui.game.picker.ScanOn
 import by.klnvch.link5dots.ui.game.picker.TargetCreated
 import by.klnvch.link5dots.ui.game.picker.TargetCreating
 import by.klnvch.link5dots.ui.game.picker.TargetDeleting
@@ -69,13 +74,14 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class OnlineGameViewModel @Inject constructor(
-    private val initUseCase: InitUseCase,
-    private val createOnlineRoomUseCase: CreateOnlineRoomUseCase,
-    private val getOnlineRoomStateUseCase: GetOnlineRoomStateUseCase,
-    private val updateOnlineRoomStateUseCase: UpdateOnlineRoomStateUseCase,
-    private val connectOnlineRoomUseCase: ConnectOnlineRoomUseCase,
-    private val disconnectOnlineRoomUseCase: DisconnectOnlineRoomUseCase,
-    private val firebaseManager: FirebaseManager,
+    private val initMultiplayerUseCase: InitMultiplayerUseCase,
+    private val createMultiplayerRoomUseCase: CreateMultiplayerRoomUseCase,
+    private val getStateUseCase: GetMultiplayerRoomStateUseCase,
+    private val deleteMultiplayerRoomUseCase: DeleteMultiplayerRoomUseCase,
+    private val scanUseCase: ScanUseCase,
+    private val connectRemoteRoomUseCase: ConnectRemoteRoomUseCase,
+    private val getNetworkGameActionUseCase: GetNetworkGameActionUseCase,
+    private val getUserNameUseCase: GetUserNameUseCase,
     getRoomUseCase: GetRoomUseCase,
     newGameUseCase: NewGameUseCase,
     addDotUseCase: AddDotUseCase,
@@ -84,7 +90,6 @@ class OnlineGameViewModel @Inject constructor(
     analytics: Analytics,
     saveScoreUseCase: SaveScoreUseCase,
     settings: Settings,
-    private val getUserNameUseCase: GetUserNameUseCase,
 ) : OfflineGameViewModel(
     getRoomUseCase,
     newGameUseCase,
@@ -108,45 +113,37 @@ class OnlineGameViewModel @Inject constructor(
             it.targetState is TargetCreating -> flowOf(R.string.connecting)
             it.targetState is TargetDeleting -> flowOf(R.string.connecting)
             it.targetState is TargetCreated -> flowOf(R.string.progress_text)
-            it.scanState == ScanState.ON -> flowOf(R.string.searching)
+            it.scanState is ScanOn -> flowOf(R.string.searching)
             it.connectState is ConnectConnecting -> flowOf(R.string.connecting)
             it.connectState is ConnectDisconnected -> flowOf(R.string.disconnected)
-            it.connectState is ConnectConnected ->
-                roomFlow.map { room ->
-                    val userId = firebaseManager.getUserId()
-                    return@map if (room is NetworkRoom && userId != null) {
-                        roomToTitle(room, userId)
-                    } else {
-                        0
-                    }
-                }
+            it.connectState is ConnectConnected -> roomFlow
+                .map { room -> getNetworkGameActionUseCase.get(room) }
+                .map { action -> actionToTitle(action) }
 
             else -> flowOf(0)
         }
     }
 
     private var roomStatesJob: Job? = null
+    private var scanJob: Job? = null
 
     lateinit var disconnectViewState: DisconnectViewState
 
     init {
         viewModelScope.launch {
             try {
-                initUseCase.init()
+                initMultiplayerUseCase.init()
                 _pickerUiState.value = PickerViewState.IDLE
             } catch (e: Error) {
                 _pickerUiState.value = PickerViewState.ERROR
-                _navigationEvent.emit(MultiplayerNavigationEvent.ERROR)
+                _navigationEvent.emit(InitError)
             }
         }
         viewModelScope.launch {
             roomFlow.collect {
-                if (it is NetworkRoom) {
-                    disconnectViewState = if (it.user1.id == firebaseManager.getUserId()) {
-                        DisconnectViewState(getUserNameUseCase.get(it.user2) ?: "")
-                    } else {
-                        DisconnectViewState(getUserNameUseCase.get(it.user1) ?: "")
-                    }
+                if (it is NetworkRoomExtended) {
+                    disconnectViewState =
+                        DisconnectViewState(getUserNameUseCase.get(it.opponent) ?: "")
                     if (it.state == RoomState.FINISHED) {
                         _pickerUiState.value = PickerViewState.DISCONNECTED
                     }
@@ -160,18 +157,16 @@ class OnlineGameViewModel @Inject constructor(
     fun createRoom() {
         roomStatesJob = viewModelScope.launch {
             _pickerUiState.value = PickerViewState.TARGET_CREATING
-            val room = createOnlineRoomUseCase.create()
-            val key = room.key
-            getOnlineRoomStateUseCase.get(room.key).collect {
+            val descriptor = createMultiplayerRoomUseCase.create()
+            getStateUseCase.get(descriptor).collect {
                 when (it) {
                     RoomState.CREATED -> {
-                        val userName = getUserNameUseCase.get(room.user1)
-                        val itemViewState = PickerItemViewState(key, room.timestamp, userName!!)
-                        _pickerUiState.value = PickerViewState.created(itemViewState)
+                        _pickerUiState.value =
+                            PickerViewState.created(PickerItemViewState(descriptor))
                     }
 
                     RoomState.STARTED -> {
-                        onConnected(key)
+                        onConnected(descriptor)
                         coroutineContext.job.cancel()
                     }
 
@@ -184,26 +179,38 @@ class OnlineGameViewModel @Inject constructor(
         }
     }
 
-    fun deleteRoom(key: String) {
+    fun deleteRoom(descriptor: RemoteRoomDescriptor) {
         _pickerUiState.value = PickerViewState.TARGET_DELETING
-        viewModelScope.launch {
-            updateOnlineRoomStateUseCase.update(key, RoomState.DELETED)
-        }
+        deleteMultiplayerRoomUseCase.delete(descriptor)
     }
 
     fun startScan() {
-        _pickerUiState.value = PickerViewState.START_SCAN
+        _pickerUiState.value = PickerViewState.scanning(emptyList())
+        scanJob = viewModelScope.launch {
+            scanUseCase.scan().collect { list ->
+                _pickerUiState.value =
+                    PickerViewState.scanning(list.map { PickerItemViewState(it) })
+            }
+        }
     }
 
     fun stopScan() {
         _pickerUiState.value = PickerViewState.IDLE
+        scanJob?.cancel()
     }
 
-    fun connect(key: String) {
+    fun connect(descriptor: RemoteRoomDescriptor) {
         _pickerUiState.value = PickerViewState.CONNECTING
         viewModelScope.launch {
-            connectOnlineRoomUseCase.connect(key)
-            onConnected(key)
+            try {
+                connectRemoteRoomUseCase.connect(descriptor)
+                onConnected(descriptor)
+                scanJob?.cancel()
+            } catch (e: Throwable) {
+                Log.e("Multiplayer", "${e.message}")
+                _navigationEvent.emit(ConnectError(descriptor.title))
+                stopScan()
+            }
         }
     }
 
@@ -211,19 +218,19 @@ class OnlineGameViewModel @Inject constructor(
         val pickerState = pickerUiState.value
         val targetState = pickerState.targetState
         if (targetState is TargetCreated) {
-            disconnectOnlineRoomUseCase.disconnect(targetState.key)
+            deleteMultiplayerRoomUseCase.delete(targetState.descriptor)
         }
         val connectState = pickerState.connectState
         if (connectState is ConnectConnected) {
-            disconnectOnlineRoomUseCase.disconnect(connectState.key)
+            deleteMultiplayerRoomUseCase.finish(connectState.descriptor)
         }
         _pickerUiState.value = PickerViewState.IDLE
     }
 
-    private suspend fun onConnected(key: String) {
-        _pickerUiState.value = PickerViewState.connected(key)
-        setParam(RoomByKey(key))
-        _navigationEvent.emit(MultiplayerNavigationEvent.GAME)
+    private suspend fun onConnected(descriptor: RemoteRoomDescriptor) {
+        _pickerUiState.value = PickerViewState.connected(descriptor)
+        setParam(RoomByDescriptor(descriptor))
+        _navigationEvent.emit(GameScreen)
     }
 }
 

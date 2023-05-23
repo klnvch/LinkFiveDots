@@ -36,7 +36,7 @@
         android:id="@+id/multiplayerMenuFragment"
         android:name="by.klnvch.link5dots.ui.menu.MultiplayerMenuFragment"
         android:label="@string/menu_multi_player"
-        tools:layout="@layout/fragment_multiplayer_menu" >
+        tools:layout="@layout/fragment_multiplayer_menu">
         <action
             android:id="@+id/action_multiplayerMenuFragment_to_twoPlayersActivity"
             app:destination="@id/twoPlayersActivity" />
@@ -85,7 +85,7 @@
         android:label="GameActivityBluetooth" />
     <activity
         android:id="@+id/gameActivityNsd"
-        android:name="by.klnvch.link5dots.multiplayer.activities.GameActivityNsd"
+        android:name="by.klnvch.link5dots.ui.game.activities.NsdGameActivity"
         android:label="GameActivityNsd" />
     <activity
         android:id="@+id/gameActivityOnline"

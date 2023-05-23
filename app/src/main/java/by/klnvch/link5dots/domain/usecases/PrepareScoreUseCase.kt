@@ -29,10 +29,8 @@ import by.klnvch.link5dots.domain.models.GameResult
 import by.klnvch.link5dots.domain.models.GameScore
 import by.klnvch.link5dots.domain.models.IRoom
 import by.klnvch.link5dots.domain.models.NetworkGameScore
-import by.klnvch.link5dots.domain.models.NetworkRoom
+import by.klnvch.link5dots.domain.models.NetworkRoomExtended
 import by.klnvch.link5dots.domain.models.SimpleGameScore
-import by.klnvch.link5dots.domain.repositories.FirebaseManager
-import java.lang.IllegalStateException
 import javax.inject.Inject
 
 interface PrepareScoreUseCase {
@@ -48,24 +46,19 @@ class PrepareScoreBotUseCase @Inject constructor() : PrepareScoreUseCase {
     )
 }
 
-class PrepareScoreOnlineUseCase @Inject constructor(
-    private val firebaseManager: FirebaseManager,
+class PrepareScoreMultiplayerUseCase @Inject constructor(
 ) : PrepareScoreUseCase {
     override fun get(room: IRoom): NetworkGameScore {
-        val status = if (room is NetworkRoom) {
-            val userId = firebaseManager.getUserId()
-            if (room.user1.id == userId) {
+        val status = if (room is NetworkRoomExtended) {
+            if (room.user1.id == room.yourId) {
                 if (room.dots.size % 2 == 1) GameResult.WON
                 else GameResult.LOST
-            } else if (room.user2?.id == userId) {
+            } else if (room.user2?.id == room.yourId) {
                 if (room.dots.size % 2 == 0) GameResult.WON
                 else GameResult.LOST
-            } else {
-                throw IllegalStateException()
-            }
-        } else {
-            throw IllegalStateException()
-        }
+            } else throw IllegalStateException("User not found")
+        } else throw IllegalStateException("Wrong room type")
+
         return NetworkGameScore(
             room.dots.size,
             room.getDuration(),

@@ -21,15 +21,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package by.klnvch.link5dots.workers
+package by.klnvch.link5dots.domain.models
 
-import android.content.Context
-import by.klnvch.link5dots.workers.CleanUpOnlineRoomWorker.Companion.launchCleanUpOnlineRoomWorker
-import javax.inject.Inject
-import javax.inject.Singleton
-
-@Singleton
-class WorkLauncher @Inject constructor(private val context: Context) {
-    fun cleanUpOnlineRoom(key: String, state: Int) =
-        context.launchCleanUpOnlineRoomWorker(key, state)
-}
+class UnauthorizedError : Error("No Firebase User Found")

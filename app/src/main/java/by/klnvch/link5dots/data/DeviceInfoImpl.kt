@@ -21,13 +21,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 package by.klnvch.link5dots.data
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.os.Build
 import android.provider.Settings
 import by.klnvch.link5dots.domain.repositories.DeviceInfo
+import by.klnvch.link5dots.domain.usecases.network.UnsupportedError
 import by.klnvch.link5dots.utils.TestDevices
 import javax.inject.Inject
 
@@ -40,4 +41,13 @@ class DeviceInfoImpl @Inject constructor(
     override fun getAndroidId(): String =
         Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
 
+    @SuppressLint("ObsoleteSdkInt")
+    override fun isNsdSupported() = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
+        try {
+            Class.forName("android.net.nsd.NsdManager")
+            true
+        } catch (e: ClassNotFoundException) {
+            false
+        }
+    else false
 }

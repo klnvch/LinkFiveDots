@@ -21,7 +21,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 package by.klnvch.link5dots.data
 
 import by.klnvch.link5dots.BuildConfig
@@ -30,8 +29,11 @@ import by.klnvch.link5dots.data.firebase.OnlineRoomRemote
 import by.klnvch.link5dots.domain.models.Dot
 import by.klnvch.link5dots.domain.models.NetworkRoom
 import by.klnvch.link5dots.domain.models.NetworkUser
+import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
 import by.klnvch.link5dots.domain.models.RoomState
 import by.klnvch.link5dots.domain.repositories.OnlineRoomRepository
+import by.klnvch.link5dots.domain.repositories.StringRepository
+import by.klnvch.link5dots.utils.FormatUtils.formatDateTime
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
@@ -39,6 +41,7 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.trySendBlocking
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.suspendCancellableCoroutine
 import javax.inject.Inject
@@ -47,6 +50,7 @@ import kotlin.coroutines.resumeWithException
 
 class OnlineRoomRepositoryImpl @Inject constructor(
     private val mapper: OnlineRoomMapper,
+    private val stringRepository: StringRepository,
 ) : OnlineRoomRepository {
 
     override val path = if (BuildConfig.DEBUG) "rooms_debug" else "rooms_v2"
@@ -64,7 +68,7 @@ class OnlineRoomRepositoryImpl @Inject constructor(
 
             reference
                 .setValue(remoteRoom)
-                .addOnSuccessListener { continuation.resume(Unit) }
+                .addOnSuccessListener { continuation.resume(createDescriptor(room)) }
                 .addOnFailureListener { continuation.resumeWithException(it) }
         }
 
@@ -97,6 +101,31 @@ class OnlineRoomRepositoryImpl @Inject constructor(
         awaitClose { reference.removeEventListener(callback) }
     }
 
+
+    override fun getRemoteRooms(): Flow<List<RemoteRoomDescriptor>> = callbackFlow {
+        val callback = object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                val result = dataSnapshot.children
+                    .mapNotNull {
+                        val key = it.key
+                        val value = it.getValue(OnlineRoomRemote::class.java)
+                        if (key != null && value != null) mapper.map(key, value) else null
+                    }
+                    .map { createDescriptor(it) }
+                trySendBlocking(result)
+
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                throw error.toException()
+            }
+        }
+
+        val reference = reference.orderByChild(CHILD_STATE).equalTo(RoomState.CREATED.toDouble())
+        reference.addValueEventListener(callback)
+        awaitClose { reference.removeEventListener(callback) }
+    }
+
     override suspend fun isConnected() = suspendCancellableCoroutine { continuation ->
         val connectedRef = Firebase.database.getReference(".info/connected")
         connectedRef.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -105,14 +134,15 @@ class OnlineRoomRepositoryImpl @Inject constructor(
                 continuation.resume(connected)
             }
 
-            override fun onCancelled(error: DatabaseError) {
+            override fun onCancelled(error: DatabaseError) =
                 continuation.resumeWithException(error.toException())
-            }
         })
     }
 
-    override suspend fun connect(key: String, user2: NetworkUser) =
+    override suspend fun connect(descriptor: RemoteRoomDescriptor, user2: NetworkUser) =
         suspendCancellableCoroutine { continuation ->
+            val key = (descriptor as OnlineRoomDescriptor).key
+
             reference
                 .child(key)
                 .updateChildren(
@@ -125,7 +155,9 @@ class OnlineRoomRepositoryImpl @Inject constructor(
                 .addOnFailureListener { continuation.resumeWithException(it) }
         }
 
-    override fun get(key: String) = callbackFlow {
+    override fun get(descriptor: RemoteRoomDescriptor) = callbackFlow {
+        val key = (descriptor as OnlineRoomDescriptor).key
+
         val callback = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val remoteRoom = snapshot.getValue(OnlineRoomRemote::class.java)
@@ -134,9 +166,7 @@ class OnlineRoomRepositoryImpl @Inject constructor(
                 trySendBlocking(room)
             }
 
-            override fun onCancelled(error: DatabaseError) {
-                throw error.toException()
-            }
+            override fun onCancelled(error: DatabaseError) = throw error.toException()
         }
 
         val reference = reference.child(key)
@@ -156,9 +186,23 @@ class OnlineRoomRepositoryImpl @Inject constructor(
                 .addOnFailureListener { continuation.resumeWithException(it) }
         }
 
+    private fun createDescriptor(room: NetworkRoom) = OnlineRoomDescriptor(
+        room,
+        room.user1.name.ifEmpty { stringRepository.getUnknownName() },
+    )
+
     companion object {
         private const val CHILD_STATE = "state"
         private const val CHILD_USER2 = "user2"
         private const val CHILD_DOTS = "dots"
     }
+}
+
+data class OnlineRoomDescriptor(
+    private val room: NetworkRoom,
+    private val userName: String,
+) : RemoteRoomDescriptor {
+    override val title = userName
+    override val description = room.timestamp.formatDateTime()
+    val key = room.key
 }

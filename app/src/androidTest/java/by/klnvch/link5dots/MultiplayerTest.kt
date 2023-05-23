@@ -40,7 +40,7 @@ import androidx.test.runner.AndroidJUnit4
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiObjectNotFoundException
 import androidx.test.uiautomator.UiSelector
-import by.klnvch.link5dots.ui.menu.MultiPlayerMenuActivity
+import by.klnvch.link5dots.ui.menu.MenuActivity
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.not
 import org.junit.Rule
@@ -54,7 +54,7 @@ class MultiplayerTest {
 
     @Rule
     @JvmField
-    var mActivityTestRule = ActivityTestRule(MultiPlayerMenuActivity::class.java)
+    var mActivityTestRule = ActivityTestRule(MenuActivity::class.java)
 
     @Test
     fun testBluetoothNone() {

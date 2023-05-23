@@ -21,7 +21,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 package by.klnvch.link5dots.data.settings
 
 import androidx.datastore.core.DataStore
@@ -32,6 +31,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.runBlocking
+import java.util.UUID
 import javax.inject.Inject
 
 class SettingsImpl @Inject constructor(
@@ -41,6 +41,7 @@ class SettingsImpl @Inject constructor(
 
     companion object {
         private val USER_NAME = stringPreferencesKey(Settings.KEY_USER_NAME)
+        private val USER_ID = stringPreferencesKey(Settings.KEY_USER_ID)
         private val LANGUAGE = stringPreferencesKey(Settings.KEY_LANGUAGE)
         private val NIGHT_MODE = stringPreferencesKey(Settings.KEY_NIGHT_MODE)
         private val FIRST_RUN = booleanPreferencesKey(Settings.KEY_FIRST_RUN)
@@ -60,6 +61,17 @@ class SettingsImpl @Inject constructor(
 
     override fun getUserName() = dataStore.data
         .map { it[USER_NAME] ?: DEFAULT_USER_NAME }
+        .distinctUntilChanged()
+
+    override fun getUserId() = dataStore.data
+        .map {
+            val userId = it[USER_ID]
+            if (userId == null) {
+                val newId = UUID.randomUUID().toString()
+                setUserId(newId)
+                newId
+            } else userId
+        }
         .distinctUntilChanged()
 
     override fun getUserNameBlocking(): String {
@@ -91,11 +103,16 @@ class SettingsImpl @Inject constructor(
     override suspend fun reset() {
         dataStore.edit {
             it[USER_NAME] = DEFAULT_USER_NAME
+            it[USER_ID] = UUID.randomUUID().toString()
             it[LANGUAGE] = DEFAULT_LANGUAGE
             it[VIBRATION] = DEFAULT_VIBRATION
             it[NIGHT_MODE] = DEFAULT_NIGHT_MODE
             it[DOTS_TYPE] = mapper.map(null as DotsStyleType?)
             it[FIRST_RUN] = DEFAULT_FIRST_RUN
         }
+    }
+
+    private suspend fun setUserId(userId: String) {
+        dataStore.edit { it[USER_ID] = userId }
     }
 }

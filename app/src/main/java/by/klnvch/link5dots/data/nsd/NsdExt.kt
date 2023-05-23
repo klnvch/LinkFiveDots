@@ -21,14 +21,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+package by.klnvch.link5dots.data.nsd
 
-package by.klnvch.link5dots.domain.usecases.network
+import android.net.nsd.NsdManager
+import android.net.nsd.NsdServiceInfo
 
-import by.klnvch.link5dots.domain.repositories.OnlineRoomRepository
-import javax.inject.Inject
+object NsdExt {
+    private fun createNsdServiceInfo(port: Int): NsdServiceInfo {
+        val serviceInfo = NsdServiceInfo()
+        serviceInfo.port = port
+        serviceInfo.serviceName = NsdParams.SERVICE_NAME
+        serviceInfo.serviceType = NsdParams.SERVICE_TYPE
+        return serviceInfo
+    }
 
-class UpdateOnlineRoomStateUseCase @Inject constructor(
-    private val onlineRoomRepository: OnlineRoomRepository,
-) {
-    suspend fun update(key: String, state: Int) = onlineRoomRepository.updateState(key, state)
+    fun NsdServiceInfo.isValid(): Boolean {
+        return if (serviceType != NsdParams.SERVICE_TYPE) false
+        else serviceName.contains(NsdParams.SERVICE_NAME)
+    }
+
+    fun NsdManager.registerService(port: Int, listener: NsdManager.RegistrationListener) =
+        registerService(createNsdServiceInfo(port), NsdManager.PROTOCOL_DNS_SD, listener)
 }

@@ -26,16 +26,12 @@ package by.klnvch.link5dots.multiplayer.factories;
 import androidx.annotation.NonNull;
 
 import by.klnvch.link5dots.multiplayer.activities.GameActivityBluetooth;
-import by.klnvch.link5dots.multiplayer.activities.GameActivityNsd;
 import by.klnvch.link5dots.multiplayer.services.GameServiceBluetooth;
-import by.klnvch.link5dots.multiplayer.services.GameServiceNsd;
 
 public class FactoryProvider {
     @NonNull
     public static FactoryActivityInterface getActivityFactory(@NonNull Class c) {
-        if (c.equals(GameActivityNsd.class)) {
-            return new FactoryNsd();
-        } else if (c.equals(GameActivityBluetooth.class)) {
+        if (c.equals(GameActivityBluetooth.class)) {
             return new FactoryBluetooth();
         } else {
             throw new IllegalArgumentException();
@@ -44,9 +40,7 @@ public class FactoryProvider {
 
     @NonNull
     public static FactoryServiceInterface getServiceFactory(@NonNull Class c) {
-        if (c.equals(GameServiceNsd.class)) {
-            return new FactoryNsd();
-        } else if (c.equals(GameServiceBluetooth.class)) {
+        if (c.equals(GameServiceBluetooth.class)) {
             return new FactoryBluetooth();
         } else {
             throw new IllegalArgumentException();

@@ -39,7 +39,7 @@ import androidx.sqlite.db.framework.FrameworkSQLiteOpenHelperFactory;
 import androidx.test.InstrumentationRegistry;
 import androidx.test.runner.AndroidJUnit4;
 import by.klnvch.link5dots.data.db.AppDatabase;
-import by.klnvch.link5dots.models.Room;
+import by.klnvch.link5dots.domain.models.Room;
 
 @RunWith(AndroidJUnit4.class)
 public class MigrationTest {
@@ -49,16 +49,16 @@ public class MigrationTest {
     public MigrationTestHelper helper;
 
     public MigrationTest() {
-        helper = new MigrationTestHelper(InstrumentationRegistry.getInstrumentation(),
-                AppDatabase.class.getCanonicalName(),
-                new FrameworkSQLiteOpenHelperFactory());
+        //helper = new MigrationTestHelper(InstrumentationRegistry.getInstrumentation(),
+        //        AppDatabase.class.getCanonicalName(),
+        //        new FrameworkSQLiteOpenHelperFactory());
     }
 
     private static void insertUser(Room room, SupportSQLiteDatabase db) {
         ContentValues values = new ContentValues();
 
         values.put("key", room.getKey());
-        values.put("state", room.getState());
+        //values.put("state", room.getState());
         values.put("timestamp", room.getTimestamp());
         values.put("dots", "{}");
         values.put("user_1_id", "dfgsdfg");

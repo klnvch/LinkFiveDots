@@ -24,30 +24,15 @@
 package by.klnvch.link5dots.ui.game
 
 import by.klnvch.link5dots.R
-import by.klnvch.link5dots.domain.models.NetworkRoom
-import by.klnvch.link5dots.domain.models.RoomState
+import by.klnvch.link5dots.domain.models.NetworkGameAction
 
 object RoomToTitleMapper {
-    fun roomToTitle(room: NetworkRoom, userId: String): Int {
-        return if (room.user1.id == userId) {
-            map(room, 0)
-        } else if (room.user2?.id == userId) {
-            map(room, 1)
-        } else {
-            0
-        }
-    }
-
-    private fun map(room: NetworkRoom, expectedOrder: Int): Int {
-        val order = room.dots.size % 2
-        return if (room.isOver()) {
-            if (order == expectedOrder) R.string.end_lose
-            else R.string.end_win
-        } else if (room.state == RoomState.FINISHED) {
-            R.string.disconnected
-        } else {
-            if (order == expectedOrder) R.string.bt_message_your_turn
-            else R.string.bt_message_opponents_turn
-        }
+    fun actionToTitle(action: NetworkGameAction) = when(action) {
+        NetworkGameAction.GAME_OVER_WIN -> R.string.end_win
+        NetworkGameAction.GAME_OVER_LOSE -> R.string.end_lose
+        NetworkGameAction.DISCONNECTED -> R.string.end_lose
+        NetworkGameAction.MOVE -> R.string.bt_message_your_turn
+        NetworkGameAction.WAIT -> R.string.bt_message_opponents_turn
+        NetworkGameAction.UNKNOWN -> 0
     }
 }

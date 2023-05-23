@@ -21,22 +21,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+package by.klnvch.link5dots.domain.repositories
 
-package by.klnvch.link5dots.multiplayer.activities;
+import by.klnvch.link5dots.domain.models.Dot
+import by.klnvch.link5dots.domain.models.NetworkRoom
+import by.klnvch.link5dots.domain.models.NetworkUser
+import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
+import kotlinx.coroutines.flow.Flow
 
-import android.annotation.SuppressLint;
-import android.os.Build;
-
-public class GameActivityNsd extends GameActivity {
-    @Override
-    public void newGame() {
-        mGameFragment.reset();
-        mService.newGame();
-    }
-
-    @SuppressLint("ObsoleteSdkInt")
-    @Override
-    protected boolean isValidFomMainMenuMoved() {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN;
-    }
+interface NsdRoomRepository {
+    suspend fun create(room: NetworkRoom): RemoteRoomDescriptor
+    fun getState(): Flow<Int>
+    fun delete()
+    fun finish()
+    fun getRemoteRooms(): Flow<List<RemoteRoomDescriptor>>
+    fun get(descriptor: RemoteRoomDescriptor): Flow<NetworkRoom>
+    suspend fun connect(descriptor: RemoteRoomDescriptor, user2: NetworkUser)
+    suspend fun addDot(dot: Dot)
 }

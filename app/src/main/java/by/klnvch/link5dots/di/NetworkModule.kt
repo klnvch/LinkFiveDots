@@ -21,10 +21,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 package by.klnvch.link5dots.di
 
 import by.klnvch.link5dots.data.network.NetworkService
+import com.google.gson.Gson
 import dagger.Module
 import dagger.Provides
 import retrofit2.Retrofit
@@ -42,4 +42,7 @@ class NetworkModule {
             .build()
             .create(NetworkService::class.java)
     }
+
+    @Provides
+    fun provideGson() = Gson()
 }

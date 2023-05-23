@@ -21,22 +21,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 package by.klnvch.link5dots.domain.repositories
 
 import by.klnvch.link5dots.domain.models.Dot
 import by.klnvch.link5dots.domain.models.NetworkRoom
 import by.klnvch.link5dots.domain.models.NetworkUser
+import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
 import kotlinx.coroutines.flow.Flow
 
 interface OnlineRoomRepository {
     suspend fun generateKey(): String
-    suspend fun create(room: NetworkRoom)
+    suspend fun create(room: NetworkRoom): RemoteRoomDescriptor
     suspend fun updateState(key: String, state: Int)
     fun getState(key: String): Flow<Int>
     suspend fun isConnected(): Boolean
-    suspend fun connect(key: String, user2: NetworkUser)
-    fun get(key: String): Flow<NetworkRoom>
+    suspend fun connect(descriptor: RemoteRoomDescriptor, user2: NetworkUser)
+    fun get(descriptor: RemoteRoomDescriptor): Flow<NetworkRoom>
     suspend fun addDot(key: String, position: Int, dot: Dot)
     val path: String
+    fun getRemoteRooms(): Flow<List<RemoteRoomDescriptor>>
 }

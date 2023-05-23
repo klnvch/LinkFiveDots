@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2017 klnvch
+ * Copyright (c) 2023 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,44 +21,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+package by.klnvch.link5dots.di.game.nsd
 
-package by.klnvch.link5dots.multiplayer.sockets;
+import by.klnvch.link5dots.di.ActivityScope
+import by.klnvch.link5dots.di.game.GameFragmentBuilderModule
+import by.klnvch.link5dots.di.game.OnlineGameViewModelsModule
+import by.klnvch.link5dots.ui.game.activities.NsdGameActivity
+import dagger.Subcomponent
+import dagger.android.AndroidInjector
 
-import java.io.IOException;
-import java.net.ServerSocket;
-
-import androidx.annotation.MainThread;
-import androidx.annotation.NonNull;
-
-public class ServerSocketDecoratorNsd extends ServerSocketDecorator<ServerSocket> {
-
-    @MainThread
-    public ServerSocketDecoratorNsd() throws IOException {
-        super(create());
-    }
-
-    @NonNull
-    private static ServerSocket create() throws IOException {
-        return new ServerSocket(0);
-    }
-
-    @Override
-    public SocketDecorator accept() throws IOException {
-        return new SocketDecoratorNsd(mSocket.accept());
-    }
-
-    @Override
-    public void close() throws IOException {
-        mSocket.close();
-    }
-
-    public int getLocalPort() {
-        return mSocket.getLocalPort();
-    }
-
-    @NonNull
-    @Override
-    public String toString() {
-        return mSocket.toString();
-    }
+@ActivityScope
+@Subcomponent(
+    modules = [
+        OnlineGameViewModelsModule::class,
+        GameFragmentBuilderModule::class,
+        NsdGameRulesModule::class,
+    ]
+)
+interface NsdGameSubcomponent : AndroidInjector<NsdGameActivity> {
+    @Subcomponent.Factory
+    interface Factory : AndroidInjector.Factory<NsdGameActivity>
 }

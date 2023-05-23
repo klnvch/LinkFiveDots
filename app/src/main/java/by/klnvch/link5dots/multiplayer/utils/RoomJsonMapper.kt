@@ -21,7 +21,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 package by.klnvch.link5dots.multiplayer.utils
 
 import by.klnvch.link5dots.domain.models.NetworkRoom
@@ -29,6 +28,6 @@ import com.google.gson.Gson
 import javax.inject.Inject
 
 class RoomJsonMapper @Inject constructor(private val gson: Gson) {
-    fun toJson(room: NetworkRoom) = gson.toJson(room)
-    fun toRoom(json: String) = gson.fromJson(json, NetworkRoom::class.java)
+    fun toJson(room: NetworkRoom): String = gson.toJson(room)
+    fun toRoom(json: String): NetworkRoom = gson.fromJson(json, NetworkRoom::class.java)
 }

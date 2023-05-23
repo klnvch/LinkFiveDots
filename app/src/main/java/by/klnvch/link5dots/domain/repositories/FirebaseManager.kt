@@ -21,12 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 package by.klnvch.link5dots.domain.repositories
 
 interface FirebaseManager {
     fun isSupported(): Boolean
     suspend fun signInAnonymously(): String
     fun signOut()
-    fun getUserId(): String?
+    fun getUserId(): String
 }

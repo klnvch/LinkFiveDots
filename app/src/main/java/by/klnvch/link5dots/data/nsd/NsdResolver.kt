@@ -21,23 +21,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package by.klnvch.link5dots.ui.game.picker.adapters
+package by.klnvch.link5dots.data.nsd
 
-import android.view.View
+import android.content.Context
+import android.net.nsd.NsdManager
+import android.net.nsd.NsdServiceInfo
+import javax.inject.Inject
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
+import kotlin.coroutines.suspendCoroutine
 
-class EmptyStateMediator constructor(
-    private val adapter: PickerAdapterOnline,
-    private val view: View
-) {
-    fun attach() {
-        adapter.emptyStateListener = object : OnEmptyStateListener {
-            override fun onEmptyState(isEmpty: Boolean) {
-                if (isEmpty) {
-                    view.visibility = View.VISIBLE
-                } else {
-                    view.visibility = View.INVISIBLE
-                }
-            }
+class NsdResolver @Inject constructor(context: Context) {
+    private val nsdManager = context.getSystemService(Context.NSD_SERVICE) as NsdManager
+
+    suspend fun resolve(serviceInfo: NsdServiceInfo) = suspendCoroutine { continuation ->
+        val listener = object : NsdManager.ResolveListener {
+            override fun onResolveFailed(info: NsdServiceInfo?, errorCode: Int) =
+                continuation.resumeWithException(Error("NSD: $errorCode"))
+
+            override fun onServiceResolved(info: NsdServiceInfo?) = continuation.resume(info)
         }
+        nsdManager.resolveService(serviceInfo, listener)
     }
 }

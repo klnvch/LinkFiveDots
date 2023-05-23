@@ -21,15 +21,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 package by.klnvch.link5dots.di.game
 
 import by.klnvch.link5dots.di.game.bot.BotGameSubcomponent
 import by.klnvch.link5dots.di.game.info.InfoGameSubcomponent
+import by.klnvch.link5dots.di.game.nsd.NsdGameSubcomponent
 import by.klnvch.link5dots.di.game.online.OnlineGameSubcomponent
 import by.klnvch.link5dots.di.game.two.TwoPlayersGameSubcomponent
 import by.klnvch.link5dots.ui.game.activities.BotGameActivity
 import by.klnvch.link5dots.ui.game.activities.GameInfoActivity
+import by.klnvch.link5dots.ui.game.activities.NsdGameActivity
 import by.klnvch.link5dots.ui.game.activities.OnlineGameActivity
 import by.klnvch.link5dots.ui.game.activities.TwoPlayersGameActivity
 import dagger.Binds
@@ -44,6 +45,7 @@ import dagger.multibindings.IntoMap
         TwoPlayersGameSubcomponent::class,
         InfoGameSubcomponent::class,
         OnlineGameSubcomponent::class,
+        NsdGameSubcomponent::class,
     ]
 )
 internal abstract class GameModule {
@@ -66,4 +68,9 @@ internal abstract class GameModule {
     @IntoMap
     @ClassKey(OnlineGameActivity::class)
     abstract fun bindOnlineGameSubcomponentFactory(factory: OnlineGameSubcomponent.Factory): AndroidInjector.Factory<*>
+
+    @Binds
+    @IntoMap
+    @ClassKey(NsdGameActivity::class)
+    abstract fun bindNsdGameSubcomponentFactory(factory: NsdGameSubcomponent.Factory): AndroidInjector.Factory<*>
 }

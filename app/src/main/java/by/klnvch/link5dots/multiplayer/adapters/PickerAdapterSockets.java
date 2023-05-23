@@ -21,7 +21,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 package by.klnvch.link5dots.multiplayer.adapters;
 
 import android.view.LayoutInflater;
@@ -34,10 +33,9 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
+
 import by.klnvch.link5dots.R;
 import by.klnvch.link5dots.multiplayer.targets.Target;
-
-import static com.google.common.base.Preconditions.checkNotNull;
 
 public abstract class PickerAdapterSockets extends RecyclerView.Adapter<TargetHolder>
         implements TargetAdapterInterface, ScannerInterface {
@@ -46,9 +44,6 @@ public abstract class PickerAdapterSockets extends RecyclerView.Adapter<TargetHo
     OnScanStoppedListener mOnScanStoppedListener;
     private OnItemClickListener mOnItemClickListener = null;
     private OnEmptyStateListener mOnEmptyStateListener = null;
-
-    PickerAdapterSockets() {
-    }
 
     @NonNull
     @Override
@@ -121,8 +116,6 @@ public abstract class PickerAdapterSockets extends RecyclerView.Adapter<TargetHo
 
     @Override
     public void startScan(@NonNull OnScanStoppedListener listener) {
-        checkNotNull(listener);
-
         mOnScanStoppedListener = listener;
         startListening();
     }

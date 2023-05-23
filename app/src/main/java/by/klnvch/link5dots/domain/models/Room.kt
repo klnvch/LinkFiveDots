@@ -86,6 +86,14 @@ data class Room(
     }
 }
 
+interface INetworkRoom : IRoom {
+    val state: Int
+}
+
+interface INetworkRoomExtended : INetworkRoom {
+    val yourId: String
+}
+
 data class NetworkRoom(
     override val key: String,
     override val timestamp: Long,
@@ -93,9 +101,32 @@ data class NetworkRoom(
     override val user1: NetworkUser,
     override val user2: NetworkUser?,
     override val type: Int,
-    val state: Int,
-) : IRoom
+    override val state: Int,
+) : INetworkRoom
 
+data class NetworkRoomExtended(
+    override val key: String,
+    override val timestamp: Long,
+    override val dots: List<Dot>,
+    override val user1: NetworkUser,
+    override val user2: NetworkUser?,
+    override val type: Int,
+    override val state: Int,
+    override val yourId: String
+) : INetworkRoomExtended {
+    val opponent = if (user1.id == yourId) user2 else user1
+
+    constructor(room: NetworkRoom, yourId: String) : this(
+        room.key,
+        room.timestamp,
+        room.dots,
+        room.user1,
+        room.user2,
+        room.type,
+        room.state,
+        yourId,
+    )
+}
 
 private inline fun List<Point>.findMaxLine(predicate: (Point) -> Boolean): List<Point>? = this
     .filter { p -> predicate(p) }

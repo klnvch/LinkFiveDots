@@ -21,8 +21,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package by.klnvch.link5dots.ui.game.picker.adapters
+package by.klnvch.link5dots.domain.usecases.network
 
-interface OnEmptyStateListener {
-    fun onEmptyState(isEmpty: Boolean)
+import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
+import by.klnvch.link5dots.domain.repositories.NsdRoomRepository
+import by.klnvch.link5dots.domain.repositories.OnlineRoomRepository
+import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
+
+interface ScanUseCase {
+    fun scan(): Flow<List<RemoteRoomDescriptor>>
+}
+
+class OnlineScanUseCase @Inject constructor(
+    val repository: OnlineRoomRepository
+) : ScanUseCase {
+    override fun scan() = repository.getRemoteRooms()
+}
+
+class NsdScanUseCase @Inject constructor(
+    val repository: NsdRoomRepository
+) : ScanUseCase {
+    override fun scan() = repository.getRemoteRooms()
 }

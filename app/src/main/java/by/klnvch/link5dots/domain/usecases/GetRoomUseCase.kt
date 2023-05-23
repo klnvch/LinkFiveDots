@@ -24,30 +24,56 @@
 package by.klnvch.link5dots.domain.usecases
 
 import by.klnvch.link5dots.domain.models.IRoom
+import by.klnvch.link5dots.domain.models.NetworkRoomExtended
+import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
+import by.klnvch.link5dots.domain.repositories.FirebaseManager
+import by.klnvch.link5dots.domain.repositories.NsdRoomRepository
 import by.klnvch.link5dots.domain.repositories.OnlineRoomRepository
 import by.klnvch.link5dots.domain.repositories.RoomRepository
+import by.klnvch.link5dots.domain.repositories.Settings
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-abstract class GetRoomUseCase : GetUseCase<IRoom, RoomParam>
+interface GetRoomUseCase : GetUseCase<IRoom, RoomParam>
 
-class GetOfflineRoomUseCase @Inject constructor(
-    private val roomRepository: RoomRepository
-) : GetRoomUseCase() {
+class GetRoomOfflineUseCase @Inject constructor(
+    private val repository: RoomRepository,
+) : GetRoomUseCase {
     override fun get(param: RoomParam) = when (param) {
-        is RoomByType -> roomRepository.getRecentByType(param.type)
-        is RoomByKey -> roomRepository.getByKey(param.key)
+        is RoomByType -> repository.getRecentByType(param.type)
+        is RoomByKey -> repository.getByKey(param.key)
+        else -> throw IllegalArgumentException("Wrong param")
     }
 }
 
-class GetOnlineRoomUseCase @Inject constructor(
-    private val onlineRoomRepository: OnlineRoomRepository,
-) : GetRoomUseCase() {
+class GetRoomOnlineUseCase @Inject constructor(
+    private val repository: OnlineRoomRepository,
+    private val firebaseManager: FirebaseManager,
+) : GetRoomUseCase {
     override fun get(param: RoomParam) = when (param) {
-        is RoomByType -> throw IllegalArgumentException("It is not possible to get online room by type")
-        is RoomByKey -> onlineRoomRepository.get(param.key)
+        is RoomByDescriptor -> repository.get(param.descriptor)
+            .map { NetworkRoomExtended(it, firebaseManager.getUserId()) }
+
+        else -> throw IllegalArgumentException("Wrong param")
+    }
+}
+
+class GetRoomNsdUseCase @Inject constructor(
+    private val repository: NsdRoomRepository,
+    private val settings: Settings,
+) : GetRoomUseCase {
+    override fun get(param: RoomParam) = when (param) {
+        is RoomByDescriptor -> repository
+            .get(param.descriptor)
+            .combine(settings.getUserId())
+            { room, userId -> NetworkRoomExtended(room, userId) }
+
+        else -> throw IllegalArgumentException("Wrong param")
     }
 }
 
 sealed interface RoomParam
 data class RoomByType(val type: Int) : RoomParam
 data class RoomByKey(val key: String) : RoomParam
+data class RoomByDescriptor(val descriptor: RemoteRoomDescriptor) : RoomParam
