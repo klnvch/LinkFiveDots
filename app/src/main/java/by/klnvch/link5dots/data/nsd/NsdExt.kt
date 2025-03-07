@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 klnvch
+ * Copyright (c) 2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,19 +27,17 @@ import android.net.nsd.NsdManager
 import android.net.nsd.NsdServiceInfo
 
 object NsdExt {
-    private fun createNsdServiceInfo(port: Int): NsdServiceInfo {
-        val serviceInfo = NsdServiceInfo()
-        serviceInfo.port = port
-        serviceInfo.serviceName = NsdParams.SERVICE_NAME
-        serviceInfo.serviceType = NsdParams.SERVICE_TYPE
-        return serviceInfo
-    }
-
     fun NsdServiceInfo.isValid(): Boolean {
         return if (serviceType != NsdParams.SERVICE_TYPE) false
         else serviceName.contains(NsdParams.SERVICE_NAME)
     }
 
-    fun NsdManager.registerService(port: Int, listener: NsdManager.RegistrationListener) =
-        registerService(createNsdServiceInfo(port), NsdManager.PROTOCOL_DNS_SD, listener)
+    fun NsdManager.registerService(port: Int, listener: NsdManager.RegistrationListener) {
+        val serviceInfo = NsdServiceInfo().apply {
+            serviceName = NsdParams.SERVICE_NAME
+            serviceType = NsdParams.SERVICE_TYPE
+            setPort(port)
+        }
+        registerService(serviceInfo, NsdManager.PROTOCOL_DNS_SD, listener)
+    }
 }

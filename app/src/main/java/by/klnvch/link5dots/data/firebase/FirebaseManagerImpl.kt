@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 klnvch
+ * Copyright (c) 2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,8 +29,9 @@ import by.klnvch.link5dots.domain.repositories.FirebaseManager
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.Firebase
 import com.google.firebase.auth.AuthResult
-import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.auth
 import kotlinx.coroutines.suspendCancellableCoroutine
 import javax.inject.Inject
 import kotlin.coroutines.resume
@@ -45,8 +46,9 @@ class FirebaseManagerImpl @Inject constructor(
     }
 
     override suspend fun signInAnonymously() = suspendCancellableCoroutine { continuation ->
-        val auth = FirebaseAuth.getInstance()
-        // TODO: what if user is null?
+        // TODO: FirebaseNetworkException can be thrown, reproducible on emulator for airplane mode
+        // TODO: FirebaseException Requests from this Android client application are blocked
+        val auth = Firebase.auth
         val listener = OnCompleteListener<AuthResult> {
             if (it.isSuccessful) {
                 continuation.resume(it.result.user!!.uid)
@@ -59,8 +61,8 @@ class FirebaseManagerImpl @Inject constructor(
         auth.signInAnonymously().addOnCompleteListener(listener)
     }
 
-    override fun signOut() = FirebaseAuth.getInstance().signOut()
+    override fun signOut() = Firebase.auth.signOut()
 
     override fun getUserId() =
-        FirebaseAuth.getInstance().currentUser?.uid ?: throw UnauthorizedError()
+        Firebase.auth.currentUser?.uid ?: throw UnauthorizedError()
 }

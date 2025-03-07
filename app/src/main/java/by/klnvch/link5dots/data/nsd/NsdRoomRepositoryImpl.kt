@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 klnvch
+ * Copyright (c) 2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -61,8 +61,9 @@ class NsdRoomRepositoryImpl @Inject constructor(
 
     override suspend fun create(room: NetworkRoom) = withContext(Dispatchers.IO) {
         val socket = ServerSocket(0)
+        val localPort = socket.localPort
         try {
-            val info = nsdRegistration.register(socket.localPort)
+            val info = nsdRegistration.register(localPort)
             startAccepting(socket)
             roomFlow.emit(room)
             NsdRoomDescriptor(info)
