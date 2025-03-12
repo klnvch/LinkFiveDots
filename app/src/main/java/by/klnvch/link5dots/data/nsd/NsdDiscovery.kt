@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 klnvch
+ * Copyright (c) 2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -44,7 +44,7 @@ class NsdDiscovery @Inject constructor(
             override fun onDiscoveryStarted(serviceType: String?) = Unit
             override fun onDiscoveryStopped(serviceType: String?) = Unit
             override fun onStartDiscoveryFailed(serviceType: String?, errorCode: Int) =
-                throw Error("NSD error: $errorCode")
+                throw Exception("NSD error: $errorCode")
 
             override fun onServiceFound(serviceInfo: NsdServiceInfo?) {
                 if (serviceInfo?.isValid() == true) {

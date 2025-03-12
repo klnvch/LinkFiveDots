@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 klnvch
+ * Copyright (c) 2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -38,7 +38,7 @@ class InitOnlineUseCase @Inject constructor(
         if (firebaseManager.isSupported()) {
             firebaseManager.signInAnonymously()
         } else {
-            throw UnsupportedError()
+            throw UnsupportedException()
         }
     }
 }
@@ -47,7 +47,7 @@ class InitNsdUseCase @Inject constructor(
     private val deviceInfo: DeviceInfo,
 ) : InitMultiplayerUseCase() {
     override suspend fun init() =
-        if (deviceInfo.isNsdSupported()) Unit else throw UnsupportedError()
+        if (deviceInfo.isNsdSupported()) Unit else throw UnsupportedException()
 }
 
-class UnsupportedError : Error()
+class UnsupportedException : Exception()

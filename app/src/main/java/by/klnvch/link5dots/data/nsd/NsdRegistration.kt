@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 klnvch
+ * Copyright (c) 2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -42,7 +42,7 @@ class NsdRegistration @Inject constructor(context: Context) {
         val listener = object : NsdManager.RegistrationListener {
             override fun onRegistrationFailed(info: NsdServiceInfo, errorCode: Int) {
                 Log.e(TAG, "onRegistrationFailed: $errorCode")
-                continuation.resumeWithException(Error("$TAG error: $errorCode"))
+                continuation.resumeWithException(Exception("$TAG error: $errorCode"))
             }
 
             override fun onUnregistrationFailed(info: NsdServiceInfo, errorCode: Int) {

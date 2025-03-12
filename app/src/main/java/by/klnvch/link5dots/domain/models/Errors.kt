@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 klnvch
+ * Copyright (c) 2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,4 +23,4 @@
  */
 package by.klnvch.link5dots.domain.models
 
-class UnauthorizedError : Error("No Firebase User Found")
+class UnauthorizedException : Exception("No Firebase User Found")

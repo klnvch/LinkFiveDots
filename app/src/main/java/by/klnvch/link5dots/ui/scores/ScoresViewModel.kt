@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 klnvch
+ * Copyright (c) 2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -71,9 +71,9 @@ class ScoresViewModel @AssistedInject constructor(
             try {
                 val scorePath = getScorePathUseCase.signInAndGet()
                 _scoresUiState.value = ScoresViewState(FirebaseState.SIGNED_IN, scorePath)
-            } catch (e: NotSupportedError) {
+            } catch (e: NotSupportedException) {
                 _scoresUiState.value = ScoresViewState(FirebaseState.NOT_SUPPORTED)
-            } catch (e: Error) {
+            } catch (e: Exception) {
                 _scoresUiState.value = ScoresViewState(FirebaseState.ERROR)
             }
         }

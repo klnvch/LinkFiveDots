@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 klnvch
+ * Copyright (c) 2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -72,7 +72,7 @@ class CreateOnlineRoomUseCase @Inject constructor(
 ) : CreateMultiplayerRoomUseCase(settings, timeRepository, roomKeyGenerator) {
     override suspend fun create(room: NetworkRoom) =
         if (repository.isConnected()) repository.create(room)
-        else throw DisconnectedError()
+        else throw DisconnectedException()
 
     override suspend fun getUser1(userName: String) =
         NetworkUser(firebaseManager.getUserId(), userName)
@@ -96,4 +96,4 @@ class CreateNsdRoomUseCase @Inject constructor(
 
 }
 
-class DisconnectedError : Error()
+class DisconnectedException : Exception()

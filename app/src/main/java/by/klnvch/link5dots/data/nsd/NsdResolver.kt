@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 klnvch
+ * Copyright (c) 2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -37,7 +37,7 @@ class NsdResolver @Inject constructor(context: Context) {
     suspend fun resolve(serviceInfo: NsdServiceInfo) = suspendCoroutine { continuation ->
         val listener = object : NsdManager.ResolveListener {
             override fun onResolveFailed(info: NsdServiceInfo?, errorCode: Int) =
-                continuation.resumeWithException(Error("NSD: $errorCode"))
+                continuation.resumeWithException(Exception("NSD: $errorCode"))
 
             override fun onServiceResolved(info: NsdServiceInfo?) = continuation.resume(info)
         }

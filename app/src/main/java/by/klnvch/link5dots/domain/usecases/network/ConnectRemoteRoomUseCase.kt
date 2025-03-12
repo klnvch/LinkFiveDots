@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 klnvch
+ * Copyright (c) 2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -48,7 +48,7 @@ class ConnectOnlineRoomUseCase @Inject constructor(
         if (onlineRoomRepository.isConnected()) {
             onlineRoomRepository.connect(descriptor, user2)
         } else {
-            throw Error("Not connected")
+            throw Exception("Not connected")
         }
     }
 }

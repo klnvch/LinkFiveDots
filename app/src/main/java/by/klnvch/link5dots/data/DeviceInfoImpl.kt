@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 klnvch
+ * Copyright (c) 2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,7 +28,6 @@ import android.content.Context
 import android.os.Build
 import android.provider.Settings
 import by.klnvch.link5dots.domain.repositories.DeviceInfo
-import by.klnvch.link5dots.domain.usecases.network.UnsupportedError
 import by.klnvch.link5dots.utils.TestDevices
 import javax.inject.Inject
 

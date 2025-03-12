@@ -24,7 +24,7 @@
 package by.klnvch.link5dots.data.firebase
 
 import android.content.Context
-import by.klnvch.link5dots.domain.models.UnauthorizedError
+import by.klnvch.link5dots.domain.models.UnauthorizedException
 import by.klnvch.link5dots.domain.repositories.FirebaseManager
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
@@ -46,14 +46,12 @@ class FirebaseManagerImpl @Inject constructor(
     }
 
     override suspend fun signInAnonymously() = suspendCancellableCoroutine { continuation ->
-        // TODO: FirebaseNetworkException can be thrown, reproducible on emulator for airplane mode
-        // TODO: FirebaseException Requests from this Android client application are blocked
         val auth = Firebase.auth
         val listener = OnCompleteListener<AuthResult> {
             if (it.isSuccessful) {
                 continuation.resume(it.result.user!!.uid)
             } else {
-                continuation.resumeWithException(it.exception ?: Error("Unknown error"))
+                continuation.resumeWithException(it.exception ?: Exception("Unknown error"))
             }
         }
 
@@ -64,5 +62,5 @@ class FirebaseManagerImpl @Inject constructor(
     override fun signOut() = Firebase.auth.signOut()
 
     override fun getUserId() =
-        Firebase.auth.currentUser?.uid ?: throw UnauthorizedError()
+        Firebase.auth.currentUser?.uid ?: throw UnauthorizedException()
 }
