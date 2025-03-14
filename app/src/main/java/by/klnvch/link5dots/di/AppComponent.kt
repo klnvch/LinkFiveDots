@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 klnvch
+ * Copyright (c) 2023-2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -43,8 +43,6 @@ import javax.inject.Singleton
         NetworkModule::class,
         DatabaseModule::class,
         DataStoreModule::class,
-        ServiceBindingModule::class,
-        ActivityBindingModule::class,
         AndroidSupportInjectionModule::class,
         ViewModelFactoryModule::class,
         SettingsModule::class,

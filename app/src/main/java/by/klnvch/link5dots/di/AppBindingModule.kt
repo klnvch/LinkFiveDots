@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 klnvch
+ * Copyright (c) 2023-2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,15 +27,37 @@ package by.klnvch.link5dots.di
 import android.app.Application
 import android.content.Context
 import androidx.preference.PreferenceDataStore
-import by.klnvch.link5dots.data.*
+import by.klnvch.link5dots.data.CrashRepositoryImpl
+import by.klnvch.link5dots.data.DeviceInfoImpl
+import by.klnvch.link5dots.data.GameScoreRepositoryImpl
+import by.klnvch.link5dots.data.LanguageManagerImpl
+import by.klnvch.link5dots.data.NightModeManagerImpl
+import by.klnvch.link5dots.data.OnlineRoomRepositoryImpl
+import by.klnvch.link5dots.data.RoomRepositoryImpl
+import by.klnvch.link5dots.data.StringProvider
+import by.klnvch.link5dots.data.TimeRepositoryImpl
+import by.klnvch.link5dots.data.bluetooth.BluetoothRoomRepositoryImpl
 import by.klnvch.link5dots.data.firebase.AnalyticsImpl
 import by.klnvch.link5dots.data.firebase.FirebaseManagerImpl
-import by.klnvch.link5dots.data.GameScoreRepositoryImpl
 import by.klnvch.link5dots.data.nsd.NsdRoomRepositoryImpl
 import by.klnvch.link5dots.data.settings.PreferenceDataStoreImpl
 import by.klnvch.link5dots.data.settings.SettingsImpl
 import by.klnvch.link5dots.data.workers.WorkLauncher
-import by.klnvch.link5dots.domain.repositories.*
+import by.klnvch.link5dots.domain.repositories.Analytics
+import by.klnvch.link5dots.domain.repositories.BluetoothRoomRepository
+import by.klnvch.link5dots.domain.repositories.CrashRepository
+import by.klnvch.link5dots.domain.repositories.DeviceInfo
+import by.klnvch.link5dots.domain.repositories.FirebaseManager
+import by.klnvch.link5dots.domain.repositories.GameScoreRepository
+import by.klnvch.link5dots.domain.repositories.LanguageManager
+import by.klnvch.link5dots.domain.repositories.NightModeManager
+import by.klnvch.link5dots.domain.repositories.NsdRoomRepository
+import by.klnvch.link5dots.domain.repositories.OnlineGameWorkLauncher
+import by.klnvch.link5dots.domain.repositories.OnlineRoomRepository
+import by.klnvch.link5dots.domain.repositories.RoomRepository
+import by.klnvch.link5dots.domain.repositories.Settings
+import by.klnvch.link5dots.domain.repositories.StringRepository
+import by.klnvch.link5dots.domain.repositories.TimeRepository
 import dagger.Binds
 import dagger.Module
 import javax.inject.Singleton
@@ -98,6 +120,10 @@ interface AppBindingModule {
     @Singleton
     @Binds
     fun bindNsdRoomRepository(impl: NsdRoomRepositoryImpl): NsdRoomRepository
+
+    @Singleton
+    @Binds
+    fun bindBluetoothRoomRepository(impl: BluetoothRoomRepositoryImpl): BluetoothRoomRepository
 
     @Singleton
     @Binds

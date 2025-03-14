@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 klnvch
+ * Copyright (c) 2023-2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,11 +23,13 @@
  */
 package by.klnvch.link5dots.di.game
 
+import by.klnvch.link5dots.di.game.bluetooth.BluetoothGameSubcomponent
 import by.klnvch.link5dots.di.game.bot.BotGameSubcomponent
 import by.klnvch.link5dots.di.game.info.InfoGameSubcomponent
 import by.klnvch.link5dots.di.game.nsd.NsdGameSubcomponent
 import by.klnvch.link5dots.di.game.online.OnlineGameSubcomponent
 import by.klnvch.link5dots.di.game.two.TwoPlayersGameSubcomponent
+import by.klnvch.link5dots.ui.game.activities.BluetoothGameActivity
 import by.klnvch.link5dots.ui.game.activities.BotGameActivity
 import by.klnvch.link5dots.ui.game.activities.GameInfoActivity
 import by.klnvch.link5dots.ui.game.activities.NsdGameActivity
@@ -46,6 +48,7 @@ import dagger.multibindings.IntoMap
         InfoGameSubcomponent::class,
         OnlineGameSubcomponent::class,
         NsdGameSubcomponent::class,
+        BluetoothGameSubcomponent::class,
     ]
 )
 internal abstract class GameModule {
@@ -73,4 +76,9 @@ internal abstract class GameModule {
     @IntoMap
     @ClassKey(NsdGameActivity::class)
     abstract fun bindNsdGameSubcomponentFactory(factory: NsdGameSubcomponent.Factory): AndroidInjector.Factory<*>
+
+    @Binds
+    @IntoMap
+    @ClassKey(BluetoothGameActivity::class)
+    abstract fun bindBluetoothGameSubcomponentFactory(factory: BluetoothGameSubcomponent.Factory): AndroidInjector.Factory<*>
 }

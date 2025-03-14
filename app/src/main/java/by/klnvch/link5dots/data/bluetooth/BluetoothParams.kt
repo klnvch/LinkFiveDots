@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2017 klnvch
+ * Copyright (c) 2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,25 +22,13 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.multiplayer.factories;
+package by.klnvch.link5dots.data.bluetooth
 
-import android.content.Context;
-import android.content.Intent;
+import java.util.UUID
 
-import androidx.annotation.NonNull;
-import androidx.annotation.StringRes;
-import by.klnvch.link5dots.multiplayer.activities.PickerFragment;
-
-public interface FactoryActivityInterface {
-
-    @NonNull
-    Intent getServiceIntent(@NonNull Context context);
-
-    boolean isValid(@NonNull Context context);
-
-    @StringRes
-    int getDefaultTitle();
-
-    @NonNull
-    PickerFragment getPickerFragment();
+object BluetoothParams {
+    const val TAG = "Bluetooth"
+    const val NAME_SECURE = "BluetoothLinkFiveDotsSecure"
+    val UUID_SECURE: UUID = UUID.fromString("fa87c0d0-afac-11de-8a39-0800200c9a66")
+    const val FAKE_ADDRESS = "02:00:00:00:00:00"
 }

@@ -25,6 +25,7 @@ package by.klnvch.link5dots.domain.usecases.network
 
 import by.klnvch.link5dots.domain.models.NetworkUser
 import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
+import by.klnvch.link5dots.domain.repositories.BluetoothRoomRepository
 import by.klnvch.link5dots.domain.repositories.FirebaseManager
 import by.klnvch.link5dots.domain.repositories.NsdRoomRepository
 import by.klnvch.link5dots.domain.repositories.OnlineRoomRepository
@@ -54,13 +55,25 @@ class ConnectOnlineRoomUseCase @Inject constructor(
 }
 
 class ConnectNsdRoomUseCase @Inject constructor(
-    private val nsdRoomRepository: NsdRoomRepository,
+    private val repository: NsdRoomRepository,
     private val settings: Settings,
 ) : ConnectRemoteRoomUseCase() {
     override suspend fun connect(descriptor: RemoteRoomDescriptor) {
         val userId = settings.getUserId().first()
         val userName = settings.getUserName().first()
         val user2 = NetworkUser(userId, userName)
-        nsdRoomRepository.connect(descriptor, user2)
+        repository.connect(descriptor, user2)
+    }
+}
+
+class ConnectBluetoothRoomUseCase @Inject constructor(
+    private val repository: BluetoothRoomRepository,
+    private val settings: Settings,
+) : ConnectRemoteRoomUseCase() {
+    override suspend fun connect(descriptor: RemoteRoomDescriptor) {
+        val userId = settings.getUserId().first()
+        val userName = settings.getUserName().first()
+        val user2 = NetworkUser(userId, userName)
+        repository.connect(descriptor, user2)
     }
 }

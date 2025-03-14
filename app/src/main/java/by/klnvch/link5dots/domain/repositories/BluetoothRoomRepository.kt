@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2017 klnvch
+ * Copyright (c) 2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,14 +22,21 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.multiplayer.adapters;
+package by.klnvch.link5dots.domain.repositories
 
-import androidx.annotation.NonNull;
+import by.klnvch.link5dots.domain.models.Dot
+import by.klnvch.link5dots.domain.models.NetworkRoom
+import by.klnvch.link5dots.domain.models.NetworkUser
+import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
+import kotlinx.coroutines.flow.Flow
 
-public interface ScannerInterface {
-    void startScan(@NonNull OnScanStoppedListener onScanStoppedListener);
-
-    void stopScan();
-
-    boolean isScanning();
+interface BluetoothRoomRepository {
+    fun get(descriptor: RemoteRoomDescriptor): Flow<NetworkRoom>
+    suspend fun addDot(dot: Dot)
+    suspend fun create(room: NetworkRoom): RemoteRoomDescriptor
+    fun getState(): Flow<Int>
+    fun delete()
+    fun getRemoteRooms(): Flow<List<RemoteRoomDescriptor>>
+    suspend fun connect(descriptor: RemoteRoomDescriptor, user2: NetworkUser)
+    fun finish()
 }

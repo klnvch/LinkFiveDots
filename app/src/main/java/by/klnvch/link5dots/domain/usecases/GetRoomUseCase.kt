@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 klnvch
+ * Copyright (c) 2023-2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,6 +26,7 @@ package by.klnvch.link5dots.domain.usecases
 import by.klnvch.link5dots.domain.models.IRoom
 import by.klnvch.link5dots.domain.models.NetworkRoomExtended
 import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
+import by.klnvch.link5dots.domain.repositories.BluetoothRoomRepository
 import by.klnvch.link5dots.domain.repositories.FirebaseManager
 import by.klnvch.link5dots.domain.repositories.NsdRoomRepository
 import by.klnvch.link5dots.domain.repositories.OnlineRoomRepository
@@ -61,6 +62,20 @@ class GetRoomOnlineUseCase @Inject constructor(
 
 class GetRoomNsdUseCase @Inject constructor(
     private val repository: NsdRoomRepository,
+    private val settings: Settings,
+) : GetRoomUseCase {
+    override fun get(param: RoomParam) = when (param) {
+        is RoomByDescriptor -> repository
+            .get(param.descriptor)
+            .combine(settings.getUserId())
+            { room, userId -> NetworkRoomExtended(room, userId) }
+
+        else -> throw IllegalArgumentException("Wrong param")
+    }
+}
+
+class GetRoomBluetoothUseCase @Inject constructor(
+    private val repository: BluetoothRoomRepository,
     private val settings: Settings,
 ) : GetRoomUseCase {
     override fun get(param: RoomParam) = when (param) {

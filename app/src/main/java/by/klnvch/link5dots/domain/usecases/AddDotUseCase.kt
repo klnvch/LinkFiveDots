@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 klnvch
+ * Copyright (c) 2023-2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -30,6 +30,7 @@ import by.klnvch.link5dots.domain.models.IRoom
 import by.klnvch.link5dots.domain.models.NetworkRoomExtended
 import by.klnvch.link5dots.domain.models.Point
 import by.klnvch.link5dots.domain.models.Room
+import by.klnvch.link5dots.domain.repositories.BluetoothRoomRepository
 import by.klnvch.link5dots.domain.repositories.NsdRoomRepository
 import by.klnvch.link5dots.domain.repositories.OnlineRoomRepository
 import by.klnvch.link5dots.domain.repositories.RoomRepository
@@ -44,7 +45,7 @@ class AddDotInfoUseCase @Inject constructor() : AddDotUseCase {
     override suspend fun addDot(room: IRoom, p: Point) = Unit
 }
 
-abstract class AddDotRealUseCase constructor(
+abstract class AddDotRealUseCase(
     private val timeRepository: TimeRepository,
     private val board: Board,
 ) : AddDotUseCase {
@@ -58,14 +59,14 @@ abstract class AddDotRealUseCase constructor(
     abstract suspend fun addInternal(room: IRoom, p: Point, dt: Int)
 }
 
-abstract class AddDotMultiplayerUseCase constructor(
+abstract class AddDotMultiplayerUseCase(
     timeRepository: TimeRepository,
     board: Board,
 ) : AddDotRealUseCase(timeRepository, board) {
     abstract suspend fun addMultiplayerDot(room: IRoom, dot: Dot)
     override suspend fun addInternal(room: IRoom, p: Point, dt: Int) {
         if (room is NetworkRoomExtended) {
-            val (_, _, dots, user1, user2, _, _,  yourId) = room
+            val (_, _, dots, user1, user2, _, _, yourId) = room
             if (user1.id == yourId && dots.size % 2 == 0) {
                 addMultiplayerDot(room, Dot(p, Dot.HOST, dt))
             } else if (user2?.id == yourId && dots.size % 2 == 1) {
@@ -91,6 +92,14 @@ class AddDotNsdUseCase @Inject constructor(
     timeRepository: TimeRepository,
     board: Board,
     private val repository: NsdRoomRepository,
+) : AddDotMultiplayerUseCase(timeRepository, board) {
+    override suspend fun addMultiplayerDot(room: IRoom, dot: Dot) = repository.addDot(dot)
+}
+
+class AddDotBluetoothUseCase @Inject constructor(
+    timeRepository: TimeRepository,
+    board: Board,
+    private val repository: BluetoothRoomRepository,
 ) : AddDotMultiplayerUseCase(timeRepository, board) {
     override suspend fun addMultiplayerDot(room: IRoom, dot: Dot) = repository.addDot(dot)
 }

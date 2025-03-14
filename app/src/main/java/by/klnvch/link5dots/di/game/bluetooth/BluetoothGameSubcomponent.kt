@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2017 klnvch
+ * Copyright (c) 2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,49 +22,24 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.multiplayer.services;
+package by.klnvch.link5dots.di.game.bluetooth
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import by.klnvch.link5dots.di.ActivityScope
+import by.klnvch.link5dots.di.game.GameFragmentBuilderModule
+import by.klnvch.link5dots.di.game.OnlineGameViewModelsModule
+import by.klnvch.link5dots.ui.game.activities.BluetoothGameActivity
+import dagger.Subcomponent
+import dagger.android.AndroidInjector
 
-import by.klnvch.link5dots.domain.models.NetworkRoom;
-import by.klnvch.link5dots.domain.models.NetworkUser;
-import by.klnvch.link5dots.domain.models.Point;
-import by.klnvch.link5dots.data.db.UserLocal;
-import by.klnvch.link5dots.multiplayer.adapters.TargetAdapterInterface;
-import by.klnvch.link5dots.multiplayer.targets.Target;
-import by.klnvch.link5dots.multiplayer.utils.GameState;
-
-public interface GameServiceInterface {
-
-    void createTarget();
-
-    void deleteTarget();
-
-    void startScan();
-
-    void stopScan();
-
-    void connect(@NonNull Target target);
-
-    @NonNull
-    NetworkUser getUser();
-
-    @Nullable
-    NetworkRoom getRoom();
-
-    @NonNull
-    GameState getState();
-
-    @Nullable
-    Target getTarget();
-
-    @NonNull
-    TargetAdapterInterface getAdapter();
-
-    void reset();
-
-    void addDot(@NonNull Point p);
-
-    void newGame();
+@ActivityScope
+@Subcomponent(
+    modules = [
+        OnlineGameViewModelsModule::class,
+        GameFragmentBuilderModule::class,
+        BluetoothGameRulesModule::class,
+    ]
+)
+interface BluetoothGameSubcomponent : AndroidInjector<BluetoothGameActivity> {
+    @Subcomponent.Factory
+    interface Factory : AndroidInjector.Factory<BluetoothGameActivity>
 }

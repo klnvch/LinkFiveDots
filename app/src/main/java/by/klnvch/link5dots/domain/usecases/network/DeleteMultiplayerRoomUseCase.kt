@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 klnvch
+ * Copyright (c) 2023-2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,6 +24,7 @@
 package by.klnvch.link5dots.domain.usecases.network
 
 import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
+import by.klnvch.link5dots.domain.repositories.BluetoothRoomRepository
 import by.klnvch.link5dots.domain.repositories.NsdRoomRepository
 import by.klnvch.link5dots.domain.repositories.OnlineGameWorkLauncher
 import javax.inject.Inject
@@ -42,6 +43,13 @@ class DeleteOnlineRoomUseCase @Inject constructor(
 
 class DeleteNsdRoomUseCase @Inject constructor(
     private val repository: NsdRoomRepository,
+) : DeleteMultiplayerRoomUseCase {
+    override fun delete(descriptor: RemoteRoomDescriptor) = repository.delete()
+    override fun finish(descriptor: RemoteRoomDescriptor) = repository.finish()
+}
+
+class DeleteBluetoothRoomUseCase @Inject constructor(
+    private val repository: BluetoothRoomRepository,
 ) : DeleteMultiplayerRoomUseCase {
     override fun delete(descriptor: RemoteRoomDescriptor) = repository.delete()
     override fun finish(descriptor: RemoteRoomDescriptor) = repository.finish()

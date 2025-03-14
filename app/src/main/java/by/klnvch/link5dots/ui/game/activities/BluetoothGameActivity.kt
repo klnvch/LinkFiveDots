@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 klnvch
+ * Copyright (c) 2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,16 +22,10 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.di
+package by.klnvch.link5dots.ui.game.activities
 
-import by.klnvch.link5dots.multiplayer.activities.GameFragment
-import dagger.Module
-import dagger.android.ContributesAndroidInjector
+import by.klnvch.link5dots.R
 
-
-@Module
-abstract class FragmentBuildersModule {
-
-    @ContributesAndroidInjector
-    abstract fun gameFragment(): GameFragment
+class BluetoothGameActivity : MultiplayerGameActivity() {
+    override val defaultTitle = R.string.bluetooth
 }

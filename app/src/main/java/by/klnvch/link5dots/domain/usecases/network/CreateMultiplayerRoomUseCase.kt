@@ -29,6 +29,7 @@ import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
 import by.klnvch.link5dots.domain.models.RoomKeyGenerator
 import by.klnvch.link5dots.domain.models.RoomState
 import by.klnvch.link5dots.domain.models.RoomType
+import by.klnvch.link5dots.domain.repositories.BluetoothRoomRepository
 import by.klnvch.link5dots.domain.repositories.FirebaseManager
 import by.klnvch.link5dots.domain.repositories.NsdRoomRepository
 import by.klnvch.link5dots.domain.repositories.OnlineRoomRepository
@@ -93,7 +94,21 @@ class CreateNsdRoomUseCase @Inject constructor(
     }
 
     override val type = RoomType.NSD
+}
 
+class CreateBluetoothRoomUseCase @Inject constructor(
+    private val repository: BluetoothRoomRepository,
+    private val settings: Settings,
+    timeRepository: TimeRepository,
+    roomKeyGenerator: RoomKeyGenerator,
+) : CreateMultiplayerRoomUseCase(settings, timeRepository, roomKeyGenerator) {
+    override suspend fun create(room: NetworkRoom) = repository.create(room)
+    override suspend fun getUser1(userName: String): NetworkUser {
+        val userId = settings.getUserId().first()
+        return NetworkUser(userId, userName)
+    }
+
+    override val type = RoomType.BLUETOOTH
 }
 
 class DisconnectedException : Exception()

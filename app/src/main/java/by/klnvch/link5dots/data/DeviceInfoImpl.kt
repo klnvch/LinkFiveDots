@@ -24,6 +24,7 @@
 package by.klnvch.link5dots.data
 
 import android.annotation.SuppressLint
+import android.bluetooth.BluetoothManager
 import android.content.Context
 import android.os.Build
 import android.provider.Settings
@@ -49,4 +50,9 @@ class DeviceInfoImpl @Inject constructor(
             false
         }
     else false
+
+    override fun isBluetoothSupported(): Boolean {
+        val manager = this.context.getSystemService(BluetoothManager::class.java)
+        return manager.adapter != null
+    }
 }

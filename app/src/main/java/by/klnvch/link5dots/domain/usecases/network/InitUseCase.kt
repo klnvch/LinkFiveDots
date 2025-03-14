@@ -50,4 +50,11 @@ class InitNsdUseCase @Inject constructor(
         if (deviceInfo.isNsdSupported()) Unit else throw UnsupportedException()
 }
 
+class InitBluetoothUseCase @Inject constructor(
+    private val deviceInfo: DeviceInfo,
+) : InitMultiplayerUseCase() {
+    override suspend fun init() =
+        if (deviceInfo.isBluetoothSupported()) Unit else throw UnsupportedException()
+}
+
 class UnsupportedException : Exception()
