@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 klnvch
+ * Copyright (c) 2023-2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,14 +29,31 @@ import androidx.recyclerview.widget.RecyclerView
 import by.klnvch.link5dots.R
 import by.klnvch.link5dots.ui.game.picker.adapters.PickerAdapter
 import by.klnvch.link5dots.ui.game.picker.adapters.PickerItemViewState
+import by.klnvch.link5dots.ui.game.picker.states.ScanFailed
+import by.klnvch.link5dots.ui.game.picker.states.ScanOn
+import by.klnvch.link5dots.ui.game.picker.states.ScanState
+import by.klnvch.link5dots.ui.game.picker.states.TargetCreated
+import by.klnvch.link5dots.ui.game.picker.states.TargetFailed
+import by.klnvch.link5dots.ui.game.picker.states.TargetState
 
 object PickerBindingAdapters {
     @JvmStatic
     @BindingAdapter("setRoomSate")
-    fun TextView.setRoomSate(targetState: TargetState) {
-        when (targetState) {
-            is TargetCreated -> text = targetState.itemViewState.longName
+    fun TextView.setRoomSate(state: TargetState) {
+        when (state) {
+            is TargetCreated -> text = state.itemViewState.longName
+            is TargetFailed -> text = state.e.message // TODO exception to resource mapper
             else -> setText(R.string.name_not_set)
+        }
+    }
+
+    @JvmStatic
+    @BindingAdapter("setScanSate")
+    fun TextView.setScanSate(state: ScanState) {
+        when {
+            state is ScanOn && state.items.isEmpty() -> setText(R.string.search_no_results)
+            state is ScanFailed -> text = state.e.message // TODO exception to resource mapper
+            else -> text = ""
         }
     }
 

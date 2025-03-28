@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 klnvch
+ * Copyright (c) 2023-2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -41,6 +41,7 @@ import by.klnvch.link5dots.ui.game.OnlineGameViewModel
 import by.klnvch.link5dots.ui.game.picker.adapters.OnPickerItemSelected
 import by.klnvch.link5dots.ui.game.picker.adapters.PickerAdapter
 import by.klnvch.link5dots.ui.game.picker.adapters.PickerItemViewState
+import by.klnvch.link5dots.ui.game.picker.states.TargetCreated
 import dagger.android.support.DaggerFragment
 import kotlinx.coroutines.launch
 import javax.inject.Inject

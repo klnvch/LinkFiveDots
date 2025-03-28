@@ -23,7 +23,6 @@
  */
 package by.klnvch.link5dots.ui.game
 
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import by.klnvch.link5dots.R
 import by.klnvch.link5dots.domain.models.NetworkRoomExtended
@@ -55,11 +54,11 @@ import by.klnvch.link5dots.ui.game.picker.ConnectConnected
 import by.klnvch.link5dots.ui.game.picker.ConnectConnecting
 import by.klnvch.link5dots.ui.game.picker.ConnectDisconnected
 import by.klnvch.link5dots.ui.game.picker.PickerViewState
-import by.klnvch.link5dots.ui.game.picker.ScanOn
-import by.klnvch.link5dots.ui.game.picker.TargetCreated
-import by.klnvch.link5dots.ui.game.picker.TargetCreating
-import by.klnvch.link5dots.ui.game.picker.TargetDeleting
 import by.klnvch.link5dots.ui.game.picker.adapters.PickerItemViewState
+import by.klnvch.link5dots.ui.game.picker.states.ScanOn
+import by.klnvch.link5dots.ui.game.picker.states.TargetCreated
+import by.klnvch.link5dots.ui.game.picker.states.TargetCreating
+import by.klnvch.link5dots.ui.game.picker.states.TargetDeleting
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -69,7 +68,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.job
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -155,9 +153,19 @@ class OnlineGameViewModel @Inject constructor(
     fun isConnected() = pickerUiState.value.connectState is ConnectConnected
 
     fun createRoom() {
-        roomStatesJob = viewModelScope.launch {
+        viewModelScope.launch {
             _pickerUiState.value = PickerViewState.TARGET_CREATING
-            val descriptor = createMultiplayerRoomUseCase.create()
+            try {
+                val descriptor = createMultiplayerRoomUseCase.create()
+                startAccepting(descriptor)
+            } catch (e: Exception) {
+                _pickerUiState.value = PickerViewState.creationFailed(e)
+            }
+        }
+    }
+
+    fun startAccepting(descriptor: RemoteRoomDescriptor) {
+        roomStatesJob = viewModelScope.launch {
             getStateUseCase.get(descriptor).collect {
                 when (it) {
                     RoomState.CREATED -> {
@@ -167,12 +175,12 @@ class OnlineGameViewModel @Inject constructor(
 
                     RoomState.STARTED -> {
                         onConnected(descriptor)
-                        coroutineContext.job.cancel()
+                        roomStatesJob?.cancel()
                     }
 
                     RoomState.DELETED -> {
                         _pickerUiState.value = PickerViewState.IDLE
-                        coroutineContext.job.cancel()
+                        roomStatesJob?.cancel()
                     }
                 }
             }
@@ -187,9 +195,13 @@ class OnlineGameViewModel @Inject constructor(
     fun startScan() {
         _pickerUiState.value = PickerViewState.scanning(emptyList())
         scanJob = viewModelScope.launch {
-            scanUseCase.scan().collect { list ->
-                _pickerUiState.value =
-                    PickerViewState.scanning(list.map { PickerItemViewState(it) })
+            try {
+                scanUseCase.scan().collect { list ->
+                    _pickerUiState.value =
+                        PickerViewState.scanning(list.map { PickerItemViewState(it) })
+                }
+            } catch (e: Exception) {
+                _pickerUiState.value = PickerViewState.scanFailed(e)
             }
         }
     }
@@ -200,16 +212,15 @@ class OnlineGameViewModel @Inject constructor(
     }
 
     fun connect(descriptor: RemoteRoomDescriptor) {
+        scanJob?.cancel()
         _pickerUiState.value = PickerViewState.CONNECTING
         viewModelScope.launch {
             try {
                 connectRemoteRoomUseCase.connect(descriptor)
                 onConnected(descriptor)
-                scanJob?.cancel()
             } catch (e: Throwable) {
-                Log.e("Multiplayer", "${e.message}")
                 _navigationEvent.emit(ConnectError(descriptor.title))
-                stopScan()
+                startScan()
             }
         }
     }

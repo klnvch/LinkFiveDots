@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?><!--
   ~ MIT License
   ~
-  ~ Copyright (c) 2023 klnvch
+  ~ Copyright (c) 2023-2025 klnvch
   ~
   ~ Permission is hereby granted, free of charge, to any person obtaining a copy
   ~ of this software and associated documentation files (the "Software"), to deal
@@ -172,13 +172,12 @@
             style="@style/TextAppearance.AppCompat.Large"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/search_no_results"
-            android:visibility="@{viewState.noResultLabelVisibility}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/guidelineVertical"
             app:layout_constraintTop_toTopOf="parent"
-            tools:visibility="visible" />
+            app:setScanSate="@{viewState.scanState}"
+            tools:text="@string/search_no_results" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guidelineVertical"
