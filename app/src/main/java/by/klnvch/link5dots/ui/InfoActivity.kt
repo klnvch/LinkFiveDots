@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2017 klnvch
+ * Copyright (c) 2017-2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,13 +24,17 @@
 
 package by.klnvch.link5dots.ui
 
-import android.content.*
-import android.net.Uri
+import android.content.ActivityNotFoundException
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.net.toUri
 import by.klnvch.link5dots.BuildConfig
 import by.klnvch.link5dots.R
 import by.klnvch.link5dots.databinding.ActivityInfoBinding
@@ -52,23 +56,26 @@ class InfoActivity : AppCompatActivity(), View.OnClickListener {
     override fun onClick(v: View) {
         when (v.id) {
             R.id.buttonInfoCode -> {
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(GITHUB_LINK))
+                val intent = Intent(Intent.ACTION_VIEW, GITHUB_LINK.toUri())
                 launchIntent(intent, GITHUB_LINK)
             }
+
             R.id.buttonInfoRate -> {
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(ANDROID_APP_LINK))
+                val intent = Intent(Intent.ACTION_VIEW, ANDROID_APP_LINK.toUri())
                 launchIntent(intent, WEB_PAGE_LINK)
             }
+
             R.id.buttonInfoShare -> {
                 val intent = Intent(Intent.ACTION_SEND)
                     .putExtra(Intent.EXTRA_TEXT, WEB_PAGE_LINK)
                     .setType("text/plain")
                 launchIntent(intent, WEB_PAGE_LINK)
             }
+
             R.id.buttonInfoFeedback -> {
                 val intent = Intent.createChooser(
                     Intent(Intent.ACTION_SENDTO)
-                        .setDataAndType(Uri.parse(URI_MAIL_DATA), "message/rfc822")
+                        .setDataAndType(URI_MAIL_DATA.toUri(), "message/rfc822")
                         .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK),
                     getString(R.string.connection_error_message)
                 )

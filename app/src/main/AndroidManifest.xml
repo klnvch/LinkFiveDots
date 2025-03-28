@@ -56,8 +56,6 @@
         tools:ignore="AllowBackup,GoogleAppIndexingWarning"
         tools:targetApi="tiramisu">
 
-        <service android:name="by.klnvch.link5dots.multiplayer.services.GameServiceBluetooth" />
-
         <meta-data
             android:name="google_analytics_adid_collection_enabled"
             android:value="false" />

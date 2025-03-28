@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 klnvch
+ * Copyright (c) 2023-2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,8 +25,6 @@
 package by.klnvch.link5dots.ui.scores.history
 
 import android.view.View
-import by.klnvch.link5dots.data.StringProvider
-import by.klnvch.link5dots.domain.models.IRoom
 
 data class HistoryViewState(
     val items: List<HistoryItemViewState>
