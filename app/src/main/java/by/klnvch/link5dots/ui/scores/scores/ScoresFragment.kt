@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 klnvch
+ * Copyright (c) 2023-2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -42,8 +42,8 @@ import javax.inject.Inject
 
 class ScoresFragment : DaggerFragment() {
     private lateinit var binding: FragmentScoresBinding
-    private lateinit var scoresAdapter: ScoresAdapter
     private lateinit var viewModel: ScoresViewModel
+    private var scoresAdapter: ScoresAdapter? = null
 
     @Inject
     lateinit var viewModelFactory: SavedStateViewModelFactory
@@ -75,7 +75,7 @@ class ScoresFragment : DaggerFragment() {
     }
 
     override fun onStop() {
-        scoresAdapter.stopListening()
+        scoresAdapter?.stopListening()
         viewModel.signOut()
         super.onStop()
     }
@@ -84,12 +84,12 @@ class ScoresFragment : DaggerFragment() {
         binding.viewState = viewState
 
         if (viewState.highScorePath != null) {
-            scoresAdapter = ScoresAdapter.create(viewState.highScorePath)
+            val scoresAdapter = ScoresAdapter.create(viewState.highScorePath)
             binding.recyclerView.adapter = scoresAdapter
-        }
-
-        if (viewState.firebaseState == FirebaseState.SIGNED_IN) {
-            scoresAdapter.startListening()
+            if (viewState.firebaseState == FirebaseState.SIGNED_IN) {
+                scoresAdapter.startListening()
+            }
+            this.scoresAdapter = scoresAdapter
         }
     }
 }

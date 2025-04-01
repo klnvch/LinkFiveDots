@@ -219,7 +219,7 @@ class OnlineGameViewModel @Inject constructor(
                 connectRemoteRoomUseCase.connect(descriptor)
                 onConnected(descriptor)
             } catch (e: Throwable) {
-                _navigationEvent.emit(ConnectError(descriptor.title))
+                _navigationEvent.emit(ConnectError(descriptor.title, e))
                 startScan()
             }
         }

@@ -128,6 +128,7 @@ class BluetoothRoomRepositoryImpl @Inject constructor(
         withContext(Dispatchers.IO) {
             val device = (descriptor as BluetoothRemoteRoomDescriptor).device
             val socket = device.createRfcommSocketToServiceRecord(UUID_SECURE)
+            socket.connect()
 
             val inputStream = DataInputStream(socket.inputStream)
             outputStream = DataOutputStream(socket.outputStream)

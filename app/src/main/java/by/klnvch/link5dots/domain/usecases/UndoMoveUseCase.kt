@@ -15,7 +15,7 @@ class UndoMoveInfoUseCase @Inject constructor() : UndoMoveUseCase {
     override suspend fun undo(room: IRoom) = Unit
 }
 
-abstract class UndoMoveRealUseCase constructor(
+abstract class UndoMoveRealUseCase(
     private val roomRepository: RoomRepository
 ) : UndoMoveUseCase {
     override val isSupported = true
