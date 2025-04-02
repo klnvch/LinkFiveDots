@@ -51,9 +51,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.Closeable
@@ -68,13 +68,14 @@ class BluetoothRoomRepositoryImpl @Inject constructor(
 ) :
     BluetoothRoomRepository {
     private val bluetoothService = context.getSystemService(BluetoothManager::class.java)
-    private val roomFlow = MutableSharedFlow<NetworkRoom>(1)
+    private val roomFlow = MutableSharedFlow<NetworkRoom?>(1)
+    private val stateFlow = MutableSharedFlow<Int>(1)
     private var _serverSocket: BluetoothServerSocket? = null
     private var _socket: BluetoothSocket? = null
     private var outputStream: DataOutputStream? = null
 
     @SuppressLint("HardwareIds")
-    override suspend fun create(room: NetworkRoom): RemoteRoomDescriptor {
+    override suspend fun create(): RemoteRoomDescriptor {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && ContextCompat.checkSelfPermission(
                 this.context,
                 Manifest.permission.BLUETOOTH_CONNECT
@@ -87,15 +88,13 @@ class BluetoothRoomRepositoryImpl @Inject constructor(
             bluetoothService.adapter.listenUsingRfcommWithServiceRecord(NAME_SECURE, UUID_SECURE)
         startAccepting(socket)
 
-        roomFlow.emit(room)
-
         return BluetoothRoomDescriptor(
             bluetoothService.adapter.name,
             bluetoothService.adapter.address
         )
     }
 
-    override fun getState() = roomFlow.map { it.state }
+    override fun getState() = stateFlow
 
     override fun delete() {
         _serverSocket?.closeSafely()
@@ -104,7 +103,12 @@ class BluetoothRoomRepositoryImpl @Inject constructor(
 
     override fun finish() {
         _socket?.closeSafely()
+        _socket = null
+        outputStream?.closeSafely()
+        outputStream = null
     }
+
+    override fun isServer() = _serverSocket !== null
 
     override fun getRemoteRooms(): Flow<List<RemoteRoomDescriptor>> {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && ContextCompat.checkSelfPermission(
@@ -121,7 +125,12 @@ class BluetoothRoomRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun get(descriptor: RemoteRoomDescriptor) = roomFlow
+    override suspend fun newGame(room: NetworkRoom) {
+        roomFlow.emit(room)
+        send(room)
+    }
+
+    override fun get() = roomFlow
 
     @SuppressLint("MissingPermission")
     override suspend fun connect(descriptor: RemoteRoomDescriptor, user2: NetworkUser) =
@@ -135,7 +144,7 @@ class BluetoothRoomRepositoryImpl @Inject constructor(
 
             val json = inputStream.readUTF()
             val room = mapper.toRoom(json)
-            val updatedRoom = room.copy(user2 = user2, state = RoomState.STARTED)
+            val updatedRoom = room.copy(user2 = user2)
             roomFlow.tryEmit(updatedRoom)
             send(updatedRoom)
 
@@ -144,7 +153,7 @@ class BluetoothRoomRepositoryImpl @Inject constructor(
         }
 
     override suspend fun addDot(dot: Dot) {
-        val room = roomFlow.first()
+        val room = roomFlow.filterNotNull().first()
         val updatedRoom = room.copy(dots = room.dots + dot)
         roomFlow.tryEmit(updatedRoom)
         send(updatedRoom)
@@ -155,21 +164,18 @@ class BluetoothRoomRepositoryImpl @Inject constructor(
         thread {
             _serverSocket = serverSocket
             try {
+                stateFlow.tryEmit(RoomState.CREATED)
+                roomFlow.tryEmit(null)
                 val socket = serverSocket.accept()
 
                 val inputStream = DataInputStream(socket.inputStream)
                 outputStream = DataOutputStream(socket.outputStream)
 
-                GlobalScope.launch(Dispatchers.IO) {
-                    send(roomFlow.first())
-                }
-
                 startCommunication(inputStream)
                 _socket = socket
             } catch (_: Throwable) {
                 GlobalScope.launch(Dispatchers.IO) {
-                    val room = roomFlow.first()
-                    roomFlow.emit(room.copy(state = RoomState.DELETED))
+                    stateFlow.tryEmit(RoomState.DELETED)
                 }
             }
         }
@@ -179,6 +185,7 @@ class BluetoothRoomRepositoryImpl @Inject constructor(
     private fun startCommunication(inputStream: DataInputStream) {
         thread {
             try {
+                stateFlow.tryEmit(RoomState.STARTED)
                 while (true) {
                     val roomJson = inputStream.readUTF()
                     val room = mapper.toRoom(roomJson)
@@ -188,8 +195,14 @@ class BluetoothRoomRepositoryImpl @Inject constructor(
                 Log.e(TAG, "${e.message}")
                 GlobalScope.launch(Dispatchers.IO) {
                     val room = roomFlow.first()
-                    roomFlow.tryEmit(room.copy(state = RoomState.FINISHED))
+                    if (room != null) {
+                        roomFlow.tryEmit(room.copy(state = RoomState.FINISHED))
+                    }
+                    stateFlow.tryEmit(RoomState.FINISHED)
                 }
+            } finally {
+                delete()
+                finish()
             }
         }
     }

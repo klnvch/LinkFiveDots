@@ -31,12 +31,14 @@ import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
 import kotlinx.coroutines.flow.Flow
 
 interface BluetoothRoomRepository {
-    fun get(descriptor: RemoteRoomDescriptor): Flow<NetworkRoom>
+    suspend fun newGame(room: NetworkRoom)
+    fun get(): Flow<NetworkRoom?>
     suspend fun addDot(dot: Dot)
-    suspend fun create(room: NetworkRoom): RemoteRoomDescriptor
+    suspend fun create(): RemoteRoomDescriptor
     fun getState(): Flow<Int>
     fun delete()
     fun getRemoteRooms(): Flow<List<RemoteRoomDescriptor>>
     suspend fun connect(descriptor: RemoteRoomDescriptor, user2: NetworkUser)
     fun finish()
+    fun isServer(): Boolean
 }

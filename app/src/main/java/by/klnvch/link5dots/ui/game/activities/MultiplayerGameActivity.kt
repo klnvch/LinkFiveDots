@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 klnvch
+ * Copyright (c) 2023-2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,7 +24,6 @@
 package by.klnvch.link5dots.ui.game.activities
 
 import android.os.Bundle
-import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.addCallback
 import androidx.appcompat.app.AlertDialog
@@ -106,8 +105,6 @@ abstract class MultiplayerGameActivity : GameActivity() {
 
         onBackPressedDispatcher.addCallback(this) { disconnectGuard(false) }
     }
-
-    override fun onCreateOptionsMenu(menu: Menu) = true
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {

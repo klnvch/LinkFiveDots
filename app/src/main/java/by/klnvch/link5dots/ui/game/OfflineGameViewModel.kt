@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 klnvch
+ * Copyright (c) 2023-2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -42,9 +42,17 @@ import by.klnvch.link5dots.domain.usecases.UndoMoveUseCase
 import by.klnvch.link5dots.ui.game.create.NewGameViewState
 import by.klnvch.link5dots.ui.game.end.EndGameViewState
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import java.util.*
+import java.util.Random
 import javax.inject.Inject
 
 open class OfflineGameViewModel @Inject constructor(
@@ -76,7 +84,7 @@ open class OfflineGameViewModel @Inject constructor(
     val scoreUi = roomFlow.map {
         if (!it.isNotOver()) {
             val score = prepareScoreUseCase.get(it)
-            EndGameViewState(score, undoMoveUseCase.isSupported, newGameUseCase.isSupported)
+            EndGameViewState(score, undoMoveUseCase.isSupported, newGameUseCase.isSupported())
         } else {
             null
         }

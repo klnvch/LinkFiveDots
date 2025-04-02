@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 klnvch
+ * Copyright (c) 2023-2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,24 +28,30 @@ import by.klnvch.link5dots.domain.models.DeviceOwnerUser
 import by.klnvch.link5dots.domain.models.Dot
 import by.klnvch.link5dots.domain.models.IUser
 import by.klnvch.link5dots.domain.models.InitialGameGenerator
+import by.klnvch.link5dots.domain.models.NetworkRoom
+import by.klnvch.link5dots.domain.models.NetworkUser
 import by.klnvch.link5dots.domain.models.Point
 import by.klnvch.link5dots.domain.models.Room
 import by.klnvch.link5dots.domain.models.RoomKeyGenerator
+import by.klnvch.link5dots.domain.models.RoomState
 import by.klnvch.link5dots.domain.models.RoomType
 import by.klnvch.link5dots.domain.models.translate
+import by.klnvch.link5dots.domain.repositories.BluetoothRoomRepository
 import by.klnvch.link5dots.domain.repositories.RoomRepository
+import by.klnvch.link5dots.domain.repositories.Settings
 import by.klnvch.link5dots.domain.repositories.TimeRepository
-import java.lang.IllegalStateException
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 import javax.inject.Inject
 
 interface NewGameUseCase {
     suspend fun create(seed: Long?)
-    val isSupported: Boolean
+    fun isSupported(): Boolean
 }
 
 class NewGameEmptyUseCase @Inject constructor() : NewGameUseCase {
     override suspend fun create(seed: Long?) = throw IllegalStateException()
-    override val isSupported = false
+    override fun isSupported() = false
 }
 
 abstract class NewGameOfflineUseCase(
@@ -54,7 +60,7 @@ abstract class NewGameOfflineUseCase(
     private val initialGameGenerator: InitialGameGenerator,
     private val roomRepository: RoomRepository,
 ) : NewGameUseCase {
-    override val isSupported = true
+    override fun isSupported() = true
     override suspend fun create(seed: Long?) {
         val room = Room(
             roomKeyGenerator.get(),
@@ -111,4 +117,52 @@ class NewGameTwoUseCase @Inject constructor(
     override val user1 = null
     override val user2 = null
     override val type = RoomType.TWO_PLAYERS
+}
+
+class NewGameBluetoothUseCase @Inject constructor(
+    private val settings: Settings,
+    private val timeRepository: TimeRepository,
+    private val roomKeyGenerator: RoomKeyGenerator,
+    private val repository: BluetoothRoomRepository,
+) :
+    NewGameUseCase {
+    override suspend fun create(seed: Long?) {
+        if (repository.isServer()) {
+            val prevRoom = repository.get().firstOrNull()
+
+            val key = roomKeyGenerator.get()
+            val timestamp = timeRepository.getCurrentTime()
+
+            val newRoom: NetworkRoom
+            if (prevRoom != null) {
+                newRoom = NetworkRoom(
+                    key,
+                    timestamp,
+                    emptyList(),
+                    prevRoom.user1,
+                    prevRoom.user2,
+                    RoomType.BLUETOOTH,
+                    RoomState.CREATED
+                )
+            } else {
+                val userName = settings.getUserName().first()
+                val userId = settings.getUserId().first()
+                val user1 = NetworkUser(userId, userName)
+
+                newRoom = NetworkRoom(
+                    key,
+                    timestamp,
+                    emptyList(),
+                    user1,
+                    null,
+                    RoomType.BLUETOOTH,
+                    RoomState.CREATED
+                )
+            }
+
+            repository.newGame(newRoom)
+        }
+    }
+
+    override fun isSupported() = repository.isServer()
 }

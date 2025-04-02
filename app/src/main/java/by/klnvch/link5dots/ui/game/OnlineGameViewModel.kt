@@ -132,9 +132,9 @@ class OnlineGameViewModel @Inject constructor(
             try {
                 initMultiplayerUseCase.init()
                 _pickerUiState.value = PickerViewState.IDLE
-            } catch (e: Exception) {
+            } catch (e: Throwable) {
                 _pickerUiState.value = PickerViewState.ERROR
-                _navigationEvent.emit(InitError)
+                _navigationEvent.emit(InitError(e))
             }
         }
         viewModelScope.launch {
@@ -158,7 +158,7 @@ class OnlineGameViewModel @Inject constructor(
             try {
                 val descriptor = createMultiplayerRoomUseCase.create()
                 startAccepting(descriptor)
-            } catch (e: Exception) {
+            } catch (e: Throwable) {
                 _pickerUiState.value = PickerViewState.creationFailed(e)
             }
         }

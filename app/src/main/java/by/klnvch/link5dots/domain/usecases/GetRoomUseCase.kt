@@ -80,9 +80,9 @@ class GetRoomBluetoothUseCase @Inject constructor(
 ) : GetRoomUseCase {
     override fun get(param: RoomParam) = when (param) {
         is RoomByDescriptor -> repository
-            .get(param.descriptor)
+            .get()
             .combine(settings.getUserId())
-            { room, userId -> NetworkRoomExtended(room, userId) }
+            { room, userId -> if (room !== null) NetworkRoomExtended(room, userId) else null }
 
         else -> throw IllegalArgumentException("Wrong param")
     }

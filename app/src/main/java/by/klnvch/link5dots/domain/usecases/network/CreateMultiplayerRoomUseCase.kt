@@ -38,12 +38,16 @@ import by.klnvch.link5dots.domain.repositories.TimeRepository
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
-abstract class CreateMultiplayerRoomUseCase(
+interface CreateMultiplayerRoomUseCase {
+    suspend fun create(): RemoteRoomDescriptor
+}
+
+abstract class CreateMultiplayerRoomCommonUseCase(
     private val settings: Settings,
     private val timeRepository: TimeRepository,
     private val roomKeyGenerator: RoomKeyGenerator,
-) {
-    suspend fun create(): RemoteRoomDescriptor {
+) : CreateMultiplayerRoomUseCase {
+    override suspend fun create(): RemoteRoomDescriptor {
         val userName = settings.getUserName().first()
         val timestamp = timeRepository.getCurrentTime()
         val key = roomKeyGenerator.get()
@@ -70,7 +74,7 @@ class CreateOnlineRoomUseCase @Inject constructor(
     settings: Settings,
     timeRepository: TimeRepository,
     roomKeyGenerator: RoomKeyGenerator,
-) : CreateMultiplayerRoomUseCase(settings, timeRepository, roomKeyGenerator) {
+) : CreateMultiplayerRoomCommonUseCase(settings, timeRepository, roomKeyGenerator) {
     override suspend fun create(room: NetworkRoom) =
         if (repository.isConnected()) repository.create(room)
         else throw DisconnectedException()
@@ -86,7 +90,7 @@ class CreateNsdRoomUseCase @Inject constructor(
     private val settings: Settings,
     timeRepository: TimeRepository,
     roomKeyGenerator: RoomKeyGenerator,
-) : CreateMultiplayerRoomUseCase(settings, timeRepository, roomKeyGenerator) {
+) : CreateMultiplayerRoomCommonUseCase(settings, timeRepository, roomKeyGenerator) {
     override suspend fun create(room: NetworkRoom) = repository.create(room)
     override suspend fun getUser1(userName: String): NetworkUser {
         val userId = settings.getUserId().first()
@@ -98,17 +102,8 @@ class CreateNsdRoomUseCase @Inject constructor(
 
 class CreateBluetoothRoomUseCase @Inject constructor(
     private val repository: BluetoothRoomRepository,
-    private val settings: Settings,
-    timeRepository: TimeRepository,
-    roomKeyGenerator: RoomKeyGenerator,
-) : CreateMultiplayerRoomUseCase(settings, timeRepository, roomKeyGenerator) {
-    override suspend fun create(room: NetworkRoom) = repository.create(room)
-    override suspend fun getUser1(userName: String): NetworkUser {
-        val userId = settings.getUserId().first()
-        return NetworkUser(userId, userName)
-    }
-
-    override val type = RoomType.BLUETOOTH
+) : CreateMultiplayerRoomUseCase {
+    override suspend fun create() = repository.create()
 }
 
 class DisconnectedException : Exception()

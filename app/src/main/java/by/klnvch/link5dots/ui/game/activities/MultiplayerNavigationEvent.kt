@@ -26,5 +26,5 @@ package by.klnvch.link5dots.ui.game.activities
 sealed interface MultiplayerNavigationEvent
 object PickerScreen : MultiplayerNavigationEvent
 object GameScreen : MultiplayerNavigationEvent
-object InitError : MultiplayerNavigationEvent
+data class InitError(val e: Throwable) : MultiplayerNavigationEvent
 data class ConnectError(val dst: String, val e: Throwable) : MultiplayerNavigationEvent

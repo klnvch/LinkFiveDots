@@ -28,7 +28,7 @@ import by.klnvch.link5dots.domain.usecases.AddDotBluetoothUseCase
 import by.klnvch.link5dots.domain.usecases.AddDotUseCase
 import by.klnvch.link5dots.domain.usecases.GetRoomBluetoothUseCase
 import by.klnvch.link5dots.domain.usecases.GetRoomUseCase
-import by.klnvch.link5dots.domain.usecases.NewGameEmptyUseCase
+import by.klnvch.link5dots.domain.usecases.NewGameBluetoothUseCase
 import by.klnvch.link5dots.domain.usecases.NewGameUseCase
 import by.klnvch.link5dots.domain.usecases.PrepareScoreMultiplayerUseCase
 import by.klnvch.link5dots.domain.usecases.PrepareScoreUseCase
@@ -57,7 +57,7 @@ interface BluetoothGameRulesModule {
     fun bindGetRoomUseCase(impl: GetRoomBluetoothUseCase): GetRoomUseCase
 
     @Binds
-    fun bindNewGameUseCase(impl: NewGameEmptyUseCase): NewGameUseCase
+    fun bindNewGameUseCase(impl: NewGameBluetoothUseCase): NewGameUseCase
 
     @Binds
     fun bindAddDotUseCase(impl: AddDotBluetoothUseCase): AddDotUseCase

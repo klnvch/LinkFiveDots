@@ -38,4 +38,4 @@ class TargetCreated(val itemViewState: PickerItemViewState) : TargetState() {
     val descriptor = itemViewState.descriptor
 }
 
-class TargetFailed(val e: Exception) : TargetState()
+class TargetFailed(val e: Throwable) : TargetState()

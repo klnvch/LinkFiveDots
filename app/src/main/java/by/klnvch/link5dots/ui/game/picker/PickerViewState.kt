@@ -99,7 +99,7 @@ data class PickerViewState(private val state: GameState) {
         fun connected(descriptor: RemoteRoomDescriptor) =
             PickerViewState(StateConnected(descriptor))
 
-        fun creationFailed(e: Exception) = PickerViewState(StateTargetFailed(e))
+        fun creationFailed(e: Throwable) = PickerViewState(StateTargetFailed(e))
 
         fun created(itemViewState: PickerItemViewState) =
             PickerViewState(StateTargetCreated(itemViewState))
@@ -132,7 +132,7 @@ private class StateTargetCreating : GameState(TargetCreating, ScanNone, ConnectN
 class StateTargetCreated(itemViewState: PickerItemViewState) :
     GameState(TargetCreated(itemViewState), ScanNone, ConnectNone)
 
-class StateTargetFailed(e: Exception) : GameState(TargetFailed(e), ScanOff, ConnectNone)
+class StateTargetFailed(e: Throwable) : GameState(TargetFailed(e), ScanOff, ConnectNone)
 
 private class StateTargetDeleting : GameState(TargetDeleting, ScanNone, ConnectNone)
 private class StateConnected(descriptor: RemoteRoomDescriptor) :
