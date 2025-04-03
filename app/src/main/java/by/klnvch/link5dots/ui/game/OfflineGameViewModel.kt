@@ -49,7 +49,6 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.util.Random
@@ -69,10 +68,9 @@ open class OfflineGameViewModel @Inject constructor(
     private val _searchQueryFlow = MutableSharedFlow<RoomParam>(1)
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    protected val roomFlow = _searchQueryFlow
-        .flatMapLatest { getRoomUseCase.get(it) }
-        .onEach { if (it == null) newGameUseCase.create(0) }
-        .filterNotNull()
+    private val roomFlowGuard = _searchQueryFlow.flatMapLatest { getRoomUseCase.get(it) }
+
+    protected val roomFlow = roomFlowGuard.filterNotNull()
 
     val uiState = roomFlow.map {
         val type = settings.getDotsType().first()
@@ -92,6 +90,16 @@ open class OfflineGameViewModel @Inject constructor(
 
     private val _focusEvent = MutableLiveData<Unit>()
     val focusEvent: LiveData<Unit> = _focusEvent
+
+    init {
+        viewModelScope.launch {
+            val room = roomFlowGuard.first()
+            if (room === null) {
+                val seed = Random().nextInt(0xFFFF).toLong()
+                newGameUseCase.create(seed)
+            }
+        }
+    }
 
     fun setParam(param: RoomParam) {
         viewModelScope.launch { _searchQueryFlow.emit(param) }

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 klnvch
+ * Copyright (c) 2023-2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -102,7 +102,11 @@ data class NetworkRoom(
     override val user2: NetworkUser?,
     override val type: Int,
     override val state: Int,
-) : INetworkRoom
+) : INetworkRoom {
+    override fun toString(): String {
+        return "NetworkRoom(key=$key, timestamp=$timestamp, dots=${dots.size}, user1=${user1.name}, user2=${user2?.name})"
+    }
+}
 
 data class NetworkRoomExtended(
     override val key: String,
@@ -112,7 +116,7 @@ data class NetworkRoomExtended(
     override val user2: NetworkUser?,
     override val type: Int,
     override val state: Int,
-    override val yourId: String
+    override val yourId: String,
 ) : INetworkRoomExtended {
     val opponent = if (user1.id == yourId) user2 else user1
 

@@ -126,6 +126,7 @@ class BluetoothRoomRepositoryImpl @Inject constructor(
     }
 
     override suspend fun newGame(room: NetworkRoom) {
+        Log.d(TAG, "new game created: $room")
         roomFlow.emit(room)
         send(room)
     }
@@ -133,11 +134,12 @@ class BluetoothRoomRepositoryImpl @Inject constructor(
     override fun get() = roomFlow
 
     @SuppressLint("MissingPermission")
-    override suspend fun connect(descriptor: RemoteRoomDescriptor, user2: NetworkUser) =
+    override suspend fun connect(descriptor: RemoteRoomDescriptor, user2: NetworkUser): Unit =
         withContext(Dispatchers.IO) {
             val device = (descriptor as BluetoothRemoteRoomDescriptor).device
             val socket = device.createRfcommSocketToServiceRecord(UUID_SECURE)
             socket.connect()
+            Log.d(TAG, "connected: waiting for input")
 
             val inputStream = DataInputStream(socket.inputStream)
             outputStream = DataOutputStream(socket.outputStream)
@@ -147,6 +149,7 @@ class BluetoothRoomRepositoryImpl @Inject constructor(
             val updatedRoom = room.copy(user2 = user2)
             roomFlow.tryEmit(updatedRoom)
             send(updatedRoom)
+            Log.d(TAG, "connected: first message received")
 
             _socket = socket
             startCommunication(inputStream)
@@ -155,6 +158,7 @@ class BluetoothRoomRepositoryImpl @Inject constructor(
     override suspend fun addDot(dot: Dot) {
         val room = roomFlow.filterNotNull().first()
         val updatedRoom = room.copy(dots = room.dots + dot)
+        Log.d(TAG, "add dot: $updatedRoom")
         roomFlow.tryEmit(updatedRoom)
         send(updatedRoom)
     }
@@ -164,16 +168,20 @@ class BluetoothRoomRepositoryImpl @Inject constructor(
         thread {
             _serverSocket = serverSocket
             try {
+                Log.d(TAG, "accepting: waiting")
                 stateFlow.tryEmit(RoomState.CREATED)
-                roomFlow.tryEmit(null)
                 val socket = serverSocket.accept()
+                Log.d(TAG, "accepting: connected")
 
                 val inputStream = DataInputStream(socket.inputStream)
                 outputStream = DataOutputStream(socket.outputStream)
 
+                roomFlow.tryEmit(null)
+
                 startCommunication(inputStream)
                 _socket = socket
-            } catch (_: Throwable) {
+            } catch (e: Throwable) {
+                Log.d(TAG, "accepting: ${e.message}")
                 GlobalScope.launch(Dispatchers.IO) {
                     stateFlow.tryEmit(RoomState.DELETED)
                 }
@@ -190,9 +198,10 @@ class BluetoothRoomRepositoryImpl @Inject constructor(
                     val roomJson = inputStream.readUTF()
                     val room = mapper.toRoom(roomJson)
                     roomFlow.tryEmit(room)
+                    Log.d(TAG, "received: $room")
                 }
             } catch (e: Throwable) {
-                Log.e(TAG, "${e.message}")
+                Log.d(TAG, "disconnected: ${e.message}")
                 GlobalScope.launch(Dispatchers.IO) {
                     val room = roomFlow.first()
                     if (room != null) {

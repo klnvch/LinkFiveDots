@@ -54,32 +54,37 @@ class NewGameEmptyUseCase @Inject constructor() : NewGameUseCase {
     override fun isSupported() = false
 }
 
+abstract class NewGameCommonUseCase(
+    private val initialGameGenerator: InitialGameGenerator,
+) : NewGameUseCase {
+    fun getDots(seed: Long?): MutableList<Dot> {
+        if (seed != null) {
+            val tp = Point(8, 8)
+            return initialGameGenerator.get(seed).map { it.translate(tp) }.withIndex()
+                .map { (i, p) -> Dot(p, if (i % 2 == 0) Dot.HOST else Dot.GUEST, 0) }
+                .toMutableList()
+        } else {
+            return mutableListOf()
+        }
+    }
+}
+
 abstract class NewGameOfflineUseCase(
     private val roomKeyGenerator: RoomKeyGenerator,
     private val timeRepository: TimeRepository,
-    private val initialGameGenerator: InitialGameGenerator,
     private val roomRepository: RoomRepository,
-) : NewGameUseCase {
+    initialGameGenerator: InitialGameGenerator,
+) : NewGameCommonUseCase(initialGameGenerator) {
     override fun isSupported() = true
     override suspend fun create(seed: Long?) {
         val room = Room(
             roomKeyGenerator.get(),
             timeRepository.getCurrentTime(),
-            mutableListOf(),
+            getDots(seed),
             user1,
             user2,
             type,
         )
-        if (seed != null) {
-            val tp = Point(8, 8)
-            initialGameGenerator.get(seed)
-                .map { it.translate(tp) }
-                .withIndex()
-                .forEach { (i, p) ->
-                    val type = if (i % 2 == 0) Dot.HOST else Dot.GUEST
-                    room.add(Dot(p, type, 0))
-                }
-        }
         roomRepository.save(room)
     }
 
@@ -95,13 +100,13 @@ class NewGameBotUseCase @Inject constructor(
     roomRepository: RoomRepository,
 ) : NewGameOfflineUseCase(
     roomKeyGenerator,
-    timeRepository, initialGameGenerator,
+    timeRepository,
     roomRepository,
+    initialGameGenerator,
 ) {
     override val user1 = DeviceOwnerUser
     override val user2 = BotUser
     override val type = RoomType.BOT
-
 }
 
 class NewGameTwoUseCase @Inject constructor(
@@ -111,8 +116,9 @@ class NewGameTwoUseCase @Inject constructor(
     roomRepository: RoomRepository,
 ) : NewGameOfflineUseCase(
     roomKeyGenerator,
-    timeRepository, initialGameGenerator,
+    timeRepository,
     roomRepository,
+    initialGameGenerator,
 ) {
     override val user1 = null
     override val user2 = null
@@ -124,8 +130,8 @@ class NewGameBluetoothUseCase @Inject constructor(
     private val timeRepository: TimeRepository,
     private val roomKeyGenerator: RoomKeyGenerator,
     private val repository: BluetoothRoomRepository,
-) :
-    NewGameUseCase {
+    initialGameGenerator: InitialGameGenerator,
+) : NewGameCommonUseCase(initialGameGenerator) {
     override suspend fun create(seed: Long?) {
         if (repository.isServer()) {
             val prevRoom = repository.get().firstOrNull()
@@ -133,32 +139,14 @@ class NewGameBluetoothUseCase @Inject constructor(
             val key = roomKeyGenerator.get()
             val timestamp = timeRepository.getCurrentTime()
 
-            val newRoom: NetworkRoom
-            if (prevRoom != null) {
-                newRoom = NetworkRoom(
-                    key,
-                    timestamp,
-                    emptyList(),
-                    prevRoom.user1,
-                    prevRoom.user2,
-                    RoomType.BLUETOOTH,
-                    RoomState.CREATED
-                )
-            } else {
-                val userName = settings.getUserName().first()
-                val userId = settings.getUserId().first()
-                val user1 = NetworkUser(userId, userName)
+            val userName = settings.getUserName().first()
+            val userId = settings.getUserId().first()
+            val user1 = NetworkUser(userId, userName)
+            val user2 = prevRoom?.user2
 
-                newRoom = NetworkRoom(
-                    key,
-                    timestamp,
-                    emptyList(),
-                    user1,
-                    null,
-                    RoomType.BLUETOOTH,
-                    RoomState.CREATED
-                )
-            }
+            val newRoom = NetworkRoom(
+                key, timestamp, getDots(seed), user1, user2, RoomType.BLUETOOTH, RoomState.CREATED
+            )
 
             repository.newGame(newRoom)
         }
