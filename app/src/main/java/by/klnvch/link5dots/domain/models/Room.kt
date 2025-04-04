@@ -82,7 +82,7 @@ data class Room(
     }
 
     fun undo() {
-        dots.removeLast()
+        dots.removeAt(dots.lastIndex)
     }
 }
 

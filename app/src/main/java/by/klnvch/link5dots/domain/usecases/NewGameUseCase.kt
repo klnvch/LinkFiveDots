@@ -148,7 +148,7 @@ class NewGameBluetoothUseCase @Inject constructor(
                 key, timestamp, getDots(seed), user1, user2, RoomType.BLUETOOTH, RoomState.CREATED
             )
 
-            repository.newGame(newRoom)
+            repository.update(newRoom)
         }
     }
 

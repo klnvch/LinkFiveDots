@@ -35,6 +35,8 @@ import by.klnvch.link5dots.domain.repositories.NsdRoomRepository
 import by.klnvch.link5dots.domain.repositories.OnlineRoomRepository
 import by.klnvch.link5dots.domain.repositories.RoomRepository
 import by.klnvch.link5dots.domain.repositories.TimeRepository
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
 interface AddDotUseCase {
@@ -101,7 +103,11 @@ class AddDotBluetoothUseCase @Inject constructor(
     board: Board,
     private val repository: BluetoothRoomRepository,
 ) : AddDotMultiplayerUseCase(timeRepository, board) {
-    override suspend fun addMultiplayerDot(room: IRoom, dot: Dot) = repository.addDot(dot)
+    override suspend fun addMultiplayerDot(room: IRoom, dot: Dot) {
+        val currentRoom = repository.get().filterNotNull().first()
+        val updatedRoom = currentRoom.copy(dots = currentRoom.dots + dot)
+        repository.update(updatedRoom)
+    }
 }
 
 abstract class AddDotOfflineUseCase(

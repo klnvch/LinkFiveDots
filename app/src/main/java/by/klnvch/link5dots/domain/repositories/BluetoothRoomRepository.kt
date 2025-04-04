@@ -24,16 +24,14 @@
 
 package by.klnvch.link5dots.domain.repositories
 
-import by.klnvch.link5dots.domain.models.Dot
 import by.klnvch.link5dots.domain.models.NetworkRoom
 import by.klnvch.link5dots.domain.models.NetworkUser
 import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
 import kotlinx.coroutines.flow.Flow
 
 interface BluetoothRoomRepository {
-    suspend fun newGame(room: NetworkRoom)
     fun get(): Flow<NetworkRoom?>
-    suspend fun addDot(dot: Dot)
+    suspend fun update(room: NetworkRoom)
     suspend fun create(): RemoteRoomDescriptor
     fun getState(): Flow<Int>
     fun delete()

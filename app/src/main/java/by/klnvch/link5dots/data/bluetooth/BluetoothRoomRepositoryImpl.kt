@@ -40,7 +40,6 @@ import by.klnvch.link5dots.data.bluetooth.BluetoothParams.FAKE_ADDRESS
 import by.klnvch.link5dots.data.bluetooth.BluetoothParams.NAME_SECURE
 import by.klnvch.link5dots.data.bluetooth.BluetoothParams.TAG
 import by.klnvch.link5dots.data.bluetooth.BluetoothParams.UUID_SECURE
-import by.klnvch.link5dots.domain.models.Dot
 import by.klnvch.link5dots.domain.models.NetworkRoom
 import by.klnvch.link5dots.domain.models.NetworkUser
 import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
@@ -51,7 +50,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
@@ -125,8 +123,8 @@ class BluetoothRoomRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun newGame(room: NetworkRoom) {
-        Log.d(TAG, "new game created: $room")
+    override suspend fun update(room: NetworkRoom) {
+        Log.d(TAG, "game updated: $room")
         roomFlow.emit(room)
         send(room)
     }
@@ -154,14 +152,6 @@ class BluetoothRoomRepositoryImpl @Inject constructor(
             _socket = socket
             startCommunication(inputStream)
         }
-
-    override suspend fun addDot(dot: Dot) {
-        val room = roomFlow.filterNotNull().first()
-        val updatedRoom = room.copy(dots = room.dots + dot)
-        Log.d(TAG, "add dot: $updatedRoom")
-        roomFlow.tryEmit(updatedRoom)
-        send(updatedRoom)
-    }
 
     @OptIn(DelicateCoroutinesApi::class)
     private fun startAccepting(serverSocket: BluetoothServerSocket) {
