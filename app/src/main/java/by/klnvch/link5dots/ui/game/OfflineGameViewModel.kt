@@ -93,10 +93,11 @@ open class OfflineGameViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            val room = roomFlowGuard.first()
-            if (room === null) {
-                val seed = Random().nextInt(0xFFFF).toLong()
-                newGameUseCase.create(seed)
+            roomFlowGuard.collect {
+                if (it === null) {
+                    val seed = Random().nextInt(0xFFFF).toLong()
+                    newGameUseCase.create(seed)
+                }
             }
         }
     }
@@ -135,6 +136,10 @@ open class OfflineGameViewModel @Inject constructor(
     fun getNewGameViewState(): NewGameViewState {
         val seed = Random().nextInt(0xFFFF)
         return NewGameViewState(seed.toString())
+    }
+
+    fun getMenuViewState(): MenuViewState {
+        return MenuViewState(newGameUseCase.isSupported())
     }
 
     fun saveScore() {

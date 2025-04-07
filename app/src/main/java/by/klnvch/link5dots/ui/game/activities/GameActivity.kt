@@ -63,6 +63,10 @@ abstract class GameActivity : DaggerAppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_game_offline, menu)
         super.onCreateOptionsMenu(menu)
+
+        val menuViewState = viewModel.getMenuViewState()
+        menu.findItem(R.id.menu_new_game).isVisible = menuViewState.isNewGameSupported
+
         return true
     }
 

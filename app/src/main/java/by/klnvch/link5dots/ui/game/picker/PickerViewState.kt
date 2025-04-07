@@ -45,6 +45,7 @@ data class PickerViewState(private val state: GameState) {
     val connectState = state.connectState
 
     val isCreateButtonEnabled = when {
+        state.connectState is ConnectDisconnected -> true
         state.connectState !is ConnectNone -> false
         state.targetState is TargetDeleted -> true
         state.targetState is TargetCreated -> true
@@ -71,6 +72,7 @@ data class PickerViewState(private val state: GameState) {
     }
 
     val isScanButtonEnabled = when {
+        state.connectState is ConnectDisconnected -> true
         state.connectState !is ConnectNone -> false
         state.scanState is ScanOn -> true
         state.scanState == ScanOff -> true

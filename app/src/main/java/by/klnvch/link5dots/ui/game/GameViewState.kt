@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 klnvch
+ * Copyright (c) 2023-2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -32,7 +32,7 @@ import by.klnvch.link5dots.domain.models.WinningLine
 data class GameViewState(
     val infoViewState: GameInfoViewState,
     val boardViewState: GameBoardViewState,
-    val room: IRoom?
+    val room: IRoom?,
 ) {
     constructor(
         dotsStyleType: DotsStyleType,
@@ -82,3 +82,5 @@ data class GameBoardViewState(
     val isOver = winningLine != null
     val lastDot = dots.lastOrNull()
 }
+
+data class MenuViewState(val isNewGameSupported: Boolean)
