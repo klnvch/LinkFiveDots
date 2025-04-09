@@ -27,13 +27,23 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
             name="viewState"
             type="by.klnvch.link5dots.ui.game.picker.PickerViewState" />
 
         <variable
+            name="visibilityViewState"
+            type="by.klnvch.link5dots.ui.game.picker.states.VisibilityViewState" />
+
+        <variable
             name="listener"
-            type="by.klnvch.link5dots.ui.game.picker.OnPickerClickListener" />
+            type="by.klnvch.link5dots.ui.game.picker.listeners.OnPickerClickListener" />
+
+        <variable
+            name="visibilityListener"
+            type="by.klnvch.link5dots.ui.game.picker.listeners.OnVisibilityClickListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -60,8 +70,9 @@
             android:id="@+id/buttonBluetoothVisibility"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:onClick="@{() -> visibilityListener.onVisibilityButtonClicked()}"
             android:text="@string/bluetooth_not_discoverable"
-            android:visibility="gone"
+            android:visibility="@{visibilityViewState == null ? View.GONE : View.VISIBLE}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/buttonCreate" />
@@ -71,10 +82,10 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/bluetooth_only_visible_to_paired_devices"
-            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/buttonBluetoothVisibility" />
+            app:layout_constraintTop_toBottomOf="@+id/buttonBluetoothVisibility"
+            app:visibilityDuration="@{visibilityViewState}" />
 
         <TextView
             android:id="@+id/textStatusLabel"

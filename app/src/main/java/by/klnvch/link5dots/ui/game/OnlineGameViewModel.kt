@@ -65,9 +65,11 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -195,14 +197,21 @@ class OnlineGameViewModel @Inject constructor(
     fun startScan() {
         _pickerUiState.value = PickerViewState.scanning(emptyList())
         scanJob = viewModelScope.launch {
-            try {
-                scanUseCase.scan().collect { list ->
+            scanUseCase
+                .scan()
+                .onCompletion {
+                    if (it == null) {
+                        val scanState = _pickerUiState.value.scanState
+                        if (scanState is ScanOn) {
+                            _pickerUiState.value = PickerViewState.scanDone(scanState.items)
+                        }
+                    }
+                }
+                .catch { _pickerUiState.value = PickerViewState.scanFailed(it) }
+                .collect { list ->
                     _pickerUiState.value =
                         PickerViewState.scanning(list.map { PickerItemViewState(it) })
                 }
-            } catch (e: Exception) {
-                _pickerUiState.value = PickerViewState.scanFailed(e)
-            }
         }
     }
 

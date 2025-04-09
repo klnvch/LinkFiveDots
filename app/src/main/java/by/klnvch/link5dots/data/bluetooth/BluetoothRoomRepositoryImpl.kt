@@ -51,7 +51,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.Closeable
@@ -62,6 +62,7 @@ import kotlin.concurrent.thread
 
 class BluetoothRoomRepositoryImpl @Inject constructor(
     private val context: Context,
+    private val bluetoothDiscovery: BluetoothDiscovery,
     private val mapper: RoomJsonMapper,
 ) :
     BluetoothRoomRepository {
@@ -109,18 +110,7 @@ class BluetoothRoomRepositoryImpl @Inject constructor(
     override fun isServer() = _serverSocket !== null
 
     override fun getRemoteRooms(): Flow<List<RemoteRoomDescriptor>> {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && ContextCompat.checkSelfPermission(
-                this.context,
-                Manifest.permission.BLUETOOTH_CONNECT
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            throw BluetoothPermissionException()
-        }
-
-        val boundedDevices: Set<BluetoothDevice> = bluetoothService.adapter.bondedDevices
-        return flow {
-            emit(boundedDevices.toList().map { BluetoothRemoteRoomDescriptor(it) })
-        }
+        return bluetoothDiscovery.discover().map { it.map { BluetoothRemoteRoomDescriptor(it) } }
     }
 
     override suspend fun update(room: NetworkRoom) {
@@ -216,9 +206,8 @@ class BluetoothRoomRepositoryImpl @Inject constructor(
 }
 
 class BluetoothRemoteRoomDescriptor(val device: BluetoothDevice) : RemoteRoomDescriptor {
-    @SuppressLint("MissingPermission")
-    override val title: String = device.name
-    override val description: String = device.address
+    override val title get() = device.name ?: ""
+    override val description get() = device.address ?: ""
 }
 
 class BluetoothRoomDescriptor(val name: String, address: String) : RemoteRoomDescriptor {

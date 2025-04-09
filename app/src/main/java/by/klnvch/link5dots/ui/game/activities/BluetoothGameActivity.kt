@@ -25,7 +25,15 @@
 package by.klnvch.link5dots.ui.game.activities
 
 import by.klnvch.link5dots.R
+import by.klnvch.link5dots.ui.game.picker.BluetoothPickerFragment
 
 class BluetoothGameActivity : MultiplayerGameActivity() {
     override val defaultTitle = R.string.bluetooth
+
+    override fun addPickerFragment() {
+        supportFragmentManager
+            .beginTransaction()
+            .add(R.id.fragment, BluetoothPickerFragment())
+            .commit()
+    }
 }

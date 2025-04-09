@@ -26,6 +26,7 @@ package by.klnvch.link5dots.ui.game.picker
 import android.view.View
 import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
 import by.klnvch.link5dots.ui.game.picker.adapters.PickerItemViewState
+import by.klnvch.link5dots.ui.game.picker.states.ScanDone
 import by.klnvch.link5dots.ui.game.picker.states.ScanFailed
 import by.klnvch.link5dots.ui.game.picker.states.ScanNone
 import by.klnvch.link5dots.ui.game.picker.states.ScanOff
@@ -75,7 +76,8 @@ data class PickerViewState(private val state: GameState) {
         state.connectState is ConnectDisconnected -> true
         state.connectState !is ConnectNone -> false
         state.scanState is ScanOn -> true
-        state.scanState == ScanOff -> true
+        state.scanState is ScanOff -> true
+        state.scanState is ScanDone -> true
         state.scanState is ScanFailed -> true
         else -> false
     }
@@ -90,7 +92,11 @@ data class PickerViewState(private val state: GameState) {
         else -> View.INVISIBLE
     }
 
-    val discoveredItems = if (state.scanState is ScanOn) state.scanState.items else emptyList()
+    val discoveredItems = when (state.scanState) {
+        is ScanOn -> state.scanState.items
+        is ScanDone -> state.scanState.items
+        else -> emptyList()
+    }
 
     companion object {
         val INITIAL = PickerViewState(StateInitial())
@@ -107,8 +113,8 @@ data class PickerViewState(private val state: GameState) {
             PickerViewState(StateTargetCreated(itemViewState))
 
         fun scanning(items: List<PickerItemViewState>) = PickerViewState(StateScanning(items))
-
-        fun scanFailed(e: Exception) = PickerViewState(StateScanFailed(e))
+        fun scanDone(items: List<PickerItemViewState>) = PickerViewState(StateScanDone(items))
+        fun scanFailed(e: Throwable) = PickerViewState(StateScanFailed(e))
 
         val CONNECTING = PickerViewState(StateConnecting())
         val DISCONNECTED = PickerViewState(StateDisconnected())
@@ -143,7 +149,10 @@ private class StateConnected(descriptor: RemoteRoomDescriptor) :
 private class StateScanning(items: List<PickerItemViewState>) :
     GameState(TargetNone, ScanOn(items), ConnectNone)
 
-private class StateScanFailed(e: Exception) :
+private class StateScanDone(items: List<PickerItemViewState>) :
+    GameState(TargetDeleted, ScanDone(items), ConnectNone)
+
+private class StateScanFailed(e: Throwable) :
     GameState(TargetDeleted, ScanFailed(e), ConnectNone)
 
 private class StateConnecting : GameState(TargetNone, ScanNone, ConnectConnecting)

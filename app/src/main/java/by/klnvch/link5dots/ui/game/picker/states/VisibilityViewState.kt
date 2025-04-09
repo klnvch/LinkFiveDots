@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023-2025 klnvch
+ * Copyright (c) 2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,34 +22,12 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.di.game
+package by.klnvch.link5dots.ui.game.picker.states
 
-import by.klnvch.link5dots.ui.game.GameFragment
-import by.klnvch.link5dots.ui.game.create.NewGameDialog
-import by.klnvch.link5dots.ui.game.end.EndGameDialog
-import by.klnvch.link5dots.ui.game.error.MultiplayerErrorFragment
-import by.klnvch.link5dots.ui.game.picker.BluetoothPickerFragment
-import by.klnvch.link5dots.ui.game.picker.PickerFragment
-import dagger.Module
-import dagger.android.ContributesAndroidInjector
+import android.text.format.DateUtils
 
-@Module
-abstract class GameFragmentBuilderModule {
-    @ContributesAndroidInjector
-    abstract fun bindPickerFragment(): PickerFragment
-
-    @ContributesAndroidInjector
-    abstract fun bindBluetoothPickerFragment(): BluetoothPickerFragment
-
-    @ContributesAndroidInjector
-    abstract fun bindGameFragment(): GameFragment
-
-    @ContributesAndroidInjector
-    abstract fun bindEndGameDialog(): EndGameDialog
-
-    @ContributesAndroidInjector
-    abstract fun bindNewGameDialog(): NewGameDialog
-
-    @ContributesAndroidInjector
-    abstract fun bindMultiplayerErrorFragment(): MultiplayerErrorFragment
+sealed interface VisibilityViewState
+object InvisibleViewState : VisibilityViewState
+class VisibleViewState(durationMs: Long) : VisibilityViewState {
+    val duration: String = DateUtils.formatElapsedTime(durationMs / 1000)
 }

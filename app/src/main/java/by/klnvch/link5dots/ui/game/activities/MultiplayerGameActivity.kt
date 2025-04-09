@@ -53,10 +53,7 @@ abstract class MultiplayerGameActivity : GameActivity() {
         )[OfflineGameViewModel.KEY, OnlineGameViewModel::class.java]
 
         if (savedInstanceState == null) {
-            supportFragmentManager
-                .beginTransaction()
-                .add(R.id.fragment, PickerFragment())
-                .commit()
+            addPickerFragment()
         }
 
         lifecycleScope.launch {
@@ -120,6 +117,13 @@ abstract class MultiplayerGameActivity : GameActivity() {
     override fun setTitle(titleId: Int) =
         if (titleId != 0) super.setTitle(titleId)
         else super.setTitle(defaultTitle)
+
+    protected open fun addPickerFragment() {
+        supportFragmentManager
+            .beginTransaction()
+            .add(R.id.fragment, PickerFragment())
+            .commit()
+    }
 
     private fun disconnectGuard(isFullExit: Boolean) {
         if (supportFragmentManager.backStackEntryCount > 0 && viewModel.isConnected()) {

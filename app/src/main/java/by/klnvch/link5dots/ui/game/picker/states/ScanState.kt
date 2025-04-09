@@ -33,5 +33,5 @@ sealed class ScanState
 object ScanNone : ScanState()
 object ScanOff : ScanState()
 data class ScanOn(val items: List<PickerItemViewState>) : ScanState()
-object ScanDone : ScanState()
-data class ScanFailed(val e: Exception) : ScanState()
+data class ScanDone(val items: List<PickerItemViewState>) : ScanState()
+data class ScanFailed(val e: Throwable) : ScanState()

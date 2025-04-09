@@ -23,18 +23,22 @@
  */
 package by.klnvch.link5dots.ui.game.picker
 
+import android.view.View
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import by.klnvch.link5dots.R
 import by.klnvch.link5dots.ui.game.picker.adapters.PickerAdapter
 import by.klnvch.link5dots.ui.game.picker.adapters.PickerItemViewState
+import by.klnvch.link5dots.ui.game.picker.states.InvisibleViewState
 import by.klnvch.link5dots.ui.game.picker.states.ScanFailed
 import by.klnvch.link5dots.ui.game.picker.states.ScanOn
 import by.klnvch.link5dots.ui.game.picker.states.ScanState
 import by.klnvch.link5dots.ui.game.picker.states.TargetCreated
 import by.klnvch.link5dots.ui.game.picker.states.TargetFailed
 import by.klnvch.link5dots.ui.game.picker.states.TargetState
+import by.klnvch.link5dots.ui.game.picker.states.VisibilityViewState
+import by.klnvch.link5dots.ui.game.picker.states.VisibleViewState
 
 object PickerBindingAdapters {
     @JvmStatic
@@ -63,6 +67,18 @@ object PickerBindingAdapters {
         val currentAdapter = adapter
         if (currentAdapter is PickerAdapter) {
             currentAdapter.submitList(items)
+        }
+    }
+
+    @JvmStatic
+    @BindingAdapter("visibilityDuration")
+    fun TextView.setVisibilityDuration(state: VisibilityViewState?) {
+        when (state) {
+            is InvisibleViewState -> setText(R.string.bluetooth_only_visible_to_paired_devices)
+            is VisibleViewState -> text =
+                context.getString(R.string.bluetooth_is_discoverable, state.duration)
+
+            else -> visibility = View.GONE
         }
     }
 }

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 klnvch
+ * Copyright (c) 2023-2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,6 +27,7 @@ package by.klnvch.link5dots.di.game
 import androidx.lifecycle.ViewModel
 import by.klnvch.link5dots.di.viewmodels.ViewModelKey
 import by.klnvch.link5dots.ui.game.OnlineGameViewModel
+import by.klnvch.link5dots.ui.game.picker.VisibilityViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
@@ -36,5 +37,10 @@ abstract class OnlineGameViewModelsModule {
     @Binds
     @IntoMap
     @ViewModelKey(OnlineGameViewModel::class)
-    abstract fun bindMainMenuViewModel(viewModel: OnlineGameViewModel): ViewModel
+    abstract fun bindOnlineGameViewModel(viewModel: OnlineGameViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(VisibilityViewModel::class)
+    abstract fun bindVisibilityViewModel(viewModel: VisibilityViewModel): ViewModel
 }
