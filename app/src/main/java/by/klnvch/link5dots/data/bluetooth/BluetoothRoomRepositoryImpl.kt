@@ -24,17 +24,12 @@
 
 package by.klnvch.link5dots.data.bluetooth
 
-import android.Manifest
-import android.annotation.SuppressLint
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
 import android.bluetooth.BluetoothServerSocket
 import android.bluetooth.BluetoothSocket
 import android.content.Context
-import android.content.pm.PackageManager
-import android.os.Build
 import android.util.Log
-import androidx.core.content.ContextCompat
 import by.klnvch.link5dots.data.RoomJsonMapper
 import by.klnvch.link5dots.data.bluetooth.BluetoothParams.FAKE_ADDRESS
 import by.klnvch.link5dots.data.bluetooth.BluetoothParams.NAME_SECURE
@@ -61,8 +56,9 @@ import javax.inject.Inject
 import kotlin.concurrent.thread
 
 class BluetoothRoomRepositoryImpl @Inject constructor(
-    private val context: Context,
-    private val bluetoothDiscovery: BluetoothDiscovery,
+    context: Context,
+    private val bluetoothDiscoveryService: BluetoothDiscoveryService,
+    private val bluetoothConnectService: BluetoothConnectService,
     private val mapper: RoomJsonMapper,
 ) :
     BluetoothRoomRepository {
@@ -73,16 +69,7 @@ class BluetoothRoomRepositoryImpl @Inject constructor(
     private var _socket: BluetoothSocket? = null
     private var outputStream: DataOutputStream? = null
 
-    @SuppressLint("HardwareIds")
     override suspend fun create(): RemoteRoomDescriptor {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && ContextCompat.checkSelfPermission(
-                this.context,
-                Manifest.permission.BLUETOOTH_CONNECT
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            throw BluetoothPermissionException()
-        }
-
         val socket =
             bluetoothService.adapter.listenUsingRfcommWithServiceRecord(NAME_SECURE, UUID_SECURE)
         startAccepting(socket)
@@ -110,7 +97,8 @@ class BluetoothRoomRepositoryImpl @Inject constructor(
     override fun isServer() = _serverSocket !== null
 
     override fun getRemoteRooms(): Flow<List<RemoteRoomDescriptor>> {
-        return bluetoothDiscovery.discover().map { it.map { BluetoothRemoteRoomDescriptor(it) } }
+        return bluetoothDiscoveryService.discover()
+            .map { it.map { BluetoothRemoteRoomDescriptor(it) } }
     }
 
     override suspend fun update(room: NetworkRoom) {
@@ -121,26 +109,30 @@ class BluetoothRoomRepositoryImpl @Inject constructor(
 
     override fun get() = roomFlow
 
-    @SuppressLint("MissingPermission")
     override suspend fun connect(descriptor: RemoteRoomDescriptor, user2: NetworkUser): Unit =
         withContext(Dispatchers.IO) {
-            val device = (descriptor as BluetoothRemoteRoomDescriptor).device
-            val socket = device.createRfcommSocketToServiceRecord(UUID_SECURE)
-            socket.connect()
-            Log.d(TAG, "connected: waiting for input")
+            try {
+                Log.d(TAG, "connect: started")
+                val device = (descriptor as BluetoothRemoteRoomDescriptor).device
+                val socket = bluetoothConnectService.connect(device)
+                Log.d(TAG, "connect: waiting for input")
 
-            val inputStream = DataInputStream(socket.inputStream)
-            outputStream = DataOutputStream(socket.outputStream)
+                val inputStream = DataInputStream(socket.inputStream)
+                outputStream = DataOutputStream(socket.outputStream)
 
-            val json = inputStream.readUTF()
-            val room = mapper.toRoom(json)
-            val updatedRoom = room.copy(user2 = user2)
-            roomFlow.tryEmit(updatedRoom)
-            send(updatedRoom)
-            Log.d(TAG, "connected: first message received")
+                val json = inputStream.readUTF()
+                val room = mapper.toRoom(json)
+                val updatedRoom = room.copy(user2 = user2)
+                roomFlow.tryEmit(updatedRoom)
+                send(updatedRoom)
+                Log.d(TAG, "connect: first message received")
 
-            _socket = socket
-            startCommunication(inputStream)
+                _socket = socket
+                startCommunication(inputStream)
+            } catch (e: Throwable) {
+                Log.d(TAG, "connect: failed ${e.message}")
+                throw e
+            }
         }
 
     @OptIn(DelicateCoroutinesApi::class)
@@ -220,5 +212,3 @@ private fun Closeable.closeSafely() = try {
 } catch (e: Throwable) {
     Log.e(TAG, "${e.message}")
 }
-
-class BluetoothPermissionException : Exception("TODO: bluetooth permission required")

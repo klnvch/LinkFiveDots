@@ -113,18 +113,18 @@ class BluetoothPickerFragment : PickerFragment(), OnVisibilityClickListener {
 
     override fun onScanButtonClicked(isOn: Boolean) {
         if (isOn) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                val permissions = arrayOf(
+            val permissions = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                arrayOf(
                     Manifest.permission.BLUETOOTH_SCAN,
                     Manifest.permission.BLUETOOTH_CONNECT,
                 )
-                if (permissions.all { hasPermission(it) }) {
-                    super.onScanButtonClicked(true)
-                } else {
-                    requestScanPermissionLauncher.launch(permissions)
-                }
             } else {
+                arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION)
+            }
+            if (permissions.all { hasPermission(it) }) {
                 super.onScanButtonClicked(true)
+            } else {
+                requestScanPermissionLauncher.launch(permissions)
             }
         } else {
             super.onScanButtonClicked(false)

@@ -24,7 +24,6 @@
 
 package by.klnvch.link5dots.data.bluetooth
 
-import android.Manifest
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
@@ -32,16 +31,14 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.content.pm.PackageManager
 import android.util.Log
-import androidx.core.app.ActivityCompat
 import by.klnvch.link5dots.data.bluetooth.BluetoothParams.TAG
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.callbackFlow
 import javax.inject.Inject
 
-class BluetoothDiscovery @Inject constructor(private val context: Context) {
+class BluetoothDiscoveryService @Inject constructor(private val context: Context) {
     private val bluetoothService = context.getSystemService(BluetoothManager::class.java)
 
     fun discover() = callbackFlow {
@@ -69,13 +66,7 @@ class BluetoothDiscovery @Inject constructor(private val context: Context) {
         context.registerReceiver(receiver, IntentFilter(BluetoothDevice.ACTION_FOUND))
         context.registerReceiver(receiver, IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_STARTED))
         context.registerReceiver(receiver, IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED))
-        if (ActivityCompat.checkSelfPermission(
-                context,
-                Manifest.permission.BLUETOOTH_SCAN
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            throw BluetoothPermissionException()
-        }
+
         val state = bluetoothService.adapter.state
         val startDiscoveryResult = bluetoothService.adapter.startDiscovery()
         Log.d(TAG, "startDiscovery: state=$state; result=$startDiscoveryResult")
