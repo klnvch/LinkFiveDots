@@ -31,7 +31,8 @@ import android.bluetooth.BluetoothSocket
 import android.content.Context
 import android.util.Log
 import by.klnvch.link5dots.data.RoomJsonMapper
-import by.klnvch.link5dots.data.bluetooth.BluetoothParams.FAKE_ADDRESS
+import by.klnvch.link5dots.data.bluetooth.BluetoothManagerExt.getDeviceAddress
+import by.klnvch.link5dots.data.bluetooth.BluetoothManagerExt.getDeviceName
 import by.klnvch.link5dots.data.bluetooth.BluetoothParams.NAME_SECURE
 import by.klnvch.link5dots.data.bluetooth.BluetoothParams.TAG
 import by.klnvch.link5dots.data.bluetooth.BluetoothParams.UUID_SECURE
@@ -62,7 +63,7 @@ class BluetoothRoomRepositoryImpl @Inject constructor(
     private val mapper: RoomJsonMapper,
 ) :
     BluetoothRoomRepository {
-    private val bluetoothService = context.getSystemService(BluetoothManager::class.java)
+    private val bluetoothManager = context.getSystemService(BluetoothManager::class.java)
     private val roomFlow = MutableSharedFlow<NetworkRoom?>(1)
     private val stateFlow = MutableSharedFlow<Int>(1)
     private var _serverSocket: BluetoothServerSocket? = null
@@ -71,13 +72,10 @@ class BluetoothRoomRepositoryImpl @Inject constructor(
 
     override suspend fun create(): RemoteRoomDescriptor {
         val socket =
-            bluetoothService.adapter.listenUsingRfcommWithServiceRecord(NAME_SECURE, UUID_SECURE)
+            bluetoothManager.adapter.listenUsingRfcommWithServiceRecord(NAME_SECURE, UUID_SECURE)
         startAccepting(socket)
 
-        return BluetoothRoomDescriptor(
-            bluetoothService.adapter.name,
-            bluetoothService.adapter.address
-        )
+        return BluetoothLocalRoomDescriptor()
     }
 
     override fun getState() = stateFlow
@@ -195,16 +193,16 @@ class BluetoothRoomRepositoryImpl @Inject constructor(
             it.flush()
         }
     }
+
+    private inner class BluetoothLocalRoomDescriptor() : RemoteRoomDescriptor {
+        override val title = bluetoothManager.getDeviceName()
+        override val description = bluetoothManager.getDeviceAddress()
+    }
 }
 
 class BluetoothRemoteRoomDescriptor(val device: BluetoothDevice) : RemoteRoomDescriptor {
     override val title get() = device.name ?: ""
     override val description get() = device.address ?: ""
-}
-
-class BluetoothRoomDescriptor(val name: String, address: String) : RemoteRoomDescriptor {
-    override val title = name
-    override val description = if (address === FAKE_ADDRESS) "" else address
 }
 
 private fun Closeable.closeSafely() = try {

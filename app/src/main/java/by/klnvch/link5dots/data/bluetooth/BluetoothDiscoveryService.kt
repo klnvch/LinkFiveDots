@@ -39,10 +39,10 @@ import kotlinx.coroutines.flow.callbackFlow
 import javax.inject.Inject
 
 class BluetoothDiscoveryService @Inject constructor(private val context: Context) {
-    private val bluetoothService = context.getSystemService(BluetoothManager::class.java)
+    private val bluetoothManager = context.getSystemService(BluetoothManager::class.java)
 
     fun discover() = callbackFlow {
-        val result = mutableListOf<BluetoothDevice>()
+        val targets = mutableMapOf<String, BluetoothDevice>()
         val receiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
                 val action = intent.action
@@ -52,8 +52,8 @@ class BluetoothDiscoveryService @Inject constructor(private val context: Context
                         val device =
                             intent.getParcelableExtra<BluetoothDevice>(BluetoothDevice.EXTRA_DEVICE)
                         if (device != null) {
-                            result.add(device)
-                            trySendBlocking(result.sortedWith(compareBy(nullsLast<String>()) { it.name }))
+                            targets[device.address] = device
+                            trySendBlocking(targets.values.sortedWith(compareBy(nullsLast<String>()) { it.name }))
                         }
                     }
 
@@ -67,12 +67,12 @@ class BluetoothDiscoveryService @Inject constructor(private val context: Context
         context.registerReceiver(receiver, IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_STARTED))
         context.registerReceiver(receiver, IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED))
 
-        val state = bluetoothService.adapter.state
-        val startDiscoveryResult = bluetoothService.adapter.startDiscovery()
+        val state = bluetoothManager.adapter.state
+        val startDiscoveryResult = bluetoothManager.adapter.startDiscovery()
         Log.d(TAG, "startDiscovery: state=$state; result=$startDiscoveryResult")
 
         awaitClose {
-            bluetoothService.adapter.cancelDiscovery()
+            bluetoothManager.adapter.cancelDiscovery()
             context.unregisterReceiver(receiver)
         }
     }

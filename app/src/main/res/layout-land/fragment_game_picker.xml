@@ -71,6 +71,7 @@
             android:id="@+id/buttonBluetoothVisibility"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:onClick="@{() -> visibilityListener.onVisibilityButtonClicked()}"
             android:text="@string/bluetooth_not_discoverable"
             android:visibility="@{visibilityViewState == null ? View.GONE : View.VISIBLE}"
             app:layout_constraintEnd_toEndOf="@+id/guidelineVertical"
