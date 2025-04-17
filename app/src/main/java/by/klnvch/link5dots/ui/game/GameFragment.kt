@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 klnvch
+ * Copyright (c) 2023-2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -42,6 +42,7 @@ import by.klnvch.link5dots.domain.models.Point
 import by.klnvch.link5dots.domain.repositories.Analytics
 import by.klnvch.link5dots.models.GameViewState
 import by.klnvch.link5dots.ui.game.GameView.OnMoveDoneListener
+import by.klnvch.link5dots.ui.game.create.NewGameDialog
 import dagger.android.support.DaggerFragment
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -59,7 +60,7 @@ class GameFragment : DaggerFragment(), OnMoveDoneListener {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         binding = GameBoardBinding.inflate(inflater, container, false)
 
@@ -99,13 +100,27 @@ class GameFragment : DaggerFragment(), OnMoveDoneListener {
     private fun setupMenu() {
         (requireActivity() as MenuHost).addMenuProvider(object : MenuProvider {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-                menuInflater.inflate(R.menu.menu_game_fragment, menu)
+                menuInflater.inflate(R.menu.menu_game, menu)
+
+                val menuViewState = viewModel.getMenuViewState()
+                menu.findItem(R.id.menu_new_game).isVisible = menuViewState.isNewGameSupported
+                menu.findItem(R.id.menu_undo).isVisible = menuViewState.isUndoSupported
             }
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                 return when (menuItem.itemId) {
                     R.id.menu_search -> {
                         viewModel.focus()
+                        true
+                    }
+
+                    R.id.menu_undo -> {
+                        viewModel.undoLastMove()
+                        true
+                    }
+
+                    R.id.menu_new_game -> {
+                        NewGameDialog().show(parentFragmentManager, NewGameDialog.TAG)
                         true
                     }
 

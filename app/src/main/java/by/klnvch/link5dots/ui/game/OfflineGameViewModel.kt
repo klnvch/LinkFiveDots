@@ -139,7 +139,7 @@ open class OfflineGameViewModel @Inject constructor(
     }
 
     fun getMenuViewState(): MenuViewState {
-        return MenuViewState(newGameUseCase.isSupported())
+        return MenuViewState(newGameUseCase.isSupported(), undoMoveUseCase.isSupported)
     }
 
     fun saveScore() {

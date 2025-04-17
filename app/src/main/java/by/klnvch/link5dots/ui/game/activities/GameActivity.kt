@@ -24,7 +24,6 @@
 package by.klnvch.link5dots.ui.game.activities
 
 import android.os.Bundle
-import android.view.Menu
 import android.view.MenuItem
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
@@ -32,7 +31,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import by.klnvch.link5dots.R
 import by.klnvch.link5dots.ui.game.OfflineGameViewModel
-import by.klnvch.link5dots.ui.game.create.NewGameDialog
 import by.klnvch.link5dots.ui.game.end.EndGameDialog
 import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.coroutines.launch
@@ -60,30 +58,10 @@ abstract class GameActivity : DaggerAppCompatActivity() {
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.menu_game_offline, menu)
-        super.onCreateOptionsMenu(menu)
-
-        val menuViewState = viewModel.getMenuViewState()
-        menu.findItem(R.id.menu_new_game).isVisible = menuViewState.isNewGameSupported
-
-        return true
-    }
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             android.R.id.home -> {
                 finish()
-                true
-            }
-
-            R.id.menu_undo -> {
-                viewModel.undoLastMove()
-                true
-            }
-
-            R.id.menu_new_game -> {
-                NewGameDialog().show(supportFragmentManager, NewGameDialog.TAG)
                 true
             }
 
