@@ -54,6 +54,13 @@ class BluetoothPickerFragment : PickerFragment(), OnVisibilityClickListener {
             }
         }
 
+    private val requestDiscoverPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) {
+            if (it) {
+                startDiscoverable()
+            }
+        }
+
     private val requestScanPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
             if (it.values.all { it }) {
@@ -132,6 +139,18 @@ class BluetoothPickerFragment : PickerFragment(), OnVisibilityClickListener {
     }
 
     override fun onVisibilityButtonClicked() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            if (hasPermission(Manifest.permission.BLUETOOTH_CONNECT)) {
+                startDiscoverable()
+            } else {
+                requestDiscoverPermissionLauncher.launch(Manifest.permission.BLUETOOTH_CONNECT)
+            }
+        } else {
+            startDiscoverable()
+        }
+    }
+
+    private fun startDiscoverable() {
         val intent = Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE).apply {
             putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, DISCOVERABLE_DURATION_SECONDS)
         }
