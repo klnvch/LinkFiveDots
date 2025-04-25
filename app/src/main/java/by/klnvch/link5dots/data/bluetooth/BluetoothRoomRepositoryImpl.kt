@@ -46,9 +46,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import java.io.Closeable
 import java.io.DataInputStream
@@ -68,7 +70,7 @@ class BluetoothRoomRepositoryImpl @Inject constructor(
     private val stateFlow = MutableSharedFlow<Int>(1)
     private var _serverSocket: BluetoothServerSocket? = null
     private var _socket: BluetoothSocket? = null
-    private var outputStream: DataOutputStream? = null
+    private var _outputStream: DataOutputStream? = null
 
     override suspend fun create(): RemoteRoomDescriptor {
         val socket =
@@ -88,8 +90,8 @@ class BluetoothRoomRepositoryImpl @Inject constructor(
     override fun finish() {
         _socket?.closeSafely()
         _socket = null
-        outputStream?.closeSafely()
-        outputStream = null
+        _outputStream?.closeSafely()
+        _outputStream = null
     }
 
     override fun isServer() = _serverSocket !== null
@@ -102,7 +104,7 @@ class BluetoothRoomRepositoryImpl @Inject constructor(
     override suspend fun update(room: NetworkRoom) {
         Log.d(TAG, "game updated: $room")
         roomFlow.emit(room)
-        send(room)
+        _outputStream?.writeRoom(room)
     }
 
     override fun get() = roomFlow
@@ -113,20 +115,24 @@ class BluetoothRoomRepositoryImpl @Inject constructor(
                 Log.d(TAG, "connect: started")
                 val device = (descriptor as BluetoothRemoteRoomDescriptor).device
                 val socket = bluetoothConnectService.connect(device)
-                Log.d(TAG, "connect: waiting for input")
-
                 val inputStream = DataInputStream(socket.inputStream)
-                outputStream = DataOutputStream(socket.outputStream)
+                val outputStream = DataOutputStream(socket.outputStream)
 
-                val json = inputStream.readUTF()
-                val room = mapper.toRoom(json)
-                val updatedRoom = room.copy(user2 = user2)
-                roomFlow.tryEmit(updatedRoom)
-                send(updatedRoom)
-                Log.d(TAG, "connect: first message received")
+                Log.d(TAG, "connect: connected")
+                stateFlow.tryEmit(RoomState.STARTED)
 
-                _socket = socket
-                startCommunication(inputStream)
+                // receive new room
+                Log.d(TAG, "connect: waiting for new game")
+                val newRoom = inputStream.readRoom()
+
+                // add user2 to the new room
+                Log.d(TAG, "connect: new game received $newRoom")
+                val roomWithUser2 = newRoom.copy(user2 = user2)
+                outputStream.writeRoom(roomWithUser2)
+                roomFlow.tryEmit(roomWithUser2)
+
+                // now we can communicate
+                startCommunication(socket, outputStream, inputStream)
             } catch (e: Throwable) {
                 Log.d(TAG, "connect: failed ${e.message}")
                 throw e
@@ -138,18 +144,30 @@ class BluetoothRoomRepositoryImpl @Inject constructor(
         thread {
             _serverSocket = serverSocket
             try {
-                Log.d(TAG, "accepting: waiting")
+                // reset current game to generate a new one
                 stateFlow.tryEmit(RoomState.CREATED)
-                val socket = serverSocket.accept()
-                Log.d(TAG, "accepting: connected")
-
-                val inputStream = DataInputStream(socket.inputStream)
-                outputStream = DataOutputStream(socket.outputStream)
-
                 roomFlow.tryEmit(null)
 
-                startCommunication(inputStream)
-                _socket = socket
+                Log.d(TAG, "accepting: waiting")
+                val socket = serverSocket.accept()
+                val inputStream = DataInputStream(socket.inputStream)
+                val outputStream = DataOutputStream(socket.outputStream)
+
+                Log.d(TAG, "accepting: connected")
+                stateFlow.tryEmit(RoomState.STARTED)
+
+                // get a new generated game and send it
+                val newRoom = runBlocking { roomFlow.filterNotNull().first() }
+                Log.d(TAG, "accepting: new room created")
+                outputStream.writeRoom(newRoom)
+
+                // receive a game with filled user
+                Log.d(TAG, "accepting: wait for user2")
+                val newRoomWithUser2 = inputStream.readRoom()
+                roomFlow.tryEmit(newRoomWithUser2)
+
+                // now we can communicate
+                startCommunication(socket, outputStream, inputStream)
             } catch (e: Throwable) {
                 Log.d(TAG, "accepting: ${e.message}")
                 GlobalScope.launch(Dispatchers.IO) {
@@ -160,13 +178,18 @@ class BluetoothRoomRepositoryImpl @Inject constructor(
     }
 
     @OptIn(DelicateCoroutinesApi::class)
-    private fun startCommunication(inputStream: DataInputStream) {
+    private fun startCommunication(
+        socket: BluetoothSocket,
+        outputStream: DataOutputStream,
+        inputStream: DataInputStream,
+    ) {
+        Log.d(TAG, "connect: start communication")
+        _outputStream = outputStream
+        _socket = socket
         thread {
             try {
-                stateFlow.tryEmit(RoomState.STARTED)
                 while (true) {
-                    val roomJson = inputStream.readUTF()
-                    val room = mapper.toRoom(roomJson)
+                    val room = inputStream.readRoom()
                     roomFlow.tryEmit(room)
                     Log.d(TAG, "received: $room")
                 }
@@ -186,12 +209,15 @@ class BluetoothRoomRepositoryImpl @Inject constructor(
         }
     }
 
-    private suspend fun send(room: NetworkRoom) = withContext(Dispatchers.IO) {
-        outputStream?.let {
-            val json = mapper.toJson(room)
-            it.writeUTF(json)
-            it.flush()
-        }
+    private fun DataOutputStream.writeRoom(room: NetworkRoom) {
+        val json = mapper.toJson(room)
+        writeUTF(json)
+        flush()
+    }
+
+    private fun DataInputStream.readRoom(): NetworkRoom {
+        val json = readUTF()
+        return mapper.toRoom(json)
     }
 
     private inner class BluetoothLocalRoomDescriptor() : RemoteRoomDescriptor {

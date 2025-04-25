@@ -23,6 +23,7 @@
  */
 package by.klnvch.link5dots.ui.game
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -94,6 +95,7 @@ open class OfflineGameViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             roomFlowGuard.collect {
+                Log.d(TAG, "non null room guard: $it")
                 if (it === null) {
                     val seed = Random().nextInt(0xFFFF).toLong()
                     newGameUseCase.create(seed)
@@ -103,6 +105,7 @@ open class OfflineGameViewModel @Inject constructor(
     }
 
     fun setParam(param: RoomParam) {
+        Log.d(TAG, "param: $param")
         viewModelScope.launch { _searchQueryFlow.emit(param) }
     }
 
@@ -159,6 +162,7 @@ open class OfflineGameViewModel @Inject constructor(
     }
 
     companion object {
+        const val TAG = "ViewModel"
         const val KEY = "VIEW_MODEL_KEY"
     }
 }
