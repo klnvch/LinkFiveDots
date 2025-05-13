@@ -24,10 +24,14 @@
 
 package by.klnvch.link5dots.data.bluetooth
 
+import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
+import android.bluetooth.BluetoothServerSocket
 import by.klnvch.link5dots.data.bluetooth.BluetoothParams.FAKE_ADDRESS
+import by.klnvch.link5dots.data.bluetooth.BluetoothParams.NAME_SECURE
+import by.klnvch.link5dots.data.bluetooth.BluetoothParams.UUID_SECURE
 
-object BluetoothManagerExt {
+object BluetoothExt {
     fun BluetoothManager.getDeviceName(): String {
         return adapter.name ?: ""
     }
@@ -36,4 +40,13 @@ object BluetoothManagerExt {
         val address = adapter.address
         return if (address == FAKE_ADDRESS) "" else address
     }
+
+    fun BluetoothManager.createServerSocket(): BluetoothServerSocket =
+        adapter.listenUsingRfcommWithServiceRecord(NAME_SECURE, UUID_SECURE)
+
+    val BluetoothManager.bondedDevices: Set<BluetoothDevice> get() = adapter.bondedDevices
+
+    val BluetoothDevice.deviceName: String? get() = name
+
+    val BluetoothDevice.isBonded get() = bondState == BluetoothDevice.BOND_BONDED
 }

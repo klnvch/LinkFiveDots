@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 klnvch
+ * Copyright (c) 2023-2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,6 +23,7 @@
  */
 package by.klnvch.link5dots.ui.game.picker.adapters
 
+import android.graphics.Typeface
 import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
 
 data class PickerItemViewState(
@@ -30,4 +31,5 @@ data class PickerItemViewState(
 ) {
     val shortName = descriptor.title
     val longName = "${descriptor.title} ${descriptor.description}"
+    val textStyle = if (descriptor.isFavorite) Typeface.BOLD else Typeface.NORMAL
 }

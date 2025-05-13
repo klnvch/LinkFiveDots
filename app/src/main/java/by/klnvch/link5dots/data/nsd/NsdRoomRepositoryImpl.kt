@@ -173,6 +173,7 @@ data class NsdRoomDescriptor(
 ) : RemoteRoomDescriptor {
     override val title = serviceInfo.serviceName
     override val description = "${serviceInfo.host}:${serviceInfo.port}"
+    override val isFavorite = false
 }
 
 private fun Closeable.closeSafely() = try {

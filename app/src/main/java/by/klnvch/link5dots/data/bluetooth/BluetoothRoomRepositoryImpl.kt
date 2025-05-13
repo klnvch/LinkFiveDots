@@ -31,11 +31,12 @@ import android.bluetooth.BluetoothSocket
 import android.content.Context
 import android.util.Log
 import by.klnvch.link5dots.data.RoomJsonMapper
-import by.klnvch.link5dots.data.bluetooth.BluetoothManagerExt.getDeviceAddress
-import by.klnvch.link5dots.data.bluetooth.BluetoothManagerExt.getDeviceName
-import by.klnvch.link5dots.data.bluetooth.BluetoothParams.NAME_SECURE
+import by.klnvch.link5dots.data.bluetooth.BluetoothExt.createServerSocket
+import by.klnvch.link5dots.data.bluetooth.BluetoothExt.deviceName
+import by.klnvch.link5dots.data.bluetooth.BluetoothExt.getDeviceAddress
+import by.klnvch.link5dots.data.bluetooth.BluetoothExt.getDeviceName
+import by.klnvch.link5dots.data.bluetooth.BluetoothExt.isBonded
 import by.klnvch.link5dots.data.bluetooth.BluetoothParams.TAG
-import by.klnvch.link5dots.data.bluetooth.BluetoothParams.UUID_SECURE
 import by.klnvch.link5dots.domain.models.NetworkRoom
 import by.klnvch.link5dots.domain.models.NetworkUser
 import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
@@ -43,13 +44,13 @@ import by.klnvch.link5dots.domain.models.RoomState
 import by.klnvch.link5dots.domain.repositories.BluetoothRoomRepository
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import java.io.Closeable
@@ -62,6 +63,7 @@ class BluetoothRoomRepositoryImpl @Inject constructor(
     context: Context,
     private val bluetoothDiscoveryService: BluetoothDiscoveryService,
     private val bluetoothConnectService: BluetoothConnectService,
+    private val bluetoothBondedStore: BluetoothBondedStore,
     private val mapper: RoomJsonMapper,
 ) :
     BluetoothRoomRepository {
@@ -73,8 +75,7 @@ class BluetoothRoomRepositoryImpl @Inject constructor(
     private var _outputStream: DataOutputStream? = null
 
     override suspend fun create(): RemoteRoomDescriptor {
-        val socket =
-            bluetoothManager.adapter.listenUsingRfcommWithServiceRecord(NAME_SECURE, UUID_SECURE)
+        val socket = bluetoothManager.createServerSocket()
         startAccepting(socket)
 
         return BluetoothLocalRoomDescriptor()
@@ -97,8 +98,15 @@ class BluetoothRoomRepositoryImpl @Inject constructor(
     override fun isServer() = _serverSocket !== null
 
     override fun getRemoteRooms(): Flow<List<RemoteRoomDescriptor>> {
-        return bluetoothDiscoveryService.discover()
-            .map { it.map { BluetoothRemoteRoomDescriptor(it) } }
+        return flow {
+            val known = bluetoothBondedStore.getKnown()
+            emitAll(
+                bluetoothDiscoveryService
+                    .discover()
+                    .map { it.filter { !known.contains(it) } }
+                    .map { known + it }
+                    .map { it.map { BluetoothRemoteRoomDescriptor(it) } })
+        }
     }
 
     override suspend fun update(room: NetworkRoom) {
@@ -115,6 +123,7 @@ class BluetoothRoomRepositoryImpl @Inject constructor(
                 Log.d(TAG, "connect: started")
                 val device = (descriptor as BluetoothRemoteRoomDescriptor).device
                 val socket = bluetoothConnectService.connect(device)
+                bluetoothBondedStore.save(device)
                 val inputStream = DataInputStream(socket.inputStream)
                 val outputStream = DataOutputStream(socket.outputStream)
 
@@ -150,6 +159,7 @@ class BluetoothRoomRepositoryImpl @Inject constructor(
 
                 Log.d(TAG, "accepting: waiting")
                 val socket = serverSocket.accept()
+                runBlocking { bluetoothBondedStore.save(socket.remoteDevice) }
                 val inputStream = DataInputStream(socket.inputStream)
                 val outputStream = DataOutputStream(socket.outputStream)
 
@@ -170,9 +180,7 @@ class BluetoothRoomRepositoryImpl @Inject constructor(
                 startCommunication(socket, outputStream, inputStream)
             } catch (e: Throwable) {
                 Log.d(TAG, "accepting: ${e.message}")
-                GlobalScope.launch(Dispatchers.IO) {
-                    stateFlow.tryEmit(RoomState.DELETED)
-                }
+                stateFlow.tryEmit(RoomState.DELETED)
             }
         }
     }
@@ -195,13 +203,11 @@ class BluetoothRoomRepositoryImpl @Inject constructor(
                 }
             } catch (e: Throwable) {
                 Log.d(TAG, "disconnected: ${e.message}")
-                GlobalScope.launch(Dispatchers.IO) {
-                    val room = roomFlow.first()
-                    if (room != null) {
-                        roomFlow.tryEmit(room.copy(state = RoomState.FINISHED))
-                    }
-                    stateFlow.tryEmit(RoomState.FINISHED)
+                val room = runBlocking { roomFlow.first() }
+                if (room != null) {
+                    roomFlow.tryEmit(room.copy(state = RoomState.FINISHED))
                 }
+                stateFlow.tryEmit(RoomState.FINISHED)
             } finally {
                 delete()
                 finish()
@@ -223,12 +229,14 @@ class BluetoothRoomRepositoryImpl @Inject constructor(
     private inner class BluetoothLocalRoomDescriptor() : RemoteRoomDescriptor {
         override val title = bluetoothManager.getDeviceName()
         override val description = bluetoothManager.getDeviceAddress()
+        override val isFavorite = false
     }
 }
 
 class BluetoothRemoteRoomDescriptor(val device: BluetoothDevice) : RemoteRoomDescriptor {
-    override val title get() = device.name ?: ""
+    override val title get() = device.deviceName ?: ""
     override val description get() = device.address ?: ""
+    override val isFavorite = device.isBonded
 }
 
 private fun Closeable.closeSafely() = try {
