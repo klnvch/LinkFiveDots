@@ -27,6 +27,7 @@ import android.os.Bundle
 import android.view.MenuItem
 import androidx.activity.addCallback
 import androidx.appcompat.app.AlertDialog
+import androidx.core.os.bundleOf
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -38,6 +39,7 @@ import by.klnvch.link5dots.ui.game.OnlineGameViewModel
 import by.klnvch.link5dots.ui.game.error.MultiplayerErrorFragment
 import by.klnvch.link5dots.ui.game.picker.PickerFragment
 import kotlinx.coroutines.launch
+
 
 abstract class MultiplayerGameActivity : GameActivity() {
     abstract val defaultTitle: Int
@@ -75,10 +77,8 @@ abstract class MultiplayerGameActivity : GameActivity() {
                         }
 
                         is InitError -> {
-                            supportFragmentManager
-                                .beginTransaction()
-                                .add(R.id.fragment, MultiplayerErrorFragment())
-                                .commit()
+                            val args = bundleOf("error" to it.e)
+                            addErrorFragment(args)
                         }
 
                         is PickerScreen -> {
@@ -122,6 +122,13 @@ abstract class MultiplayerGameActivity : GameActivity() {
         supportFragmentManager
             .beginTransaction()
             .add(R.id.fragment, PickerFragment())
+            .commit()
+    }
+
+    protected open fun addErrorFragment(args: Bundle) {
+        supportFragmentManager
+            .beginTransaction()
+            .add(R.id.fragment, MultiplayerErrorFragment::class.java, args)
             .commit()
     }
 

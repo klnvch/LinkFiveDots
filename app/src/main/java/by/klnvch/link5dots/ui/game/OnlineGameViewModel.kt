@@ -25,6 +25,7 @@ package by.klnvch.link5dots.ui.game
 
 import androidx.lifecycle.viewModelScope
 import by.klnvch.link5dots.R
+import by.klnvch.link5dots.domain.models.FeatureDisabled
 import by.klnvch.link5dots.domain.models.NetworkRoomExtended
 import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
 import by.klnvch.link5dots.domain.models.RoomState
@@ -160,6 +161,9 @@ class OnlineGameViewModel @Inject constructor(
             try {
                 val descriptor = createMultiplayerRoomUseCase.create()
                 startAccepting(descriptor)
+            } catch (e: FeatureDisabled) {
+                _pickerUiState.value = PickerViewState.IDLE
+                _navigationEvent.emit(InitError(e))
             } catch (e: Throwable) {
                 _pickerUiState.value = PickerViewState.creationFailed(e)
             }
@@ -197,21 +201,26 @@ class OnlineGameViewModel @Inject constructor(
     fun startScan() {
         _pickerUiState.value = PickerViewState.scanning(emptyList())
         scanJob = viewModelScope.launch {
-            scanUseCase
-                .scan()
-                .onCompletion {
-                    if (it == null) {
-                        val scanState = _pickerUiState.value.scanState
-                        if (scanState is ScanOn) {
-                            _pickerUiState.value = PickerViewState.scanDone(scanState.items)
+            try {
+                scanUseCase
+                    .scan()
+                    .onCompletion {
+                        if (it == null) {
+                            val scanState = _pickerUiState.value.scanState
+                            if (scanState is ScanOn) {
+                                _pickerUiState.value = PickerViewState.scanDone(scanState.items)
+                            }
                         }
                     }
-                }
-                .catch { _pickerUiState.value = PickerViewState.scanFailed(it) }
-                .collect { list ->
-                    _pickerUiState.value =
-                        PickerViewState.scanning(list.map { PickerItemViewState(it) })
-                }
+                    .catch { _pickerUiState.value = PickerViewState.scanFailed(it) }
+                    .collect { list ->
+                        _pickerUiState.value =
+                            PickerViewState.scanning(list.map { PickerItemViewState(it) })
+                    }
+            } catch (e: Throwable) {
+                _pickerUiState.value = PickerViewState.IDLE
+                _navigationEvent.emit(InitError(e))
+            }
         }
     }
 

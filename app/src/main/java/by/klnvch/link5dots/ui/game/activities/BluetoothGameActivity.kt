@@ -24,7 +24,10 @@
 
 package by.klnvch.link5dots.ui.game.activities
 
+import android.os.Bundle
+import androidx.fragment.app.commit
 import by.klnvch.link5dots.R
+import by.klnvch.link5dots.ui.game.error.BluetoothErrorFragment
 import by.klnvch.link5dots.ui.game.picker.BluetoothPickerFragment
 
 class BluetoothGameActivity : MultiplayerGameActivity() {
@@ -35,5 +38,11 @@ class BluetoothGameActivity : MultiplayerGameActivity() {
             .beginTransaction()
             .add(R.id.fragment, BluetoothPickerFragment())
             .commit()
+    }
+
+    override fun addErrorFragment(args: Bundle) {
+        supportFragmentManager.commit {
+            add(R.id.fragment, BluetoothErrorFragment::class.java, args)
+        }
     }
 }

@@ -37,6 +37,8 @@ import by.klnvch.link5dots.data.bluetooth.BluetoothExt.getDeviceAddress
 import by.klnvch.link5dots.data.bluetooth.BluetoothExt.getDeviceName
 import by.klnvch.link5dots.data.bluetooth.BluetoothExt.isBonded
 import by.klnvch.link5dots.data.bluetooth.BluetoothParams.TAG
+import by.klnvch.link5dots.domain.models.FeatureDisabled
+import by.klnvch.link5dots.domain.models.FeatureUnsupported
 import by.klnvch.link5dots.domain.models.NetworkRoom
 import by.klnvch.link5dots.domain.models.NetworkUser
 import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
@@ -75,9 +77,9 @@ class BluetoothRoomRepositoryImpl @Inject constructor(
     private var _outputStream: DataOutputStream? = null
 
     override suspend fun create(): RemoteRoomDescriptor {
+        validate()
         val socket = bluetoothManager.createServerSocket()
         startAccepting(socket)
-
         return BluetoothLocalRoomDescriptor()
     }
 
@@ -98,6 +100,7 @@ class BluetoothRoomRepositoryImpl @Inject constructor(
     override fun isServer() = _serverSocket !== null
 
     override fun getRemoteRooms(): Flow<List<RemoteRoomDescriptor>> {
+        validate()
         return flow {
             val known = bluetoothBondedStore.getKnown()
             emitAll(
@@ -213,6 +216,12 @@ class BluetoothRoomRepositoryImpl @Inject constructor(
                 finish()
             }
         }
+    }
+
+    private fun validate() {
+        val adapter = bluetoothManager.adapter
+        if (adapter == null) throw FeatureUnsupported()
+        if (!adapter.isEnabled) throw FeatureDisabled()
     }
 
     private fun DataOutputStream.writeRoom(room: NetworkRoom) {
