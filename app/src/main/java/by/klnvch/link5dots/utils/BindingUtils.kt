@@ -26,7 +26,6 @@ package by.klnvch.link5dots.utils
 
 import android.view.View
 import android.widget.TextView
-import android.widget.ToggleButton
 import androidx.databinding.BindingAdapter
 import by.klnvch.link5dots.R
 
@@ -46,15 +45,6 @@ object BindingUtils {
         text = context.getString(R.string.greetings, greetings)
         visibility = if (greetings.isEmpty()) View.GONE else View.VISIBLE
     }
-
-    interface OnToggleButtonClicked {
-        fun onClick(isChecked: Boolean)
-    }
-
-    @JvmStatic
-    @BindingAdapter("android:onClick")
-    fun ToggleButton.setOnClickedListener(listener: OnToggleButtonClicked) =
-        setOnClickListener { listener.onClick(isChecked) }
 
     @JvmStatic
     @BindingAdapter("setTextStyle")

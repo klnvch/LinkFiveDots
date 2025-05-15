@@ -25,6 +25,8 @@
 package by.klnvch.link5dots.ui.game.picker.listeners
 
 interface OnPickerClickListener {
-    fun onCreateButtonClicked(isOn: Boolean)
-    fun onScanButtonClicked(isOn: Boolean)
+    fun onCreateButtonClicked()
+    fun onDeleteButtonClicked()
+    fun onStartScanButtonClicked()
+    fun onCancelScanButtonClicked()
 }

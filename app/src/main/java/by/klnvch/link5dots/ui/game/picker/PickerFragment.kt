@@ -98,19 +98,20 @@ open class PickerFragment : DaggerFragment(), OnPickerClickListener, OnPickerIte
             .show()
     }
 
-    override fun onCreateButtonClicked(isOn: Boolean) {
-        if (isOn) {
-            viewModel.createRoom()
-        } else {
-            val viewState = binding.viewState
-            if (viewState != null && viewState.targetState is TargetCreated) {
-                viewModel.deleteRoom(viewState.targetState.itemViewState.descriptor)
-            }
+    override fun onCreateButtonClicked() {
+        viewModel.createRoom()
+    }
+
+    override fun onDeleteButtonClicked() {
+        val viewState = binding.viewState
+        if (viewState != null && viewState.targetState is TargetCreated) {
+            viewModel.deleteRoom(viewState.targetState.itemViewState.descriptor)
         }
     }
 
-    override fun onScanButtonClicked(isOn: Boolean) =
-        if (isOn) viewModel.startScan() else viewModel.stopScan()
+    override fun onStartScanButtonClicked() = viewModel.startScan()
+
+    override fun onCancelScanButtonClicked() = viewModel.stopScan()
 
     companion object {
         const val TAG = "OnlineGamePickerFr"

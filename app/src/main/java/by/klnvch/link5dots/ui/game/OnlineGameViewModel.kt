@@ -163,9 +163,11 @@ class OnlineGameViewModel @Inject constructor(
                 startAccepting(descriptor)
             } catch (e: FeatureDisabled) {
                 _pickerUiState.value = PickerViewState.IDLE
+                roomStatesJob?.cancel()
                 _navigationEvent.emit(InitError(e))
             } catch (e: Throwable) {
                 _pickerUiState.value = PickerViewState.creationFailed(e)
+                roomStatesJob?.cancel()
             }
         }
     }

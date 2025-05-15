@@ -53,18 +53,29 @@
         android:keepScreenOn="true"
         android:padding="32dp">
 
-        <ToggleButton
+        <Button
             android:id="@+id/buttonCreate"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:checked="@{viewState.createButtonChecked}"
-            android:enabled="@{viewState.createButtonEnabled}"
-            android:onClick="@{listener::onCreateButtonClicked}"
-            android:textOff="@string/create"
-            android:textOn="@string/delete"
+            android:enabled="@{viewState.isCreateOrDeleteButtonEnabled}"
+            android:onClick="@{() -> listener.onCreateButtonClicked()}"
+            android:text="@string/create"
+            android:visibility="@{viewState.createButtonVisibility}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/buttonDelete"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:enabled="@{viewState.isCreateOrDeleteButtonEnabled}"
+            android:onClick="@{() -> listener.onDeleteButtonClicked()}"
+            android:text="@string/delete"
+            android:visibility="@{viewState.deleteButtonVisibility}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/buttonCreate" />
 
         <Button
             android:id="@+id/buttonBluetoothVisibility"
@@ -75,7 +86,7 @@
             android:visibility="@{visibilityViewState == null ? View.GONE : View.VISIBLE}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/buttonCreate" />
+            app:layout_constraintTop_toBottomOf="@+id/buttonDelete" />
 
         <TextView
             android:id="@+id/textBluetoothVisibility"
@@ -91,7 +102,7 @@
             android:id="@+id/textStatusLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:enabled="@{viewState.createButtonEnabled}"
+            android:enabled="@{viewState.isCreateOrDeleteButtonEnabled}"
             android:maxLines="1"
             android:text="@string/name"
             android:visibility="@{viewState.statusVisibility}"
@@ -102,7 +113,7 @@
             android:id="@+id/textStatusColon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:enabled="@{viewState.createButtonEnabled}"
+            android:enabled="@{viewState.isCreateOrDeleteButtonEnabled}"
             android:maxLines="1"
             android:text="@string/colon"
             android:visibility="@{viewState.statusVisibility}"
@@ -114,8 +125,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:enabled="@{viewState.createButtonEnabled}"
+            android:enabled="@{viewState.isCreateOrDeleteButtonEnabled}"
             android:maxLines="2"
             android:visibility="@{viewState.statusVisibility}"
             app:layout_constraintEnd_toEndOf="parent"
@@ -146,18 +156,29 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textStatusValue" />
 
-        <ToggleButton
-            android:id="@+id/buttonScan"
+        <Button
+            android:id="@+id/buttonScanStart"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:checked="@{viewState.scanButtonChecked}"
             android:enabled="@{viewState.scanButtonEnabled}"
-            android:onClick="@{listener::onScanButtonClicked}"
-            android:textOff="@string/scan"
-            android:textOn="@string/cancel"
+            android:onClick="@{() -> listener.onStartScanButtonClicked()}"
+            android:text="@string/scan"
+            android:visibility="@{viewState.startScanButtonVisibility}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/separator" />
+
+        <Button
+            android:id="@+id/buttonScanCancel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:enabled="@{viewState.scanButtonEnabled}"
+            android:onClick="@{() -> listener.onCancelScanButtonClicked()}"
+            android:text="@string/cancel"
+            android:visibility="@{viewState.cancelScanButtonVisibility}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/buttonScanStart" />
 
         <ProgressBar
             android:id="@+id/progressScan"
@@ -168,7 +189,7 @@
             android:visibility="@{viewState.scanProgressVisibility}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/buttonScan" />
+            app:layout_constraintTop_toBottomOf="@+id/buttonScanCancel" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/listTargets"

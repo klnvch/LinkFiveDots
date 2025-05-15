@@ -45,7 +45,7 @@ data class PickerViewState(private val state: GameState) {
     val scanState = state.scanState
     val connectState = state.connectState
 
-    val isCreateButtonEnabled = when {
+    val isCreateOrDeleteButtonEnabled = when {
         state.connectState is ConnectDisconnected -> true
         state.connectState !is ConnectNone -> false
         state.targetState is TargetDeleted -> true
@@ -54,11 +54,16 @@ data class PickerViewState(private val state: GameState) {
         else -> false
     }
 
-    val isCreateButtonChecked = when (state.targetState) {
-        is TargetCreated -> true
-        is TargetDeleting -> true
-        else -> false
+    private val isCreateVisible = when (state.targetState) {
+        is TargetCreated -> false
+        is TargetDeleting -> false
+        is TargetCreating -> true
+        is TargetDeleted -> true
+        is TargetFailed -> true
+        is TargetNone -> true
     }
+    val createButtonVisibility = if (isCreateVisible) View.VISIBLE else View.GONE
+    val deleteButtonVisibility = if (isCreateVisible) View.GONE else View.VISIBLE
 
     val progressCreateVisibility = when (state.targetState) {
         is TargetCreating -> View.VISIBLE
@@ -82,10 +87,15 @@ data class PickerViewState(private val state: GameState) {
         else -> false
     }
 
-    val isScanButtonChecked = when (state.scanState) {
-        is ScanOn -> true
-        else -> false
+    private val isScanVisible = when (state.scanState) {
+        is ScanOn -> false
+        is ScanDone -> true
+        is ScanFailed -> true
+        is ScanNone -> true
+        is ScanOff -> true
     }
+    val startScanButtonVisibility = if (isScanVisible) View.VISIBLE else View.GONE
+    val cancelScanButtonVisibility = if (isScanVisible) View.GONE else View.VISIBLE
 
     val scanProgressVisibility = when (state.scanState) {
         is ScanOn -> View.VISIBLE
