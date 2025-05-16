@@ -63,7 +63,8 @@
             android:visibility="@{viewState.createButtonVisibility}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_max="320dp" />
 
         <Button
             android:id="@+id/buttonDelete"
@@ -75,7 +76,8 @@
             android:visibility="@{viewState.deleteButtonVisibility}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/buttonCreate" />
+            app:layout_constraintTop_toBottomOf="@+id/buttonCreate"
+            app:layout_constraintWidth_max="320dp" />
 
         <Button
             android:id="@+id/buttonBluetoothVisibility"
@@ -86,7 +88,8 @@
             android:visibility="@{visibilityViewState == null ? View.GONE : View.VISIBLE}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/buttonDelete" />
+            app:layout_constraintTop_toBottomOf="@+id/buttonDelete"
+            app:layout_constraintWidth_max="320dp" />
 
         <TextView
             android:id="@+id/textBluetoothVisibility"
@@ -98,6 +101,17 @@
             app:layout_constraintTop_toBottomOf="@+id/buttonBluetoothVisibility"
             app:visibilityDuration="@{visibilityViewState}" />
 
+        <ProgressBar
+            android:id="@+id/progressCreate"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            android:visibility="@{viewState.progressCreateVisibility}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textBluetoothVisibility" />
+
         <TextView
             android:id="@+id/textStatusLabel"
             android:layout_width="wrap_content"
@@ -107,7 +121,7 @@
             android:text="@string/name"
             android:visibility="@{viewState.statusVisibility}"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textBluetoothVisibility" />
+            app:layout_constraintTop_toBottomOf="@+id/progressCreate" />
 
         <TextView
             android:id="@+id/textStatusColon"
@@ -118,7 +132,7 @@
             android:text="@string/colon"
             android:visibility="@{viewState.statusVisibility}"
             app:layout_constraintStart_toEndOf="@+id/textStatusLabel"
-            app:layout_constraintTop_toBottomOf="@+id/textBluetoothVisibility" />
+            app:layout_constraintTop_toBottomOf="@+id/progressCreate" />
 
         <TextView
             android:id="@+id/textStatusValue"
@@ -130,21 +144,9 @@
             android:visibility="@{viewState.statusVisibility}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/textStatusColon"
-            app:layout_constraintTop_toBottomOf="@+id/textBluetoothVisibility"
+            app:layout_constraintTop_toBottomOf="@+id/progressCreate"
             app:setRoomSate="@{viewState.targetState}"
             tools:text="@string/name_not_set" />
-
-        <ProgressBar
-            android:id="@+id/progressCreate"
-            style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:indeterminate="true"
-            android:visibility="@{viewState.progressCreateVisibility}"
-            app:layout_constraintBottom_toTopOf="@+id/separator"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textBluetoothVisibility" />
 
         <View
             android:id="@+id/separator"
@@ -166,7 +168,8 @@
             android:visibility="@{viewState.startScanButtonVisibility}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/separator" />
+            app:layout_constraintTop_toBottomOf="@+id/separator"
+            app:layout_constraintWidth_max="320dp" />
 
         <Button
             android:id="@+id/buttonScanCancel"
@@ -178,7 +181,8 @@
             android:visibility="@{viewState.cancelScanButtonVisibility}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/buttonScanStart" />
+            app:layout_constraintTop_toBottomOf="@+id/buttonScanStart"
+            app:layout_constraintWidth_max="320dp" />
 
         <ProgressBar
             android:id="@+id/progressScan"

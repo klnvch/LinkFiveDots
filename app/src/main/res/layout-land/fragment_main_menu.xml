@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?><!--
   ~ MIT License
   ~
-  ~ Copyright (c) 2023 klnvch
+  ~ Copyright (c) 2023-2025 klnvch
   ~
   ~ Permission is hereby granted, free of charge, to any person obtaining a copy
   ~ of this software and associated documentation files (the "Software"), to deal
@@ -63,39 +63,38 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:drawableStart="@drawable/ic_android_48dp"
-            android:drawableLeft="@drawable/ic_android_48dp"
             android:onClick="@{() -> listener.onSinglePlayerClicked()}"
             android:text="@string/menu_single_player"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/guidelineVertical"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_max="320dp" />
 
         <Button
             android:id="@+id/main_menu_multi_player"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:drawableStart="@drawable/ic_person_48dp"
-            android:drawableLeft="@drawable/ic_person_48dp"
             android:onClick="@{() -> listener.onMultiplayerPlayerClicked()}"
             android:text="@string/menu_multi_player"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/guidelineVertical"
-            app:layout_constraintTop_toTopOf="parent" />
-
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_max="320dp" />
 
         <Button
             android:id="@+id/main_menu_scores"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:drawableStart="@drawable/ic_star_48dp"
-            android:drawableLeft="@drawable/ic_star_48dp"
             android:onClick="@{() -> listener.onScoresClicked()}"
             android:text="@string/scores_title"
             app:layout_constraintEnd_toStartOf="@+id/guidelineVertical"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/main_menu_single_player" />
+            app:layout_constraintTop_toBottomOf="@+id/main_menu_single_player"
+            app:layout_constraintWidth_max="320dp" />
 
         <ImageButton
             android:id="@+id/main_menu_settings"
@@ -105,7 +104,7 @@
             android:onClick="@{() -> listener.onSettingsClicked()}"
             android:src="@drawable/ic_settings_48dp"
             app:layout_constraintEnd_toStartOf="@+id/main_menu_about"
-            app:layout_constraintStart_toEndOf="@+id/main_menu_scores"
+            app:layout_constraintStart_toStartOf="@id/main_menu_multi_player"
             app:layout_constraintTop_toBottomOf="@+id/main_menu_multi_player" />
 
         <ImageButton
@@ -126,7 +125,7 @@
             android:contentDescription="@string/help"
             android:onClick="@{() -> listener.onHelpClicked()}"
             android:src="@drawable/ic_help_48dp"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/main_menu_multi_player"
             app:layout_constraintStart_toEndOf="@+id/main_menu_about"
             app:layout_constraintTop_toBottomOf="@+id/main_menu_multi_player" />
 

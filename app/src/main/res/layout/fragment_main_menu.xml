@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?><!--
   ~ MIT License
   ~
-  ~ Copyright (c) 2023 klnvch
+  ~ Copyright (c) 2023-2025 klnvch
   ~
   ~ Permission is hereby granted, free of charge, to any person obtaining a copy
   ~ of this software and associated documentation files (the "Software"), to deal
@@ -50,10 +50,10 @@
             android:gravity="center"
             android:onLongClick="@{listener::onUserNameClicked}"
             android:padding="16dp"
+            app:greetings="@{userName}"
             app:layout_constraintBottom_toTopOf="@+id/main_menu_single_player"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:greetings="@{userName}"
             tools:text="Hi, Unknown!" />
 
         <Button
@@ -65,7 +65,8 @@
             android:text="@string/menu_single_player"
             app:layout_constraintBottom_toTopOf="@+id/main_menu_multi_player"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintWidth_max="320dp" />
 
         <Button
             android:id="@+id/main_menu_multi_player"
@@ -77,7 +78,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_max="320dp" />
 
         <Button
             android:id="@+id/main_menu_scores"
@@ -88,7 +90,8 @@
             android:text="@string/scores_title"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/main_menu_multi_player" />
+            app:layout_constraintTop_toBottomOf="@+id/main_menu_multi_player"
+            app:layout_constraintWidth_max="320dp" />
 
         <ImageButton
             android:id="@+id/main_menu_settings"
@@ -98,7 +101,7 @@
             android:onClick="@{() -> listener.onSettingsClicked()}"
             android:src="@drawable/ic_settings_48dp"
             app:layout_constraintEnd_toStartOf="@+id/main_menu_about"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toStartOf="@id/main_menu_scores"
             app:layout_constraintTop_toBottomOf="@+id/main_menu_scores" />
 
         <ImageButton
@@ -119,7 +122,7 @@
             android:contentDescription="@string/help"
             android:onClick="@{() -> listener.onHelpClicked()}"
             android:src="@drawable/ic_help_48dp"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/main_menu_scores"
             app:layout_constraintStart_toEndOf="@+id/main_menu_about"
             app:layout_constraintTop_toBottomOf="@+id/main_menu_scores" />
 

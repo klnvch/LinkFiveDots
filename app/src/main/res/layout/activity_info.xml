@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?><!--
   ~ MIT License
   ~
-  ~ Copyright (c) 2023 klnvch
+  ~ Copyright (c) 2023-2025 klnvch
   ~
   ~ Permission is hereby granted, free of charge, to any person obtaining a copy
   ~ of this software and associated documentation files (the "Software"), to deal
@@ -79,7 +79,8 @@
             android:text="@string/btn_github"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/guidelineHorizontal" />
+            app:layout_constraintTop_toTopOf="@+id/guidelineHorizontal"
+            app:layout_constraintWidth_max="320dp" />
 
         <Button
             android:id="@+id/buttonInfoRate"
@@ -93,7 +94,8 @@
             android:text="@string/rate_this_app"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/buttonInfoCode" />
+            app:layout_constraintTop_toBottomOf="@+id/buttonInfoCode"
+            app:layout_constraintWidth_max="320dp" />
 
         <Button
             android:id="@+id/buttonInfoFeedback"
@@ -107,7 +109,8 @@
             android:text="@string/send_mail"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/buttonInfoRate" />
+            app:layout_constraintTop_toBottomOf="@+id/buttonInfoRate"
+            app:layout_constraintWidth_max="320dp" />
 
         <Button
             android:id="@+id/buttonInfoShare"
@@ -121,7 +124,8 @@
             android:text="@string/share"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/buttonInfoFeedback" />
+            app:layout_constraintTop_toBottomOf="@+id/buttonInfoFeedback"
+            app:layout_constraintWidth_max="320dp" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
