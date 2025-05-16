@@ -30,7 +30,6 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
@@ -47,7 +46,7 @@ import dagger.android.support.DaggerFragment
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class GameFragment : DaggerFragment(), OnMoveDoneListener {
+class GameFragment : DaggerFragment(), OnMoveDoneListener, MenuProvider {
     private lateinit var binding: GameBoardBinding
 
     @Inject
@@ -90,44 +89,19 @@ class GameFragment : DaggerFragment(), OnMoveDoneListener {
             }
         }
 
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.menuUi.collect {
+                    requireActivity().invalidateMenu()
+                }
+            }
+        }
+
         viewModel.focusEvent.observe(viewLifecycleOwner) {
             binding.gameView.focus()
         }
 
-        setupMenu()
-    }
-
-    private fun setupMenu() {
-        (requireActivity() as MenuHost).addMenuProvider(object : MenuProvider {
-            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-                menuInflater.inflate(R.menu.menu_game, menu)
-
-                val menuViewState = viewModel.getMenuViewState()
-                menu.findItem(R.id.menu_new_game).isVisible = menuViewState.isNewGameSupported
-                menu.findItem(R.id.menu_undo).isVisible = menuViewState.isUndoSupported
-            }
-
-            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-                return when (menuItem.itemId) {
-                    R.id.menu_search -> {
-                        viewModel.focus()
-                        true
-                    }
-
-                    R.id.menu_undo -> {
-                        viewModel.undoLastMove()
-                        true
-                    }
-
-                    R.id.menu_new_game -> {
-                        NewGameDialog().show(parentFragmentManager, NewGameDialog.TAG)
-                        true
-                    }
-
-                    else -> true
-                }
-            }
-        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
+        requireActivity().addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -141,4 +115,34 @@ class GameFragment : DaggerFragment(), OnMoveDoneListener {
     }
 
     override fun onMoveDone(dot: Point) = viewModel.addDot(dot)
+
+    override fun onPrepareMenu(menu: Menu) {
+        val menuViewState = viewModel.menuUi.value
+        menu.findItem(R.id.menu_new_game).isVisible = menuViewState.isNewGameSupported
+        menu.findItem(R.id.menu_undo).isVisible = menuViewState.isUndoSupported
+        menu.findItem(R.id.menu_undo).isEnabled = menuViewState.isUndoAvailable
+    }
+
+    override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+        menuInflater.inflate(R.menu.menu_game, menu)
+    }
+
+    override fun onMenuItemSelected(menuItem: MenuItem) = when (menuItem.itemId) {
+        R.id.menu_search -> {
+            viewModel.focus()
+            true
+        }
+
+        R.id.menu_undo -> {
+            viewModel.undoLastMove()
+            true
+        }
+
+        R.id.menu_new_game -> {
+            NewGameDialog().show(parentFragmentManager, NewGameDialog.TAG)
+            true
+        }
+
+        else -> true
+    }
 }

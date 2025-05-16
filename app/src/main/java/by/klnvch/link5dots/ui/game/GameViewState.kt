@@ -83,4 +83,8 @@ data class GameBoardViewState(
     val lastDot = dots.lastOrNull()
 }
 
-data class MenuViewState(val isNewGameSupported: Boolean, val isUndoSupported: Boolean)
+data class MenuViewState(
+    val isNewGameSupported: Boolean,
+    val isUndoSupported: Boolean,
+    val isUndoAvailable: Boolean,
+)

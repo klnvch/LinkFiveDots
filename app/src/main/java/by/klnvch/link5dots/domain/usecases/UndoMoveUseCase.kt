@@ -25,6 +25,7 @@
 package by.klnvch.link5dots.domain.usecases
 
 import by.klnvch.link5dots.domain.models.IRoom
+import by.klnvch.link5dots.domain.models.NetworkRoom
 import by.klnvch.link5dots.domain.models.Room
 import by.klnvch.link5dots.domain.repositories.BluetoothRoomRepository
 import by.klnvch.link5dots.domain.repositories.RoomRepository
@@ -35,11 +36,13 @@ import javax.inject.Inject
 
 interface UndoMoveUseCase {
     val isSupported: Boolean
+    suspend fun isAvailable(room: IRoom): Boolean
     suspend fun undo(room: IRoom)
 }
 
 class UndoMoveInfoUseCase @Inject constructor() : UndoMoveUseCase {
     override val isSupported = false
+    override suspend fun isAvailable(room: IRoom) = false
     override suspend fun undo(room: IRoom) = Unit
 }
 
@@ -47,8 +50,9 @@ abstract class UndoMoveRealUseCase(
     private val roomRepository: RoomRepository,
 ) : UndoMoveUseCase {
     override val isSupported = true
+    override suspend fun isAvailable(room: IRoom) = room.dots.isNotEmpty()
     override suspend fun undo(room: IRoom) {
-        if (room.dots.isNotEmpty()) {
+        if (isAvailable(room)) {
             val updatedRoom = undoInternal(room)
             roomRepository.save(updatedRoom)
         }
@@ -83,20 +87,29 @@ class UndoMoveMultiplayerUseCase @Inject constructor(
     private val repository: BluetoothRoomRepository,
 ) : UndoMoveUseCase {
     override val isSupported = true
+    override suspend fun isAvailable(room: IRoom): Boolean {
+        val currentRoom = repository.get().filterNotNull().first()
+        return isAvailable(currentRoom)
+    }
+
     override suspend fun undo(room: IRoom) {
         val currentRoom = repository.get().filterNotNull().first()
-        val dots = currentRoom.dots
+        if (isAvailable(currentRoom)) {
+            val dots = room.dots
+            repository.update(currentRoom.copy(dots = dots.subList(0, dots.size - 1)))
+        }
+    }
+
+    private suspend fun isAvailable(room: NetworkRoom): Boolean {
+        val dots = room.dots
         if (dots.isNotEmpty()) {
             val userId = settings.getUserId().first()
-            if (currentRoom.user1.id == userId) {
-                if (dots.size % 2 == 1) {
-                    repository.update(currentRoom.copy(dots = dots.subList(0, dots.size - 1)))
-                }
+            if (room.user1.id == userId) {
+                if (dots.size % 2 == 1) return true
             } else {
-                if (dots.size % 2 == 0) {
-                    repository.update(currentRoom.copy(dots = dots.subList(0, dots.size - 1)))
-                }
+                if (dots.size % 2 == 0) return true
             }
         }
+        return false
     }
 }

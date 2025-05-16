@@ -89,6 +89,16 @@ open class OfflineGameViewModel @Inject constructor(
         }
     }.stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
+    val menuUi = roomFlow
+        .map {
+            MenuViewState(
+                newGameUseCase.isSupported(),
+                undoMoveUseCase.isSupported,
+                undoMoveUseCase.isAvailable(it)
+            )
+        }
+        .stateIn(viewModelScope, SharingStarted.Eagerly, MenuViewState(false, false, false))
+
     private val _focusEvent = MutableLiveData<Unit>()
     val focusEvent: LiveData<Unit> = _focusEvent
 
@@ -139,10 +149,6 @@ open class OfflineGameViewModel @Inject constructor(
     fun getNewGameViewState(): NewGameViewState {
         val seed = Random().nextInt(0xFFFF)
         return NewGameViewState(seed.toString())
-    }
-
-    fun getMenuViewState(): MenuViewState {
-        return MenuViewState(newGameUseCase.isSupported(), undoMoveUseCase.isSupported)
     }
 
     fun saveScore() {
