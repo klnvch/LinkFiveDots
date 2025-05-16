@@ -24,11 +24,15 @@
 
 package by.klnvch.link5dots.data.bluetooth
 
+import android.annotation.SuppressLint
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
 import android.bluetooth.BluetoothServerSocket
+import android.bluetooth.BluetoothSocket
+import android.util.Log
 import by.klnvch.link5dots.data.bluetooth.BluetoothParams.FAKE_ADDRESS
 import by.klnvch.link5dots.data.bluetooth.BluetoothParams.NAME_SECURE
+import by.klnvch.link5dots.data.bluetooth.BluetoothParams.TAG
 import by.klnvch.link5dots.data.bluetooth.BluetoothParams.UUID_SECURE
 
 object BluetoothExt {
@@ -44,9 +48,36 @@ object BluetoothExt {
     fun BluetoothManager.createServerSocket(): BluetoothServerSocket =
         adapter.listenUsingRfcommWithServiceRecord(NAME_SECURE, UUID_SECURE)
 
+    fun BluetoothManager.startDiscovery() = adapter.startDiscovery()
+
+    @SuppressLint("MissingPermission")
+    fun BluetoothManager.cancelDiscoverySafely() {
+        try {
+            adapter.cancelDiscovery()
+        } catch (e: Throwable) {
+            Log.d(TAG, "cancelDiscovery: ${e.message}")
+        }
+    }
+
     val BluetoothManager.bondedDevices: Set<BluetoothDevice> get() = adapter.bondedDevices
 
     val BluetoothDevice.deviceName: String? get() = name
 
     val BluetoothDevice.isBonded get() = bondState == BluetoothDevice.BOND_BONDED
+
+    fun BluetoothDevice.createSocketAndConnect(): BluetoothSocket {
+        val socket = createRfcommSocketToServiceRecord(UUID_SECURE)
+        socket.connect()
+        return socket
+    }
+
+    @SuppressLint("MissingPermission")
+    fun BluetoothDevice.createBondSafely(): Boolean {
+        try {
+            return createBond()
+        } catch (e: Throwable) {
+            Log.d(TAG, "createBond: ${e.message}")
+            return false
+        }
+    }
 }

@@ -121,7 +121,7 @@ class BluetoothPickerFragment : PickerFragment(), OnVisibilityClickListener {
                 Manifest.permission.BLUETOOTH_CONNECT,
             )
         } else {
-            arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION)
+            arrayOf(Manifest.permission.ACCESS_FINE_LOCATION)
         }
         if (permissions.all { hasPermission(it) }) {
             super.onStartScanButtonClicked()

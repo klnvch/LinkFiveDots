@@ -32,6 +32,10 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.util.Log
+import androidx.core.content.IntentCompat
+import by.klnvch.link5dots.data.bluetooth.BluetoothExt.cancelDiscoverySafely
+import by.klnvch.link5dots.data.bluetooth.BluetoothExt.deviceName
+import by.klnvch.link5dots.data.bluetooth.BluetoothExt.startDiscovery
 import by.klnvch.link5dots.data.bluetooth.BluetoothParams.TAG
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.trySendBlocking
@@ -50,10 +54,14 @@ class BluetoothDiscoveryService @Inject constructor(private val context: Context
                 when (action) {
                     BluetoothDevice.ACTION_FOUND -> {
                         val device =
-                            intent.getParcelableExtra<BluetoothDevice>(BluetoothDevice.EXTRA_DEVICE)
+                            IntentCompat.getParcelableExtra(
+                                intent,
+                                BluetoothDevice.EXTRA_DEVICE,
+                                BluetoothDevice::class.java
+                            )
                         if (device != null) {
                             targets[device.address] = device
-                            trySendBlocking(targets.values.sortedWith(compareBy(nullsLast<String>()) { it.name }))
+                            trySendBlocking(targets.values.sortedWith(compareBy(nullsLast<String>()) { it.deviceName }))
                         }
                     }
 
@@ -68,11 +76,11 @@ class BluetoothDiscoveryService @Inject constructor(private val context: Context
         context.registerReceiver(receiver, IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED))
 
         val state = bluetoothManager.adapter.state
-        val startDiscoveryResult = bluetoothManager.adapter.startDiscovery()
+        val startDiscoveryResult = bluetoothManager.startDiscovery()
         Log.d(TAG, "startDiscovery: state=$state; result=$startDiscoveryResult")
 
         awaitClose {
-            bluetoothManager.adapter.cancelDiscovery()
+            bluetoothManager.cancelDiscoverySafely()
             context.unregisterReceiver(receiver)
         }
     }

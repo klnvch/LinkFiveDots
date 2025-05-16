@@ -31,8 +31,11 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.util.Log
+import androidx.core.content.IntentCompat
+import by.klnvch.link5dots.data.bluetooth.BluetoothExt.createBondSafely
+import by.klnvch.link5dots.data.bluetooth.BluetoothExt.createSocketAndConnect
+import by.klnvch.link5dots.data.bluetooth.BluetoothExt.isBonded
 import by.klnvch.link5dots.data.bluetooth.BluetoothParams.TAG
-import by.klnvch.link5dots.data.bluetooth.BluetoothParams.UUID_SECURE
 import kotlinx.coroutines.suspendCancellableCoroutine
 import javax.inject.Inject
 import kotlin.coroutines.resume
@@ -40,12 +43,10 @@ import kotlin.coroutines.resumeWithException
 
 class BluetoothConnectService @Inject constructor(private val context: Context) {
     suspend fun connect(device: BluetoothDevice): BluetoothSocket {
-        if (device.bondState != BluetoothDevice.BOND_BONDED) {
+        if (device.isBonded) {
             bond(device)
         }
-        val socket = device.createRfcommSocketToServiceRecord(UUID_SECURE)
-        socket.connect()
-        return socket
+        return device.createSocketAndConnect()
     }
 
     private suspend fun bond(device: BluetoothDevice) =
@@ -56,8 +57,11 @@ class BluetoothConnectService @Inject constructor(private val context: Context) 
                     Log.d(TAG, "action: $action")
                     when (action) {
                         BluetoothDevice.ACTION_BOND_STATE_CHANGED -> {
-                            val intentDevice =
-                                intent.getParcelableExtra<BluetoothDevice>(BluetoothDevice.EXTRA_DEVICE)
+                            val intentDevice = IntentCompat.getParcelableExtra(
+                                intent,
+                                BluetoothDevice.EXTRA_DEVICE,
+                                BluetoothDevice::class.java
+                            )
                             val bondState = intent.getIntExtra(BluetoothDevice.EXTRA_BOND_STATE, -1)
                             Log.d(TAG, "bond state: $bondState")
                             if (device.address == intentDevice?.address) {
@@ -81,7 +85,7 @@ class BluetoothConnectService @Inject constructor(private val context: Context) 
                 receiver,
                 IntentFilter(BluetoothDevice.ACTION_BOND_STATE_CHANGED)
             )
-            val result = device.createBond()
+            val result = device.createBondSafely()
             if (!result) {
                 context.unregisterReceiver(receiver)
                 continuation.resumeWithException(BluetoothBondException())

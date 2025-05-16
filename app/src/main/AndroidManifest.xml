@@ -125,7 +125,6 @@
         </activity>
         <activity
             android:name="by.klnvch.link5dots.ui.game.activities.BluetoothGameActivity"
-            android:configChanges="orientation|keyboardHidden|locale"
             android:label="@string/bluetooth"
             android:launchMode="singleTop">
             <meta-data
@@ -134,7 +133,6 @@
         </activity>
         <activity
             android:name="by.klnvch.link5dots.ui.game.activities.NsdGameActivity"
-            android:configChanges="orientation|keyboardHidden|locale"
             android:label="@string/menu_local_network"
             android:launchMode="singleTop">
             <meta-data
