@@ -61,12 +61,12 @@ class NewGameDialog : DaggerDialogFragment(), DialogInterface.OnClickListener {
             .create()
     }
 
-    override fun onClick(dialogInterface: DialogInterface, i: Int) {
+    override fun onClick(dialogInterface: DialogInterface, i: Int) =
         when (i) {
             DialogInterface.BUTTON_POSITIVE -> processInput()
             DialogInterface.BUTTON_NEGATIVE -> viewModel.newGame(null)
+            else -> Unit
         }
-    }
 
     private fun processInput() {
         try {
