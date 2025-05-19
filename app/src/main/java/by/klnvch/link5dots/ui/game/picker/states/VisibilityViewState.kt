@@ -25,9 +25,21 @@
 package by.klnvch.link5dots.ui.game.picker.states
 
 import android.text.format.DateUtils
+import android.view.View
 
 sealed interface VisibilityViewState
 object InvisibleViewState : VisibilityViewState
 class VisibleViewState(durationMs: Long) : VisibilityViewState {
     val duration: String = DateUtils.formatElapsedTime(durationMs / 1000)
+}
+
+data class BluetoothPickerViewState(
+    val visibility: VisibilityViewState,
+    val isCreatePermissionGranted: Boolean,
+    val isScanPermissionGranted: Boolean,
+) {
+    val createPermissionMessageVisibility =
+        if (isCreatePermissionGranted) View.GONE else View.VISIBLE
+    val scanPermissionMessageVisibility =
+        if (isScanPermissionGranted) View.GONE else View.VISIBLE
 }

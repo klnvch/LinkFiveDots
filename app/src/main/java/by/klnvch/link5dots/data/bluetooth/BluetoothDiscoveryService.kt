@@ -46,6 +46,7 @@ class BluetoothDiscoveryService @Inject constructor(private val context: Context
     private val bluetoothManager = context.getSystemService(BluetoothManager::class.java)
 
     fun discover() = callbackFlow {
+        trySendBlocking(emptyList())
         val targets = mutableMapOf<String, BluetoothDevice>()
         val receiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
@@ -78,6 +79,9 @@ class BluetoothDiscoveryService @Inject constructor(private val context: Context
         val state = bluetoothManager.adapter.state
         val startDiscoveryResult = bluetoothManager.startDiscovery()
         Log.d(TAG, "startDiscovery: state=$state; result=$startDiscoveryResult")
+        if (!startDiscoveryResult) {
+            channel.close()
+        }
 
         awaitClose {
             bluetoothManager.cancelDiscoverySafely()

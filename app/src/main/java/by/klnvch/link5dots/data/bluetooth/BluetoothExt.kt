@@ -48,7 +48,13 @@ object BluetoothExt {
     fun BluetoothManager.createServerSocket(): BluetoothServerSocket =
         adapter.listenUsingRfcommWithServiceRecord(NAME_SECURE, UUID_SECURE)
 
-    fun BluetoothManager.startDiscovery() = adapter.startDiscovery()
+    @SuppressLint("MissingPermission")
+    fun BluetoothManager.startDiscovery() = try {
+        adapter.startDiscovery()
+    } catch (e: Throwable) {
+        Log.d(TAG, "startDiscovery: ${e.message}")
+        false
+    }
 
     @SuppressLint("MissingPermission")
     fun BluetoothManager.cancelDiscoverySafely() {
@@ -59,11 +65,25 @@ object BluetoothExt {
         }
     }
 
-    val BluetoothManager.bondedDevices: Set<BluetoothDevice> get() = adapter.bondedDevices
+    val BluetoothManager.bondedDevices: Set<BluetoothDevice>
+        @SuppressLint("MissingPermission")
+        get() = try {
+            adapter.bondedDevices
+        } catch (e: Throwable) {
+            Log.d(TAG, "bondedDevices: ${e.message}")
+            emptySet<BluetoothDevice>()
+        }
 
     val BluetoothDevice.deviceName: String? get() = name
 
-    val BluetoothDevice.isBonded get() = bondState == BluetoothDevice.BOND_BONDED
+    val BluetoothDevice.isBonded
+        @SuppressLint("MissingPermission")
+        get() = try {
+            bondState == BluetoothDevice.BOND_BONDED
+        } catch (e: Throwable) {
+            Log.d(TAG, "isBonded: ${e.message}")
+            false
+        }
 
     fun BluetoothDevice.createSocketAndConnect(): BluetoothSocket {
         val socket = createRfcommSocketToServiceRecord(UUID_SECURE)

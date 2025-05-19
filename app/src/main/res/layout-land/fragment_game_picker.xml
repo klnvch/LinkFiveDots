@@ -35,8 +35,8 @@
             type="by.klnvch.link5dots.ui.game.picker.PickerViewState" />
 
         <variable
-            name="visibilityViewState"
-            type="by.klnvch.link5dots.ui.game.picker.states.VisibilityViewState" />
+            name="bluetoothPickerViewState"
+            type="by.klnvch.link5dots.ui.game.picker.states.BluetoothPickerViewState" />
 
         <variable
             name="listener"
@@ -80,16 +80,26 @@
             app:layout_constraintTop_toBottomOf="@+id/buttonCreate"
             app:layout_constraintWidth_max="320dp" />
 
+        <TextView
+            android:id="@+id/textCreateNoPermission"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/runtime_permissions_summary_no_permissions_granted"
+            android:visibility="@{bluetoothPickerViewState == null ? View.GONE : bluetoothPickerViewState.createPermissionMessageVisibility}"
+            app:layout_constraintEnd_toEndOf="@+id/guidelineVertical"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/buttonDelete" />
+
         <Button
             android:id="@+id/buttonBluetoothVisibility"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:onClick="@{() -> visibilityListener.onVisibilityButtonClicked()}"
             android:text="@string/bluetooth_not_discoverable"
-            android:visibility="@{visibilityViewState == null ? View.GONE : View.VISIBLE}"
+            android:visibility="@{bluetoothPickerViewState == null ? View.GONE : View.VISIBLE}"
             app:layout_constraintEnd_toEndOf="@+id/guidelineVertical"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/buttonDelete"
+            app:layout_constraintTop_toBottomOf="@+id/textCreateNoPermission"
             app:layout_constraintWidth_max="320dp" />
 
         <TextView
@@ -100,7 +110,7 @@
             app:layout_constraintEnd_toEndOf="@+id/guidelineVertical"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/buttonBluetoothVisibility"
-            app:visibilityDuration="@{visibilityViewState}" />
+            app:visibilityDuration="@{bluetoothPickerViewState.visibility}" />
 
         <ProgressBar
             android:id="@+id/progressCreate"
@@ -183,6 +193,16 @@
             app:layout_constraintTop_toBottomOf="@+id/buttonStartScan"
             app:layout_constraintWidth_max="320dp" />
 
+        <TextView
+            android:id="@+id/textScanNoPermission"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/runtime_permissions_summary_no_permissions_granted"
+            android:visibility="@{bluetoothPickerViewState == null ? View.GONE : bluetoothPickerViewState.scanPermissionMessageVisibility}"
+            app:layout_constraintEnd_toEndOf="@+id/guidelineVertical"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/buttonCancelScan" />
+
         <ProgressBar
             android:id="@+id/progressScan"
             style="?android:attr/progressBarStyleHorizontal"
@@ -192,7 +212,7 @@
             android:visibility="@{viewState.scanProgressVisibility}"
             app:layout_constraintEnd_toEndOf="@+id/guidelineVertical"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/buttonCancelScan" />
+            app:layout_constraintTop_toBottomOf="@id/textScanNoPermission" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/listTargets"

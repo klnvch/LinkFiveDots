@@ -49,6 +49,7 @@ class BluetoothPickerFragment : PickerFragment(), OnVisibilityClickListener {
 
     private val requestCreatePermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) {
+            viewModel.setCreatePermissionGranted(it)
             if (it) {
                 super.onCreateButtonClicked()
             }
@@ -63,9 +64,9 @@ class BluetoothPickerFragment : PickerFragment(), OnVisibilityClickListener {
 
     private val requestScanPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
-            if (it.values.all { it }) {
-                super.onStartScanButtonClicked()
-            }
+            val isGranted = it.values.all { it }
+            viewModel.setScanPermissionGranted(isGranted)
+            super.onStartScanButtonClicked()
         }
 
     private val startDiscoverableForResult =
@@ -96,37 +97,30 @@ class BluetoothPickerFragment : PickerFragment(), OnVisibilityClickListener {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uiState.collect {
-                    binding.visibilityViewState = it
+                    binding.bluetoothPickerViewState = it
                 }
             }
         }
     }
 
     override fun onCreateButtonClicked() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            if (hasPermission(Manifest.permission.BLUETOOTH_CONNECT)) {
-                super.onCreateButtonClicked()
-            } else {
-                requestCreatePermissionLauncher.launch(Manifest.permission.BLUETOOTH_CONNECT)
-            }
-        } else {
+        if (isCreatePermissionGranted()) {
+            viewModel.setCreatePermissionGranted(true)
             super.onCreateButtonClicked()
+        } else {
+            requestCreatePermissionLauncher.launch(Manifest.permission.BLUETOOTH_CONNECT)
         }
     }
 
+    private fun isCreatePermissionGranted() =
+        Build.VERSION.SDK_INT < Build.VERSION_CODES.S || hasPermission(Manifest.permission.BLUETOOTH_CONNECT)
+
     override fun onStartScanButtonClicked() {
-        val permissions = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            arrayOf(
-                Manifest.permission.BLUETOOTH_SCAN,
-                Manifest.permission.BLUETOOTH_CONNECT,
-            )
-        } else {
-            arrayOf(Manifest.permission.ACCESS_FINE_LOCATION)
-        }
-        if (permissions.all { hasPermission(it) }) {
+        if (isScanPermissionGranted()) {
+            viewModel.setScanPermissionGranted(true)
             super.onStartScanButtonClicked()
         } else {
-            requestScanPermissionLauncher.launch(permissions)
+            requestScanPermissionLauncher.launch(scanPermissions)
         }
     }
 
@@ -141,6 +135,17 @@ class BluetoothPickerFragment : PickerFragment(), OnVisibilityClickListener {
             startDiscoverable()
         }
     }
+
+    private val scanPermissions = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        arrayOf(
+            Manifest.permission.BLUETOOTH_SCAN,
+            Manifest.permission.BLUETOOTH_CONNECT,
+        )
+    } else {
+        arrayOf(Manifest.permission.ACCESS_FINE_LOCATION)
+    }
+
+    private fun isScanPermissionGranted() = scanPermissions.all { hasPermission(it) }
 
     private fun startDiscoverable() {
         val intent = Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE).apply {

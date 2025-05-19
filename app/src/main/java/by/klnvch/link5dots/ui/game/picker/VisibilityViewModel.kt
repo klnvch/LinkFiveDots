@@ -26,8 +26,8 @@ package by.klnvch.link5dots.ui.game.picker
 
 import android.os.CountDownTimer
 import androidx.lifecycle.ViewModel
+import by.klnvch.link5dots.ui.game.picker.states.BluetoothPickerViewState
 import by.klnvch.link5dots.ui.game.picker.states.InvisibleViewState
-import by.klnvch.link5dots.ui.game.picker.states.VisibilityViewState
 import by.klnvch.link5dots.ui.game.picker.states.VisibleViewState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -35,25 +35,38 @@ import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 
 class VisibilityViewModel @Inject constructor() : ViewModel() {
-    private val _uiState = MutableStateFlow<VisibilityViewState>(InvisibleViewState)
-    val uiState: StateFlow<VisibilityViewState> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow<BluetoothPickerViewState>(
+        BluetoothPickerViewState(
+            InvisibleViewState, true, true
+        )
+    )
+    val uiState: StateFlow<BluetoothPickerViewState> = _uiState.asStateFlow()
     private var _timer: CountDownTimer? = null
 
     fun startCountDown(durationSeconds: Int) {
         _timer?.cancel()
 
         val duration = durationSeconds * 1000L
-        _uiState.value = VisibleViewState(duration)
+        _uiState.value = _uiState.value.copy(visibility = VisibleViewState(duration))
 
         _timer = object : CountDownTimer(duration, 1000) {
             override fun onTick(millisUntilFinished: Long) {
-                _uiState.value = VisibleViewState(millisUntilFinished)
+                _uiState.value =
+                    _uiState.value.copy(visibility = VisibleViewState(millisUntilFinished))
             }
 
             override fun onFinish() {
-                _uiState.value = InvisibleViewState
+                _uiState.value = _uiState.value.copy(visibility = InvisibleViewState)
             }
         }.start()
+    }
+
+    fun setCreatePermissionGranted(isGranted: Boolean) {
+        _uiState.value = _uiState.value.copy(isCreatePermissionGranted = isGranted)
+    }
+
+    fun setScanPermissionGranted(isGranted: Boolean) {
+        _uiState.value = _uiState.value.copy(isScanPermissionGranted = isGranted)
     }
 
     override fun onCleared() {

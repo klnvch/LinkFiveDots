@@ -146,7 +146,7 @@ class BluetoothRoomRepositoryImpl @Inject constructor(
                 // now we can communicate
                 startCommunication(socket, outputStream, inputStream)
             } catch (e: Throwable) {
-                Log.d(TAG, "connect: failed ${e.message}")
+                Log.d(TAG, "connect: failed $e")
                 throw e
             }
         }

@@ -62,10 +62,12 @@ class BluetoothBondedStore @Inject constructor(private val context: Context) {
         val bonded = bluetoothManager.bondedDevices
         val savedAddresses = context.dataStore.data.map { it[bondedDevices] ?: emptySet() }.first()
         // clean storage
-        val bondedAddresses = bonded.map { it.address }
-        for (address in savedAddresses) {
-            if (!bondedAddresses.contains(address)) {
-                remove(address)
+        if (bonded.isNotEmpty()) {
+            val bondedAddresses = bonded.map { it.address }
+            for (address in savedAddresses) {
+                if (!bondedAddresses.contains(address)) {
+                    remove(address)
+                }
             }
         }
         // find stored devices

@@ -43,7 +43,7 @@ import kotlin.coroutines.resumeWithException
 
 class BluetoothConnectService @Inject constructor(private val context: Context) {
     suspend fun connect(device: BluetoothDevice): BluetoothSocket {
-        if (device.isBonded) {
+        if (!device.isBonded) {
             bond(device)
         }
         return device.createSocketAndConnect()
