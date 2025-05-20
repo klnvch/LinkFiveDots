@@ -34,6 +34,7 @@ import by.klnvch.link5dots.domain.repositories.RoomRepository
 import by.klnvch.link5dots.domain.repositories.Settings
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 interface GetRoomUseCase : GetUseCase<IRoom, RoomParam>
@@ -75,12 +76,14 @@ class GetRoomNsdUseCase @Inject constructor(
 }
 
 class GetRoomBluetoothUseCase @Inject constructor(
+    private val dbRepository: RoomRepository,
     private val repository: BluetoothRoomRepository,
     private val settings: Settings,
 ) : GetRoomUseCase {
     override fun get(param: RoomParam) = when (param) {
         is RoomByDescriptor -> repository
             .get()
+            .onEach { if (it !== null) dbRepository.save(it) }
             .combine(settings.getUserId())
             { room, userId -> if (room !== null) NetworkRoomExtended(room, userId) else null }
 
