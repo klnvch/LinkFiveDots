@@ -48,11 +48,14 @@ import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.merge
+import kotlinx.coroutines.flow.scan
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import java.io.Closeable
@@ -101,15 +104,13 @@ class BluetoothRoomRepositoryImpl @Inject constructor(
 
     override fun getRemoteRooms(): Flow<List<RemoteRoomDescriptor>> {
         validate()
-        return flow {
-            val known = bluetoothBondedStore.getKnown()
-            emitAll(
-                bluetoothDiscoveryService
-                    .discover()
-                    .map { it.filter { !known.contains(it) } }
-                    .map { known + it }
-                    .map { it.map { BluetoothRemoteRoomDescriptor(it) } })
-        }
+        val knownFlow = flow { emitAll(bluetoothBondedStore.getKnown().asFlow()) }
+        val foundFlow = bluetoothDiscoveryService.discover().filterNotNull()
+        return merge(knownFlow, foundFlow)
+            .scan(emptyMap<String, BluetoothDevice>()) { acc, d -> acc.plus(d.address to d) }
+            .map { it.values }
+            .map { it.sortedWith(compareBy<BluetoothDevice> { !it.isBonded }.thenBy(nullsLast()) { it.deviceName }) }
+            .map { it.map { BluetoothRemoteRoomDescriptor(it) } }
     }
 
     override suspend fun update(room: NetworkRoom) {
@@ -245,7 +246,7 @@ class BluetoothRoomRepositoryImpl @Inject constructor(
 class BluetoothRemoteRoomDescriptor(val device: BluetoothDevice) : RemoteRoomDescriptor {
     override val title get() = device.deviceName ?: ""
     override val description get() = device.address ?: ""
-    override val isFavorite = device.isBonded
+    override val isFavorite get() = device.isBonded
 }
 
 private fun Closeable.closeSafely() = try {

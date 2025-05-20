@@ -34,7 +34,6 @@ import android.content.IntentFilter
 import android.util.Log
 import androidx.core.content.IntentCompat
 import by.klnvch.link5dots.data.bluetooth.BluetoothExt.cancelDiscoverySafely
-import by.klnvch.link5dots.data.bluetooth.BluetoothExt.deviceName
 import by.klnvch.link5dots.data.bluetooth.BluetoothExt.startDiscovery
 import by.klnvch.link5dots.data.bluetooth.BluetoothParams.TAG
 import kotlinx.coroutines.channels.awaitClose
@@ -46,8 +45,6 @@ class BluetoothDiscoveryService @Inject constructor(private val context: Context
     private val bluetoothManager = context.getSystemService(BluetoothManager::class.java)
 
     fun discover() = callbackFlow {
-        trySendBlocking(emptyList())
-        val targets = mutableMapOf<String, BluetoothDevice>()
         val receiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
                 val action = intent.action
@@ -60,10 +57,7 @@ class BluetoothDiscoveryService @Inject constructor(private val context: Context
                                 BluetoothDevice.EXTRA_DEVICE,
                                 BluetoothDevice::class.java
                             )
-                        if (device != null) {
-                            targets[device.address] = device
-                            trySendBlocking(targets.values.sortedWith(compareBy(nullsLast<String>()) { it.deviceName }))
-                        }
+                        trySendBlocking(device)
                     }
 
                     BluetoothAdapter.ACTION_DISCOVERY_FINISHED -> {

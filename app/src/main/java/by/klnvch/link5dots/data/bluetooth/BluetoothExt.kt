@@ -65,16 +65,23 @@ object BluetoothExt {
         }
     }
 
-    val BluetoothManager.bondedDevices: Set<BluetoothDevice>
+    val BluetoothManager.bondedDevices: Set<BluetoothDevice>?
         @SuppressLint("MissingPermission")
         get() = try {
             adapter.bondedDevices
         } catch (e: Throwable) {
             Log.d(TAG, "bondedDevices: ${e.message}")
-            emptySet<BluetoothDevice>()
+            null
         }
 
-    val BluetoothDevice.deviceName: String? get() = name
+    val BluetoothDevice.deviceName: String?
+        @SuppressLint("MissingPermission")
+        get() = try {
+            name
+        } catch (e: Throwable) {
+            Log.d(TAG, "isBonded: ${e.message}")
+            null
+        }
 
     val BluetoothDevice.isBonded
         @SuppressLint("MissingPermission")

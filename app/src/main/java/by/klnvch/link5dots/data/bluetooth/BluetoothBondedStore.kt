@@ -61,19 +61,21 @@ class BluetoothBondedStore @Inject constructor(private val context: Context) {
     suspend fun getKnown(): List<BluetoothDevice> {
         val bonded = bluetoothManager.bondedDevices
         val savedAddresses = context.dataStore.data.map { it[bondedDevices] ?: emptySet() }.first()
-        // clean storage
-        if (bonded.isNotEmpty()) {
+        if (bonded !== null) {
+            // clean storage
             val bondedAddresses = bonded.map { it.address }
             for (address in savedAddresses) {
                 if (!bondedAddresses.contains(address)) {
                     remove(address)
                 }
             }
+            // find stored devices
+            return bonded
+                .filter { savedAddresses.contains(it.address) }
+                .toList()
+                .sortedWith(compareBy { it.deviceName })
+        } else {
+            return emptyList()
         }
-        // find stored devices
-        return bonded
-            .filter { savedAddresses.contains(it.address) }
-            .toList()
-            .sortedWith(compareBy { it.deviceName })
     }
 }
