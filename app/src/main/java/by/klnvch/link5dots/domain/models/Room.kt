@@ -37,7 +37,7 @@ sealed interface IRoom {
     fun getWinningLine(): WinningLine? {
         if (dots.size < 9) return null
 
-        val lastDot = getLatsDot()!!
+        val lastDot = dots.last()
         val points = dots.filter { it.type == lastDot.type }.map { Point(it.x, it.y) }
 
         // y = x + (py - px)
@@ -55,9 +55,9 @@ sealed interface IRoom {
     fun isNotOver() = getWinningLine() == null
     fun isOver() = getWinningLine() != null
 
-    fun getLatsDot() = dots.lastOrNull()
-
     fun isFree(p: Point) = dots.find { it.x == p.x && it.y == p.y } == null
+
+    val isNew get() = dots.isEmpty() || dots.last().dt == 0
 }
 
 data class Room(

@@ -43,6 +43,7 @@ data class GameViewState(
         GameInfoViewState(dotsStyleType, user1Name, user2Name),
         GameBoardViewState(
             dotsStyleType,
+            room?.isNew != false,
             room?.dots?.toMutableList() ?: emptyList<Dot>(),
             room?.getWinningLine(),
         ),
@@ -52,7 +53,7 @@ data class GameViewState(
     companion object {
         fun default() = GameViewState(
             GameInfoViewState(DotsStyleType.ORIGINAL, null, null),
-            GameBoardViewState(DotsStyleType.ORIGINAL, emptyList(), null),
+            GameBoardViewState(DotsStyleType.ORIGINAL, true, emptyList(), null),
             null
         )
     }
@@ -76,10 +77,10 @@ data class GameInfoViewState(
 
 data class GameBoardViewState(
     val dotsStyleType: DotsStyleType,
+    val isNew: Boolean,
     val dots: List<Dot>,
     val winningLine: WinningLine?,
 ) {
-    val isOver = winningLine != null
     val lastDot = dots.lastOrNull()
 }
 

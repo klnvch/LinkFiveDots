@@ -81,7 +81,7 @@ open class OfflineGameViewModel @Inject constructor(
     }.stateIn(viewModelScope, SharingStarted.Eagerly, GameViewState.default())
 
     val scoreUi = roomFlow.map {
-        if (!it.isNotOver()) {
+        if (it.isOver()) {
             val score = prepareScoreUseCase.get(it)
             EndGameViewState(score, undoMoveUseCase.isSupported, newGameUseCase.isSupported())
         } else {

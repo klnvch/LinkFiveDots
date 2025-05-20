@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 klnvch
+ * Copyright (c) 2023-2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -62,6 +62,7 @@ public class GameView extends View {
     private final float[] mDotLocations = new float[Board.BOARD_SIZE];
     private final float[] mArrowLocations = new float[Board.BOARD_SIZE];
     private final Matrix mDrawMatrix = new Matrix();
+    private final PointF mWinningLineD = new PointF(0, 0);
     /**
      * The background bitmap is paper size pixels wide. This array contains positions of lines of number GRID_SIZE
      */
@@ -87,7 +88,6 @@ public class GameView extends View {
     private GameBoardViewState gameBoardViewState = null;
     private OnMoveDoneListener mOnMoveDoneListener;
     private Bitmap mWinningLine = null;
-    private final PointF mWinningLineD = new PointF(0, 0);
 
     public GameView(Context context) {
         super(context);
@@ -174,7 +174,7 @@ public class GameView extends View {
     }
 
     @Override
-    protected void onDraw(Canvas canvas) {
+    protected void onDraw(@NonNull Canvas canvas) {
         Log.d(TAG, "onDraw");
         // validate basic parameters
         if (mViewState == null || mScreenWidth <= 0 || mScreenHeight <= 0 || mPaperSize <= 0) {
@@ -311,7 +311,8 @@ public class GameView extends View {
     public void setGameBoardViewState(@Nullable GameBoardViewState gameBoardViewState) {
         this.gameBoardViewState = gameBoardViewState;
         setDotsStyleType(gameBoardViewState != null ? gameBoardViewState.getDotsStyleType() : null);
-        if (!mViewState.isFocused()) {
+        boolean isNew = gameBoardViewState == null || gameBoardViewState.isNew();
+        if (!mViewState.isFocused() || isNew) {
             focus();
         } else {
             invalidate();
@@ -338,12 +339,12 @@ public class GameView extends View {
     private class GestureListener extends SimpleOnGestureListener {
 
         @Override
-        public boolean onDown(MotionEvent e) {
+        public boolean onDown(@NonNull MotionEvent e) {
             return true;
         }
 
         @Override
-        public boolean onScroll(MotionEvent e1, MotionEvent e2, float dx, float dy) {
+        public boolean onScroll(MotionEvent e1, @NonNull MotionEvent e2, float dx, float dy) {
             mViewState.translate(-dx, -dy);
             invalidate();
             return true;

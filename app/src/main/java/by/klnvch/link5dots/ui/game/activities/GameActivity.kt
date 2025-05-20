@@ -49,8 +49,8 @@ abstract class GameActivity : DaggerAppCompatActivity() {
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.uiState.collect {
-                    if (it.boardViewState.isOver) {
+                viewModel.scoreUi.collect {
+                    if (it != null) {
                         onGameEnd()
                     }
                 }

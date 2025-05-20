@@ -124,7 +124,7 @@ abstract class AddDotOfflineUseCase(
 }
 
 class AddDotBotUseCase @Inject constructor(
-    timeRepository: TimeRepository,
+    private val timeRepository: TimeRepository,
     board: Board,
     roomRepository: RoomRepository,
     private val bot: Bot,
@@ -134,7 +134,8 @@ class AddDotBotUseCase @Inject constructor(
             room.add(Dot(p, Dot.HOST, dt))
             if (room.isNotOver()) {
                 val botDot = bot.findAnswer(room.dots)
-                room.add(botDot.copy(type = Dot.GUEST))
+                val botDt = (timeRepository.getCurrentTime() - room.timestamp).toInt()
+                room.add(botDot.copy(type = Dot.GUEST, dt = botDt))
             }
         }
         return room
