@@ -62,14 +62,16 @@ class GetRoomOnlineUseCase @Inject constructor(
 }
 
 class GetRoomNsdUseCase @Inject constructor(
+    private val dbRepository: RoomRepository,
     private val repository: NsdRoomRepository,
     private val settings: Settings,
 ) : GetRoomUseCase {
     override fun get(param: RoomParam) = when (param) {
         is RoomByDescriptor -> repository
-            .get(param.descriptor)
+            .get()
+            .onEach { if (it !== null) dbRepository.save(it) }
             .combine(settings.getUserId())
-            { room, userId -> NetworkRoomExtended(room, userId) }
+            { room, userId -> if (room !== null) NetworkRoomExtended(room, userId) else null }
 
         else -> throw IllegalArgumentException("Wrong param")
     }

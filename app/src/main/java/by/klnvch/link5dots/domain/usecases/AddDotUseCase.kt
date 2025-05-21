@@ -95,7 +95,11 @@ class AddDotNsdUseCase @Inject constructor(
     board: Board,
     private val repository: NsdRoomRepository,
 ) : AddDotMultiplayerUseCase(timeRepository, board) {
-    override suspend fun addMultiplayerDot(room: IRoom, dot: Dot) = repository.addDot(dot)
+    override suspend fun addMultiplayerDot(room: IRoom, dot: Dot) {
+        val currentRoom = repository.get().filterNotNull().first()
+        val updatedRoom = currentRoom.copy(dots = currentRoom.dots + dot)
+        repository.update(updatedRoom)
+    }
 }
 
 class AddDotBluetoothUseCase @Inject constructor(

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 klnvch
+ * Copyright (c) 2023-2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,19 +23,19 @@
  */
 package by.klnvch.link5dots.domain.repositories
 
-import by.klnvch.link5dots.domain.models.Dot
 import by.klnvch.link5dots.domain.models.NetworkRoom
 import by.klnvch.link5dots.domain.models.NetworkUser
 import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
 import kotlinx.coroutines.flow.Flow
 
 interface NsdRoomRepository {
-    suspend fun create(room: NetworkRoom): RemoteRoomDescriptor
-    fun getState(): Flow<Int>
+    suspend fun create(): RemoteRoomDescriptor
     fun delete()
-    fun finish()
-    fun getRemoteRooms(): Flow<List<RemoteRoomDescriptor>>
-    fun get(descriptor: RemoteRoomDescriptor): Flow<NetworkRoom>
+    fun getState(): Flow<Int>
+    fun get(): Flow<NetworkRoom?>
     suspend fun connect(descriptor: RemoteRoomDescriptor, user2: NetworkUser)
-    suspend fun addDot(dot: Dot)
+    suspend fun update(room: NetworkRoom)
+    fun getRemoteRooms(): Flow<List<RemoteRoomDescriptor>>
+    fun finish()
+    fun isServer(): Boolean
 }

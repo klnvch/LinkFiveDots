@@ -87,17 +87,8 @@ class CreateOnlineRoomUseCase @Inject constructor(
 
 class CreateNsdRoomUseCase @Inject constructor(
     private val repository: NsdRoomRepository,
-    private val settings: Settings,
-    timeRepository: TimeRepository,
-    roomKeyGenerator: RoomKeyGenerator,
-) : CreateMultiplayerRoomCommonUseCase(settings, timeRepository, roomKeyGenerator) {
-    override suspend fun create(room: NetworkRoom) = repository.create(room)
-    override suspend fun getUser1(userName: String): NetworkUser {
-        val userId = settings.getUserId().first()
-        return NetworkUser(userId, userName)
-    }
-
-    override val type = RoomType.NSD
+) : CreateMultiplayerRoomUseCase {
+    override suspend fun create() = repository.create()
 }
 
 class CreateBluetoothRoomUseCase @Inject constructor(

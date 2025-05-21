@@ -25,12 +25,16 @@ package by.klnvch.link5dots.data.nsd
 
 import android.net.nsd.NsdManager
 import android.net.nsd.NsdServiceInfo
+import java.net.InetAddress
 
 object NsdExt {
     fun NsdServiceInfo.isValid(): Boolean {
         return if (serviceType != NsdParams.SERVICE_TYPE) false
         else serviceName.contains(NsdParams.SERVICE_NAME)
     }
+
+    val NsdServiceInfo.address: InetAddress
+        get() = host
 
     fun NsdManager.registerService(port: Int, listener: NsdManager.RegistrationListener) {
         val serviceInfo = NsdServiceInfo().apply {

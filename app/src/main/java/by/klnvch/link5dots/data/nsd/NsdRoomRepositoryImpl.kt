@@ -24,160 +24,62 @@
 package by.klnvch.link5dots.data.nsd
 
 import android.net.nsd.NsdServiceInfo
-import android.util.Log
 import by.klnvch.link5dots.data.RoomJsonMapper
-import by.klnvch.link5dots.data.nsd.NsdParams.TAG
-import by.klnvch.link5dots.domain.models.Dot
-import by.klnvch.link5dots.domain.models.NetworkRoom
+import by.klnvch.link5dots.data.nsd.NsdExt.address
+import by.klnvch.link5dots.data.sockets.SocketData
+import by.klnvch.link5dots.data.sockets.SocketRoomRepository
 import by.klnvch.link5dots.domain.models.NetworkUser
 import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
-import by.klnvch.link5dots.domain.models.RoomState
 import by.klnvch.link5dots.domain.repositories.NsdRoomRepository
-import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.io.Closeable
-import java.io.DataInputStream
-import java.io.DataOutputStream
 import java.net.ServerSocket
 import java.net.Socket
 import javax.inject.Inject
-import kotlin.concurrent.thread
 
 class NsdRoomRepositoryImpl @Inject constructor(
     private val nsdRegistration: NsdRegistration,
     private val nsdDiscovery: NsdDiscovery,
-    private val mapper: RoomJsonMapper,
-) : NsdRoomRepository {
-    private val roomFlow = MutableSharedFlow<NetworkRoom>(1)
-    private var _serverSocket: Closeable? = null
-    private var _socket: Closeable? = null
-    private var outputStream: DataOutputStream? = null
+    mapper: RoomJsonMapper,
+) : SocketRoomRepository(mapper), NsdRoomRepository {
 
-    override suspend fun create(room: NetworkRoom) = withContext(Dispatchers.IO) {
-        val socket = ServerSocket(0)
-        val localPort = socket.localPort
+    override suspend fun create() = withContext(Dispatchers.IO) {
+        val serverSocket = ServerSocket(0)
         try {
-            val info = nsdRegistration.register(localPort)
-            startAccepting(socket)
-            roomFlow.emit(room)
+            val info = nsdRegistration.register(serverSocket.localPort)
+            startAccepting(serverSocket) {
+                val socket = serverSocket.accept()
+                SocketData(socket, socket.inputStream, socket.outputStream)
+            }
             NsdRoomDescriptor(info)
         } catch (e: Throwable) {
-            socket.close()
+            serverSocket.close()
             throw e
         }
     }
 
-    override fun getState() = roomFlow.map { it.state }
-
     override fun delete() {
-        _serverSocket?.closeSafely()
-        _serverSocket = null
         nsdRegistration.unregister()
-    }
-
-    override fun finish() {
-        _socket?.closeSafely()
+        super.delete()
     }
 
     override fun getRemoteRooms() =
         nsdDiscovery.discover().map { list -> list.map { NsdRoomDescriptor(it) } }
 
-    override fun get(descriptor: RemoteRoomDescriptor) = roomFlow
 
     override suspend fun connect(descriptor: RemoteRoomDescriptor, user2: NetworkUser) =
-        withContext(Dispatchers.IO) {
+        connect(user2) {
             val info = (descriptor as NsdRoomDescriptor).serviceInfo
-            val socket = Socket(info.host, info.port)
-
-            val inputStream = DataInputStream(socket.getInputStream())
-            outputStream = DataOutputStream(socket.getOutputStream())
-
-            val json = inputStream.readUTF()
-            val room = mapper.toRoom(json)
-            val updatedRoom = room.copy(user2 = user2, state = RoomState.STARTED)
-            roomFlow.tryEmit(updatedRoom)
-            send(updatedRoom)
-
-            _socket = socket
-            startCommunication(inputStream)
+            val socket = Socket(info.address, info.port)
+            SocketData(socket, socket.inputStream, socket.outputStream)
         }
-
-    override suspend fun addDot(dot: Dot) {
-        val room = roomFlow.first()
-        val updatedRoom = room.copy(dots = room.dots + dot)
-        roomFlow.tryEmit(updatedRoom)
-        send(updatedRoom)
-    }
-
-    @OptIn(DelicateCoroutinesApi::class)
-    private fun startAccepting(serverSocket: ServerSocket) {
-        thread {
-            _serverSocket = serverSocket
-            try {
-                val socket = serverSocket.accept()
-
-                val inputStream = DataInputStream(socket.getInputStream())
-                outputStream = DataOutputStream(socket.getOutputStream())
-
-                GlobalScope.launch(Dispatchers.IO) {
-                    send(roomFlow.first())
-                }
-
-                startCommunication(inputStream)
-                _socket = socket
-            } catch (_: Throwable) {
-                GlobalScope.launch(Dispatchers.IO) {
-                    val room = roomFlow.first()
-                    roomFlow.emit(room.copy(state = RoomState.DELETED))
-                }
-            }
-        }
-    }
-
-    @OptIn(DelicateCoroutinesApi::class)
-    private fun startCommunication(inputStream: DataInputStream) {
-        thread {
-            try {
-                while (true) {
-                    val roomJson = inputStream.readUTF()
-                    val room = mapper.toRoom(roomJson)
-                    roomFlow.tryEmit(room)
-                }
-            } catch (e: Throwable) {
-                Log.e(TAG, "${e.message}")
-                GlobalScope.launch(Dispatchers.IO) {
-                    val room = roomFlow.first()
-                    roomFlow.tryEmit(room.copy(state = RoomState.FINISHED))
-                }
-            }
-        }
-    }
-
-    private suspend fun send(room: NetworkRoom) = withContext(Dispatchers.IO) {
-        outputStream?.let {
-            val json = mapper.toJson(room)
-            it.writeUTF(json)
-            it.flush()
-        }
-    }
 }
 
 data class NsdRoomDescriptor(
     val serviceInfo: NsdServiceInfo,
 ) : RemoteRoomDescriptor {
-    override val title = serviceInfo.serviceName
-    override val description = "${serviceInfo.host}:${serviceInfo.port}"
+    override val title = serviceInfo.serviceName ?: ""
+    override val description = "${serviceInfo.address}:${serviceInfo.port}"
     override val isFavorite = false
-}
-
-private fun Closeable.closeSafely() = try {
-    close()
-} catch (e: Throwable) {
-    Log.e(TAG, "${e.message}")
 }

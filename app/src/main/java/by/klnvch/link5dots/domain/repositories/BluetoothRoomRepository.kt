@@ -21,7 +21,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 package by.klnvch.link5dots.domain.repositories
 
 import by.klnvch.link5dots.domain.models.NetworkRoom
@@ -30,13 +29,13 @@ import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
 import kotlinx.coroutines.flow.Flow
 
 interface BluetoothRoomRepository {
-    fun get(): Flow<NetworkRoom?>
-    suspend fun update(room: NetworkRoom)
     suspend fun create(): RemoteRoomDescriptor
-    fun getState(): Flow<Int>
     fun delete()
-    fun getRemoteRooms(): Flow<List<RemoteRoomDescriptor>>
+    fun getState(): Flow<Int>
+    fun get(): Flow<NetworkRoom?>
     suspend fun connect(descriptor: RemoteRoomDescriptor, user2: NetworkUser)
+    suspend fun update(room: NetworkRoom)
+    fun getRemoteRooms(): Flow<List<RemoteRoomDescriptor>>
     fun finish()
     fun isServer(): Boolean
 }
