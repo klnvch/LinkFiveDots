@@ -37,6 +37,7 @@ import by.klnvch.link5dots.domain.models.RoomState
 import by.klnvch.link5dots.domain.models.RoomType
 import by.klnvch.link5dots.domain.models.translate
 import by.klnvch.link5dots.domain.repositories.BluetoothRoomRepository
+import by.klnvch.link5dots.domain.repositories.NsdRoomRepository
 import by.klnvch.link5dots.domain.repositories.RoomRepository
 import by.klnvch.link5dots.domain.repositories.Settings
 import by.klnvch.link5dots.domain.repositories.TimeRepository
@@ -146,6 +147,36 @@ class NewGameBluetoothUseCase @Inject constructor(
 
             val newRoom = NetworkRoom(
                 key, timestamp, getDots(seed), user1, user2, RoomType.BLUETOOTH, RoomState.CREATED
+            )
+
+            repository.update(newRoom)
+        }
+    }
+
+    override fun isSupported() = repository.isServer()
+}
+
+class NewGameNsdUseCase @Inject constructor(
+    private val settings: Settings,
+    private val timeRepository: TimeRepository,
+    private val roomKeyGenerator: RoomKeyGenerator,
+    private val repository: NsdRoomRepository,
+    initialGameGenerator: InitialGameGenerator,
+) : NewGameCommonUseCase(initialGameGenerator) {
+    override suspend fun create(seed: Long?) {
+        if (repository.isServer()) {
+            val prevRoom = repository.get().firstOrNull()
+
+            val key = roomKeyGenerator.get()
+            val timestamp = timeRepository.getCurrentTime()
+
+            val userName = settings.getUserName().first()
+            val userId = settings.getUserId().first()
+            val user1 = NetworkUser(userId, userName)
+            val user2 = prevRoom?.user2
+
+            val newRoom = NetworkRoom(
+                key, timestamp, getDots(seed), user1, user2, RoomType.NSD, RoomState.CREATED
             )
 
             repository.update(newRoom)

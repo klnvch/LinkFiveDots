@@ -43,6 +43,7 @@ class NsdRoomRepositoryImpl @Inject constructor(
     private val nsdDiscovery: NsdDiscovery,
     mapper: RoomJsonMapper,
 ) : SocketRoomRepository(mapper), NsdRoomRepository {
+    override val TAG = NsdParams.TAG
 
     override suspend fun create() = withContext(Dispatchers.IO) {
         val serverSocket = ServerSocket(0)
@@ -54,7 +55,8 @@ class NsdRoomRepositoryImpl @Inject constructor(
             }
             NsdRoomDescriptor(info)
         } catch (e: Throwable) {
-            serverSocket.close()
+            serverSocket.closeSafely()
+            delete()
             throw e
         }
     }
@@ -80,6 +82,9 @@ data class NsdRoomDescriptor(
     val serviceInfo: NsdServiceInfo,
 ) : RemoteRoomDescriptor {
     override val title = serviceInfo.serviceName ?: ""
-    override val description = "${serviceInfo.address}:${serviceInfo.port}"
+    override val description = listOfNotNull<String>(
+        serviceInfo.address?.toString(),
+        if (serviceInfo.port == 0) null else serviceInfo.port.toString()
+    ).joinToString(":")
     override val isFavorite = false
 }

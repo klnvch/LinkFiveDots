@@ -26,7 +26,6 @@ package by.klnvch.link5dots.data.sockets
 
 import android.util.Log
 import by.klnvch.link5dots.data.RoomJsonMapper
-import by.klnvch.link5dots.data.bluetooth.BluetoothParams.TAG
 import by.klnvch.link5dots.domain.models.NetworkRoom
 import by.klnvch.link5dots.domain.models.NetworkUser
 import by.klnvch.link5dots.domain.models.RoomState
@@ -42,6 +41,7 @@ import java.io.OutputStream
 import kotlin.concurrent.thread
 
 abstract class SocketRoomRepository(private val mapper: RoomJsonMapper) {
+    protected abstract val TAG: String
     private val roomFlow = MutableSharedFlow<NetworkRoom?>(1)
     private val stateFlow = MutableSharedFlow<Int>(1)
     private var _serverSocket: Closeable? = null
@@ -175,6 +175,12 @@ abstract class SocketRoomRepository(private val mapper: RoomJsonMapper) {
         val json = readUTF()
         return mapper.toRoom(json)
     }
+
+    protected fun Closeable.closeSafely() = try {
+        close()
+    } catch (e: Throwable) {
+        Log.e(TAG, "${e.message}")
+    }
 }
 
 data class SocketData(
@@ -182,9 +188,3 @@ data class SocketData(
     val inputStream: InputStream,
     val outputStream: OutputStream,
 )
-
-fun Closeable.closeSafely() = try {
-    close()
-} catch (e: Throwable) {
-    Log.e(TAG, "${e.message}")
-}

@@ -33,7 +33,7 @@ object NsdExt {
         else serviceName.contains(NsdParams.SERVICE_NAME)
     }
 
-    val NsdServiceInfo.address: InetAddress
+    val NsdServiceInfo.address: InetAddress?
         get() = host
 
     fun NsdManager.registerService(port: Int, listener: NsdManager.RegistrationListener) {

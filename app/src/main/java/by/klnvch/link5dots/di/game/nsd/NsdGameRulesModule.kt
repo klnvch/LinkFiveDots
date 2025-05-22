@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 klnvch
+ * Copyright (c) 2023-2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,11 +27,11 @@ import by.klnvch.link5dots.domain.usecases.AddDotNsdUseCase
 import by.klnvch.link5dots.domain.usecases.AddDotUseCase
 import by.klnvch.link5dots.domain.usecases.GetRoomNsdUseCase
 import by.klnvch.link5dots.domain.usecases.GetRoomUseCase
-import by.klnvch.link5dots.domain.usecases.NewGameEmptyUseCase
+import by.klnvch.link5dots.domain.usecases.NewGameNsdUseCase
 import by.klnvch.link5dots.domain.usecases.NewGameUseCase
 import by.klnvch.link5dots.domain.usecases.PrepareScoreMultiplayerUseCase
 import by.klnvch.link5dots.domain.usecases.PrepareScoreUseCase
-import by.klnvch.link5dots.domain.usecases.UndoMoveInfoUseCase
+import by.klnvch.link5dots.domain.usecases.UndoMoveNsdUseCase
 import by.klnvch.link5dots.domain.usecases.UndoMoveUseCase
 import by.klnvch.link5dots.domain.usecases.network.ConnectNsdRoomUseCase
 import by.klnvch.link5dots.domain.usecases.network.ConnectRemoteRoomUseCase
@@ -56,13 +56,13 @@ interface NsdGameRulesModule {
     fun bindGetRoomUseCase(impl: GetRoomNsdUseCase): GetRoomUseCase
 
     @Binds
-    fun bindNewGameUseCase(impl: NewGameEmptyUseCase): NewGameUseCase
+    fun bindNewGameUseCase(impl: NewGameNsdUseCase): NewGameUseCase
 
     @Binds
     fun bindAddDotUseCase(impl: AddDotNsdUseCase): AddDotUseCase
 
     @Binds
-    fun bindUndoMoveUseCase(impl: UndoMoveInfoUseCase): UndoMoveUseCase
+    fun bindUndoMoveUseCase(impl: UndoMoveNsdUseCase): UndoMoveUseCase
 
     @Binds
     fun bindPrepareScoreUseCase(impl: PrepareScoreMultiplayerUseCase): PrepareScoreUseCase

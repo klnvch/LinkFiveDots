@@ -28,6 +28,7 @@ import by.klnvch.link5dots.domain.models.IRoom
 import by.klnvch.link5dots.domain.models.NetworkRoom
 import by.klnvch.link5dots.domain.models.Room
 import by.klnvch.link5dots.domain.repositories.BluetoothRoomRepository
+import by.klnvch.link5dots.domain.repositories.NsdRoomRepository
 import by.klnvch.link5dots.domain.repositories.RoomRepository
 import by.klnvch.link5dots.domain.repositories.Settings
 import kotlinx.coroutines.flow.filterNotNull
@@ -82,9 +83,41 @@ class UndoMoveTwoUseCase @Inject constructor(
     }
 }
 
-class UndoMoveMultiplayerUseCase @Inject constructor(
+class UndoMoveBluetoothUseCase @Inject constructor(
     private val settings: Settings,
     private val repository: BluetoothRoomRepository,
+) : UndoMoveUseCase {
+    override val isSupported = true
+    override suspend fun isAvailable(room: IRoom): Boolean {
+        val currentRoom = repository.get().filterNotNull().first()
+        return isAvailable(currentRoom)
+    }
+
+    override suspend fun undo(room: IRoom) {
+        val currentRoom = repository.get().filterNotNull().first()
+        if (isAvailable(currentRoom)) {
+            val dots = room.dots
+            repository.update(currentRoom.copy(dots = dots.subList(0, dots.size - 1)))
+        }
+    }
+
+    private suspend fun isAvailable(room: NetworkRoom): Boolean {
+        val dots = room.dots
+        if (dots.isNotEmpty()) {
+            val userId = settings.getUserId().first()
+            if (room.user1.id == userId) {
+                if (dots.size % 2 == 1) return true
+            } else {
+                if (dots.size % 2 == 0) return true
+            }
+        }
+        return false
+    }
+}
+
+class UndoMoveNsdUseCase @Inject constructor(
+    private val settings: Settings,
+    private val repository: NsdRoomRepository,
 ) : UndoMoveUseCase {
     override val isSupported = true
     override suspend fun isAvailable(room: IRoom): Boolean {

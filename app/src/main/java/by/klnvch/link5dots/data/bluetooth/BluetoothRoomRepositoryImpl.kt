@@ -57,6 +57,7 @@ class BluetoothRoomRepositoryImpl @Inject constructor(
     mapper: RoomJsonMapper,
 ) : SocketRoomRepository(mapper), BluetoothRoomRepository {
     private val bluetoothManager = context.getSystemService(BluetoothManager::class.java)
+    override val TAG = BluetoothParams.TAG
 
     override suspend fun create(): RemoteRoomDescriptor {
         validate()

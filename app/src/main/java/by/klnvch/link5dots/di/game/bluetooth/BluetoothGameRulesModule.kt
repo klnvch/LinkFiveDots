@@ -32,7 +32,7 @@ import by.klnvch.link5dots.domain.usecases.NewGameBluetoothUseCase
 import by.klnvch.link5dots.domain.usecases.NewGameUseCase
 import by.klnvch.link5dots.domain.usecases.PrepareScoreMultiplayerUseCase
 import by.klnvch.link5dots.domain.usecases.PrepareScoreUseCase
-import by.klnvch.link5dots.domain.usecases.UndoMoveMultiplayerUseCase
+import by.klnvch.link5dots.domain.usecases.UndoMoveBluetoothUseCase
 import by.klnvch.link5dots.domain.usecases.UndoMoveUseCase
 import by.klnvch.link5dots.domain.usecases.network.BluetoothScanUseCase
 import by.klnvch.link5dots.domain.usecases.network.ConnectBluetoothRoomUseCase
@@ -63,7 +63,7 @@ interface BluetoothGameRulesModule {
     fun bindAddDotUseCase(impl: AddDotBluetoothUseCase): AddDotUseCase
 
     @Binds
-    fun bindUndoMoveUseCase(impl: UndoMoveMultiplayerUseCase): UndoMoveUseCase
+    fun bindUndoMoveUseCase(impl: UndoMoveBluetoothUseCase): UndoMoveUseCase
 
     @Binds
     fun bindPrepareScoreUseCase(impl: PrepareScoreMultiplayerUseCase): PrepareScoreUseCase
