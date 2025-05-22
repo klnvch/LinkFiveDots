@@ -60,6 +60,7 @@
 
     <string name="yes">"بله"</string>
     <string name="no">"نه"</string>
+    <string name="confirmation_turn_on">"روشن کردن"</string>
     <string name="create">"ایجاد"</string>
     <string name="unknown">"ناشناس"</string>
     <string name="settings_system">"سیستم"</string>
@@ -70,6 +71,7 @@
     <string name="bluetooth_devices_card_off_title">"بلوتوث خاموش است"</string>
     <string name="bluetooth_devices_card_off_summary">"برای روشن کردن آن، تک‌ضرب بزنید"</string>
     <string name="runtime_permissions_summary_no_permissions_granted">"اجازه‌ای داده نشده"</string>
+    <string name="wifi_settings_primary_switch_title">"‏استفاده از Wi-Fi"</string>
     <string name="is_disconnect_question">"ارتباط <ns0:g id="DEVICE_NAME">%1$s</ns0:g> قطع شود؟"</string>
     <string name="connection_dialog_text">"آیا می‌خواهید به \"<ns0:g id="DEVICE_NAME">%1$s</ns0:g>\" وصل شوید؟"</string>
     <string name="cancel">"لغو"</string>

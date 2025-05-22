@@ -34,8 +34,6 @@ import by.klnvch.link5dots.data.bluetooth.BluetoothExt.getDeviceName
 import by.klnvch.link5dots.data.bluetooth.BluetoothExt.isBonded
 import by.klnvch.link5dots.data.sockets.SocketData
 import by.klnvch.link5dots.data.sockets.SocketRoomRepository
-import by.klnvch.link5dots.domain.models.FeatureDisabled
-import by.klnvch.link5dots.domain.models.FeatureUnsupported
 import by.klnvch.link5dots.domain.models.NetworkUser
 import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
 import by.klnvch.link5dots.domain.repositories.BluetoothRoomRepository
@@ -51,6 +49,7 @@ import javax.inject.Inject
 
 class BluetoothRoomRepositoryImpl @Inject constructor(
     context: Context,
+    private val bluetoothValidator: BluetoothValidator,
     private val bluetoothDiscoveryService: BluetoothDiscoveryService,
     private val bluetoothConnectService: BluetoothConnectService,
     private val bluetoothBondedStore: BluetoothBondedStore,
@@ -60,7 +59,7 @@ class BluetoothRoomRepositoryImpl @Inject constructor(
     override val TAG = BluetoothParams.TAG
 
     override suspend fun create(): RemoteRoomDescriptor {
-        validate()
+        bluetoothValidator.validate()
         val serverSocket = bluetoothManager.createServerSocket()
         startAccepting(serverSocket) {
             val socket = serverSocket.accept()
@@ -71,7 +70,7 @@ class BluetoothRoomRepositoryImpl @Inject constructor(
     }
 
     override fun getRemoteRooms(): Flow<List<RemoteRoomDescriptor>> {
-        validate()
+        bluetoothValidator.validate()
         val knownFlow = flow { emitAll(bluetoothBondedStore.getKnown().asFlow()) }
         val foundFlow = bluetoothDiscoveryService.discover().filterNotNull()
         return merge(knownFlow, foundFlow)
@@ -88,12 +87,6 @@ class BluetoothRoomRepositoryImpl @Inject constructor(
             bluetoothBondedStore.save(device)
             SocketData(socket, socket.inputStream, socket.outputStream)
         }
-
-    private fun validate() {
-        val adapter = bluetoothManager.adapter
-        if (adapter == null) throw FeatureUnsupported()
-        if (!adapter.isEnabled) throw FeatureDisabled()
-    }
 
     private inner class BluetoothLocalRoomDescriptor() : RemoteRoomDescriptor {
         override val title = bluetoothManager.getDeviceName()

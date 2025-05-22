@@ -21,34 +21,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package by.klnvch.link5dots.data
 
-import android.annotation.SuppressLint
+package by.klnvch.link5dots.data.bluetooth
+
 import android.bluetooth.BluetoothManager
 import android.content.Context
-import android.provider.Settings
-import by.klnvch.link5dots.domain.repositories.DeviceInfo
-import by.klnvch.link5dots.utils.TestDevices
+import by.klnvch.link5dots.domain.models.FeatureDisabled
+import by.klnvch.link5dots.domain.models.FeatureUnsupported
 import javax.inject.Inject
 
-@SuppressLint("HardwareIds")
-class DeviceInfoImpl @Inject constructor(
-    private val context: Context,
-) : DeviceInfo {
-    override fun isTest() = TestDevices.TEST_DEVICES.contains(getAndroidId())
+class BluetoothValidator @Inject constructor(context: Context) {
+    private val bluetoothManager = context.getSystemService(BluetoothManager::class.java)
 
-    override fun getAndroidId(): String =
-        Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
-
-    override fun isNsdSupported() = try {
-        Class.forName("android.net.nsd.NsdManager")
-        true
-    } catch (_: ClassNotFoundException) {
-        false
-    }
-
-    override fun isBluetoothSupported(): Boolean {
-        val manager = this.context.getSystemService(BluetoothManager::class.java)
-        return manager.adapter != null
+    fun validate() {
+        val adapter = bluetoothManager.adapter
+        if (adapter == null) throw FeatureUnsupported()
+        if (!adapter.isEnabled) throw FeatureDisabled()
     }
 }

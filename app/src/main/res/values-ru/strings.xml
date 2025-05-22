@@ -49,6 +49,7 @@
 
     <string name="yes">"Да"</string>
     <string name="no">"Нет"</string>
+    <string name="confirmation_turn_on">"Да"</string>
     <string name="create">"Создать"</string>
     <string name="unknown">"Неизвестно"</string>
     <string name="settings_system">"Система"</string>
@@ -59,6 +60,7 @@
     <string name="bluetooth_devices_card_off_title">"Bluetooth отключен"</string>
     <string name="bluetooth_devices_card_off_summary">"Нажмите, чтобы включить"</string>
     <string name="runtime_permissions_summary_no_permissions_granted">"У приложения нет разрешений"</string>
+    <string name="wifi_settings_primary_switch_title">"Использовать Wi-Fi"</string>
     <string name="is_disconnect_question">"Отключить <ns0:g id="DEVICE_NAME">%1$s</ns0:g>?"</string>
     <string name="connection_dialog_text">"Подключиться к устройству \"<ns0:g id="DEVICE_NAME">%1$s</ns0:g>\"?"</string>
     <string name="cancel">"Отмена"</string>

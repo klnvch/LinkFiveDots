@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 klnvch
+ * Copyright (c) 2023-2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,8 +23,17 @@
  */
 package by.klnvch.link5dots.ui.game.activities
 
+import android.os.Bundle
+import androidx.fragment.app.commit
 import by.klnvch.link5dots.R
+import by.klnvch.link5dots.ui.game.error.NsdErrorFragment
 
 class NsdGameActivity : MultiplayerGameActivity() {
     override val defaultTitle = R.string.menu_local_network
+
+    override fun addErrorFragment(args: Bundle) {
+        supportFragmentManager.commit {
+            add(R.id.fragment, NsdErrorFragment::class.java, args)
+        }
+    }
 }

@@ -32,13 +32,16 @@ import by.klnvch.link5dots.domain.models.NetworkUser
 import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
 import by.klnvch.link5dots.domain.repositories.NsdRoomRepository
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import java.net.ServerSocket
 import java.net.Socket
 import javax.inject.Inject
 
+
 class NsdRoomRepositoryImpl @Inject constructor(
+    private val nsdValidator: NsdValidator,
     private val nsdRegistration: NsdRegistration,
     private val nsdDiscovery: NsdDiscovery,
     mapper: RoomJsonMapper,
@@ -46,6 +49,7 @@ class NsdRoomRepositoryImpl @Inject constructor(
     override val TAG = NsdParams.TAG
 
     override suspend fun create() = withContext(Dispatchers.IO) {
+        nsdValidator.validate()
         val serverSocket = ServerSocket(0)
         try {
             val info = nsdRegistration.register(serverSocket.localPort)
@@ -66,8 +70,10 @@ class NsdRoomRepositoryImpl @Inject constructor(
         super.delete()
     }
 
-    override fun getRemoteRooms() =
-        nsdDiscovery.discover().map { list -> list.map { NsdRoomDescriptor(it) } }
+    override fun getRemoteRooms(): Flow<List<RemoteRoomDescriptor>> {
+        nsdValidator.validate()
+        return nsdDiscovery.discover().map { list -> list.map { NsdRoomDescriptor(it) } }
+    }
 
 
     override suspend fun connect(descriptor: RemoteRoomDescriptor, user2: NetworkUser) =
