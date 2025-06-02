@@ -79,6 +79,7 @@
     <string name="bluetooth_devices_card_off_summary">Tap to turn it on</string>
     <string name="runtime_permissions_summary_no_permissions_granted">No permissions granted</string>
     <string name="wifi_settings_primary_switch_title">Use Wi\u2011Fi</string>
+    <string name="audio_sharing_retry_dialog_content">Something went wrong. Please try again.</string>
     <string name="is_disconnect_question">Disconnect <ns0:g id="device_name">%1$s</ns0:g>?</string>
     <string name="connection_dialog_text">"Do you want to connect to \u0022<ns0:g id="device_name">%1$s</ns0:g>\u0022?"</string>
     <string name="cancel">Cancel</string>

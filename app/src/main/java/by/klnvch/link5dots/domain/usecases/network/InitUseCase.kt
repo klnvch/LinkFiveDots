@@ -23,6 +23,7 @@
  */
 package by.klnvch.link5dots.domain.usecases.network
 
+import by.klnvch.link5dots.domain.models.FeatureUnsupported
 import by.klnvch.link5dots.domain.repositories.DeviceInfo
 import by.klnvch.link5dots.domain.repositories.FirebaseManager
 import javax.inject.Inject
@@ -32,13 +33,13 @@ abstract class InitMultiplayerUseCase {
 }
 
 class InitOnlineUseCase @Inject constructor(
-    private val firebaseManager: FirebaseManager
+    private val firebaseManager: FirebaseManager,
 ) : InitMultiplayerUseCase() {
     override suspend fun init() {
         if (firebaseManager.isSupported()) {
             firebaseManager.signInAnonymously()
         } else {
-            throw UnsupportedException()
+            throw FeatureUnsupported()
         }
     }
 }
@@ -47,14 +48,12 @@ class InitNsdUseCase @Inject constructor(
     private val deviceInfo: DeviceInfo,
 ) : InitMultiplayerUseCase() {
     override suspend fun init() =
-        if (deviceInfo.isNsdSupported()) Unit else throw UnsupportedException()
+        if (deviceInfo.isNsdSupported()) Unit else throw FeatureUnsupported()
 }
 
 class InitBluetoothUseCase @Inject constructor(
     private val deviceInfo: DeviceInfo,
 ) : InitMultiplayerUseCase() {
     override suspend fun init() =
-        if (deviceInfo.isBluetoothSupported()) Unit else throw UnsupportedException()
+        if (deviceInfo.isBluetoothSupported()) Unit else throw FeatureUnsupported()
 }
-
-class UnsupportedException : Exception()

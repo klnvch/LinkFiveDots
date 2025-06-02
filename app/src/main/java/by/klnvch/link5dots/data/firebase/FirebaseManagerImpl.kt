@@ -24,12 +24,16 @@
 package by.klnvch.link5dots.data.firebase
 
 import android.content.Context
+import by.klnvch.link5dots.domain.models.FeatureDisabled
 import by.klnvch.link5dots.domain.models.UnauthorizedException
+import by.klnvch.link5dots.domain.models.UnknownException
 import by.klnvch.link5dots.domain.repositories.FirebaseManager
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.Firebase
+import com.google.firebase.FirebaseException
+import com.google.firebase.FirebaseNetworkException
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.auth
 import kotlinx.coroutines.suspendCancellableCoroutine
@@ -38,25 +42,38 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
 class FirebaseManagerImpl @Inject constructor(
-    private val context: Context
+    private val context: Context,
 ) : FirebaseManager {
     override fun isSupported(): Boolean {
         return GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(context) ==
                 ConnectionResult.SUCCESS
     }
 
-    override suspend fun signInAnonymously() = suspendCancellableCoroutine { continuation ->
+    override suspend fun signInAnonymously() = suspendCancellableCoroutine { cont ->
         val auth = Firebase.auth
-        val listener = OnCompleteListener<AuthResult> {
-            if (it.isSuccessful) {
-                continuation.resume(it.result.user!!.uid)
-            } else {
-                continuation.resumeWithException(it.exception ?: Exception("Unknown error"))
-            }
-        }
 
-        continuation.invokeOnCancellation { auth.signOut() }
-        auth.signInAnonymously().addOnCompleteListener(listener)
+        val currentUser = auth.currentUser
+        if (currentUser != null) {
+            cont.resume(currentUser.uid)
+        } else {
+            val listener = OnCompleteListener<AuthResult> { task ->
+                if (task.isSuccessful) {
+                    cont.resume(task.result.user!!.uid)
+                } else {
+                    val exception = task.exception
+                    when (exception) {
+                        is FirebaseNetworkException -> cont.resumeWithException(FeatureDisabled())
+                        is FirebaseException -> cont.resumeWithException(UnknownException())
+                        is Exception -> cont.resumeWithException(exception)
+                        else -> cont.resumeWithException(UnknownException())
+                    }
+
+                }
+            }
+
+            cont.invokeOnCancellation { auth.signOut() }
+            auth.signInAnonymously().addOnCompleteListener(listener)
+        }
     }
 
     override fun signOut() = Firebase.auth.signOut()

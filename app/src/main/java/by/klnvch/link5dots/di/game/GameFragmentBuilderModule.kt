@@ -30,6 +30,7 @@ import by.klnvch.link5dots.ui.game.end.EndGameDialog
 import by.klnvch.link5dots.ui.game.error.BluetoothErrorFragment
 import by.klnvch.link5dots.ui.game.error.MultiplayerErrorFragment
 import by.klnvch.link5dots.ui.game.error.NsdErrorFragment
+import by.klnvch.link5dots.ui.game.error.OnlineErrorFragment
 import by.klnvch.link5dots.ui.game.picker.BluetoothPickerFragment
 import by.klnvch.link5dots.ui.game.picker.PickerFragment
 import dagger.Module
@@ -60,4 +61,7 @@ abstract class GameFragmentBuilderModule {
 
     @ContributesAndroidInjector
     abstract fun bindNsdErrorFragment(): NsdErrorFragment
+
+    @ContributesAndroidInjector
+    abstract fun bindOnlineErrorFragment(): OnlineErrorFragment
 }
