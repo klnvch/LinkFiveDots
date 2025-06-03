@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 klnvch
+ * Copyright (c) 2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,10 +22,11 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.data.workers
+package by.klnvch.link5dots.di.workers
 
 import androidx.work.ListenableWorker
-import by.klnvch.link5dots.di.workers.WorkManagerKey
+import by.klnvch.link5dots.data.online.CleanUpOnlineRoomWorker
+import by.klnvch.link5dots.data.workers.SyncHistoryWorker
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap

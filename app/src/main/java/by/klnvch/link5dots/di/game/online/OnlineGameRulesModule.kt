@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 klnvch
+ * Copyright (c) 2023-2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -39,14 +39,10 @@ import by.klnvch.link5dots.domain.usecases.network.CreateMultiplayerRoomUseCase
 import by.klnvch.link5dots.domain.usecases.network.CreateOnlineRoomUseCase
 import by.klnvch.link5dots.domain.usecases.network.DeleteMultiplayerRoomUseCase
 import by.klnvch.link5dots.domain.usecases.network.DeleteOnlineRoomUseCase
-import by.klnvch.link5dots.domain.usecases.network.GetMultiplayerRoomStateUseCase
-import by.klnvch.link5dots.domain.usecases.network.GetOnlineRoomStateUseCase
 import by.klnvch.link5dots.domain.usecases.network.InitMultiplayerUseCase
 import by.klnvch.link5dots.domain.usecases.network.InitOnlineUseCase
 import by.klnvch.link5dots.domain.usecases.network.OnlineScanUseCase
 import by.klnvch.link5dots.domain.usecases.network.ScanUseCase
-import by.klnvch.link5dots.domain.usecases.network.UpdateMultiplayerRoomStateUseCase
-import by.klnvch.link5dots.domain.usecases.network.UpdateOnlineRoomStateUseCase
 import dagger.Binds
 import dagger.Module
 
@@ -74,13 +70,7 @@ interface OnlineGameRulesModule {
     fun bindCreateMultiplayerRoomUseCase(impl: CreateOnlineRoomUseCase): CreateMultiplayerRoomUseCase
 
     @Binds
-    fun bindGetMultiplayerRoomStateUseCase(impl: GetOnlineRoomStateUseCase): GetMultiplayerRoomStateUseCase
-
-    @Binds
     fun bindScanUseCase(impl: OnlineScanUseCase): ScanUseCase
-
-    @Binds
-    fun bindUpdateMultiplayerRoomStateUseCase(impl: UpdateOnlineRoomStateUseCase): UpdateMultiplayerRoomStateUseCase
 
     @Binds
     fun bindConnectRemoteRoomUseCase(impl: ConnectOnlineRoomUseCase): ConnectRemoteRoomUseCase

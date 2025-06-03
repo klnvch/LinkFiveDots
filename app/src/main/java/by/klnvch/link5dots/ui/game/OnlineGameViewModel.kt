@@ -42,7 +42,6 @@ import by.klnvch.link5dots.domain.usecases.UndoMoveUseCase
 import by.klnvch.link5dots.domain.usecases.network.ConnectRemoteRoomUseCase
 import by.klnvch.link5dots.domain.usecases.network.CreateMultiplayerRoomUseCase
 import by.klnvch.link5dots.domain.usecases.network.DeleteMultiplayerRoomUseCase
-import by.klnvch.link5dots.domain.usecases.network.GetMultiplayerRoomStateUseCase
 import by.klnvch.link5dots.domain.usecases.network.GetNetworkGameActionUseCase
 import by.klnvch.link5dots.domain.usecases.network.InitMultiplayerUseCase
 import by.klnvch.link5dots.domain.usecases.network.ScanUseCase
@@ -77,7 +76,6 @@ import javax.inject.Inject
 class OnlineGameViewModel @Inject constructor(
     private val initMultiplayerUseCase: InitMultiplayerUseCase,
     private val createMultiplayerRoomUseCase: CreateMultiplayerRoomUseCase,
-    private val getStateUseCase: GetMultiplayerRoomStateUseCase,
     private val deleteMultiplayerRoomUseCase: DeleteMultiplayerRoomUseCase,
     private val scanUseCase: ScanUseCase,
     private val connectRemoteRoomUseCase: ConnectRemoteRoomUseCase,
@@ -125,7 +123,6 @@ class OnlineGameViewModel @Inject constructor(
         }
     }
 
-    private var roomStatesJob: Job? = null
     private var scanJob: Job? = null
 
     lateinit var disconnectViewState: DisconnectViewState
@@ -158,46 +155,39 @@ class OnlineGameViewModel @Inject constructor(
     fun createRoom() {
         viewModelScope.launch {
             _pickerUiState.value = PickerViewState.TARGET_CREATING
-            try {
-                val descriptor = createMultiplayerRoomUseCase.create()
-                startAccepting(descriptor)
-            } catch (e: FeatureDisabled) {
-                _pickerUiState.value = PickerViewState.IDLE
-                roomStatesJob?.cancel()
-                _navigationEvent.emit(InitError(e))
-            } catch (e: Throwable) {
-                _pickerUiState.value = PickerViewState.creationFailed(e)
-                roomStatesJob?.cancel()
-            }
-        }
-    }
+            createMultiplayerRoomUseCase.create()
+                .onCompletion {
+                    when (it) {
+                        is FeatureDisabled -> {
+                            _pickerUiState.value = PickerViewState.IDLE
+                            _navigationEvent.emit(InitError(it))
+                        }
 
-    fun startAccepting(descriptor: RemoteRoomDescriptor) {
-        roomStatesJob = viewModelScope.launch {
-            getStateUseCase.get(descriptor).collect {
-                when (it) {
-                    RoomState.CREATED -> {
-                        _pickerUiState.value =
-                            PickerViewState.created(PickerItemViewState(descriptor))
+                        is Throwable -> {
+                            _pickerUiState.value = PickerViewState.creationFailed(it)
+                        }
                     }
+                }.collect {
+                    when (it.state) {
+                        RoomState.CREATED -> {
+                            _pickerUiState.value = PickerViewState.created(PickerItemViewState(it))
+                        }
 
-                    RoomState.STARTED -> {
-                        onConnected(descriptor)
-                        roomStatesJob?.cancel()
-                    }
+                        RoomState.STARTED -> {
+                            onConnected(it)
+                        }
 
-                    RoomState.DELETED -> {
-                        _pickerUiState.value = PickerViewState.IDLE
-                        roomStatesJob?.cancel()
+                        RoomState.DELETED -> {
+                            _pickerUiState.value = PickerViewState.IDLE
+                        }
                     }
                 }
-            }
         }
     }
 
-    fun deleteRoom(descriptor: RemoteRoomDescriptor) {
+    fun deleteRoom() {
         _pickerUiState.value = PickerViewState.TARGET_DELETING
-        deleteMultiplayerRoomUseCase.delete(descriptor)
+        deleteMultiplayerRoomUseCase.delete()
     }
 
     fun startScan() {
@@ -249,11 +239,11 @@ class OnlineGameViewModel @Inject constructor(
         val pickerState = pickerUiState.value
         val targetState = pickerState.targetState
         if (targetState is TargetCreated) {
-            deleteMultiplayerRoomUseCase.delete(targetState.descriptor)
+            deleteMultiplayerRoomUseCase.delete()
         }
         val connectState = pickerState.connectState
         if (connectState is ConnectConnected) {
-            deleteMultiplayerRoomUseCase.finish(connectState.descriptor)
+            deleteMultiplayerRoomUseCase.finish()
         }
         _pickerUiState.value = PickerViewState.IDLE
     }

@@ -30,11 +30,12 @@ import by.klnvch.link5dots.data.sockets.SocketData
 import by.klnvch.link5dots.data.sockets.SocketRoomRepository
 import by.klnvch.link5dots.domain.models.NetworkUser
 import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
+import by.klnvch.link5dots.domain.models.RoomState
 import by.klnvch.link5dots.domain.repositories.NsdRoomRepository
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emitAll
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.withContext
 import java.net.ServerSocket
 import java.net.Socket
 import javax.inject.Inject
@@ -48,7 +49,7 @@ class NsdRoomRepositoryImpl @Inject constructor(
 ) : SocketRoomRepository(mapper), NsdRoomRepository {
     override val TAG = NsdParams.TAG
 
-    override suspend fun create() = withContext(Dispatchers.IO) {
+    override fun create() = flow {
         nsdValidator.validate()
         val serverSocket = ServerSocket(0)
         try {
@@ -57,7 +58,8 @@ class NsdRoomRepositoryImpl @Inject constructor(
                 val socket = serverSocket.accept()
                 SocketData(socket, socket.inputStream, socket.outputStream)
             }
-            NsdRoomDescriptor(info)
+            val descriptor = NsdRoomDescriptor(info)
+            emitAll(getState().map { descriptor.copy(state = it) })
         } catch (e: Throwable) {
             serverSocket.closeSafely()
             delete()
@@ -86,6 +88,7 @@ class NsdRoomRepositoryImpl @Inject constructor(
 
 data class NsdRoomDescriptor(
     val serviceInfo: NsdServiceInfo,
+    override val state: Int = RoomState.CREATED,
 ) : RemoteRoomDescriptor {
     override val title = serviceInfo.serviceName ?: ""
     override val description = listOfNotNull<String>(

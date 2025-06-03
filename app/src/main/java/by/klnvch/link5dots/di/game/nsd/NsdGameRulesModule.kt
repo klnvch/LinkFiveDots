@@ -39,14 +39,10 @@ import by.klnvch.link5dots.domain.usecases.network.CreateMultiplayerRoomUseCase
 import by.klnvch.link5dots.domain.usecases.network.CreateNsdRoomUseCase
 import by.klnvch.link5dots.domain.usecases.network.DeleteMultiplayerRoomUseCase
 import by.klnvch.link5dots.domain.usecases.network.DeleteNsdRoomUseCase
-import by.klnvch.link5dots.domain.usecases.network.GetMultiplayerRoomStateUseCase
-import by.klnvch.link5dots.domain.usecases.network.GetNsdRoomStateUseCase
 import by.klnvch.link5dots.domain.usecases.network.InitMultiplayerUseCase
 import by.klnvch.link5dots.domain.usecases.network.InitNsdUseCase
 import by.klnvch.link5dots.domain.usecases.network.NsdScanUseCase
 import by.klnvch.link5dots.domain.usecases.network.ScanUseCase
-import by.klnvch.link5dots.domain.usecases.network.UpdateMultiplayerRoomStateUseCase
-import by.klnvch.link5dots.domain.usecases.network.UpdateNsdRoomStateUseCase
 import dagger.Binds
 import dagger.Module
 
@@ -72,12 +68,6 @@ interface NsdGameRulesModule {
 
     @Binds
     fun bindCreateMultiplayerRoomUseCase(impl: CreateNsdRoomUseCase): CreateMultiplayerRoomUseCase
-
-    @Binds
-    fun bindGetMultiplayerRoomStateUseCase(impl: GetNsdRoomStateUseCase): GetMultiplayerRoomStateUseCase
-
-    @Binds
-    fun bindUpdateMultiplayerRoomStateUseCase(impl: UpdateNsdRoomStateUseCase): UpdateMultiplayerRoomStateUseCase
 
     @Binds
     fun bindScanUseCase(impl: NsdScanUseCase): ScanUseCase

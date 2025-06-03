@@ -32,7 +32,6 @@ import by.klnvch.link5dots.data.DeviceInfoImpl
 import by.klnvch.link5dots.data.GameScoreRepositoryImpl
 import by.klnvch.link5dots.data.LanguageManagerImpl
 import by.klnvch.link5dots.data.NightModeManagerImpl
-import by.klnvch.link5dots.data.OnlineRoomRepositoryImpl
 import by.klnvch.link5dots.data.RoomRepositoryImpl
 import by.klnvch.link5dots.data.StringProvider
 import by.klnvch.link5dots.data.TimeRepositoryImpl
@@ -40,9 +39,9 @@ import by.klnvch.link5dots.data.bluetooth.BluetoothRoomRepositoryImpl
 import by.klnvch.link5dots.data.firebase.AnalyticsImpl
 import by.klnvch.link5dots.data.firebase.FirebaseManagerImpl
 import by.klnvch.link5dots.data.nsd.NsdRoomRepositoryImpl
+import by.klnvch.link5dots.data.online.OnlineRoomRepositoryImpl
 import by.klnvch.link5dots.data.settings.PreferenceDataStoreImpl
 import by.klnvch.link5dots.data.settings.SettingsImpl
-import by.klnvch.link5dots.data.workers.WorkLauncher
 import by.klnvch.link5dots.domain.repositories.Analytics
 import by.klnvch.link5dots.domain.repositories.BluetoothRoomRepository
 import by.klnvch.link5dots.domain.repositories.CrashRepository
@@ -52,7 +51,6 @@ import by.klnvch.link5dots.domain.repositories.GameScoreRepository
 import by.klnvch.link5dots.domain.repositories.LanguageManager
 import by.klnvch.link5dots.domain.repositories.NightModeManager
 import by.klnvch.link5dots.domain.repositories.NsdRoomRepository
-import by.klnvch.link5dots.domain.repositories.OnlineGameWorkLauncher
 import by.klnvch.link5dots.domain.repositories.OnlineRoomRepository
 import by.klnvch.link5dots.domain.repositories.RoomRepository
 import by.klnvch.link5dots.domain.repositories.Settings
@@ -128,8 +126,4 @@ interface AppBindingModule {
     @Singleton
     @Binds
     fun bindTimeRepository(impl: TimeRepositoryImpl): TimeRepository
-
-    @Singleton
-    @Binds
-    fun bindOnlineGameWorkLauncher(impl: WorkLauncher): OnlineGameWorkLauncher
 }

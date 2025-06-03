@@ -35,66 +35,50 @@ import by.klnvch.link5dots.domain.repositories.NsdRoomRepository
 import by.klnvch.link5dots.domain.repositories.OnlineRoomRepository
 import by.klnvch.link5dots.domain.repositories.Settings
 import by.klnvch.link5dots.domain.repositories.TimeRepository
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 interface CreateMultiplayerRoomUseCase {
-    suspend fun create(): RemoteRoomDescriptor
+    fun create(): Flow<RemoteRoomDescriptor>
 }
 
-abstract class CreateMultiplayerRoomCommonUseCase(
+class CreateOnlineRoomUseCase @Inject constructor(
     private val settings: Settings,
     private val timeRepository: TimeRepository,
     private val roomKeyGenerator: RoomKeyGenerator,
+    private val firebaseManager: FirebaseManager,
+    private val repository: OnlineRoomRepository,
 ) : CreateMultiplayerRoomUseCase {
-    override suspend fun create(): RemoteRoomDescriptor {
+    override fun create() = flow {
         val userName = settings.getUserName().first()
+        val userId = firebaseManager.getUserId()
+        val user1 = NetworkUser(userId, userName)
         val timestamp = timeRepository.getCurrentTime()
         val key = roomKeyGenerator.get()
         val room = NetworkRoom(
             key,
             timestamp,
             emptyList(),
-            getUser1(userName),
+            user1,
             null,
-            type,
+            RoomType.ONLINE,
             RoomState.CREATED
         )
-        return create(room)
+        emitAll(repository.create(room))
     }
-
-    abstract suspend fun create(room: NetworkRoom): RemoteRoomDescriptor
-    abstract suspend fun getUser1(userName: String): NetworkUser
-    abstract val type: Int
-}
-
-class CreateOnlineRoomUseCase @Inject constructor(
-    private val repository: OnlineRoomRepository,
-    private val firebaseManager: FirebaseManager,
-    settings: Settings,
-    timeRepository: TimeRepository,
-    roomKeyGenerator: RoomKeyGenerator,
-) : CreateMultiplayerRoomCommonUseCase(settings, timeRepository, roomKeyGenerator) {
-    override suspend fun create(room: NetworkRoom) =
-        if (repository.isConnected()) repository.create(room)
-        else throw DisconnectedException()
-
-    override suspend fun getUser1(userName: String) =
-        NetworkUser(firebaseManager.getUserId(), userName)
-
-    override val type = RoomType.ONLINE
 }
 
 class CreateNsdRoomUseCase @Inject constructor(
     private val repository: NsdRoomRepository,
 ) : CreateMultiplayerRoomUseCase {
-    override suspend fun create() = repository.create()
+    override fun create() = repository.create()
 }
 
 class CreateBluetoothRoomUseCase @Inject constructor(
     private val repository: BluetoothRoomRepository,
 ) : CreateMultiplayerRoomUseCase {
-    override suspend fun create() = repository.create()
+    override fun create() = repository.create()
 }
-
-class DisconnectedException : Exception()

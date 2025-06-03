@@ -27,4 +27,5 @@ interface RemoteRoomDescriptor {
     val title: String
     val description: String
     val isFavorite: Boolean
+    val state: Int
 }

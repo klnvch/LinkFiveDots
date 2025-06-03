@@ -23,34 +23,33 @@
  */
 package by.klnvch.link5dots.domain.usecases.network
 
-import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
 import by.klnvch.link5dots.domain.repositories.BluetoothRoomRepository
 import by.klnvch.link5dots.domain.repositories.NsdRoomRepository
-import by.klnvch.link5dots.domain.repositories.OnlineGameWorkLauncher
+import by.klnvch.link5dots.domain.repositories.OnlineRoomRepository
 import javax.inject.Inject
 
 interface DeleteMultiplayerRoomUseCase {
-    fun delete(descriptor: RemoteRoomDescriptor)
-    fun finish(descriptor: RemoteRoomDescriptor)
+    fun delete()
+    fun finish()
 }
 
 class DeleteOnlineRoomUseCase @Inject constructor(
-    private val workLauncher: OnlineGameWorkLauncher,
+    private val repository: OnlineRoomRepository,
 ) : DeleteMultiplayerRoomUseCase {
-    override fun delete(descriptor: RemoteRoomDescriptor) = workLauncher.delete(descriptor)
-    override fun finish(descriptor: RemoteRoomDescriptor) = workLauncher.finish(descriptor)
+    override fun delete() = repository.delete()
+    override fun finish() = repository.finish()
 }
 
 class DeleteNsdRoomUseCase @Inject constructor(
     private val repository: NsdRoomRepository,
 ) : DeleteMultiplayerRoomUseCase {
-    override fun delete(descriptor: RemoteRoomDescriptor) = repository.delete()
-    override fun finish(descriptor: RemoteRoomDescriptor) = repository.finish()
+    override fun delete() = repository.delete()
+    override fun finish() = repository.finish()
 }
 
 class DeleteBluetoothRoomUseCase @Inject constructor(
     private val repository: BluetoothRoomRepository,
 ) : DeleteMultiplayerRoomUseCase {
-    override fun delete(descriptor: RemoteRoomDescriptor) = repository.delete()
-    override fun finish(descriptor: RemoteRoomDescriptor) = repository.finish()
+    override fun delete() = repository.delete()
+    override fun finish() = repository.finish()
 }

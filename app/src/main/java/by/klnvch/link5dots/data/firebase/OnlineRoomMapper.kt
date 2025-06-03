@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 klnvch
+ * Copyright (c) 2023-2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,7 +24,10 @@
 
 package by.klnvch.link5dots.data.firebase
 
-import by.klnvch.link5dots.domain.models.*
+import by.klnvch.link5dots.domain.models.Dot
+import by.klnvch.link5dots.domain.models.NetworkRoom
+import by.klnvch.link5dots.domain.models.NetworkUser
+import by.klnvch.link5dots.domain.models.RoomType
 import javax.inject.Inject
 
 
@@ -58,14 +61,17 @@ class OnlineRoomMapper @Inject constructor() {
     private fun map(user: OnlineRemoteUser?): NetworkUser? {
         if (user != null) {
             val id = user.id ?: throw IllegalArgumentException("user.id is null")
-            val name = user.name ?: throw IllegalArgumentException("user.name is null")
+            val name = user.name ?: ""
             return NetworkUser(id, name)
         }
         return null
     }
 
     fun map(user: NetworkUser?): OnlineRemoteUser? {
-        return if (user != null) OnlineRemoteUser(user.id, user.name)
+        return if (user != null) OnlineRemoteUser(
+            user.id,
+            if (user.name.isNotEmpty()) user.name else null
+        )
         else null
     }
 

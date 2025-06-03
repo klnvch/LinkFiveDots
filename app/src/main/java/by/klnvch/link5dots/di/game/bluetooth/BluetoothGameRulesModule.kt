@@ -41,13 +41,9 @@ import by.klnvch.link5dots.domain.usecases.network.CreateBluetoothRoomUseCase
 import by.klnvch.link5dots.domain.usecases.network.CreateMultiplayerRoomUseCase
 import by.klnvch.link5dots.domain.usecases.network.DeleteBluetoothRoomUseCase
 import by.klnvch.link5dots.domain.usecases.network.DeleteMultiplayerRoomUseCase
-import by.klnvch.link5dots.domain.usecases.network.GetBluetoothRoomStateUseCase
-import by.klnvch.link5dots.domain.usecases.network.GetMultiplayerRoomStateUseCase
 import by.klnvch.link5dots.domain.usecases.network.InitBluetoothUseCase
 import by.klnvch.link5dots.domain.usecases.network.InitMultiplayerUseCase
 import by.klnvch.link5dots.domain.usecases.network.ScanUseCase
-import by.klnvch.link5dots.domain.usecases.network.UpdateBluetoothRoomStateUseCase
-import by.klnvch.link5dots.domain.usecases.network.UpdateMultiplayerRoomStateUseCase
 import dagger.Binds
 import dagger.Module
 
@@ -73,12 +69,6 @@ interface BluetoothGameRulesModule {
 
     @Binds
     fun bindCreateMultiplayerRoomUseCase(impl: CreateBluetoothRoomUseCase): CreateMultiplayerRoomUseCase
-
-    @Binds
-    fun bindGetMultiplayerRoomStateUseCase(impl: GetBluetoothRoomStateUseCase): GetMultiplayerRoomStateUseCase
-
-    @Binds
-    fun bindUpdateMultiplayerRoomStateUseCase(impl: UpdateBluetoothRoomStateUseCase): UpdateMultiplayerRoomStateUseCase
 
     @Binds
     fun bindScanUseCase(impl: BluetoothScanUseCase): ScanUseCase

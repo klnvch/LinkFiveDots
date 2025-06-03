@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 klnvch
+ * Copyright (c) 2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,7 +21,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package by.klnvch.link5dots.data.workers
+
+package by.klnvch.link5dots.data.online
 
 import android.content.Context
 import androidx.work.CoroutineWorker
@@ -29,19 +30,20 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
-import by.klnvch.link5dots.domain.usecases.network.UpdateOnlineRoomStateUseCase
+import by.klnvch.link5dots.domain.repositories.OnlineRoomRepository
 import javax.inject.Inject
 
 class CleanUpOnlineRoomWorker @Inject constructor(
     appContext: Context,
     private val params: WorkerParameters,
-    private val updateOnlineRoomStateUseCase: UpdateOnlineRoomStateUseCase,
+    private val repository: OnlineRoomRepository,
 ) : CoroutineWorker(appContext, params) {
+
     override suspend fun doWork(): Result {
         val key = params.inputData.getString(ROOM_KEY)
         val state = params.inputData.getInt(ROOM_STATE, -1)
         if (key != null && state != -1) {
-            updateOnlineRoomStateUseCase.update(key, state)
+            repository.updateState(key, state)
         }
         return Result.success()
     }
@@ -50,7 +52,7 @@ class CleanUpOnlineRoomWorker @Inject constructor(
         private const val ROOM_KEY = "ROOM_KEY"
         private const val ROOM_STATE = "ROOM_STATE"
         fun Context.launchCleanUpOnlineRoomWorker(key: String, state: Int) {
-            WorkManager.getInstance(this)
+            WorkManager.Companion.getInstance(this)
                 .enqueue(
                     OneTimeWorkRequestBuilder<CleanUpOnlineRoomWorker>()
                         .setInputData(workDataOf(Pair(ROOM_KEY, key), Pair(ROOM_STATE, state)))

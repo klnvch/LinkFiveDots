@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 klnvch
+ * Copyright (c) 2023-2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -30,14 +30,14 @@ import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
 import kotlinx.coroutines.flow.Flow
 
 interface OnlineRoomRepository {
-    suspend fun generateKey(): String
-    suspend fun create(room: NetworkRoom): RemoteRoomDescriptor
+    fun create(room: NetworkRoom): Flow<RemoteRoomDescriptor>
+    fun getKey(): String?
     suspend fun updateState(key: String, state: Int)
-    fun getState(key: String): Flow<Int>
     suspend fun isConnected(): Boolean
     suspend fun connect(descriptor: RemoteRoomDescriptor, user2: NetworkUser)
     fun get(descriptor: RemoteRoomDescriptor): Flow<NetworkRoom>
     suspend fun addDot(key: String, position: Int, dot: Dot)
-    val path: String
     fun getRemoteRooms(): Flow<List<RemoteRoomDescriptor>>
+    fun delete()
+    fun finish()
 }

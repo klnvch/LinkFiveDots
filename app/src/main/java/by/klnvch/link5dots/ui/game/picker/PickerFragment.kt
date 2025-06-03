@@ -42,7 +42,6 @@ import by.klnvch.link5dots.ui.game.picker.adapters.OnPickerItemSelected
 import by.klnvch.link5dots.ui.game.picker.adapters.PickerAdapter
 import by.klnvch.link5dots.ui.game.picker.adapters.PickerItemViewState
 import by.klnvch.link5dots.ui.game.picker.listeners.OnPickerClickListener
-import by.klnvch.link5dots.ui.game.picker.states.TargetCreated
 import dagger.android.support.DaggerFragment
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -100,12 +99,7 @@ open class PickerFragment : DaggerFragment(), OnPickerClickListener, OnPickerIte
 
     override fun onCreateButtonClicked() = viewModel.createRoom()
 
-    override fun onDeleteButtonClicked() {
-        val viewState = binding.viewState
-        if (viewState != null && viewState.targetState is TargetCreated) {
-            viewModel.deleteRoom(viewState.targetState.itemViewState.descriptor)
-        }
-    }
+    override fun onDeleteButtonClicked() = viewModel.deleteRoom()
 
     override fun onStartScanButtonClicked() = viewModel.startScan()
 

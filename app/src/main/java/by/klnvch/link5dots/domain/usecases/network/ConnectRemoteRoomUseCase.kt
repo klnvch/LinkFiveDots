@@ -46,11 +46,8 @@ class ConnectOnlineRoomUseCase @Inject constructor(
         val userId = firebaseManager.getUserId()
         val userName = settings.getUserName().first()
         val user2 = NetworkUser(userId, userName)
-        if (onlineRoomRepository.isConnected()) {
-            onlineRoomRepository.connect(descriptor, user2)
-        } else {
-            throw Exception("Not connected")
-        }
+        onlineRoomRepository.connect(descriptor, user2)
+
     }
 }
 

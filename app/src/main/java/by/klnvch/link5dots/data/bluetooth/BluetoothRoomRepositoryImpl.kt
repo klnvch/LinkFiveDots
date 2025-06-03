@@ -36,6 +36,7 @@ import by.klnvch.link5dots.data.sockets.SocketData
 import by.klnvch.link5dots.data.sockets.SocketRoomRepository
 import by.klnvch.link5dots.domain.models.NetworkUser
 import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
+import by.klnvch.link5dots.domain.models.RoomState
 import by.klnvch.link5dots.domain.repositories.BluetoothRoomRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
@@ -58,7 +59,7 @@ class BluetoothRoomRepositoryImpl @Inject constructor(
     private val bluetoothManager = context.getSystemService(BluetoothManager::class.java)
     override val TAG = BluetoothParams.TAG
 
-    override suspend fun create(): RemoteRoomDescriptor {
+    override fun create(): Flow<RemoteRoomDescriptor> {
         bluetoothValidator.validate()
         val serverSocket = bluetoothManager.createServerSocket()
         startAccepting(serverSocket) {
@@ -66,7 +67,7 @@ class BluetoothRoomRepositoryImpl @Inject constructor(
             bluetoothBondedStore.save(socket.remoteDevice)
             SocketData(socket, socket.inputStream, socket.outputStream)
         }
-        return BluetoothLocalRoomDescriptor()
+        return getState().map { BluetoothLocalRoomDescriptor(it) }
     }
 
     override fun getRemoteRooms(): Flow<List<RemoteRoomDescriptor>> {
@@ -88,7 +89,8 @@ class BluetoothRoomRepositoryImpl @Inject constructor(
             SocketData(socket, socket.inputStream, socket.outputStream)
         }
 
-    private inner class BluetoothLocalRoomDescriptor() : RemoteRoomDescriptor {
+    private inner class BluetoothLocalRoomDescriptor(override val state: Int) :
+        RemoteRoomDescriptor {
         override val title = bluetoothManager.getDeviceName()
         override val description = bluetoothManager.getDeviceAddress()
         override val isFavorite = false
@@ -99,4 +101,5 @@ class BluetoothRemoteRoomDescriptor(val device: BluetoothDevice) : RemoteRoomDes
     override val title get() = device.deviceName ?: ""
     override val description get() = device.address ?: ""
     override val isFavorite get() = device.isBonded
+    override val state = RoomState.CREATED
 }
