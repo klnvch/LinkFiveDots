@@ -37,20 +37,17 @@ import by.klnvch.link5dots.domain.repositories.OnlineRoomRepository
 import by.klnvch.link5dots.domain.repositories.StringRepository
 import by.klnvch.link5dots.utils.FormatUtils.formatDateTime
 import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.database.snapshots
 import com.google.firebase.database.values
 import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.transformWhile
 import kotlinx.coroutines.suspendCancellableCoroutine
@@ -107,75 +104,39 @@ class OnlineRoomRepositoryImpl @Inject constructor(
         .equalTo(RoomState.CREATED.toDouble())
         .snapshots
         .map { it.children }
-        .map {
-            it
-                .map { Pair(it.key, it.getValue(OnlineRoomRemote::class.java)) }
-                .mapNotNull {
-                    val key = it.first
-                    val value = it.second
-                    if (key != null && value != null) mapper.map(key, value) else null
-                }.map { createDescriptor(it) }
-        }
+        .map { it.mapNotNull { dataSnapshotToRoom(it) }.map { createDescriptor(it) } }
 
-    override suspend fun isConnected() = suspendCancellableCoroutine { continuation ->
-        val connectedRef = Firebase.database.getReference(".info/connected")
-        connectedRef.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val connected = snapshot.getValue(Boolean::class.java) == true
-                continuation.resume(connected)
-            }
+    override suspend fun isConnected() =
+        Firebase.database.getReference(".info/connected").values<Boolean>().first() == true
 
-            override fun onCancelled(error: DatabaseError) =
-                continuation.resumeWithException(error.toException())
-        })
-    }
-
-    override suspend fun connect(descriptor: RemoteRoomDescriptor, user2: NetworkUser) =
-        suspendCancellableCoroutine { continuation ->
-            val key = (descriptor as OnlineRoomDescriptor).key
-
-            reference
-                .child(key)
-                .updateChildren(
-                    mapOf(
-                        CHILD_STATE to RoomState.STARTED,
-                        CHILD_USER2 to mapper.map(user2)
-                    )
-                )
-                .addOnSuccessListener { continuation.resume(Unit) }
-                .addOnFailureListener { continuation.resumeWithException(it) }
-        }
-
-    override fun get(descriptor: RemoteRoomDescriptor) = callbackFlow {
+    override suspend fun connect(descriptor: RemoteRoomDescriptor, user2: NetworkUser) {
         val key = (descriptor as OnlineRoomDescriptor).key
-
-        val callback = object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val remoteRoom = snapshot.getValue(OnlineRoomRemote::class.java)
-                    ?: throw IllegalStateException("Online room not found")
-                val room = mapper.map(key, remoteRoom)
-                trySendBlocking(room)
-            }
-
-            override fun onCancelled(error: DatabaseError) = throw error.toException()
-        }
-
-        val reference = reference.child(key)
-
-        reference.addValueEventListener(callback)
-        awaitClose { reference.removeEventListener(callback) }
+        reference
+            .child(key)
+            .updateChildren(
+                mapOf(
+                    CHILD_STATE to RoomState.STARTED,
+                    CHILD_USER2 to mapper.map(user2)
+                )
+            ).await()
+        _key = key
     }
 
-    override suspend fun addDot(key: String, position: Int, dot: Dot) =
-        suspendCancellableCoroutine { continuation ->
-            reference
-                .child(key)
-                .child(CHILD_DOTS)
-                .child(position.toString())
-                .setValue(mapper.map(dot))
-                .addOnSuccessListener { continuation.resume(Unit) }
-                .addOnFailureListener { continuation.resumeWithException(it) }
-        }
+    override fun get(): Flow<NetworkRoom> {
+        return reference.child(_key!!).snapshots
+            .map { it }
+            .mapNotNull { dataSnapshotToRoom(it) }
+    }
+
+    override suspend fun addDot(key: String, position: Int, dot: Dot) {
+        reference
+            .child(key)
+            .child(CHILD_DOTS)
+            .child(position.toString())
+            .setValue(mapper.map(dot))
+            .await()
+    }
+
 
     override fun delete() {
         _key?.let { context.launchCleanUpOnlineRoomWorker(it, RoomState.DELETED) }
@@ -183,6 +144,12 @@ class OnlineRoomRepositoryImpl @Inject constructor(
 
     override fun finish() {
         _key?.let { context.launchCleanUpOnlineRoomWorker(it, RoomState.FINISHED) }
+    }
+
+    private fun dataSnapshotToRoom(snapshot: DataSnapshot): NetworkRoom? {
+        val key = snapshot.key
+        val value = snapshot.getValue(OnlineRoomRemote::class.java)
+        return if (key != null && value != null) mapper.map(key, value) else null
     }
 
     private fun createDescriptor(room: NetworkRoom) = OnlineRoomDescriptor(

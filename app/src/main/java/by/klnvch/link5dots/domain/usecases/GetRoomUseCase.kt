@@ -54,7 +54,7 @@ class GetRoomOnlineUseCase @Inject constructor(
     private val firebaseManager: FirebaseManager,
 ) : GetRoomUseCase {
     override fun get(param: RoomParam) = when (param) {
-        is RoomByDescriptor -> repository.get(param.descriptor)
+        is RoomByDescriptor -> repository.get()
             .map { NetworkRoomExtended(it, firebaseManager.getUserId()) }
 
         else -> throw IllegalArgumentException("Wrong param")
@@ -67,8 +67,7 @@ class GetRoomNsdUseCase @Inject constructor(
     private val settings: Settings,
 ) : GetRoomUseCase {
     override fun get(param: RoomParam) = when (param) {
-        is RoomByDescriptor -> repository
-            .get()
+        is RoomByDescriptor -> repository.get()
             .onEach { if (it !== null) dbRepository.save(it) }
             .combine(settings.getUserId())
             { room, userId -> if (room !== null) NetworkRoomExtended(room, userId) else null }
@@ -83,8 +82,7 @@ class GetRoomBluetoothUseCase @Inject constructor(
     private val settings: Settings,
 ) : GetRoomUseCase {
     override fun get(param: RoomParam) = when (param) {
-        is RoomByDescriptor -> repository
-            .get()
+        is RoomByDescriptor -> repository.get()
             .onEach { if (it !== null) dbRepository.save(it) }
             .combine(settings.getUserId())
             { room, userId -> if (room !== null) NetworkRoomExtended(room, userId) else null }

@@ -35,7 +35,7 @@ interface OnlineRoomRepository {
     suspend fun updateState(key: String, state: Int)
     suspend fun isConnected(): Boolean
     suspend fun connect(descriptor: RemoteRoomDescriptor, user2: NetworkUser)
-    fun get(descriptor: RemoteRoomDescriptor): Flow<NetworkRoom>
+    fun get(): Flow<NetworkRoom>
     suspend fun addDot(key: String, position: Int, dot: Dot)
     fun getRemoteRooms(): Flow<List<RemoteRoomDescriptor>>
     fun delete()
