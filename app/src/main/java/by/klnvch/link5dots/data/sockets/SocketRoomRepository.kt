@@ -129,10 +129,6 @@ abstract class SocketRoomRepository(private val mapper: RoomJsonMapper) {
                 }
             } catch (e: Throwable) {
                 Log.d(TAG, "disconnected: ${e.message}")
-                val room = runBlocking { roomFlow.first() }
-                if (room != null) {
-                    roomFlow.tryEmit(room.copy(state = RoomState.FINISHED))
-                }
                 stateFlow.tryEmit(RoomState.FINISHED)
             } finally {
                 delete()

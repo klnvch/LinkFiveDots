@@ -37,7 +37,7 @@ sealed interface IRoom {
     fun isNotOver() = getWinningLine() == null
     fun isOver() = getWinningLine() != null
     fun isFree(p: Point) = dots.find { it.x == p.x && it.y == p.y } == null
-    val isNew get() = dots.isEmpty() || dots.last().dt == 0
+    val isNew get() = dots.size <= 1 || dots.last().dt == 0
 }
 
 fun List<Dot>.findWinningLine(): WinningLine? {

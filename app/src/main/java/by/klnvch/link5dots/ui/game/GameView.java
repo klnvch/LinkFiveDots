@@ -255,9 +255,9 @@ public class GameView extends View {
                 final float x = mLineLocations[lastDot.getX()];
                 final float y = mLineLocations[lastDot.getY()];
                 mViewState.focus(x, y, mScreenWidth, mScreenHeight);
-                invalidate();
             }
         }
+        invalidate();
     }
 
     public void reset() {

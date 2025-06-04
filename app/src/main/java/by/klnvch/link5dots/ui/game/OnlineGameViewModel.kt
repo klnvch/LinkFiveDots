@@ -164,21 +164,7 @@ class OnlineGameViewModel @Inject constructor(
                             _pickerUiState.value = PickerViewState.creationFailed(it)
                         }
                     }
-                }.collect {
-                    when (it.state) {
-                        RoomState.CREATED -> {
-                            _pickerUiState.value = PickerViewState.created(PickerItemViewState(it))
-                        }
-
-                        RoomState.STARTED -> {
-                            onConnected(it)
-                        }
-
-                        RoomState.DELETED -> {
-                            _pickerUiState.value = PickerViewState.IDLE
-                        }
-                    }
-                }
+                }.collect { onStatedChanged(it.state, it) }
         }
     }
 
@@ -223,12 +209,8 @@ class OnlineGameViewModel @Inject constructor(
         _pickerUiState.value = PickerViewState.CONNECTING
         viewModelScope.launch {
             try {
-                connectRemoteRoomUseCase.connect(descriptor).collect {
-                    when (it) {
-                        RoomState.STARTED -> onConnected(descriptor)
-                        RoomState.FINISHED -> _pickerUiState.value = PickerViewState.DISCONNECTED
-                    }
-                }
+                connectRemoteRoomUseCase.connect(descriptor)
+                    .collect { onStatedChanged(it, descriptor) }
             } catch (e: Throwable) {
                 _navigationEvent.emit(ConnectError(descriptor.title, e))
                 startScan()
@@ -247,6 +229,17 @@ class OnlineGameViewModel @Inject constructor(
             deleteMultiplayerRoomUseCase.finish()
         }
         _pickerUiState.value = PickerViewState.IDLE
+    }
+
+    private suspend fun onStatedChanged(state: Int, descriptor: RemoteRoomDescriptor) {
+        when (state) {
+            RoomState.CREATED ->
+                _pickerUiState.value = PickerViewState.created(PickerItemViewState(descriptor))
+
+            RoomState.DELETED -> _pickerUiState.value = PickerViewState.IDLE
+            RoomState.STARTED -> onConnected(descriptor)
+            RoomState.FINISHED -> _pickerUiState.value = PickerViewState.DISCONNECTED
+        }
     }
 
     private suspend fun onConnected(descriptor: RemoteRoomDescriptor) {

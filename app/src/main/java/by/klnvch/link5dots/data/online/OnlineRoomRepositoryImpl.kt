@@ -41,10 +41,13 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.database.snapshots
 import com.google.firebase.database.values
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
@@ -60,24 +63,23 @@ class OnlineRoomRepositoryImpl @Inject constructor(
 ) : OnlineRoomRepository {
     private val path = if (BuildConfig.DEBUG) "rooms_debug" else "rooms_v2"
     private val reference = Firebase.database.reference.child(path)
-    private var _key: String? = null
+    private var keyFlow = MutableStateFlow<String?>(null)
     private var _room: NetworkRoom? = null
 
     override fun create(room: NetworkRoom) = flow {
         val remoteRoom = mapper.map(room)
         reference.child(room.key).setValue(remoteRoom).await()
-        _key = room.key
+        keyFlow.emit(room.key)
         val descriptor = createDescriptor(room)
 
         emitAll(
             reference.child(room.key).child(CHILD_STATE).values<Int>()
                 .filterNotNull()
-                .onEach {
-                    if (it == RoomState.FINISHED || it == RoomState.DELETED) _key = null
-                }
                 .transformWhile {
                     emit(it)
-                    it == RoomState.CREATED
+                    val isDone = it == RoomState.DELETED || it == RoomState.FINISHED
+                    if (isDone) keyFlow.emit(null)
+                    !isDone
                 }
                 .map {
                     descriptor.copy(state = it)
@@ -85,7 +87,7 @@ class OnlineRoomRepositoryImpl @Inject constructor(
         )
     }
 
-    override fun getKey(): String? = _key
+    override fun getKey(): String? = keyFlow.value
 
     override suspend fun updateState(key: String, state: Int) {
         reference.child(key).child(CHILD_STATE).setValue(state).await()
@@ -111,12 +113,13 @@ class OnlineRoomRepositoryImpl @Inject constructor(
                     CHILD_USER2 to mapper.map(user2)
                 )
             ).await()
-        _key = key
+        keyFlow.emit(key)
         emitAll(reference.child(key).child(CHILD_STATE).values<Int>().filterNotNull())
     }
 
-    override fun get(): Flow<NetworkRoom> {
-        return reference.child(_key!!).snapshots
+    @OptIn(ExperimentalCoroutinesApi::class)
+    override fun get(): Flow<NetworkRoom> = keyFlow.filterNotNull().flatMapLatest { key ->
+        reference.child(key).snapshots
             .map { it }
             .mapNotNull { dataSnapshotToRoom(it) }
             .onEach { this._room = it }
@@ -133,13 +136,12 @@ class OnlineRoomRepositoryImpl @Inject constructor(
             .await()
     }
 
-
     override fun delete() {
-        _key?.let { context.launchCleanUpOnlineRoomWorker(it, RoomState.DELETED) }
+        keyFlow.value?.let { context.launchCleanUpOnlineRoomWorker(it, RoomState.DELETED) }
     }
 
     override fun finish() {
-        _key?.let { context.launchCleanUpOnlineRoomWorker(it, RoomState.FINISHED) }
+        keyFlow.value?.let { context.launchCleanUpOnlineRoomWorker(it, RoomState.FINISHED) }
     }
 
     private fun dataSnapshotToRoom(snapshot: DataSnapshot): NetworkRoom? {
