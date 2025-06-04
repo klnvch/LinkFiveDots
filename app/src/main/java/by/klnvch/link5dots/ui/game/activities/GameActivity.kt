@@ -31,12 +31,14 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import by.klnvch.link5dots.R
 import by.klnvch.link5dots.ui.game.OfflineGameViewModel
+import by.klnvch.link5dots.ui.game.OnNewGameClickListener
+import by.klnvch.link5dots.ui.game.create.NewGameDialog
 import by.klnvch.link5dots.ui.game.end.EndGameDialog
 import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-abstract class GameActivity : DaggerAppCompatActivity() {
+abstract class GameActivity : DaggerAppCompatActivity(), OnNewGameClickListener {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -74,5 +76,9 @@ abstract class GameActivity : DaggerAppCompatActivity() {
         return true
     }
 
-    protected open fun onGameEnd() = EndGameDialog().show(supportFragmentManager, EndGameDialog.TAG)
+    protected open fun onGameEnd() =
+        EndGameDialog().show(supportFragmentManager, EndGameDialog.TAG)
+
+    override fun onNewGameClicked() =
+        NewGameDialog().show(supportFragmentManager, NewGameDialog.TAG)
 }

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 klnvch
+ * Copyright (c) 2023-2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,6 +29,7 @@ import by.klnvch.link5dots.domain.models.GameResult
 import by.klnvch.link5dots.domain.models.GameScore
 import by.klnvch.link5dots.domain.models.NetworkGameScore
 import by.klnvch.link5dots.domain.models.SimpleGameScore
+import by.klnvch.link5dots.domain.usecases.ActionAvailability
 import by.klnvch.link5dots.utils.FormatUtils.formatDuration
 
 data class EndGameViewState(
@@ -37,12 +38,12 @@ data class EndGameViewState(
     val duration: String,
     val isShareable: Boolean,
     val isUndoMoveSupported: Boolean,
-    val isNewGameSupported: Boolean,
+    val newGameAvailability: ActionAvailability,
 ) {
     constructor(
         score: GameScore,
         isUndoMoveSupported: Boolean,
-        isNewGameSupported: Boolean
+        newGameAvailability: ActionAvailability,
     ) : this(
         when (score) {
             is NetworkGameScore -> when (score.status) {
@@ -61,6 +62,6 @@ data class EndGameViewState(
         score.duration.formatDuration(),
         score is BotGameScore,
         isUndoMoveSupported,
-        isNewGameSupported,
+        newGameAvailability,
     )
 }

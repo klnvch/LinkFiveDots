@@ -146,7 +146,7 @@ abstract class MultiplayerGameActivity : GameActivity() {
         }
     }
 
-    private fun disconnectFinal(isFullExit: Boolean) {
+    protected fun disconnectFinal(isFullExit: Boolean) {
         viewModel.cleanUp()
         if (supportFragmentManager.backStackEntryCount > 0 && !isFullExit) {
             supportFragmentManager.popBackStack()

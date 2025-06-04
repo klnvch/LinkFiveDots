@@ -28,6 +28,7 @@ import by.klnvch.link5dots.domain.models.Dot
 import by.klnvch.link5dots.domain.models.DotsStyleType
 import by.klnvch.link5dots.domain.models.IRoom
 import by.klnvch.link5dots.domain.models.WinningLine
+import by.klnvch.link5dots.domain.usecases.ActionAvailability
 
 data class GameViewState(
     val infoViewState: GameInfoViewState,
@@ -85,7 +86,11 @@ data class GameBoardViewState(
 }
 
 data class MenuViewState(
-    val isNewGameSupported: Boolean,
+    val newGameAvailability: ActionAvailability,
     val isUndoSupported: Boolean,
     val isUndoAvailable: Boolean,
-)
+) {
+    companion object {
+        val Default = MenuViewState(ActionAvailability.Gone, false, false)
+    }
+}

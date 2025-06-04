@@ -38,6 +38,7 @@ import by.klnvch.link5dots.domain.models.RoomType
 import by.klnvch.link5dots.domain.models.translate
 import by.klnvch.link5dots.domain.repositories.BluetoothRoomRepository
 import by.klnvch.link5dots.domain.repositories.NsdRoomRepository
+import by.klnvch.link5dots.domain.repositories.OnlineRoomRepository
 import by.klnvch.link5dots.domain.repositories.RoomRepository
 import by.klnvch.link5dots.domain.repositories.Settings
 import by.klnvch.link5dots.domain.repositories.TimeRepository
@@ -45,14 +46,13 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import javax.inject.Inject
 
-interface NewGameUseCase {
+interface NewGameUseCase : ActionAvailabilityForUseCase {
     suspend fun create(seed: Long?)
-    fun isSupported(): Boolean
 }
 
 class NewGameEmptyUseCase @Inject constructor() : NewGameUseCase {
     override suspend fun create(seed: Long?) = throw IllegalStateException()
-    override fun isSupported() = false
+    override val actionAvailability = ActionAvailability.Gone
 }
 
 abstract class NewGameCommonUseCase(
@@ -76,7 +76,7 @@ abstract class NewGameOfflineUseCase(
     private val roomRepository: RoomRepository,
     initialGameGenerator: InitialGameGenerator,
 ) : NewGameCommonUseCase(initialGameGenerator) {
-    override fun isSupported() = true
+    override val actionAvailability = ActionAvailability.Available
     override suspend fun create(seed: Long?) {
         val room = Room(
             roomKeyGenerator.get(),
@@ -126,6 +126,16 @@ class NewGameTwoUseCase @Inject constructor(
     override val type = RoomType.TWO_PLAYERS
 }
 
+class NewGameOnlineUseCase @Inject constructor(
+    private val repository: OnlineRoomRepository,
+) : NewGameUseCase {
+    override suspend fun create(seed: Long?) = throw IllegalStateException()
+    override val actionAvailability
+        get() =
+            if (repository.getRoom()?.isOver() == true) ActionAvailability.Available
+            else ActionAvailability.Disabled
+}
+
 class NewGameBluetoothUseCase @Inject constructor(
     private val settings: Settings,
     private val timeRepository: TimeRepository,
@@ -153,7 +163,8 @@ class NewGameBluetoothUseCase @Inject constructor(
         }
     }
 
-    override fun isSupported() = repository.isServer()
+    override val actionAvailability
+        get() = if (repository.isServer()) ActionAvailability.Available else ActionAvailability.Gone
 }
 
 class NewGameNsdUseCase @Inject constructor(
@@ -183,5 +194,6 @@ class NewGameNsdUseCase @Inject constructor(
         }
     }
 
-    override fun isSupported() = repository.isServer()
+    override val actionAvailability
+        get() = if (repository.isServer()) ActionAvailability.Available else ActionAvailability.Gone
 }

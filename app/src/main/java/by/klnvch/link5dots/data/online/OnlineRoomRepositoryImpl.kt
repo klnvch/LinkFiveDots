@@ -64,6 +64,7 @@ class OnlineRoomRepositoryImpl @Inject constructor(
     private val path = if (BuildConfig.DEBUG) "rooms_debug" else "rooms_v2"
     private val reference = Firebase.database.reference.child(path)
     private var _key: String? = null
+    private var _room: NetworkRoom? = null
 
     override fun create(room: NetworkRoom) = flow {
         val remoteRoom = mapper.map(room)
@@ -126,7 +127,10 @@ class OnlineRoomRepositoryImpl @Inject constructor(
         return reference.child(_key!!).snapshots
             .map { it }
             .mapNotNull { dataSnapshotToRoom(it) }
+            .onEach { this._room = it }
     }
+
+    override fun getRoom() = this._room
 
     override suspend fun addDot(key: String, position: Int, dot: Dot) {
         reference

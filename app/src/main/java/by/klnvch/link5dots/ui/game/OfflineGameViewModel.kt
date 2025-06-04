@@ -83,7 +83,7 @@ open class OfflineGameViewModel @Inject constructor(
     val scoreUi = roomFlow.map {
         if (it.isOver()) {
             val score = prepareScoreUseCase.get(it)
-            EndGameViewState(score, undoMoveUseCase.isSupported, newGameUseCase.isSupported())
+            EndGameViewState(score, undoMoveUseCase.isSupported, newGameUseCase.actionAvailability)
         } else {
             null
         }
@@ -92,12 +92,12 @@ open class OfflineGameViewModel @Inject constructor(
     val menuUi = roomFlow
         .map {
             MenuViewState(
-                newGameUseCase.isSupported(),
+                newGameUseCase.actionAvailability,
                 undoMoveUseCase.isSupported,
                 undoMoveUseCase.isAvailable(it)
             )
         }
-        .stateIn(viewModelScope, SharingStarted.Eagerly, MenuViewState(false, false, false))
+        .stateIn(viewModelScope, SharingStarted.Eagerly, MenuViewState.Default)
 
     private val _focusEvent = MutableLiveData<Unit>()
     val focusEvent: LiveData<Unit> = _focusEvent

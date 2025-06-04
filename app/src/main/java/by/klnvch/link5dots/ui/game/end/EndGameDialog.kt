@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 klnvch
+ * Copyright (c) 2023-2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,6 +24,7 @@
 package by.klnvch.link5dots.ui.game.end
 
 import android.app.Dialog
+import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
@@ -31,8 +32,9 @@ import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.ViewModelProvider
 import by.klnvch.link5dots.R
 import by.klnvch.link5dots.databinding.DialogEndGameBinding
+import by.klnvch.link5dots.domain.usecases.ActionAvailability
 import by.klnvch.link5dots.ui.game.OfflineGameViewModel
-import by.klnvch.link5dots.ui.game.create.NewGameDialog
+import by.klnvch.link5dots.ui.game.OnNewGameClickListener
 import by.klnvch.link5dots.ui.scores.ScoresActivity
 import dagger.android.support.DaggerDialogFragment
 import javax.inject.Inject
@@ -44,6 +46,8 @@ class EndGameDialog : DaggerDialogFragment(), DialogInterface.OnClickListener {
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private lateinit var viewModel: OfflineGameViewModel
+
+    internal lateinit var onNewGameClickListener: OnNewGameClickListener
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         binding = DialogEndGameBinding.inflate(requireActivity().layoutInflater)
@@ -60,7 +64,7 @@ class EndGameDialog : DaggerDialogFragment(), DialogInterface.OnClickListener {
             .setView(binding.root)
             .setTitle(if (viewState?.title != null) getString(viewState.title) else null)
 
-        if (viewState?.isNewGameSupported == true) {
+        if (viewState?.newGameAvailability == ActionAvailability.Available) {
             builder.setPositiveButton(R.string.new_game, this)
         } else {
             builder.setPositiveButton(R.string.okay, null)
@@ -74,16 +78,21 @@ class EndGameDialog : DaggerDialogFragment(), DialogInterface.OnClickListener {
         return builder.show()
     }
 
-    override fun onClick(dialog: DialogInterface, which: Int) {
-        when (which) {
-            DialogInterface.BUTTON_POSITIVE -> moveToGameCreation()
-            DialogInterface.BUTTON_NEGATIVE -> viewModel.undoLastMove()
-            DialogInterface.BUTTON_NEUTRAL -> moveToScores()
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        try {
+            onNewGameClickListener = context as OnNewGameClickListener
+        } catch (_: ClassCastException) {
+            throw ClassCastException(("$context must implement NoticeDialogListener"))
         }
     }
 
-    private fun moveToGameCreation() {
-        NewGameDialog().show(parentFragmentManager, NewGameDialog.TAG)
+    override fun onClick(dialog: DialogInterface, which: Int) {
+        when (which) {
+            DialogInterface.BUTTON_POSITIVE -> onNewGameClickListener.onNewGameClicked()
+            DialogInterface.BUTTON_NEGATIVE -> viewModel.undoLastMove()
+            DialogInterface.BUTTON_NEUTRAL -> moveToScores()
+        }
     }
 
     private fun moveToScores() {

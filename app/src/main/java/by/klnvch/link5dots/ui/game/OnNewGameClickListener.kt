@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023-2025 klnvch
+ * Copyright (c) 2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,24 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package by.klnvch.link5dots.domain.repositories
 
-import by.klnvch.link5dots.domain.models.Dot
-import by.klnvch.link5dots.domain.models.NetworkRoom
-import by.klnvch.link5dots.domain.models.NetworkUser
-import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
-import kotlinx.coroutines.flow.Flow
+package by.klnvch.link5dots.ui.game
 
-interface OnlineRoomRepository {
-    fun create(room: NetworkRoom): Flow<RemoteRoomDescriptor>
-    fun getKey(): String?
-    suspend fun updateState(key: String, state: Int)
-    suspend fun isConnected(): Boolean
-    suspend fun connect(descriptor: RemoteRoomDescriptor, user2: NetworkUser)
-    fun get(): Flow<NetworkRoom>
-    fun getRoom(): NetworkRoom?
-    suspend fun addDot(key: String, position: Int, dot: Dot)
-    fun getRemoteRooms(): Flow<List<RemoteRoomDescriptor>>
-    fun delete()
-    fun finish()
+interface OnNewGameClickListener {
+    fun onNewGameClicked()
 }
