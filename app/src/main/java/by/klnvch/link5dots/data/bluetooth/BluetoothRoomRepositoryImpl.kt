@@ -81,13 +81,15 @@ class BluetoothRoomRepositoryImpl @Inject constructor(
             .map { it.map { BluetoothRemoteRoomDescriptor(it) } }
     }
 
-    override suspend fun connect(descriptor: RemoteRoomDescriptor, user2: NetworkUser) =
+    override fun connect(descriptor: RemoteRoomDescriptor, user2: NetworkUser) = flow {
         connect(user2) {
             val device = (descriptor as BluetoothRemoteRoomDescriptor).device
             val socket = bluetoothConnectService.connect(device)
             bluetoothBondedStore.save(device)
             SocketData(socket, socket.inputStream, socket.outputStream)
         }
+        emitAll(getState())
+    }
 
     private inner class BluetoothLocalRoomDescriptor(override val state: Int) :
         RemoteRoomDescriptor {

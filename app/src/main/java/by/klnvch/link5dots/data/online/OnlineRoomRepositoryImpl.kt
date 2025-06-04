@@ -50,11 +50,8 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.transformWhile
-import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
-import kotlin.coroutines.resume
-import kotlin.coroutines.resumeWithException
 
 class OnlineRoomRepositoryImpl @Inject constructor(
     private val context: Context,
@@ -90,15 +87,9 @@ class OnlineRoomRepositoryImpl @Inject constructor(
 
     override fun getKey(): String? = _key
 
-    override suspend fun updateState(key: String, state: Int) =
-        suspendCancellableCoroutine { continuation ->
-            reference
-                .child(key)
-                .child(CHILD_STATE)
-                .setValue(state)
-                .addOnSuccessListener { continuation.resume(Unit) }
-                .addOnFailureListener { continuation.resumeWithException(it) }
-        }
+    override suspend fun updateState(key: String, state: Int) {
+        reference.child(key).child(CHILD_STATE).setValue(state).await()
+    }
 
     override fun getRemoteRooms(): Flow<List<RemoteRoomDescriptor>> = reference
         .orderByChild(CHILD_STATE)
@@ -110,7 +101,7 @@ class OnlineRoomRepositoryImpl @Inject constructor(
     override suspend fun isConnected() =
         Firebase.database.getReference(".info/connected").values<Boolean>().first() == true
 
-    override suspend fun connect(descriptor: RemoteRoomDescriptor, user2: NetworkUser) {
+    override fun connect(descriptor: RemoteRoomDescriptor, user2: NetworkUser) = flow {
         val key = (descriptor as OnlineRoomDescriptor).key
         reference
             .child(key)
@@ -121,6 +112,7 @@ class OnlineRoomRepositoryImpl @Inject constructor(
                 )
             ).await()
         _key = key
+        emitAll(reference.child(key).child(CHILD_STATE).values<Int>().filterNotNull())
     }
 
     override fun get(): Flow<NetworkRoom> {

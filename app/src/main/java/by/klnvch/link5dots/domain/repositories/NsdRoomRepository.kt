@@ -32,7 +32,7 @@ interface NsdRoomRepository {
     fun create(): Flow<RemoteRoomDescriptor>
     fun delete()
     fun get(): Flow<NetworkRoom?>
-    suspend fun connect(descriptor: RemoteRoomDescriptor, user2: NetworkUser)
+    fun connect(descriptor: RemoteRoomDescriptor, user2: NetworkUser): Flow<Int>
     suspend fun update(room: NetworkRoom)
     fun getRemoteRooms(): Flow<List<RemoteRoomDescriptor>>
     fun finish()

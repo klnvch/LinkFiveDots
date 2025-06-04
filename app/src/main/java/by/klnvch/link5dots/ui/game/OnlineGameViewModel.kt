@@ -142,9 +142,6 @@ class OnlineGameViewModel @Inject constructor(
                 if (it is NetworkRoomExtended) {
                     disconnectViewState =
                         DisconnectViewState(getUserNameUseCase.get(it.opponent) ?: "")
-                    if (it.state == RoomState.FINISHED) {
-                        _pickerUiState.value = PickerViewState.DISCONNECTED
-                    }
                 }
             }
         }
@@ -226,8 +223,12 @@ class OnlineGameViewModel @Inject constructor(
         _pickerUiState.value = PickerViewState.CONNECTING
         viewModelScope.launch {
             try {
-                connectRemoteRoomUseCase.connect(descriptor)
-                onConnected(descriptor)
+                connectRemoteRoomUseCase.connect(descriptor).collect {
+                    when (it) {
+                        RoomState.STARTED -> onConnected(descriptor)
+                        RoomState.FINISHED -> _pickerUiState.value = PickerViewState.DISCONNECTED
+                    }
+                }
             } catch (e: Throwable) {
                 _navigationEvent.emit(ConnectError(descriptor.title, e))
                 startScan()

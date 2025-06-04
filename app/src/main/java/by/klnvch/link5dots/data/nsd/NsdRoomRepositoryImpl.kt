@@ -78,12 +78,14 @@ class NsdRoomRepositoryImpl @Inject constructor(
     }
 
 
-    override suspend fun connect(descriptor: RemoteRoomDescriptor, user2: NetworkUser) =
+    override fun connect(descriptor: RemoteRoomDescriptor, user2: NetworkUser) = flow {
         connect(user2) {
             val info = (descriptor as NsdRoomDescriptor).serviceInfo
             val socket = Socket(info.address, info.port)
             SocketData(socket, socket.inputStream, socket.outputStream)
         }
+        emitAll(getState())
+    }
 }
 
 data class NsdRoomDescriptor(

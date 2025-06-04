@@ -33,31 +33,29 @@ sealed interface IRoom {
     val type: Int
     fun getDuration() = dots.lastOrNull()?.dt ?: 0
     fun getEndTime() = timestamp + getDuration()
-
-    fun getWinningLine(): WinningLine? {
-        if (dots.size < 9) return null
-
-        val lastDot = dots.last()
-        val points = dots.filter { it.type == lastDot.type }.map { Point(it.x, it.y) }
-
-        // y = x + (py - px)
-        // y = -x + (py + px)
-        // y = py
-        // x = px
-        val line = points.findMaxLine { it.y == it.x + (lastDot.y - lastDot.x) }
-            ?: points.findMaxLine { it.y == -it.x + (lastDot.y + lastDot.x) }
-            ?: points.findMaxLine { it.y == lastDot.y }
-            ?: points.map { it.invert() }.findMaxLine { it.y == lastDot.x }?.map { it.invert() }
-
-        return if (line != null) WinningLine(line, lastDot.type) else null
-    }
-
+    fun getWinningLine() = dots.findWinningLine()
     fun isNotOver() = getWinningLine() == null
     fun isOver() = getWinningLine() != null
-
     fun isFree(p: Point) = dots.find { it.x == p.x && it.y == p.y } == null
-
     val isNew get() = dots.isEmpty() || dots.last().dt == 0
+}
+
+fun List<Dot>.findWinningLine(): WinningLine? {
+    if (size < 9) return null
+
+    val lastDot = last()
+    val points = filter { it.type == lastDot.type }.map { Point(it.x, it.y) }
+
+    // y = x + (py - px)
+    // y = -x + (py + px)
+    // y = py
+    // x = px
+    val line = points.findMaxLine { it.y == it.x + (lastDot.y - lastDot.x) }
+        ?: points.findMaxLine { it.y == -it.x + (lastDot.y + lastDot.x) }
+        ?: points.findMaxLine { it.y == lastDot.y }
+        ?: points.map { it.invert() }.findMaxLine { it.y == lastDot.x }?.map { it.invert() }
+
+    return if (line != null) WinningLine(line, lastDot.type) else null
 }
 
 data class Room(

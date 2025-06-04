@@ -30,6 +30,8 @@ import by.klnvch.link5dots.domain.models.IRoom
 import by.klnvch.link5dots.domain.models.NetworkRoomExtended
 import by.klnvch.link5dots.domain.models.Point
 import by.klnvch.link5dots.domain.models.Room
+import by.klnvch.link5dots.domain.models.RoomState
+import by.klnvch.link5dots.domain.models.findWinningLine
 import by.klnvch.link5dots.domain.repositories.BluetoothRoomRepository
 import by.klnvch.link5dots.domain.repositories.NsdRoomRepository
 import by.klnvch.link5dots.domain.repositories.OnlineRoomRepository
@@ -86,8 +88,14 @@ class AddDotOnlineUseCase @Inject constructor(
     private val repository: OnlineRoomRepository,
 ) : AddDotMultiplayerUseCase(timeRepository, board) {
 
-    override suspend fun addMultiplayerDot(room: IRoom, dot: Dot) =
-        repository.addDot(room.key, room.dots.size, dot)
+    override suspend fun addMultiplayerDot(room: IRoom, dot: Dot) {
+        val key = room.key
+        val dots = room.dots
+        repository.addDot(key, dots.size, dot)
+        if ((dots + dot).findWinningLine() != null) {
+            repository.updateState(key, RoomState.FINISHED)
+        }
+    }
 }
 
 class AddDotNsdUseCase @Inject constructor(
