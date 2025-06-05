@@ -93,7 +93,7 @@ class AddDotOnlineUseCase @Inject constructor(
         val dots = room.dots
         repository.addDot(key, dots.size, dot)
         if ((dots + dot).findWinningLine() != null) {
-            repository.updateState(key, RoomState.FINISHED)
+            repository.updateState(RoomState.FINISHED)
         }
     }
 }

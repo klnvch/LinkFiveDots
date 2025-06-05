@@ -47,7 +47,6 @@ import com.google.firebase.database.values
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
@@ -60,34 +59,58 @@ import javax.inject.Inject
 
 class OnlineRoomRepositoryImpl @Inject constructor(
     private val context: Context,
+    private val onlineLocalStore: OnlineLocalStore,
     private val mapper: OnlineRoomMapper,
     private val stringRepository: StringRepository,
 ) : OnlineRoomRepository {
     private val path = if (BuildConfig.DEBUG) "rooms_debug" else "rooms_v2"
     private val reference = Firebase.database.reference.child(path)
-    private var keyFlow = MutableStateFlow<String?>(null)
     private var _room: NetworkRoom? = null
 
     override suspend fun create(room: NetworkRoom) {
         val remoteRoom = mapper.map(room)
         reference.child(room.key).setValue(remoteRoom).await()
-        keyFlow.emit(room.key)
+        onlineLocalStore.saveKey(room.key)
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    override fun get() = onlineLocalStore.getKey().filterNotNull().flatMapLatest { key ->
+        reference.child(key).snapshots
+            .map { it }
+            .mapNotNull { dataSnapshotToRoom(it) }
+            .onEach { this._room = it }
     }
 
     override val state = get().mapNotNull {
         when (it.state) {
-            RoomState.CREATED -> NetworkRoomCreated(createDescriptor(it))
-            RoomState.DELETED -> NetworkRoomDeleted
-            RoomState.STARTED -> NetworkRoomStarted(createDescriptor(it))
-            RoomState.FINISHED -> NetworkRoomFinished
+            RoomState.CREATED -> {
+                NetworkRoomCreated(createDescriptor(it))
+            }
+
+            RoomState.DELETED -> {
+                onlineLocalStore.saveKey(null)
+                NetworkRoomDeleted
+            }
+
+            RoomState.STARTED -> {
+                NetworkRoomStarted(createDescriptor(it))
+            }
+
+            RoomState.FINISHED -> {
+                onlineLocalStore.saveKey(null)
+                NetworkRoomFinished
+            }
+
             else -> null
         }
     }.distinctUntilChanged()
 
-    override fun getKey(): String? = keyFlow.value
+    override suspend fun getKey(): String? = onlineLocalStore.getKey().first()
 
-    override suspend fun updateState(key: String, state: Int) {
-        reference.child(key).child(CHILD_STATE).setValue(state).await()
+    override suspend fun updateState(state: Int) {
+        onlineLocalStore.getKey().first()?.let {
+            reference.child(it).child(CHILD_STATE).setValue(state).await()
+        }
     }
 
     override fun getRemoteRooms(): Flow<List<RemoteRoomDescriptor>> = reference
@@ -110,15 +133,7 @@ class OnlineRoomRepositoryImpl @Inject constructor(
                     CHILD_USER2 to mapper.map(user2)
                 )
             ).await()
-        keyFlow.emit(key)
-    }
-
-    @OptIn(ExperimentalCoroutinesApi::class)
-    override fun get(): Flow<NetworkRoom> = keyFlow.filterNotNull().flatMapLatest { key ->
-        reference.child(key).snapshots
-            .map { it }
-            .mapNotNull { dataSnapshotToRoom(it) }
-            .onEach { this._room = it }
+        onlineLocalStore.saveKey(key)
     }
 
     override fun getRoom() = this._room
@@ -132,13 +147,9 @@ class OnlineRoomRepositoryImpl @Inject constructor(
             .await()
     }
 
-    override fun delete() {
-        keyFlow.value?.let { context.launchCleanUpOnlineRoomWorker(it, RoomState.DELETED) }
-    }
+    override fun delete() = context.launchCleanUpOnlineRoomWorker(RoomState.DELETED)
 
-    override fun finish() {
-        keyFlow.value?.let { context.launchCleanUpOnlineRoomWorker(it, RoomState.FINISHED) }
-    }
+    override fun finish() = context.launchCleanUpOnlineRoomWorker(RoomState.FINISHED)
 
     private fun dataSnapshotToRoom(snapshot: DataSnapshot): NetworkRoom? {
         val key = snapshot.key

@@ -40,22 +40,20 @@ class CleanUpOnlineRoomWorker @Inject constructor(
 ) : CoroutineWorker(appContext, params) {
 
     override suspend fun doWork(): Result {
-        val key = params.inputData.getString(ROOM_KEY)
         val state = params.inputData.getInt(ROOM_STATE, -1)
-        if (key != null && state != -1) {
-            repository.updateState(key, state)
+        if (state != -1) {
+            repository.updateState(state)
         }
         return Result.success()
     }
 
     companion object {
-        private const val ROOM_KEY = "ROOM_KEY"
         private const val ROOM_STATE = "ROOM_STATE"
-        fun Context.launchCleanUpOnlineRoomWorker(key: String, state: Int) {
+        fun Context.launchCleanUpOnlineRoomWorker(state: Int) {
             WorkManager.Companion.getInstance(this)
                 .enqueue(
                     OneTimeWorkRequestBuilder<CleanUpOnlineRoomWorker>()
-                        .setInputData(workDataOf(Pair(ROOM_KEY, key), Pair(ROOM_STATE, state)))
+                        .setInputData(workDataOf(Pair(ROOM_STATE, state)))
                         .build()
                 )
         }

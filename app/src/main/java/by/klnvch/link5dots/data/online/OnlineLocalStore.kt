@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023-2025 klnvch
+ * Copyright (c) 2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,26 +21,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package by.klnvch.link5dots.domain.repositories
 
-import by.klnvch.link5dots.domain.models.Dot
-import by.klnvch.link5dots.domain.models.NetworkRoom
-import by.klnvch.link5dots.domain.models.NetworkRoomState
-import by.klnvch.link5dots.domain.models.NetworkUser
-import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
-import kotlinx.coroutines.flow.Flow
+package by.klnvch.link5dots.data.online
 
-interface OnlineRoomRepository {
-    suspend fun create(room: NetworkRoom)
-    val state: Flow<NetworkRoomState>
-    suspend fun getKey(): String?
-    suspend fun updateState(state: Int)
-    suspend fun isConnected(): Boolean
-    suspend fun connect(descriptor: RemoteRoomDescriptor, user2: NetworkUser)
-    fun get(): Flow<NetworkRoom>
-    fun getRoom(): NetworkRoom?
-    suspend fun addDot(key: String, position: Int, dot: Dot)
-    fun getRemoteRooms(): Flow<List<RemoteRoomDescriptor>>
-    fun delete()
-    fun finish()
+import android.content.Context
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.datastore.preferences.preferencesDataStore
+import kotlinx.coroutines.flow.map
+import javax.inject.Inject
+
+class OnlineLocalStore @Inject constructor(private val context: Context) {
+    private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "online")
+    private val keyKey = stringPreferencesKey("key")
+
+    suspend fun saveKey(key: String?) = context.dataStore.edit { it[keyKey] = key ?: "" }
+    fun getKey() = context.dataStore.data.map { it[keyKey]?.let { if (it.isEmpty()) null else it } }
 }
