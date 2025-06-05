@@ -27,8 +27,13 @@ package by.klnvch.link5dots.data.sockets
 import android.util.Log
 import by.klnvch.link5dots.data.RoomJsonMapper
 import by.klnvch.link5dots.domain.models.NetworkRoom
+import by.klnvch.link5dots.domain.models.NetworkRoomCreated
+import by.klnvch.link5dots.domain.models.NetworkRoomDeleted
+import by.klnvch.link5dots.domain.models.NetworkRoomFinished
+import by.klnvch.link5dots.domain.models.NetworkRoomStarted
+import by.klnvch.link5dots.domain.models.NetworkRoomState
 import by.klnvch.link5dots.domain.models.NetworkUser
-import by.klnvch.link5dots.domain.models.RoomState
+import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
@@ -43,17 +48,21 @@ import kotlin.concurrent.thread
 abstract class SocketRoomRepository(private val mapper: RoomJsonMapper) {
     protected abstract val TAG: String
     private val roomFlow = MutableSharedFlow<NetworkRoom?>(1)
-    private val stateFlow = MutableSharedFlow<Int>(1)
+    private val stateFlow = MutableSharedFlow<NetworkRoomState>(1)
     private var _serverSocket: Closeable? = null
     private var _socket: Closeable? = null
     private var _outputStream: DataOutputStream? = null
 
-    protected fun startAccepting(serverSocket: Closeable, accept: suspend () -> SocketData) {
+    protected fun startAccepting(
+        descriptor: RemoteRoomDescriptor,
+        serverSocket: Closeable,
+        accept: suspend () -> SocketData,
+    ) {
         thread {
             _serverSocket = serverSocket
             try {
                 // reset current game to generate a new one
-                stateFlow.tryEmit(RoomState.CREATED)
+                stateFlow.tryEmit(NetworkRoomCreated(descriptor))
                 roomFlow.tryEmit(null)
 
                 Log.d(TAG, "accepting: waiting")
@@ -63,7 +72,7 @@ abstract class SocketRoomRepository(private val mapper: RoomJsonMapper) {
                 val outputStream = DataOutputStream(socketData.outputStream)
 
                 Log.d(TAG, "accepting: connected")
-                stateFlow.tryEmit(RoomState.STARTED)
+                stateFlow.tryEmit(NetworkRoomStarted(descriptor))
 
                 // get a new generated game and send it
                 val newRoom = runBlocking { roomFlow.filterNotNull().first() }
@@ -79,12 +88,16 @@ abstract class SocketRoomRepository(private val mapper: RoomJsonMapper) {
                 startCommunication(socket, outputStream, inputStream)
             } catch (e: Throwable) {
                 Log.d(TAG, "accepting: ${e.message}")
-                stateFlow.tryEmit(RoomState.DELETED)
+                stateFlow.tryEmit(NetworkRoomDeleted)
             }
         }
     }
 
-    protected suspend fun connect(user2: NetworkUser, connect: suspend () -> SocketData): Unit =
+    protected suspend fun connect(
+        descriptor: RemoteRoomDescriptor,
+        user2: NetworkUser,
+        connect: suspend () -> SocketData,
+    ): Unit =
         try {
             Log.d(TAG, "connect: started")
             val socketData = connect()
@@ -93,7 +106,7 @@ abstract class SocketRoomRepository(private val mapper: RoomJsonMapper) {
             val outputStream = DataOutputStream(socketData.outputStream)
 
             Log.d(TAG, "connect: connected")
-            stateFlow.tryEmit(RoomState.STARTED)
+            stateFlow.tryEmit(NetworkRoomStarted(descriptor))
 
             // receive new room
             Log.d(TAG, "connect: waiting for new game")
@@ -129,7 +142,7 @@ abstract class SocketRoomRepository(private val mapper: RoomJsonMapper) {
                 }
             } catch (e: Throwable) {
                 Log.d(TAG, "disconnected: ${e.message}")
-                stateFlow.tryEmit(RoomState.FINISHED)
+                stateFlow.tryEmit(NetworkRoomFinished)
             } finally {
                 delete()
                 finish()
@@ -157,7 +170,7 @@ abstract class SocketRoomRepository(private val mapper: RoomJsonMapper) {
         _outputStream = null
     }
 
-    fun getState() = stateFlow
+    val state = stateFlow
 
     fun get() = roomFlow
 

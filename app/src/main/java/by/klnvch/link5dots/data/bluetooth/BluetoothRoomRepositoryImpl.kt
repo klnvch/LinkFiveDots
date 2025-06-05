@@ -36,7 +36,6 @@ import by.klnvch.link5dots.data.sockets.SocketData
 import by.klnvch.link5dots.data.sockets.SocketRoomRepository
 import by.klnvch.link5dots.domain.models.NetworkUser
 import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
-import by.klnvch.link5dots.domain.models.RoomState
 import by.klnvch.link5dots.domain.repositories.BluetoothRoomRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
@@ -59,15 +58,15 @@ class BluetoothRoomRepositoryImpl @Inject constructor(
     private val bluetoothManager = context.getSystemService(BluetoothManager::class.java)
     override val TAG = BluetoothParams.TAG
 
-    override fun create(): Flow<RemoteRoomDescriptor> {
+    override suspend fun create() {
         bluetoothValidator.validate()
+        val descriptor = BluetoothLocalRoomDescriptor()
         val serverSocket = bluetoothManager.createServerSocket()
-        startAccepting(serverSocket) {
+        startAccepting(descriptor, serverSocket) {
             val socket = serverSocket.accept()
             bluetoothBondedStore.save(socket.remoteDevice)
             SocketData(socket, socket.inputStream, socket.outputStream)
         }
-        return getState().map { BluetoothLocalRoomDescriptor(it) }
     }
 
     override fun getRemoteRooms(): Flow<List<RemoteRoomDescriptor>> {
@@ -81,17 +80,16 @@ class BluetoothRoomRepositoryImpl @Inject constructor(
             .map { it.map { BluetoothRemoteRoomDescriptor(it) } }
     }
 
-    override fun connect(descriptor: RemoteRoomDescriptor, user2: NetworkUser) = flow {
-        connect(user2) {
+    override suspend fun connect(descriptor: RemoteRoomDescriptor, user2: NetworkUser) {
+        connect(descriptor, user2) {
             val device = (descriptor as BluetoothRemoteRoomDescriptor).device
             val socket = bluetoothConnectService.connect(device)
             bluetoothBondedStore.save(device)
             SocketData(socket, socket.inputStream, socket.outputStream)
         }
-        emitAll(getState())
     }
 
-    private inner class BluetoothLocalRoomDescriptor(override val state: Int) :
+    private inner class BluetoothLocalRoomDescriptor() :
         RemoteRoomDescriptor {
         override val title = bluetoothManager.getDeviceName()
         override val description = bluetoothManager.getDeviceAddress()
@@ -103,5 +101,4 @@ class BluetoothRemoteRoomDescriptor(val device: BluetoothDevice) : RemoteRoomDes
     override val title get() = device.deviceName ?: ""
     override val description get() = device.address ?: ""
     override val isFavorite get() = device.isBonded
-    override val state = RoomState.CREATED
 }

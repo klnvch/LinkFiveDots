@@ -26,9 +26,13 @@ package by.klnvch.link5dots.ui.game
 import androidx.lifecycle.viewModelScope
 import by.klnvch.link5dots.R
 import by.klnvch.link5dots.domain.models.FeatureDisabled
+import by.klnvch.link5dots.domain.models.NetworkRoomCreated
+import by.klnvch.link5dots.domain.models.NetworkRoomDeleted
 import by.klnvch.link5dots.domain.models.NetworkRoomExtended
+import by.klnvch.link5dots.domain.models.NetworkRoomFinished
+import by.klnvch.link5dots.domain.models.NetworkRoomStarted
+import by.klnvch.link5dots.domain.models.NetworkRoomState
 import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
-import by.klnvch.link5dots.domain.models.RoomState
 import by.klnvch.link5dots.domain.repositories.Analytics
 import by.klnvch.link5dots.domain.repositories.Settings
 import by.klnvch.link5dots.domain.usecases.AddDotUseCase
@@ -43,6 +47,7 @@ import by.klnvch.link5dots.domain.usecases.network.ConnectRemoteRoomUseCase
 import by.klnvch.link5dots.domain.usecases.network.CreateMultiplayerRoomUseCase
 import by.klnvch.link5dots.domain.usecases.network.DeleteMultiplayerRoomUseCase
 import by.klnvch.link5dots.domain.usecases.network.GetNetworkGameActionUseCase
+import by.klnvch.link5dots.domain.usecases.network.GetNetworkRoomStateUseCase
 import by.klnvch.link5dots.domain.usecases.network.InitMultiplayerUseCase
 import by.klnvch.link5dots.domain.usecases.network.ScanUseCase
 import by.klnvch.link5dots.ui.game.RoomToTitleMapper.actionToTitle
@@ -76,6 +81,7 @@ import javax.inject.Inject
 class OnlineGameViewModel @Inject constructor(
     private val initMultiplayerUseCase: InitMultiplayerUseCase,
     private val createMultiplayerRoomUseCase: CreateMultiplayerRoomUseCase,
+    private val getNetworkRoomStateUseCase: GetNetworkRoomStateUseCase,
     private val deleteMultiplayerRoomUseCase: DeleteMultiplayerRoomUseCase,
     private val scanUseCase: ScanUseCase,
     private val connectRemoteRoomUseCase: ConnectRemoteRoomUseCase,
@@ -145,6 +151,11 @@ class OnlineGameViewModel @Inject constructor(
                 }
             }
         }
+        viewModelScope.launch { getNetworkRoomStateUseCase.get().collect { onStatedChanged(it) } }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
     }
 
     fun isConnected() = pickerUiState.value.connectState is ConnectConnected
@@ -152,19 +163,20 @@ class OnlineGameViewModel @Inject constructor(
     fun createRoom() {
         viewModelScope.launch {
             _pickerUiState.value = PickerViewState.TARGET_CREATING
-            createMultiplayerRoomUseCase.create()
-                .onCompletion {
-                    when (it) {
-                        is FeatureDisabled -> {
-                            _pickerUiState.value = PickerViewState.IDLE
-                            _navigationEvent.emit(InitError(it))
-                        }
-
-                        is Throwable -> {
-                            _pickerUiState.value = PickerViewState.creationFailed(it)
-                        }
+            try {
+                createMultiplayerRoomUseCase.create()
+            } catch (e: Throwable) {
+                when (e) {
+                    is FeatureDisabled -> {
+                        _pickerUiState.value = PickerViewState.IDLE
+                        _navigationEvent.emit(InitError(e))
                     }
-                }.collect { onStatedChanged(it.state, it) }
+
+                    else -> {
+                        _pickerUiState.value = PickerViewState.creationFailed(e)
+                    }
+                }
+            }
         }
     }
 
@@ -210,7 +222,6 @@ class OnlineGameViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 connectRemoteRoomUseCase.connect(descriptor)
-                    .collect { onStatedChanged(it, descriptor) }
             } catch (e: Throwable) {
                 _navigationEvent.emit(ConnectError(descriptor.title, e))
                 startScan()
@@ -231,14 +242,14 @@ class OnlineGameViewModel @Inject constructor(
         _pickerUiState.value = PickerViewState.IDLE
     }
 
-    private suspend fun onStatedChanged(state: Int, descriptor: RemoteRoomDescriptor) {
+    private suspend fun onStatedChanged(state: NetworkRoomState) {
         when (state) {
-            RoomState.CREATED ->
-                _pickerUiState.value = PickerViewState.created(PickerItemViewState(descriptor))
+            is NetworkRoomCreated -> _pickerUiState.value =
+                PickerViewState.created(PickerItemViewState(state.descriptor))
 
-            RoomState.DELETED -> _pickerUiState.value = PickerViewState.IDLE
-            RoomState.STARTED -> onConnected(descriptor)
-            RoomState.FINISHED -> _pickerUiState.value = PickerViewState.DISCONNECTED
+            is NetworkRoomDeleted -> _pickerUiState.value = PickerViewState.IDLE
+            is NetworkRoomStarted -> onConnected(state.descriptor)
+            is NetworkRoomFinished -> _pickerUiState.value = PickerViewState.DISCONNECTED
         }
     }
 

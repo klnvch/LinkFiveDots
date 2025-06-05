@@ -30,49 +30,46 @@ import by.klnvch.link5dots.domain.repositories.FirebaseManager
 import by.klnvch.link5dots.domain.repositories.NsdRoomRepository
 import by.klnvch.link5dots.domain.repositories.OnlineRoomRepository
 import by.klnvch.link5dots.domain.repositories.Settings
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
-abstract class ConnectRemoteRoomUseCase {
-    abstract fun connect(descriptor: RemoteRoomDescriptor): Flow<Int>
+interface ConnectRemoteRoomUseCase {
+    suspend fun connect(descriptor: RemoteRoomDescriptor)
 }
 
 class ConnectOnlineRoomUseCase @Inject constructor(
     private val firebaseManager: FirebaseManager,
     private val settings: Settings,
     private val onlineRoomRepository: OnlineRoomRepository,
-) : ConnectRemoteRoomUseCase() {
-    override fun connect(descriptor: RemoteRoomDescriptor) = flow {
+) : ConnectRemoteRoomUseCase {
+    override suspend fun connect(descriptor: RemoteRoomDescriptor) {
         val userId = firebaseManager.getUserId()
         val userName = settings.getUserName().first()
         val user2 = NetworkUser(userId, userName)
-        emitAll(onlineRoomRepository.connect(descriptor, user2))
+        onlineRoomRepository.connect(descriptor, user2)
     }
 }
 
 class ConnectNsdRoomUseCase @Inject constructor(
     private val repository: NsdRoomRepository,
     private val settings: Settings,
-) : ConnectRemoteRoomUseCase() {
-    override fun connect(descriptor: RemoteRoomDescriptor) = flow {
+) : ConnectRemoteRoomUseCase {
+    override suspend fun connect(descriptor: RemoteRoomDescriptor) {
         val userId = settings.getUserId().first()
         val userName = settings.getUserName().first()
         val user2 = NetworkUser(userId, userName)
-        emitAll(repository.connect(descriptor, user2))
+        repository.connect(descriptor, user2)
     }
 }
 
 class ConnectBluetoothRoomUseCase @Inject constructor(
     private val repository: BluetoothRoomRepository,
     private val settings: Settings,
-) : ConnectRemoteRoomUseCase() {
-    override fun connect(descriptor: RemoteRoomDescriptor) = flow {
+) : ConnectRemoteRoomUseCase {
+    override suspend fun connect(descriptor: RemoteRoomDescriptor) {
         val userId = settings.getUserId().first()
         val userName = settings.getUserName().first()
         val user2 = NetworkUser(userId, userName)
-        emitAll(repository.connect(descriptor, user2))
+        repository.connect(descriptor, user2)
     }
 }

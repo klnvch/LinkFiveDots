@@ -30,6 +30,10 @@ import by.klnvch.link5dots.data.firebase.OnlineRoomRemote
 import by.klnvch.link5dots.data.online.CleanUpOnlineRoomWorker.Companion.launchCleanUpOnlineRoomWorker
 import by.klnvch.link5dots.domain.models.Dot
 import by.klnvch.link5dots.domain.models.NetworkRoom
+import by.klnvch.link5dots.domain.models.NetworkRoomCreated
+import by.klnvch.link5dots.domain.models.NetworkRoomDeleted
+import by.klnvch.link5dots.domain.models.NetworkRoomFinished
+import by.klnvch.link5dots.domain.models.NetworkRoomStarted
 import by.klnvch.link5dots.domain.models.NetworkUser
 import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
 import by.klnvch.link5dots.domain.models.RoomState
@@ -44,15 +48,13 @@ import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.emitAll
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.transformWhile
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
@@ -66,26 +68,21 @@ class OnlineRoomRepositoryImpl @Inject constructor(
     private var keyFlow = MutableStateFlow<String?>(null)
     private var _room: NetworkRoom? = null
 
-    override fun create(room: NetworkRoom) = flow {
+    override suspend fun create(room: NetworkRoom) {
         val remoteRoom = mapper.map(room)
         reference.child(room.key).setValue(remoteRoom).await()
         keyFlow.emit(room.key)
-        val descriptor = createDescriptor(room)
-
-        emitAll(
-            reference.child(room.key).child(CHILD_STATE).values<Int>()
-                .filterNotNull()
-                .transformWhile {
-                    emit(it)
-                    val isDone = it == RoomState.DELETED || it == RoomState.FINISHED
-                    if (isDone) keyFlow.emit(null)
-                    !isDone
-                }
-                .map {
-                    descriptor.copy(state = it)
-                }
-        )
     }
+
+    override val state = get().mapNotNull {
+        when (it.state) {
+            RoomState.CREATED -> NetworkRoomCreated(createDescriptor(it))
+            RoomState.DELETED -> NetworkRoomDeleted
+            RoomState.STARTED -> NetworkRoomStarted(createDescriptor(it))
+            RoomState.FINISHED -> NetworkRoomFinished
+            else -> null
+        }
+    }.distinctUntilChanged()
 
     override fun getKey(): String? = keyFlow.value
 
@@ -103,7 +100,7 @@ class OnlineRoomRepositoryImpl @Inject constructor(
     override suspend fun isConnected() =
         Firebase.database.getReference(".info/connected").values<Boolean>().first() == true
 
-    override fun connect(descriptor: RemoteRoomDescriptor, user2: NetworkUser) = flow {
+    override suspend fun connect(descriptor: RemoteRoomDescriptor, user2: NetworkUser) {
         val key = (descriptor as OnlineRoomDescriptor).key
         reference
             .child(key)
@@ -114,7 +111,6 @@ class OnlineRoomRepositoryImpl @Inject constructor(
                 )
             ).await()
         keyFlow.emit(key)
-        emitAll(reference.child(key).child(CHILD_STATE).values<Int>().filterNotNull())
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -153,7 +149,6 @@ class OnlineRoomRepositoryImpl @Inject constructor(
     private fun createDescriptor(room: NetworkRoom) = OnlineRoomDescriptor(
         room,
         room.user1.name.ifEmpty { stringRepository.getUnknownName() },
-        RoomState.CREATED,
     )
 
     companion object {
@@ -164,12 +159,13 @@ class OnlineRoomRepositoryImpl @Inject constructor(
 }
 
 data class OnlineRoomDescriptor(
-    private val room: NetworkRoom,
-    private val userName: String,
-    override val state: Int,
+    override val title: String,
+    override val description: String,
+    override val isFavorite: Boolean,
+    val key: String,
 ) : RemoteRoomDescriptor {
-    override val title = userName
-    override val description = room.timestamp.formatDateTime()
-    override val isFavorite = false
-    val key = room.key
+    constructor(
+        room: NetworkRoom,
+        userName: String,
+    ) : this(userName, room.timestamp.formatDateTime(), false, room.key)
 }

@@ -21,10 +21,33 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package by.klnvch.link5dots.domain.models
+package by.klnvch.link5dots.domain.usecases.network
 
-interface RemoteRoomDescriptor {
-    val title: String
-    val description: String
-    val isFavorite: Boolean
+import by.klnvch.link5dots.domain.models.NetworkRoomState
+import by.klnvch.link5dots.domain.repositories.BluetoothRoomRepository
+import by.klnvch.link5dots.domain.repositories.NsdRoomRepository
+import by.klnvch.link5dots.domain.repositories.OnlineRoomRepository
+import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
+
+interface GetNetworkRoomStateUseCase {
+    fun get(): Flow<NetworkRoomState>
+}
+
+class GetOnlineRoomStateUseCase @Inject constructor(
+    private val repository: OnlineRoomRepository,
+) : GetNetworkRoomStateUseCase {
+    override fun get() = repository.state
+}
+
+class GetNsdRoomStateUseCase @Inject constructor(
+    private val repository: NsdRoomRepository,
+) : GetNetworkRoomStateUseCase {
+    override fun get() = repository.state
+}
+
+class GetBluetoothRoomStateUseCase @Inject constructor(
+    private val repository: BluetoothRoomRepository,
+) : GetNetworkRoomStateUseCase {
+    override fun get() = repository.state
 }

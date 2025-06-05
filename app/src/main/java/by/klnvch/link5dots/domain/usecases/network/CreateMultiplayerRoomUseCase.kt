@@ -25,7 +25,6 @@ package by.klnvch.link5dots.domain.usecases.network
 
 import by.klnvch.link5dots.domain.models.NetworkRoom
 import by.klnvch.link5dots.domain.models.NetworkUser
-import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
 import by.klnvch.link5dots.domain.models.RoomKeyGenerator
 import by.klnvch.link5dots.domain.models.RoomState
 import by.klnvch.link5dots.domain.models.RoomType
@@ -35,14 +34,11 @@ import by.klnvch.link5dots.domain.repositories.NsdRoomRepository
 import by.klnvch.link5dots.domain.repositories.OnlineRoomRepository
 import by.klnvch.link5dots.domain.repositories.Settings
 import by.klnvch.link5dots.domain.repositories.TimeRepository
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 interface CreateMultiplayerRoomUseCase {
-    fun create(): Flow<RemoteRoomDescriptor>
+    suspend fun create()
 }
 
 class CreateOnlineRoomUseCase @Inject constructor(
@@ -52,7 +48,7 @@ class CreateOnlineRoomUseCase @Inject constructor(
     private val firebaseManager: FirebaseManager,
     private val repository: OnlineRoomRepository,
 ) : CreateMultiplayerRoomUseCase {
-    override fun create() = flow {
+    override suspend fun create() {
         val userName = settings.getUserName().first()
         val userId = firebaseManager.getUserId()
         val user1 = NetworkUser(userId, userName)
@@ -67,18 +63,18 @@ class CreateOnlineRoomUseCase @Inject constructor(
             RoomType.ONLINE,
             RoomState.CREATED
         )
-        emitAll(repository.create(room))
+        repository.create(room)
     }
 }
 
 class CreateNsdRoomUseCase @Inject constructor(
     private val repository: NsdRoomRepository,
 ) : CreateMultiplayerRoomUseCase {
-    override fun create() = repository.create()
+    override suspend fun create() = repository.create()
 }
 
 class CreateBluetoothRoomUseCase @Inject constructor(
     private val repository: BluetoothRoomRepository,
 ) : CreateMultiplayerRoomUseCase {
-    override fun create() = repository.create()
+    override suspend fun create() = repository.create()
 }

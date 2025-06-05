@@ -39,6 +39,8 @@ import by.klnvch.link5dots.domain.usecases.network.CreateMultiplayerRoomUseCase
 import by.klnvch.link5dots.domain.usecases.network.CreateOnlineRoomUseCase
 import by.klnvch.link5dots.domain.usecases.network.DeleteMultiplayerRoomUseCase
 import by.klnvch.link5dots.domain.usecases.network.DeleteOnlineRoomUseCase
+import by.klnvch.link5dots.domain.usecases.network.GetNetworkRoomStateUseCase
+import by.klnvch.link5dots.domain.usecases.network.GetOnlineRoomStateUseCase
 import by.klnvch.link5dots.domain.usecases.network.InitMultiplayerUseCase
 import by.klnvch.link5dots.domain.usecases.network.InitOnlineUseCase
 import by.klnvch.link5dots.domain.usecases.network.OnlineScanUseCase
@@ -50,6 +52,9 @@ import dagger.Module
 interface OnlineGameRulesModule {
     @Binds
     fun bindGetRoomUseCase(impl: GetRoomOnlineUseCase): GetRoomUseCase
+
+    @Binds
+    fun bindGetMultiplayerRoomStateUseCase(impl: GetOnlineRoomStateUseCase): GetNetworkRoomStateUseCase
 
     @Binds
     fun bindNewGameUseCase(impl: NewGameOnlineUseCase): NewGameUseCase

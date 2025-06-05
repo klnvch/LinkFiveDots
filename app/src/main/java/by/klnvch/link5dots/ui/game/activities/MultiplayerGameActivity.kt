@@ -28,6 +28,7 @@ import android.view.MenuItem
 import androidx.activity.addCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.core.os.bundleOf
+import androidx.fragment.app.commit
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -68,25 +69,14 @@ abstract class MultiplayerGameActivity : GameActivity() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.navigationEvent.collect {
                     when (it) {
-                        is GameScreen -> {
-                            supportFragmentManager
-                                .beginTransaction()
-                                .add(R.id.fragment, GameFragment())
-                                .addToBackStack(null)
-                                .commit()
+                        is GameScreen -> supportFragmentManager.commit {
+                            add(R.id.fragment, GameFragment())
+                            addToBackStack(null)
                         }
 
-                        is InitError -> {
-                            val args = bundleOf("error" to it.e)
-                            addErrorFragment(args)
-                        }
+                        is InitError -> addErrorFragment(bundleOf("error" to it.e))
 
-                        is PickerScreen -> {
-                            //supportFragmentManager
-                            //    .beginTransaction()
-                            //    .add(R.id.fragment, PickerFragment())
-                            //    .commit()
-                        }
+                        is PickerScreen -> {}
 
                         is ConnectError -> {
                             val msg = getString(R.string.connecting_error_message, it.dst)
@@ -119,17 +109,13 @@ abstract class MultiplayerGameActivity : GameActivity() {
         else super.setTitle(defaultTitle)
 
     protected open fun addPickerFragment() {
-        supportFragmentManager
-            .beginTransaction()
-            .add(R.id.fragment, PickerFragment())
-            .commit()
+        supportFragmentManager.commit { add(R.id.fragment, PickerFragment()) }
     }
 
     protected open fun addErrorFragment(args: Bundle) {
-        supportFragmentManager
-            .beginTransaction()
-            .add(R.id.fragment, MultiplayerErrorFragment::class.java, args)
-            .commit()
+        supportFragmentManager.commit {
+            add(R.id.fragment, MultiplayerErrorFragment::class.java, args)
+        }
     }
 
     private fun disconnectGuard(isFullExit: Boolean) {

@@ -30,11 +30,8 @@ import by.klnvch.link5dots.data.sockets.SocketData
 import by.klnvch.link5dots.data.sockets.SocketRoomRepository
 import by.klnvch.link5dots.domain.models.NetworkUser
 import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
-import by.klnvch.link5dots.domain.models.RoomState
 import by.klnvch.link5dots.domain.repositories.NsdRoomRepository
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.emitAll
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import java.net.ServerSocket
 import java.net.Socket
@@ -49,17 +46,16 @@ class NsdRoomRepositoryImpl @Inject constructor(
 ) : SocketRoomRepository(mapper), NsdRoomRepository {
     override val TAG = NsdParams.TAG
 
-    override fun create() = flow {
+    override suspend fun create() {
         nsdValidator.validate()
         val serverSocket = ServerSocket(0)
         try {
             val info = nsdRegistration.register(serverSocket.localPort)
-            startAccepting(serverSocket) {
+            val descriptor = NsdRoomDescriptor(info)
+            startAccepting(descriptor, serverSocket) {
                 val socket = serverSocket.accept()
                 SocketData(socket, socket.inputStream, socket.outputStream)
             }
-            val descriptor = NsdRoomDescriptor(info)
-            emitAll(getState().map { descriptor.copy(state = it) })
         } catch (e: Throwable) {
             serverSocket.closeSafely()
             delete()
@@ -78,19 +74,17 @@ class NsdRoomRepositoryImpl @Inject constructor(
     }
 
 
-    override fun connect(descriptor: RemoteRoomDescriptor, user2: NetworkUser) = flow {
-        connect(user2) {
+    override suspend fun connect(descriptor: RemoteRoomDescriptor, user2: NetworkUser) {
+        connect(descriptor, user2) {
             val info = (descriptor as NsdRoomDescriptor).serviceInfo
             val socket = Socket(info.address, info.port)
             SocketData(socket, socket.inputStream, socket.outputStream)
         }
-        emitAll(getState())
     }
 }
 
 data class NsdRoomDescriptor(
     val serviceInfo: NsdServiceInfo,
-    override val state: Int = RoomState.CREATED,
 ) : RemoteRoomDescriptor {
     override val title = serviceInfo.serviceName ?: ""
     override val description = listOfNotNull<String>(

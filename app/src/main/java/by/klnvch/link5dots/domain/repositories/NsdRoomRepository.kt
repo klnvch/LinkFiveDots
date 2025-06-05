@@ -24,15 +24,17 @@
 package by.klnvch.link5dots.domain.repositories
 
 import by.klnvch.link5dots.domain.models.NetworkRoom
+import by.klnvch.link5dots.domain.models.NetworkRoomState
 import by.klnvch.link5dots.domain.models.NetworkUser
 import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
 import kotlinx.coroutines.flow.Flow
 
 interface NsdRoomRepository {
-    fun create(): Flow<RemoteRoomDescriptor>
+    suspend fun create()
     fun delete()
+    val state: Flow<NetworkRoomState>
     fun get(): Flow<NetworkRoom?>
-    fun connect(descriptor: RemoteRoomDescriptor, user2: NetworkUser): Flow<Int>
+    suspend fun connect(descriptor: RemoteRoomDescriptor, user2: NetworkUser)
     suspend fun update(room: NetworkRoom)
     fun getRemoteRooms(): Flow<List<RemoteRoomDescriptor>>
     fun finish()

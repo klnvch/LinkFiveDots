@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 klnvch
+ * Copyright (c) 2023-2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -30,3 +30,9 @@ object RoomState {
     const val STARTED = 2
     const val FINISHED = 3
 }
+
+sealed interface NetworkRoomState
+data class NetworkRoomCreated(val descriptor: RemoteRoomDescriptor) : NetworkRoomState
+object NetworkRoomDeleted : NetworkRoomState
+data class NetworkRoomStarted(val descriptor: RemoteRoomDescriptor) : NetworkRoomState
+object NetworkRoomFinished : NetworkRoomState
