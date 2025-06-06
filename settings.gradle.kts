@@ -21,7 +21,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 pluginManagement {
     repositories {
         google {
@@ -43,4 +42,5 @@ dependencyResolutionManagement {
     }
 }
 
-include ':app'
+rootProject.name = "Link Five Dots"
+include(":app")
