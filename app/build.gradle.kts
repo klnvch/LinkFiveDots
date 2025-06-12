@@ -32,6 +32,7 @@ plugins {
     alias(libs.plugins.androidx.navigation.safeargs)
     alias(libs.plugins.google.devtools.ksp)
     alias(libs.plugins.google.services)
+    alias(libs.plugins.compose.compiler)
 }
 
 val keystorePropertiesFile = rootProject.file("keystore.properties")
@@ -100,13 +101,25 @@ android {
         jvmTarget = "17"
     }
     buildFeatures {
+        compose = true
         dataBinding = true
         buildConfig = true
     }
 }
 
+composeCompiler {
+    reportsDestination = layout.buildDirectory.dir("compose_compiler")
+    stabilityConfigurationFile = rootProject.layout.projectDirectory.file("stability_config.conf")
+}
+
 dependencies {
     implementation(libs.androidx.appcompat)
+
+    implementation(platform(libs.androidx.compose))
+    implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.compose.ui.preview)
+    debugImplementation(libs.androidx.compose.ui)
+
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.datastore.preferences)
@@ -114,6 +127,7 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.savedstate)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.multidex)
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)

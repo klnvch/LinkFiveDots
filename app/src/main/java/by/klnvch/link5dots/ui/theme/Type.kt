@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023-2025 klnvch
+ * Copyright (c) 2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,14 +22,8 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.utils
+package by.klnvch.link5dots.ui.theme
 
-import android.widget.TextView
-import androidx.databinding.BindingAdapter
+import androidx.compose.material3.Typography
 
-
-object BindingUtils {
-    @JvmStatic
-    @BindingAdapter("setTextStyle")
-    fun setTextStyle(view: TextView, style: Int) = view.setTypeface(view.typeface, style)
-}
+val AppTypography = Typography()
