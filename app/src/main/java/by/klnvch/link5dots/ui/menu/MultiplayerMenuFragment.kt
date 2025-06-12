@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 klnvch
+ * Copyright (c) 2023-2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,30 +24,45 @@
 
 package by.klnvch.link5dots.ui.menu
 
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.compose.ui.unit.dp
 import androidx.navigation.fragment.findNavController
 import by.klnvch.link5dots.R
-import by.klnvch.link5dots.databinding.FragmentMultiplayerMenuBinding
+import by.klnvch.link5dots.ui.common.MenuTextButton
 import by.klnvch.link5dots.ui.menu.MultiplayerMenuFragmentDirections.Companion.actionMultiplayerMenuFragmentToGameActivityBluetooth
 import by.klnvch.link5dots.ui.menu.MultiplayerMenuFragmentDirections.Companion.actionMultiplayerMenuFragmentToGameActivityNsd
 import by.klnvch.link5dots.ui.menu.MultiplayerMenuFragmentDirections.Companion.actionMultiplayerMenuFragmentToGameActivityOnline
 import by.klnvch.link5dots.ui.menu.MultiplayerMenuFragmentDirections.Companion.actionMultiplayerMenuFragmentToTwoPlayersActivity
+import by.klnvch.link5dots.ui.theme.AppTheme
 import dagger.android.support.DaggerFragment
 
 class MultiplayerMenuFragment : DaggerFragment(), OnMultiplayerMenuListener {
-    private lateinit var binding: FragmentMultiplayerMenuBinding
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
-        binding = FragmentMultiplayerMenuBinding.inflate(inflater, container, false)
-        binding.listener = this
-        return binding.root
+        return ComposeView(requireContext()).apply {
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setContent {
+                MultiplayerMenuScreen(this@MultiplayerMenuFragment)
+            }
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -66,4 +81,77 @@ class MultiplayerMenuFragment : DaggerFragment(), OnMultiplayerMenuListener {
 
     override fun onOnlineGameClicked() =
         findNavController().navigate(actionMultiplayerMenuFragmentToGameActivityOnline())
+}
+
+@Composable
+fun MultiplayerMenuScreen(listener: OnMultiplayerMenuListener) {
+    val configuration = LocalConfiguration.current
+    AppTheme {
+        when (configuration.orientation) {
+            Configuration.ORIENTATION_PORTRAIT -> MultiplayerMenuScreenPortrait(listener)
+            else -> MultiplayerMenuScreenLandscape(listener)
+        }
+    }
+}
+
+@Composable
+fun MultiplayerMenuScreenPortrait(listener: OnMultiplayerMenuListener) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(24.dp),
+    ) {
+        ButtonColumn1(listener)
+        ButtonColumn2(listener)
+    }
+}
+
+@Composable
+fun MultiplayerMenuScreenLandscape(listener: OnMultiplayerMenuListener) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(24.dp),
+    ) {
+        Row {
+            ButtonColumn1(listener)
+            ButtonColumn2(listener)
+        }
+    }
+}
+
+@Composable
+fun ButtonColumn1(listener: OnMultiplayerMenuListener) {
+    Column {
+        MenuTextButton(
+            onClick = { listener.onTwoPlayersGameClicked() },
+            iconId = R.drawable.ic_people_48dp,
+            textId = R.string.menu_two_players,
+        )
+        MenuTextButton(
+            onClick = { listener.onBluetoothGameClicked() },
+            iconId = R.drawable.ic_bluetooth_48dp,
+            textId = R.string.bluetooth,
+        )
+    }
+}
+
+@Composable
+fun ButtonColumn2(listener: OnMultiplayerMenuListener) {
+    Column {
+        MenuTextButton(
+            onClick = { listener.onNsdGameClicked() },
+            iconId = R.drawable.ic_router_48dp,
+            textId = R.string.menu_local_network,
+        )
+        MenuTextButton(
+            onClick = { listener.onOnlineGameClicked() },
+            iconId = R.drawable.ic_public_48dp,
+            textId = R.string.menu_online_game,
+        )
+    }
 }

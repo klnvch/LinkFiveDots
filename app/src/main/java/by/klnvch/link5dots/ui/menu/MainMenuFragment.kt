@@ -57,12 +57,12 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import by.klnvch.link5dots.R
+import by.klnvch.link5dots.ui.common.MenuTextButton
 import by.klnvch.link5dots.ui.menu.MainMenuFragmentDirections.Companion.actionMainMenuFragmentToHowToActivity
 import by.klnvch.link5dots.ui.menu.MainMenuFragmentDirections.Companion.actionMainMenuFragmentToInfoActivity
 import by.klnvch.link5dots.ui.menu.MainMenuFragmentDirections.Companion.actionMainMenuFragmentToMainActivity
@@ -121,14 +121,10 @@ fun MainMenuScreen(viewModel: MainMenuViewModel, listener: OnMainMenuActionListe
     val configuration = LocalConfiguration.current
     val uiState by viewModel.uiState.collectAsState()
     AppTheme {
+        val userName = uiState.userName
         when (configuration.orientation) {
-            Configuration.ORIENTATION_PORTRAIT -> {
-                MainMenuScreenPortrait(userName = uiState.userName, listener = listener)
-            }
-
-            else -> {
-                MainMenuScreenLandscape(userName = uiState.userName, listener = listener)
-            }
+            Configuration.ORIENTATION_PORTRAIT -> MainMenuScreenPortrait(userName, listener)
+            else -> MainMenuScreenLandscape(userName, listener)
         }
     }
 }
@@ -247,34 +243,6 @@ fun GreetingText(
             Icon(
                 imageVector = Icons.Rounded.Edit,
                 contentDescription = stringResource(R.string.name)
-            )
-        }
-    }
-}
-
-@Composable
-fun MenuTextButton(
-    onClick: () -> Unit,
-    @DrawableRes iconId: Int,
-    @StringRes textId: Int,
-) {
-    ElevatedButton(
-        onClick = onClick,
-        modifier = Modifier.widthIn(0.dp, 320.dp),
-    ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Icon(
-                painter = painterResource(iconId),
-                contentDescription = stringResource(textId),
-                modifier = Modifier.size(24.dp),
-            )
-            Text(
-                text = stringResource(textId).uppercase(),
-                textAlign = TextAlign.Center,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.weight(1f),
             )
         }
     }
