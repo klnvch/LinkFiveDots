@@ -60,6 +60,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import by.klnvch.link5dots.R
 import by.klnvch.link5dots.ui.common.MenuTextButton
@@ -74,7 +75,7 @@ import by.klnvch.link5dots.ui.theme.AppTheme
 import dagger.android.support.DaggerFragment
 import javax.inject.Inject
 
-class MainMenuFragment : DaggerFragment(), OnMainMenuActionListener {
+class MainMenuFragment : DaggerFragment() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -89,48 +90,27 @@ class MainMenuFragment : DaggerFragment(), OnMainMenuActionListener {
         return ComposeView(requireContext()).apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
-                MainMenuScreen(viewModel, this@MainMenuFragment)
+                MainMenuScreen(viewModel) { dest -> findNavController().navigate(dest) }
             }
         }
     }
-
-    override fun onUserNameClicked() =
-        findNavController().navigate(actionMainMenuFragmentToUsernameDialog())
-
-    override fun onSinglePlayerClicked() =
-        findNavController().navigate(actionMainMenuFragmentToMainActivity())
-
-    override fun onMultiplayerPlayerClicked() =
-        findNavController().navigate(actionMainMenuFragmentToMultiplayerMenuFragment())
-
-    override fun onScoresClicked() =
-        findNavController().navigate(actionMainMenuFragmentToScoresActivity())
-
-    override fun onSettingsClicked() =
-        findNavController().navigate(actionMainMenuFragmentToSettingsActivity())
-
-    override fun onInfoClicked() =
-        findNavController().navigate(actionMainMenuFragmentToInfoActivity())
-
-    override fun onHelpClicked() =
-        findNavController().navigate(actionMainMenuFragmentToHowToActivity())
 }
 
 @Composable
-fun MainMenuScreen(viewModel: MainMenuViewModel, listener: OnMainMenuActionListener) {
+fun MainMenuScreen(viewModel: MainMenuViewModel, onNavigate: (NavDirections) -> Unit) {
     val configuration = LocalConfiguration.current
     val uiState by viewModel.uiState.collectAsState()
     AppTheme {
         val userName = uiState.userName
         when (configuration.orientation) {
-            Configuration.ORIENTATION_PORTRAIT -> MainMenuScreenPortrait(userName, listener)
-            else -> MainMenuScreenLandscape(userName, listener)
+            Configuration.ORIENTATION_PORTRAIT -> MainMenuScreenPortrait(userName, onNavigate)
+            else -> MainMenuScreenLandscape(userName, onNavigate)
         }
     }
 }
 
 @Composable
-fun MainMenuScreenPortrait(userName: String, listener: OnMainMenuActionListener) {
+fun MainMenuScreenPortrait(userName: String, onNavigate: (NavDirections) -> Unit) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
@@ -139,17 +119,17 @@ fun MainMenuScreenPortrait(userName: String, listener: OnMainMenuActionListener)
             .padding(24.dp),
     ) {
         GreetingText(
-            onClick = { listener.onUserNameClicked() },
+            onClick = { onNavigate(actionMainMenuFragmentToUsernameDialog()) },
             userName = userName,
             modifier = Modifier.widthIn(0.dp, 320.dp)
         )
-        GameButtonColumn(listener)
-        InfoButtonColumn(listener)
+        GameButtonColumn(onNavigate)
+        InfoButtonColumn(onNavigate)
     }
 }
 
 @Composable
-fun MainMenuScreenLandscape(userName: String, listener: OnMainMenuActionListener) {
+fun MainMenuScreenLandscape(userName: String, onNavigate: (NavDirections) -> Unit) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
@@ -158,27 +138,27 @@ fun MainMenuScreenLandscape(userName: String, listener: OnMainMenuActionListener
             .padding(24.dp),
     ) {
         GreetingText(
-            onClick = { listener.onUserNameClicked() },
+            onClick = { onNavigate(actionMainMenuFragmentToUsernameDialog()) },
             userName = userName,
             modifier = Modifier.widthIn(0.dp, 320.dp)
         )
         Row {
-            GameButtonColumn(listener)
-            InfoButtonColumn(listener)
+            GameButtonColumn(onNavigate)
+            InfoButtonColumn(onNavigate)
         }
     }
 }
 
 @Composable
-fun GameButtonColumn(listener: OnMainMenuActionListener) {
+fun GameButtonColumn(onNavigate: (NavDirections) -> Unit) {
     Column {
         MenuTextButton(
-            onClick = { listener.onSinglePlayerClicked() },
+            onClick = { onNavigate(actionMainMenuFragmentToMainActivity()) },
             iconId = R.drawable.ic_android_48dp,
             textId = R.string.menu_single_player,
         )
         MenuTextButton(
-            onClick = { listener.onMultiplayerPlayerClicked() },
+            onClick = { onNavigate(actionMainMenuFragmentToMultiplayerMenuFragment()) },
             iconId = R.drawable.ic_person_48dp,
             textId = R.string.menu_multi_player,
         )
@@ -186,10 +166,10 @@ fun GameButtonColumn(listener: OnMainMenuActionListener) {
 }
 
 @Composable
-fun InfoButtonColumn(listener: OnMainMenuActionListener) {
+fun InfoButtonColumn(onNavigate: (NavDirections) -> Unit) {
     Column {
         MenuTextButton(
-            onClick = { listener.onScoresClicked() },
+            onClick = { onNavigate(actionMainMenuFragmentToScoresActivity()) },
             iconId = R.drawable.ic_star_48dp,
             textId = R.string.scores_title,
         )
@@ -199,19 +179,19 @@ fun InfoButtonColumn(listener: OnMainMenuActionListener) {
             modifier = Modifier.widthIn(0.dp, 320.dp),
         ) {
             MenuIconButton(
-                onClick = { listener.onSettingsClicked() },
+                onClick = { onNavigate(actionMainMenuFragmentToSettingsActivity()) },
                 iconId = R.drawable.ic_settings_48dp,
                 textId = R.string.settings,
                 modifier = Modifier.weight(1f),
             )
             MenuIconButton(
-                onClick = { listener.onInfoClicked() },
+                onClick = { onNavigate(actionMainMenuFragmentToInfoActivity()) },
                 iconId = R.drawable.ic_info_48dp,
                 textId = R.string.application_info_label,
                 modifier = Modifier.weight(1f),
             )
             MenuIconButton(
-                onClick = { listener.onHelpClicked() },
+                onClick = { onNavigate(actionMainMenuFragmentToHowToActivity()) },
                 iconId = R.drawable.ic_help_48dp,
                 textId = R.string.help,
                 modifier = Modifier.weight(1f),
