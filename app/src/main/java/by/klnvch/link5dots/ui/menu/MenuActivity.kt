@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 klnvch
+ * Copyright (c) 2023-2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,32 +24,61 @@
 
 package by.klnvch.link5dots.ui.menu
 
+import android.content.Intent
 import android.os.Bundle
-import androidx.navigation.findNavController
-import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.navigateUp
-import androidx.navigation.ui.setupActionBarWithNavController
-import by.klnvch.link5dots.R
+import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
+import androidx.lifecycle.ViewModelProvider
+import by.klnvch.link5dots.ui.HowToActivity
+import by.klnvch.link5dots.ui.InfoActivity
+import by.klnvch.link5dots.ui.game.activities.BluetoothGameActivity
+import by.klnvch.link5dots.ui.game.activities.BotGameActivity
+import by.klnvch.link5dots.ui.game.activities.NsdGameActivity
+import by.klnvch.link5dots.ui.game.activities.OnlineGameActivity
+import by.klnvch.link5dots.ui.game.activities.TwoPlayersGameActivity
+import by.klnvch.link5dots.ui.scores.ScoresActivity
+import by.klnvch.link5dots.ui.settings.SettingsActivity
+import by.klnvch.link5dots.ui.theme.AppTheme
 import dagger.android.support.DaggerAppCompatActivity
+import javax.inject.Inject
+import kotlin.reflect.KClass
 
 class MenuActivity : DaggerAppCompatActivity() {
-    private lateinit var appBarConfiguration: AppBarConfiguration
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        enableEdgeToEdge()
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_menu)
-        setTitle(R.string.app_name)
 
-        val navHostFragment =
-            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-        val navController = navHostFragment.navController
-        appBarConfiguration = AppBarConfiguration(navController.graph)
-        setupActionBarWithNavController(navController, appBarConfiguration)
+        val viewModel = ViewModelProvider(this, viewModelFactory)[MainMenuViewModel::class.java]
+
+        setContent {
+            AppTheme {
+                App(viewModel) { dest -> navigate(dest) }
+            }
+        }
     }
 
-    override fun onSupportNavigateUp(): Boolean {
-        val navController = findNavController(R.id.nav_host_fragment)
-        return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
+    private fun navigate(destination: Screen) {
+        when (destination) {
+            Screen.UserNameDialog -> UsernameDialog().show(
+                supportFragmentManager,
+                UsernameDialog.TAG
+            )
+
+            Screen.BotGame -> start(BotGameActivity::class)
+            Screen.Scores -> start(ScoresActivity::class)
+            Screen.Settings -> start(SettingsActivity::class)
+            Screen.Info -> start(InfoActivity::class)
+            Screen.Help -> start(HowToActivity::class)
+            Screen.MultiplayerTwo -> start(TwoPlayersGameActivity::class)
+            Screen.MultiplayerBluetooth -> start(BluetoothGameActivity::class)
+            Screen.MultiplayerNsd -> start(NsdGameActivity::class)
+            Screen.MultiplayerOnline -> start(OnlineGameActivity::class)
+            else -> {}
+        }
     }
+
+    private fun start(cls: KClass<*>) = startActivity(Intent(this, cls.java))
 }

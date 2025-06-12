@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023-2025 klnvch
+ * Copyright (c) 2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,14 +22,22 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.di.menu
+package by.klnvch.link5dots.ui.menu
 
-import by.klnvch.link5dots.ui.menu.UsernameDialog
-import dagger.Module
-import dagger.android.ContributesAndroidInjector
+import androidx.annotation.StringRes
+import by.klnvch.link5dots.R
 
-@Module
-abstract class MenuFragmentBuildersModule {
-    @ContributesAndroidInjector
-    abstract fun contributeUsernameDialog(): UsernameDialog
+enum class Screen(@StringRes val title: Int) {
+    MainMenu(title = R.string.app_name),
+    MultiplayerMenu(title = R.string.menu_multi_player),
+    UserNameDialog(title = 0),
+    BotGame(title = 0),
+    Scores(title = 0),
+    Settings(title = 0),
+    Info(title = 0),
+    Help(title = 0),
+    MultiplayerTwo(title = 0),
+    MultiplayerBluetooth(title = 0),
+    MultiplayerNsd(title = 0),
+    MultiplayerOnline(title = 0),
 }

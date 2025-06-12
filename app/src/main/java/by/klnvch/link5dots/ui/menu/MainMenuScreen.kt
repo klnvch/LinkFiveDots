@@ -25,10 +25,6 @@
 package by.klnvch.link5dots.ui.menu
 
 import android.content.res.Configuration
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
@@ -52,65 +48,28 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.NavDirections
-import androidx.navigation.fragment.findNavController
 import by.klnvch.link5dots.R
 import by.klnvch.link5dots.ui.common.MenuTextButton
-import by.klnvch.link5dots.ui.menu.MainMenuFragmentDirections.Companion.actionMainMenuFragmentToHowToActivity
-import by.klnvch.link5dots.ui.menu.MainMenuFragmentDirections.Companion.actionMainMenuFragmentToInfoActivity
-import by.klnvch.link5dots.ui.menu.MainMenuFragmentDirections.Companion.actionMainMenuFragmentToMainActivity
-import by.klnvch.link5dots.ui.menu.MainMenuFragmentDirections.Companion.actionMainMenuFragmentToMultiplayerMenuFragment
-import by.klnvch.link5dots.ui.menu.MainMenuFragmentDirections.Companion.actionMainMenuFragmentToScoresActivity
-import by.klnvch.link5dots.ui.menu.MainMenuFragmentDirections.Companion.actionMainMenuFragmentToSettingsActivity
-import by.klnvch.link5dots.ui.menu.MainMenuFragmentDirections.Companion.actionMainMenuFragmentToUsernameDialog
-import by.klnvch.link5dots.ui.theme.AppTheme
-import dagger.android.support.DaggerFragment
-import javax.inject.Inject
-
-class MainMenuFragment : DaggerFragment() {
-
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?,
-    ): View {
-        val viewModel =
-            ViewModelProvider(requireActivity(), viewModelFactory)[MainMenuViewModel::class.java]
-        return ComposeView(requireContext()).apply {
-            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
-            setContent {
-                MainMenuScreen(viewModel) { dest -> findNavController().navigate(dest) }
-            }
-        }
-    }
-}
 
 @Composable
-fun MainMenuScreen(viewModel: MainMenuViewModel, onNavigate: (NavDirections) -> Unit) {
+fun MainMenuScreen(viewModel: MainMenuViewModel, onNavigate: (Screen) -> Unit) {
     val configuration = LocalConfiguration.current
     val uiState by viewModel.uiState.collectAsState()
-    AppTheme {
-        val userName = uiState.userName
-        when (configuration.orientation) {
-            Configuration.ORIENTATION_PORTRAIT -> MainMenuScreenPortrait(userName, onNavigate)
-            else -> MainMenuScreenLandscape(userName, onNavigate)
-        }
+    val userName = uiState.userName
+    when (configuration.orientation) {
+        Configuration.ORIENTATION_PORTRAIT -> MainMenuScreenPortrait(userName, onNavigate)
+        else -> MainMenuScreenLandscape(userName, onNavigate)
     }
 }
 
+
 @Composable
-fun MainMenuScreenPortrait(userName: String, onNavigate: (NavDirections) -> Unit) {
+fun MainMenuScreenPortrait(userName: String, onNavigate: (Screen) -> Unit) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
@@ -119,7 +78,7 @@ fun MainMenuScreenPortrait(userName: String, onNavigate: (NavDirections) -> Unit
             .padding(24.dp),
     ) {
         GreetingText(
-            onClick = { onNavigate(actionMainMenuFragmentToUsernameDialog()) },
+            onClick = { onNavigate(Screen.UserNameDialog) },
             userName = userName,
             modifier = Modifier.widthIn(0.dp, 320.dp)
         )
@@ -129,7 +88,7 @@ fun MainMenuScreenPortrait(userName: String, onNavigate: (NavDirections) -> Unit
 }
 
 @Composable
-fun MainMenuScreenLandscape(userName: String, onNavigate: (NavDirections) -> Unit) {
+fun MainMenuScreenLandscape(userName: String, onNavigate: (Screen) -> Unit) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
@@ -138,7 +97,7 @@ fun MainMenuScreenLandscape(userName: String, onNavigate: (NavDirections) -> Uni
             .padding(24.dp),
     ) {
         GreetingText(
-            onClick = { onNavigate(actionMainMenuFragmentToUsernameDialog()) },
+            onClick = { onNavigate(Screen.UserNameDialog) },
             userName = userName,
             modifier = Modifier.widthIn(0.dp, 320.dp)
         )
@@ -150,15 +109,15 @@ fun MainMenuScreenLandscape(userName: String, onNavigate: (NavDirections) -> Uni
 }
 
 @Composable
-fun GameButtonColumn(onNavigate: (NavDirections) -> Unit) {
+fun GameButtonColumn(onNavigate: (Screen) -> Unit) {
     Column {
         MenuTextButton(
-            onClick = { onNavigate(actionMainMenuFragmentToMainActivity()) },
+            onClick = { onNavigate(Screen.BotGame) },
             iconId = R.drawable.ic_android_48dp,
             textId = R.string.menu_single_player,
         )
         MenuTextButton(
-            onClick = { onNavigate(actionMainMenuFragmentToMultiplayerMenuFragment()) },
+            onClick = { onNavigate(Screen.MultiplayerMenu) },
             iconId = R.drawable.ic_person_48dp,
             textId = R.string.menu_multi_player,
         )
@@ -166,10 +125,10 @@ fun GameButtonColumn(onNavigate: (NavDirections) -> Unit) {
 }
 
 @Composable
-fun InfoButtonColumn(onNavigate: (NavDirections) -> Unit) {
+fun InfoButtonColumn(onNavigate: (Screen) -> Unit) {
     Column {
         MenuTextButton(
-            onClick = { onNavigate(actionMainMenuFragmentToScoresActivity()) },
+            onClick = { onNavigate(Screen.Scores) },
             iconId = R.drawable.ic_star_48dp,
             textId = R.string.scores_title,
         )
@@ -179,19 +138,19 @@ fun InfoButtonColumn(onNavigate: (NavDirections) -> Unit) {
             modifier = Modifier.widthIn(0.dp, 320.dp),
         ) {
             MenuIconButton(
-                onClick = { onNavigate(actionMainMenuFragmentToSettingsActivity()) },
+                onClick = { onNavigate(Screen.Settings) },
                 iconId = R.drawable.ic_settings_48dp,
                 textId = R.string.settings,
                 modifier = Modifier.weight(1f),
             )
             MenuIconButton(
-                onClick = { onNavigate(actionMainMenuFragmentToInfoActivity()) },
+                onClick = { onNavigate(Screen.Info) },
                 iconId = R.drawable.ic_info_48dp,
                 textId = R.string.application_info_label,
                 modifier = Modifier.weight(1f),
             )
             MenuIconButton(
-                onClick = { onNavigate(actionMainMenuFragmentToHowToActivity()) },
+                onClick = { onNavigate(Screen.Help) },
                 iconId = R.drawable.ic_help_48dp,
                 textId = R.string.help,
                 modifier = Modifier.weight(1f),
