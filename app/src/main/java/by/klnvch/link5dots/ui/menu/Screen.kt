@@ -35,7 +35,7 @@ enum class Screen(@StringRes val title: Int) {
     Scores(title = 0),
     Settings(title = 0),
     Info(title = 0),
-    Help(title = 0),
+    Help(title = R.string.help),
     MultiplayerTwo(title = 0),
     MultiplayerBluetooth(title = 0),
     MultiplayerNsd(title = 0),

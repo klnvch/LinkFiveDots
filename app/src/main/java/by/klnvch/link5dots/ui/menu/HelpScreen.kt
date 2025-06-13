@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2017 klnvch
+ * Copyright (c) 2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,17 +22,24 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.ui
+package by.klnvch.link5dots.ui.menu
 
-import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import by.klnvch.link5dots.R
 
-class HowToActivity : AppCompatActivity() {
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_how_to)
-        setTitle(R.string.help)
-    }
+@Preview()
+@Composable
+fun HelpScreen() {
+    Text(
+        color = MaterialTheme.colorScheme.onSecondaryContainer,
+        text = stringResource(R.string.how_to_text),
+        modifier = Modifier.padding(10.dp)
+    )
 }

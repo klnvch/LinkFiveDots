@@ -75,6 +75,7 @@ fun AppBar(
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = Color(33, 33, 33),
             titleContentColor = Color(250, 250, 250),
+            navigationIconContentColor = Color(250, 250, 250),
         ),
         modifier = modifier,
         navigationIcon = {
@@ -102,7 +103,6 @@ fun App(
     )
 
     Scaffold(
-        //modifier = Modifier.paint(painter = painterResource(id = R.drawable.paper)),
         modifier = Modifier.background(
             ShaderBrush(
                 ImageShader(
@@ -132,12 +132,16 @@ fun App(
                 MainMenuScreen(viewModel) {
                     when (it) {
                         Screen.MultiplayerMenu -> navController.navigate(Screen.MultiplayerMenu.name)
+                        Screen.Help -> navController.navigate(Screen.Help.name)
                         else -> onNavigate(it)
                     }
                 }
             }
             composable(route = Screen.MultiplayerMenu.name) {
                 MultiplayerMenuScreen(onNavigate)
+            }
+            composable(route = Screen.Help.name) {
+                HelpScreen()
             }
         }
     }

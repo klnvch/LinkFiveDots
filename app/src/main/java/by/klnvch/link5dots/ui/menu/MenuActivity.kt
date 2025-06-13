@@ -29,7 +29,6 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.lifecycle.ViewModelProvider
-import by.klnvch.link5dots.ui.HowToActivity
 import by.klnvch.link5dots.ui.InfoActivity
 import by.klnvch.link5dots.ui.game.activities.BluetoothGameActivity
 import by.klnvch.link5dots.ui.game.activities.BotGameActivity
@@ -71,7 +70,6 @@ class MenuActivity : DaggerAppCompatActivity() {
             Screen.Scores -> start(ScoresActivity::class)
             Screen.Settings -> start(SettingsActivity::class)
             Screen.Info -> start(InfoActivity::class)
-            Screen.Help -> start(HowToActivity::class)
             Screen.MultiplayerTwo -> start(TwoPlayersGameActivity::class)
             Screen.MultiplayerBluetooth -> start(BluetoothGameActivity::class)
             Screen.MultiplayerNsd -> start(NsdGameActivity::class)

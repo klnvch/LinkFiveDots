@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 klnvch
+ * Copyright (c) 2023-2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -34,6 +34,6 @@ class RoomKeyGenerator @Inject constructor(
     fun get(): String {
         val time = timeRepository.getCurrentTime().toString(16)
         val random = Random.Default.nextUInt().toString(16)
-        return "${time}_${random}"
+        return "${time}_a_${random}"
     }
 }
