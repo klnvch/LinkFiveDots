@@ -30,7 +30,6 @@ import by.klnvch.link5dots.R
 enum class Screen(@StringRes val title: Int = 0) {
     MainMenu(title = R.string.app_name),
     MultiplayerMenu(title = R.string.menu_multi_player),
-    UserNameDialog(),
     BotGame(),
     Scores(),
     Settings(),

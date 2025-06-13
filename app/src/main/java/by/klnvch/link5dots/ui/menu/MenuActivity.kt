@@ -68,11 +68,6 @@ class MenuActivity : DaggerAppCompatActivity() {
 
     private fun navigate(destination: Screen) {
         when (destination) {
-            Screen.UserNameDialog -> UsernameDialog().show(
-                supportFragmentManager,
-                UsernameDialog.TAG
-            )
-
             Screen.BotGame -> start(BotGameActivity::class)
             Screen.Scores -> start(ScoresActivity::class)
             Screen.Settings -> start(SettingsActivity::class)

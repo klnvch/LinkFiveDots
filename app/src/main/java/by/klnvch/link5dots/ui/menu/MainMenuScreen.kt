@@ -46,6 +46,8 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
@@ -58,18 +60,27 @@ import by.klnvch.link5dots.ui.common.MenuTextButton
 
 @Composable
 fun MainMenuScreen(viewModel: MainMenuViewModel, onNavigate: (Screen) -> Unit) {
-    val configuration = LocalConfiguration.current
     val uiState by viewModel.uiState.collectAsState()
     val userName = uiState.userName
+    val configuration = LocalConfiguration.current
     when (configuration.orientation) {
-        Configuration.ORIENTATION_PORTRAIT -> MainMenuScreenPortrait(userName, onNavigate)
-        else -> MainMenuScreenLandscape(userName, onNavigate)
+        Configuration.ORIENTATION_PORTRAIT -> MainMenuScreenPortrait(userName, onNavigate) {
+            viewModel.setUserName(it)
+        }
+
+        else -> MainMenuScreenLandscape(userName, onNavigate) {
+            viewModel.setUserName(it)
+        }
     }
 }
 
 
 @Composable
-fun MainMenuScreenPortrait(userName: String, onNavigate: (Screen) -> Unit) {
+fun MainMenuScreenPortrait(
+    userName: String,
+    onNavigate: (Screen) -> Unit,
+    onUserNameChanged: (userName: String) -> Unit,
+) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
@@ -78,9 +89,9 @@ fun MainMenuScreenPortrait(userName: String, onNavigate: (Screen) -> Unit) {
             .padding(24.dp),
     ) {
         GreetingText(
-            onClick = { onNavigate(Screen.UserNameDialog) },
             userName = userName,
-            modifier = Modifier.widthIn(0.dp, 320.dp)
+            modifier = Modifier.widthIn(0.dp, 320.dp),
+            onUserNameChanged = onUserNameChanged
         )
         GameButtonColumn(onNavigate)
         InfoButtonColumn(onNavigate)
@@ -88,7 +99,11 @@ fun MainMenuScreenPortrait(userName: String, onNavigate: (Screen) -> Unit) {
 }
 
 @Composable
-fun MainMenuScreenLandscape(userName: String, onNavigate: (Screen) -> Unit) {
+fun MainMenuScreenLandscape(
+    userName: String,
+    onNavigate: (Screen) -> Unit,
+    onUserNameChanged: (userName: String) -> Unit,
+) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
@@ -97,9 +112,9 @@ fun MainMenuScreenLandscape(userName: String, onNavigate: (Screen) -> Unit) {
             .padding(24.dp),
     ) {
         GreetingText(
-            onClick = { onNavigate(Screen.UserNameDialog) },
             userName = userName,
-            modifier = Modifier.widthIn(0.dp, 320.dp)
+            modifier = Modifier.widthIn(0.dp, 320.dp),
+            onUserNameChanged = onUserNameChanged
         )
         Row {
             GameButtonColumn(onNavigate)
@@ -161,10 +176,21 @@ fun InfoButtonColumn(onNavigate: (Screen) -> Unit) {
 
 @Composable
 fun GreetingText(
-    onClick: () -> Unit,
-    userName: String,
     modifier: Modifier,
+    userName: String,
+    onUserNameChanged: (userName: String) -> Unit,
 ) {
+    val openAlertDialog = remember { mutableStateOf(false) }
+    when {
+        openAlertDialog.value -> {
+            UsernameDialog(userName, {
+                openAlertDialog.value = false
+                onUserNameChanged(it)
+            }, {
+                openAlertDialog.value = false
+            })
+        }
+    }
     Box(
         contentAlignment = Alignment.CenterEnd,
         modifier = modifier.padding(16.dp),
@@ -176,7 +202,7 @@ fun GreetingText(
             color = MaterialTheme.colorScheme.onSecondaryContainer,
         )
         TextButton(
-            onClick = onClick
+            onClick = { openAlertDialog.value = true }
         ) {
             Icon(
                 imageVector = Icons.Rounded.Edit,

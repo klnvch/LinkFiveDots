@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 klnvch
+ * Copyright (c) 2023-2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,62 +24,48 @@
 
 package by.klnvch.link5dots.ui.menu
 
-import android.app.Dialog
-import android.content.DialogInterface
-import android.os.Bundle
-import android.view.View
-import android.widget.EditText
-import androidx.appcompat.app.AlertDialog
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextField
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.res.stringResource
 import by.klnvch.link5dots.R
-import dagger.android.support.DaggerAppCompatDialogFragment
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-class UsernameDialog : DaggerAppCompatDialogFragment(), DialogInterface.OnClickListener {
-
-    private lateinit var viewModel: MainMenuViewModel
-
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
-
-    private lateinit var mEditText: EditText
-
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val v = View.inflate(activity, R.layout.dialog_username, null)
-        mEditText = v.findViewById(R.id.username)
-
-        viewModel =
-            ViewModelProvider(requireActivity(), viewModelFactory)[MainMenuViewModel::class.java]
-
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.uiState.map { it.userName }.collect { userName ->
-                    mEditText.setText(userName)
-                    mEditText.setSelection(userName.length)
-                }
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun UsernameDialog(
+    userName: String,
+    onConfirmation: (userName: String) -> Unit,
+    onDismissRequest: () -> Unit,
+) {
+    var text = remember { mutableStateOf(userName) }
+    androidx.compose.material3.AlertDialog(
+        text = {
+            TextField(
+                value = text.value,
+                onValueChange = { text.value = it },
+                placeholder = { Text(text = stringResource(R.string.unknown)) },
+                singleLine = true,
+                label = { Text(text = stringResource(R.string.username)) },
+            )
+        },
+        onDismissRequest = { onDismissRequest() },
+        confirmButton = {
+            TextButton(
+                onClick = { onConfirmation(text.value) }
+            ) {
+                Text(text = stringResource(R.string.okay))
+            }
+        },
+        dismissButton = {
+            TextButton(
+                onClick = { onDismissRequest() }
+            ) {
+                Text(text = stringResource(R.string.cancel))
             }
         }
-
-        return AlertDialog.Builder(requireContext())
-            .setCancelable(false)
-            .setPositiveButton(R.string.okay, this)
-            .setNegativeButton(R.string.cancel, null)
-            .setView(v)
-            .create()
-    }
-
-    override fun onClick(dialog: DialogInterface, which: Int) {
-        if (which == DialogInterface.BUTTON_POSITIVE) {
-            viewModel.setUserName(mEditText.text.toString())
-        }
-    }
-
-    companion object {
-        const val TAG = "UsernameDialog"
-    }
+    )
 }
