@@ -48,7 +48,7 @@ fun MultiplayerMenuScreen(onNavigate: (Screen) -> Unit) {
 }
 
 @Composable
-fun MultiplayerMenuScreenPortrait(onNavigate: (Screen) -> Unit) {
+private fun MultiplayerMenuScreenPortrait(onNavigate: (Screen) -> Unit) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
@@ -62,23 +62,18 @@ fun MultiplayerMenuScreenPortrait(onNavigate: (Screen) -> Unit) {
 }
 
 @Composable
-fun MultiplayerMenuScreenLandscape(onNavigate: (Screen) -> Unit) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(24.dp),
+private fun MultiplayerMenuScreenLandscape(onNavigate: (Screen) -> Unit) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center
     ) {
-        Row {
-            ButtonColumn1(onNavigate)
-            ButtonColumn2(onNavigate)
-        }
+        ButtonColumn1(onNavigate)
+        ButtonColumn2(onNavigate)
     }
 }
 
 @Composable
-fun ButtonColumn1(onNavigate: (Screen) -> Unit) {
+private fun ButtonColumn1(onNavigate: (Screen) -> Unit) {
     Column {
         MenuTextButton(
             onClick = { onNavigate(Screen.MultiplayerTwo) },
@@ -94,7 +89,7 @@ fun ButtonColumn1(onNavigate: (Screen) -> Unit) {
 }
 
 @Composable
-fun ButtonColumn2(onNavigate: (Screen) -> Unit) {
+private fun ButtonColumn2(onNavigate: (Screen) -> Unit) {
     Column {
         MenuTextButton(
             onClick = { onNavigate(Screen.MultiplayerNsd) },

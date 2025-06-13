@@ -132,6 +132,7 @@ fun App(
                 MainMenuScreen(viewModel) {
                     when (it) {
                         Screen.MultiplayerMenu -> navController.navigate(Screen.MultiplayerMenu.name)
+                        Screen.Info -> navController.navigate(Screen.Info.name)
                         Screen.Help -> navController.navigate(Screen.Help.name)
                         else -> onNavigate(it)
                     }
@@ -139,6 +140,9 @@ fun App(
             }
             composable(route = Screen.MultiplayerMenu.name) {
                 MultiplayerMenuScreen(onNavigate)
+            }
+            composable(route = Screen.Info.name) {
+                InfoScreen { onNavigate(it) }
             }
             composable(route = Screen.Help.name) {
                 HelpScreen()

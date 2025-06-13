@@ -40,7 +40,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Surface
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -169,13 +169,12 @@ fun GreetingText(
         contentAlignment = Alignment.CenterEnd,
         modifier = modifier.padding(16.dp),
     ) {
-        Surface {
-            Text(
-                text = stringResource(R.string.greetings, userName),
-                textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth()
-            )
-        }
+        Text(
+            text = stringResource(R.string.greetings, userName),
+            textAlign = TextAlign.Center,
+            modifier = Modifier.fillMaxWidth(),
+            color = MaterialTheme.colorScheme.onSecondaryContainer,
+        )
         TextButton(
             onClick = onClick
         ) {

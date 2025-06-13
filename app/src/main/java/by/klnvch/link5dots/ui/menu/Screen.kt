@@ -27,17 +27,21 @@ package by.klnvch.link5dots.ui.menu
 import androidx.annotation.StringRes
 import by.klnvch.link5dots.R
 
-enum class Screen(@StringRes val title: Int) {
+enum class Screen(@StringRes val title: Int = 0) {
     MainMenu(title = R.string.app_name),
     MultiplayerMenu(title = R.string.menu_multi_player),
-    UserNameDialog(title = 0),
-    BotGame(title = 0),
-    Scores(title = 0),
-    Settings(title = 0),
-    Info(title = 0),
+    UserNameDialog(),
+    BotGame(),
+    Scores(),
+    Settings(),
+    Info(title = R.string.application_info_label),
     Help(title = R.string.help),
-    MultiplayerTwo(title = 0),
-    MultiplayerBluetooth(title = 0),
-    MultiplayerNsd(title = 0),
-    MultiplayerOnline(title = 0),
+    MultiplayerTwo(),
+    MultiplayerBluetooth(),
+    MultiplayerNsd(),
+    MultiplayerOnline(),
+    SourceCode(),
+    RateApp(),
+    ShareApp(),
+    Feedback(),
 }
