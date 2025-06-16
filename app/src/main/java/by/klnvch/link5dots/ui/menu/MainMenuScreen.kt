@@ -40,7 +40,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -84,13 +83,10 @@ fun MainMenuScreenPortrait(
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(24.dp),
+        modifier = Modifier.fillMaxSize(),
     ) {
         GreetingText(
             userName = userName,
-            modifier = Modifier.widthIn(0.dp, 320.dp),
             onUserNameChanged = onUserNameChanged
         )
         GameButtonColumn(onNavigate)
@@ -107,14 +103,11 @@ fun MainMenuScreenLandscape(
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(24.dp),
+        modifier = Modifier.fillMaxSize(),
     ) {
         GreetingText(
             userName = userName,
-            modifier = Modifier.widthIn(0.dp, 320.dp),
-            onUserNameChanged = onUserNameChanged
+            onUserNameChanged = onUserNameChanged,
         )
         Row {
             GameButtonColumn(onNavigate)
@@ -176,9 +169,9 @@ fun InfoButtonColumn(onNavigate: (Screen) -> Unit) {
 
 @Composable
 fun GreetingText(
-    modifier: Modifier,
     userName: String,
     onUserNameChanged: (userName: String) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val openAlertDialog = remember { mutableStateOf(false) }
     when {
@@ -193,13 +186,14 @@ fun GreetingText(
     }
     Box(
         contentAlignment = Alignment.CenterEnd,
-        modifier = modifier.padding(16.dp),
+        modifier = modifier
+            .widthIn(0.dp, 320.dp)
+            .padding(16.dp),
     ) {
         Text(
             text = stringResource(R.string.greetings, userName),
             textAlign = TextAlign.Center,
             modifier = Modifier.fillMaxWidth(),
-            color = MaterialTheme.colorScheme.onSecondaryContainer,
         )
         TextButton(
             onClick = { openAlertDialog.value = true }

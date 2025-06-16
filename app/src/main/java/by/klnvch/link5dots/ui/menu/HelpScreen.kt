@@ -25,7 +25,6 @@
 package by.klnvch.link5dots.ui.menu
 
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -38,7 +37,6 @@ import by.klnvch.link5dots.R
 @Composable
 fun HelpScreen() {
     Text(
-        color = MaterialTheme.colorScheme.onSecondaryContainer,
         text = stringResource(R.string.how_to_text),
         modifier = Modifier.padding(10.dp)
     )

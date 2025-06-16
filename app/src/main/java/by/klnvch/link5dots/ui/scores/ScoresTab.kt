@@ -22,25 +22,10 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.ui.menu
+package by.klnvch.link5dots.ui.scores
 
-import androidx.annotation.StringRes
-import by.klnvch.link5dots.R
+import androidx.compose.runtime.Composable
 
-enum class Screen(@StringRes val title: Int = 0) {
-    MainMenu(title = R.string.app_name),
-    MultiplayerMenu(title = R.string.menu_multi_player),
-    BotGame(),
-    Scores(title = R.string.scores_title),
-    Settings(),
-    Info(title = R.string.application_info_label),
-    Help(title = R.string.help),
-    MultiplayerTwo(),
-    MultiplayerBluetooth(),
-    MultiplayerNsd(),
-    MultiplayerOnline(),
-    SourceCode(),
-    RateApp(),
-    ShareApp(),
-    Feedback(),
+@Composable
+fun ScoresTab() {
 }

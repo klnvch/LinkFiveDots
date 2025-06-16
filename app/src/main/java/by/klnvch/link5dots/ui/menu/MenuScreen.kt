@@ -25,10 +25,7 @@
 package by.klnvch.link5dots.ui.menu
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -55,6 +52,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import by.klnvch.link5dots.R
+import by.klnvch.link5dots.ui.scores.ScoresScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -123,15 +121,13 @@ fun App(
         NavHost(
             navController = navController,
             startDestination = Screen.MainMenu.name,
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .padding(innerPadding)
+            modifier = Modifier.padding(innerPadding)
         ) {
             composable(route = Screen.MainMenu.name) {
                 MainMenuScreen(viewModel) {
                     when (it) {
                         Screen.MultiplayerMenu -> navController.navigate(Screen.MultiplayerMenu.name)
+                        Screen.Scores -> navController.navigate(Screen.Scores.name)
                         Screen.Info -> navController.navigate(Screen.Info.name)
                         Screen.Help -> navController.navigate(Screen.Help.name)
                         else -> onNavigate(it)
@@ -140,6 +136,9 @@ fun App(
             }
             composable(route = Screen.MultiplayerMenu.name) {
                 MultiplayerMenuScreen(onNavigate)
+            }
+            composable(route = Screen.Scores.name) {
+                ScoresScreen()
             }
             composable(route = Screen.Info.name) {
                 InfoScreen { onNavigate(it) }
