@@ -52,6 +52,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import by.klnvch.link5dots.R
+import by.klnvch.link5dots.di.viewmodels.SavedStateViewModelFactory
 import by.klnvch.link5dots.ui.scores.ScoresScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -91,6 +92,7 @@ fun AppBar(
 
 @Composable
 fun App(
+    getVmFactory: () -> SavedStateViewModelFactory,
     viewModel: MainMenuViewModel,
     navController: NavHostController = rememberNavController(),
     onNavigate: (Screen) -> Unit,
@@ -138,7 +140,7 @@ fun App(
                 MultiplayerMenuScreen(onNavigate)
             }
             composable(route = Screen.Scores.name) {
-                ScoresScreen()
+                ScoresScreen(getVmFactory)
             }
             composable(route = Screen.Info.name) {
                 InfoScreen { onNavigate(it) }

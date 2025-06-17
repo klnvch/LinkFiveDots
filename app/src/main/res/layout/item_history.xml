@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?><!--
   ~ MIT License
   ~
-  ~ Copyright (c) 2023 klnvch
+  ~ Copyright (c) 2023-2025 klnvch
   ~
   ~ Permission is hereby granted, free of charge, to any person obtaining a copy
   ~ of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,8 @@
   -->
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto">
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -59,7 +60,8 @@
                 app:drawableLeftCompat="@drawable/game_dot_circle_red"
                 app:drawableStartCompat="@drawable/game_dot_circle_red"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="User 1" />
 
             <TextView
                 android:id="@+id/textUser2Name"
@@ -72,7 +74,8 @@
                 app:drawableLeftCompat="@drawable/game_dot_circle_blue"
                 app:drawableStartCompat="@drawable/game_dot_circle_blue"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="User 2" />
 
             <TextView
                 android:id="@+id/textTimeLabel"
@@ -100,7 +103,8 @@
                 android:text="@{viewState.startTime}"
                 android:textStyle="bold"
                 app:layout_constraintStart_toEndOf="@+id/textTimeColon"
-                app:layout_constraintTop_toBottomOf="@+id/textTypeLabel" />
+                app:layout_constraintTop_toBottomOf="@+id/textTypeLabel"
+                tools:text="16 March" />
 
             <TextView
                 android:id="@+id/textTypeLabel"
@@ -128,7 +132,8 @@
                 android:text="@{viewState.typeStringRes}"
                 android:textStyle="bold"
                 app:layout_constraintStart_toEndOf="@+id/textTypeColon"
-                app:layout_constraintTop_toBottomOf="@+id/textUser2Name" />
+                app:layout_constraintTop_toBottomOf="@+id/textUser2Name"
+                tools:text="@string/bluetooth" />
 
             <TextView
                 android:id="@+id/textDurationLabel"
@@ -156,7 +161,8 @@
                 android:text="@{viewState.duration}"
                 android:textStyle="bold"
                 app:layout_constraintStart_toEndOf="@+id/textDurationColon"
-                app:layout_constraintTop_toBottomOf="@+id/textTimeLabel" />
+                app:layout_constraintTop_toBottomOf="@+id/textTimeLabel"
+                tools:text="10 minutes" />
 
             <TextView
                 android:id="@+id/textDotsLabel"
@@ -184,7 +190,8 @@
                 android:text="@{viewState.size}"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textTimeLabel" />
+                app:layout_constraintTop_toBottomOf="@+id/textTimeLabel"
+                tools:text="5" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

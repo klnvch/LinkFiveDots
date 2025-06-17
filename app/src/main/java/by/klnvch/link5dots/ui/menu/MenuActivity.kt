@@ -33,9 +33,11 @@ import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AlertDialog
+import androidx.compose.runtime.remember
 import androidx.core.net.toUri
 import androidx.lifecycle.ViewModelProvider
 import by.klnvch.link5dots.R
+import by.klnvch.link5dots.di.viewmodels.SavedStateViewModelFactory
 import by.klnvch.link5dots.ui.game.activities.BluetoothGameActivity
 import by.klnvch.link5dots.ui.game.activities.BotGameActivity
 import by.klnvch.link5dots.ui.game.activities.NsdGameActivity
@@ -53,6 +55,9 @@ class MenuActivity : DaggerAppCompatActivity() {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
+    @Inject
+    lateinit var savedStateViewModelFactory: SavedStateViewModelFactory
+
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
@@ -61,7 +66,10 @@ class MenuActivity : DaggerAppCompatActivity() {
 
         setContent {
             AppTheme {
-                App(viewModel) { dest -> navigate(dest) }
+                val getVmFactory: () -> SavedStateViewModelFactory = remember {
+                    { savedStateViewModelFactory }
+                }
+                App(getVmFactory, viewModel) { dest -> navigate(dest) }
             }
         }
     }

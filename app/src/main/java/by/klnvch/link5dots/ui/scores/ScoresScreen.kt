@@ -38,6 +38,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import by.klnvch.link5dots.R
+import by.klnvch.link5dots.di.viewmodels.SavedStateViewModelFactory
 
 enum class ScoresDestination(
     @StringRes val title: Int = 0,
@@ -48,7 +49,7 @@ enum class ScoresDestination(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ScoresScreen() {
+fun ScoresScreen(getVmFactory: () -> SavedStateViewModelFactory) {
     var selectedDestination by rememberSaveable { mutableIntStateOf(ScoresDestination.SCORES.ordinal) }
 
     Column {
@@ -71,7 +72,7 @@ fun ScoresScreen() {
         }
         when (selectedDestination) {
             ScoresDestination.SCORES.ordinal -> ScoresTab()
-            ScoresDestination.HISTORY.ordinal -> HistoryTab()
+            ScoresDestination.HISTORY.ordinal -> HistoryTab(getVmFactory)
         }
     }
 }

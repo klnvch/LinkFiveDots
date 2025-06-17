@@ -24,8 +24,113 @@
 
 package by.klnvch.link5dots.ui.scores
 
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Card
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import by.klnvch.link5dots.R
+import by.klnvch.link5dots.di.viewmodels.SavedStateViewModelFactory
+import by.klnvch.link5dots.ui.scores.history.HistoryItemViewState
 
 @Composable
-fun HistoryTab() {
+fun HistoryTab(
+    getVmFactory: () -> SavedStateViewModelFactory,
+    viewModel: ScoresViewModel = viewModel(factory = getVmFactory()),
+) {
+    val uiState by viewModel.historyUiState.collectAsState()
+    val rooms = uiState.items
+    LazyColumn(
+        contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp),
+        verticalArrangement = Arrangement.spacedBy(4.dp),
+    ) {
+        items(
+            items = rooms,
+            key = { it.room.key },
+        ) { room ->
+            HistoryRoomRow(
+                modifier = Modifier
+                    .animateItem()
+                    .fillParentMaxWidth()
+                    .padding(horizontal = 8.dp, vertical = 8.dp),
+                room = room,
+            )
+        }
+    }
+}
+
+@Composable
+fun HistoryRoomRow(modifier: Modifier, room: HistoryItemViewState) {
+    Card(
+        modifier = modifier
+    ) {
+        Row {
+            Column(
+                horizontalAlignment = Alignment.Start,
+                modifier = Modifier.weight(1.0f),
+            ) {
+                UserName(R.drawable.game_dot_circle_red, room.userName1 ?: "")
+                RoomProperty(R.string.type, stringResource(room.typeStringRes))
+                RoomProperty(R.string.time, room.startTime)
+                RoomProperty(R.string.duration, room.duration)
+            }
+            Column(
+                horizontalAlignment = Alignment.End,
+                verticalArrangement = Arrangement.SpaceBetween,
+            ) {
+                UserName(R.drawable.game_dot_circle_blue, room.userName2 ?: "")
+                RoomProperty(R.string.settings_dots, room.size)
+            }
+        }
+    }
+}
+
+@Composable
+private fun UserName(@DrawableRes iconId: Int, userName: String) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Icon(
+            modifier = Modifier.padding(8.dp),
+            painter = painterResource(iconId),
+            contentDescription = userName,
+            tint = Color.Unspecified,
+        )
+        Text(
+            text = userName,
+            fontWeight = FontWeight.Bold,
+        )
+    }
+}
+
+@Composable
+private fun RoomProperty(@StringRes textId: Int, value: String) {
+    Row {
+        Text(
+            text = stringResource(textId) + stringResource(R.string.colon),
+        )
+        Text(
+            modifier = Modifier.padding(horizontal = 8.dp),
+            text = value,
+            fontWeight = FontWeight.Bold,
+        )
+    }
 }

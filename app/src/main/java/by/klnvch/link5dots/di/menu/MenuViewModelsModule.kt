@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 klnvch
+ * Copyright (c) 2023-2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,11 +25,17 @@
 package by.klnvch.link5dots.di.menu
 
 
+import android.os.Bundle
 import androidx.lifecycle.ViewModel
+import androidx.savedstate.SavedStateRegistryOwner
+import by.klnvch.link5dots.di.viewmodels.AssistedSavedStateViewModelFactory
 import by.klnvch.link5dots.di.viewmodels.ViewModelKey
 import by.klnvch.link5dots.ui.menu.MainMenuViewModel
+import by.klnvch.link5dots.ui.menu.MenuActivity
+import by.klnvch.link5dots.ui.scores.ScoresViewModel
 import dagger.Binds
 import dagger.Module
+import dagger.Provides
 import dagger.multibindings.IntoMap
 
 @Module
@@ -38,4 +44,19 @@ abstract class MenuViewModelsModule {
     @IntoMap
     @ViewModelKey(MainMenuViewModel::class)
     abstract fun bindMainMenuViewModel(viewModel: MainMenuViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(ScoresViewModel::class)
+    abstract fun bindScoresViewModel(factory: ScoresViewModel.Factory): AssistedSavedStateViewModelFactory<out ViewModel>
+
+    @Binds
+    abstract fun bindSavedStateRegistryOwner(scoresActivity: MenuActivity): SavedStateRegistryOwner
+
+    companion object {
+        @Provides
+        fun provideDefaultArgs(): Bundle? {
+            return null
+        }
+    }
 }
