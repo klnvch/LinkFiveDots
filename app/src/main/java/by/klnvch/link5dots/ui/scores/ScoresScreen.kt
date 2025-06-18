@@ -49,7 +49,10 @@ enum class ScoresDestination(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ScoresScreen(getVmFactory: () -> SavedStateViewModelFactory) {
+fun ScoresScreen(
+    getVmFactory: () -> SavedStateViewModelFactory,
+    onSnackbarMessage: (message: String, actionLabel: String, action: () -> Unit) -> Unit,
+) {
     var selectedDestination by rememberSaveable { mutableIntStateOf(ScoresDestination.SCORES.ordinal) }
 
     Column {
@@ -72,7 +75,7 @@ fun ScoresScreen(getVmFactory: () -> SavedStateViewModelFactory) {
         }
         when (selectedDestination) {
             ScoresDestination.SCORES.ordinal -> ScoresTab()
-            ScoresDestination.HISTORY.ordinal -> HistoryTab(getVmFactory)
+            ScoresDestination.HISTORY.ordinal -> HistoryTab(onSnackbarMessage, getVmFactory)
         }
     }
 }

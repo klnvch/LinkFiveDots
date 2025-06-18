@@ -49,6 +49,7 @@
 
     <string name="yes">"Так"</string>
     <string name="no">"Ні"</string>
+    <string name="done">"Готово"</string>
     <string name="confirmation_turn_on">"Увімкнути"</string>
     <string name="create">"Створити"</string>
     <string name="unknown">"Невідомо"</string>

@@ -49,6 +49,7 @@
 
     <string name="yes">"Да"</string>
     <string name="no">"Нет"</string>
+    <string name="done">"Готово"</string>
     <string name="confirmation_turn_on">"Да"</string>
     <string name="create">"Создать"</string>
     <string name="unknown">"Неизвестно"</string>

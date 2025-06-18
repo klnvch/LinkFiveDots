@@ -60,6 +60,7 @@
 
     <string name="yes">"بله"</string>
     <string name="no">"نه"</string>
+    <string name="done">"تمام"</string>
     <string name="confirmation_turn_on">"روشن کردن"</string>
     <string name="create">"ایجاد"</string>
     <string name="unknown">"ناشناس"</string>

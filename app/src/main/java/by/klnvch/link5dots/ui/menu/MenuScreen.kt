@@ -32,11 +32,17 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
@@ -54,6 +60,7 @@ import androidx.navigation.compose.rememberNavController
 import by.klnvch.link5dots.R
 import by.klnvch.link5dots.di.viewmodels.SavedStateViewModelFactory
 import by.klnvch.link5dots.ui.scores.ScoresScreen
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -102,6 +109,9 @@ fun App(
         backStackEntry?.destination?.route ?: Screen.MainMenu.name
     )
 
+    val scope = rememberCoroutineScope()
+    val snackbarHostState = remember { SnackbarHostState() }
+
     Scaffold(
         modifier = Modifier.background(
             ShaderBrush(
@@ -119,7 +129,11 @@ fun App(
                 canNavigateBack = navController.previousBackStackEntry != null,
                 navigateUp = { navController.navigateUp() }
             )
-        }) { innerPadding ->
+        },
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState)
+        },
+    ) { innerPadding ->
         NavHost(
             navController = navController,
             startDestination = Screen.MainMenu.name,
@@ -140,7 +154,19 @@ fun App(
                 MultiplayerMenuScreen(onNavigate)
             }
             composable(route = Screen.Scores.name) {
-                ScoresScreen(getVmFactory)
+                ScoresScreen(getVmFactory) { message, actionLabel, action ->
+                    scope.launch {
+                        val result = snackbarHostState.showSnackbar(
+                            message = message,
+                            actionLabel = actionLabel,
+                            duration = SnackbarDuration.Long
+                        )
+                        when (result) {
+                            SnackbarResult.ActionPerformed -> action()
+                            SnackbarResult.Dismissed -> {}
+                        }
+                    }
+                }
             }
             composable(route = Screen.Info.name) {
                 InfoScreen { onNavigate(it) }

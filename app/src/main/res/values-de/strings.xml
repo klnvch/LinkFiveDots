@@ -49,6 +49,7 @@
 
     <string name="yes">"Ja"</string>
     <string name="no">"Nein"</string>
+    <string name="done">"Fertig"</string>
     <string name="confirmation_turn_on">"Aktivieren"</string>
     <string name="create">"Erstellen"</string>
     <string name="unknown">"Unbekannt"</string>

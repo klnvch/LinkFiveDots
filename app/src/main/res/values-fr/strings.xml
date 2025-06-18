@@ -49,6 +49,7 @@
 
     <string name="yes">"Oui"</string>
     <string name="no">"Non"</string>
+    <string name="done">"Terminé"</string>
     <string name="confirmation_turn_on">"Activer"</string>
     <string name="create">"Créer"</string>
     <string name="unknown">"Inconnu"</string>

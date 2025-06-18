@@ -67,6 +67,7 @@
 
     <string name="yes">"Yes"</string>
     <string name="no">"No"</string>
+    <string name="done">Done</string>
     <string name="confirmation_turn_on">Turn on</string>
     <string name="create">Create</string>
     <string name="unknown">Unknown</string>

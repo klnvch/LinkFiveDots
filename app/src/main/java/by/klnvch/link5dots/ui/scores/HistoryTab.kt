@@ -26,22 +26,33 @@ package by.klnvch.link5dots.ui.scores
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
+import androidx.compose.material3.SwipeToDismissBox
+import androidx.compose.material3.SwipeToDismissBoxValue.EndToStart
+import androidx.compose.material3.SwipeToDismissBoxValue.Settled
+import androidx.compose.material3.SwipeToDismissBoxValue.StartToEnd
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -53,14 +64,16 @@ import by.klnvch.link5dots.ui.scores.history.HistoryItemViewState
 
 @Composable
 fun HistoryTab(
+    onSnackbarMessage: (message: String, actionLabel: String, action: () -> Unit) -> Unit,
     getVmFactory: () -> SavedStateViewModelFactory,
     viewModel: ScoresViewModel = viewModel(factory = getVmFactory()),
 ) {
+    val context = LocalContext.current
     val uiState by viewModel.historyUiState.collectAsState()
     val rooms = uiState.items
     LazyColumn(
         contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp),
-        verticalArrangement = Arrangement.spacedBy(4.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         items(
             items = rooms,
@@ -69,35 +82,77 @@ fun HistoryTab(
             HistoryRoomRow(
                 modifier = Modifier
                     .animateItem()
-                    .fillParentMaxWidth()
-                    .padding(horizontal = 8.dp, vertical = 8.dp),
+                    .fillParentMaxWidth(),
                 room = room,
-            )
+            ) {
+                viewModel.deleteRoom(it.room)
+                onSnackbarMessage(
+                    context.getString(R.string.done),
+                    context.getString(R.string.undo)
+                ) {
+                    viewModel.insertRoom(it.room)
+                }
+            }
         }
     }
 }
 
 @Composable
-fun HistoryRoomRow(modifier: Modifier, room: HistoryItemViewState) {
-    Card(
-        modifier = modifier
-    ) {
-        Row {
-            Column(
-                horizontalAlignment = Alignment.Start,
-                modifier = Modifier.weight(1.0f),
-            ) {
-                UserName(R.drawable.game_dot_circle_red, room.userName1 ?: "")
-                RoomProperty(R.string.type, stringResource(room.typeStringRes))
-                RoomProperty(R.string.time, room.startTime)
-                RoomProperty(R.string.duration, room.duration)
+fun HistoryRoomRow(
+    modifier: Modifier,
+    room: HistoryItemViewState,
+    onRemove: (HistoryItemViewState) -> Unit,
+) {
+    val swipeToDismissBoxState = rememberSwipeToDismissBoxState(
+        confirmValueChange = {
+            if (it == EndToStart) onRemove(room)
+            true
+        }
+    )
+    SwipeToDismissBox(
+        state = swipeToDismissBoxState,
+        modifier = modifier.fillMaxSize(),
+        enableDismissFromStartToEnd = false,
+        backgroundContent = {
+            when (swipeToDismissBoxState.dismissDirection) {
+                EndToStart -> {
+                    Icon(
+                        imageVector = Icons.Default.Delete,
+                        contentDescription = "Remove item",
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(Color.Red)
+                            .wrapContentSize(Alignment.CenterEnd)
+                            .padding(12.dp),
+                        tint = Color.White
+                    )
+                }
+
+                StartToEnd -> {}
+                Settled -> {}
             }
-            Column(
-                horizontalAlignment = Alignment.End,
-                verticalArrangement = Arrangement.SpaceBetween,
-            ) {
-                UserName(R.drawable.game_dot_circle_blue, room.userName2 ?: "")
-                RoomProperty(R.string.settings_dots, room.size)
+        }
+    ) {
+        Card(
+            modifier = modifier
+        ) {
+            Row {
+                Column(
+                    horizontalAlignment = Alignment.Start,
+                    modifier = Modifier.weight(1.0f),
+                ) {
+                    UserName(R.drawable.game_dot_circle_red, room.userName1 ?: "")
+                    RoomProperty(R.string.type, stringResource(room.typeStringRes))
+                    RoomProperty(R.string.time, room.startTime)
+                    RoomProperty(R.string.duration, room.duration)
+                }
+                Column(
+                    horizontalAlignment = Alignment.End,
+                    verticalArrangement = Arrangement.SpaceBetween,
+                ) {
+                    UserName(R.drawable.game_dot_circle_blue, room.userName2 ?: "")
+                    RoomProperty(R.string.settings_dots, room.size)
+                }
             }
         }
     }
