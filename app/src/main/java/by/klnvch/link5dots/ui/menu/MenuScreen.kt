@@ -9,10 +9,10 @@
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- *
+ *  
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
- *
+ *  
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -65,7 +65,7 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppBar(
-    currentScreen: Screen,
+    currentScreen: Screen.ComposeScreen,
     canNavigateBack: Boolean,
     navigateUp: () -> Unit,
     modifier: Modifier = Modifier,
@@ -105,9 +105,7 @@ fun App(
     onNavigate: (Screen) -> Unit,
 ) {
     val backStackEntry by navController.currentBackStackEntryAsState()
-    val currentScreen = Screen.valueOf(
-        backStackEntry?.destination?.route ?: Screen.MainMenu.name
-    )
+    val currentScreen = Screen.getComposeScreen(backStackEntry?.destination?.route)
 
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
@@ -136,42 +134,44 @@ fun App(
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = Screen.MainMenu.name,
+            startDestination = Screen.MainMenu.route,
             modifier = Modifier.padding(innerPadding)
         ) {
-            composable(route = Screen.MainMenu.name) {
+            composable(route = Route.MainMenu.name) {
                 MainMenuScreen(viewModel) {
-                    when (it) {
-                        Screen.MultiplayerMenu -> navController.navigate(Screen.MultiplayerMenu.name)
-                        Screen.Scores -> navController.navigate(Screen.Scores.name)
-                        Screen.Info -> navController.navigate(Screen.Info.name)
-                        Screen.Help -> navController.navigate(Screen.Help.name)
-                        else -> onNavigate(it)
+                    if (it is Screen.ComposeScreen) {
+                        navController.navigate(it.route)
+                    } else {
+                        onNavigate(it)
                     }
                 }
             }
-            composable(route = Screen.MultiplayerMenu.name) {
+            composable(route = Route.MultiplayerMenu.name) {
                 MultiplayerMenuScreen(onNavigate)
             }
-            composable(route = Screen.Scores.name) {
-                ScoresScreen(getVmFactory) { message, actionLabel, action ->
-                    scope.launch {
-                        val result = snackbarHostState.showSnackbar(
-                            message = message,
-                            actionLabel = actionLabel,
-                            duration = SnackbarDuration.Long
-                        )
-                        when (result) {
-                            SnackbarResult.ActionPerformed -> action()
-                            SnackbarResult.Dismissed -> {}
+            composable(route = Route.Scores.name) {
+                ScoresScreen(
+                    getVmFactory,
+                    onNavigate = { onNavigate(it) },
+                    onSnackbarMessage = { message, actionLabel, action ->
+                        scope.launch {
+                            val result = snackbarHostState.showSnackbar(
+                                message = message,
+                                actionLabel = actionLabel,
+                                duration = SnackbarDuration.Long
+                            )
+                            when (result) {
+                                SnackbarResult.ActionPerformed -> action()
+                                SnackbarResult.Dismissed -> {}
+                            }
                         }
                     }
-                }
+                )
             }
-            composable(route = Screen.Info.name) {
+            composable(route = Route.Info.name) {
                 InfoScreen { onNavigate(it) }
             }
-            composable(route = Screen.Help.name) {
+            composable(route = Route.Help.name) {
                 HelpScreen()
             }
         }

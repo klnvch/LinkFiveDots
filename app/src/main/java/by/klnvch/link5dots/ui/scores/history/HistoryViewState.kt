@@ -24,13 +24,9 @@
 
 package by.klnvch.link5dots.ui.scores.history
 
-import android.view.View
-
 data class HistoryViewState(
-    val items: List<HistoryItemViewState>
+    val items: List<HistoryItemViewState>,
 ) {
-    val errorMessageVisibility = if (items.isEmpty()) View.VISIBLE else View.GONE
-
     companion object {
         fun initial() = HistoryViewState(emptyList())
     }

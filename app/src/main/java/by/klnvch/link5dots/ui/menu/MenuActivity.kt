@@ -40,6 +40,7 @@ import by.klnvch.link5dots.R
 import by.klnvch.link5dots.di.viewmodels.SavedStateViewModelFactory
 import by.klnvch.link5dots.ui.game.activities.BluetoothGameActivity
 import by.klnvch.link5dots.ui.game.activities.BotGameActivity
+import by.klnvch.link5dots.ui.game.activities.GameInfoActivity.Companion.launchGameInfoActivity
 import by.klnvch.link5dots.ui.game.activities.NsdGameActivity
 import by.klnvch.link5dots.ui.game.activities.OnlineGameActivity
 import by.klnvch.link5dots.ui.game.activities.TwoPlayersGameActivity
@@ -83,6 +84,7 @@ class MenuActivity : DaggerAppCompatActivity() {
             Screen.MultiplayerBluetooth -> start(BluetoothGameActivity::class)
             Screen.MultiplayerNsd -> start(NsdGameActivity::class)
             Screen.MultiplayerOnline -> start(OnlineGameActivity::class)
+            is Screen.GameInfo -> launchGameInfoActivity(destination.key)
             Screen.SourceCode -> {
                 val intent = Intent(Intent.ACTION_VIEW, GITHUB_LINK.toUri())
                 launchIntent(intent, GITHUB_LINK)

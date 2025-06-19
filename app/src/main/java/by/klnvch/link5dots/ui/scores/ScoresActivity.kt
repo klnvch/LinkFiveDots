@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 klnvch
+ * Copyright (c) 2023-2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -32,7 +32,6 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import by.klnvch.link5dots.R
 import by.klnvch.link5dots.databinding.ActivityScoresBinding
 import by.klnvch.link5dots.di.viewmodels.SavedStateViewModelFactory
-import by.klnvch.link5dots.ui.scores.history.HistoryFragment
 import by.klnvch.link5dots.ui.scores.scores.ScoresFragment
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
@@ -79,7 +78,7 @@ class ScoresActivity : DaggerAppCompatActivity(), OnTabSelectedListener {
         override fun createFragment(position: Int): Fragment {
             return when (position) {
                 ScoresTabPosition.SCORES -> ScoresFragment()
-                ScoresTabPosition.HISTORY -> HistoryFragment()
+                ScoresTabPosition.HISTORY -> ScoresFragment()
                 else -> throw IllegalStateException()
             }
         }

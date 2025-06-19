@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.ui.scores
+package by.klnvch.link5dots.ui.scores.history
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
@@ -60,10 +60,12 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import by.klnvch.link5dots.R
 import by.klnvch.link5dots.di.viewmodels.SavedStateViewModelFactory
-import by.klnvch.link5dots.ui.scores.history.HistoryItemViewState
+import by.klnvch.link5dots.ui.menu.Screen
+import by.klnvch.link5dots.ui.scores.ScoresViewModel
 
 @Composable
 fun HistoryTab(
+    onNavigate: (Screen) -> Unit,
     onSnackbarMessage: (message: String, actionLabel: String, action: () -> Unit) -> Unit,
     getVmFactory: () -> SavedStateViewModelFactory,
     viewModel: ScoresViewModel = viewModel(factory = getVmFactory()),
@@ -71,29 +73,42 @@ fun HistoryTab(
     val context = LocalContext.current
     val uiState by viewModel.historyUiState.collectAsState()
     val rooms = uiState.items
-    LazyColumn(
-        contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
-    ) {
-        items(
-            items = rooms,
-            key = { it.room.key },
-        ) { room ->
-            HistoryRoomRow(
-                modifier = Modifier
-                    .animateItem()
-                    .fillParentMaxWidth(),
-                room = room,
-            ) {
-                viewModel.deleteRoom(it.room)
-                onSnackbarMessage(
-                    context.getString(R.string.done),
-                    context.getString(R.string.undo)
-                ) {
-                    viewModel.insertRoom(it.room)
-                }
+    if (rooms.isEmpty()) {
+        LazyColumn(
+            contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            items(
+                items = rooms,
+                key = { it.room.key },
+            ) { room ->
+                HistoryRoomRow(
+                    modifier = Modifier
+                        .animateItem()
+                        .fillParentMaxWidth(),
+                    room = room,
+                    onClick = { onNavigate(Screen.GameInfo(it)) },
+                    onRemove = {
+                        viewModel.deleteRoom(it.room)
+                        onSnackbarMessage(
+                            context.getString(R.string.done),
+                            context.getString(R.string.undo)
+                        ) { viewModel.insertRoom(it.room) }
+                    },
+                )
             }
         }
+    } else {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            Text(
+                text = stringResource(R.string.search_no_results),
+            )
+        }
+
     }
 }
 
@@ -101,6 +116,7 @@ fun HistoryTab(
 fun HistoryRoomRow(
     modifier: Modifier,
     room: HistoryItemViewState,
+    onClick: (key: String) -> Unit,
     onRemove: (HistoryItemViewState) -> Unit,
 ) {
     val swipeToDismissBoxState = rememberSwipeToDismissBoxState(
@@ -134,7 +150,8 @@ fun HistoryRoomRow(
         }
     ) {
         Card(
-            modifier = modifier
+            onClick = { onClick(room.room.key) },
+            modifier = modifier,
         ) {
             Row {
                 Column(

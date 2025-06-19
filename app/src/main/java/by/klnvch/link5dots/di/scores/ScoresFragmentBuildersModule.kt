@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 klnvch
+ * Copyright (c) 2023-2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,15 +24,12 @@
 
 package by.klnvch.link5dots.di.scores
 
-import by.klnvch.link5dots.ui.scores.history.HistoryFragment
 import by.klnvch.link5dots.ui.scores.scores.ScoresFragment
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
 @Module
 abstract class ScoresFragmentBuildersModule {
-    @ContributesAndroidInjector
-    abstract fun contributeHistoryFragment(): HistoryFragment
     @ContributesAndroidInjector
     abstract fun contributeScoresFragment(): ScoresFragment
 }

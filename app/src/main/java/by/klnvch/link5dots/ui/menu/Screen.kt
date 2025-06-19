@@ -27,20 +27,41 @@ package by.klnvch.link5dots.ui.menu
 import androidx.annotation.StringRes
 import by.klnvch.link5dots.R
 
-enum class Screen(@StringRes val title: Int = 0) {
-    MainMenu(title = R.string.app_name),
-    MultiplayerMenu(title = R.string.menu_multi_player),
-    BotGame(),
-    Scores(title = R.string.scores_title),
-    Settings(),
-    Info(title = R.string.application_info_label),
-    Help(title = R.string.help),
-    MultiplayerTwo(),
-    MultiplayerBluetooth(),
-    MultiplayerNsd(),
-    MultiplayerOnline(),
-    SourceCode(),
-    RateApp(),
-    ShareApp(),
-    Feedback(),
+enum class Route() {
+    MainMenu, MultiplayerMenu, Scores, Info, Help
+}
+
+sealed class Screen() {
+    open class ComposeScreen(route: Route, @StringRes val title: Int) : Screen() {
+        val route = route.name
+    }
+
+    object MainMenu : ComposeScreen(Route.MainMenu, R.string.app_name)
+    object MultiplayerMenu : ComposeScreen(Route.MultiplayerMenu, R.string.menu_multi_player)
+    object Scores : ComposeScreen(Route.Scores, R.string.scores_title)
+    object Info : ComposeScreen(Route.Info, R.string.application_info_label)
+    object Help : ComposeScreen(Route.Help, R.string.help)
+
+    object BotGame : Screen()
+    object Settings : Screen()
+    object MultiplayerTwo : Screen()
+    object MultiplayerBluetooth : Screen()
+    object MultiplayerNsd : Screen()
+    object MultiplayerOnline : Screen()
+    object SourceCode : Screen()
+    object RateApp : Screen()
+    object ShareApp : Screen()
+    object Feedback : Screen()
+    data class GameInfo(val key: String) : Screen()
+
+    companion object {
+        fun getComposeScreen(name: String?) = when (name) {
+            Route.MainMenu.name -> MainMenu
+            Route.MultiplayerMenu.name -> MultiplayerMenu
+            Route.Scores.name -> Scores
+            Route.Info.name -> Info
+            Route.Help.name -> Help
+            else -> MainMenu
+        }
+    }
 }

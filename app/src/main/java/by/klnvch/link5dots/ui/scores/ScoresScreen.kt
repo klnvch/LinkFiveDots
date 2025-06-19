@@ -39,6 +39,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import by.klnvch.link5dots.R
 import by.klnvch.link5dots.di.viewmodels.SavedStateViewModelFactory
+import by.klnvch.link5dots.ui.menu.Screen
+import by.klnvch.link5dots.ui.scores.history.HistoryTab
 
 enum class ScoresDestination(
     @StringRes val title: Int = 0,
@@ -51,6 +53,7 @@ enum class ScoresDestination(
 @Composable
 fun ScoresScreen(
     getVmFactory: () -> SavedStateViewModelFactory,
+    onNavigate: (Screen) -> Unit,
     onSnackbarMessage: (message: String, actionLabel: String, action: () -> Unit) -> Unit,
 ) {
     var selectedDestination by rememberSaveable { mutableIntStateOf(ScoresDestination.SCORES.ordinal) }
@@ -75,7 +78,11 @@ fun ScoresScreen(
         }
         when (selectedDestination) {
             ScoresDestination.SCORES.ordinal -> ScoresTab()
-            ScoresDestination.HISTORY.ordinal -> HistoryTab(onSnackbarMessage, getVmFactory)
+            ScoresDestination.HISTORY.ordinal -> HistoryTab(
+                onNavigate,
+                onSnackbarMessage,
+                getVmFactory
+            )
         }
     }
 }

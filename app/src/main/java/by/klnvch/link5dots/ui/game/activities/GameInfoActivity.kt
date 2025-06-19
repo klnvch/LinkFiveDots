@@ -23,11 +23,10 @@
  */
 package by.klnvch.link5dots.ui.game.activities
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import by.klnvch.link5dots.R
-import by.klnvch.link5dots.domain.models.IRoom
 import by.klnvch.link5dots.domain.usecases.RoomByKey
 import by.klnvch.link5dots.domain.usecases.RoomParam
 
@@ -47,8 +46,8 @@ class GameInfoActivity : OfflineGameActivity() {
 
     companion object {
         private const val KEY = "key"
-        fun Fragment.launchGameInfoActivity(room: IRoom) {
-            startActivity(Intent(context, GameInfoActivity::class.java).putExtra(KEY, room.key))
-        }
+
+        fun Activity.launchGameInfoActivity(key: String) =
+            startActivity(Intent(this, GameInfoActivity::class.java).putExtra(KEY, key))
     }
 }
