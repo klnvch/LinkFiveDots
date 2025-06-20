@@ -44,7 +44,6 @@ import by.klnvch.link5dots.ui.game.activities.GameInfoActivity.Companion.launchG
 import by.klnvch.link5dots.ui.game.activities.NsdGameActivity
 import by.klnvch.link5dots.ui.game.activities.OnlineGameActivity
 import by.klnvch.link5dots.ui.game.activities.TwoPlayersGameActivity
-import by.klnvch.link5dots.ui.scores.ScoresActivity
 import by.klnvch.link5dots.ui.settings.SettingsActivity
 import by.klnvch.link5dots.ui.theme.AppTheme
 import com.google.firebase.crashlytics.FirebaseCrashlytics
@@ -78,7 +77,6 @@ class MenuActivity : DaggerAppCompatActivity() {
     private fun navigate(destination: Screen) {
         when (destination) {
             Screen.BotGame -> start(BotGameActivity::class)
-            Screen.Scores -> start(ScoresActivity::class)
             Screen.Settings -> start(SettingsActivity::class)
             Screen.MultiplayerTwo -> start(TwoPlayersGameActivity::class)
             Screen.MultiplayerBluetooth -> start(BluetoothGameActivity::class)

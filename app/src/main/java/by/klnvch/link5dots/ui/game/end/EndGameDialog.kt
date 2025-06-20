@@ -26,7 +26,6 @@ package by.klnvch.link5dots.ui.game.end
 import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
-import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.ViewModelProvider
@@ -35,7 +34,6 @@ import by.klnvch.link5dots.databinding.DialogEndGameBinding
 import by.klnvch.link5dots.domain.usecases.ActionAvailability
 import by.klnvch.link5dots.ui.game.OfflineGameViewModel
 import by.klnvch.link5dots.ui.game.OnNewGameClickListener
-import by.klnvch.link5dots.ui.scores.ScoresActivity
 import dagger.android.support.DaggerDialogFragment
 import javax.inject.Inject
 
@@ -97,7 +95,7 @@ class EndGameDialog : DaggerDialogFragment(), DialogInterface.OnClickListener {
 
     private fun moveToScores() {
         viewModel.saveScore()
-        startActivity(Intent(requireContext(), ScoresActivity::class.java))
+        // TODO: startActivity(Intent(requireContext(), ScoresActivity::class.java))
     }
 
     companion object {

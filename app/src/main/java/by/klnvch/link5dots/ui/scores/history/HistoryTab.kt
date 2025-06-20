@@ -73,7 +73,7 @@ fun HistoryTab(
     val context = LocalContext.current
     val uiState by viewModel.historyUiState.collectAsState()
     val rooms = uiState.items
-    if (rooms.isEmpty()) {
+    if (rooms.isNotEmpty()) {
         LazyColumn(
             contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -108,7 +108,6 @@ fun HistoryTab(
                 text = stringResource(R.string.search_no_results),
             )
         }
-
     }
 }
 

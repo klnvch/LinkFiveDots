@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 klnvch
+ * Copyright (c) 2023-2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,7 +27,11 @@ package by.klnvch.link5dots.ui.scores.scores
 import android.view.View
 import by.klnvch.link5dots.R
 
-data class ScoresViewState(val firebaseState: FirebaseState, val highScorePath: String? = null) {
+data class ScoresViewState(
+    val items: List<HighScoreViewState>,
+    val firebaseState: FirebaseState,
+    val highScorePath: String? = null,
+) {
     val errorMsg = when (firebaseState) {
         FirebaseState.NOT_SUPPORTED -> R.string.error_feature_not_available
         FirebaseState.ERROR -> R.string.connection_error_message
@@ -36,7 +40,7 @@ data class ScoresViewState(val firebaseState: FirebaseState, val highScorePath: 
     val errorVisibility = if (firebaseState != FirebaseState.SIGNED_IN) View.VISIBLE else View.GONE
 
     companion object {
-        fun initial() = ScoresViewState(FirebaseState.UNKNOWN)
+        fun initial() = ScoresViewState(emptyList(), FirebaseState.UNKNOWN)
     }
 }
 

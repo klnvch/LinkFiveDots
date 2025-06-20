@@ -27,20 +27,28 @@ package by.klnvch.link5dots.ui.scores
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import by.klnvch.link5dots.data.firebase.GameScoreRemote
 import by.klnvch.link5dots.di.viewmodels.AssistedSavedStateViewModelFactory
 import by.klnvch.link5dots.domain.models.IRoom
-import by.klnvch.link5dots.domain.usecases.*
+import by.klnvch.link5dots.domain.usecases.DeleteRoomUseCase
 import by.klnvch.link5dots.domain.usecases.GetRoomsUseCase
+import by.klnvch.link5dots.domain.usecases.GetScorePathUseCase
+import by.klnvch.link5dots.domain.usecases.GetUserNameUseCase
+import by.klnvch.link5dots.domain.usecases.NotSupportedException
+import by.klnvch.link5dots.domain.usecases.SaveRoomUseCase
 import by.klnvch.link5dots.ui.scores.history.HistoryItemViewState
 import by.klnvch.link5dots.ui.scores.history.HistoryViewState
 import by.klnvch.link5dots.ui.scores.scores.FirebaseState
+import by.klnvch.link5dots.ui.scores.scores.HighScoreViewState
 import by.klnvch.link5dots.ui.scores.scores.ScoresViewState
+import com.google.firebase.database.FirebaseDatabase
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 
 class ScoresViewModel @AssistedInject constructor(
     @Assisted private val savedStateHandle: SavedStateHandle,
@@ -70,17 +78,33 @@ class ScoresViewModel @AssistedInject constructor(
         viewModelScope.launch {
             try {
                 val scorePath = getScorePathUseCase.signInAndGet()
-                _scoresUiState.value = ScoresViewState(FirebaseState.SIGNED_IN, scorePath)
-            } catch (e: NotSupportedException) {
-                _scoresUiState.value = ScoresViewState(FirebaseState.NOT_SUPPORTED)
-            } catch (e: Exception) {
-                _scoresUiState.value = ScoresViewState(FirebaseState.ERROR)
+                _scoresUiState.value =
+                    ScoresViewState(emptyList(), FirebaseState.SIGNED_IN, scorePath)
+
+                val dataSnapshot = FirebaseDatabase.getInstance().reference
+                    .child(scorePath)
+                    .orderByChild("score")
+                    .limitToLast(LIMIT_TO_FIRST)
+                    .get()
+                    .await()
+
+                val scores = dataSnapshot.children
+                    .mapNotNull { it.getValue(GameScoreRemote::class.java) }
+                    .mapIndexed { i, score -> HighScoreViewState(i, score) }
+
+                _scoresUiState.value =
+                    ScoresViewState(scores, FirebaseState.SIGNED_IN, scorePath)
+            } catch (_: NotSupportedException) {
+                _scoresUiState.value = ScoresViewState(emptyList(), FirebaseState.NOT_SUPPORTED)
+            } catch (_: Exception) {
+                _scoresUiState.value = ScoresViewState(emptyList(), FirebaseState.ERROR)
             }
         }
     }
 
     fun getCurrentItem(): Int {
-        return savedStateHandle.get<Int>(CURRENT_TAB_POSITION_KEY) ?: ScoresTabPosition.SCORES
+        // TODO
+        return savedStateHandle.get<Int>(CURRENT_TAB_POSITION_KEY) ?: 0
     }
 
     fun setCurrentItem(currentItem: Int) {
@@ -99,12 +123,9 @@ class ScoresViewModel @AssistedInject constructor(
         }
     }
 
-    fun signOut() {
-        getScorePathUseCase.signOut()
-    }
-
     companion object {
         private const val CURRENT_TAB_POSITION_KEY = "currentTabPosition"
+        private const val LIMIT_TO_FIRST = 500
     }
 
     @AssistedFactory

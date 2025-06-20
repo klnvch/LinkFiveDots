@@ -41,6 +41,7 @@ import by.klnvch.link5dots.R
 import by.klnvch.link5dots.di.viewmodels.SavedStateViewModelFactory
 import by.klnvch.link5dots.ui.menu.Screen
 import by.klnvch.link5dots.ui.scores.history.HistoryTab
+import by.klnvch.link5dots.ui.scores.scores.ScoresTab
 
 enum class ScoresDestination(
     @StringRes val title: Int = 0,
@@ -77,7 +78,7 @@ fun ScoresScreen(
             }
         }
         when (selectedDestination) {
-            ScoresDestination.SCORES.ordinal -> ScoresTab()
+            ScoresDestination.SCORES.ordinal -> ScoresTab(getVmFactory)
             ScoresDestination.HISTORY.ordinal -> HistoryTab(
                 onNavigate,
                 onSnackbarMessage,
