@@ -37,6 +37,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.lifecycle.viewmodel.compose.viewModel
 import by.klnvch.link5dots.R
 import by.klnvch.link5dots.di.viewmodels.SavedStateViewModelFactory
 import by.klnvch.link5dots.ui.menu.Screen
@@ -54,10 +55,11 @@ enum class ScoresDestination(
 @Composable
 fun ScoresScreen(
     getVmFactory: () -> SavedStateViewModelFactory,
+    viewModel: ScoresViewModel = viewModel(factory = getVmFactory()),
     onNavigate: (Screen) -> Unit,
     onSnackbarMessage: (message: String, actionLabel: String, action: () -> Unit) -> Unit,
 ) {
-    var selectedDestination by rememberSaveable { mutableIntStateOf(ScoresDestination.SCORES.ordinal) }
+    var selectedDestination by rememberSaveable { mutableIntStateOf(viewModel.getCurrentItem()) }
 
     Column {
         PrimaryTabRow(
@@ -66,7 +68,10 @@ fun ScoresScreen(
             ScoresDestination.entries.forEachIndexed { index, destination ->
                 Tab(
                     selected = selectedDestination == index,
-                    onClick = { selectedDestination = index },
+                    onClick = {
+                        selectedDestination = index
+                        viewModel.setCurrentItem(index)
+                    },
                     text = {
                         Text(
                             stringResource(destination.title),

@@ -103,7 +103,6 @@ class ScoresViewModel @AssistedInject constructor(
     }
 
     fun getCurrentItem(): Int {
-        // TODO
         return savedStateHandle.get<Int>(CURRENT_TAB_POSITION_KEY) ?: 0
     }
 
@@ -129,7 +128,5 @@ class ScoresViewModel @AssistedInject constructor(
     }
 
     @AssistedFactory
-    interface Factory : AssistedSavedStateViewModelFactory<ScoresViewModel> {
-        override fun create(savedStateHandle: SavedStateHandle): ScoresViewModel
-    }
+    interface Factory : AssistedSavedStateViewModelFactory<ScoresViewModel>
 }

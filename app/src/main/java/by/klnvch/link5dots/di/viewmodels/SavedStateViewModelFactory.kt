@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 klnvch
+ * Copyright (c) 2023-2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,31 +24,28 @@
 
 package by.klnvch.link5dots.di.viewmodels
 
-import android.os.Bundle
-import androidx.lifecycle.AbstractSavedStateViewModelFactory
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import androidx.savedstate.SavedStateRegistryOwner
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.createSavedStateHandle
+import androidx.lifecycle.viewmodel.CreationExtras
 import javax.inject.Inject
 
 class SavedStateViewModelFactory @Inject constructor(
     private val creators: MutableMap<Class<out ViewModel>, AssistedSavedStateViewModelFactory<out ViewModel>>,
-    owner: SavedStateRegistryOwner,
-    defaultArgs: Bundle?
-) : AbstractSavedStateViewModelFactory(owner, defaultArgs) {
+) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(
-        key: String,
         modelClass: Class<T>,
-        handle: SavedStateHandle
+        extras: CreationExtras,
     ): T {
         val creator = creators[modelClass]
             ?: creators.asIterable().firstOrNull { modelClass.isAssignableFrom(it.key) }?.value
             ?: throw IllegalArgumentException("unknown model class $modelClass")
 
         return try {
+            val savedStateHandle = extras.createSavedStateHandle()
             @Suppress("UNCHECKED_CAST")
-            creator.create(handle) as T
+            creator.create(savedStateHandle) as T
         } catch (e: Exception) {
             throw RuntimeException(e)
         }

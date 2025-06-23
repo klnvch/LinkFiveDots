@@ -1,6 +1,6 @@
 [versions]
 appcompat = "1.7.1"
-compose = "2025.06.00"
+compose = "2025.06.01"
 constraintlayout = "2.2.1"
 coreKtx = "1.16.0"
 dagger = "2.56.2"
@@ -20,10 +20,10 @@ multidex = "2.0.1"
 androidxNavigation = "2.9.0"
 preferenceKtx = "1.2.1"
 retrofit = "3.0.0"
-room = "2.7.1"
+room = "2.7.2"
 rules = "1.6.1"
 uiautomator = "2.3.0"
-workRuntimeKtx = "2.10.1"
+workRuntimeKtx = "2.10.2"
 ksp = "2.1.21-2.0.1"
 
 [libraries]
