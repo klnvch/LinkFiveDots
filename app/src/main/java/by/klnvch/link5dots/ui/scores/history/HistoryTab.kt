@@ -60,6 +60,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import by.klnvch.link5dots.R
 import by.klnvch.link5dots.di.viewmodels.SavedStateViewModelFactory
+import by.klnvch.link5dots.ui.common.ListErrorMsg
 import by.klnvch.link5dots.ui.menu.Screen
 import by.klnvch.link5dots.ui.scores.ScoresViewModel
 
@@ -99,15 +100,7 @@ fun HistoryTab(
             }
         }
     } else {
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            Text(
-                text = stringResource(R.string.search_no_results),
-            )
-        }
+        ListErrorMsg(R.string.search_no_results)
     }
 }
 

@@ -27,41 +27,35 @@ package by.klnvch.link5dots.ui.scores
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import by.klnvch.link5dots.data.firebase.GameScoreRemote
 import by.klnvch.link5dots.di.viewmodels.AssistedSavedStateViewModelFactory
 import by.klnvch.link5dots.domain.models.IRoom
 import by.klnvch.link5dots.domain.usecases.DeleteRoomUseCase
 import by.klnvch.link5dots.domain.usecases.GetRoomsUseCase
-import by.klnvch.link5dots.domain.usecases.GetScorePathUseCase
+import by.klnvch.link5dots.domain.usecases.GetScoresUseCase
 import by.klnvch.link5dots.domain.usecases.GetUserNameUseCase
-import by.klnvch.link5dots.domain.usecases.NotSupportedException
 import by.klnvch.link5dots.domain.usecases.SaveRoomUseCase
 import by.klnvch.link5dots.ui.scores.history.HistoryItemViewState
 import by.klnvch.link5dots.ui.scores.history.HistoryViewState
-import by.klnvch.link5dots.ui.scores.scores.FirebaseState
-import by.klnvch.link5dots.ui.scores.scores.HighScoreViewState
 import by.klnvch.link5dots.ui.scores.scores.ScoresViewState
-import com.google.firebase.database.FirebaseDatabase
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
 
 class ScoresViewModel @AssistedInject constructor(
     @Assisted private val savedStateHandle: SavedStateHandle,
     private val deleteRoomUseCase: DeleteRoomUseCase,
     private val saveRoomUseCase: SaveRoomUseCase,
     private val getRoomsUseCase: GetRoomsUseCase,
-    private val getScorePathUseCase: GetScorePathUseCase,
+    private val getScoresUseCase: GetScoresUseCase,
     private val getUserNameUseCase: GetUserNameUseCase,
 ) : ViewModel() {
     private val _historyUiState = MutableStateFlow(HistoryViewState.initial())
     val historyUiState: StateFlow<HistoryViewState> = _historyUiState
 
-    private val _scoresUiState = MutableStateFlow(ScoresViewState.initial())
+    private val _scoresUiState = MutableStateFlow<ScoresViewState>(ScoresViewState.initial())
     val scoresUiState: StateFlow<ScoresViewState> = _scoresUiState
 
     init {
@@ -77,27 +71,10 @@ class ScoresViewModel @AssistedInject constructor(
 
         viewModelScope.launch {
             try {
-                val scorePath = getScorePathUseCase.signInAndGet()
-                _scoresUiState.value =
-                    ScoresViewState(emptyList(), FirebaseState.SIGNED_IN, scorePath)
-
-                val dataSnapshot = FirebaseDatabase.getInstance().reference
-                    .child(scorePath)
-                    .orderByChild("score")
-                    .limitToLast(LIMIT_TO_FIRST)
-                    .get()
-                    .await()
-
-                val scores = dataSnapshot.children
-                    .mapNotNull { it.getValue(GameScoreRemote::class.java) }
-                    .mapIndexed { i, score -> HighScoreViewState(i, score) }
-
-                _scoresUiState.value =
-                    ScoresViewState(scores, FirebaseState.SIGNED_IN, scorePath)
-            } catch (_: NotSupportedException) {
-                _scoresUiState.value = ScoresViewState(emptyList(), FirebaseState.NOT_SUPPORTED)
-            } catch (_: Exception) {
-                _scoresUiState.value = ScoresViewState(emptyList(), FirebaseState.ERROR)
+                val scores = getScoresUseCase.get()
+                _scoresUiState.value = ScoresViewState.success(scores)
+            } catch (e: Throwable) {
+                _scoresUiState.value = ScoresViewState.fail(e)
             }
         }
     }
@@ -110,21 +87,12 @@ class ScoresViewModel @AssistedInject constructor(
         savedStateHandle[CURRENT_TAB_POSITION_KEY] = currentItem
     }
 
-    fun deleteRoom(room: IRoom) {
-        viewModelScope.launch {
-            deleteRoomUseCase.delete(room)
-        }
-    }
+    fun deleteRoom(room: IRoom) = viewModelScope.launch { deleteRoomUseCase.delete(room) }
 
-    fun insertRoom(room: IRoom) {
-        viewModelScope.launch {
-            saveRoomUseCase.save(room)
-        }
-    }
+    fun insertRoom(room: IRoom) = viewModelScope.launch { saveRoomUseCase.save(room) }
 
     companion object {
         private const val CURRENT_TAB_POSITION_KEY = "currentTabPosition"
-        private const val LIMIT_TO_FIRST = 500
     }
 
     @AssistedFactory

@@ -25,7 +25,6 @@
 package by.klnvch.link5dots.ui.scores.scores
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -35,7 +34,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -43,6 +41,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import by.klnvch.link5dots.R
 import by.klnvch.link5dots.di.viewmodels.SavedStateViewModelFactory
 import by.klnvch.link5dots.domain.models.GameResult
+import by.klnvch.link5dots.ui.common.ListErrorMsg
 import by.klnvch.link5dots.ui.scores.ScoresViewModel
 
 @Composable
@@ -51,34 +50,28 @@ fun ScoresTab(
     viewModel: ScoresViewModel = viewModel(factory = getVmFactory()),
 ) {
     val uiState by viewModel.scoresUiState.collectAsState()
-    val scores = uiState.items
-    if (scores.isNotEmpty()) {
-        LazyColumn(
-            contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-        ) {
-            items(
-                items = scores,
-                key = { it.position },
-            ) { score ->
-                ScoreRow(
-                    modifier = Modifier
-                        .animateItem()
-                        .fillParentMaxWidth(),
-                    score = score,
-                )
+    val state = uiState
+    when (state) {
+        is ScoresViewState.Success -> {
+            LazyColumn(
+                contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                items(
+                    items = state.items,
+                    key = { it.position },
+                ) { score ->
+                    ScoreRow(
+                        modifier = Modifier
+                            .animateItem()
+                            .fillParentMaxWidth(),
+                        score = score,
+                    )
+                }
             }
         }
-    } else {
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            Text(
-                text = stringResource(R.string.search_no_results),
-            )
-        }
+
+        is ScoresViewState.Fail -> ListErrorMsg(state.msg)
     }
 }
 

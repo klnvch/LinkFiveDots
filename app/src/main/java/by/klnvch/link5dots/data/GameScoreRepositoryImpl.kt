@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 klnvch
+ * Copyright (c) 2023-2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,35 +24,46 @@
 
 package by.klnvch.link5dots.data
 
-import android.util.Log
 import by.klnvch.link5dots.BuildConfig
 import by.klnvch.link5dots.data.firebase.GameScoreRemote
 import by.klnvch.link5dots.domain.models.BotGameScore
 import by.klnvch.link5dots.domain.repositories.GameScoreRepository
 import com.google.firebase.crashlytics.FirebaseCrashlytics
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 class GameScoreRepositoryImpl @Inject constructor() : GameScoreRepository {
-    override fun getHighScorePath(): String {
-        return if (BuildConfig.DEBUG) "high_scores_debug" else "high_scores"
-    }
+    private val path = if (BuildConfig.DEBUG) "high_scores_debug" else "high_scores"
+    private val ref = Firebase.database.reference.child(path)
 
-    override fun save(score: BotGameScore, userName: String, userId: String, androidId: String) {
+    override suspend fun save(
+        score: BotGameScore,
+        userName: String,
+        userId: String,
+        androidId: String,
+    ) {
         val scoreRemote = GameScoreRemote(score, userName, userId, androidId)
-        val mDatabase = FirebaseDatabase.getInstance().reference.child(getHighScorePath())
-        val key = mDatabase.push().key
+        val ref = Firebase.database.reference.child(path)
+        val key = ref.push().key
 
         if (key != null) {
-            mDatabase
-                .child(key)
-                .setValue(scoreRemote)
-                .addOnCompleteListener { task ->
-                    Log.d("FirebaseUtils", "publishScore: " + task.exception)
-                }
+            ref.child(key).setValue(scoreRemote).await()
         } else {
             FirebaseCrashlytics.getInstance()
-                .recordException(NullPointerException("Firebase key is null"))
+                .recordException(NullPointerException("Couldn't get push key for scores"))
         }
+    }
+
+    override suspend fun getHighScore(): List<GameScoreRemote> {
+        val dataSnapshot = ref
+            .orderByChild("score")
+            .limitToLast(500)
+            .get()
+            .await()
+
+        return dataSnapshot.children
+            .mapNotNull { it.getValue(GameScoreRemote::class.java) }
     }
 }

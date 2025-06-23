@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023-2025 klnvch
+ * Copyright (c) 2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,26 +22,25 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.ui.scores.scores
+package by.klnvch.link5dots.ui.common
 
 import androidx.annotation.StringRes
-import by.klnvch.link5dots.R
-import by.klnvch.link5dots.data.firebase.GameScoreRemote
-import by.klnvch.link5dots.domain.models.FeatureDisabled
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 
-sealed class ScoresViewState {
-    data class Success(val items: List<HighScoreViewState>) : ScoresViewState()
-    data class Fail(@StringRes val msg: Int) : ScoresViewState()
-
-    companion object {
-        fun initial() = Fail(R.string.loading)
-        fun success(items: List<GameScoreRemote>) =
-            if (items.isEmpty()) Fail(R.string.search_no_results)
-            else Success(items.mapIndexed { i, score -> HighScoreViewState(i, score) })
-
-        fun fail(e: Throwable) = when (e) {
-            is FeatureDisabled -> Fail(R.string.error_feature_not_available)
-            else -> Fail(R.string.connection_error_message)
-        }
+@Composable
+fun ListErrorMsg(@StringRes msgId: Int) {
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        Text(text = stringResource(msgId))
     }
 }

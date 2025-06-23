@@ -24,26 +24,22 @@
 
 package by.klnvch.link5dots.domain.usecases
 
+import by.klnvch.link5dots.data.firebase.GameScoreRemote
+import by.klnvch.link5dots.domain.models.FeatureUnsupported
 import by.klnvch.link5dots.domain.repositories.FirebaseManager
 import by.klnvch.link5dots.domain.repositories.GameScoreRepository
 import javax.inject.Inject
 
-class GetScorePathUseCase @Inject constructor(
+class GetScoresUseCase @Inject constructor(
     private val firebaseManager: FirebaseManager,
     private val gameScoreRepository: GameScoreRepository,
 ) {
-    suspend fun signInAndGet(): String {
+    suspend fun get(): List<GameScoreRemote> {
         if (firebaseManager.isSupported()) {
             firebaseManager.signInAnonymously()
-            return gameScoreRepository.getHighScorePath()
+            return gameScoreRepository.getHighScore()
         } else {
-            throw NotSupportedException()
+            throw FeatureUnsupported()
         }
     }
-
-    fun signOut() {
-        firebaseManager.signOut()
-    }
 }
-
-class NotSupportedException : Exception()
