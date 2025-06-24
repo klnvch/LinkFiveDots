@@ -190,8 +190,9 @@ fun GreetingText(
             .widthIn(0.dp, 320.dp)
             .padding(16.dp),
     ) {
+        val name = if (userName.isEmpty()) stringResource(R.string.unknown) else userName
         Text(
-            text = stringResource(R.string.greetings, userName),
+            text = stringResource(R.string.greetings, name),
             textAlign = TextAlign.Center,
             modifier = Modifier.fillMaxWidth(),
         )

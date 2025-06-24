@@ -22,14 +22,17 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.ui.scores
+package by.klnvch.link5dots.ui.scores.history
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import by.klnvch.link5dots.di.viewmodels.AssistedSavedStateViewModelFactory
-import by.klnvch.link5dots.domain.usecases.GetScoresUseCase
-import by.klnvch.link5dots.ui.scores.scores.ScoresViewState
+import by.klnvch.link5dots.domain.models.IRoom
+import by.klnvch.link5dots.domain.usecases.DeleteRoomUseCase
+import by.klnvch.link5dots.domain.usecases.GetRoomsUseCase
+import by.klnvch.link5dots.domain.usecases.GetUserNameUseCase
+import by.klnvch.link5dots.domain.usecases.SaveRoomUseCase
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -37,36 +40,32 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class ScoresViewModel @AssistedInject constructor(
+class HistoryViewModel @AssistedInject constructor(
     @Assisted private val savedStateHandle: SavedStateHandle,
-    private val getScoresUseCase: GetScoresUseCase,
+    private val getRoomsUseCase: GetRoomsUseCase,
+    private val getUserNameUseCase: GetUserNameUseCase,
+    private val deleteRoomUseCase: DeleteRoomUseCase,
+    private val saveRoomUseCase: SaveRoomUseCase,
 ) : ViewModel() {
-    private val _scoresUiState = MutableStateFlow<ScoresViewState>(ScoresViewState.initial())
-    val scoresUiState: StateFlow<ScoresViewState> = _scoresUiState
+    private val _historyUiState = MutableStateFlow(HistoryViewState.initial())
+    val historyUiState: StateFlow<HistoryViewState> = _historyUiState
 
     init {
         viewModelScope.launch {
-            try {
-                val scores = getScoresUseCase.get()
-                _scoresUiState.value = ScoresViewState.success(scores)
-            } catch (e: Throwable) {
-                _scoresUiState.value = ScoresViewState.fail(e)
+            getRoomsUseCase.get().collect { rooms ->
+                _historyUiState.value = HistoryViewState(rooms.map {
+                    val user1Name = getUserNameUseCase.get(it.user1)
+                    val user2Name = getUserNameUseCase.get(it.user2)
+                    HistoryItemViewState(it, user1Name, user2Name)
+                })
             }
         }
     }
 
-    fun getCurrentItem(): Int {
-        return savedStateHandle.get<Int>(CURRENT_TAB_POSITION_KEY) ?: 0
-    }
+    fun deleteRoom(room: IRoom) = viewModelScope.launch { deleteRoomUseCase.delete(room) }
 
-    fun setCurrentItem(currentItem: Int) {
-        savedStateHandle[CURRENT_TAB_POSITION_KEY] = currentItem
-    }
-
-    companion object {
-        private const val CURRENT_TAB_POSITION_KEY = "currentTabPosition"
-    }
+    fun insertRoom(room: IRoom) = viewModelScope.launch { saveRoomUseCase.save(room) }
 
     @AssistedFactory
-    interface Factory : AssistedSavedStateViewModelFactory<ScoresViewModel>
+    interface Factory : AssistedSavedStateViewModelFactory<HistoryViewModel>
 }

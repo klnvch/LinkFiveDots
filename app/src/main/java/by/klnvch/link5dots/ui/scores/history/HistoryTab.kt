@@ -62,14 +62,13 @@ import by.klnvch.link5dots.R
 import by.klnvch.link5dots.di.viewmodels.SavedStateViewModelFactory
 import by.klnvch.link5dots.ui.common.ListErrorMsg
 import by.klnvch.link5dots.ui.menu.Screen
-import by.klnvch.link5dots.ui.scores.ScoresViewModel
 
 @Composable
 fun HistoryTab(
     onNavigate: (Screen) -> Unit,
     onSnackbarMessage: (message: String, actionLabel: String, action: () -> Unit) -> Unit,
     getVmFactory: () -> SavedStateViewModelFactory,
-    viewModel: ScoresViewModel = viewModel(factory = getVmFactory()),
+    viewModel: HistoryViewModel = viewModel(factory = getVmFactory()),
 ) {
     val context = LocalContext.current
     val uiState by viewModel.historyUiState.collectAsState()
