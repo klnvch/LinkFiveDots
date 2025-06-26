@@ -54,8 +54,8 @@ enum class ScoresDestination(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ScoresScreen(
-    getVmFactory: () -> SavedStateViewModelFactory,
-    viewModel: ScoresViewModel = viewModel(factory = getVmFactory()),
+    getSSVMFactory: () -> SavedStateViewModelFactory,
+    viewModel: ScoresViewModel = viewModel(factory = getSSVMFactory()),
     onNavigate: (Screen) -> Unit,
     onSnackbarMessage: (message: String, actionLabel: String, action: () -> Unit) -> Unit,
 ) {
@@ -83,11 +83,11 @@ fun ScoresScreen(
             }
         }
         when (selectedDestination) {
-            ScoresDestination.SCORES.ordinal -> ScoresTab(getVmFactory)
+            ScoresDestination.SCORES.ordinal -> ScoresTab(getSSVMFactory)
             ScoresDestination.HISTORY.ordinal -> HistoryTab(
                 onNavigate,
                 onSnackbarMessage,
-                getVmFactory
+                getSSVMFactory
             )
         }
     }

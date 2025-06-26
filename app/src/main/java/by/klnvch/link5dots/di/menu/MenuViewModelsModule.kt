@@ -31,6 +31,7 @@ import by.klnvch.link5dots.di.viewmodels.ViewModelKey
 import by.klnvch.link5dots.ui.menu.MainMenuViewModel
 import by.klnvch.link5dots.ui.scores.ScoresViewModel
 import by.klnvch.link5dots.ui.scores.history.HistoryViewModel
+import by.klnvch.link5dots.ui.settings.SettingsViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
@@ -41,6 +42,11 @@ abstract class MenuViewModelsModule {
     @IntoMap
     @ViewModelKey(MainMenuViewModel::class)
     abstract fun bindMainMenuViewModel(viewModel: MainMenuViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(SettingsViewModel::class)
+    abstract fun bindSettingsViewModel(viewModel: SettingsViewModel): ViewModel
 
     @Binds
     @IntoMap

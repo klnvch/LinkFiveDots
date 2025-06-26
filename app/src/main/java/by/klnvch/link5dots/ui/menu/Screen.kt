@@ -28,7 +28,7 @@ import androidx.annotation.StringRes
 import by.klnvch.link5dots.R
 
 enum class Route() {
-    MainMenu, MultiplayerMenu, Scores, Info, Help
+    MainMenu, MultiplayerMenu, Scores, Info, Help, Settings
 }
 
 sealed class Screen() {
@@ -41,9 +41,9 @@ sealed class Screen() {
     object Scores : ComposeScreen(Route.Scores, R.string.scores_title)
     object Info : ComposeScreen(Route.Info, R.string.application_info_label)
     object Help : ComposeScreen(Route.Help, R.string.help)
+    object Settings : ComposeScreen(Route.Settings, R.string.settings)
 
     object BotGame : Screen()
-    object Settings : Screen()
     object MultiplayerTwo : Screen()
     object MultiplayerBluetooth : Screen()
     object MultiplayerNsd : Screen()
@@ -61,6 +61,7 @@ sealed class Screen() {
             Route.Scores.name -> Scores
             Route.Info.name -> Info
             Route.Help.name -> Help
+            Route.Settings.name -> Settings
             else -> MainMenu
         }
     }

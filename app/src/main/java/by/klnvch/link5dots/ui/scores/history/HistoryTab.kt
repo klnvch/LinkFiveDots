@@ -67,8 +67,8 @@ import by.klnvch.link5dots.ui.menu.Screen
 fun HistoryTab(
     onNavigate: (Screen) -> Unit,
     onSnackbarMessage: (message: String, actionLabel: String, action: () -> Unit) -> Unit,
-    getVmFactory: () -> SavedStateViewModelFactory,
-    viewModel: HistoryViewModel = viewModel(factory = getVmFactory()),
+    getSSVMFactory: () -> SavedStateViewModelFactory,
+    viewModel: HistoryViewModel = viewModel(factory = getSSVMFactory()),
 ) {
     val context = LocalContext.current
     val uiState by viewModel.historyUiState.collectAsState()

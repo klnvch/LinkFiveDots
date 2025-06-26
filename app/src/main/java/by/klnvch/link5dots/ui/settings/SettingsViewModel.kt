@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 klnvch
+ * Copyright (c) 2023-2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,8 +26,10 @@ package by.klnvch.link5dots.ui.settings
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import by.klnvch.link5dots.domain.usecases.SyncLanguageUseCase
+import by.klnvch.link5dots.domain.models.DotsStyleType
+import by.klnvch.link5dots.domain.repositories.Settings
 import by.klnvch.link5dots.domain.usecases.ResetAllDataUseCase
+import by.klnvch.link5dots.domain.usecases.SyncLanguageUseCase
 import by.klnvch.link5dots.domain.usecases.SyncNightModeUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -35,32 +37,28 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class SettingsViewModel @Inject constructor(
+    private val settings: Settings,
     private val resetAllDataUseCase: ResetAllDataUseCase,
     private val syncNightModeUseCase: SyncNightModeUseCase,
     private val syncLanguageUseCase: SyncLanguageUseCase,
 ) : ViewModel() {
-    private val _uiState = MutableStateFlow(SettingsViewState.READY)
+    private val _uiState = MutableStateFlow<SettingsViewState>(SettingsViewState.Loading)
     val uiState: StateFlow<SettingsViewState> = _uiState
 
     init {
+        viewModelScope.launch { syncNightModeUseCase.sync() }
+        viewModelScope.launch { syncLanguageUseCase.sync() }
         viewModelScope.launch {
-            syncNightModeUseCase.sync()
-        }
-
-        viewModelScope.launch {
-            syncLanguageUseCase.sync()
-        }
-    }
-
-    fun reset() {
-        _uiState.value = SettingsViewState.READY
-    }
-
-    fun onDeleteAll() {
-        viewModelScope.launch {
-            _uiState.value = SettingsViewState.WORKING
-            resetAllDataUseCase.reset()
-            _uiState.value = SettingsViewState.RESTARTING
+            settings.getAllSettings().collect {
+                _uiState.value = SettingsViewState.Ready(it)
+            }
         }
     }
+
+    fun setUserName(userName: String) = viewModelScope.launch { settings.setUserName(userName) }
+    fun setLanguage(language: String) = viewModelScope.launch { settings.setLanguage(language) }
+    fun setVibration(isOn: Boolean) = viewModelScope.launch { settings.setVibration(isOn) }
+    fun setNightMode(nightMode: String) = viewModelScope.launch { settings.setNightMode(nightMode) }
+    fun setDotsStyle(style: DotsStyleType) = viewModelScope.launch { settings.setDotsStyle(style) }
+    fun reset() = viewModelScope.launch { resetAllDataUseCase.reset() }
 }

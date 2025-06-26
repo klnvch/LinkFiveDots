@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 klnvch
+ * Copyright (c) 2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,19 +22,37 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.di.settings
+package by.klnvch.link5dots.ui.settings.items
 
-import androidx.lifecycle.ViewModel
-import by.klnvch.link5dots.di.viewmodels.ViewModelKey
-import by.klnvch.link5dots.ui.settings.SettingsViewModel
-import dagger.Binds
-import dagger.Module
-import dagger.multibindings.IntoMap
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import by.klnvch.link5dots.ui.common.UsernameDialog
 
-@Module
-abstract class SettingsViewModelsModule {
-    @Binds
-    @IntoMap
-    @ViewModelKey(SettingsViewModel::class)
-    abstract fun bindSettingsViewModel(viewModel: SettingsViewModel): ViewModel
+@Composable
+fun EditTextPreferenceItem(
+    @DrawableRes icon: Int,
+    @StringRes title: Int,
+    value: String,
+    onChange: (value: String) -> Unit,
+) {
+    val openDialog = remember { mutableStateOf(false) }
+    when {
+        openDialog.value -> {
+            UsernameDialog(value, {
+                openDialog.value = false
+                onChange(it)
+            }, {
+                openDialog.value = false
+            })
+        }
+    }
+    PreferenceItem(
+        icon = icon,
+        title = title,
+        value = value,
+        onClick = { openDialog.value = true },
+    )
 }

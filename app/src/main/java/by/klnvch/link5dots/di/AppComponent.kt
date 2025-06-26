@@ -26,7 +26,6 @@ package by.klnvch.link5dots.di
 import android.app.Application
 import by.klnvch.link5dots.di.game.GameModule
 import by.klnvch.link5dots.di.menu.MenuModule
-import by.klnvch.link5dots.di.settings.SettingsModule
 import by.klnvch.link5dots.di.viewmodels.ViewModelFactoryModule
 import by.klnvch.link5dots.di.workers.WorkerSubcomponent
 import dagger.BindsInstance
@@ -44,7 +43,6 @@ import javax.inject.Singleton
         DataStoreModule::class,
         AndroidSupportInjectionModule::class,
         ViewModelFactoryModule::class,
-        SettingsModule::class,
         MenuModule::class,
         GameModule::class,
     ]

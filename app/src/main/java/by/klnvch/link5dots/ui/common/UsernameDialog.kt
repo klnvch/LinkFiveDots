@@ -22,40 +22,47 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.ui.menu
+package by.klnvch.link5dots.ui.common
 
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import by.klnvch.link5dots.R
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UsernameDialog(
     userName: String,
     onConfirmation: (userName: String) -> Unit,
     onDismissRequest: () -> Unit,
 ) {
-    var text = remember { mutableStateOf(userName) }
-    androidx.compose.material3.AlertDialog(
+    val text = remember { mutableStateOf(userName) }
+    AlertDialog(
+        icon = {
+            Icon(
+                painter = painterResource(R.drawable.ic_mood_48dp),
+                contentDescription = null
+            )
+        },
+        title = { Text(text = stringResource(R.string.username)) },
         text = {
             TextField(
                 value = text.value,
                 onValueChange = { text.value = it },
                 placeholder = { Text(text = stringResource(R.string.unknown)) },
                 singleLine = true,
-                label = { Text(text = stringResource(R.string.username)) },
             )
         },
         onDismissRequest = { onDismissRequest() },
         confirmButton = {
             TextButton(
-                onClick = { onConfirmation(text.value) }
+                onClick = { onConfirmation(text.value.trim()) }
             ) {
                 Text(text = stringResource(R.string.okay))
             }

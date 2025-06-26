@@ -46,8 +46,8 @@ import by.klnvch.link5dots.ui.scores.ScoresViewModel
 
 @Composable
 fun ScoresTab(
-    getVmFactory: () -> SavedStateViewModelFactory,
-    viewModel: ScoresViewModel = viewModel(factory = getVmFactory()),
+    getSSVMFactory: () -> SavedStateViewModelFactory,
+    viewModel: ScoresViewModel = viewModel(factory = getSSVMFactory()),
 ) {
     val uiState by viewModel.scoresUiState.collectAsState()
     val state = uiState

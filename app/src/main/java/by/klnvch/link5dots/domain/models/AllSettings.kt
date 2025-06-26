@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 klnvch
+ * Copyright (c) 2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,18 +22,12 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.di.settings
+package by.klnvch.link5dots.domain.models
 
-import by.klnvch.link5dots.ui.settings.SettingsFragment
-import by.klnvch.link5dots.ui.settings.preferences.DeletePreferenceDialog
-import dagger.Module
-import dagger.android.ContributesAndroidInjector
-
-@Module
-abstract class SettingsFragmentBuildersModule {
-    @ContributesAndroidInjector
-    abstract fun contributeDeletePreferenceDialog(): DeletePreferenceDialog
-
-    @ContributesAndroidInjector
-    abstract fun contributeSettingsFragment(): SettingsFragment
-}
+data class AllSettings(
+    val userName: String,
+    val language: String,
+    val isVibrationEnabled: Boolean,
+    val nightMode: String,
+    val dotsStyle: DotsStyleType,
+)

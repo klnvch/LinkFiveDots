@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 klnvch
+ * Copyright (c) 2023-2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,15 +24,20 @@
 
 package by.klnvch.link5dots.domain.repositories
 
+import by.klnvch.link5dots.domain.models.AllSettings
 import by.klnvch.link5dots.domain.models.DotsStyleType
-import by.klnvch.link5dots.domain.models.NetworkUser
 import kotlinx.coroutines.flow.Flow
 
 interface Settings {
+    fun getAllSettings(): Flow<AllSettings>
     fun getUserName(): Flow<String>
     fun getUserId(): Flow<String>
     fun getUserNameBlocking(): String
     suspend fun setUserName(userName: String)
+    suspend fun setLanguage(language: String)
+    suspend fun setVibration(isOn: Boolean)
+    suspend fun setNightMode(nightMode: String)
+    suspend fun setDotsStyle(style: DotsStyleType)
     fun isFirstRun(): Flow<Boolean>
     suspend fun setFirstRun()
     fun getDotsType(): Flow<DotsStyleType>

@@ -44,7 +44,6 @@ import by.klnvch.link5dots.ui.game.activities.GameInfoActivity.Companion.launchG
 import by.klnvch.link5dots.ui.game.activities.NsdGameActivity
 import by.klnvch.link5dots.ui.game.activities.OnlineGameActivity
 import by.klnvch.link5dots.ui.game.activities.TwoPlayersGameActivity
-import by.klnvch.link5dots.ui.settings.SettingsActivity
 import by.klnvch.link5dots.ui.theme.AppTheme
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import dagger.android.support.DaggerAppCompatActivity
@@ -62,14 +61,15 @@ class MenuActivity : DaggerAppCompatActivity() {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
 
-        val viewModel = ViewModelProvider(this, viewModelFactory)[MainMenuViewModel::class.java]
-
         setContent {
             AppTheme {
-                val getVmFactory: () -> SavedStateViewModelFactory = remember {
+                val getVMFactory: () -> ViewModelProvider.Factory = remember {
+                    { viewModelFactory }
+                }
+                val getSSVMFactory: () -> SavedStateViewModelFactory = remember {
                     { savedStateViewModelFactory }
                 }
-                App(getVmFactory, viewModel) { dest -> navigate(dest) }
+                App(getVMFactory, getSSVMFactory) { dest -> navigate(dest) }
             }
         }
     }
@@ -77,7 +77,6 @@ class MenuActivity : DaggerAppCompatActivity() {
     private fun navigate(destination: Screen) {
         when (destination) {
             Screen.BotGame -> start(BotGameActivity::class)
-            Screen.Settings -> start(SettingsActivity::class)
             Screen.MultiplayerTwo -> start(TwoPlayersGameActivity::class)
             Screen.MultiplayerBluetooth -> start(BluetoothGameActivity::class)
             Screen.MultiplayerNsd -> start(NsdGameActivity::class)

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 klnvch
+ * Copyright (c) 2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,19 +22,29 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.di.settings
+package by.klnvch.link5dots.ui.settings.items
 
-import by.klnvch.link5dots.ui.settings.SettingsActivity
-import dagger.Binds
-import dagger.Module
-import dagger.android.AndroidInjector
-import dagger.multibindings.ClassKey
-import dagger.multibindings.IntoMap
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
+import androidx.compose.material3.Switch
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
+import by.klnvch.link5dots.R
 
-@Module(subcomponents = [SettingsSubcomponent::class])
-internal abstract class SettingsModule {
-    @Binds
-    @IntoMap
-    @ClassKey(SettingsActivity::class)
-    abstract fun bindAndroidInjectorFactory(factory: SettingsSubcomponent.Factory): AndroidInjector.Factory<*>
+@Composable
+fun SwitchPreferenceItem(
+    @DrawableRes icon: Int,
+    @StringRes title: Int,
+    value: Boolean,
+    onChange: (value: Boolean) -> Unit,
+) {
+    PreferenceItem(
+        icon = icon,
+        title = title,
+        value =
+            if (value) stringResource(R.string.switch_on_text)
+            else stringResource(R.string.switch_off_text),
+        trailing = { Switch(value, onCheckedChange = null) },
+        onClick = { onChange(!value) },
+    )
 }

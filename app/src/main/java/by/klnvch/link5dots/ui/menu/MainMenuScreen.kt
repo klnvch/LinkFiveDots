@@ -54,11 +54,18 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.compose.viewModel
 import by.klnvch.link5dots.R
 import by.klnvch.link5dots.ui.common.MenuTextButton
+import by.klnvch.link5dots.ui.common.UsernameDialog
 
 @Composable
-fun MainMenuScreen(viewModel: MainMenuViewModel, onNavigate: (Screen) -> Unit) {
+fun MainMenuScreen(
+    getVMFactory: () -> ViewModelProvider.Factory,
+    viewModel: MainMenuViewModel = viewModel(factory = getVMFactory()),
+    onNavigate: (Screen) -> Unit,
+) {
     val uiState by viewModel.uiState.collectAsState()
     val userName = uiState.userName
     val configuration = LocalConfiguration.current
@@ -173,14 +180,14 @@ fun GreetingText(
     onUserNameChanged: (userName: String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val openAlertDialog = remember { mutableStateOf(false) }
+    val openUserNameDialog = remember { mutableStateOf(false) }
     when {
-        openAlertDialog.value -> {
+        openUserNameDialog.value -> {
             UsernameDialog(userName, {
-                openAlertDialog.value = false
+                openUserNameDialog.value = false
                 onUserNameChanged(it)
             }, {
-                openAlertDialog.value = false
+                openUserNameDialog.value = false
             })
         }
     }
@@ -190,14 +197,14 @@ fun GreetingText(
             .widthIn(0.dp, 320.dp)
             .padding(16.dp),
     ) {
-        val name = if (userName.isEmpty()) stringResource(R.string.unknown) else userName
+        val name = userName.ifEmpty { stringResource(R.string.unknown) }
         Text(
             text = stringResource(R.string.greetings, name),
             textAlign = TextAlign.Center,
             modifier = Modifier.fillMaxWidth(),
         )
         TextButton(
-            onClick = { openAlertDialog.value = true }
+            onClick = { openUserNameDialog.value = true }
         ) {
             Icon(
                 imageVector = Icons.Rounded.Edit,

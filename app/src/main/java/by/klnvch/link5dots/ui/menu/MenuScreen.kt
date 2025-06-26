@@ -52,6 +52,7 @@ import androidx.compose.ui.graphics.TileMode
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -60,6 +61,7 @@ import androidx.navigation.compose.rememberNavController
 import by.klnvch.link5dots.R
 import by.klnvch.link5dots.di.viewmodels.SavedStateViewModelFactory
 import by.klnvch.link5dots.ui.scores.ScoresScreen
+import by.klnvch.link5dots.ui.settings.SettingsScreen
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -99,8 +101,8 @@ fun AppBar(
 
 @Composable
 fun App(
-    getVmFactory: () -> SavedStateViewModelFactory,
-    viewModel: MainMenuViewModel,
+    getVMFactory: () -> ViewModelProvider.Factory,
+    getSSVMFactory: () -> SavedStateViewModelFactory,
     navController: NavHostController = rememberNavController(),
     onNavigate: (Screen) -> Unit,
 ) {
@@ -138,7 +140,7 @@ fun App(
             modifier = Modifier.padding(innerPadding)
         ) {
             composable(route = Route.MainMenu.name) {
-                MainMenuScreen(viewModel) {
+                MainMenuScreen(getVMFactory) {
                     if (it is Screen.ComposeScreen) {
                         navController.navigate(it.route)
                     } else {
@@ -151,7 +153,7 @@ fun App(
             }
             composable(route = Route.Scores.name) {
                 ScoresScreen(
-                    getVmFactory,
+                    getSSVMFactory,
                     onNavigate = { onNavigate(it) },
                     onSnackbarMessage = { message, actionLabel, action ->
                         scope.launch {
@@ -173,6 +175,9 @@ fun App(
             }
             composable(route = Route.Help.name) {
                 HelpScreen()
+            }
+            composable(route = Route.Settings.name) {
+                SettingsScreen(getVMFactory)
             }
         }
     }
