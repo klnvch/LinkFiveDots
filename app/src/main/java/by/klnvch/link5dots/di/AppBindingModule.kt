@@ -26,7 +26,6 @@ package by.klnvch.link5dots.di
 
 import android.app.Application
 import android.content.Context
-import androidx.preference.PreferenceDataStore
 import by.klnvch.link5dots.data.CrashRepositoryImpl
 import by.klnvch.link5dots.data.DeviceInfoImpl
 import by.klnvch.link5dots.data.GameScoreRepositoryImpl
@@ -40,7 +39,6 @@ import by.klnvch.link5dots.data.firebase.AnalyticsImpl
 import by.klnvch.link5dots.data.firebase.FirebaseManagerImpl
 import by.klnvch.link5dots.data.nsd.NsdRoomRepositoryImpl
 import by.klnvch.link5dots.data.online.OnlineRoomRepositoryImpl
-import by.klnvch.link5dots.data.settings.PreferenceDataStoreImpl
 import by.klnvch.link5dots.data.settings.SettingsImpl
 import by.klnvch.link5dots.domain.repositories.Analytics
 import by.klnvch.link5dots.domain.repositories.BluetoothRoomRepository
@@ -70,10 +68,6 @@ interface AppBindingModule {
     @Singleton
     @Binds
     fun bindSettings(impl: SettingsImpl): Settings
-
-    @Singleton
-    @Binds
-    fun bindPreferenceDataStore(impl: PreferenceDataStoreImpl): PreferenceDataStore
 
     @Singleton
     @Binds

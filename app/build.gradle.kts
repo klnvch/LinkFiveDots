@@ -29,7 +29,6 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.firebase.crashlitycs)
-    alias(libs.plugins.androidx.navigation.safeargs)
     alias(libs.plugins.google.devtools.ksp)
     alias(libs.plugins.google.services)
     alias(libs.plugins.compose.compiler)
@@ -40,12 +39,12 @@ val keystoreProperties = Properties()
 keystoreProperties.load(FileInputStream(keystorePropertiesFile))
 
 ksp {
-    arg("room.schemaLocation", "$projectDir/schemas".toString())
+    arg("room.schemaLocation", "$projectDir/schemas")
 }
 
 android {
     namespace = "by.klnvch.link5dots"
-    compileSdk = 35
+    compileSdk = 36
 
     signingConfigs {
         create("debugConfig") {
@@ -64,7 +63,7 @@ android {
     defaultConfig {
         applicationId = "by.klnvch.link5dots"
         minSdk = 23
-        targetSdk = 35
+        targetSdk = 36
         versionCode = 48
         versionName = "4.4.12"
 
@@ -109,7 +108,9 @@ android {
 
 composeCompiler {
     reportsDestination = layout.buildDirectory.dir("compose_compiler")
-    stabilityConfigurationFile = rootProject.layout.projectDirectory.file("stability_config.conf")
+    stabilityConfigurationFiles.addAll(
+        project.layout.projectDirectory.file("configuration-file.conf"),
+    )
 }
 
 dependencies {
@@ -131,8 +132,6 @@ dependencies {
     implementation(libs.androidx.multidex)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.navigation.fragment.ktx)
-    implementation(libs.androidx.navigation.ui.ktx)
-    implementation(libs.androidx.preference.ktx)
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
     ksp(libs.androidx.room.compiler)
@@ -152,14 +151,9 @@ dependencies {
     implementation(libs.firebase.auth)
     implementation(libs.firebase.crashlytics)
     implementation(libs.firebase.database)
-    implementation(libs.firebase.ui.database)
     implementation(libs.material)
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.coroutines.android)
-    implementation(libs.kotlin.stdlib)
-    implementation(libs.kotlin.stdlib.jdk7)
-    implementation(libs.kotlin.stdlib.jdk8)
-    implementation(libs.kotlin.reflect)
     androidTestImplementation(libs.androidx.uiautomator)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.room.testing)
