@@ -31,7 +31,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Text
@@ -49,6 +48,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
 import by.klnvch.link5dots.BuildConfig
 import by.klnvch.link5dots.R
+import by.klnvch.link5dots.ui.common.TextNoSurface
 
 @Composable
 fun InfoScreen(onNavigate: (Screen) -> Unit) {
@@ -62,11 +62,9 @@ fun InfoScreen(onNavigate: (Screen) -> Unit) {
 @Composable
 private fun InfoScreenPortrait(onNavigate: (Screen) -> Unit) {
     Column(
+        modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceEvenly,
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(24.dp),
     ) {
         Column1()
         Column2(onNavigate)
@@ -76,8 +74,9 @@ private fun InfoScreenPortrait(onNavigate: (Screen) -> Unit) {
 @Composable
 private fun InfoScreenScreenLandscape(onNavigate: (Screen) -> Unit) {
     Row(
+        modifier = Modifier.fillMaxSize(),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceEvenly
+        horizontalArrangement = Arrangement.SpaceEvenly,
     ) {
         Column1()
         Column2(onNavigate)
@@ -96,7 +95,7 @@ private fun Column1() {
                 contentDescription = stringResource(id = R.string.app_name)
             )
         }
-        Text(
+        TextNoSurface(
             text = stringResource(R.string.version_text, BuildConfig.VERSION_NAME),
         )
     }

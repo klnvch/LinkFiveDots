@@ -40,7 +40,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -58,6 +57,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import by.klnvch.link5dots.R
 import by.klnvch.link5dots.ui.common.MenuTextButton
+import by.klnvch.link5dots.ui.common.TextNoSurface
 import by.klnvch.link5dots.ui.common.UsernameDialog
 
 @Composable
@@ -80,9 +80,8 @@ fun MainMenuScreen(
     }
 }
 
-
 @Composable
-fun MainMenuScreenPortrait(
+private fun MainMenuScreenPortrait(
     userName: String,
     onNavigate: (Screen) -> Unit,
     onUserNameChanged: (userName: String) -> Unit,
@@ -102,7 +101,7 @@ fun MainMenuScreenPortrait(
 }
 
 @Composable
-fun MainMenuScreenLandscape(
+private fun MainMenuScreenLandscape(
     userName: String,
     onNavigate: (Screen) -> Unit,
     onUserNameChanged: (userName: String) -> Unit,
@@ -124,7 +123,7 @@ fun MainMenuScreenLandscape(
 }
 
 @Composable
-fun GameButtonColumn(onNavigate: (Screen) -> Unit) {
+private fun GameButtonColumn(onNavigate: (Screen) -> Unit) {
     Column {
         MenuTextButton(
             onClick = { onNavigate(Screen.BotGame) },
@@ -140,7 +139,7 @@ fun GameButtonColumn(onNavigate: (Screen) -> Unit) {
 }
 
 @Composable
-fun InfoButtonColumn(onNavigate: (Screen) -> Unit) {
+private fun InfoButtonColumn(onNavigate: (Screen) -> Unit) {
     Column {
         MenuTextButton(
             onClick = { onNavigate(Screen.Scores) },
@@ -175,7 +174,7 @@ fun InfoButtonColumn(onNavigate: (Screen) -> Unit) {
 }
 
 @Composable
-fun GreetingText(
+private fun GreetingText(
     userName: String,
     onUserNameChanged: (userName: String) -> Unit,
     modifier: Modifier = Modifier,
@@ -198,10 +197,10 @@ fun GreetingText(
             .padding(16.dp),
     ) {
         val name = userName.ifEmpty { stringResource(R.string.unknown) }
-        Text(
+        TextNoSurface(
+            modifier = Modifier.fillMaxWidth(),
             text = stringResource(R.string.greetings, name),
             textAlign = TextAlign.Center,
-            modifier = Modifier.fillMaxWidth(),
         )
         TextButton(
             onClick = { openUserNameDialog.value = true }
@@ -215,7 +214,7 @@ fun GreetingText(
 }
 
 @Composable
-fun MenuIconButton(
+private fun MenuIconButton(
     onClick: () -> Unit,
     @DrawableRes iconId: Int,
     @StringRes textId: Int,

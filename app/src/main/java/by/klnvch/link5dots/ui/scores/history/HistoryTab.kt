@@ -60,7 +60,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import by.klnvch.link5dots.R
 import by.klnvch.link5dots.di.viewmodels.SavedStateViewModelFactory
-import by.klnvch.link5dots.ui.common.ListErrorMsg
+import by.klnvch.link5dots.ui.common.TextCenterInfo
 import by.klnvch.link5dots.ui.menu.Screen
 
 @Composable
@@ -99,7 +99,7 @@ fun HistoryTab(
             }
         }
     } else {
-        ListErrorMsg(R.string.search_no_results)
+        TextCenterInfo(R.string.search_no_results)
     }
 }
 

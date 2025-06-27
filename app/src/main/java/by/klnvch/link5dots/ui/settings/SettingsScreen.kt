@@ -25,14 +25,16 @@
 package by.klnvch.link5dots.ui.settings
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.Modifier
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import by.klnvch.link5dots.R
-import by.klnvch.link5dots.ui.common.ListErrorMsg
+import by.klnvch.link5dots.ui.common.TextCenterInfo
 import by.klnvch.link5dots.ui.settings.items.DotsStylePreferenceItem
 import by.klnvch.link5dots.ui.settings.items.EditTextPreferenceItem
 import by.klnvch.link5dots.ui.settings.items.ListPreferenceItem
@@ -47,12 +49,14 @@ fun SettingsScreen(
     val uiState by viewModel.uiState.collectAsState()
     val state = uiState
     when (state) {
-        SettingsViewState.Loading -> ListErrorMsg(R.string.loading)
-        is SettingsViewState.Ready -> Column {
+        SettingsViewState.Loading -> TextCenterInfo(R.string.loading)
+        is SettingsViewState.Ready -> Column(
+            modifier = Modifier.verticalScroll(rememberScrollState())
+        ) {
             EditTextPreferenceItem(
                 icon = R.drawable.ic_mood_48dp,
                 title = R.string.username,
-                value = state.settings.userName.ifEmpty { stringResource(R.string.unknown) },
+                value = state.settings.userName,
                 onChange = { viewModel.setUserName(it) },
             )
             ListPreferenceItem(

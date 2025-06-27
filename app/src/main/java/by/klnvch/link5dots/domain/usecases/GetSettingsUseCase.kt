@@ -22,25 +22,28 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.ui.common
+package by.klnvch.link5dots.domain.usecases
 
-import androidx.annotation.StringRes
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
+import by.klnvch.link5dots.domain.repositories.LanguageManager
+import by.klnvch.link5dots.domain.repositories.NightModeManager
+import by.klnvch.link5dots.domain.repositories.Settings
+import by.klnvch.link5dots.domain.repositories.StringRepository
+import kotlinx.coroutines.flow.map
+import javax.inject.Inject
 
-@Composable
-fun ListErrorMsg(@StringRes msgId: Int) {
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        Text(text = stringResource(msgId))
-    }
+class GetSettingsUseCase @Inject constructor(
+    private val settings: Settings,
+    private val stringRepository: StringRepository,
+    private val languageManager: LanguageManager,
+    private val nightModeManager: NightModeManager,
+) {
+    fun get() =
+        settings.getAllSettings()
+            .map {
+                it.copy(
+                    userName = it.userName.ifEmpty { stringRepository.getUnknownName() },
+                    language = it.language.ifEmpty { languageManager.getCurrent() },
+                    nightMode = it.nightMode.ifEmpty { nightModeManager.getCurrent() },
+                )
+            }
 }

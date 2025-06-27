@@ -28,6 +28,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import by.klnvch.link5dots.domain.models.DotsStyleType
 import by.klnvch.link5dots.domain.repositories.Settings
+import by.klnvch.link5dots.domain.usecases.GetSettingsUseCase
 import by.klnvch.link5dots.domain.usecases.ResetAllDataUseCase
 import by.klnvch.link5dots.domain.usecases.SyncLanguageUseCase
 import by.klnvch.link5dots.domain.usecases.SyncNightModeUseCase
@@ -38,6 +39,7 @@ import javax.inject.Inject
 
 class SettingsViewModel @Inject constructor(
     private val settings: Settings,
+    private val getSettingsUseCase: GetSettingsUseCase,
     private val resetAllDataUseCase: ResetAllDataUseCase,
     private val syncNightModeUseCase: SyncNightModeUseCase,
     private val syncLanguageUseCase: SyncLanguageUseCase,
@@ -49,7 +51,7 @@ class SettingsViewModel @Inject constructor(
         viewModelScope.launch { syncNightModeUseCase.sync() }
         viewModelScope.launch { syncLanguageUseCase.sync() }
         viewModelScope.launch {
-            settings.getAllSettings().collect {
+            getSettingsUseCase.get().collect {
                 _uiState.value = SettingsViewState.Ready(it)
             }
         }

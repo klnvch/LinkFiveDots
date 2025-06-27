@@ -29,12 +29,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.unit.dp
 import by.klnvch.link5dots.R
 import by.klnvch.link5dots.ui.common.MenuTextButton
 
@@ -50,11 +48,9 @@ fun MultiplayerMenuScreen(onNavigate: (Screen) -> Unit) {
 @Composable
 private fun MultiplayerMenuScreenPortrait(onNavigate: (Screen) -> Unit) {
     Column(
+        modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(24.dp),
     ) {
         ButtonColumn1(onNavigate)
         ButtonColumn2(onNavigate)
@@ -64,6 +60,7 @@ private fun MultiplayerMenuScreenPortrait(onNavigate: (Screen) -> Unit) {
 @Composable
 private fun MultiplayerMenuScreenLandscape(onNavigate: (Screen) -> Unit) {
     Row(
+        modifier = Modifier.fillMaxSize(),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center
     ) {

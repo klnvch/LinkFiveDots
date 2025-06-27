@@ -30,6 +30,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -41,7 +42,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import by.klnvch.link5dots.R
 import by.klnvch.link5dots.di.viewmodels.SavedStateViewModelFactory
 import by.klnvch.link5dots.domain.models.GameResult
-import by.klnvch.link5dots.ui.common.ListErrorMsg
+import by.klnvch.link5dots.ui.common.TextCenterInfo
 import by.klnvch.link5dots.ui.scores.ScoresViewModel
 
 @Composable
@@ -71,38 +72,40 @@ fun ScoresTab(
             }
         }
 
-        is ScoresViewState.Fail -> ListErrorMsg(state.msg)
+        is ScoresViewState.Fail -> TextCenterInfo(state.msg)
     }
 }
 
 @Composable
 fun ScoreRow(modifier: Modifier, score: HighScoreViewState? = null) {
-    Row(
-        modifier = modifier.fillMaxSize(),
-    ) {
-        Text(
-            modifier = Modifier.weight(1.0f),
-            text = score?.position ?: stringResource(R.string.scores_number)
-        )
-        Text(
-            modifier = Modifier.weight(4.0f),
-            text = score?.userName ?: stringResource(R.string.name)
-        )
-        Text(
-            modifier = Modifier.weight(2.0f),
-            text = score?.size ?: stringResource(R.string.scores_moves)
-        )
-        Text(
-            modifier = Modifier.weight(3.0f),
-            text = score?.duration ?: stringResource(R.string.time)
-        )
-        Text(
-            modifier = Modifier.weight(3.0f),
-            text = when (score?.status) {
-                GameResult.WON -> stringResource(R.string.scores_won)
-                GameResult.LOST -> stringResource(R.string.scores_lost)
-                else -> stringResource(R.string.status)
-            }
-        )
+    Surface {
+        Row(
+            modifier = modifier.fillMaxSize(),
+        ) {
+            Text(
+                modifier = Modifier.weight(1.0f),
+                text = score?.position ?: stringResource(R.string.scores_number)
+            )
+            Text(
+                modifier = Modifier.weight(4.0f),
+                text = score?.userName ?: stringResource(R.string.name)
+            )
+            Text(
+                modifier = Modifier.weight(2.0f),
+                text = score?.size ?: stringResource(R.string.scores_moves)
+            )
+            Text(
+                modifier = Modifier.weight(3.0f),
+                text = score?.duration ?: stringResource(R.string.time)
+            )
+            Text(
+                modifier = Modifier.weight(3.0f),
+                text = when (score?.status) {
+                    GameResult.WON -> stringResource(R.string.scores_won)
+                    GameResult.LOST -> stringResource(R.string.scores_lost)
+                    else -> stringResource(R.string.status)
+                }
+            )
+        }
     }
 }

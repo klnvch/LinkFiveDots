@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 klnvch
+ * Copyright (c) 2023-2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,6 +27,7 @@ package by.klnvch.link5dots.data
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.LocaleListCompat
 import by.klnvch.link5dots.domain.repositories.LanguageManager
+import java.util.Locale
 import javax.inject.Inject
 
 
@@ -42,7 +43,7 @@ class LanguageManagerImpl @Inject constructor() : LanguageManager {
         }
     }
 
-    override fun reset() {
-        set("")
-    }
+    override fun reset() = set("")
+
+    override fun getCurrent(): String = Locale.getDefault().language
 }

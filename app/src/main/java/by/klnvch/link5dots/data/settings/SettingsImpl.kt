@@ -56,7 +56,7 @@ class SettingsImpl @Inject constructor(
         private const val DEFAULT_USER_NAME = ""
         private const val DEFAULT_LANGUAGE = ""
         private const val DEFAULT_VIBRATION = true
-        private const val DEFAULT_NIGHT_MODE = "system"
+        private const val DEFAULT_NIGHT_MODE = ""
         private const val DEFAULT_FIRST_RUN = false
     }
 

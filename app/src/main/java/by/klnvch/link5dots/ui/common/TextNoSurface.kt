@@ -22,22 +22,20 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.ui.menu
+package by.klnvch.link5dots.ui.common
 
-import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import by.klnvch.link5dots.R
-import by.klnvch.link5dots.ui.common.TextNoSurface
+import androidx.compose.ui.text.style.TextAlign
 
-@Preview()
 @Composable
-fun HelpScreen() {
-    TextNoSurface(
-        text = stringResource(R.string.how_to_text),
-        modifier = Modifier.padding(10.dp)
+fun TextNoSurface(text: String, modifier: Modifier = Modifier, textAlign: TextAlign? = null) {
+    Text(
+        text = text,
+        modifier,
+        color = MaterialTheme.colorScheme.onSurface,
+        textAlign = textAlign,
     )
 }

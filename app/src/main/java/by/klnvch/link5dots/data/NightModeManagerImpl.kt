@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 klnvch
+ * Copyright (c) 2023-2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -43,6 +43,17 @@ class NightModeManagerImpl @Inject constructor() : NightModeManager {
 
     override fun reset() {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+    }
+
+    override fun getCurrent(): String {
+        val nightMode = AppCompatDelegate.getDefaultNightMode()
+        return when (nightMode) {
+            AppCompatDelegate.MODE_NIGHT_YES -> NightMode.ON
+            AppCompatDelegate.MODE_NIGHT_NO -> NightMode.OFF
+            AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY -> NightMode.AUTO
+            AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM -> NightMode.SYSTEM
+            else -> NightMode.SYSTEM
+        }
     }
 
     private fun map(nightMode: String): Int {
