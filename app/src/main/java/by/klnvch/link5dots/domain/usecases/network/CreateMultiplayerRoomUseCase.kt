@@ -33,8 +33,8 @@ import by.klnvch.link5dots.domain.repositories.FirebaseManager
 import by.klnvch.link5dots.domain.repositories.NsdRoomRepository
 import by.klnvch.link5dots.domain.repositories.OnlineRoomRepository
 import by.klnvch.link5dots.domain.repositories.Settings
-import by.klnvch.link5dots.domain.repositories.TimeRepository
 import kotlinx.coroutines.flow.first
+import org.klnvch.link5dots.shared.domain.repositories.TimeRepository
 import javax.inject.Inject
 
 interface CreateMultiplayerRoomUseCase {
@@ -52,7 +52,7 @@ class CreateOnlineRoomUseCase @Inject constructor(
         val userName = settings.getUserName().first()
         val userId = firebaseManager.getUserId()
         val user1 = NetworkUser(userId, userName)
-        val timestamp = timeRepository.getCurrentTime()
+        val timestamp = timeRepository.now()
         val key = roomKeyGenerator.get()
         val room = NetworkRoom(
             key,

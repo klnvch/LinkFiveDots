@@ -38,6 +38,7 @@ import javax.inject.Singleton
 @Component(
     modules = [
         AppBindingModule::class,
+        AppBindingModule2::class,
         NetworkModule::class,
         DatabaseModule::class,
         DataStoreModule::class,

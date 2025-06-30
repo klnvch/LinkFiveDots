@@ -36,9 +36,9 @@ import by.klnvch.link5dots.domain.repositories.BluetoothRoomRepository
 import by.klnvch.link5dots.domain.repositories.NsdRoomRepository
 import by.klnvch.link5dots.domain.repositories.OnlineRoomRepository
 import by.klnvch.link5dots.domain.repositories.RoomRepository
-import by.klnvch.link5dots.domain.repositories.TimeRepository
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
+import org.klnvch.link5dots.shared.domain.repositories.TimeRepository
 import javax.inject.Inject
 
 interface AddDotUseCase {
@@ -55,7 +55,7 @@ abstract class AddDotRealUseCase(
 ) : AddDotUseCase {
     override suspend fun addDot(room: IRoom, p: Point) {
         if (board.isInside(p) && room.isFree(p) && room.isNotOver()) {
-            val dt = (timeRepository.getCurrentTime() - room.timestamp).toInt()
+            val dt = (timeRepository.now() - room.timestamp).toInt()
             addInternal(room, p, dt)
         }
     }
@@ -146,7 +146,7 @@ class AddDotBotUseCase @Inject constructor(
             room.add(Dot(p, Dot.HOST, dt))
             if (room.isNotOver()) {
                 val botDot = bot.findAnswer(room.dots)
-                val botDt = (timeRepository.getCurrentTime() - room.timestamp).toInt()
+                val botDt = (timeRepository.now() - room.timestamp).toInt()
                 room.add(botDot.copy(type = Dot.GUEST, dt = botDt))
             }
         }

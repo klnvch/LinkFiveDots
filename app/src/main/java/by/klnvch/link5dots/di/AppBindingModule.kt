@@ -33,7 +33,6 @@ import by.klnvch.link5dots.data.LanguageManagerImpl
 import by.klnvch.link5dots.data.NightModeManagerImpl
 import by.klnvch.link5dots.data.RoomRepositoryImpl
 import by.klnvch.link5dots.data.StringProvider
-import by.klnvch.link5dots.data.TimeRepositoryImpl
 import by.klnvch.link5dots.data.bluetooth.BluetoothRoomRepositoryImpl
 import by.klnvch.link5dots.data.firebase.AnalyticsImpl
 import by.klnvch.link5dots.data.firebase.FirebaseManagerImpl
@@ -53,7 +52,6 @@ import by.klnvch.link5dots.domain.repositories.OnlineRoomRepository
 import by.klnvch.link5dots.domain.repositories.RoomRepository
 import by.klnvch.link5dots.domain.repositories.Settings
 import by.klnvch.link5dots.domain.repositories.StringRepository
-import by.klnvch.link5dots.domain.repositories.TimeRepository
 import dagger.Binds
 import dagger.Module
 import javax.inject.Singleton
@@ -116,8 +114,4 @@ interface AppBindingModule {
     @Singleton
     @Binds
     fun bindBluetoothRoomRepository(impl: BluetoothRoomRepositoryImpl): BluetoothRoomRepository
-
-    @Singleton
-    @Binds
-    fun bindTimeRepository(impl: TimeRepositoryImpl): TimeRepository
 }

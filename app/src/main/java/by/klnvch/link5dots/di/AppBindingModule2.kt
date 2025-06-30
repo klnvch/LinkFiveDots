@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023-2025 klnvch
+ * Copyright (c) 2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,19 +21,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package by.klnvch.link5dots.domain.models
 
+package by.klnvch.link5dots.di
+
+import dagger.Module
+import dagger.Provides
+import org.klnvch.link5dots.shared.data.TimeRepositoryImpl
 import org.klnvch.link5dots.shared.domain.repositories.TimeRepository
-import javax.inject.Inject
-import kotlin.random.Random
-import kotlin.random.nextUInt
+import javax.inject.Singleton
 
-class RoomKeyGenerator @Inject constructor(
-    private val timeRepository: TimeRepository,
-) {
-    fun get(): String {
-        val time = timeRepository.now().toString(16)
-        val random = Random.Default.nextUInt().toString(16)
-        return "${time}_a_${random}"
-    }
+@Module
+class AppBindingModule2 {
+    @Singleton
+    @Provides
+    fun provideTimeRepository(): TimeRepository = TimeRepositoryImpl()
 }
