@@ -24,9 +24,18 @@
 
 package org.klnvch.link5dots.shared.data
 
-import org.klnvch.link5dots.shared.domain.repositories.TimeRepository
-import org.klnvch.link5dots.shared.utils.currentTime
+import org.klnvch.link5dots.shared.domain.repositories.RoomKeyGenerator
+import org.klnvch.link5dots.shared.domain.repositories.TimeService
+import org.klnvch.link5dots.shared.utils.platformKeyPart
+import kotlin.random.Random
+import kotlin.random.nextUInt
 
-class TimeRepositoryImpl : TimeRepository {
-    override fun now() = currentTime()
+class RoomKeyGeneratorImpl(
+    private val timeRepository: TimeService,
+) : RoomKeyGenerator {
+    override fun generate(): String {
+        val time = timeRepository.now().toString(16)
+        val random = Random.Default.nextUInt().toString(16)
+        return "${time}_${platformKeyPart}_${random}"
+    }
 }

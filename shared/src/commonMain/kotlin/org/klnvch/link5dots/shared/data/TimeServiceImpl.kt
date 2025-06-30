@@ -22,8 +22,11 @@
  * SOFTWARE.
  */
 
-package org.klnvch.link5dots.shared.domain.repositories
+package org.klnvch.link5dots.shared.data
 
-interface TimeRepository {
-    fun now(): Long
+import org.klnvch.link5dots.shared.domain.repositories.TimeService
+import org.klnvch.link5dots.shared.utils.currentTime
+
+class TimeServiceImpl : TimeService {
+    override fun now() = currentTime()
 }

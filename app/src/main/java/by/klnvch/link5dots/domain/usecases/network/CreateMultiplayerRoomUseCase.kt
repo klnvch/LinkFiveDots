@@ -25,7 +25,6 @@ package by.klnvch.link5dots.domain.usecases.network
 
 import by.klnvch.link5dots.domain.models.NetworkRoom
 import by.klnvch.link5dots.domain.models.NetworkUser
-import by.klnvch.link5dots.domain.models.RoomKeyGenerator
 import by.klnvch.link5dots.domain.models.RoomState
 import by.klnvch.link5dots.domain.models.RoomType
 import by.klnvch.link5dots.domain.repositories.BluetoothRoomRepository
@@ -34,7 +33,8 @@ import by.klnvch.link5dots.domain.repositories.NsdRoomRepository
 import by.klnvch.link5dots.domain.repositories.OnlineRoomRepository
 import by.klnvch.link5dots.domain.repositories.Settings
 import kotlinx.coroutines.flow.first
-import org.klnvch.link5dots.shared.domain.repositories.TimeRepository
+import org.klnvch.link5dots.shared.domain.repositories.RoomKeyGenerator
+import org.klnvch.link5dots.shared.domain.repositories.TimeService
 import javax.inject.Inject
 
 interface CreateMultiplayerRoomUseCase {
@@ -43,7 +43,7 @@ interface CreateMultiplayerRoomUseCase {
 
 class CreateOnlineRoomUseCase @Inject constructor(
     private val settings: Settings,
-    private val timeRepository: TimeRepository,
+    private val timeRepository: TimeService,
     private val roomKeyGenerator: RoomKeyGenerator,
     private val firebaseManager: FirebaseManager,
     private val repository: OnlineRoomRepository,
@@ -53,7 +53,7 @@ class CreateOnlineRoomUseCase @Inject constructor(
         val userId = firebaseManager.getUserId()
         val user1 = NetworkUser(userId, userName)
         val timestamp = timeRepository.now()
-        val key = roomKeyGenerator.get()
+        val key = roomKeyGenerator.generate()
         val room = NetworkRoom(
             key,
             timestamp,

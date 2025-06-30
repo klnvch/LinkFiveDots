@@ -35,19 +35,19 @@ interface ScanUseCase {
 }
 
 class OnlineScanUseCase @Inject constructor(
-    val repository: OnlineRoomRepository
+    val repository: OnlineRoomRepository,
 ) : ScanUseCase {
     override fun scan() = repository.getRemoteRooms()
 }
 
 class NsdScanUseCase @Inject constructor(
-    val repository: NsdRoomRepository
+    val repository: NsdRoomRepository,
 ) : ScanUseCase {
     override fun scan() = repository.getRemoteRooms()
 }
 
 class BluetoothScanUseCase @Inject constructor(
-    val repository: BluetoothRoomRepository
+    val repository: BluetoothRoomRepository,
 ) : ScanUseCase {
     override fun scan() = repository.getRemoteRooms()
 }

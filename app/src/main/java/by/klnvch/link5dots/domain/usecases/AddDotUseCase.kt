@@ -38,7 +38,7 @@ import by.klnvch.link5dots.domain.repositories.OnlineRoomRepository
 import by.klnvch.link5dots.domain.repositories.RoomRepository
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
-import org.klnvch.link5dots.shared.domain.repositories.TimeRepository
+import org.klnvch.link5dots.shared.domain.repositories.TimeService
 import javax.inject.Inject
 
 interface AddDotUseCase {
@@ -50,7 +50,7 @@ class AddDotInfoUseCase @Inject constructor() : AddDotUseCase {
 }
 
 abstract class AddDotRealUseCase(
-    private val timeRepository: TimeRepository,
+    private val timeRepository: TimeService,
     private val board: Board,
 ) : AddDotUseCase {
     override suspend fun addDot(room: IRoom, p: Point) {
@@ -64,7 +64,7 @@ abstract class AddDotRealUseCase(
 }
 
 abstract class AddDotMultiplayerUseCase(
-    timeRepository: TimeRepository,
+    timeRepository: TimeService,
     board: Board,
 ) : AddDotRealUseCase(timeRepository, board) {
     abstract suspend fun addMultiplayerDot(room: IRoom, dot: Dot)
@@ -83,7 +83,7 @@ abstract class AddDotMultiplayerUseCase(
 }
 
 class AddDotOnlineUseCase @Inject constructor(
-    timeRepository: TimeRepository,
+    timeRepository: TimeService,
     board: Board,
     private val repository: OnlineRoomRepository,
 ) : AddDotMultiplayerUseCase(timeRepository, board) {
@@ -99,7 +99,7 @@ class AddDotOnlineUseCase @Inject constructor(
 }
 
 class AddDotNsdUseCase @Inject constructor(
-    timeRepository: TimeRepository,
+    timeRepository: TimeService,
     board: Board,
     private val repository: NsdRoomRepository,
 ) : AddDotMultiplayerUseCase(timeRepository, board) {
@@ -111,7 +111,7 @@ class AddDotNsdUseCase @Inject constructor(
 }
 
 class AddDotBluetoothUseCase @Inject constructor(
-    timeRepository: TimeRepository,
+    timeRepository: TimeService,
     board: Board,
     private val repository: BluetoothRoomRepository,
 ) : AddDotMultiplayerUseCase(timeRepository, board) {
@@ -123,7 +123,7 @@ class AddDotBluetoothUseCase @Inject constructor(
 }
 
 abstract class AddDotOfflineUseCase(
-    timeRepository: TimeRepository,
+    timeRepository: TimeService,
     board: Board,
     private val roomRepository: RoomRepository,
 ) : AddDotRealUseCase(timeRepository, board) {
@@ -136,7 +136,7 @@ abstract class AddDotOfflineUseCase(
 }
 
 class AddDotBotUseCase @Inject constructor(
-    private val timeRepository: TimeRepository,
+    private val timeRepository: TimeService,
     board: Board,
     roomRepository: RoomRepository,
     private val bot: Bot,
@@ -155,7 +155,7 @@ class AddDotBotUseCase @Inject constructor(
 }
 
 class AddDotTwoUseCase @Inject constructor(
-    timeRepository: TimeRepository,
+    timeRepository: TimeService,
     board: Board,
     roomRepository: RoomRepository,
 ) : AddDotOfflineUseCase(timeRepository, board, roomRepository) {

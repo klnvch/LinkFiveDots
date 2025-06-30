@@ -25,3 +25,4 @@
 package org.klnvch.link5dots.shared.utils
 
 expect fun currentTime(): Long
+expect val platformKeyPart: String

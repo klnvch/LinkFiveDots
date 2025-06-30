@@ -25,3 +25,4 @@
 package org.klnvch.link5dots.shared.utils
 
 actual fun currentTime() = System.currentTimeMillis()
+actual val platformKeyPart = "a"

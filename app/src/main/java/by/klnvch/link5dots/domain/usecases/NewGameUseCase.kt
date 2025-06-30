@@ -32,7 +32,6 @@ import by.klnvch.link5dots.domain.models.NetworkRoom
 import by.klnvch.link5dots.domain.models.NetworkUser
 import by.klnvch.link5dots.domain.models.Point
 import by.klnvch.link5dots.domain.models.Room
-import by.klnvch.link5dots.domain.models.RoomKeyGenerator
 import by.klnvch.link5dots.domain.models.RoomState
 import by.klnvch.link5dots.domain.models.RoomType
 import by.klnvch.link5dots.domain.models.translate
@@ -43,7 +42,8 @@ import by.klnvch.link5dots.domain.repositories.RoomRepository
 import by.klnvch.link5dots.domain.repositories.Settings
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
-import org.klnvch.link5dots.shared.domain.repositories.TimeRepository
+import org.klnvch.link5dots.shared.domain.repositories.RoomKeyGenerator
+import org.klnvch.link5dots.shared.domain.repositories.TimeService
 import javax.inject.Inject
 
 interface NewGameUseCase : ActionAvailabilityForUseCase {
@@ -72,14 +72,14 @@ abstract class NewGameCommonUseCase(
 
 abstract class NewGameOfflineUseCase(
     private val roomKeyGenerator: RoomKeyGenerator,
-    private val timeRepository: TimeRepository,
+    private val timeRepository: TimeService,
     private val roomRepository: RoomRepository,
     initialGameGenerator: InitialGameGenerator,
 ) : NewGameCommonUseCase(initialGameGenerator) {
     override val actionAvailability = ActionAvailability.Available
     override suspend fun create(seed: Long?) {
         val room = Room(
-            roomKeyGenerator.get(),
+            roomKeyGenerator.generate(),
             timeRepository.now(),
             getDots(seed),
             user1,
@@ -96,7 +96,7 @@ abstract class NewGameOfflineUseCase(
 
 class NewGameBotUseCase @Inject constructor(
     roomKeyGenerator: RoomKeyGenerator,
-    timeRepository: TimeRepository,
+    timeRepository: TimeService,
     initialGameGenerator: InitialGameGenerator,
     roomRepository: RoomRepository,
 ) : NewGameOfflineUseCase(
@@ -112,7 +112,7 @@ class NewGameBotUseCase @Inject constructor(
 
 class NewGameTwoUseCase @Inject constructor(
     roomKeyGenerator: RoomKeyGenerator,
-    timeRepository: TimeRepository,
+    timeRepository: TimeService,
     initialGameGenerator: InitialGameGenerator,
     roomRepository: RoomRepository,
 ) : NewGameOfflineUseCase(
@@ -138,7 +138,7 @@ class NewGameOnlineUseCase @Inject constructor(
 
 class NewGameBluetoothUseCase @Inject constructor(
     private val settings: Settings,
-    private val timeRepository: TimeRepository,
+    private val timeRepository: TimeService,
     private val roomKeyGenerator: RoomKeyGenerator,
     private val repository: BluetoothRoomRepository,
     initialGameGenerator: InitialGameGenerator,
@@ -147,7 +147,7 @@ class NewGameBluetoothUseCase @Inject constructor(
         if (repository.isServer()) {
             val prevRoom = repository.get().firstOrNull()
 
-            val key = roomKeyGenerator.get()
+            val key = roomKeyGenerator.generate()
             val timestamp = timeRepository.now()
 
             val userName = settings.getUserName().first()
@@ -169,7 +169,7 @@ class NewGameBluetoothUseCase @Inject constructor(
 
 class NewGameNsdUseCase @Inject constructor(
     private val settings: Settings,
-    private val timeRepository: TimeRepository,
+    private val timeRepository: TimeService,
     private val roomKeyGenerator: RoomKeyGenerator,
     private val repository: NsdRoomRepository,
     initialGameGenerator: InitialGameGenerator,
@@ -178,7 +178,7 @@ class NewGameNsdUseCase @Inject constructor(
         if (repository.isServer()) {
             val prevRoom = repository.get().firstOrNull()
 
-            val key = roomKeyGenerator.get()
+            val key = roomKeyGenerator.generate()
             val timestamp = timeRepository.now()
 
             val userName = settings.getUserName().first()

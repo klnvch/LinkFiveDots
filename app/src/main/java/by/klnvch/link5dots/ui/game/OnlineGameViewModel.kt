@@ -154,10 +154,6 @@ class OnlineGameViewModel @Inject constructor(
         viewModelScope.launch { getNetworkRoomStateUseCase.get().collect { onStatedChanged(it) } }
     }
 
-    override fun onCleared() {
-        super.onCleared()
-    }
-
     fun isConnected() = pickerUiState.value.connectState is ConnectConnected
 
     fun createRoom() {

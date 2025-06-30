@@ -22,9 +22,8 @@
  * SOFTWARE.
  */
 
-package org.klnvch.link5dots.shared.utils
+package org.klnvch.link5dots.shared.domain.repositories
 
-import kotlin.js.Date
-
-actual fun currentTime() = Date.now().toLong()
-actual val platformKeyPart = "w"
+interface TimeService {
+    fun now(): Long
+}

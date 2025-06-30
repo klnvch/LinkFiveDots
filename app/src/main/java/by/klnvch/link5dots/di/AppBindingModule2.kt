@@ -26,13 +26,21 @@ package by.klnvch.link5dots.di
 
 import dagger.Module
 import dagger.Provides
-import org.klnvch.link5dots.shared.data.TimeRepositoryImpl
-import org.klnvch.link5dots.shared.domain.repositories.TimeRepository
+import org.klnvch.link5dots.shared.data.RoomKeyGeneratorImpl
+import org.klnvch.link5dots.shared.data.TimeServiceImpl
+import org.klnvch.link5dots.shared.domain.repositories.RoomKeyGenerator
+import org.klnvch.link5dots.shared.domain.repositories.TimeService
 import javax.inject.Singleton
 
 @Module
 class AppBindingModule2 {
     @Singleton
     @Provides
-    fun provideTimeRepository(): TimeRepository = TimeRepositoryImpl()
+    fun provideTimeService(): TimeService = TimeServiceImpl()
+
+
+    @Singleton
+    @Provides
+    fun provideRoomKeyGenerator(timeService: TimeService): RoomKeyGenerator =
+        RoomKeyGeneratorImpl(timeService)
 }
