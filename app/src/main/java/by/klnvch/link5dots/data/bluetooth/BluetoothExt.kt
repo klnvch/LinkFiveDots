@@ -36,15 +36,21 @@ import by.klnvch.link5dots.data.bluetooth.BluetoothParams.TAG
 import by.klnvch.link5dots.data.bluetooth.BluetoothParams.UUID_SECURE
 
 object BluetoothExt {
-    fun BluetoothManager.getDeviceName(): String {
-        return adapter.name ?: ""
+    @SuppressLint("MissingPermission")
+    fun BluetoothManager.getDeviceName() = try {
+        adapter.name ?: ""
+    } catch (e: Throwable) {
+        Log.d(TAG, "getDeviceName: ${e.message}")
+        ""
     }
 
+    @SuppressLint("MissingPermission", "HardwareIds")
     fun BluetoothManager.getDeviceAddress(): String {
         val address = adapter.address
         return if (address == FAKE_ADDRESS) "" else address
     }
 
+    @SuppressLint("MissingPermission")
     fun BluetoothManager.createServerSocket(): BluetoothServerSocket =
         adapter.listenUsingRfcommWithServiceRecord(NAME_SECURE, UUID_SECURE)
 

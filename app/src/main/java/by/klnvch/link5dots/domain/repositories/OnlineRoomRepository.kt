@@ -31,7 +31,6 @@ import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
 import kotlinx.coroutines.flow.Flow
 
 interface OnlineRoomRepository {
-    suspend fun create(room: NetworkRoom)
     val state: Flow<NetworkRoomState>
     suspend fun getKey(): String?
     suspend fun updateState(state: Int)

@@ -44,7 +44,7 @@ class ConnectOnlineRoomUseCase @Inject constructor(
 ) : ConnectRemoteRoomUseCase {
     override suspend fun connect(descriptor: RemoteRoomDescriptor) {
         val userId = firebaseManager.getUserId()
-        val userName = settings.getUserName().first()
+        val userName = settings.getUserName()
         val user2 = NetworkUser(userId, userName)
         onlineRoomRepository.connect(descriptor, user2)
     }
@@ -56,7 +56,7 @@ class ConnectNsdRoomUseCase @Inject constructor(
 ) : ConnectRemoteRoomUseCase {
     override suspend fun connect(descriptor: RemoteRoomDescriptor) {
         val userId = settings.getUserId().first()
-        val userName = settings.getUserName().first()
+        val userName = settings.getUserName()
         val user2 = NetworkUser(userId, userName)
         repository.connect(descriptor, user2)
     }
@@ -68,7 +68,7 @@ class ConnectBluetoothRoomUseCase @Inject constructor(
 ) : ConnectRemoteRoomUseCase {
     override suspend fun connect(descriptor: RemoteRoomDescriptor) {
         val userId = settings.getUserId().first()
-        val userName = settings.getUserName().first()
+        val userName = settings.getUserName()
         val user2 = NetworkUser(userId, userName)
         repository.connect(descriptor, user2)
     }

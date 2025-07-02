@@ -24,12 +24,22 @@
 
 package by.klnvch.link5dots.di
 
+import by.klnvch.link5dots.data.RoomKeyGeneratorImpl
+import by.klnvch.link5dots.data.TimeServiceImpl
+import by.klnvch.link5dots.data.online.CreateOnlineRoomRepositoryImpl
+import by.klnvch.link5dots.data.online.FirebaseDb
+import by.klnvch.link5dots.data.online.OnlineLocalStore
+import by.klnvch.link5dots.data.online.OnlineLocalStoreWriter
+import by.klnvch.link5dots.domain.repositories.CreateOnlineRoomRepository
+import by.klnvch.link5dots.domain.repositories.FirebaseAuthManager
+import by.klnvch.link5dots.domain.repositories.FirebaseManager
+import by.klnvch.link5dots.domain.repositories.RoomKeyGenerator
+import by.klnvch.link5dots.domain.repositories.Settings
+import by.klnvch.link5dots.domain.repositories.TimeService
+import by.klnvch.link5dots.domain.repositories.UserNameSettings
+import by.klnvch.link5dots.domain.usecases.network.CreateOnlineRoomUseCase
 import dagger.Module
 import dagger.Provides
-import org.klnvch.link5dots.shared.data.RoomKeyGeneratorImpl
-import org.klnvch.link5dots.shared.data.TimeServiceImpl
-import org.klnvch.link5dots.shared.domain.repositories.RoomKeyGenerator
-import org.klnvch.link5dots.shared.domain.repositories.TimeService
 import javax.inject.Singleton
 
 @Module
@@ -38,9 +48,43 @@ class AppBindingModule2 {
     @Provides
     fun provideTimeService(): TimeService = TimeServiceImpl()
 
-
     @Singleton
     @Provides
     fun provideRoomKeyGenerator(timeService: TimeService): RoomKeyGenerator =
         RoomKeyGeneratorImpl(timeService)
+
+    @Singleton
+    @Provides
+    fun provideUserNameSettings(settings: Settings): UserNameSettings = settings
+
+    @Singleton
+    @Provides
+    fun provideFirebaseAuthManager(manager: FirebaseManager): FirebaseAuthManager = manager
+
+    @Singleton
+    @Provides
+    fun provideCreateOnlineRoomUseCase(
+        userNameSettings: UserNameSettings,
+        timeService: TimeService,
+        roomKeyGenerator: RoomKeyGenerator,
+        firebaseAuthManager: FirebaseAuthManager,
+        createOnlineRoomRepository: CreateOnlineRoomRepository,
+    ) = CreateOnlineRoomUseCase(
+        userNameSettings,
+        timeService,
+        roomKeyGenerator,
+        firebaseAuthManager,
+        createOnlineRoomRepository,
+    )
+
+    @Singleton
+    @Provides
+    fun provideOnlineLocalStoreWriter(store: OnlineLocalStore): OnlineLocalStoreWriter = store
+
+    @Singleton
+    @Provides
+    fun provideCreateOnlineRoomRepository(
+        firebaseDb: FirebaseDb,
+        onlineLocalStore: OnlineLocalStore,
+    ): CreateOnlineRoomRepository = CreateOnlineRoomRepositoryImpl(firebaseDb, onlineLocalStore)
 }

@@ -70,7 +70,7 @@ class OnlineRoomMapper @Inject constructor() {
     fun map(user: NetworkUser?): OnlineRemoteUser? {
         return if (user != null) OnlineRemoteUser(
             user.id,
-            if (user.name.isNotEmpty()) user.name else null
+            user.name.ifEmpty { null }
         )
         else null
     }

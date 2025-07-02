@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023-2025 klnvch
+ * Copyright (c) 2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,26 +21,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package by.klnvch.link5dots.domain.usecases
 
-import by.klnvch.link5dots.domain.models.BotGameScore
-import by.klnvch.link5dots.domain.repositories.DeviceInfo
-import by.klnvch.link5dots.domain.repositories.FirebaseManager
-import by.klnvch.link5dots.domain.repositories.GameScoreRepository
-import by.klnvch.link5dots.domain.repositories.Settings
-import javax.inject.Inject
+package by.klnvch.link5dots
 
-// TODO: add isSupported and login
-class SaveScoreUseCase @Inject constructor(
-    private val deviceInfo: DeviceInfo,
-    private val firebaseManager: FirebaseManager,
-    private val gameScoreRepository: GameScoreRepository,
-    private val settings: Settings,
-) {
-    suspend fun save(score: BotGameScore) {
-        val deviceId = deviceInfo.getAndroidId()
-        val userId = firebaseManager.getUserId()
-        val userName = settings.getUserName()
-        gameScoreRepository.save(score, userName, userId, deviceId)
+import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.platform.app.InstrumentationRegistry
+import org.junit.Assert.assertEquals
+import org.junit.Test
+import org.junit.runner.RunWith
+
+/**
+ * Instrumented test, which will execute on an Android device.
+ *
+ * See [testing documentation](http://d.android.com/tools/testing).
+ */
+@RunWith(AndroidJUnit4::class)
+class ExampleInstrumentedTest {
+    @Test
+    fun useAppContext() {
+        // Context of the app under test.
+        val appContext = InstrumentationRegistry.getInstrumentation().targetContext
+        assertEquals("by.klnvch.link5dots.test", appContext.packageName)
     }
 }

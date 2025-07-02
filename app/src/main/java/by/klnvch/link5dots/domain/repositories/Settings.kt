@@ -28,11 +28,10 @@ import by.klnvch.link5dots.domain.models.AllSettings
 import by.klnvch.link5dots.domain.models.DotsStyleType
 import kotlinx.coroutines.flow.Flow
 
-interface Settings {
+interface Settings : UserNameSettings {
     fun getAllSettings(): Flow<AllSettings>
-    fun getUserName(): Flow<String>
+    fun getUserNameFlow(): Flow<String>
     fun getUserId(): Flow<String>
-    fun getUserNameBlocking(): String
     suspend fun setUserName(userName: String)
     suspend fun setLanguage(language: String)
     suspend fun setVibration(isOn: Boolean)

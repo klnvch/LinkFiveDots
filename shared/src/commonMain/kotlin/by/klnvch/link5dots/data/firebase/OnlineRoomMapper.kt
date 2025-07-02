@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023-2025 klnvch
+ * Copyright (c) 2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,26 +21,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package by.klnvch.link5dots.domain.usecases
 
-import by.klnvch.link5dots.domain.models.BotGameScore
-import by.klnvch.link5dots.domain.repositories.DeviceInfo
-import by.klnvch.link5dots.domain.repositories.FirebaseManager
-import by.klnvch.link5dots.domain.repositories.GameScoreRepository
-import by.klnvch.link5dots.domain.repositories.Settings
-import javax.inject.Inject
+package by.klnvch.link5dots.data.firebase
 
-// TODO: add isSupported and login
-class SaveScoreUseCase @Inject constructor(
-    private val deviceInfo: DeviceInfo,
-    private val firebaseManager: FirebaseManager,
-    private val gameScoreRepository: GameScoreRepository,
-    private val settings: Settings,
-) {
-    suspend fun save(score: BotGameScore) {
-        val deviceId = deviceInfo.getAndroidId()
-        val userId = firebaseManager.getUserId()
-        val userName = settings.getUserName()
-        gameScoreRepository.save(score, userName, userId, deviceId)
-    }
-}
+import by.klnvch.link5dots.domain.models.NetworkRoomInvitation
+import by.klnvch.link5dots.domain.models.NetworkUser
+import by.klnvch.link5dots.domain.models.RoomState
+
+fun NetworkRoomInvitation.mapToOnlineRoomRemote() = OnlineRoomRemote(
+    RoomState.CREATED,
+    null,
+    timestamp,
+    user1.mapToOnlineRemoteUser(),
+    null,
+)
+
+fun NetworkUser.mapToOnlineRemoteUser() = OnlineRemoteUser(id, name)

@@ -35,7 +35,6 @@ import by.klnvch.link5dots.domain.repositories.Settings
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.runBlocking
 import java.util.UUID
 import javax.inject.Inject
 
@@ -78,7 +77,9 @@ class SettingsImpl @Inject constructor(
         dataStore.edit { it[USER_NAME] = userName }
     }
 
-    override fun getUserName() = dataStore.data
+    override suspend fun getUserName() = getUserNameFlow().first()
+
+    override fun getUserNameFlow() = dataStore.data
         .map { it[USER_NAME] ?: DEFAULT_USER_NAME }
         .distinctUntilChanged()
 
@@ -108,10 +109,6 @@ class SettingsImpl @Inject constructor(
             } else userId
         }
         .distinctUntilChanged()
-
-    override fun getUserNameBlocking(): String {
-        return runBlocking { getUserName().first() }
-    }
 
     override fun getLanguage() = dataStore.data
         .map { it[LANGUAGE] ?: DEFAULT_LANGUAGE }

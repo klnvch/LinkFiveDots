@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 klnvch
+ * Copyright (c) 2023-2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,7 +27,6 @@ package by.klnvch.link5dots.domain.usecases.network
 import by.klnvch.link5dots.domain.models.NetworkUser
 import by.klnvch.link5dots.domain.repositories.FirebaseManager
 import by.klnvch.link5dots.domain.repositories.Settings
-import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
 class GetNetworkUserUseCase @Inject constructor(
@@ -36,7 +35,7 @@ class GetNetworkUserUseCase @Inject constructor(
 ) {
     suspend fun get(): NetworkUser {
         val id = firebaseManager.signInAnonymously()
-        val name = settings.getUserName().first()
+        val name = settings.getUserName()
         return NetworkUser(id, name)
     }
 }

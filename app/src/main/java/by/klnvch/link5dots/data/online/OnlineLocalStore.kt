@@ -33,10 +33,13 @@ import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-class OnlineLocalStore @Inject constructor(private val context: Context) {
+class OnlineLocalStore @Inject constructor(private val context: Context) : OnlineLocalStoreWriter {
     private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "online")
     private val keyKey = stringPreferencesKey("key")
 
-    suspend fun saveKey(key: String?) = context.dataStore.edit { it[keyKey] = key ?: "" }
-    fun getKey() = context.dataStore.data.map { it[keyKey]?.let { if (it.isEmpty()) null else it } }
+    override suspend fun saveKey(key: String?) {
+        context.dataStore.edit { it[keyKey] = key ?: "" }
+    }
+
+    fun getKey() = context.dataStore.data.map { it[keyKey]?.ifEmpty { null } }
 }

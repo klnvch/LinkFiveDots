@@ -21,20 +21,39 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
 package by.klnvch.link5dots.domain.usecases.network
 
-import by.klnvch.link5dots.domain.repositories.BluetoothRoomRepository
-import by.klnvch.link5dots.domain.repositories.NsdRoomRepository
-import javax.inject.Inject
+import by.klnvch.link5dots.domain.models.NetworkRoomInvitation
+import by.klnvch.link5dots.domain.repositories.CreateOnlineRoomRepository
+import by.klnvch.link5dots.domain.repositories.FirebaseAuthManager
+import by.klnvch.link5dots.domain.repositories.RoomKeyGenerator
+import by.klnvch.link5dots.domain.repositories.TimeService
+import by.klnvch.link5dots.domain.repositories.UserNameSettings
 
-class CreateNsdRoomUseCase @Inject constructor(
-    private val repository: NsdRoomRepository,
-) : CreateMultiplayerRoomUseCase {
-    override suspend fun create() = repository.create()
+interface CreateMultiplayerRoomUseCase {
+    suspend fun create()
 }
 
-class CreateBluetoothRoomUseCase @Inject constructor(
-    private val repository: BluetoothRoomRepository,
+class CreateOnlineRoomUseCase(
+    private val userNameSettings: UserNameSettings,
+    private val timeService: TimeService,
+    private val roomKeyGenerator: RoomKeyGenerator,
+    private val firebaseAuthManager: FirebaseAuthManager,
+    private val repository: CreateOnlineRoomRepository,
 ) : CreateMultiplayerRoomUseCase {
-    override suspend fun create() = repository.create()
+    override suspend fun create() {
+        val userId = firebaseAuthManager.getUserId()
+        val userName = userNameSettings.getUserName()
+        val timestamp = timeService.now().toLong()
+        val key = roomKeyGenerator.generate()
+
+        val room = NetworkRoomInvitation(
+            key,
+            timestamp,
+            userId,
+            userName,
+        )
+        repository.create(room)
+    }
 }

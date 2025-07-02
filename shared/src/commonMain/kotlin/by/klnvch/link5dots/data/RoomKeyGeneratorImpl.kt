@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023-2025 klnvch
+ * Copyright (c) 2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,26 +21,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package by.klnvch.link5dots.domain.usecases
 
-import by.klnvch.link5dots.domain.models.BotGameScore
-import by.klnvch.link5dots.domain.repositories.DeviceInfo
-import by.klnvch.link5dots.domain.repositories.FirebaseManager
-import by.klnvch.link5dots.domain.repositories.GameScoreRepository
-import by.klnvch.link5dots.domain.repositories.Settings
-import javax.inject.Inject
+package by.klnvch.link5dots.data
 
-// TODO: add isSupported and login
-class SaveScoreUseCase @Inject constructor(
-    private val deviceInfo: DeviceInfo,
-    private val firebaseManager: FirebaseManager,
-    private val gameScoreRepository: GameScoreRepository,
-    private val settings: Settings,
-) {
-    suspend fun save(score: BotGameScore) {
-        val deviceId = deviceInfo.getAndroidId()
-        val userId = firebaseManager.getUserId()
-        val userName = settings.getUserName()
-        gameScoreRepository.save(score, userName, userId, deviceId)
+import by.klnvch.link5dots.domain.repositories.RoomKeyGenerator
+import by.klnvch.link5dots.domain.repositories.TimeService
+import by.klnvch.link5dots.platformKeyPart
+import kotlin.js.ExperimentalJsExport
+import kotlin.js.JsExport
+import kotlin.random.Random
+import kotlin.random.nextUInt
+
+@OptIn(ExperimentalJsExport::class)
+@JsExport
+class RoomKeyGeneratorImpl(
+    private val timeRepository: TimeService,
+) : RoomKeyGenerator {
+    override fun generate(): String {
+        val time = timeRepository.now().toLong().toString(16)
+        val random = Random.Default.nextUInt().toString(16)
+        return "${time}_${platformKeyPart}_${random}"
     }
 }

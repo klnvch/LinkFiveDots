@@ -21,26 +21,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package by.klnvch.link5dots.domain.usecases
 
-import by.klnvch.link5dots.domain.models.BotGameScore
-import by.klnvch.link5dots.domain.repositories.DeviceInfo
-import by.klnvch.link5dots.domain.repositories.FirebaseManager
-import by.klnvch.link5dots.domain.repositories.GameScoreRepository
-import by.klnvch.link5dots.domain.repositories.Settings
-import javax.inject.Inject
+package by.klnvch.link5dots.domain.models
 
-// TODO: add isSupported and login
-class SaveScoreUseCase @Inject constructor(
-    private val deviceInfo: DeviceInfo,
-    private val firebaseManager: FirebaseManager,
-    private val gameScoreRepository: GameScoreRepository,
-    private val settings: Settings,
-) {
-    suspend fun save(score: BotGameScore) {
-        val deviceId = deviceInfo.getAndroidId()
-        val userId = firebaseManager.getUserId()
-        val userName = settings.getUserName()
-        gameScoreRepository.save(score, userName, userId, deviceId)
-    }
-}
+sealed interface IUser
+object BotUser : IUser
+object DeviceOwnerUser : IUser
+data class NetworkUser(val id: String, val name: String) : IUser

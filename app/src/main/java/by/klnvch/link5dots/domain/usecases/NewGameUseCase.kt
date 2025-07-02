@@ -38,12 +38,12 @@ import by.klnvch.link5dots.domain.models.translate
 import by.klnvch.link5dots.domain.repositories.BluetoothRoomRepository
 import by.klnvch.link5dots.domain.repositories.NsdRoomRepository
 import by.klnvch.link5dots.domain.repositories.OnlineRoomRepository
+import by.klnvch.link5dots.domain.repositories.RoomKeyGenerator
 import by.klnvch.link5dots.domain.repositories.RoomRepository
 import by.klnvch.link5dots.domain.repositories.Settings
+import by.klnvch.link5dots.domain.repositories.TimeService
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
-import org.klnvch.link5dots.shared.domain.repositories.RoomKeyGenerator
-import org.klnvch.link5dots.shared.domain.repositories.TimeService
 import javax.inject.Inject
 
 interface NewGameUseCase : ActionAvailabilityForUseCase {
@@ -80,7 +80,7 @@ abstract class NewGameOfflineUseCase(
     override suspend fun create(seed: Long?) {
         val room = Room(
             roomKeyGenerator.generate(),
-            timeRepository.now(),
+            timeRepository.now().toLong(),
             getDots(seed),
             user1,
             user2,
@@ -150,13 +150,19 @@ class NewGameBluetoothUseCase @Inject constructor(
             val key = roomKeyGenerator.generate()
             val timestamp = timeRepository.now()
 
-            val userName = settings.getUserName().first()
+            val userName = settings.getUserName()
             val userId = settings.getUserId().first()
             val user1 = NetworkUser(userId, userName)
             val user2 = prevRoom?.user2
 
             val newRoom = NetworkRoom(
-                key, timestamp, getDots(seed), user1, user2, RoomType.BLUETOOTH, RoomState.CREATED
+                key,
+                timestamp.toLong(),
+                getDots(seed),
+                user1,
+                user2,
+                RoomType.BLUETOOTH,
+                RoomState.CREATED
             )
 
             repository.update(newRoom)
@@ -181,13 +187,19 @@ class NewGameNsdUseCase @Inject constructor(
             val key = roomKeyGenerator.generate()
             val timestamp = timeRepository.now()
 
-            val userName = settings.getUserName().first()
+            val userName = settings.getUserName()
             val userId = settings.getUserId().first()
             val user1 = NetworkUser(userId, userName)
             val user2 = prevRoom?.user2
 
             val newRoom = NetworkRoom(
-                key, timestamp, getDots(seed), user1, user2, RoomType.NSD, RoomState.CREATED
+                key,
+                timestamp.toLong(),
+                getDots(seed),
+                user1,
+                user2,
+                RoomType.NSD,
+                RoomState.CREATED
             )
 
             repository.update(newRoom)

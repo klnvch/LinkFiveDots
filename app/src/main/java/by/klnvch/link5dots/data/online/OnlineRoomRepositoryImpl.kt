@@ -67,12 +67,6 @@ class OnlineRoomRepositoryImpl @Inject constructor(
     private val reference = Firebase.database.reference.child(path)
     private var _room: NetworkRoom? = null
 
-    override suspend fun create(room: NetworkRoom) {
-        val remoteRoom = mapper.map(room)
-        reference.child(room.key).setValue(remoteRoom).await()
-        onlineLocalStore.saveKey(room.key)
-    }
-
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun get() = onlineLocalStore.getKey().filterNotNull().flatMapLatest { key ->
         reference.child(key).snapshots

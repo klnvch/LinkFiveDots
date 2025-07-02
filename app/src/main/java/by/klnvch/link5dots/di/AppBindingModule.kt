@@ -37,6 +37,8 @@ import by.klnvch.link5dots.data.bluetooth.BluetoothRoomRepositoryImpl
 import by.klnvch.link5dots.data.firebase.AnalyticsImpl
 import by.klnvch.link5dots.data.firebase.FirebaseManagerImpl
 import by.klnvch.link5dots.data.nsd.NsdRoomRepositoryImpl
+import by.klnvch.link5dots.data.online.FirebaseDb
+import by.klnvch.link5dots.data.online.FirebaseDbImpl
 import by.klnvch.link5dots.data.online.OnlineRoomRepositoryImpl
 import by.klnvch.link5dots.data.settings.SettingsImpl
 import by.klnvch.link5dots.domain.repositories.Analytics
@@ -114,4 +116,8 @@ interface AppBindingModule {
     @Singleton
     @Binds
     fun bindBluetoothRoomRepository(impl: BluetoothRoomRepositoryImpl): BluetoothRoomRepository
+
+    @Singleton
+    @Binds
+    fun bindFirebaseDb(impl: FirebaseDbImpl): FirebaseDb
 }

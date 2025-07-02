@@ -24,13 +24,6 @@
 
 package by.klnvch.link5dots.domain.models
 
-object RoomState {
-    const val CREATED = 0
-    const val DELETED = 1
-    const val STARTED = 2
-    const val FINISHED = 3
-}
-
 sealed interface NetworkRoomState
 data class NetworkRoomCreated(val descriptor: RemoteRoomDescriptor) : NetworkRoomState
 object NetworkRoomDeleted : NetworkRoomState

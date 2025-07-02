@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023-2025 klnvch
+ * Copyright (c) 2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,26 +21,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package by.klnvch.link5dots.domain.usecases
 
-import by.klnvch.link5dots.domain.models.BotGameScore
-import by.klnvch.link5dots.domain.repositories.DeviceInfo
-import by.klnvch.link5dots.domain.repositories.FirebaseManager
-import by.klnvch.link5dots.domain.repositories.GameScoreRepository
-import by.klnvch.link5dots.domain.repositories.Settings
+package by.klnvch.link5dots.data.online
+
+import by.klnvch.link5dots.BuildConfig
+import by.klnvch.link5dots.data.firebase.OnlineRoomRemote
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
-// TODO: add isSupported and login
-class SaveScoreUseCase @Inject constructor(
-    private val deviceInfo: DeviceInfo,
-    private val firebaseManager: FirebaseManager,
-    private val gameScoreRepository: GameScoreRepository,
-    private val settings: Settings,
-) {
-    suspend fun save(score: BotGameScore) {
-        val deviceId = deviceInfo.getAndroidId()
-        val userId = firebaseManager.getUserId()
-        val userName = settings.getUserName()
-        gameScoreRepository.save(score, userName, userId, deviceId)
+class FirebaseDbImpl @Inject constructor() : FirebaseDb {
+    private val path = if (BuildConfig.DEBUG) "rooms_debug" else "rooms_v2"
+    private val reference = Firebase.database.reference.child(path)
+
+    override suspend fun setValue(key: String, room: OnlineRoomRemote) {
+        reference.child(key).setValue(room).await()
     }
 }

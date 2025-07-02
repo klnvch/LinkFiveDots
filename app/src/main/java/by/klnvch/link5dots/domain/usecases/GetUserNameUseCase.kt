@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 klnvch
+ * Copyright (c) 2023-2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -30,20 +30,19 @@ import by.klnvch.link5dots.domain.models.IUser
 import by.klnvch.link5dots.domain.models.NetworkUser
 import by.klnvch.link5dots.domain.repositories.Settings
 import by.klnvch.link5dots.domain.repositories.StringRepository
-import kotlinx.coroutines.flow.firstOrNull
 import javax.inject.Inject
 
 class GetUserNameUseCase @Inject constructor(
     private val settings: Settings,
     private val stringRepository: StringRepository,
 ) {
-    fun get() = settings.getUserName()
+    fun get() = settings.getUserNameFlow()
 
     suspend fun get(user: IUser?) = when (user) {
         is BotUser -> stringRepository.getString(R.string.computer)
         is NetworkUser -> get(user)
-        is DeviceOwnerUser -> settings.getUserName().firstOrNull()
-            ?.ifEmpty { stringRepository.getString(R.string.unknown) }
+        is DeviceOwnerUser -> settings.getUserName()
+            .ifEmpty { stringRepository.getString(R.string.unknown) }
 
         null -> null
     }

@@ -37,7 +37,7 @@ project.plugins.withType<org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsPlu
 
 kotlin {
     androidLibrary {
-        namespace = "org.klnvch.link5dots.shared"
+        namespace = "by.klnvch.link5dots"
         compileSdk = 36
         minSdk = 23
 
@@ -52,19 +52,15 @@ kotlin {
     }
 
     js(IR) {
+        binaries.library()
         browser {
             webpackTask {
                 output.libraryTarget = "commonjs2"
             }
         }
-        binaries.executable()
+        generateTypeScriptDefinitions()
     }
 
-    // Source set declarations.
-    // Declaring a target automatically creates a source set with the same name. By default, the
-    // Kotlin Gradle Plugin creates additional source sets that depend on each other, since it is
-    // common to share sources between related targets.
-    // See: https://kotlinlang.org/docs/multiplatform-hierarchy.html
     sourceSets {
         commonMain {
             dependencies {
