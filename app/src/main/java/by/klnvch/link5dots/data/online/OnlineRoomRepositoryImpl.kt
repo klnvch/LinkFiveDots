@@ -82,7 +82,7 @@ class OnlineRoomRepositoryImpl @Inject constructor(
             }
 
             RoomState.DELETED -> {
-                onlineLocalStore.saveKey(null)
+                onlineLocalStore.clearKey()
                 NetworkRoomDeleted
             }
 
@@ -91,7 +91,7 @@ class OnlineRoomRepositoryImpl @Inject constructor(
             }
 
             RoomState.FINISHED -> {
-                onlineLocalStore.saveKey(null)
+                onlineLocalStore.clearKey()
                 NetworkRoomFinished
             }
 

@@ -37,8 +37,12 @@ class OnlineLocalStore @Inject constructor(private val context: Context) : Onlin
     private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "online")
     private val keyKey = stringPreferencesKey("key")
 
-    override suspend fun saveKey(key: String?) {
-        context.dataStore.edit { it[keyKey] = key ?: "" }
+    override suspend fun saveKey(key: String) {
+        context.dataStore.edit { it[keyKey] = key }
+    }
+
+    suspend fun clearKey() {
+        context.dataStore.edit { it[keyKey] = "" }
     }
 
     fun getKey() = context.dataStore.data.map { it[keyKey]?.ifEmpty { null } }

@@ -31,7 +31,7 @@ import by.klnvch.link5dots.domain.models.RoomState
 fun NetworkRoomInvitation.mapToOnlineRoomRemote() = OnlineRoomRemote(
     RoomState.CREATED,
     null,
-    timestamp,
+    timestamp.toDouble(),
     user1.mapToOnlineRemoteUser(),
     null,
 )

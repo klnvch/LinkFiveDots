@@ -53,11 +53,8 @@ kotlin {
 
     js(IR) {
         binaries.library()
-        browser {
-            webpackTask {
-                output.libraryTarget = "commonjs2"
-            }
-        }
+        useEsModules()
+        browser()
         generateTypeScriptDefinitions()
     }
 
@@ -65,7 +62,7 @@ kotlin {
         commonMain {
             dependencies {
                 implementation(libs.kotlin.stdlib)
-                // Add KMP dependencies here
+                implementation(libs.kotlinx.coroutines.core)
             }
         }
 
@@ -76,11 +73,7 @@ kotlin {
         }
 
         androidMain {
-            dependencies {
-                // Add Android-specific dependencies here. Note that this source set depends on
-                // commonMain by default and will correctly pull the Android artifacts of any KMP
-                // dependencies declared in commonMain.
-            }
+            dependencies { }
         }
 
         getByName("androidDeviceTest") {
@@ -92,9 +85,7 @@ kotlin {
         }
 
         jsMain {
-            dependencies {
-
-            }
+            dependencies { }
         }
     }
 }

@@ -25,5 +25,5 @@
 package by.klnvch.link5dots.data.online
 
 interface OnlineLocalStoreWriter {
-    suspend fun saveKey(key: String?)
+    suspend fun saveKey(key: String)
 }

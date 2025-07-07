@@ -24,20 +24,29 @@
 
 package by.klnvch.link5dots.data.firebase
 
+import kotlin.js.ExperimentalJsExport
+import kotlin.js.JsExport
+
+@OptIn(ExperimentalJsExport::class)
+@JsExport()
 data class OnlineRoomRemote(
     val state: Int? = null,
     val dots: List<OnlineDotRemote>? = null,
-    val time: Long? = null,
+    val time: Double? = null,
     val user1: OnlineRemoteUser? = null,
     val user2: OnlineRemoteUser? = null,
 )
 
+@OptIn(ExperimentalJsExport::class)
+@JsExport()
 data class OnlineDotRemote(
     val dt: Int? = null,
     val x: Int? = null,
     val y: Int? = null,
 )
 
+@OptIn(ExperimentalJsExport::class)
+@JsExport()
 data class OnlineRemoteUser(
     val id: String? = null,
     val name: String? = null,

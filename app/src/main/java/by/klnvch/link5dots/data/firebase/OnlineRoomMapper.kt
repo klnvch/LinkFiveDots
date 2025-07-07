@@ -36,7 +36,7 @@ class OnlineRoomMapper @Inject constructor() {
     fun map(room: NetworkRoom) = OnlineRoomRemote(
         room.state,
         room.dots.map { dot -> map(dot) }.ifEmpty { null },
-        room.timestamp,
+        room.timestamp.toDouble(),
         map(room.user1) ?: throw IllegalStateException("user1"),
         map(room.user2),
     )
@@ -47,7 +47,7 @@ class OnlineRoomMapper @Inject constructor() {
         val user2 = map(room.user2)
         return NetworkRoom(
             key,
-            timestamp,
+            timestamp.toLong(),
             room.dots?.mapIndexed { i, d ->
                 Dot(d.x!!, d.y!!, if (i % 2 == 0) Dot.HOST else Dot.GUEST, d.dt!!)
             } ?: emptyList(),
