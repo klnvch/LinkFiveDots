@@ -24,8 +24,13 @@
 
 package by.klnvch.link5dots.domain.models
 
+import kotlin.js.ExperimentalJsExport
+import kotlin.js.JsExport
 
-data class NetworkRoomInvitation(val key: String, val timestamp: Long, val user1: NetworkUser) {
-    constructor(key: String, timestamp: Long, userId: String, userName: String) :
-            this(key, timestamp, NetworkUser(userId, userName))
-}
+@OptIn(ExperimentalJsExport::class)
+@JsExport()
+data class NetworkRoomInvitation(
+    val key: String,
+    val timestamp: Double,
+    val user1: NetworkUser,
+)

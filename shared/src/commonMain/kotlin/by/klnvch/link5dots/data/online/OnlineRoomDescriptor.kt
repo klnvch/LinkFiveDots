@@ -22,16 +22,38 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.domain.models
+package by.klnvch.link5dots.data.online
 
+import by.klnvch.link5dots.data.firebase.OnlineRoomRemote
+import by.klnvch.link5dots.data.firebase.mapToNetworkRoomInvitation
+import by.klnvch.link5dots.domain.models.NetworkRoomInvitation
+import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
+import by.klnvch.link5dots.formatDateTime
 import kotlin.js.ExperimentalJsExport
 import kotlin.js.JsExport
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport()
-object RoomState {
-    const val CREATED = 0
-    const val DELETED = 1
-    const val STARTED = 2
-    const val FINISHED = 3
-}
+data class OnlineRoomDescriptor(
+    override val title: String,
+    override val description: String,
+    override val isFavorite: Boolean,
+    val key: String,
+) : RemoteRoomDescriptor
+
+
+fun NetworkRoomInvitation.createDescriptor(defaultName: String) = OnlineRoomDescriptor(
+    user1.name.ifEmpty { defaultName },
+    timestamp.formatDateTime(),
+    false,
+    key,
+)
+
+@OptIn(ExperimentalJsExport::class)
+@JsExport()
+data class RemoteRoomItem(val key: String?, val value: OnlineRoomRemote?)
+
+fun mapToDescriptors(items: List<RemoteRoomItem>, defaultName: String) = items
+    .mapNotNull { item -> item.key?.let { item.value?.mapToNetworkRoomInvitation(it) } }
+    .map { it.createDescriptor(defaultName) }
+

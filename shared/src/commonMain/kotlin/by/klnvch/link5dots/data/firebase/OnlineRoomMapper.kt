@@ -31,9 +31,19 @@ import by.klnvch.link5dots.domain.models.RoomState
 fun NetworkRoomInvitation.mapToOnlineRoomRemote() = OnlineRoomRemote(
     RoomState.CREATED,
     null,
-    timestamp.toDouble(),
+    timestamp,
     user1.mapToOnlineRemoteUser(),
     null,
 )
 
 fun NetworkUser.mapToOnlineRemoteUser() = OnlineRemoteUser(id, name)
+
+fun OnlineRemoteUser.mapToNetworkUser() = id?.let { NetworkUser(it, name ?: "") }
+
+fun OnlineRoomRemote.mapToNetworkRoomInvitation(key: String): NetworkRoomInvitation? {
+    val user1 = user1?.mapToNetworkUser()
+    return if (time != null && user1 != null)
+        NetworkRoomInvitation(key, time, user1)
+    else
+        null
+}

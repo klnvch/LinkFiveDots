@@ -25,6 +25,7 @@
 package by.klnvch.link5dots.domain.usecases.network
 
 import by.klnvch.link5dots.domain.models.NetworkRoomInvitation
+import by.klnvch.link5dots.domain.models.NetworkUser
 import by.klnvch.link5dots.domain.repositories.CreateOnlineRoomRepository
 import by.klnvch.link5dots.domain.repositories.FirebaseAuthManager
 import by.klnvch.link5dots.domain.repositories.RoomKeyGenerator
@@ -45,14 +46,14 @@ class CreateOnlineRoomUseCase(
     override suspend fun create() {
         val userId = firebaseAuthManager.getUserId()
         val userName = userNameSettings.getUserName()
-        val timestamp = timeService.now().toLong()
+        val timestamp = timeService.now()
         val key = roomKeyGenerator.generate()
 
+        val user1 = NetworkUser(userId, userName)
         val room = NetworkRoomInvitation(
             key,
             timestamp,
-            userId,
-            userName,
+            user1,
         )
         repository.create(room)
     }

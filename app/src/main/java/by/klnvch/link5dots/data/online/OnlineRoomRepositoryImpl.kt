@@ -112,7 +112,17 @@ class OnlineRoomRepositoryImpl @Inject constructor(
         .equalTo(RoomState.CREATED.toDouble())
         .snapshots
         .map { it.children }
-        .map { it.mapNotNull { dataSnapshotToRoom(it) }.map { createDescriptor(it) } }
+        .map {
+            it.map { snapshot ->
+                RemoteRoomItem(
+                    snapshot.key,
+                    snapshot.getValue(OnlineRoomRemote::class.java),
+                )
+            }
+        }
+        .map {
+            mapToDescriptors(it, stringRepository.getUnknownName())
+        }
 
     override suspend fun isConnected() =
         Firebase.database.getReference(".info/connected").values<Boolean>().first() == true
@@ -152,8 +162,10 @@ class OnlineRoomRepositoryImpl @Inject constructor(
     }
 
     private fun createDescriptor(room: NetworkRoom) = OnlineRoomDescriptor(
-        room,
         room.user1.name.ifEmpty { stringRepository.getUnknownName() },
+        room.timestamp.formatDateTime(),
+        false,
+        room.key
     )
 
     companion object {
@@ -161,16 +173,4 @@ class OnlineRoomRepositoryImpl @Inject constructor(
         private const val CHILD_USER2 = "user2"
         private const val CHILD_DOTS = "dots"
     }
-}
-
-data class OnlineRoomDescriptor(
-    override val title: String,
-    override val description: String,
-    override val isFavorite: Boolean,
-    val key: String,
-) : RemoteRoomDescriptor {
-    constructor(
-        room: NetworkRoom,
-        userName: String,
-    ) : this(userName, room.timestamp.formatDateTime(), false, room.key)
 }

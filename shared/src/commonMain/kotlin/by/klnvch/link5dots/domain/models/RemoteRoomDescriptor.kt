@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023-2025 klnvch
+ * Copyright (c) 2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,24 +22,15 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.utils
+package by.klnvch.link5dots.domain.models
 
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
-import kotlin.time.Duration.Companion.milliseconds
+import kotlin.js.ExperimentalJsExport
+import kotlin.js.JsExport
 
-object FormatUtils {
-
-    fun Int.formatDuration(): String {
-        return milliseconds.toComponents { hours, minutes, seconds, _ ->
-            if (hours > 0) "%02d:%02d:%02d".format(hours, minutes, seconds)
-            else "%02d:%02d".format(minutes, seconds)
-        }
-    }
-
-    fun Long.formatDateTime(): String {
-        val timeFormat = SimpleDateFormat("MMM-dd HH:mm", Locale.getDefault())
-        return timeFormat.format(Date(this))
-    }
+@OptIn(ExperimentalJsExport::class)
+@JsExport()
+interface RemoteRoomDescriptor {
+    val title: String
+    val description: String
+    val isFavorite: Boolean
 }

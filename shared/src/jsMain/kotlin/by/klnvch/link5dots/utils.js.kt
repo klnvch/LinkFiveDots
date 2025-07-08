@@ -28,3 +28,10 @@ import kotlin.js.Date
 
 actual fun currentTime() = Date.now()
 actual val platformKeyPart = "w"
+actual fun Double.formatDateTime(): String {
+    val date = Date(this)
+    return date.toLocaleDateString(
+        "default",
+        js("({ month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })")
+    )
+}

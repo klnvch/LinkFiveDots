@@ -24,11 +24,6 @@
 
 package by.klnvch.link5dots.domain.repositories
 
-import kotlin.js.ExperimentalJsExport
-import kotlin.js.JsExport
-
-@OptIn(ExperimentalJsExport::class)
-@JsExport
 interface RoomKeyGenerator {
     fun generate(): String
 }

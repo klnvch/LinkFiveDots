@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023-2025 klnvch
+ * Copyright (c) 2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,10 +21,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package by.klnvch.link5dots.domain.models
 
-interface RemoteRoomDescriptor {
-    val title: String
-    val description: String
-    val isFavorite: Boolean
-}
+package by.klnvch.link5dots
+
+import by.klnvch.link5dots.data.online.RemoteRoomItem
+import by.klnvch.link5dots.data.online.mapToDescriptors
+import kotlin.js.collections.JsReadonlyArray
+import kotlin.js.collections.toList
+
+@OptIn(ExperimentalJsExport::class, ExperimentalJsCollectionsApi::class)
+@JsExport()
+fun mapToDescriptors(items: JsReadonlyArray<RemoteRoomItem>, defaultName: String) =
+    mapToDescriptors(items.toList(), defaultName).toTypedArray()

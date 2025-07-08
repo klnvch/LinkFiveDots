@@ -24,7 +24,13 @@
 
 package by.klnvch.link5dots.domain.models
 
+import kotlin.js.ExperimentalJsExport
+import kotlin.js.JsExport
+
 sealed interface IUser
 object BotUser : IUser
 object DeviceOwnerUser : IUser
+
+@OptIn(ExperimentalJsExport::class)
+@JsExport()
 data class NetworkUser(val id: String, val name: String) : IUser
