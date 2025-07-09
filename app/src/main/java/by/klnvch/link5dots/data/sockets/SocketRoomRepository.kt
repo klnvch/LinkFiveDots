@@ -27,11 +27,11 @@ package by.klnvch.link5dots.data.sockets
 import android.util.Log
 import by.klnvch.link5dots.data.RoomJsonMapper
 import by.klnvch.link5dots.domain.models.NetworkRoom
-import by.klnvch.link5dots.domain.models.NetworkRoomCreated
-import by.klnvch.link5dots.domain.models.NetworkRoomDeleted
-import by.klnvch.link5dots.domain.models.NetworkRoomFinished
-import by.klnvch.link5dots.domain.models.NetworkRoomStarted
 import by.klnvch.link5dots.domain.models.NetworkRoomState
+import by.klnvch.link5dots.domain.models.NetworkRoomStateCreated
+import by.klnvch.link5dots.domain.models.NetworkRoomStateDeleted
+import by.klnvch.link5dots.domain.models.NetworkRoomStateFinished
+import by.klnvch.link5dots.domain.models.NetworkRoomStateStarted
 import by.klnvch.link5dots.domain.models.NetworkUser
 import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -62,7 +62,7 @@ abstract class SocketRoomRepository(private val mapper: RoomJsonMapper) {
             _serverSocket = serverSocket
             try {
                 // reset current game to generate a new one
-                stateFlow.tryEmit(NetworkRoomCreated(descriptor))
+                stateFlow.tryEmit(NetworkRoomStateCreated(descriptor))
                 roomFlow.tryEmit(null)
 
                 Log.d(TAG, "accepting: waiting")
@@ -72,7 +72,7 @@ abstract class SocketRoomRepository(private val mapper: RoomJsonMapper) {
                 val outputStream = DataOutputStream(socketData.outputStream)
 
                 Log.d(TAG, "accepting: connected")
-                stateFlow.tryEmit(NetworkRoomStarted(descriptor))
+                stateFlow.tryEmit(NetworkRoomStateStarted(descriptor))
 
                 // get a new generated game and send it
                 val newRoom = runBlocking { roomFlow.filterNotNull().first() }
@@ -88,7 +88,7 @@ abstract class SocketRoomRepository(private val mapper: RoomJsonMapper) {
                 startCommunication(socket, outputStream, inputStream)
             } catch (e: Throwable) {
                 Log.d(TAG, "accepting: ${e.message}")
-                stateFlow.tryEmit(NetworkRoomDeleted)
+                stateFlow.tryEmit(NetworkRoomStateDeleted(descriptor))
             }
         }
     }
@@ -106,7 +106,7 @@ abstract class SocketRoomRepository(private val mapper: RoomJsonMapper) {
             val outputStream = DataOutputStream(socketData.outputStream)
 
             Log.d(TAG, "connect: connected")
-            stateFlow.tryEmit(NetworkRoomStarted(descriptor))
+            stateFlow.tryEmit(NetworkRoomStateStarted(descriptor))
 
             // receive new room
             Log.d(TAG, "connect: waiting for new game")
@@ -142,7 +142,7 @@ abstract class SocketRoomRepository(private val mapper: RoomJsonMapper) {
                 }
             } catch (e: Throwable) {
                 Log.d(TAG, "disconnected: ${e.message}")
-                stateFlow.tryEmit(NetworkRoomFinished)
+                stateFlow.tryEmit(NetworkRoomStateFinished)
             } finally {
                 delete()
                 finish()

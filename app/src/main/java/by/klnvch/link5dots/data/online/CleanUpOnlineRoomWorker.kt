@@ -30,6 +30,7 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
+import by.klnvch.link5dots.domain.models.RoomState
 import by.klnvch.link5dots.domain.repositories.OnlineRoomRepository
 import javax.inject.Inject
 
@@ -40,16 +41,15 @@ class CleanUpOnlineRoomWorker @Inject constructor(
 ) : CoroutineWorker(appContext, params) {
 
     override suspend fun doWork(): Result {
-        val state = params.inputData.getInt(ROOM_STATE, -1)
-        if (state != -1) {
-            repository.updateState(state)
-        }
+        val ordinal = params.inputData.getInt(ROOM_STATE, -1)
+        val state = RoomState.entries[ordinal]
+        repository.updateState(state)
         return Result.success()
     }
 
     companion object {
         private const val ROOM_STATE = "ROOM_STATE"
-        fun Context.launchCleanUpOnlineRoomWorker(state: Int) {
+        fun Context.launchCleanUpOnlineRoomWorker(state: RoomState) {
             WorkManager.Companion.getInstance(this)
                 .enqueue(
                     OneTimeWorkRequestBuilder<CleanUpOnlineRoomWorker>()

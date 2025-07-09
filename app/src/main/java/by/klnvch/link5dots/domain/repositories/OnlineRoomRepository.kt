@@ -28,12 +28,13 @@ import by.klnvch.link5dots.domain.models.NetworkRoom
 import by.klnvch.link5dots.domain.models.NetworkRoomState
 import by.klnvch.link5dots.domain.models.NetworkUser
 import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
+import by.klnvch.link5dots.domain.models.RoomState
 import kotlinx.coroutines.flow.Flow
 
 interface OnlineRoomRepository {
     val state: Flow<NetworkRoomState>
     suspend fun getKey(): String?
-    suspend fun updateState(state: Int)
+    suspend fun updateState(state: RoomState)
     suspend fun isConnected(): Boolean
     suspend fun connect(descriptor: RemoteRoomDescriptor, user2: NetworkUser)
     fun get(): Flow<NetworkRoom>

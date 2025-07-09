@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 klnvch
+ * Copyright (c) 2023-2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,7 +27,7 @@ package by.klnvch.link5dots.ui.scores.history
 import by.klnvch.link5dots.R
 import by.klnvch.link5dots.domain.models.IRoom
 import by.klnvch.link5dots.domain.models.RoomType
-import by.klnvch.link5dots.utils.FormatUtils.formatDateTime
+import by.klnvch.link5dots.formatDateTime
 import by.klnvch.link5dots.utils.FormatUtils.formatDuration
 
 data class HistoryItemViewState(

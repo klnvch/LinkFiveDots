@@ -26,12 +26,12 @@ package by.klnvch.link5dots.ui.game
 import androidx.lifecycle.viewModelScope
 import by.klnvch.link5dots.R
 import by.klnvch.link5dots.domain.models.FeatureDisabled
-import by.klnvch.link5dots.domain.models.NetworkRoomCreated
-import by.klnvch.link5dots.domain.models.NetworkRoomDeleted
 import by.klnvch.link5dots.domain.models.NetworkRoomExtended
-import by.klnvch.link5dots.domain.models.NetworkRoomFinished
-import by.klnvch.link5dots.domain.models.NetworkRoomStarted
 import by.klnvch.link5dots.domain.models.NetworkRoomState
+import by.klnvch.link5dots.domain.models.NetworkRoomStateCreated
+import by.klnvch.link5dots.domain.models.NetworkRoomStateDeleted
+import by.klnvch.link5dots.domain.models.NetworkRoomStateFinished
+import by.klnvch.link5dots.domain.models.NetworkRoomStateStarted
 import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
 import by.klnvch.link5dots.domain.repositories.Analytics
 import by.klnvch.link5dots.domain.repositories.Settings
@@ -240,12 +240,12 @@ class OnlineGameViewModel @Inject constructor(
 
     private suspend fun onStatedChanged(state: NetworkRoomState) {
         when (state) {
-            is NetworkRoomCreated -> _pickerUiState.value =
+            is NetworkRoomStateCreated -> _pickerUiState.value =
                 PickerViewState.created(PickerItemViewState(state.descriptor))
 
-            is NetworkRoomDeleted -> _pickerUiState.value = PickerViewState.IDLE
-            is NetworkRoomStarted -> onConnected(state.descriptor)
-            is NetworkRoomFinished -> _pickerUiState.value = PickerViewState.DISCONNECTED
+            is NetworkRoomStateDeleted -> _pickerUiState.value = PickerViewState.IDLE
+            is NetworkRoomStateStarted -> onConnected(state.descriptor)
+            is NetworkRoomStateFinished -> _pickerUiState.value = PickerViewState.DISCONNECTED
         }
     }
 

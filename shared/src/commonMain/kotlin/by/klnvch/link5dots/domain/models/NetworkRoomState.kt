@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023-2025 klnvch
+ * Copyright (c) 2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,8 +24,25 @@
 
 package by.klnvch.link5dots.domain.models
 
+import kotlin.js.ExperimentalJsExport
+import kotlin.js.JsExport
+
+@OptIn(ExperimentalJsExport::class)
+@JsExport()
 sealed interface NetworkRoomState
-data class NetworkRoomCreated(val descriptor: RemoteRoomDescriptor) : NetworkRoomState
-object NetworkRoomDeleted : NetworkRoomState
-data class NetworkRoomStarted(val descriptor: RemoteRoomDescriptor) : NetworkRoomState
-object NetworkRoomFinished : NetworkRoomState
+
+@OptIn(ExperimentalJsExport::class)
+@JsExport()
+data class NetworkRoomStateCreated(val descriptor: RemoteRoomDescriptor) : NetworkRoomState
+
+@OptIn(ExperimentalJsExport::class)
+@JsExport()
+data class NetworkRoomStateDeleted(val descriptor: RemoteRoomDescriptor) : NetworkRoomState
+
+@OptIn(ExperimentalJsExport::class)
+@JsExport()
+data class NetworkRoomStateStarted(val descriptor: RemoteRoomDescriptor) : NetworkRoomState
+
+@OptIn(ExperimentalJsExport::class)
+@JsExport()
+object NetworkRoomStateFinished : NetworkRoomState

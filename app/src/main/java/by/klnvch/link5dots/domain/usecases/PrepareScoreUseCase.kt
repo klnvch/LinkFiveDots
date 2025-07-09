@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 klnvch
+ * Copyright (c) 2023-2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -41,7 +41,7 @@ class PrepareScoreBotUseCase @Inject constructor() : PrepareScoreUseCase {
     override fun get(room: IRoom) = BotGameScore(
         room.dots.size,
         room.getDuration(),
-        room.getEndTime(),
+        room.getEndTime().toLong(),
         if (room.dots.last().type == Dot.HOST) GameResult.WON else GameResult.LOST
     )
 }
@@ -62,7 +62,7 @@ class PrepareScoreMultiplayerUseCase @Inject constructor(
         return NetworkGameScore(
             room.dots.size,
             room.getDuration(),
-            room.getEndTime(),
+            room.getEndTime().toLong(),
             status
         )
     }
@@ -72,6 +72,6 @@ class PrepareScoreOtherUseCase @Inject constructor() : PrepareScoreUseCase {
     override fun get(room: IRoom) = SimpleGameScore(
         room.dots.size,
         room.getDuration(),
-        room.getEndTime(),
+        room.getEndTime().toLong(),
     )
 }

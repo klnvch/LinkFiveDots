@@ -80,7 +80,7 @@ abstract class NewGameOfflineUseCase(
     override suspend fun create(seed: Long?) {
         val room = Room(
             roomKeyGenerator.generate(),
-            timeRepository.now().toLong(),
+            timeRepository.now(),
             getDots(seed),
             user1,
             user2,
@@ -157,7 +157,7 @@ class NewGameBluetoothUseCase @Inject constructor(
 
             val newRoom = NetworkRoom(
                 key,
-                timestamp.toLong(),
+                timestamp,
                 getDots(seed),
                 user1,
                 user2,
@@ -194,12 +194,12 @@ class NewGameNsdUseCase @Inject constructor(
 
             val newRoom = NetworkRoom(
                 key,
-                timestamp.toLong(),
+                timestamp,
                 getDots(seed),
                 user1,
                 user2,
                 RoomType.NSD,
-                RoomState.CREATED
+                RoomState.CREATED,
             )
 
             repository.update(newRoom)

@@ -27,10 +27,38 @@ package by.klnvch.link5dots.domain.models
 import kotlin.js.ExperimentalJsExport
 import kotlin.js.JsExport
 
+interface INetworkRoomInvitation {
+    val key: String
+    val timestamp: Double
+    val user1: NetworkUser
+    val type: Int // TODO: delete it
+}
+
+interface INetworkRoom : INetworkRoomInvitation, IRoom {
+    override val dots: List<Dot>
+    override val user2: NetworkUser?
+    val state: RoomState
+}
+
 @OptIn(ExperimentalJsExport::class)
 @JsExport()
 data class NetworkRoomInvitation(
-    val key: String,
-    val timestamp: Double,
-    val user1: NetworkUser,
-)
+    override val key: String,
+    override val timestamp: Double,
+    override val user1: NetworkUser,
+    override val type: Int,
+) : INetworkRoomInvitation
+
+data class NetworkRoom(
+    override val key: String,
+    override val timestamp: Double,
+    override val dots: List<Dot>,
+    override val user1: NetworkUser,
+    override val user2: NetworkUser?,
+    override val type: Int,
+    override val state: RoomState,
+) : INetworkRoom {
+    override fun toString(): String {
+        return "NetworkRoom(key=$key, timestamp=$timestamp, dots=${dots.size}, user1=${user1.name}, user2=${user2?.name})"
+    }
+}

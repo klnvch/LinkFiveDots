@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 klnvch
+ * Copyright (c) 2023-2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,14 +24,19 @@
 
 package by.klnvch.link5dots.data.db
 
-import by.klnvch.link5dots.domain.models.*
+import by.klnvch.link5dots.domain.models.BotUser
+import by.klnvch.link5dots.domain.models.DeviceOwnerUser
+import by.klnvch.link5dots.domain.models.IRoom
+import by.klnvch.link5dots.domain.models.IUser
+import by.klnvch.link5dots.domain.models.NetworkUser
+import by.klnvch.link5dots.domain.models.Room
 import javax.inject.Inject
 
 class RoomLocalMapper @Inject constructor() {
     fun map(room: IRoom) = RoomLocal(
         room.key,
-        room.timestamp,
-        room.dots,
+        room.timestamp.toLong(),
+        room.dots.toList(),
         map(room.user1),
         map(room.user2),
         room.type,
@@ -42,7 +47,7 @@ class RoomLocalMapper @Inject constructor() {
 
     fun map(local: RoomLocal): IRoom = Room(
         local.key,
-        local.timestamp,
+        local.timestamp.toDouble(),
         local.dots?.toMutableList() ?: mutableListOf(),
         map(local.user1),
         map(local.user2),

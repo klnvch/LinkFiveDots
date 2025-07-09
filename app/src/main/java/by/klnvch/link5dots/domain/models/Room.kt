@@ -24,43 +24,9 @@
 
 package by.klnvch.link5dots.domain.models
 
-sealed interface IRoom {
-    val key: String
-    val timestamp: Long
-    val dots: List<Dot>
-    val user1: IUser?
-    val user2: IUser?
-    val type: Int
-    fun getDuration() = dots.lastOrNull()?.dt ?: 0
-    fun getEndTime() = timestamp + getDuration()
-    fun getWinningLine() = dots.findWinningLine()
-    fun isNotOver() = getWinningLine() == null
-    fun isOver() = getWinningLine() != null
-    fun isFree(p: Point) = dots.find { it.x == p.x && it.y == p.y } == null
-    val isNew get() = dots.size <= 1 || dots.last().dt == 0
-}
-
-fun List<Dot>.findWinningLine(): WinningLine? {
-    if (size < 9) return null
-
-    val lastDot = last()
-    val points = filter { it.type == lastDot.type }.map { Point(it.x, it.y) }
-
-    // y = x + (py - px)
-    // y = -x + (py + px)
-    // y = py
-    // x = px
-    val line = points.findMaxLine { it.y == it.x + (lastDot.y - lastDot.x) }
-        ?: points.findMaxLine { it.y == -it.x + (lastDot.y + lastDot.x) }
-        ?: points.findMaxLine { it.y == lastDot.y }
-        ?: points.map { it.invert() }.findMaxLine { it.y == lastDot.x }?.map { it.invert() }
-
-    return if (line != null) WinningLine(line, lastDot.type) else null
-}
-
 data class Room(
     override val key: String,
-    override val timestamp: Long,
+    override val timestamp: Double,
     override val dots: MutableList<Dot>,
     override val user1: IUser?,
     override val user2: IUser?,
@@ -84,36 +50,18 @@ data class Room(
     }
 }
 
-interface INetworkRoom : IRoom {
-    val state: Int
-}
-
 interface INetworkRoomExtended : INetworkRoom {
     val yourId: String
 }
 
-data class NetworkRoom(
-    override val key: String,
-    override val timestamp: Long,
-    override val dots: List<Dot>,
-    override val user1: NetworkUser,
-    override val user2: NetworkUser?,
-    override val type: Int,
-    override val state: Int,
-) : INetworkRoom {
-    override fun toString(): String {
-        return "NetworkRoom(key=$key, timestamp=$timestamp, dots=${dots.size}, user1=${user1.name}, user2=${user2?.name})"
-    }
-}
-
 data class NetworkRoomExtended(
     override val key: String,
-    override val timestamp: Long,
+    override val timestamp: Double,
     override val dots: List<Dot>,
     override val user1: NetworkUser,
     override val user2: NetworkUser?,
     override val type: Int,
-    override val state: Int,
+    override val state: RoomState,
     override val yourId: String,
 ) : INetworkRoomExtended {
     val opponent = if (user1.id == yourId) user2 else user1
@@ -129,13 +77,3 @@ data class NetworkRoomExtended(
         yourId,
     )
 }
-
-private inline fun List<Point>.findMaxLine(predicate: (Point) -> Boolean): List<Point>? = this
-    .filter { p -> predicate(p) }
-    .sortedBy { it.x }
-    .fold<Point, List<Point>>(emptyList()) { acc, next ->
-        if (acc.isEmpty()) listOf(next)
-        else if (acc.last().x + 1 == next.x) acc + next
-        else if (acc.size >= 5) acc
-        else listOf(next)
-    }.takeIf { it.size >= 5 }

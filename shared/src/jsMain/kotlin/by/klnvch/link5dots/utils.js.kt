@@ -35,3 +35,7 @@ actual fun Double.formatDateTime(): String {
         js("({ month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })")
     )
 }
+
+@OptIn(ExperimentalJsExport::class)
+@JsExport
+fun <T> listOf(elements: Array<T>): List<T> = elements.toList()

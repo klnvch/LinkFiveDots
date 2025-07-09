@@ -29,9 +29,4 @@ import kotlin.js.JsExport
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport()
-object RoomState {
-    const val CREATED = 0
-    const val DELETED = 1
-    const val STARTED = 2
-    const val FINISHED = 3
-}
+enum class RoomState { CREATED, DELETED, STARTED, FINISHED }

@@ -26,6 +26,8 @@ package by.klnvch.link5dots
 
 import by.klnvch.link5dots.data.online.RemoteRoomItem
 import by.klnvch.link5dots.data.online.mapToDescriptors
+import by.klnvch.link5dots.data.online.mapToNetworkRoom
+import by.klnvch.link5dots.data.online.toNetworkRoomState
 import kotlin.js.collections.JsReadonlyArray
 import kotlin.js.collections.toList
 
@@ -33,3 +35,8 @@ import kotlin.js.collections.toList
 @JsExport()
 fun mapToDescriptors(items: JsReadonlyArray<RemoteRoomItem>, defaultName: String) =
     mapToDescriptors(items.toList(), defaultName).toTypedArray()
+
+@OptIn(ExperimentalJsExport::class)
+@JsExport()
+fun mapToRoomState(item: RemoteRoomItem, defaultName: String) =
+    item.mapToNetworkRoom()?.toNetworkRoomState(defaultName)

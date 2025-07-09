@@ -54,6 +54,7 @@ class CreateOnlineRoomUseCase(
             key,
             timestamp,
             user1,
+            3,
         )
         repository.create(room)
     }

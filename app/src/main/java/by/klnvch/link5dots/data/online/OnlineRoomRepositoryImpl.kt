@@ -25,21 +25,19 @@ package by.klnvch.link5dots.data.online
 
 import android.content.Context
 import by.klnvch.link5dots.BuildConfig
-import by.klnvch.link5dots.data.firebase.OnlineRoomMapper
 import by.klnvch.link5dots.data.firebase.OnlineRoomRemote
+import by.klnvch.link5dots.data.firebase.mapToOnlineDotRemote
+import by.klnvch.link5dots.data.firebase.mapToOnlineRemoteUser
 import by.klnvch.link5dots.data.online.CleanUpOnlineRoomWorker.Companion.launchCleanUpOnlineRoomWorker
 import by.klnvch.link5dots.domain.models.Dot
 import by.klnvch.link5dots.domain.models.NetworkRoom
-import by.klnvch.link5dots.domain.models.NetworkRoomCreated
-import by.klnvch.link5dots.domain.models.NetworkRoomDeleted
-import by.klnvch.link5dots.domain.models.NetworkRoomFinished
-import by.klnvch.link5dots.domain.models.NetworkRoomStarted
+import by.klnvch.link5dots.domain.models.NetworkRoomStateDeleted
+import by.klnvch.link5dots.domain.models.NetworkRoomStateFinished
 import by.klnvch.link5dots.domain.models.NetworkUser
 import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
 import by.klnvch.link5dots.domain.models.RoomState
 import by.klnvch.link5dots.domain.repositories.OnlineRoomRepository
 import by.klnvch.link5dots.domain.repositories.StringRepository
-import by.klnvch.link5dots.utils.FormatUtils.formatDateTime
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.ktx.database
 import com.google.firebase.database.snapshots
@@ -60,7 +58,6 @@ import javax.inject.Inject
 class OnlineRoomRepositoryImpl @Inject constructor(
     private val context: Context,
     private val onlineLocalStore: OnlineLocalStore,
-    private val mapper: OnlineRoomMapper,
     private val stringRepository: StringRepository,
 ) : OnlineRoomRepository {
     private val path = if (BuildConfig.DEBUG) "rooms_debug" else "rooms_v2"
@@ -68,61 +65,41 @@ class OnlineRoomRepositoryImpl @Inject constructor(
     private var _room: NetworkRoom? = null
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    override fun get() = onlineLocalStore.getKey().filterNotNull().flatMapLatest { key ->
-        reference.child(key).snapshots
-            .map { it }
-            .mapNotNull { dataSnapshotToRoom(it) }
-            .onEach { this._room = it }
-    }
-
-    override val state = get().mapNotNull {
-        when (it.state) {
-            RoomState.CREATED -> {
-                NetworkRoomCreated(createDescriptor(it))
-            }
-
-            RoomState.DELETED -> {
-                onlineLocalStore.clearKey()
-                NetworkRoomDeleted
-            }
-
-            RoomState.STARTED -> {
-                NetworkRoomStarted(createDescriptor(it))
-            }
-
-            RoomState.FINISHED -> {
-                onlineLocalStore.clearKey()
-                NetworkRoomFinished
-            }
-
-            else -> null
+    private val roomListener: Flow<NetworkRoom> =
+        onlineLocalStore.getKey().filterNotNull().flatMapLatest { key ->
+            reference.child(key).snapshots
+                .map { it }
+                .map { it.toRemoteRoomItem() }
+                .mapNotNull { it.mapToNetworkRoom() }
         }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    override fun get() = roomListener
+        .onEach { this._room = it }
+
+    override val state = roomListener.map {
+        val state = it.toNetworkRoomState(stringRepository.getUnknownName())
+        if (state is NetworkRoomStateDeleted || state is NetworkRoomStateFinished) {
+            onlineLocalStore.clearKey()
+        }
+        return@map state
     }.distinctUntilChanged()
 
     override suspend fun getKey(): String? = onlineLocalStore.getKey().first()
 
-    override suspend fun updateState(state: Int) {
+    override suspend fun updateState(state: RoomState) {
         onlineLocalStore.getKey().first()?.let {
-            reference.child(it).child(CHILD_STATE).setValue(state).await()
+            reference.child(it).child(CHILD_STATE).setValue(state.ordinal).await()
         }
     }
 
     override fun getRemoteRooms(): Flow<List<RemoteRoomDescriptor>> = reference
         .orderByChild(CHILD_STATE)
-        .equalTo(RoomState.CREATED.toDouble())
+        .equalTo(RoomState.CREATED.ordinal.toDouble())
         .snapshots
         .map { it.children }
-        .map {
-            it.map { snapshot ->
-                RemoteRoomItem(
-                    snapshot.key,
-                    snapshot.getValue(OnlineRoomRemote::class.java),
-                )
-            }
-        }
-        .map {
-            mapToDescriptors(it, stringRepository.getUnknownName())
-        }
+        .map { it.map { snapshot -> snapshot.toRemoteRoomItem() } }
+        .map { mapToDescriptors(it, stringRepository.getUnknownName()) }
 
     override suspend fun isConnected() =
         Firebase.database.getReference(".info/connected").values<Boolean>().first() == true
@@ -134,7 +111,7 @@ class OnlineRoomRepositoryImpl @Inject constructor(
             .updateChildren(
                 mapOf(
                     CHILD_STATE to RoomState.STARTED,
-                    CHILD_USER2 to mapper.map(user2)
+                    CHILD_USER2 to user2.mapToOnlineRemoteUser()
                 )
             ).await()
         onlineLocalStore.saveKey(key)
@@ -147,7 +124,7 @@ class OnlineRoomRepositoryImpl @Inject constructor(
             .child(key)
             .child(CHILD_DOTS)
             .child(position.toString())
-            .setValue(mapper.map(dot))
+            .setValue(dot.mapToOnlineDotRemote())
             .await()
     }
 
@@ -155,17 +132,9 @@ class OnlineRoomRepositoryImpl @Inject constructor(
 
     override fun finish() = context.launchCleanUpOnlineRoomWorker(RoomState.FINISHED)
 
-    private fun dataSnapshotToRoom(snapshot: DataSnapshot): NetworkRoom? {
-        val key = snapshot.key
-        val value = snapshot.getValue(OnlineRoomRemote::class.java)
-        return if (key != null && value != null) mapper.map(key, value) else null
-    }
-
-    private fun createDescriptor(room: NetworkRoom) = OnlineRoomDescriptor(
-        room.user1.name.ifEmpty { stringRepository.getUnknownName() },
-        room.timestamp.formatDateTime(),
-        false,
-        room.key
+    private fun DataSnapshot.toRemoteRoomItem() = RemoteRoomItem(
+        key,
+        getValue(OnlineRoomRemote::class.java),
     )
 
     companion object {
