@@ -29,12 +29,12 @@ import by.klnvch.link5dots.domain.models.NetworkRoomInvitation
 import by.klnvch.link5dots.domain.repositories.CreateOnlineRoomRepository
 
 class CreateOnlineRoomRepositoryImpl(
-    private val firebaseDb: FirebaseDb,
+    private val firebaseDb: FirebaseDbSet,
     private val onlineLocalStore: OnlineLocalStoreWriter,
 ) : CreateOnlineRoomRepository {
     override suspend fun create(room: NetworkRoomInvitation) {
         val remoteRoom = room.mapToOnlineRoomRemote()
-        firebaseDb.setValue(room.key, remoteRoom)
+        firebaseDb.set(room.key, remoteRoom)
         onlineLocalStore.saveKey(room.key)
     }
 }

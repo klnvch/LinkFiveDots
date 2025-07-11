@@ -26,10 +26,13 @@ package by.klnvch.link5dots.di
 
 import by.klnvch.link5dots.data.RoomKeyGeneratorImpl
 import by.klnvch.link5dots.data.TimeServiceImpl
+import by.klnvch.link5dots.data.online.ConnectOnlineRoomRepositoryImpl
 import by.klnvch.link5dots.data.online.CreateOnlineRoomRepositoryImpl
-import by.klnvch.link5dots.data.online.FirebaseDb
+import by.klnvch.link5dots.data.online.FirebaseDbSet
+import by.klnvch.link5dots.data.online.FirebaseDbUpdate
 import by.klnvch.link5dots.data.online.OnlineLocalStore
 import by.klnvch.link5dots.data.online.OnlineLocalStoreWriter
+import by.klnvch.link5dots.domain.repositories.ConnectOnlineRoomRepository
 import by.klnvch.link5dots.domain.repositories.CreateOnlineRoomRepository
 import by.klnvch.link5dots.domain.repositories.FirebaseAuthManager
 import by.klnvch.link5dots.domain.repositories.FirebaseManager
@@ -37,6 +40,7 @@ import by.klnvch.link5dots.domain.repositories.RoomKeyGenerator
 import by.klnvch.link5dots.domain.repositories.Settings
 import by.klnvch.link5dots.domain.repositories.TimeService
 import by.klnvch.link5dots.domain.repositories.UserNameSettings
+import by.klnvch.link5dots.domain.usecases.network.ConnectOnlineRoomUseCase
 import by.klnvch.link5dots.domain.usecases.network.CreateOnlineRoomUseCase
 import dagger.Module
 import dagger.Provides
@@ -79,12 +83,31 @@ class AppBindingModule2 {
 
     @Singleton
     @Provides
+    fun provideConnectOnlineRoomUseCase(
+        userNameSettings: UserNameSettings,
+        firebaseAuthManager: FirebaseAuthManager,
+        connectOnlineRoomRepository: ConnectOnlineRoomRepository,
+    ) = ConnectOnlineRoomUseCase(
+        userNameSettings,
+        firebaseAuthManager,
+        connectOnlineRoomRepository,
+    )
+
+    @Singleton
+    @Provides
     fun provideOnlineLocalStoreWriter(store: OnlineLocalStore): OnlineLocalStoreWriter = store
 
     @Singleton
     @Provides
     fun provideCreateOnlineRoomRepository(
-        firebaseDb: FirebaseDb,
+        firebaseDb: FirebaseDbSet,
         onlineLocalStore: OnlineLocalStore,
     ): CreateOnlineRoomRepository = CreateOnlineRoomRepositoryImpl(firebaseDb, onlineLocalStore)
+
+    @Singleton
+    @Provides
+    fun provideConnectOnlineRoomRepository(
+        firebaseDb: FirebaseDbUpdate,
+        onlineLocalStore: OnlineLocalStore,
+    ): ConnectOnlineRoomRepository = ConnectOnlineRoomRepositoryImpl(firebaseDb, onlineLocalStore)
 }

@@ -32,7 +32,9 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class OnlineLocalStore @Inject constructor(private val context: Context) : OnlineLocalStoreWriter {
     private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "online")
     private val keyKey = stringPreferencesKey("key")

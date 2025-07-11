@@ -24,38 +24,23 @@
 
 package by.klnvch.link5dots.data.online
 
-import android.content.Context
-import androidx.work.CoroutineWorker
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.WorkManager
-import androidx.work.WorkerParameters
-import androidx.work.workDataOf
+import by.klnvch.link5dots.data.firebase.mapToOnlineRemoteUser
+import by.klnvch.link5dots.domain.models.NetworkUser
+import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
 import by.klnvch.link5dots.domain.models.RoomState
-import by.klnvch.link5dots.domain.repositories.OnlineRoomRepository
-import javax.inject.Inject
+import by.klnvch.link5dots.domain.repositories.ConnectOnlineRoomRepository
 
-class CleanUpOnlineRoomWorker @Inject constructor(
-    appContext: Context,
-    private val params: WorkerParameters,
-    private val repository: OnlineRoomRepository,
-) : CoroutineWorker(appContext, params) {
-
-    override suspend fun doWork(): Result {
-        val ordinal = params.inputData.getInt(ROOM_STATE, -1)
-        val state = RoomState.entries[ordinal]
-        repository.updateState(state)
-        return Result.success()
-    }
-
-    companion object {
-        private const val ROOM_STATE = "ROOM_STATE"
-        fun Context.launchCleanUpOnlineRoomWorker(state: RoomState) {
-            WorkManager.Companion.getInstance(this)
-                .enqueue(
-                    OneTimeWorkRequestBuilder<CleanUpOnlineRoomWorker>()
-                        .setInputData(workDataOf(ROOM_STATE to state.ordinal))
-                        .build()
-                )
-        }
+class ConnectOnlineRoomRepositoryImpl(
+    private val firebaseDb: FirebaseDbUpdate,
+    private val onlineLocalStore: OnlineLocalStoreWriter,
+) : ConnectOnlineRoomRepository {
+    override suspend fun connect(descriptor: RemoteRoomDescriptor, user2: NetworkUser) {
+        val key = (descriptor as OnlineRoomDescriptor).key
+        val update = mapOf(
+            "state" to RoomState.STARTED.ordinal,
+            "user2" to user2.mapToOnlineRemoteUser()
+        )
+        firebaseDb.update(key, update)
+        onlineLocalStore.saveKey(key)
     }
 }

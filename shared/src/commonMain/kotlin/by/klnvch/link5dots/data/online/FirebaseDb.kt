@@ -26,6 +26,11 @@ package by.klnvch.link5dots.data.online
 
 import by.klnvch.link5dots.data.firebase.OnlineRoomRemote
 
-interface FirebaseDb {
-    suspend fun setValue(key: String, room: OnlineRoomRemote)
+interface FirebaseDbSet {
+    suspend fun set(key: String, room: OnlineRoomRemote)
 }
+
+interface FirebaseDbUpdate {
+    suspend fun update(key: String, update: Map<String, Any>)
+}
+

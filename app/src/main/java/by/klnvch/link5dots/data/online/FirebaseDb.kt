@@ -31,11 +31,15 @@ import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
-class FirebaseDbImpl @Inject constructor() : FirebaseDb {
+class FirebaseDbImpl @Inject constructor() : FirebaseDbSet, FirebaseDbUpdate {
     private val path = if (BuildConfig.DEBUG) "rooms_debug" else "rooms_v2"
     private val reference = Firebase.database.reference.child(path)
 
-    override suspend fun setValue(key: String, room: OnlineRoomRemote) {
+    override suspend fun set(key: String, room: OnlineRoomRemote) {
         reference.child(key).setValue(room).await()
+    }
+
+    override suspend fun update(key: String, update: Map<String, Any>) {
+        reference.child(key).updateChildren(update).await()
     }
 }

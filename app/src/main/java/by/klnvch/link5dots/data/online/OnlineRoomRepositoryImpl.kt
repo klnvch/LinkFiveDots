@@ -27,13 +27,11 @@ import android.content.Context
 import by.klnvch.link5dots.BuildConfig
 import by.klnvch.link5dots.data.firebase.OnlineRoomRemote
 import by.klnvch.link5dots.data.firebase.mapToOnlineDotRemote
-import by.klnvch.link5dots.data.firebase.mapToOnlineRemoteUser
 import by.klnvch.link5dots.data.online.CleanUpOnlineRoomWorker.Companion.launchCleanUpOnlineRoomWorker
 import by.klnvch.link5dots.domain.models.Dot
 import by.klnvch.link5dots.domain.models.NetworkRoom
 import by.klnvch.link5dots.domain.models.NetworkRoomStateDeleted
 import by.klnvch.link5dots.domain.models.NetworkRoomStateFinished
-import by.klnvch.link5dots.domain.models.NetworkUser
 import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
 import by.klnvch.link5dots.domain.models.RoomState
 import by.klnvch.link5dots.domain.repositories.OnlineRoomRepository
@@ -104,19 +102,6 @@ class OnlineRoomRepositoryImpl @Inject constructor(
     override suspend fun isConnected() =
         Firebase.database.getReference(".info/connected").values<Boolean>().first() == true
 
-    override suspend fun connect(descriptor: RemoteRoomDescriptor, user2: NetworkUser) {
-        val key = (descriptor as OnlineRoomDescriptor).key
-        reference
-            .child(key)
-            .updateChildren(
-                mapOf(
-                    CHILD_STATE to RoomState.STARTED,
-                    CHILD_USER2 to user2.mapToOnlineRemoteUser()
-                )
-            ).await()
-        onlineLocalStore.saveKey(key)
-    }
-
     override fun getRoom() = this._room
 
     override suspend fun addDot(key: String, position: Int, dot: Dot) {
@@ -139,7 +124,6 @@ class OnlineRoomRepositoryImpl @Inject constructor(
 
     companion object {
         private const val CHILD_STATE = "state"
-        private const val CHILD_USER2 = "user2"
         private const val CHILD_DOTS = "dots"
     }
 }

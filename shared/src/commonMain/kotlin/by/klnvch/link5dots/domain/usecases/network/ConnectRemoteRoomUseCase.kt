@@ -22,16 +22,27 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.domain.repositories
+package by.klnvch.link5dots.domain.usecases.network
 
-import by.klnvch.link5dots.domain.models.NetworkRoomInvitation
 import by.klnvch.link5dots.domain.models.NetworkUser
 import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
+import by.klnvch.link5dots.domain.repositories.ConnectOnlineRoomRepository
+import by.klnvch.link5dots.domain.repositories.FirebaseAuthManager
+import by.klnvch.link5dots.domain.repositories.UserNameSettings
 
-interface CreateOnlineRoomRepository {
-    suspend fun create(room: NetworkRoomInvitation)
+interface ConnectRemoteRoomUseCase {
+    suspend fun connect(descriptor: RemoteRoomDescriptor)
 }
 
-interface ConnectOnlineRoomRepository {
-    suspend fun connect(descriptor: RemoteRoomDescriptor, user2: NetworkUser)
+class ConnectOnlineRoomUseCase(
+    private val userNameSettings: UserNameSettings,
+    private val firebaseAuthManager: FirebaseAuthManager,
+    private val onlineRoomRepository: ConnectOnlineRoomRepository,
+) : ConnectRemoteRoomUseCase {
+    override suspend fun connect(descriptor: RemoteRoomDescriptor) {
+        val userId = firebaseAuthManager.getUserId()
+        val userName = userNameSettings.getUserName()
+        val user2 = NetworkUser(userId, userName)
+        onlineRoomRepository.connect(descriptor, user2)
+    }
 }

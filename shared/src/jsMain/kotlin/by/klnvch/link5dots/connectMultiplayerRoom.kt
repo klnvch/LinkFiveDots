@@ -24,40 +24,40 @@
 
 package by.klnvch.link5dots
 
-import by.klnvch.link5dots.data.RoomKeyGeneratorImpl
-import by.klnvch.link5dots.data.TimeServiceImpl
-import by.klnvch.link5dots.data.firebase.OnlineRoomRemote
-import by.klnvch.link5dots.data.online.CreateOnlineRoomRepositoryImpl
-import by.klnvch.link5dots.data.online.FirebaseDbSet
+import by.klnvch.link5dots.data.online.ConnectOnlineRoomRepositoryImpl
+import by.klnvch.link5dots.data.online.FirebaseDbUpdate
 import by.klnvch.link5dots.data.online.OnlineLocalStoreWriter
+import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
 import by.klnvch.link5dots.domain.repositories.FirebaseAuthManager
 import by.klnvch.link5dots.domain.repositories.UserNameSettings
-import by.klnvch.link5dots.domain.usecases.network.CreateOnlineRoomUseCase
+import by.klnvch.link5dots.domain.usecases.network.ConnectOnlineRoomUseCase
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.await
 import kotlinx.coroutines.launch
+import kotlin.js.Json
 import kotlin.js.Promise
+import kotlin.js.json
 
 @OptIn(DelicateCoroutinesApi::class, ExperimentalJsExport::class)
 @JsExport()
-fun createMultiplayerRoom(
+fun connectMultiplayerRoom(
     userName: String,
     firebaseUserId: String,
-    onSaveRoom: (key: String, room: OnlineRoomRemote) -> Promise<Unit>,
+    descriptor: RemoteRoomDescriptor,
+    onUpdateRoom: (key: String, update: Json) -> Promise<Unit>,
 ): Promise<String> {
     val userNameSettings = object : UserNameSettings {
         override suspend fun getUserName() = userName
     }
-    val timeService = TimeServiceImpl()
-    val roomKeyGenerator = RoomKeyGeneratorImpl(timeService)
     val firebaseAuthManager = object : FirebaseAuthManager {
         override fun getUserId() = firebaseUserId
     }
-
-    val firebaseDb = object : FirebaseDbSet {
-        override suspend fun set(key: String, room: OnlineRoomRemote) {
-            onSaveRoom(key, room).await()
+    val firebaseDb = object : FirebaseDbUpdate {
+        override suspend fun update(key: String, update: Map<String, Any>) {
+            val jsObject = json()
+            update.forEach { (key, value) -> jsObject[key] = value }
+            onUpdateRoom(key, jsObject).await()
         }
     }
 
@@ -66,16 +66,10 @@ fun createMultiplayerRoom(
             override suspend fun saveKey(key: String) = resolve(key)
         }
 
-        val repository = CreateOnlineRoomRepositoryImpl(firebaseDb, onlineLocalStore)
+        val repository = ConnectOnlineRoomRepositoryImpl(firebaseDb, onlineLocalStore)
 
-        val useCase = CreateOnlineRoomUseCase(
-            userNameSettings,
-            timeService,
-            roomKeyGenerator,
-            firebaseAuthManager,
-            repository,
-        )
+        val useCase = ConnectOnlineRoomUseCase(userNameSettings, firebaseAuthManager, repository)
 
-        GlobalScope.launch { useCase.create() }
+        GlobalScope.launch { useCase.connect(descriptor) }
     }
 }
