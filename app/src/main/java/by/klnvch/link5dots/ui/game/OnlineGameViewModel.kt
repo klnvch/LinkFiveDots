@@ -55,15 +55,8 @@ import by.klnvch.link5dots.ui.game.activities.ConnectError
 import by.klnvch.link5dots.ui.game.activities.GameScreen
 import by.klnvch.link5dots.ui.game.activities.InitError
 import by.klnvch.link5dots.ui.game.activities.MultiplayerNavigationEvent
-import by.klnvch.link5dots.ui.game.picker.ConnectConnected
-import by.klnvch.link5dots.ui.game.picker.ConnectConnecting
-import by.klnvch.link5dots.ui.game.picker.ConnectDisconnected
 import by.klnvch.link5dots.ui.game.picker.PickerViewState
-import by.klnvch.link5dots.ui.game.picker.adapters.PickerItemViewState
-import by.klnvch.link5dots.ui.game.picker.states.ScanOn
-import by.klnvch.link5dots.ui.game.picker.states.TargetCreated
-import by.klnvch.link5dots.ui.game.picker.states.TargetCreating
-import by.klnvch.link5dots.ui.game.picker.states.TargetDeleting
+import by.klnvch.link5dots.ui.game.picker.states.createInitialPickerState
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -75,6 +68,7 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -109,19 +103,19 @@ class OnlineGameViewModel @Inject constructor(
     private val _navigationEvent = MutableSharedFlow<MultiplayerNavigationEvent>()
     val navigationEvent = _navigationEvent.asSharedFlow()
 
-    private val _pickerUiState = MutableStateFlow(PickerViewState.INITIAL)
-    val pickerUiState = _pickerUiState.asStateFlow()
+    private val _pickerState = MutableStateFlow(createInitialPickerState())
+    val pickerUiState = _pickerState.asStateFlow().map { PickerViewState(it) }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val uiTitleState = _pickerUiState.flatMapLatest {
+    val uiTitleState = _pickerState.flatMapLatest {
         when {
-            it.targetState is TargetCreating -> flowOf(R.string.connecting)
-            it.targetState is TargetDeleting -> flowOf(R.string.connecting)
-            it.targetState is TargetCreated -> flowOf(R.string.progress_text)
-            it.scanState is ScanOn -> flowOf(R.string.searching)
-            it.connectState is ConnectConnecting -> flowOf(R.string.connecting)
-            it.connectState is ConnectDisconnected -> flowOf(R.string.disconnected)
-            it.connectState is ConnectConnected -> roomFlow
+            it.isCreating -> flowOf(R.string.connecting)
+            it.isDeleting -> flowOf(R.string.connecting)
+            it.isCreated -> flowOf(R.string.progress_text)
+            it.isScanning -> flowOf(R.string.searching)
+            it.isConnecting -> flowOf(R.string.connecting)
+            it.isDisconnected -> flowOf(R.string.disconnected)
+            it.isConnected -> roomFlow
                 .map { room -> getNetworkGameActionUseCase.get(room) }
                 .map { action -> actionToTitle(action) }
 
@@ -137,9 +131,7 @@ class OnlineGameViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 initMultiplayerUseCase.init()
-                _pickerUiState.value = PickerViewState.IDLE
             } catch (e: Throwable) {
-                _pickerUiState.value = PickerViewState.ERROR
                 _navigationEvent.emit(InitError(e))
             }
         }
@@ -154,22 +146,22 @@ class OnlineGameViewModel @Inject constructor(
         viewModelScope.launch { getNetworkRoomStateUseCase.get().collect { onStatedChanged(it) } }
     }
 
-    fun isConnected() = pickerUiState.value.connectState is ConnectConnected
+    fun isConnected() = _pickerState.value.isConnected
 
     fun createRoom() {
         viewModelScope.launch {
-            _pickerUiState.value = PickerViewState.TARGET_CREATING
+            _pickerState.update { it.creating() }
             try {
                 createMultiplayerRoomUseCase.create()
             } catch (e: Throwable) {
                 when (e) {
                     is FeatureDisabled -> {
-                        _pickerUiState.value = PickerViewState.IDLE
+                        _pickerState.update { it.reset() }
                         _navigationEvent.emit(InitError(e))
                     }
 
                     else -> {
-                        _pickerUiState.value = PickerViewState.creationFailed(e)
+                        _pickerState.update { it.creationFailed(e) }
                     }
                 }
             }
@@ -177,44 +169,38 @@ class OnlineGameViewModel @Inject constructor(
     }
 
     fun deleteRoom() {
-        _pickerUiState.value = PickerViewState.TARGET_DELETING
+        _pickerState.update { it.deleting() }
         deleteMultiplayerRoomUseCase.delete()
     }
 
     fun startScan() {
-        _pickerUiState.value = PickerViewState.scanning(emptyList())
+        _pickerState.update { it.scanning() }
         scanJob = viewModelScope.launch {
             try {
                 scanUseCase
                     .scan()
                     .onCompletion {
                         if (it == null) {
-                            val scanState = _pickerUiState.value.scanState
-                            if (scanState is ScanOn) {
-                                _pickerUiState.value = PickerViewState.scanDone(scanState.items)
-                            }
+                            _pickerState.update { state -> state.scanDone() }
                         }
                     }
-                    .catch { _pickerUiState.value = PickerViewState.scanFailed(it) }
-                    .collect { list ->
-                        _pickerUiState.value =
-                            PickerViewState.scanning(list.map { PickerItemViewState(it) })
-                    }
+                    .catch { e -> _pickerState.update { it.scanFailed(e) } }
+                    .collect { items -> _pickerState.update { it.scanning(items.toTypedArray()) } }
             } catch (e: Throwable) {
-                _pickerUiState.value = PickerViewState.IDLE
+                _pickerState.update { it.reset() }
                 _navigationEvent.emit(InitError(e))
             }
         }
     }
 
     fun stopScan() {
-        _pickerUiState.value = PickerViewState.IDLE
+        _pickerState.update { it.reset() }
         scanJob?.cancel()
     }
 
     fun connect(descriptor: RemoteRoomDescriptor) {
         scanJob?.cancel()
-        _pickerUiState.value = PickerViewState.CONNECTING
+        _pickerState.update { it.connecting() }
         viewModelScope.launch {
             try {
                 connectRemoteRoomUseCase.connect(descriptor)
@@ -226,31 +212,26 @@ class OnlineGameViewModel @Inject constructor(
     }
 
     fun cleanUp() {
-        val pickerState = pickerUiState.value
-        val targetState = pickerState.targetState
-        if (targetState is TargetCreated) {
+        if (_pickerState.value.isCreated) {
             deleteMultiplayerRoomUseCase.delete()
         }
-        val connectState = pickerState.connectState
-        if (connectState is ConnectConnected) {
+        if (_pickerState.value.isConnected) {
             deleteMultiplayerRoomUseCase.finish()
         }
-        _pickerUiState.value = PickerViewState.IDLE
+        _pickerState.update { it.reset() }
     }
 
     private suspend fun onStatedChanged(state: NetworkRoomState) {
         when (state) {
-            is NetworkRoomStateCreated -> _pickerUiState.value =
-                PickerViewState.created(PickerItemViewState(state.descriptor))
-
-            is NetworkRoomStateDeleted -> _pickerUiState.value = PickerViewState.IDLE
+            is NetworkRoomStateCreated -> _pickerState.update { it.created(state.descriptor) }
+            is NetworkRoomStateDeleted -> _pickerState.update { it.reset() }
             is NetworkRoomStateStarted -> onConnected(state.descriptor)
-            is NetworkRoomStateFinished -> _pickerUiState.value = PickerViewState.DISCONNECTED
+            is NetworkRoomStateFinished -> _pickerState.update { it.disconnected() }
         }
     }
 
     private suspend fun onConnected(descriptor: RemoteRoomDescriptor) {
-        _pickerUiState.value = PickerViewState.connected(descriptor)
+        _pickerState.update { it.connected(descriptor) }
         setParam(RoomByDescriptor(descriptor))
         _navigationEvent.emit(GameScreen)
     }

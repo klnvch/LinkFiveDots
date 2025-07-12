@@ -24,18 +24,18 @@
 
 package by.klnvch.link5dots.ui.game.picker.states
 
-import by.klnvch.link5dots.ui.game.picker.adapters.PickerItemViewState
+import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
 
 /**
- * All possible states for game creation
+ * All possible states for game scanning
  */
-sealed class TargetState
-object TargetNone : TargetState()
-object TargetDeleted : TargetState()
-object TargetCreating : TargetState()
-object TargetDeleting : TargetState()
-class TargetCreated(val itemViewState: PickerItemViewState) : TargetState() {
-    val descriptor = itemViewState.descriptor
+sealed interface ScanState
+
+interface ScanWithResult {
+    val items: List<RemoteRoomDescriptor>
 }
 
-class TargetFailed(val e: Throwable) : TargetState()
+object ScanNone : ScanState
+data class ScanFailed(val e: Throwable) : ScanState
+data class ScanOn(override val items: List<RemoteRoomDescriptor>) : ScanState, ScanWithResult
+data class ScanDone(override val items: List<RemoteRoomDescriptor>) : ScanState, ScanWithResult

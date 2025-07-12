@@ -151,11 +151,11 @@
             android:layout_marginStart="8dp"
             android:enabled="@{viewState.isCreateOrDeleteButtonEnabled}"
             android:maxLines="2"
+            android:text="@{viewState.targetViewState.name ?? @string/name_not_set}"
             android:visibility="@{viewState.statusVisibility}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/textStatusColon"
             app:layout_constraintTop_toBottomOf="@+id/progressCreate"
-            app:setRoomSate="@{viewState.targetState}"
             tools:text="@string/name_not_set" />
 
         <View
@@ -230,11 +230,11 @@
             style="@style/TextAppearance.AppCompat.Large"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="@{viewState.scanWarningMessage ?? @string/search_no_results}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/progressScan"
-            app:setScanSate="@{viewState.scanState}"
             tools:text="@string/search_no_results" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

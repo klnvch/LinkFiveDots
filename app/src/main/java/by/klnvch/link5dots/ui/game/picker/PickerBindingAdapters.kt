@@ -31,36 +31,10 @@ import by.klnvch.link5dots.R
 import by.klnvch.link5dots.ui.game.picker.adapters.PickerAdapter
 import by.klnvch.link5dots.ui.game.picker.adapters.PickerItemViewState
 import by.klnvch.link5dots.ui.game.picker.states.InvisibleViewState
-import by.klnvch.link5dots.ui.game.picker.states.ScanFailed
-import by.klnvch.link5dots.ui.game.picker.states.ScanOn
-import by.klnvch.link5dots.ui.game.picker.states.ScanState
-import by.klnvch.link5dots.ui.game.picker.states.TargetCreated
-import by.klnvch.link5dots.ui.game.picker.states.TargetFailed
-import by.klnvch.link5dots.ui.game.picker.states.TargetState
 import by.klnvch.link5dots.ui.game.picker.states.VisibilityViewState
 import by.klnvch.link5dots.ui.game.picker.states.VisibleViewState
 
 object PickerBindingAdapters {
-    @JvmStatic
-    @BindingAdapter("setRoomSate")
-    fun TextView.setRoomSate(state: TargetState) {
-        when (state) {
-            is TargetCreated -> text = state.itemViewState.longName
-            is TargetFailed -> text = state.e.message // TODO exception to resource mapper
-            else -> setText(R.string.name_not_set)
-        }
-    }
-
-    @JvmStatic
-    @BindingAdapter("setScanSate")
-    fun TextView.setScanSate(state: ScanState) {
-        when {
-            state is ScanOn && state.items.isEmpty() -> setText(R.string.search_no_results)
-            state is ScanFailed -> text = state.e.message // TODO exception to resource mapper
-            else -> text = ""
-        }
-    }
-
     @JvmStatic
     @BindingAdapter("items")
     fun RecyclerView.setItems(items: List<PickerItemViewState>) {

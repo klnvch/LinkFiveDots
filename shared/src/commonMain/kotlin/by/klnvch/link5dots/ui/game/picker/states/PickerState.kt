@@ -1,0 +1,106 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2025 klnvch
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
+package by.klnvch.link5dots.ui.game.picker.states
+
+import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
+import kotlin.js.ExperimentalJsExport
+import kotlin.js.JsExport
+
+@OptIn(ExperimentalJsExport::class)
+@JsExport()
+interface PickerState {
+    val isCreating: Boolean
+    val isCreated: Boolean
+    val isDeleting: Boolean
+    val result: RemoteRoomDescriptor?
+
+    val isScanning: Boolean
+    val scanResult: Array<RemoteRoomDescriptor>
+
+    val isConnected: Boolean
+    val isConnecting: Boolean
+    val isDisconnected: Boolean
+
+    val inProgress: Boolean
+
+    fun reset(): PickerState
+
+    fun creating(): PickerState
+    fun created(d: RemoteRoomDescriptor): PickerState
+    fun creationFailed(e: Throwable): PickerState
+    fun deleting(): PickerState
+
+    fun scanning(items: Array<RemoteRoomDescriptor> = emptyArray()): PickerState
+    fun scanDone(): PickerState
+    fun scanFailed(e: Throwable): PickerState
+
+    fun connecting(): PickerState
+    fun connected(d: RemoteRoomDescriptor): PickerState
+    fun disconnected(): PickerState
+}
+
+@OptIn(ExperimentalJsExport::class)
+@JsExport()
+fun createInitialPickerState(): PickerState = PickerStateImpl()
+
+private data class PickerStateImpl(
+    private val targetState: TargetState = TargetNone,
+    private val scanState: ScanState = ScanNone,
+    private val connectState: ConnectState = ConnectNone,
+) : PickerState {
+    override val isCreating = targetState is TargetCreating
+    override val isCreated = targetState is TargetCreated
+    override val isDeleting = targetState is TargetDeleting
+    override val result = if (targetState is TargetCreated) targetState.descriptor else null
+
+    override val isScanning = scanState is ScanOn
+    override val scanResult =
+        if (scanState is ScanWithResult) scanState.items.toTypedArray() else emptyArray()
+
+    override val isConnected = connectState is ConnectConnected
+    override val isConnecting = connectState is ConnectConnecting
+    override val isDisconnected = connectState is ConnectDisconnected
+
+    override val inProgress = isCreating || isDeleting || isConnecting
+
+    override fun reset() = createInitialPickerState()
+
+    override fun creating() = copy(targetState = TargetCreating)
+    override fun created(d: RemoteRoomDescriptor) = copy(targetState = TargetCreated(d))
+    override fun creationFailed(e: Throwable) = copy(targetState = TargetFailed(e))
+    override fun deleting() = copy(targetState = TargetDeleting)
+
+    override fun scanning(items: Array<RemoteRoomDescriptor>) =
+        copy(scanState = ScanOn(items.toList()))
+
+    override fun scanDone() =
+        if (scanState is ScanOn) copy(scanState = ScanDone(scanState.items)) else this
+
+    override fun scanFailed(e: Throwable) = copy(scanState = ScanFailed(e))
+
+    override fun connecting() = copy(connectState = ConnectConnecting)
+    override fun connected(d: RemoteRoomDescriptor) = copy(connectState = ConnectConnected(d))
+    override fun disconnected() = copy(connectState = ConnectDisconnected)
+}
