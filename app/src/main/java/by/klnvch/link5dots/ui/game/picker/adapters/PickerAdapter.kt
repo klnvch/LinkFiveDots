@@ -29,6 +29,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import by.klnvch.link5dots.databinding.ItemRoomBinding
+import by.klnvch.link5dots.ui.game.picker.PickerItemViewState
 
 class PickerAdapter(
     private val listener: OnPickerItemSelected,

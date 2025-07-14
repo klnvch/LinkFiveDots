@@ -43,7 +43,7 @@ interface PickerState {
     val isConnecting: Boolean
     val isDisconnected: Boolean
 
-    val inProgress: Boolean
+    val error: Throwable?
 
     fun reset(): PickerState
 
@@ -83,7 +83,11 @@ private data class PickerStateImpl(
     override val isConnecting = connectState is ConnectConnecting
     override val isDisconnected = connectState is ConnectDisconnected
 
-    override val inProgress = isCreating || isDeleting || isConnecting
+    override val error = when {
+        targetState is TargetFailed -> targetState.e
+        scanState is ScanFailed -> scanState.e
+        else -> null
+    }
 
     override fun reset() = createInitialPickerState()
 

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023-2025 klnvch
+ * Copyright (c) 2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,15 +21,36 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package by.klnvch.link5dots.ui.game.picker.adapters
 
-import android.graphics.Typeface
-import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
+package by.klnvch.link5dots.ui.common
 
-data class PickerItemViewState(
-    val descriptor: RemoteRoomDescriptor,
+import androidx.annotation.StringRes
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.material3.ElevatedButton
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+
+@Composable
+fun CustomButtonWithText(
+    onClick: () -> Unit,
+    enabled: Boolean = true,
+    @StringRes textId: Int,
 ) {
-    val shortName = descriptor.title
-    val longName = "${descriptor.title} ${descriptor.description}"
-    val textStyle = if (descriptor.isFavorite) Typeface.BOLD else Typeface.NORMAL
+    ElevatedButton(
+        onClick = onClick,
+        modifier = Modifier.widthIn(0.dp, 320.dp),
+        enabled,
+    ) {
+        Text(
+            text = stringResource(textId).uppercase(),
+            textAlign = TextAlign.Center,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.weight(1f),
+        )
+    }
 }

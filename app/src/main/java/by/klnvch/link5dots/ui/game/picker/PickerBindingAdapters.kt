@@ -29,7 +29,6 @@ import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import by.klnvch.link5dots.R
 import by.klnvch.link5dots.ui.game.picker.adapters.PickerAdapter
-import by.klnvch.link5dots.ui.game.picker.adapters.PickerItemViewState
 import by.klnvch.link5dots.ui.game.picker.states.InvisibleViewState
 import by.klnvch.link5dots.ui.game.picker.states.VisibilityViewState
 import by.klnvch.link5dots.ui.game.picker.states.VisibleViewState
@@ -37,10 +36,10 @@ import by.klnvch.link5dots.ui.game.picker.states.VisibleViewState
 object PickerBindingAdapters {
     @JvmStatic
     @BindingAdapter("items")
-    fun RecyclerView.setItems(items: List<PickerItemViewState>) {
+    fun RecyclerView.setItems(items: Array<PickerItemViewState>) {
         val currentAdapter = adapter
         if (currentAdapter is PickerAdapter) {
-            currentAdapter.submitList(items)
+            currentAdapter.submitList(items.toList())
         }
     }
 

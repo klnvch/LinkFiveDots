@@ -43,7 +43,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import by.klnvch.link5dots.ui.game.picker.listeners.OnVisibilityClickListener
 import kotlinx.coroutines.launch
 
-class BluetoothPickerFragment : PickerFragment(), OnVisibilityClickListener {
+class BluetoothPickerFragment : PickerFragmentDeprecated(), OnVisibilityClickListener {
 
     private lateinit var viewModel: VisibilityViewModel
 

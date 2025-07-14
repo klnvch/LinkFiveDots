@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023-2025 klnvch
+ * Copyright (c) 2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,87 +21,66 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
 package by.klnvch.link5dots.ui.game.picker
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.CallSuper
-import androidx.appcompat.app.AlertDialog
-import androidx.lifecycle.Lifecycle
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.ImageShader
+import androidx.compose.ui.graphics.ShaderBrush
+import androidx.compose.ui.graphics.TileMode
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.compose.ui.res.imageResource
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
-import androidx.recyclerview.widget.LinearLayoutManager
 import by.klnvch.link5dots.R
-import by.klnvch.link5dots.databinding.FragmentGamePickerBinding
 import by.klnvch.link5dots.ui.game.OfflineGameViewModel
 import by.klnvch.link5dots.ui.game.OnlineGameViewModel
-import by.klnvch.link5dots.ui.game.picker.adapters.OnPickerItemSelected
-import by.klnvch.link5dots.ui.game.picker.adapters.PickerAdapter
-import by.klnvch.link5dots.ui.game.picker.adapters.PickerItemViewState
-import by.klnvch.link5dots.ui.game.picker.listeners.OnPickerClickListener
+import by.klnvch.link5dots.ui.game.PickerScreen
+import by.klnvch.link5dots.ui.theme.AppTheme
 import dagger.android.support.DaggerFragment
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-open class PickerFragment : DaggerFragment(), OnPickerClickListener, OnPickerItemSelected {
-
-    protected lateinit var binding: FragmentGamePickerBinding
-
+class PickerFragment : DaggerFragment() {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    private lateinit var viewModel: OnlineGameViewModel
-
-    @CallSuper
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        viewModel = ViewModelProvider(
+        val viewModel = ViewModelProvider(
             requireActivity(),
             viewModelFactory
         )[OfflineGameViewModel.KEY, OnlineGameViewModel::class.java]
 
-        binding = FragmentGamePickerBinding.inflate(inflater, container, false)
-        binding.listener = this
-        binding.listTargets.setHasFixedSize(true)
-        binding.listTargets.layoutManager = LinearLayoutManager(context)
-        binding.listTargets.adapter = PickerAdapter(this)
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.pickerUiState.collect { binding.viewState = it }
+        return ComposeView(requireContext()).apply {
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setContent {
+                AppTheme {
+                    Box(
+                        modifier = Modifier
+                            .background(
+                                ShaderBrush(
+                                    ImageShader(
+                                        ImageBitmap.imageResource(R.drawable.paper),
+                                        TileMode.Repeated,
+                                        TileMode.Repeated
+                                    )
+                                )
+                            )
+                    ) {
+                        PickerScreen(viewModel)
+                    }
+                }
             }
         }
     }
-
-    override fun onDestroyView() {
-        binding.listTargets.adapter = null // prevent memory leak
-        super.onDestroyView()
-    }
-
-    override fun onPickerItemSelected(viewState: PickerItemViewState) {
-        val msg = getString(R.string.connection_dialog_text, viewState.shortName)
-        AlertDialog.Builder(requireContext())
-            .setMessage(msg)
-            .setPositiveButton(R.string.yes) { _, _ -> viewModel.connect(viewState.descriptor) }
-            .setNegativeButton(R.string.no, null)
-            .show()
-    }
-
-    override fun onCreateButtonClicked() = viewModel.createRoom()
-
-    override fun onDeleteButtonClicked() = viewModel.deleteRoom()
-
-    override fun onStartScanButtonClicked() = viewModel.startScan()
-
-    override fun onCancelScanButtonClicked() = viewModel.stopScan()
 }

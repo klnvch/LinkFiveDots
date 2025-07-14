@@ -24,6 +24,7 @@
 
 package by.klnvch.link5dots.utils
 
+import android.graphics.Typeface
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
 
@@ -31,5 +32,6 @@ import androidx.databinding.BindingAdapter
 object BindingUtils {
     @JvmStatic
     @BindingAdapter("setTextStyle")
-    fun setTextStyle(view: TextView, style: Int) = view.setTypeface(view.typeface, style)
+    fun setTextStyle(view: TextView, isBold: Boolean) =
+        view.setTypeface(view.typeface, if (isBold) Typeface.BOLD else Typeface.NORMAL)
 }

@@ -25,15 +25,11 @@
 package by.klnvch.link5dots.ui.menu
 
 import android.content.res.Configuration
-import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.widthIn
-import androidx.compose.material3.ElevatedButton
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -41,13 +37,11 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
 import by.klnvch.link5dots.BuildConfig
 import by.klnvch.link5dots.R
+import by.klnvch.link5dots.ui.common.CustomButtonWithText
 import by.klnvch.link5dots.ui.common.TextNoSurface
 
 @Composable
@@ -104,39 +98,21 @@ private fun Column1() {
 @Composable
 private fun Column2(onNavigate: (Screen) -> Unit) {
     Column {
-        MenuTextButton(
+        CustomButtonWithText(
             onClick = { onNavigate(Screen.SourceCode) },
             textId = R.string.btn_github,
         )
-        MenuTextButton(
+        CustomButtonWithText(
             onClick = { onNavigate(Screen.RateApp) },
             textId = R.string.rate_this_app,
         )
-        MenuTextButton(
+        CustomButtonWithText(
             onClick = { onNavigate(Screen.Feedback) },
             textId = R.string.send_mail,
         )
-        MenuTextButton(
+        CustomButtonWithText(
             onClick = { onNavigate(Screen.ShareApp) },
             textId = R.string.share,
-        )
-    }
-}
-
-@Composable
-private fun MenuTextButton(
-    onClick: () -> Unit,
-    @StringRes textId: Int,
-) {
-    ElevatedButton(
-        onClick = onClick,
-        modifier = Modifier.widthIn(0.dp, 320.dp),
-    ) {
-        Text(
-            text = stringResource(textId).uppercase(),
-            textAlign = TextAlign.Center,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.weight(1f),
         )
     }
 }

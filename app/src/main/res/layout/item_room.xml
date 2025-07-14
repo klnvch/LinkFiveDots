@@ -30,7 +30,7 @@
 
         <variable
             name="viewState"
-            type="by.klnvch.link5dots.ui.game.picker.adapters.PickerItemViewState" />
+            type="by.klnvch.link5dots.ui.game.picker.PickerItemViewState" />
 
         <variable
             name="listener"
@@ -58,8 +58,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:lines="2"
-            android:text="@{viewState.longName}"
-            app:setTextStyle="@{viewState.textStyle}" />
+            android:text="@{viewState.longName ?? @string/name_not_set}"
+            app:setTextStyle="@{viewState.isBold}" />
 
     </androidx.cardview.widget.CardView>
 </layout>
