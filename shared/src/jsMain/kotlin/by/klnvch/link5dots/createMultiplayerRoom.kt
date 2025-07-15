@@ -42,7 +42,7 @@ import kotlin.js.Promise
 @OptIn(DelicateCoroutinesApi::class, ExperimentalJsExport::class)
 @JsExport()
 fun createMultiplayerRoom(
-    userName: String,
+    userName: String?,
     firebaseUserId: String,
     onSaveRoom: (key: String, room: OnlineRoomRemote) -> Promise<Unit>,
 ): Promise<String> {

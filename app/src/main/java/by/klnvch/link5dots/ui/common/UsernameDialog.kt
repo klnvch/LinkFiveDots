@@ -38,8 +38,8 @@ import by.klnvch.link5dots.R
 
 @Composable
 fun UsernameDialog(
-    userName: String,
-    onConfirmation: (userName: String) -> Unit,
+    userName: String?,
+    onConfirmation: (userName: String?) -> Unit,
     onDismissRequest: () -> Unit,
 ) {
     val text = remember { mutableStateOf(userName) }
@@ -53,7 +53,7 @@ fun UsernameDialog(
         title = { Text(text = stringResource(R.string.username)) },
         text = {
             TextField(
-                value = text.value,
+                value = text.value ?: "",
                 onValueChange = { text.value = it },
                 placeholder = { Text(text = stringResource(R.string.unknown)) },
                 singleLine = true,
@@ -62,7 +62,7 @@ fun UsernameDialog(
         onDismissRequest = { onDismissRequest() },
         confirmButton = {
             TextButton(
-                onClick = { onConfirmation(text.value.trim()) }
+                onClick = { onConfirmation(text.value) }
             ) {
                 Text(text = stringResource(R.string.okay))
             }

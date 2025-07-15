@@ -52,7 +52,6 @@ class SettingsImpl @Inject constructor(
         private val VIBRATION = booleanPreferencesKey(Settings.KEY_VIBRATION)
         private val DOTS_TYPE = intPreferencesKey(Settings.KEY_DOTS_TYPE)
 
-        private const val DEFAULT_USER_NAME = ""
         private const val DEFAULT_LANGUAGE = ""
         private const val DEFAULT_VIBRATION = true
         private const val DEFAULT_NIGHT_MODE = ""
@@ -63,7 +62,7 @@ class SettingsImpl @Inject constructor(
         dataStore.data
             .map {
                 AllSettings(
-                    it[USER_NAME] ?: DEFAULT_USER_NAME,
+                    it[USER_NAME],
                     it[LANGUAGE] ?: DEFAULT_LANGUAGE,
                     it[VIBRATION] ?: DEFAULT_VIBRATION,
                     it[NIGHT_MODE] ?: DEFAULT_NIGHT_MODE,
@@ -73,14 +72,14 @@ class SettingsImpl @Inject constructor(
             .distinctUntilChanged()
 
 
-    override suspend fun setUserName(userName: String) {
-        dataStore.edit { it[USER_NAME] = userName }
+    override suspend fun setUserName(userName: String?) {
+        dataStore.edit { if (userName == null) it.remove(USER_NAME) else it[USER_NAME] = userName }
     }
 
     override suspend fun getUserName() = getUserNameFlow().first()
 
     override fun getUserNameFlow() = dataStore.data
-        .map { it[USER_NAME] ?: DEFAULT_USER_NAME }
+        .map { it[USER_NAME] }
         .distinctUntilChanged()
 
     override suspend fun setLanguage(language: String) {
@@ -134,7 +133,7 @@ class SettingsImpl @Inject constructor(
 
     override suspend fun reset() {
         dataStore.edit {
-            it[USER_NAME] = DEFAULT_USER_NAME
+            it.remove(USER_NAME)
             it[USER_ID] = UUID.randomUUID().toString()
             it[LANGUAGE] = DEFAULT_LANGUAGE
             it[VIBRATION] = DEFAULT_VIBRATION

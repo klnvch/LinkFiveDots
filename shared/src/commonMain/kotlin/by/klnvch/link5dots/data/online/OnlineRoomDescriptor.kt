@@ -51,7 +51,7 @@ data class OnlineRoomDescriptor(
 
 
 fun INetworkRoomInvitation.createDescriptor(defaultName: String) = OnlineRoomDescriptor(
-    user1.name.ifEmpty { defaultName },
+    user1.name ?: defaultName,
     timestamp.formatDateTime(),
     false,
     key,

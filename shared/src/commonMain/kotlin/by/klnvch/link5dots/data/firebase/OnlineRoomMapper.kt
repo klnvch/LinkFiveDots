@@ -38,7 +38,7 @@ fun NetworkRoomInvitation.mapToOnlineRoomRemote() = OnlineRoomRemote(
     null,
 )
 
-fun NetworkUser.mapToOnlineRemoteUser() = OnlineRemoteUser(id, name.ifEmpty { null })
+fun NetworkUser.mapToOnlineRemoteUser() = OnlineRemoteUser(id, name)
 
 fun OnlineRemoteUser.mapToNetworkUser() = id?.let { NetworkUser(it, name ?: "") }
 

@@ -28,6 +28,7 @@ import by.klnvch.link5dots.domain.repositories.DeviceInfo
 import by.klnvch.link5dots.domain.repositories.FirebaseManager
 import by.klnvch.link5dots.domain.repositories.GameScoreRepository
 import by.klnvch.link5dots.domain.repositories.Settings
+import by.klnvch.link5dots.domain.repositories.StringRepository
 import javax.inject.Inject
 
 // TODO: add isSupported and login
@@ -36,11 +37,12 @@ class SaveScoreUseCase @Inject constructor(
     private val firebaseManager: FirebaseManager,
     private val gameScoreRepository: GameScoreRepository,
     private val settings: Settings,
+    private val stringRepository: StringRepository,
 ) {
     suspend fun save(score: BotGameScore) {
         val deviceId = deviceInfo.getAndroidId()
         val userId = firebaseManager.getUserId()
-        val userName = settings.getUserName()
+        val userName = settings.getUserName() ?: stringRepository.getUnknownName()
         gameScoreRepository.save(score, userName, userId, deviceId)
     }
 }

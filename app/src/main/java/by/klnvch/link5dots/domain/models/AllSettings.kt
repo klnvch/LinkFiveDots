@@ -25,7 +25,7 @@
 package by.klnvch.link5dots.domain.models
 
 data class AllSettings(
-    val userName: String,
+    val userName: String?,
     val language: String,
     val isVibrationEnabled: Boolean,
     val nightMode: String,

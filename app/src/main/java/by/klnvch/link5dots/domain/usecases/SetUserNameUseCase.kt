@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 klnvch
+ * Copyright (c) 2023-2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,5 +28,5 @@ import by.klnvch.link5dots.domain.repositories.Settings
 import javax.inject.Inject
 
 class SetUserNameUseCase @Inject constructor(private val settings: Settings) {
-    suspend fun set(userName: String) = settings.setUserName(userName)
+    suspend fun set(userName: String?) = settings.setUserName(userName?.trim()?.ifEmpty { null })
 }

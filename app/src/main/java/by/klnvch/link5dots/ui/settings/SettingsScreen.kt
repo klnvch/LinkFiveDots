@@ -31,6 +31,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import by.klnvch.link5dots.R
@@ -56,7 +57,7 @@ fun SettingsScreen(
             EditTextPreferenceItem(
                 icon = R.drawable.ic_mood_48dp,
                 title = R.string.username,
-                value = state.settings.userName,
+                value = state.settings.userName ?: stringResource(R.string.unknown),
                 onChange = { viewModel.setUserName(it) },
             )
             ListPreferenceItem(

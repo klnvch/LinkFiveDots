@@ -42,7 +42,7 @@ import kotlin.js.json
 @OptIn(DelicateCoroutinesApi::class, ExperimentalJsExport::class)
 @JsExport()
 fun connectMultiplayerRoom(
-    userName: String,
+    userName: String?,
     firebaseUserId: String,
     descriptor: RemoteRoomDescriptor,
     onUpdateRoom: (key: String, update: Json) -> Promise<Unit>,

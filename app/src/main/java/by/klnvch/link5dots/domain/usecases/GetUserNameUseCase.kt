@@ -40,12 +40,8 @@ class GetUserNameUseCase @Inject constructor(
 
     suspend fun get(user: IUser?) = when (user) {
         is BotUser -> stringRepository.getString(R.string.computer)
-        is NetworkUser -> get(user)
-        is DeviceOwnerUser -> settings.getUserName()
-            .ifEmpty { stringRepository.getString(R.string.unknown) }
-
+        is NetworkUser -> user.name ?: stringRepository.getUnknownName()
+        is DeviceOwnerUser -> settings.getUserName() ?: stringRepository.getUnknownName()
         null -> null
     }
-
-    fun get(user: NetworkUser) = user.name.ifEmpty { stringRepository.getString(R.string.unknown) }
 }

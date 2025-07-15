@@ -27,23 +27,19 @@ package by.klnvch.link5dots.domain.usecases
 import by.klnvch.link5dots.domain.repositories.LanguageManager
 import by.klnvch.link5dots.domain.repositories.NightModeManager
 import by.klnvch.link5dots.domain.repositories.Settings
-import by.klnvch.link5dots.domain.repositories.StringRepository
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class GetSettingsUseCase @Inject constructor(
     private val settings: Settings,
-    private val stringRepository: StringRepository,
     private val languageManager: LanguageManager,
     private val nightModeManager: NightModeManager,
 ) {
-    fun get() =
-        settings.getAllSettings()
-            .map {
-                it.copy(
-                    userName = it.userName.ifEmpty { stringRepository.getUnknownName() },
-                    language = it.language.ifEmpty { languageManager.getCurrent() },
-                    nightMode = it.nightMode.ifEmpty { nightModeManager.getCurrent() },
-                )
-            }
+    fun get() = settings.getAllSettings()
+        .map {
+            it.copy(
+                language = it.language.ifEmpty { languageManager.getCurrent() },
+                nightMode = it.nightMode.ifEmpty { nightModeManager.getCurrent() },
+            )
+        }
 }

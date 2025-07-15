@@ -36,7 +36,7 @@ fun EditTextPreferenceItem(
     @DrawableRes icon: Int,
     @StringRes title: Int,
     value: String,
-    onChange: (value: String) -> Unit,
+    onChange: (value: String?) -> Unit,
 ) {
     val openDialog = remember { mutableStateOf(false) }
     when {

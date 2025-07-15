@@ -82,9 +82,9 @@ fun MainMenuScreen(
 
 @Composable
 private fun MainMenuScreenPortrait(
-    userName: String,
+    userName: String?,
     onNavigate: (Screen) -> Unit,
-    onUserNameChanged: (userName: String) -> Unit,
+    onUserNameChanged: (userName: String?) -> Unit,
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -102,9 +102,9 @@ private fun MainMenuScreenPortrait(
 
 @Composable
 private fun MainMenuScreenLandscape(
-    userName: String,
+    userName: String?,
     onNavigate: (Screen) -> Unit,
-    onUserNameChanged: (userName: String) -> Unit,
+    onUserNameChanged: (userName: String?) -> Unit,
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -175,8 +175,8 @@ private fun InfoButtonColumn(onNavigate: (Screen) -> Unit) {
 
 @Composable
 private fun GreetingText(
-    userName: String,
-    onUserNameChanged: (userName: String) -> Unit,
+    userName: String?,
+    onUserNameChanged: (userName: String?) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val openUserNameDialog = remember { mutableStateOf(false) }
@@ -196,7 +196,7 @@ private fun GreetingText(
             .widthIn(0.dp, 320.dp)
             .padding(16.dp),
     ) {
-        val name = userName.ifEmpty { stringResource(R.string.unknown) }
+        val name = userName ?: stringResource(R.string.unknown)
         TextNoSurface(
             modifier = Modifier.fillMaxWidth(),
             text = stringResource(R.string.greetings, name),

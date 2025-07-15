@@ -43,7 +43,7 @@ class MainMenuViewModel @Inject constructor(
     private val syncNightModeUseCase: SyncNightModeUseCase,
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(MainMenuViewState.initial())
+    private val _uiState = MutableStateFlow(MainMenuViewState())
     val uiState: StateFlow<MainMenuViewState> = _uiState.asStateFlow()
 
     init {
@@ -60,9 +60,6 @@ class MainMenuViewModel @Inject constructor(
         }
     }
 
-    fun setUserName(userName: String) {
-        viewModelScope.launch {
-            setUserNameUseCase.set(userName.trim())
-        }
-    }
+    fun setUserName(userName: String?) = viewModelScope.launch { setUserNameUseCase.set(userName) }
+
 }

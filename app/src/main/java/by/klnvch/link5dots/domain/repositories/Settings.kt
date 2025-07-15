@@ -30,9 +30,9 @@ import kotlinx.coroutines.flow.Flow
 
 interface Settings : UserNameSettings {
     fun getAllSettings(): Flow<AllSettings>
-    fun getUserNameFlow(): Flow<String>
+    fun getUserNameFlow(): Flow<String?>
     fun getUserId(): Flow<String>
-    suspend fun setUserName(userName: String)
+    suspend fun setUserName(userName: String?)
     suspend fun setLanguage(language: String)
     suspend fun setVibration(isOn: Boolean)
     suspend fun setNightMode(nightMode: String)
