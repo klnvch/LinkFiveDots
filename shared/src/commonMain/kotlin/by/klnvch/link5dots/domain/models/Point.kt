@@ -24,6 +24,11 @@
 
 package by.klnvch.link5dots.domain.models
 
+import kotlin.js.ExperimentalJsExport
+import kotlin.js.JsExport
+
+@OptIn(ExperimentalJsExport::class)
+@JsExport()
 data class Point(val x: Int, val y: Int)
 
 fun Point.translate(tp: Point) = Point(x + tp.x, y + tp.y)

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 klnvch
+ * Copyright (c) 2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,6 +22,27 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.domain.models
+package by.klnvch.link5dots
 
-enum class DotsStyleType { ORIGINAL, CROSS_AND_RING }
+import by.klnvch.link5dots.data.online.RemoteRoomItem
+import by.klnvch.link5dots.data.online.mapToDescriptors
+import by.klnvch.link5dots.data.online.mapToNetworkRoom
+import by.klnvch.link5dots.data.online.toNetworkRoomState
+import by.klnvch.link5dots.domain.models.IRoom
+import kotlin.js.collections.JsReadonlyArray
+import kotlin.js.collections.toList
+
+@OptIn(ExperimentalJsExport::class, ExperimentalJsCollectionsApi::class)
+@JsExport()
+fun mapToDescriptors(items: JsReadonlyArray<RemoteRoomItem>, defaultName: String) =
+    mapToDescriptors(items.toList(), defaultName).toTypedArray()
+
+@OptIn(ExperimentalJsExport::class)
+@JsExport()
+fun mapToRoomState(item: RemoteRoomItem, defaultName: String) =
+    item.mapToNetworkRoom()?.toNetworkRoomState(defaultName)
+
+
+@OptIn(ExperimentalJsExport::class)
+@JsExport()
+fun mapToRoom(item: RemoteRoomItem): IRoom? = item.mapToNetworkRoom()

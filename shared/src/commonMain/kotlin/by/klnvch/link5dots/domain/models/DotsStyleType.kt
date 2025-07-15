@@ -22,21 +22,11 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots
+package by.klnvch.link5dots.domain.models
 
-import by.klnvch.link5dots.data.online.RemoteRoomItem
-import by.klnvch.link5dots.data.online.mapToDescriptors
-import by.klnvch.link5dots.data.online.mapToNetworkRoom
-import by.klnvch.link5dots.data.online.toNetworkRoomState
-import kotlin.js.collections.JsReadonlyArray
-import kotlin.js.collections.toList
-
-@OptIn(ExperimentalJsExport::class, ExperimentalJsCollectionsApi::class)
-@JsExport()
-fun mapToDescriptors(items: JsReadonlyArray<RemoteRoomItem>, defaultName: String) =
-    mapToDescriptors(items.toList(), defaultName).toTypedArray()
+import kotlin.js.ExperimentalJsExport
+import kotlin.js.JsExport
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport()
-fun mapToRoomState(item: RemoteRoomItem, defaultName: String) =
-    item.mapToNetworkRoom()?.toNetworkRoomState(defaultName)
+enum class DotsStyleType { ORIGINAL, CROSS_AND_RING }

@@ -24,9 +24,7 @@
 
 package by.klnvch.link5dots.domain.usecases
 
-enum class ActionAvailability {
-    Gone, Disabled, Available
-}
+import by.klnvch.link5dots.domain.models.ActionAvailability
 
 interface ActionAvailabilityForUseCase {
     val actionAvailability: ActionAvailability

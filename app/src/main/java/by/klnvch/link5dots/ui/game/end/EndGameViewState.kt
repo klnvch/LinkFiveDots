@@ -24,12 +24,12 @@
 package by.klnvch.link5dots.ui.game.end
 
 import by.klnvch.link5dots.R
+import by.klnvch.link5dots.domain.models.ActionAvailability
 import by.klnvch.link5dots.domain.models.BotGameScore
 import by.klnvch.link5dots.domain.models.GameResult
 import by.klnvch.link5dots.domain.models.GameScore
 import by.klnvch.link5dots.domain.models.NetworkGameScore
 import by.klnvch.link5dots.domain.models.SimpleGameScore
-import by.klnvch.link5dots.domain.usecases.ActionAvailability
 import by.klnvch.link5dots.utils.FormatUtils.formatDuration
 
 data class EndGameViewState(

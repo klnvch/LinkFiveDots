@@ -25,6 +25,7 @@
 package by.klnvch.link5dots.data.firebase
 
 import by.klnvch.link5dots.domain.models.Dot
+import by.klnvch.link5dots.domain.models.DotImpl
 import by.klnvch.link5dots.domain.models.NetworkRoom
 import by.klnvch.link5dots.domain.models.NetworkRoomInvitation
 import by.klnvch.link5dots.domain.models.NetworkUser
@@ -70,5 +71,5 @@ fun Dot.mapToOnlineDotRemote() = OnlineDotRemote(dt, x, y)
 
 fun List<OnlineDotRemote>.mapToDotList() = this
     .mapIndexed { i, d ->
-        Dot(d.x!!, d.y!!, if (i % 2 == 0) Dot.HOST else Dot.GUEST, d.dt!!)
+        DotImpl(d.x!!, d.y!!, if (i % 2 == 0) Dot.HOST else Dot.GUEST, d.dt!!)
     }

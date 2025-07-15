@@ -31,7 +31,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.ViewModelProvider
 import by.klnvch.link5dots.R
 import by.klnvch.link5dots.databinding.DialogEndGameBinding
-import by.klnvch.link5dots.domain.usecases.ActionAvailability
+import by.klnvch.link5dots.domain.models.ActionAvailability
 import by.klnvch.link5dots.ui.game.OfflineGameViewModel
 import by.klnvch.link5dots.ui.game.OnNewGameClickListener
 import dagger.android.support.DaggerDialogFragment

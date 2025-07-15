@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2017 klnvch
+ * Copyright (c) 2017-2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,10 +29,10 @@ import android.graphics.PointF;
 import android.graphics.RectF;
 import android.util.Log;
 
-import com.google.gson.Gson;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import com.google.gson.Gson;
 
 public class GameViewState {
 
@@ -130,11 +130,11 @@ public class GameViewState {
             Log.d(TAG, "scale down to max");
         }
 
-        RectF paperRect = new RectF(0, 0, paperSize, paperSize);
-        matrix.mapRect(paperRect);
         //
         // validate translate: if paper is less than screen, than center it
         //
+        RectF paperRect = new RectF(0, 0, paperSize, paperSize);
+        matrix.mapRect(paperRect);
         float dx = 0;
         if (paperRect.width() < screenWidth) {
             dx = screenWidth / 2.0f - paperRect.centerX();

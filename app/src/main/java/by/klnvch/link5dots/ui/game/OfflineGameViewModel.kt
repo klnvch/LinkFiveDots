@@ -77,8 +77,8 @@ open class OfflineGameViewModel @Inject constructor(
         val type = settings.getDotsType().first()
         val user1Name = getUserNameUseCase.get(it.user1)
         val user2Name = getUserNameUseCase.get(it.user2)
-        GameViewState(type, user1Name, user2Name, it)
-    }.stateIn(viewModelScope, SharingStarted.Eagerly, GameViewState.default())
+        createGameViewState(type, user1Name, user2Name, it)
+    }.stateIn(viewModelScope, SharingStarted.Eagerly, GameViewStateImpl())
 
     val scoreUi = roomFlow.map {
         if (it.isOver()) {
@@ -97,7 +97,7 @@ open class OfflineGameViewModel @Inject constructor(
                 undoMoveUseCase.isAvailable(it)
             )
         }
-        .stateIn(viewModelScope, SharingStarted.Eagerly, MenuViewState.Default)
+        .stateIn(viewModelScope, SharingStarted.Eagerly, MenuViewState())
 
     private val _focusEvent = MutableLiveData<Unit>()
     val focusEvent: LiveData<Unit> = _focusEvent

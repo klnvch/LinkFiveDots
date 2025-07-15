@@ -26,6 +26,7 @@ package by.klnvch.link5dots.domain.usecases
 import by.klnvch.link5dots.domain.models.Board
 import by.klnvch.link5dots.domain.models.Bot
 import by.klnvch.link5dots.domain.models.Dot
+import by.klnvch.link5dots.domain.models.DotImpl
 import by.klnvch.link5dots.domain.models.IRoom
 import by.klnvch.link5dots.domain.models.NetworkRoomExtended
 import by.klnvch.link5dots.domain.models.Point
@@ -72,9 +73,9 @@ abstract class AddDotMultiplayerUseCase(
         if (room is NetworkRoomExtended) {
             val (_, _, dots, user1, user2, _, _, yourId) = room
             if (user1.id == yourId && dots.size % 2 == 0) {
-                addMultiplayerDot(room, Dot(p, Dot.HOST, dt))
+                addMultiplayerDot(room, DotImpl(p, Dot.HOST, dt))
             } else if (user2?.id == yourId && dots.size % 2 == 1) {
-                addMultiplayerDot(room, Dot(p, Dot.GUEST, dt))
+                addMultiplayerDot(room, DotImpl(p, Dot.GUEST, dt))
             }
         } else {
             throw IllegalStateException("Wrong room type")
@@ -143,11 +144,11 @@ class AddDotBotUseCase @Inject constructor(
 ) : AddDotOfflineUseCase(timeRepository, board, roomRepository) {
     override fun modify(room: Room, p: Point, dt: Int): Room {
         if (room.dots.size % 2 == 0) {
-            room.add(Dot(p, Dot.HOST, dt))
+            room.add(DotImpl(p, Dot.HOST, dt))
             if (room.isNotOver()) {
                 val botDot = bot.findAnswer(room.dots)
                 val botDt = (timeRepository.now() - room.timestamp).toInt()
-                room.add(botDot.copy(type = Dot.GUEST, dt = botDt))
+                room.add(DotImpl(botDot.x, botDot.y, type = Dot.GUEST, dt = botDt))
             }
         }
         return room
@@ -162,7 +163,7 @@ class AddDotTwoUseCase @Inject constructor(
     override fun modify(room: Room, p: Point, dt: Int): Room {
         val lastDotType = room.dots.lastOrNull()?.type ?: Dot.GUEST
         val type = if (lastDotType == Dot.GUEST) Dot.HOST else Dot.GUEST
-        room.add(Dot(p, type, dt))
+        room.add(DotImpl(p, type, dt))
         return room
     }
 }

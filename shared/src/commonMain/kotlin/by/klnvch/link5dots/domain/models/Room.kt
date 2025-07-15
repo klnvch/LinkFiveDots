@@ -24,6 +24,11 @@
 
 package by.klnvch.link5dots.domain.models
 
+import kotlin.js.ExperimentalJsExport
+import kotlin.js.JsExport
+
+@OptIn(ExperimentalJsExport::class)
+@JsExport()
 interface IRoom {
     val key: String
     val timestamp: Double
@@ -55,7 +60,7 @@ fun List<Dot>.findWinningLine(): WinningLine? {
         ?: points.findMaxLine { it.y == lastDot.y }
         ?: points.map { it.invert() }.findMaxLine { it.y == lastDot.x }?.map { it.invert() }
 
-    return if (line != null) WinningLine(line, lastDot.type) else null
+    return if (line != null) WinningLineImpl(line, lastDot.type) else null
 }
 
 private inline fun List<Point>.findMaxLine(predicate: (Point) -> Boolean): List<Point>? = this

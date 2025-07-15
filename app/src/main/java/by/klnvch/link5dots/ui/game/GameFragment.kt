@@ -38,9 +38,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import by.klnvch.link5dots.R
 import by.klnvch.link5dots.databinding.GameBoardBinding
+import by.klnvch.link5dots.domain.models.ActionAvailability
+import by.klnvch.link5dots.domain.models.DotsStyleType
 import by.klnvch.link5dots.domain.models.Point
 import by.klnvch.link5dots.domain.repositories.Analytics
-import by.klnvch.link5dots.domain.usecases.ActionAvailability
 import by.klnvch.link5dots.models.GameViewState
 import by.klnvch.link5dots.ui.game.GameView.OnMoveDoneListener
 import dagger.android.support.DaggerFragment
@@ -97,6 +98,37 @@ class GameFragment : DaggerFragment(), OnMoveDoneListener, MenuProvider {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uiState.collect {
                     binding.viewState = it
+                    when (it.infoViewState.dotsStyleType) {
+                        DotsStyleType.ORIGINAL -> {
+                            binding.textUser1.setCompoundDrawablesWithIntrinsicBounds(
+                                R.drawable.game_dot_circle_red,
+                                0,
+                                0,
+                                0
+                            )
+                            binding.textUser2.setCompoundDrawablesWithIntrinsicBounds(
+                                R.drawable.game_dot_circle_blue,
+                                0,
+                                0,
+                                0
+                            )
+                        }
+
+                        DotsStyleType.CROSS_AND_RING -> {
+                            binding.textUser1.setCompoundDrawablesWithIntrinsicBounds(
+                                R.drawable.game_dot_cross_red,
+                                0,
+                                0,
+                                0
+                            )
+                            binding.textUser2.setCompoundDrawablesWithIntrinsicBounds(
+                                R.drawable.game_dot_ring_blue,
+                                0,
+                                0,
+                                0
+                            )
+                        }
+                    }
                 }
             }
         }

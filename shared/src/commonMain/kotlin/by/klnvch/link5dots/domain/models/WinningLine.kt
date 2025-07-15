@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023-2025 klnvch
+ * Copyright (c) 2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,11 +29,28 @@ import kotlin.js.JsExport
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport()
-sealed interface IUser
+interface WinningLine {
+    val type: Int
+    val size: Int
+    operator fun get(i: Int): Point
+    val orientation: WinningLineOrientation
+}
 
-object BotUser : IUser
-object DeviceOwnerUser : IUser
+data class WinningLineImpl(private val points: List<Point>, override val type: Int) : WinningLine {
+    override val size = points.size
+    override operator fun get(i: Int) = points[i]
+    private val first = points.first()
+    private val last = points.last()
+    override val orientation = when {
+        first.y == last.y -> WinningLineOrientation.HORIZONTAL
+        first.x == last.x -> WinningLineOrientation.VERTICAL
+        (first.x - last.x) * (first.y - last.y) < 0 -> WinningLineOrientation.DIAGONAL_LEFT
+        else -> WinningLineOrientation.DIAGONAL_RIGHT
+    }
+}
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport()
-data class NetworkUser(val id: String, val name: String?) : IUser
+enum class WinningLineOrientation {
+    HORIZONTAL, VERTICAL, DIAGONAL_LEFT, DIAGONAL_RIGHT
+}

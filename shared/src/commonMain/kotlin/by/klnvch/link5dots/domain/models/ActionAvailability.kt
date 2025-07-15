@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 klnvch
+ * Copyright (c) 2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,20 +22,8 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.ui.game
+package by.klnvch.link5dots.domain.models
 
-import android.widget.TextView
-import androidx.databinding.BindingAdapter
-
-object GameBindingAdapters {
-
-    @JvmStatic
-    @BindingAdapter("setLeftDrawable")
-    fun TextView.setLeftDrawable(resId: Int?) {
-        if (resId != null && resId > 0) {
-            setCompoundDrawablesWithIntrinsicBounds(resId, 0, 0, 0)
-        } else {
-            setCompoundDrawablesRelativeWithIntrinsicBounds(null, null, null, null)
-        }
-    }
+enum class ActionAvailability {
+    Gone, Disabled, Available
 }

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2017 klnvch
+ * Copyright (c) 2017-2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -32,11 +32,6 @@ import java.util.List;
 import javax.inject.Inject;
 
 public class Bot {
-
-    //temporary table for dots rate
-    private final int[][] net1;
-    private final int[][] net2;
-    private final Board board;
 
     //masks
     private static final int[][] masks = new int[][]{
@@ -85,6 +80,10 @@ public class Bot {
             new int[]{3, 3, 3, 3, 1, 0, 1, 0, 1},
             new int[]{3, 3, 3, 3, 1, 1, 0, 0, 1}
     };
+    //temporary table for dots rate
+    private final int[][] net1;
+    private final int[][] net2;
+    private final Board board;
 
     @Inject
     public Bot(@NonNull Board board) {
@@ -98,7 +97,7 @@ public class Bot {
         final Dot[][] net = new Dot[board.getWidth()][board.getHeight()];
         for (int i = 0; i < board.getWidth(); i++)
             for (int j = 0; j < board.getHeight(); j++)
-                net[i][j] = new Dot(i, j, Dot.EMPTY, 0);
+                net[i][j] = new DotImpl(i, j, Dot.EMPTY, 0);
 
         for (Dot dot : dots) {
             net[dot.getX()][dot.getY()] = dot;

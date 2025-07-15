@@ -1,0 +1,143 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2025 klnvch
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
+package by.klnvch.link5dots.ui.game
+
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.rememberTransformableState
+import androidx.compose.foundation.gestures.transformable
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.MutableRect
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.Matrix
+import androidx.compose.ui.graphics.drawscope.withTransform
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.imageResource
+import androidx.compose.ui.tooling.preview.Preview
+import by.klnvch.link5dots.R
+
+@Preview()
+@Composable
+fun GameScreen() {
+    val density = LocalDensity.current.density
+    val paperImage = ImageBitmap.imageResource(id = R.drawable.background)
+    val paperSize = paperImage.width.toFloat()
+
+    var matrix by remember { mutableStateOf(Matrix().apply { scale(density, density) }) }
+
+    val state = rememberTransformableState { zoomChange, offsetChange, rotationChange ->
+        matrix *= Matrix().apply {
+            scale(zoomChange, zoomChange)
+            translate(offsetChange.x, offsetChange.y)
+        }
+        matrix = Matrix().apply { setFrom(matrix) }
+    }
+
+    Canvas(
+        modifier = Modifier
+            .background(Color.Gray)
+            .fillMaxSize()
+            .transformable(state = state)
+    ) {
+        matrix.fixScale(density)
+        matrix.fixPosition(size, paperSize)
+
+        withTransform({
+            transform(matrix)
+        }) {
+            drawImage(paperImage)
+        }
+    }
+
+}
+
+private const val MIN_SCALE = 0.2f
+private const val MAX_SCALE = 3.0f
+
+private fun s(density: Float, matrix: Matrix): Float {
+    val scale = matrix[0, 0]
+    if (scale < MIN_SCALE * density) return MIN_SCALE * density / scale
+    if (scale > MAX_SCALE * density) return MAX_SCALE * density / scale
+    return 1.0f
+}
+
+private fun Matrix.fixScale(density: Float) {
+    val s = s(density, this)
+    scale(s, s)
+}
+
+private fun dx(screenWidth: Float, paperRect: MutableRect): Float {
+    if (paperRect.width < screenWidth) {
+        return screenWidth / 2.0f - paperRect.center.x
+    } else {
+        if (paperRect.left > 0) {
+            return -paperRect.left
+        }
+        if (paperRect.right < screenWidth) {
+            return screenWidth - paperRect.right
+        }
+    }
+    return .0f
+}
+
+private fun dy(screenHeight: Float, paperRect: MutableRect): Float {
+    if (paperRect.height < screenHeight) {
+        return screenHeight / 2.0f - paperRect.center.y
+    } else {
+        if (paperRect.top > 0) {
+            return -paperRect.top
+        }
+        if (paperRect.bottom < screenHeight) {
+            return screenHeight - paperRect.bottom
+        }
+    }
+    return .0f
+}
+
+private fun Matrix.fixPosition(screenSize: Size, paperSize: Float) {
+    val paperRect = MutableRect(
+        topLeft = Offset(.0f, .0f),
+        bottomRight = Offset(paperSize, paperSize)
+    )
+
+    map(paperRect)
+
+    val dx = dx(screenSize.width, paperRect)
+    val dy = dy(screenSize.height, paperRect)
+    val translateMatrix = Matrix().apply {
+        translate(dx, dy)
+    }
+
+    this *= translateMatrix
+}

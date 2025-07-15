@@ -24,13 +24,16 @@
 
 package by.klnvch.link5dots.domain.models
 
-data class Dot(
-    val x: Int,
-    val y: Int,
-    val type: Int,
-    val dt: Int,
-) {
-    constructor(p: Point, type: Int, dt: Int) : this(p.x, p.y, type, dt)
+import kotlin.js.ExperimentalJsExport
+import kotlin.js.JsExport
+
+@OptIn(ExperimentalJsExport::class)
+@JsExport()
+interface Dot {
+    val x: Int
+    val y: Int
+    val type: Int
+    val dt: Int
 
     companion object {
         const val EMPTY = 1
@@ -39,19 +42,11 @@ data class Dot(
     }
 }
 
-data class WinningLine(private val points: List<Point>, val type: Int) {
-    val size = points.size
-    operator fun get(i: Int) = points[i]
-    private val first = points.first()
-    private val last = points.last()
-    val orientation = when {
-        first.y == last.y -> WinningLineOrientation.HORIZONTAL
-        first.x == last.x -> WinningLineOrientation.VERTICAL
-        (first.x - last.x) * (first.y - last.y) < 0 -> WinningLineOrientation.DIAGONAL_LEFT
-        else -> WinningLineOrientation.DIAGONAL_RIGHT
-    }
-}
-
-enum class WinningLineOrientation {
-    HORIZONTAL, VERTICAL, DIAGONAL_LEFT, DIAGONAL_RIGHT
+data class DotImpl(
+    override val x: Int,
+    override val y: Int,
+    override val type: Int,
+    override val dt: Int,
+) : Dot {
+    constructor(p: Point, type: Int, dt: Int) : this(p.x, p.y, type, dt)
 }

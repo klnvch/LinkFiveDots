@@ -23,9 +23,11 @@
  */
 package by.klnvch.link5dots.domain.usecases
 
+import by.klnvch.link5dots.domain.models.ActionAvailability
 import by.klnvch.link5dots.domain.models.BotUser
 import by.klnvch.link5dots.domain.models.DeviceOwnerUser
 import by.klnvch.link5dots.domain.models.Dot
+import by.klnvch.link5dots.domain.models.DotImpl
 import by.klnvch.link5dots.domain.models.IUser
 import by.klnvch.link5dots.domain.models.InitialGameGenerator
 import by.klnvch.link5dots.domain.models.NetworkRoom
@@ -62,7 +64,7 @@ abstract class NewGameCommonUseCase(
         if (seed != null) {
             val tp = Point(8, 8)
             return initialGameGenerator.get(seed).map { it.translate(tp) }.withIndex()
-                .map { (i, p) -> Dot(p, if (i % 2 == 0) Dot.HOST else Dot.GUEST, 0) }
+                .map { (i, p) -> DotImpl(p, if (i % 2 == 0) Dot.HOST else Dot.GUEST, 0) }
                 .toMutableList()
         } else {
             return mutableListOf()
