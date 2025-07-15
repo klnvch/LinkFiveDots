@@ -32,63 +32,102 @@ import kotlin.js.JsExport
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport()
-data class PickerViewState(val state: PickerState = createInitialPickerState()) {
+interface PickerViewState {
+    val common: PickerCommonViewState
+    val creation: PickerCreationViewState
+    val scanning: PickerScanningViewState
+}
+
+@OptIn(ExperimentalJsExport::class)
+@JsExport()
+interface PickerCommonViewState {
+    val inProgress: Boolean
+    val msg: String?
+}
+
+@OptIn(ExperimentalJsExport::class)
+@JsExport()
+interface PickerCreationViewState {
+    val targetName: String?
+    val isEnabled: Boolean
+    val isCreateButtonVisible: Boolean
+    val isDeleteButtonVisible: Boolean
+}
+
+@OptIn(ExperimentalJsExport::class)
+@JsExport()
+interface PickerScanningViewState {
+    val isEnabled: Boolean
+    val isStartScanButtonVisible: Boolean
+    val isCancelScanButtonVisible: Boolean
+    val discoveredItems: Array<PickerItemViewState>
+    val isEmptyMessageVisible: Boolean
+}
+
+@OptIn(ExperimentalJsExport::class)
+@JsExport()
+interface PickerItemViewState {
+    val id: Int
+    val descriptor: RemoteRoomDescriptor
+    val shortName: String
+    val longName: String
+    val isBold: Boolean
+}
+
+@OptIn(ExperimentalJsExport::class)
+@JsExport()
+fun PickerState.toPickerViewState(): PickerViewState = PickerViewStateImpl(this)
+
+data class PickerViewStateImpl(val state: PickerState = createInitialPickerState()) :
+    PickerViewState {
     private val isTargetChanging = state.isCreating || state.isDeleting || state.isConnecting
 
-    val common = PickerCommonViewState(
+    override val common = PickerCommonViewStateImpl(
         isTargetChanging || state.isScanning,
         state.error?.message
     )
 
-    val creation = PickerCreationViewState(
+    override val creation = PickerCreationViewStateImpl(
         state.result?.let { "${it.title} ${it.description}" },
         !isTargetChanging && !state.isScanning && !state.isConnected,
         !state.isCreated,
         state.isCreated,
     )
 
-    val scanning = PickerScanningViewState(
+    override val scanning = PickerScanningViewStateImpl(
         !isTargetChanging && !state.isCreated && !state.isConnected,
         !state.isScanning,
         state.isScanning,
-        state.scanResult.mapIndexed { id, d -> PickerItemViewState(id, d) }.toTypedArray(),
+        state.scanResult.mapIndexed { id, d -> PickerItemViewStateImpl(id, d) }.toTypedArray(),
         state.isScanning && state.scanResult.isEmpty(),
     )
 }
 
-@OptIn(ExperimentalJsExport::class)
-@JsExport()
-data class PickerCommonViewState(
-    val inProgress: Boolean,
-    val msg: String?,
-)
+data class PickerCommonViewStateImpl(
+    override val inProgress: Boolean,
+    override val msg: String?,
+) : PickerCommonViewState
 
-@OptIn(ExperimentalJsExport::class)
-@JsExport()
-class PickerCreationViewState(
-    val targetName: String?,
-    val isEnabled: Boolean,
-    val isCreateButtonVisible: Boolean,
-    val isDeleteButtonVisible: Boolean,
-)
+class PickerCreationViewStateImpl(
+    override val targetName: String?,
+    override val isEnabled: Boolean,
+    override val isCreateButtonVisible: Boolean,
+    override val isDeleteButtonVisible: Boolean,
+) : PickerCreationViewState
 
-@OptIn(ExperimentalJsExport::class)
-@JsExport()
-class PickerScanningViewState(
-    val isEnabled: Boolean,
-    val isStartScanButtonVisible: Boolean,
-    val isCancelScanButtonVisible: Boolean,
-    val discoveredItems: Array<PickerItemViewState>,
-    val isEmptyMessageVisible: Boolean,
-)
+class PickerScanningViewStateImpl(
+    override val isEnabled: Boolean,
+    override val isStartScanButtonVisible: Boolean,
+    override val isCancelScanButtonVisible: Boolean,
+    override val discoveredItems: Array<PickerItemViewState>,
+    override val isEmptyMessageVisible: Boolean,
+) : PickerScanningViewState
 
-@OptIn(ExperimentalJsExport::class)
-@JsExport()
-class PickerItemViewState(
-    val id: Int,
-    val descriptor: RemoteRoomDescriptor,
-) {
-    val shortName = descriptor.title
-    val longName = "${descriptor.title} ${descriptor.description}"
-    val isBold = descriptor.isFavorite
+class PickerItemViewStateImpl(
+    override val id: Int,
+    override val descriptor: RemoteRoomDescriptor,
+) : PickerItemViewState {
+    override val shortName = descriptor.title
+    override val longName = "${descriptor.title} ${descriptor.description}"
+    override val isBold = descriptor.isFavorite
 }

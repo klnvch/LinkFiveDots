@@ -27,13 +27,9 @@ package by.klnvch.link5dots.data
 import by.klnvch.link5dots.domain.repositories.RoomKeyGenerator
 import by.klnvch.link5dots.domain.repositories.TimeService
 import by.klnvch.link5dots.platformKeyPart
-import kotlin.js.ExperimentalJsExport
-import kotlin.js.JsExport
 import kotlin.random.Random
 import kotlin.random.nextUInt
 
-@OptIn(ExperimentalJsExport::class)
-@JsExport
 class RoomKeyGeneratorImpl(
     private val timeRepository: TimeService,
 ) : RoomKeyGenerator {

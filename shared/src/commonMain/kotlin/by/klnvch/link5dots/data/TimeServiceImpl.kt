@@ -26,11 +26,7 @@ package by.klnvch.link5dots.data
 
 import by.klnvch.link5dots.currentTime
 import by.klnvch.link5dots.domain.repositories.TimeService
-import kotlin.js.ExperimentalJsExport
-import kotlin.js.JsExport
 
-@OptIn(ExperimentalJsExport::class)
-@JsExport
 class TimeServiceImpl : TimeService {
     override fun now() = currentTime()
 }

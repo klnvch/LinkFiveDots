@@ -55,8 +55,9 @@ import by.klnvch.link5dots.ui.game.activities.ConnectError
 import by.klnvch.link5dots.ui.game.activities.GameScreen
 import by.klnvch.link5dots.ui.game.activities.InitError
 import by.klnvch.link5dots.ui.game.activities.MultiplayerNavigationEvent
-import by.klnvch.link5dots.ui.game.picker.PickerViewState
+import by.klnvch.link5dots.ui.game.picker.PickerViewStateImpl
 import by.klnvch.link5dots.ui.game.picker.states.createInitialPickerState
+import by.klnvch.link5dots.ui.game.picker.toPickerViewState
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -107,8 +108,8 @@ class OnlineGameViewModel @Inject constructor(
     private val _pickerState = MutableStateFlow(createInitialPickerState())
 
     val pickerUiState = _pickerState
-        .map { PickerViewState(it) }
-        .stateIn(viewModelScope, SharingStarted.Eagerly, PickerViewState())
+        .map { it.toPickerViewState() }
+        .stateIn(viewModelScope, SharingStarted.Eagerly, PickerViewStateImpl())
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val uiTitleState = _pickerState.flatMapLatest {
