@@ -50,7 +50,6 @@ import by.klnvch.link5dots.domain.models.DotsStyleType;
 import by.klnvch.link5dots.domain.models.Point;
 import by.klnvch.link5dots.domain.models.WinningLine;
 import by.klnvch.link5dots.models.GameViewState;
-import by.klnvch.link5dots.utils.BitmapCreator;
 
 public class GameView extends View {
 
@@ -58,9 +57,9 @@ public class GameView extends View {
     /**
      * number of lines vertical or horizontal
      */
-    private final float[] mLineLocations = new float[Board.BOARD_SIZE];
-    private final float[] mDotLocations = new float[Board.BOARD_SIZE];
-    private final float[] mArrowLocations = new float[Board.BOARD_SIZE];
+    private final float[] mLineLocations = new float[Board.SIZE];
+    private final float[] mDotLocations = new float[Board.SIZE];
+    private final float[] mArrowLocations = new float[Board.SIZE];
     private final Matrix mDrawMatrix = new Matrix();
     private final PointF mWinningLineD = new PointF(0, 0);
     /**
@@ -120,15 +119,15 @@ public class GameView extends View {
         final int colorBlue = ContextCompat.getColor(context, R.color.dot_color_blue);
         mBitmapPaper = BitmapFactory.decodeResource(getResources(), R.drawable.background);
 
-        userHorLine = BitmapCreator.createBitmap(BitmapCreator.LINE_H, colorRed, density);
-        userVerLine = BitmapCreator.createBitmap(BitmapCreator.LINE_V, colorRed, density);
-        userDiagonal2Line = BitmapCreator.createBitmap(BitmapCreator.LINE_D_L, colorRed, density);
-        userDiagonal1Line = BitmapCreator.createBitmap(BitmapCreator.LINE_D_R, colorRed, density);
+        userHorLine = createBitmap(BitmapType.LINE_H, colorRed, density);
+        userVerLine = createBitmap(BitmapType.LINE_V, colorRed, density);
+        userDiagonal2Line = createBitmap(BitmapType.LINE_D_L, colorRed, density);
+        userDiagonal1Line = createBitmap(BitmapType.LINE_D_R, colorRed, density);
 
-        botHorLine = BitmapCreator.createBitmap(BitmapCreator.LINE_H, colorBlue, density);
-        botVerLine = BitmapCreator.createBitmap(BitmapCreator.LINE_V, colorBlue, density);
-        botDiagonal2Line = BitmapCreator.createBitmap(BitmapCreator.LINE_D_L, colorBlue, density);
-        botDiagonal1Line = BitmapCreator.createBitmap(BitmapCreator.LINE_D_R, colorBlue, density);
+        botHorLine = createBitmap(BitmapType.LINE_H, colorBlue, density);
+        botVerLine = createBitmap(BitmapType.LINE_V, colorBlue, density);
+        botDiagonal2Line = createBitmap(BitmapType.LINE_D_L, colorBlue, density);
+        botDiagonal1Line = createBitmap(BitmapType.LINE_D_R, colorBlue, density);
 
         mBitmapArrows = BitmapFactory.decodeResource(getResources(), R.drawable.arrows);
 
@@ -137,12 +136,17 @@ public class GameView extends View {
         mPaperSize = mBitmapPaper.getWidth();
         mLineSize = userHorLine.getWidth();
         //
-        for (int i = 0; i != Board.BOARD_SIZE; ++i) {
-            mLineLocations[i] = mPaperSize / (2 * Board.BOARD_SIZE) + (i * mPaperSize) / Board.BOARD_SIZE;
+        for (int i = 0; i != Board.SIZE; ++i) {
+            mLineLocations[i] = mPaperSize / (2 * Board.SIZE) + (i * mPaperSize) / Board.SIZE;
             mArrowLocations[i] = mLineLocations[i] - arrowsSize / 2.0f;
         }
 
         setDotsStyleType(DotsStyleType.ORIGINAL);
+    }
+
+    private Bitmap createBitmap(BitmapType type, int color, float density) {
+        GameBitmap bitmap = GameBitmapFactoryKt.createGameBitmap(type, color, density);
+        return Bitmap.createBitmap(bitmap.getBuffer(), bitmap.getSize(), bitmap.getSize(), Bitmap.Config.ARGB_8888);
     }
 
     public void setOnMoveDoneListener(@NonNull OnMoveDoneListener listener) {
@@ -154,14 +158,14 @@ public class GameView extends View {
         final int colorRed = ContextCompat.getColor(getContext(), R.color.dot_color_red);
         final int colorBlue = ContextCompat.getColor(getContext(), R.color.dot_color_blue);
         if (dotsType == DotsStyleType.ORIGINAL) {
-            mBitmapUserDot = BitmapCreator.createBitmap(BitmapCreator.DOT, colorRed, density);
-            mBitmapBotDot = BitmapCreator.createBitmap(BitmapCreator.DOT, colorBlue, density);
+            mBitmapUserDot = createBitmap(BitmapType.DOT, colorRed, density);
+            mBitmapBotDot = createBitmap(BitmapType.DOT, colorBlue, density);
         } else {
-            mBitmapUserDot = BitmapCreator.createBitmap(BitmapCreator.CROSS, colorRed, density);
-            mBitmapBotDot = BitmapCreator.createBitmap(BitmapCreator.RING, colorBlue, density);
+            mBitmapUserDot = createBitmap(BitmapType.CROSS, colorRed, density);
+            mBitmapBotDot = createBitmap(BitmapType.RING, colorBlue, density);
         }
         final float dotSize = mBitmapUserDot.getWidth();
-        for (int i = 0; i != Board.BOARD_SIZE; ++i) {
+        for (int i = 0; i != Board.SIZE; ++i) {
             mDotLocations[i] = mLineLocations[i] - dotSize / 2.0f;
         }
     }

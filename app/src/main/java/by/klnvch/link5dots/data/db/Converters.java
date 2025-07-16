@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 klnvch
+ * Copyright (c) 2023-2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,14 +24,15 @@
 
 package by.klnvch.link5dots.data.db;
 
+import androidx.room.TypeConverter;
+
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.util.List;
 
-import androidx.room.TypeConverter;
-
 import by.klnvch.link5dots.domain.models.Dot;
+import by.klnvch.link5dots.domain.models.DotImpl;
 
 public class Converters {
     @TypeConverter
@@ -41,7 +42,7 @@ public class Converters {
 
     @TypeConverter
     public static List<Dot> stringToList(String dots) {
-        return dots == null ? null : new Gson().fromJson(dots, new TypeToken<List<Dot>>() {
+        return dots == null ? null : new Gson().fromJson(dots, new TypeToken<List<DotImpl>>() {
         }.getType());
     }
 }

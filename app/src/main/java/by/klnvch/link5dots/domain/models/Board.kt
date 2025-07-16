@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 klnvch
+ * Copyright (c) 2023-2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,14 +28,14 @@ import javax.inject.Inject
 
 class Board @Inject constructor() {
 
-    val width = BOARD_SIZE
-    val height = BOARD_SIZE
+    val width = SIZE
+    val height = SIZE
 
     fun isInside(p: Point): Boolean {
         return p.x in 0 until width && p.y in 0 until height
     }
 
     companion object {
-        const val BOARD_SIZE = 20
+        const val SIZE = 20
     }
 }
