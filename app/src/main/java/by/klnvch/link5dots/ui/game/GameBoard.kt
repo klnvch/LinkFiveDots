@@ -25,8 +25,10 @@
 package by.klnvch.link5dots.ui.game
 
 import android.graphics.Bitmap
+import android.util.Log
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.gestures.rememberTransformableState
 import androidx.compose.foundation.gestures.transformable
 import androidx.compose.foundation.layout.fillMaxSize
@@ -44,12 +46,18 @@ import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.Matrix
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.drawscope.withTransform
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.tooling.preview.Preview
 import by.klnvch.link5dots.R
 import by.klnvch.link5dots.domain.models.Dot
 import by.klnvch.link5dots.domain.models.DotImpl
+import by.klnvch.link5dots.domain.models.Point
+import by.klnvch.link5dots.ui.game.utils.invertMap
+import by.klnvch.link5dots.ui.game.utils.postTranslate
+import by.klnvch.link5dots.ui.game.utils.scale
+import by.klnvch.link5dots.ui.game.utils.scaleAndTranslate
 
 @Preview()
 @Composable
@@ -77,13 +85,16 @@ fun GameScreenPreview() {
                 DotImpl(17, 17, Dot.HOST, 0),
                 DotImpl(18, 18, Dot.GUEST, 0),
                 DotImpl(19, 19, Dot.HOST, 0),
-            )
+            ),
         ),
+        onMoveDone = {
+            Log.d("GameBoard", it.toString())
+        },
     )
 }
 
 @Composable
-fun GameBoard(viewState: GameBoardViewState) {
+fun GameBoard(viewState: GameBoardViewState, onMoveDone: (point: Point) -> Unit) {
     val density = LocalDensity.current.density
 
     val paperImage = ImageBitmap.imageResource(id = R.drawable.background)
@@ -97,11 +108,7 @@ fun GameBoard(viewState: GameBoardViewState) {
     var matrix by remember { mutableStateOf(Matrix().apply { scale(density, density) }) }
 
     val state = rememberTransformableState { zoomChange, offsetChange, rotationChange ->
-        matrix *= Matrix().apply {
-            scale(zoomChange, zoomChange)
-            translate(offsetChange.x, offsetChange.y)
-        }
-        matrix = Matrix().apply { setFrom(matrix) }
+        matrix = matrix.scaleAndTranslate(zoomChange, offsetChange)
     }
 
     Canvas(
@@ -109,6 +116,14 @@ fun GameBoard(viewState: GameBoardViewState) {
             .background(Color.Gray)
             .fillMaxSize()
             .transformable(state = state)
+            .pointerInput(Unit) {
+                detectTapGestures(
+                    onTap = { tapOffset ->
+                        val paperPosition = matrix.invertMap(tapOffset)
+                        onMoveDone(paper.toBoardPosition(paperPosition.x, paperPosition.y))
+                    }
+                )
+            }
     ) {
         matrix.fixScale(density)
         matrix.fixPosition(size, paperSize)
@@ -126,18 +141,14 @@ fun GameBoard(viewState: GameBoardViewState) {
 
 }
 
-private const val MIN_SCALE = 0.2f
-private const val MAX_SCALE = 3.0f
-
-private fun s(density: Float, matrix: Matrix): Float {
-    val scale = matrix[0, 0]
-    if (scale < MIN_SCALE * density) return MIN_SCALE * density / scale
-    if (scale > MAX_SCALE * density) return MAX_SCALE * density / scale
-    return 1.0f
-}
-
 private fun Matrix.fixScale(density: Float) {
-    val s = s(density, this)
+    val minScale = 0.2f * density
+    val maxScale = 3.0f * density
+
+    val s = if (scale < minScale) minScale / scale
+    else if (scale > maxScale) maxScale / scale
+    else 1.0f
+
     scale(s, s)
 }
 
@@ -179,11 +190,8 @@ private fun Matrix.fixPosition(screenSize: Size, paperSize: Float) {
 
     val dx = dx(screenSize.width, paperRect)
     val dy = dy(screenSize.height, paperRect)
-    val translateMatrix = Matrix().apply {
-        translate(dx, dy)
-    }
 
-    this *= translateMatrix
+    postTranslate(dx, dy)
 }
 
 private fun GameBitmap.toImageBitmap() = Bitmap

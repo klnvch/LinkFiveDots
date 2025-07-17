@@ -25,8 +25,10 @@
 package by.klnvch.link5dots.ui.game
 
 import by.klnvch.link5dots.domain.models.Dot
+import by.klnvch.link5dots.domain.models.Point
 import kotlin.js.ExperimentalJsExport
 import kotlin.js.JsExport
+import kotlin.math.abs
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport()
@@ -62,4 +64,9 @@ class Paper(sizePx: Int) {
 
     fun toPaperPosition(dot: Dot): PaperPosition =
         PaperPositionImpl(dotLocations[dot.x], dotLocations[dot.y])
+
+    fun toBoardPosition(x: Float, y: Float) = Point(findClosestIndex(x), findClosestIndex(y))
+
+    private fun findClosestIndex(p: Float) =
+        lineLocations.map { abs(p - it) }.withIndex().minBy { it.value }.index
 }
