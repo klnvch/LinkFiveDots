@@ -34,7 +34,7 @@ class CreateOnlineRoomRepositoryImpl(
 ) : CreateOnlineRoomRepository {
     override suspend fun create(room: NetworkRoomInvitation) {
         val remoteRoom = room.mapToOnlineRoomRemote()
-        firebaseDb.set(room.key, remoteRoom)
+        firebaseDb.set(arrayOf(room.key), remoteRoom)
         onlineLocalStore.saveKey(room.key)
     }
 }

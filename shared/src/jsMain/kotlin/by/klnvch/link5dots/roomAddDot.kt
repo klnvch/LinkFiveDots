@@ -24,15 +24,17 @@
 
 package by.klnvch.link5dots
 
-import by.klnvch.link5dots.data.RoomKeyGeneratorImpl
 import by.klnvch.link5dots.data.TimeServiceImpl
-import by.klnvch.link5dots.data.firebase.OnlineRoomRemote
-import by.klnvch.link5dots.data.online.CreateOnlineRoomRepositoryImpl
+import by.klnvch.link5dots.data.online.AddDotOnlineRoomRepositoryImpl
 import by.klnvch.link5dots.data.online.FirebaseDbSet
-import by.klnvch.link5dots.data.online.OnlineLocalStoreWriter
+import by.klnvch.link5dots.data.online.GetOnlineRoomRepositoryImpl
+import by.klnvch.link5dots.data.online.UpdateStateOnlineRoomRepositoryImpl
+import by.klnvch.link5dots.domain.models.Board
+import by.klnvch.link5dots.domain.models.IRoom
+import by.klnvch.link5dots.domain.models.NetworkRoom
+import by.klnvch.link5dots.domain.models.Point
 import by.klnvch.link5dots.domain.repositories.FirebaseAuthManager
-import by.klnvch.link5dots.domain.repositories.UserNameSettings
-import by.klnvch.link5dots.domain.usecases.network.CreateOnlineRoomUseCase
+import by.klnvch.link5dots.domain.usecases.AddDotOnlineUseCase
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.await
@@ -41,41 +43,36 @@ import kotlin.js.Promise
 
 @OptIn(DelicateCoroutinesApi::class, ExperimentalJsExport::class)
 @JsExport()
-fun createMultiplayerRoom(
-    userName: String?,
+fun roomAddDot(
     firebaseUserId: String,
-    onSaveRoom: (key: String, room: OnlineRoomRemote) -> Promise<Unit>,
-): Promise<String> {
-    val userNameSettings = object : UserNameSettings {
-        override suspend fun getUserName() = userName
-    }
-    val timeService = TimeServiceImpl()
-    val roomKeyGenerator = RoomKeyGeneratorImpl(timeService)
+    room: IRoom,
+    p: Point,
+    onSaveToDb: (key: String, room: Any) -> Promise<Unit>,
+): Promise<Unit> {
     val firebaseAuthManager = object : FirebaseAuthManager {
         override fun getUserId() = firebaseUserId
     }
+    val timeService = TimeServiceImpl()
+    val board = Board()
 
     val firebaseDb = object : FirebaseDbSet {
-        override suspend fun set(key: String, room: OnlineRoomRemote) {
-            onSaveRoom(key, room).await()
+        override suspend fun set(path: Array<String>, value: Any) {
+            onSaveToDb(path.joinToString("/"), value).await()
         }
     }
+    val addDotRepository = AddDotOnlineRoomRepositoryImpl(firebaseDb)
+    val updateStateRepository = UpdateStateOnlineRoomRepositoryImpl(firebaseDb)
+    val getRepository = GetOnlineRoomRepositoryImpl()
+    getRepository.room = room as NetworkRoom
 
-    return Promise { resolve, reject ->
-        val onlineLocalStore = object : OnlineLocalStoreWriter {
-            override suspend fun saveKey(key: String) = resolve(key)
-        }
+    val useCase = AddDotOnlineUseCase(
+        firebaseAuthManager,
+        timeService,
+        board,
+        addDotRepository,
+        updateStateRepository,
+        getRepository,
+    )
 
-        val repository = CreateOnlineRoomRepositoryImpl(firebaseDb, onlineLocalStore)
-
-        val useCase = CreateOnlineRoomUseCase(
-            userNameSettings,
-            timeService,
-            roomKeyGenerator,
-            firebaseAuthManager,
-            repository,
-        )
-
-        GlobalScope.launch { useCase.create() }
-    }
+    return Promise { resolve, reject -> GlobalScope.launch { useCase.addDot(room, p) } }
 }

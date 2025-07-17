@@ -23,21 +23,15 @@
  */
 package by.klnvch.link5dots.domain.repositories
 
-import by.klnvch.link5dots.domain.models.Dot
 import by.klnvch.link5dots.domain.models.NetworkRoom
 import by.klnvch.link5dots.domain.models.NetworkRoomState
 import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
-import by.klnvch.link5dots.domain.models.RoomState
 import kotlinx.coroutines.flow.Flow
 
 interface OnlineRoomRepository {
     val state: Flow<NetworkRoomState>
-    suspend fun getKey(): String?
-    suspend fun updateState(state: RoomState)
     suspend fun isConnected(): Boolean
     fun get(): Flow<NetworkRoom>
-    fun getRoom(): NetworkRoom?
-    suspend fun addDot(key: String, position: Int, dot: Dot)
     fun getRemoteRooms(): Flow<List<RemoteRoomDescriptor>>
     fun delete()
     fun finish()

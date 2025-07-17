@@ -26,20 +26,28 @@ package by.klnvch.link5dots.di
 
 import by.klnvch.link5dots.data.RoomKeyGeneratorImpl
 import by.klnvch.link5dots.data.TimeServiceImpl
+import by.klnvch.link5dots.data.online.AddDotOnlineRoomRepositoryImpl
 import by.klnvch.link5dots.data.online.ConnectOnlineRoomRepositoryImpl
 import by.klnvch.link5dots.data.online.CreateOnlineRoomRepositoryImpl
 import by.klnvch.link5dots.data.online.FirebaseDbSet
 import by.klnvch.link5dots.data.online.FirebaseDbUpdate
+import by.klnvch.link5dots.data.online.GetOnlineRoomRepositoryImpl
 import by.klnvch.link5dots.data.online.OnlineLocalStore
 import by.klnvch.link5dots.data.online.OnlineLocalStoreWriter
+import by.klnvch.link5dots.data.online.UpdateStateOnlineRoomRepositoryImpl
+import by.klnvch.link5dots.domain.models.Board
+import by.klnvch.link5dots.domain.repositories.AddDotOnlineRoomRepository
 import by.klnvch.link5dots.domain.repositories.ConnectOnlineRoomRepository
 import by.klnvch.link5dots.domain.repositories.CreateOnlineRoomRepository
 import by.klnvch.link5dots.domain.repositories.FirebaseAuthManager
 import by.klnvch.link5dots.domain.repositories.FirebaseManager
+import by.klnvch.link5dots.domain.repositories.GetOnlineRoomRepository
 import by.klnvch.link5dots.domain.repositories.RoomKeyGenerator
 import by.klnvch.link5dots.domain.repositories.Settings
 import by.klnvch.link5dots.domain.repositories.TimeService
+import by.klnvch.link5dots.domain.repositories.UpdateStateOnlineRoomRepository
 import by.klnvch.link5dots.domain.repositories.UserNameSettings
+import by.klnvch.link5dots.domain.usecases.AddDotOnlineUseCase
 import by.klnvch.link5dots.domain.usecases.network.ConnectOnlineRoomUseCase
 import by.klnvch.link5dots.domain.usecases.network.CreateOnlineRoomUseCase
 import dagger.Module
@@ -95,6 +103,24 @@ class AppBindingModule2 {
 
     @Singleton
     @Provides
+    fun provideAddDotOnlineUseCase(
+        firebaseAuthManager: FirebaseAuthManager,
+        timeService: TimeService,
+        board: Board,
+        addDotRepository: AddDotOnlineRoomRepository,
+        updateStateRepository: UpdateStateOnlineRoomRepository,
+        getRepository: GetOnlineRoomRepository,
+    ) = AddDotOnlineUseCase(
+        firebaseAuthManager,
+        timeService,
+        board,
+        addDotRepository,
+        updateStateRepository,
+        getRepository
+    )
+
+    @Singleton
+    @Provides
     fun provideOnlineLocalStoreWriter(store: OnlineLocalStore): OnlineLocalStoreWriter = store
 
     @Singleton
@@ -110,4 +136,25 @@ class AppBindingModule2 {
         firebaseDb: FirebaseDbUpdate,
         onlineLocalStore: OnlineLocalStore,
     ): ConnectOnlineRoomRepository = ConnectOnlineRoomRepositoryImpl(firebaseDb, onlineLocalStore)
+
+    @Singleton
+    @Provides
+    fun provideAddDotOnlineRoomRepository(
+        firebaseDb: FirebaseDbSet,
+    ): AddDotOnlineRoomRepository = AddDotOnlineRoomRepositoryImpl(firebaseDb)
+
+    @Singleton
+    @Provides
+    fun provideUpdateStateOnlineRoomRepository(
+        firebaseDb: FirebaseDbSet,
+    ): UpdateStateOnlineRoomRepository = UpdateStateOnlineRoomRepositoryImpl(firebaseDb)
+
+    @Singleton
+    @Provides
+    fun provideGetOnlineRoomRepositoryImpl(): GetOnlineRoomRepository =
+        GetOnlineRoomRepositoryImpl()
+
+    @Singleton
+    @Provides
+    fun provideBoard() = Board()
 }

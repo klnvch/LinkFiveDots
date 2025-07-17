@@ -31,19 +31,24 @@ import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import by.klnvch.link5dots.domain.models.RoomState
-import by.klnvch.link5dots.domain.repositories.OnlineRoomRepository
+import by.klnvch.link5dots.domain.repositories.UpdateStateOnlineRoomRepository
+import kotlinx.coroutines.flow.firstOrNull
 import javax.inject.Inject
 
 class CleanUpOnlineRoomWorker @Inject constructor(
     appContext: Context,
     private val params: WorkerParameters,
-    private val repository: OnlineRoomRepository,
+    private val onlineLocalStore: OnlineLocalStore,
+    private val repository: UpdateStateOnlineRoomRepository,
 ) : CoroutineWorker(appContext, params) {
 
     override suspend fun doWork(): Result {
+        val key = onlineLocalStore.getKey().firstOrNull()
         val ordinal = params.inputData.getInt(ROOM_STATE, -1)
-        val state = RoomState.entries[ordinal]
-        repository.updateState(state)
+        if (key != null && ordinal >= 0) {
+            val state = RoomState.entries[ordinal]
+            repository.update(key, state)
+        }
         return Result.success()
     }
 

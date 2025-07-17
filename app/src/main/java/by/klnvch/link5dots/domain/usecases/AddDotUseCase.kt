@@ -31,20 +31,13 @@ import by.klnvch.link5dots.domain.models.IRoom
 import by.klnvch.link5dots.domain.models.NetworkRoomExtended
 import by.klnvch.link5dots.domain.models.Point
 import by.klnvch.link5dots.domain.models.Room
-import by.klnvch.link5dots.domain.models.RoomState
-import by.klnvch.link5dots.domain.models.findWinningLine
 import by.klnvch.link5dots.domain.repositories.BluetoothRoomRepository
 import by.klnvch.link5dots.domain.repositories.NsdRoomRepository
-import by.klnvch.link5dots.domain.repositories.OnlineRoomRepository
 import by.klnvch.link5dots.domain.repositories.RoomRepository
 import by.klnvch.link5dots.domain.repositories.TimeService
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
-
-interface AddDotUseCase {
-    suspend fun addDot(room: IRoom, p: Point)
-}
 
 class AddDotInfoUseCase @Inject constructor() : AddDotUseCase {
     override suspend fun addDot(room: IRoom, p: Point) = Unit
@@ -79,22 +72,6 @@ abstract class AddDotMultiplayerUseCase(
             }
         } else {
             throw IllegalStateException("Wrong room type")
-        }
-    }
-}
-
-class AddDotOnlineUseCase @Inject constructor(
-    timeRepository: TimeService,
-    board: Board,
-    private val repository: OnlineRoomRepository,
-) : AddDotMultiplayerUseCase(timeRepository, board) {
-
-    override suspend fun addMultiplayerDot(room: IRoom, dot: Dot) {
-        val key = room.key
-        val dots = room.dots
-        repository.addDot(key, dots.size, dot)
-        if ((dots + dot).findWinningLine() != null) {
-            repository.updateState(RoomState.FINISHED)
         }
     }
 }

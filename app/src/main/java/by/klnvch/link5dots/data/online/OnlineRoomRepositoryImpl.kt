@@ -26,10 +26,7 @@ package by.klnvch.link5dots.data.online
 import android.content.Context
 import by.klnvch.link5dots.BuildConfig
 import by.klnvch.link5dots.data.firebase.OnlineRoomRemote
-import by.klnvch.link5dots.data.firebase.mapToOnlineDotRemote
 import by.klnvch.link5dots.data.online.CleanUpOnlineRoomWorker.Companion.launchCleanUpOnlineRoomWorker
-import by.klnvch.link5dots.domain.models.Dot
-import by.klnvch.link5dots.domain.models.NetworkRoom
 import by.klnvch.link5dots.domain.models.NetworkRoomStateDeleted
 import by.klnvch.link5dots.domain.models.NetworkRoomStateFinished
 import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
@@ -49,8 +46,6 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
-import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 class OnlineRoomRepositoryImpl @Inject constructor(
@@ -60,36 +55,22 @@ class OnlineRoomRepositoryImpl @Inject constructor(
 ) : OnlineRoomRepository {
     private val path = if (BuildConfig.DEBUG) "rooms_debug" else "rooms_v2"
     private val reference = Firebase.database.reference.child(path)
-    private var _room: NetworkRoom? = null
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    private val roomListener: Flow<NetworkRoom> =
-        onlineLocalStore.getKey().filterNotNull().flatMapLatest { key ->
-            reference.child(key).snapshots
-                .map { it }
-                .map { it.toRemoteRoomItem() }
-                .mapNotNull { it.mapToNetworkRoom() }
-        }
+    override fun get() = onlineLocalStore.getKey().filterNotNull().flatMapLatest { key ->
+        reference.child(key).snapshots
+            .map { it }
+            .map { it.toRemoteRoomItem() }
+            .mapNotNull { it.mapToNetworkRoom() }
+    }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
-    override fun get() = roomListener
-        .onEach { this._room = it }
-
-    override val state = roomListener.map {
+    override val state = get().map {
         val state = it.toNetworkRoomState(stringRepository.getUnknownName())
         if (state is NetworkRoomStateDeleted || state is NetworkRoomStateFinished) {
             onlineLocalStore.clearKey()
         }
         return@map state
     }.distinctUntilChanged()
-
-    override suspend fun getKey(): String? = onlineLocalStore.getKey().first()
-
-    override suspend fun updateState(state: RoomState) {
-        onlineLocalStore.getKey().first()?.let {
-            reference.child(it).child(CHILD_STATE).setValue(state.ordinal).await()
-        }
-    }
 
     override fun getRemoteRooms(): Flow<List<RemoteRoomDescriptor>> = reference
         .orderByChild(CHILD_STATE)
@@ -102,17 +83,6 @@ class OnlineRoomRepositoryImpl @Inject constructor(
     override suspend fun isConnected() =
         Firebase.database.getReference(".info/connected").values<Boolean>().first() == true
 
-    override fun getRoom() = this._room
-
-    override suspend fun addDot(key: String, position: Int, dot: Dot) {
-        reference
-            .child(key)
-            .child(CHILD_DOTS)
-            .child(position.toString())
-            .setValue(dot.mapToOnlineDotRemote())
-            .await()
-    }
-
     override fun delete() = context.launchCleanUpOnlineRoomWorker(RoomState.DELETED)
 
     override fun finish() = context.launchCleanUpOnlineRoomWorker(RoomState.FINISHED)
@@ -124,6 +94,5 @@ class OnlineRoomRepositoryImpl @Inject constructor(
 
     companion object {
         private const val CHILD_STATE = "state"
-        private const val CHILD_DOTS = "dots"
     }
 }

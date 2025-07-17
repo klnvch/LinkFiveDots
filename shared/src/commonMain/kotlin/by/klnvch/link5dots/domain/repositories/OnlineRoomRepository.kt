@@ -24,9 +24,12 @@
 
 package by.klnvch.link5dots.domain.repositories
 
+import by.klnvch.link5dots.domain.models.Dot
+import by.klnvch.link5dots.domain.models.NetworkRoom
 import by.klnvch.link5dots.domain.models.NetworkRoomInvitation
 import by.klnvch.link5dots.domain.models.NetworkUser
 import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
+import by.klnvch.link5dots.domain.models.RoomState
 
 interface CreateOnlineRoomRepository {
     suspend fun create(room: NetworkRoomInvitation)
@@ -34,4 +37,16 @@ interface CreateOnlineRoomRepository {
 
 interface ConnectOnlineRoomRepository {
     suspend fun connect(descriptor: RemoteRoomDescriptor, user2: NetworkUser)
+}
+
+interface AddDotOnlineRoomRepository {
+    suspend fun addDot(key: String, position: Int, dot: Dot)
+}
+
+interface UpdateStateOnlineRoomRepository {
+    suspend fun update(key: String, state: RoomState)
+}
+
+interface GetOnlineRoomRepository {
+    var room: NetworkRoom?
 }

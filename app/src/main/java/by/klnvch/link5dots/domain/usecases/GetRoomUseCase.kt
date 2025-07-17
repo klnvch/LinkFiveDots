@@ -28,6 +28,7 @@ import by.klnvch.link5dots.domain.models.NetworkRoomExtended
 import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
 import by.klnvch.link5dots.domain.repositories.BluetoothRoomRepository
 import by.klnvch.link5dots.domain.repositories.FirebaseManager
+import by.klnvch.link5dots.domain.repositories.GetOnlineRoomRepository
 import by.klnvch.link5dots.domain.repositories.NsdRoomRepository
 import by.klnvch.link5dots.domain.repositories.OnlineRoomRepository
 import by.klnvch.link5dots.domain.repositories.RoomRepository
@@ -51,10 +52,12 @@ class GetRoomOfflineUseCase @Inject constructor(
 
 class GetRoomOnlineUseCase @Inject constructor(
     private val repository: OnlineRoomRepository,
+    private val getRepository: GetOnlineRoomRepository,
     private val firebaseManager: FirebaseManager,
 ) : GetRoomUseCase {
     override fun get(param: RoomParam) = when (param) {
         is RoomByDescriptor -> repository.get()
+            .onEach { getRepository.room = it }
             .map { NetworkRoomExtended(it, firebaseManager.getUserId()) }
 
         else -> throw IllegalArgumentException("Wrong param")

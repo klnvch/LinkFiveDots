@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023-2025 klnvch
+ * Copyright (c) 2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,10 +24,7 @@
 
 package by.klnvch.link5dots.domain.models
 
-import javax.inject.Inject
-
-class Board @Inject constructor() {
-
+class Board() {
     val width = SIZE
     val height = SIZE
 

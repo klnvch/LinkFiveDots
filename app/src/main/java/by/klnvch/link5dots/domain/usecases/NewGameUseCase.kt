@@ -38,8 +38,8 @@ import by.klnvch.link5dots.domain.models.RoomState
 import by.klnvch.link5dots.domain.models.RoomType
 import by.klnvch.link5dots.domain.models.translate
 import by.klnvch.link5dots.domain.repositories.BluetoothRoomRepository
+import by.klnvch.link5dots.domain.repositories.GetOnlineRoomRepository
 import by.klnvch.link5dots.domain.repositories.NsdRoomRepository
-import by.klnvch.link5dots.domain.repositories.OnlineRoomRepository
 import by.klnvch.link5dots.domain.repositories.RoomKeyGenerator
 import by.klnvch.link5dots.domain.repositories.RoomRepository
 import by.klnvch.link5dots.domain.repositories.Settings
@@ -129,12 +129,12 @@ class NewGameTwoUseCase @Inject constructor(
 }
 
 class NewGameOnlineUseCase @Inject constructor(
-    private val repository: OnlineRoomRepository,
+    private val repository: GetOnlineRoomRepository,
 ) : NewGameUseCase {
     override suspend fun create(seed: Long?) = throw IllegalStateException()
     override val actionAvailability
         get() =
-            if (repository.getRoom()?.isOver() == true) ActionAvailability.Available
+            if (repository.room?.isOver() == true) ActionAvailability.Available
             else ActionAvailability.Disabled
 }
 

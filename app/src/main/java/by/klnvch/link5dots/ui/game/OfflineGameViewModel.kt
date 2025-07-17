@@ -136,14 +136,8 @@ open class OfflineGameViewModel @Inject constructor(
         }
     }
 
-    fun addDot(dot: Point) {
-        analytics.logEvent(Analytics.EVENT_NEW_MOVE)
-        viewModelScope.launch {
-            val room = roomFlow.firstOrNull()
-            if (room != null) {
-                addDotUseCase.addDot(room, dot)
-            }
-        }
+    fun addDot(p: Point) {
+        viewModelScope.launch { roomFlow.firstOrNull()?.let { addDotUseCase.addDot(it, p) } }
     }
 
     fun getNewGameViewState(): NewGameViewState {
