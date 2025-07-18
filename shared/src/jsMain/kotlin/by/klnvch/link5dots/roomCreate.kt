@@ -62,7 +62,7 @@ fun roomCreate(
 
     return Promise { resolve, reject ->
         val onlineLocalStore = object : OnlineLocalStoreWriter {
-            override suspend fun saveKey(key: String) = resolve(key)
+            override suspend fun save(key: String) = resolve(key)
         }
 
         val repository = CreateOnlineRoomRepositoryImpl(firebaseDb, onlineLocalStore)

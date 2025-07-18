@@ -24,8 +24,7 @@
 
 package by.klnvch.link5dots.data.online
 
-import by.klnvch.link5dots.data.firebase.OnlineRoomRemote
-import by.klnvch.link5dots.data.firebase.mapToNetworkRoom
+import by.klnvch.link5dots.data.firebase.RemoteRoomItem
 import by.klnvch.link5dots.data.firebase.mapToNetworkRoomInvitation
 import by.klnvch.link5dots.domain.models.INetworkRoomInvitation
 import by.klnvch.link5dots.domain.models.NetworkRoom
@@ -56,14 +55,6 @@ fun INetworkRoomInvitation.createDescriptor(defaultName: String) = OnlineRoomDes
     false,
     key,
 )
-
-@OptIn(ExperimentalJsExport::class)
-@JsExport()
-data class RemoteRoomItem(val key: String?, val value: OnlineRoomRemote?)
-
-fun RemoteRoomItem.mapToNetworkRoomInvitation() = key?.let { value?.mapToNetworkRoomInvitation(it) }
-
-fun RemoteRoomItem.mapToNetworkRoom(): NetworkRoom? = key?.let { value?.mapToNetworkRoom(it) }
 
 fun mapToDescriptors(items: List<RemoteRoomItem>, defaultName: String) = items
     .mapNotNull { it.mapToNetworkRoomInvitation() }

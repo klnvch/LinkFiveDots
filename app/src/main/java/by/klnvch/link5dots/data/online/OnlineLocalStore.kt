@@ -35,17 +35,19 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class OnlineLocalStore @Inject constructor(private val context: Context) : OnlineLocalStoreWriter {
+class OnlineLocalStore @Inject constructor(
+    private val context: Context,
+) : OnlineLocalStoreWriter, OnlineLocalStoreRemover {
     private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "online")
     private val keyKey = stringPreferencesKey("key")
 
-    override suspend fun saveKey(key: String) {
+    override suspend fun save(key: String) {
         context.dataStore.edit { it[keyKey] = key }
     }
 
-    suspend fun clearKey() {
-        context.dataStore.edit { it[keyKey] = "" }
+    override suspend fun clear() {
+        context.dataStore.edit { it.remove(keyKey) }
     }
 
-    fun getKey() = context.dataStore.data.map { it[keyKey]?.ifEmpty { null } }
+    fun getKey() = context.dataStore.data.map { it[keyKey] }
 }

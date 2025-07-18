@@ -56,8 +56,6 @@ interface GameBoardViewState {
     val lastDot: Dot?
 }
 
-@OptIn(ExperimentalJsExport::class)
-@JsExport()
 fun createGameViewState(
     dotsStyleType: DotsStyleType,
     user1Name: String?,
@@ -67,7 +65,7 @@ fun createGameViewState(
     GameInfoViewStateImpl(dotsStyleType, user1Name, user2Name),
     GameBoardViewStateImpl(
         dotsStyleType,
-        room?.isNew != false,
+        room?.isNew() != false,
         room?.dots?.toTypedArray() ?: emptyArray(),
         room?.getWinningLine(),
     ),

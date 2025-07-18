@@ -27,6 +27,8 @@ package by.klnvch.link5dots.domain.models
 import kotlin.js.ExperimentalJsExport
 import kotlin.js.JsExport
 
+@OptIn(ExperimentalJsExport::class)
+@JsExport()
 interface INetworkRoomInvitation {
     val key: String
     val timestamp: Double
@@ -34,6 +36,8 @@ interface INetworkRoomInvitation {
     val type: Int // TODO: delete it
 }
 
+@OptIn(ExperimentalJsExport::class)
+@JsExport()
 interface INetworkRoom : INetworkRoomInvitation, IRoom {
     override val dots: List<Dot>
     override val user2: NetworkUser?
@@ -49,6 +53,8 @@ data class NetworkRoomInvitation(
     override val type: Int,
 ) : INetworkRoomInvitation
 
+@OptIn(ExperimentalJsExport::class)
+@JsExport()
 data class NetworkRoom(
     override val key: String,
     override val timestamp: Double,

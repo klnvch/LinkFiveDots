@@ -30,6 +30,22 @@ import by.klnvch.link5dots.domain.models.NetworkRoom
 import by.klnvch.link5dots.domain.models.NetworkRoomInvitation
 import by.klnvch.link5dots.domain.models.NetworkUser
 import by.klnvch.link5dots.domain.models.RoomState
+import kotlin.js.ExperimentalJsExport
+import kotlin.js.JsExport
+
+@OptIn(ExperimentalJsExport::class)
+@JsExport()
+data class RemoteRoomItem(val key: String?, val value: Any?)
+
+fun RemoteRoomItem.mapToNetworkRoomInvitation(): NetworkRoomInvitation? =
+    key?.let { value?.mapToOnlineRoomRemote()?.mapToNetworkRoomInvitation(it) }
+
+@OptIn(ExperimentalJsExport::class)
+@JsExport()
+fun RemoteRoomItem.mapToNetworkRoom(): NetworkRoom? =
+    key?.let { value?.mapToOnlineRoomRemote()?.mapToNetworkRoom(it) }
+
+expect fun Any.mapToOnlineRoomRemote(): OnlineRoomRemote
 
 fun NetworkRoomInvitation.mapToOnlineRoomRemote() = OnlineRoomRemote(
     RoomState.CREATED.ordinal,
@@ -41,7 +57,7 @@ fun NetworkRoomInvitation.mapToOnlineRoomRemote() = OnlineRoomRemote(
 
 fun NetworkUser.mapToOnlineRemoteUser() = OnlineRemoteUser(id, name)
 
-fun OnlineRemoteUser.mapToNetworkUser() = id?.let { NetworkUser(it, name ?: "") }
+fun OnlineRemoteUser.mapToNetworkUser() = id?.let { NetworkUser(it, name) }
 
 fun OnlineRoomRemote.mapToNetworkRoomInvitation(key: String): NetworkRoomInvitation? {
     val user1 = user1?.mapToNetworkUser()
@@ -52,7 +68,7 @@ fun OnlineRoomRemote.mapToNetworkRoomInvitation(key: String): NetworkRoomInvitat
 }
 
 fun OnlineRoomRemote.mapToNetworkRoom(key: String): NetworkRoom {
-    val timestamp = time ?: throw IllegalArgumentException("timestamp is null")
+    val timestamp = time ?: throw IllegalArgumentException("time is null")
     val user1 = user1?.mapToNetworkUser() ?: throw IllegalArgumentException("user1 is null")
     val user2 = user2?.mapToNetworkUser()
     val state = RoomState.entries[state ?: throw IllegalArgumentException("state is null")]

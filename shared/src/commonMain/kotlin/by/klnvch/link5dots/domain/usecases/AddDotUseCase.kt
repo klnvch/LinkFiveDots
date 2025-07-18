@@ -54,13 +54,22 @@ class AddDotOnlineUseCase(
         getRepository.room?.let { room ->
             if (board.isInside(p) && room.isFree(p) && room.isNotOver()) {
                 val userId = firebaseAuthManager.getUserId()
-                val dt = (timeService.now() - room.timestamp).toInt()
-                if (room.user1.id == userId) Dot.HOST else Dot.GUEST
-                val dot = DotImpl(p, Dot.GUEST, dt)
 
-                addDotRepository.addDot(room.key, room.dots.size, dot)
-                if ((room.dots + dot).findWinningLine() != null) {
-                    updateStateRepository.update(room.key, RoomState.FINISHED)
+                val type = if (room.user1.id == userId && room.dots.size % 2 == 0) {
+                    Dot.HOST
+                } else if (room.user2?.id == userId && room.dots.size % 2 == 1) {
+                    Dot.GUEST
+                } else {
+                    null
+                }
+
+                type?.let { type ->
+                    val dt = (timeService.now() - room.timestamp).toInt()
+                    val dot = DotImpl(p, type, dt)
+                    addDotRepository.addDot(room.key, room.dots.size, dot)
+                    if ((room.dots + dot).findWinningLine() != null) {
+                        updateStateRepository.update(room.key, RoomState.FINISHED)
+                    }
                 }
             }
         }

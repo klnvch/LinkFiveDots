@@ -26,6 +26,8 @@ package by.klnvch.link5dots.data.online
 import android.content.Context
 import by.klnvch.link5dots.BuildConfig
 import by.klnvch.link5dots.data.firebase.OnlineRoomRemote
+import by.klnvch.link5dots.data.firebase.RemoteRoomItem
+import by.klnvch.link5dots.data.firebase.mapToNetworkRoom
 import by.klnvch.link5dots.data.online.CleanUpOnlineRoomWorker.Companion.launchCleanUpOnlineRoomWorker
 import by.klnvch.link5dots.domain.models.NetworkRoomStateDeleted
 import by.klnvch.link5dots.domain.models.NetworkRoomStateFinished
@@ -67,7 +69,7 @@ class OnlineRoomRepositoryImpl @Inject constructor(
     override val state = get().map {
         val state = it.toNetworkRoomState(stringRepository.getUnknownName())
         if (state is NetworkRoomStateDeleted || state is NetworkRoomStateFinished) {
-            onlineLocalStore.clearKey()
+            onlineLocalStore.clear()
         }
         return@map state
     }.distinctUntilChanged()
@@ -87,10 +89,8 @@ class OnlineRoomRepositoryImpl @Inject constructor(
 
     override fun finish() = context.launchCleanUpOnlineRoomWorker(RoomState.FINISHED)
 
-    private fun DataSnapshot.toRemoteRoomItem() = RemoteRoomItem(
-        key,
-        getValue(OnlineRoomRemote::class.java),
-    )
+    private fun DataSnapshot.toRemoteRoomItem() =
+        RemoteRoomItem(key, getValue(OnlineRoomRemote::class.java))
 
     companion object {
         private const val CHILD_STATE = "state"

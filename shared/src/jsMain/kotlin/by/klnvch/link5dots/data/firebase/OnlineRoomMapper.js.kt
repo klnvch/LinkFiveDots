@@ -24,21 +24,13 @@
 
 package by.klnvch.link5dots.data.firebase
 
-class OnlineRoomRemote(
-    val state: Int? = null,
-    val dots: List<OnlineDotRemote>? = null,
-    val time: Double? = null,
-    val user1: OnlineRemoteUser? = null,
-    val user2: OnlineRemoteUser? = null,
-)
-
-data class OnlineDotRemote(
-    val dt: Int? = null,
-    val x: Int? = null,
-    val y: Int? = null,
-)
-
-data class OnlineRemoteUser(
-    val id: String? = null,
-    val name: String? = null,
-)
+actual fun Any.mapToOnlineRoomRemote(): OnlineRoomRemote {
+    val jsRoom = this.asDynamic()
+    return OnlineRoomRemote(
+        jsRoom.state as Int,
+        jsRoom.dots?.toList(),
+        jsRoom.time as Double,
+        if (jsRoom.user1 != null) OnlineRemoteUser(jsRoom.user1.id, jsRoom.user1.name) else null,
+        if (jsRoom.user2 != null) OnlineRemoteUser(jsRoom.user2.id, jsRoom.user2.name) else null,
+    )
+}

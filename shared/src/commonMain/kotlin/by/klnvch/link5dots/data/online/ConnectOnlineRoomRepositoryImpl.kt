@@ -41,6 +41,6 @@ class ConnectOnlineRoomRepositoryImpl(
             "user2" to user2.mapToOnlineRemoteUser()
         )
         firebaseDb.update(arrayOf(key), update)
-        onlineLocalStore.saveKey(key)
+        onlineLocalStore.save(key)
     }
 }

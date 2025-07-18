@@ -24,21 +24,4 @@
 
 package by.klnvch.link5dots.data.firebase
 
-class OnlineRoomRemote(
-    val state: Int? = null,
-    val dots: List<OnlineDotRemote>? = null,
-    val time: Double? = null,
-    val user1: OnlineRemoteUser? = null,
-    val user2: OnlineRemoteUser? = null,
-)
-
-data class OnlineDotRemote(
-    val dt: Int? = null,
-    val x: Int? = null,
-    val y: Int? = null,
-)
-
-data class OnlineRemoteUser(
-    val id: String? = null,
-    val name: String? = null,
-)
+actual fun Any.mapToOnlineRoomRemote(): OnlineRoomRemote = this as OnlineRoomRemote
