@@ -69,7 +69,7 @@ open class OfflineGameViewModel @Inject constructor(
     private val _searchQueryFlow = MutableSharedFlow<RoomParam>(1)
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    private val roomFlowGuard = _searchQueryFlow.flatMapLatest { getRoomUseCase.get(it) }
+    protected val roomFlowGuard = _searchQueryFlow.flatMapLatest { getRoomUseCase.get(it) }
 
     protected val roomFlow = roomFlowGuard.filterNotNull()
 

@@ -50,6 +50,8 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.IntSize
 import by.klnvch.link5dots.R
 import by.klnvch.link5dots.domain.models.Dot
 import by.klnvch.link5dots.domain.models.DotImpl
@@ -97,6 +99,7 @@ fun GameScreenPreview() {
 fun GameBoard(viewState: GameBoardViewState, onMoveDone: (point: Point) -> Unit) {
     val density = LocalDensity.current.density
 
+    val arrowsImage = ImageBitmap.imageResource(id = R.drawable.arrows)
     val paperImage = ImageBitmap.imageResource(id = R.drawable.background)
     val paper = Paper(paperImage.width)
 
@@ -134,7 +137,14 @@ fun GameBoard(viewState: GameBoardViewState, onMoveDone: (point: Point) -> Unit)
             drawImage(paperImage)
             for (dot in viewState.dots) {
                 val dotImage = if (dot.type == Dot.HOST) user1Image else user2Image
-                drawImage(dotImage, topLeft = dot.toOffset(paper))
+                drawImage(dotImage, topLeft = dot.toDotOffset(paper))
+            }
+            viewState.lastDot?.let {
+                drawImage(
+                    image = arrowsImage,
+                    dstSize = IntSize(37, 37),
+                    dstOffset = it.toArrowsOffset(paper)
+                )
             }
         }
     }
@@ -199,4 +209,6 @@ private fun GameBitmap.toImageBitmap() = Bitmap
     .asImageBitmap()
 
 private fun PaperPosition.toOffset() = Offset(x, y)
-private fun Dot.toOffset(paper: Paper) = paper.toPaperPosition(this).toOffset()
+private fun PaperPosition.toIntOffset() = IntOffset(x.toInt(), y.toInt())
+private fun Dot.toDotOffset(paper: Paper) = paper.toDotPaperPosition(this).toOffset()
+private fun Dot.toArrowsOffset(paper: Paper) = paper.toArrowsPaperPosition(this).toIntOffset()

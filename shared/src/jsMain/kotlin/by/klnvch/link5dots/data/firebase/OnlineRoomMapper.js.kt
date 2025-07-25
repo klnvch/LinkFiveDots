@@ -24,12 +24,19 @@
 
 package by.klnvch.link5dots.data.firebase
 
+import kotlin.js.collections.JsArray
+import kotlin.js.collections.toList
+
+@OptIn(ExperimentalJsCollectionsApi::class)
 actual fun Any.mapToOnlineRoomRemote(): OnlineRoomRemote {
     val jsRoom = this.asDynamic()
     return OnlineRoomRemote(
-        jsRoom.state as Int,
-        jsRoom.dots?.toList(),
-        jsRoom.time as Double,
+        jsRoom.state as Int?,
+        (jsRoom.dots as JsArray<dynamic>?)
+            ?.toList()
+            ?.filterNotNull()
+            ?.map { OnlineDotRemote(it.dt as Int?, it.x as Int?, it.y as Int?) },
+        jsRoom.time as Double?,
         if (jsRoom.user1 != null) OnlineRemoteUser(jsRoom.user1.id, jsRoom.user1.name) else null,
         if (jsRoom.user2 != null) OnlineRemoteUser(jsRoom.user2.id, jsRoom.user2.name) else null,
     )

@@ -23,6 +23,8 @@
  */
 package by.klnvch.link5dots.di.game.nsd
 
+import by.klnvch.link5dots.data.LocalUserIdentity
+import by.klnvch.link5dots.domain.repositories.NetworkUserIdentity
 import by.klnvch.link5dots.domain.usecases.AddDotNsdUseCase
 import by.klnvch.link5dots.domain.usecases.AddDotUseCase
 import by.klnvch.link5dots.domain.usecases.GetRoomNsdUseCase
@@ -82,4 +84,7 @@ interface NsdGameRulesModule {
 
     @Binds
     fun bindDeleteMultiplayerRoomUseCase(impl: DeleteNsdRoomUseCase): DeleteMultiplayerRoomUseCase
+
+    @Binds
+    fun bindNetworkUserIdentity(impl: LocalUserIdentity): NetworkUserIdentity
 }

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023-2025 klnvch
+ * Copyright (c) 2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,26 +21,35 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package by.klnvch.link5dots.di.game.online
 
-import by.klnvch.link5dots.di.ActivityScope
-import by.klnvch.link5dots.di.game.CommonBindingModule
-import by.klnvch.link5dots.di.game.GameFragmentBuilderModule
-import by.klnvch.link5dots.di.game.OnlineGameViewModelsModule
-import by.klnvch.link5dots.ui.game.activities.OnlineGameActivity
-import dagger.Subcomponent
-import dagger.android.AndroidInjector
+import by.klnvch.link5dots.data.firebase.OnlineDotRemote
+import by.klnvch.link5dots.data.firebase.OnlineRemoteUser
+import by.klnvch.link5dots.data.firebase.OnlineRoomRemote
+import by.klnvch.link5dots.data.firebase.mapToOnlineRoomRemote
+import kotlin.test.Test
+import kotlin.test.assertEquals
 
-@ActivityScope
-@Subcomponent(
-    modules = [
-        OnlineGameViewModelsModule::class,
-        GameFragmentBuilderModule::class,
-        OnlineGameRulesModule::class,
-        CommonBindingModule::class,
-    ]
-)
-interface OnlineGameSubcomponent : AndroidInjector<OnlineGameActivity> {
-    @Subcomponent.Factory
-    interface Factory : AndroidInjector.Factory<OnlineGameActivity>
+class MyJsTests {
+    @Test
+    fun mapToOnlineRoomRemote() {
+        val jsObj = js(
+            "({" +
+                    "state:2," +
+                    "time: 1753106016872," +
+                    "dots: [{dt: 35971, x: 5, y: 8,}]," +
+                    "user1: {id: '111'}," +
+                    "user2: {id: '222', name: 'web user'}" +
+                    "})"
+        )
+        val result = (jsObj as Any).mapToOnlineRoomRemote()
+        assertEquals(
+            OnlineRoomRemote(
+                state = 2,
+                time = 1753106016872.0,
+                dots = listOf(OnlineDotRemote(35971, 5, 8)),
+                user1 = OnlineRemoteUser("111", null),
+                user2 = OnlineRemoteUser("222", "web user"),
+            ), result
+        )
+    }
 }

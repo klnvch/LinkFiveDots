@@ -25,9 +25,7 @@
 package by.klnvch.link5dots
 
 import by.klnvch.link5dots.data.firebase.RemoteRoomItem
-import by.klnvch.link5dots.data.firebase.mapToNetworkRoom
 import by.klnvch.link5dots.data.online.mapToDescriptors
-import by.klnvch.link5dots.data.online.toNetworkRoomState
 import by.klnvch.link5dots.domain.models.DotsStyleType
 import by.klnvch.link5dots.domain.models.NetworkRoom
 import by.klnvch.link5dots.ui.game.GameViewState
@@ -39,11 +37,6 @@ import kotlin.js.collections.toList
 @JsExport()
 fun mapToDescriptors(items: JsReadonlyArray<RemoteRoomItem>, defaultName: String) =
     mapToDescriptors(items.toList(), defaultName).toTypedArray()
-
-@OptIn(ExperimentalJsExport::class)
-@JsExport()
-fun mapToRoomState(item: RemoteRoomItem, defaultName: String) =
-    item.mapToNetworkRoom()?.toNetworkRoomState(defaultName)
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport()

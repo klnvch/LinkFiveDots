@@ -29,8 +29,7 @@ import by.klnvch.link5dots.data.TimeServiceImpl
 import by.klnvch.link5dots.data.online.AddDotOnlineRoomRepositoryImpl
 import by.klnvch.link5dots.data.online.ConnectOnlineRoomRepositoryImpl
 import by.klnvch.link5dots.data.online.CreateOnlineRoomRepositoryImpl
-import by.klnvch.link5dots.data.online.FirebaseDbSet
-import by.klnvch.link5dots.data.online.FirebaseDbUpdate
+import by.klnvch.link5dots.data.online.FirebaseDbImpl
 import by.klnvch.link5dots.data.online.GetOnlineRoomRepositoryImpl
 import by.klnvch.link5dots.data.online.OnlineLocalStore
 import by.klnvch.link5dots.data.online.OnlineLocalStoreWriter
@@ -126,27 +125,27 @@ class AppBindingModule2 {
     @Singleton
     @Provides
     fun provideCreateOnlineRoomRepository(
-        firebaseDb: FirebaseDbSet,
+        firebaseDb: FirebaseDbImpl,
         onlineLocalStore: OnlineLocalStore,
     ): CreateOnlineRoomRepository = CreateOnlineRoomRepositoryImpl(firebaseDb, onlineLocalStore)
 
     @Singleton
     @Provides
     fun provideConnectOnlineRoomRepository(
-        firebaseDb: FirebaseDbUpdate,
+        firebaseDb: FirebaseDbImpl,
         onlineLocalStore: OnlineLocalStore,
     ): ConnectOnlineRoomRepository = ConnectOnlineRoomRepositoryImpl(firebaseDb, onlineLocalStore)
 
     @Singleton
     @Provides
     fun provideAddDotOnlineRoomRepository(
-        firebaseDb: FirebaseDbSet,
+        firebaseDb: FirebaseDbImpl,
     ): AddDotOnlineRoomRepository = AddDotOnlineRoomRepositoryImpl(firebaseDb)
 
     @Singleton
     @Provides
     fun provideUpdateStateOnlineRoomRepository(
-        firebaseDb: FirebaseDbSet,
+        firebaseDb: FirebaseDbImpl,
     ): UpdateStateOnlineRoomRepository = UpdateStateOnlineRoomRepositoryImpl(firebaseDb)
 
     @Singleton

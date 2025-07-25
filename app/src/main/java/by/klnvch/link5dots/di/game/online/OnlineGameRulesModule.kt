@@ -23,6 +23,8 @@
  */
 package by.klnvch.link5dots.di.game.online
 
+import by.klnvch.link5dots.data.FirebaseUserIdentity
+import by.klnvch.link5dots.domain.repositories.NetworkUserIdentity
 import by.klnvch.link5dots.domain.usecases.AddDotOnlineUseCase
 import by.klnvch.link5dots.domain.usecases.AddDotUseCase
 import by.klnvch.link5dots.domain.usecases.GetRoomOnlineUseCase
@@ -82,4 +84,7 @@ interface OnlineGameRulesModule {
 
     @Binds
     fun bindDeleteMultiplayerRoomUseCase(impl: DeleteOnlineRoomUseCase): DeleteMultiplayerRoomUseCase
+
+    @Binds
+    fun bindNetworkUserIdentity(impl: FirebaseUserIdentity): NetworkUserIdentity
 }

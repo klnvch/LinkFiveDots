@@ -25,20 +25,40 @@
 package by.klnvch.link5dots.data.online
 
 import by.klnvch.link5dots.BuildConfig
+import by.klnvch.link5dots.data.firebase.OnlineDotRemote
+import by.klnvch.link5dots.data.firebase.OnlineRemoteUser
+import by.klnvch.link5dots.data.firebase.OnlineRoomInvitationRemote
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
+import javax.inject.Singleton
 
-class FirebaseDbImpl @Inject constructor() : FirebaseDbSet, FirebaseDbUpdate {
+@Singleton
+class FirebaseDbImpl @Inject constructor() : FirebaseDb {
     private val path = if (BuildConfig.DEBUG) "rooms_debug" else "rooms_v2"
     private val reference = Firebase.database.reference.child(path)
 
-    override suspend fun set(path: Array<String>, value: Any) {
+    private suspend fun set(path: Array<String>, value: Any) {
         reference.child(path.joinToString(separator = "/")).setValue(value).await()
     }
 
-    override suspend fun update(path: Array<String>, update: Map<String, Any>) {
+    private suspend fun update(path: Array<String>, update: Map<String, Any>) {
         reference.child(path.joinToString(separator = "/")).updateChildren(update).await()
     }
+
+    override suspend fun setDot(path: Array<String>, dot: OnlineDotRemote) = set(path, dot)
+
+    override suspend fun setConnected(
+        path: Array<String>,
+        state: Int,
+        user2: OnlineRemoteUser,
+    ) = update(path, mapOf("state" to state, "user2" to user2))
+
+    override suspend fun setInvitation(
+        path: Array<String>,
+        invitation: OnlineRoomInvitationRemote,
+    ) = set(path, invitation)
+
+    override suspend fun setState(path: Array<String>, state: Int) = set(path, state)
 }

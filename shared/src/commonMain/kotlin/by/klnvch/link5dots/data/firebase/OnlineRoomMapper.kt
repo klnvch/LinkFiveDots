@@ -47,12 +47,10 @@ fun RemoteRoomItem.mapToNetworkRoom(): NetworkRoom? =
 
 expect fun Any.mapToOnlineRoomRemote(): OnlineRoomRemote
 
-fun NetworkRoomInvitation.mapToOnlineRoomRemote() = OnlineRoomRemote(
+fun NetworkRoomInvitation.mapToOnlineRoomInvitationRemote() = OnlineRoomInvitationRemote(
     RoomState.CREATED.ordinal,
-    null,
     timestamp,
     user1.mapToOnlineRemoteUser(),
-    null,
 )
 
 fun NetworkUser.mapToOnlineRemoteUser() = OnlineRemoteUser(id, name)

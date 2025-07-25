@@ -29,13 +29,9 @@ import by.klnvch.link5dots.domain.models.Dot
 import by.klnvch.link5dots.domain.repositories.AddDotOnlineRoomRepository
 
 class AddDotOnlineRoomRepositoryImpl(
-    private val firebaseDb: FirebaseDbSet,
+    private val firebaseDb: FirebaseDbSetDot,
 ) : AddDotOnlineRoomRepository {
-    override suspend fun addDot(
-        key: String,
-        position: Int,
-        dot: Dot,
-    ) {
-        firebaseDb.set(arrayOf(key, "dots", position.toString()), dot.mapToOnlineDotRemote())
+    override suspend fun addDot(key: String, position: Int, dot: Dot) {
+        firebaseDb.setDot(arrayOf(key, "dots", position.toString()), dot.mapToOnlineDotRemote())
     }
 }

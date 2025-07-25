@@ -24,8 +24,9 @@
 
 package by.klnvch.link5dots
 
+import by.klnvch.link5dots.data.firebase.OnlineRemoteUser
 import by.klnvch.link5dots.data.online.ConnectOnlineRoomRepositoryImpl
-import by.klnvch.link5dots.data.online.FirebaseDbUpdate
+import by.klnvch.link5dots.data.online.FirebaseDbSetConnected
 import by.klnvch.link5dots.data.online.OnlineLocalStoreWriter
 import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
 import by.klnvch.link5dots.domain.repositories.FirebaseAuthManager
@@ -45,7 +46,7 @@ fun roomConnect(
     userName: String?,
     firebaseUserId: String,
     descriptor: RemoteRoomDescriptor,
-    onUpdateRoom: (key: String, update: Json) -> Promise<Unit>,
+    onDbUpdate: (key: String, update: Json) -> Promise<Unit>,
 ): Promise<String> {
     val userNameSettings = object : UserNameSettings {
         override suspend fun getUserName() = userName
@@ -53,11 +54,20 @@ fun roomConnect(
     val firebaseAuthManager = object : FirebaseAuthManager {
         override fun getUserId() = firebaseUserId
     }
-    val firebaseDb = object : FirebaseDbUpdate {
-        override suspend fun update(path: Array<String>, update: Map<String, Any>) {
-            val jsObject = json()
-            update.forEach { (key, value) -> jsObject[key] = value }
-            onUpdateRoom(path.joinToString("/"), jsObject).await()
+    val firebaseDb = object : FirebaseDbSetConnected {
+        override suspend fun setConnected(
+            path: Array<String>,
+            state: Int,
+            user2: OnlineRemoteUser,
+        ) {
+            val jsObject = json().also {
+                it["state"] = state
+                it["user2"] = json().also { userJson ->
+                    userJson["id"] = user2.id
+                    userJson["name"] = user2.name
+                }
+            }
+            onDbUpdate(path.joinToString("/"), jsObject).await()
         }
     }
 

@@ -24,7 +24,13 @@
 
 package by.klnvch.link5dots.data.firebase
 
-class OnlineRoomRemote(
+data class OnlineRoomInvitationRemote(
+    val state: Int? = null,
+    val time: Double? = null,
+    val user1: OnlineRemoteUser? = null,
+)
+
+data class OnlineRoomRemote(
     val state: Int? = null,
     val dots: List<OnlineDotRemote>? = null,
     val time: Double? = null,

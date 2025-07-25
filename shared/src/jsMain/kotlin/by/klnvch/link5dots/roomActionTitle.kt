@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 klnvch
+ * Copyright (c) 2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,8 +21,27 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package by.klnvch.link5dots.domain.models
 
-enum class NetworkGameAction {
-    GAME_OVER_WIN, GAME_OVER_LOSE, DISCONNECTED, MOVE, WAIT, UNKNOWN
+package by.klnvch.link5dots
+
+import by.klnvch.link5dots.domain.models.INetworkRoom
+import by.klnvch.link5dots.domain.repositories.NetworkUserIdentity
+import by.klnvch.link5dots.domain.usecases.network.GetNetworkGameActionUseCase
+import by.klnvch.link5dots.ui.game.picker.states.PickerState
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.promise
+
+@OptIn(ExperimentalJsExport::class, DelicateCoroutinesApi::class)
+@JsExport()
+fun getRoomActionTitle(
+    userId: String,
+    pickerState: PickerState,
+    room: INetworkRoom?,
+) = GlobalScope.promise {
+    val identity = object : NetworkUserIdentity {
+        override suspend fun getUserId() = userId
+    }
+    val useCase = GetNetworkGameActionUseCase(identity)
+    useCase.get(pickerState, room)
 }

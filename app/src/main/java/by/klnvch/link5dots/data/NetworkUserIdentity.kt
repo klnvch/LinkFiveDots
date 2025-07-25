@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023-2025 klnvch
+ * Copyright (c) 2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,26 +21,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package by.klnvch.link5dots.di.game.online
 
-import by.klnvch.link5dots.di.ActivityScope
-import by.klnvch.link5dots.di.game.CommonBindingModule
-import by.klnvch.link5dots.di.game.GameFragmentBuilderModule
-import by.klnvch.link5dots.di.game.OnlineGameViewModelsModule
-import by.klnvch.link5dots.ui.game.activities.OnlineGameActivity
-import dagger.Subcomponent
-import dagger.android.AndroidInjector
+package by.klnvch.link5dots.data
 
-@ActivityScope
-@Subcomponent(
-    modules = [
-        OnlineGameViewModelsModule::class,
-        GameFragmentBuilderModule::class,
-        OnlineGameRulesModule::class,
-        CommonBindingModule::class,
-    ]
-)
-interface OnlineGameSubcomponent : AndroidInjector<OnlineGameActivity> {
-    @Subcomponent.Factory
-    interface Factory : AndroidInjector.Factory<OnlineGameActivity>
+import by.klnvch.link5dots.domain.repositories.FirebaseManager
+import by.klnvch.link5dots.domain.repositories.NetworkUserIdentity
+import by.klnvch.link5dots.domain.repositories.Settings
+import kotlinx.coroutines.flow.first
+import javax.inject.Inject
+import javax.inject.Singleton
+
+@Singleton
+class FirebaseUserIdentity @Inject constructor(
+    private val firebaseManager: FirebaseManager,
+) : NetworkUserIdentity {
+    override suspend fun getUserId() = firebaseManager.getUserId()
+}
+
+@Singleton
+class LocalUserIdentity @Inject constructor(
+    private val settings: Settings,
+) : NetworkUserIdentity {
+    override suspend fun getUserId() = settings.getUserId().first()
 }

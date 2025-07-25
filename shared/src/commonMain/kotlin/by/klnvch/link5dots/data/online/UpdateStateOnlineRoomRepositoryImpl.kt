@@ -28,9 +28,9 @@ import by.klnvch.link5dots.domain.models.RoomState
 import by.klnvch.link5dots.domain.repositories.UpdateStateOnlineRoomRepository
 
 class UpdateStateOnlineRoomRepositoryImpl(
-    private val firebaseDb: FirebaseDbSet,
+    private val firebaseDb: FirebaseDbSetState,
 ) : UpdateStateOnlineRoomRepository {
     override suspend fun update(key: String, state: RoomState) {
-        firebaseDb.set(arrayOf(key, "state"), state.ordinal)
+        firebaseDb.setState(arrayOf(key, "state"), state.ordinal)
     }
 }

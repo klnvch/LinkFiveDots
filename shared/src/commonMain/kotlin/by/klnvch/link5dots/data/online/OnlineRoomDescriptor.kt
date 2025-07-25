@@ -60,6 +60,8 @@ fun mapToDescriptors(items: List<RemoteRoomItem>, defaultName: String) = items
     .mapNotNull { it.mapToNetworkRoomInvitation() }
     .map { it.createDescriptor(defaultName) }
 
+@OptIn(ExperimentalJsExport::class)
+@JsExport()
 fun NetworkRoom.toNetworkRoomState(defaultName: String): NetworkRoomState {
     return when (state) {
         RoomState.CREATED -> NetworkRoomStateCreated(this.createDescriptor(defaultName))

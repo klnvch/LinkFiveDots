@@ -25,8 +25,10 @@
 package by.klnvch.link5dots
 
 import by.klnvch.link5dots.data.TimeServiceImpl
+import by.klnvch.link5dots.data.firebase.OnlineDotRemote
 import by.klnvch.link5dots.data.online.AddDotOnlineRoomRepositoryImpl
-import by.klnvch.link5dots.data.online.FirebaseDbSet
+import by.klnvch.link5dots.data.online.FirebaseDbSetDot
+import by.klnvch.link5dots.data.online.FirebaseDbSetState
 import by.klnvch.link5dots.data.online.GetOnlineRoomRepositoryImpl
 import by.klnvch.link5dots.data.online.UpdateStateOnlineRoomRepositoryImpl
 import by.klnvch.link5dots.domain.models.Board
@@ -40,6 +42,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.await
 import kotlinx.coroutines.launch
 import kotlin.js.Promise
+import kotlin.js.json
 
 @OptIn(DelicateCoroutinesApi::class, ExperimentalJsExport::class)
 @JsExport()
@@ -47,7 +50,7 @@ fun roomAddDot(
     firebaseUserId: String,
     room: IRoom,
     p: Point,
-    onSaveToDb: (key: String, room: Any) -> Promise<Unit>,
+    onDbSet: (key: String, value: Any) -> Promise<Unit>,
 ): Promise<Unit> {
     val firebaseAuthManager = object : FirebaseAuthManager {
         override fun getUserId() = firebaseUserId
@@ -55,9 +58,21 @@ fun roomAddDot(
     val timeService = TimeServiceImpl()
     val board = Board()
 
-    val firebaseDb = object : FirebaseDbSet {
-        override suspend fun set(path: Array<String>, value: Any) {
-            onSaveToDb(path.joinToString("/"), value).await()
+    val firebaseDb = object : FirebaseDbSetDot, FirebaseDbSetState {
+        override suspend fun setDot(
+            path: Array<String>,
+            dot: OnlineDotRemote,
+        ) {
+            val jsObject = json().also {
+                it["dt"] = dot.dt
+                it["x"] = dot.x
+                it["y"] = dot.y
+            }
+            onDbSet(path.joinToString("/"), jsObject).await()
+        }
+
+        override suspend fun setState(path: Array<String>, state: Int) {
+            onDbSet(path.joinToString("/"), state).await()
         }
     }
     val addDotRepository = AddDotOnlineRoomRepositoryImpl(firebaseDb)

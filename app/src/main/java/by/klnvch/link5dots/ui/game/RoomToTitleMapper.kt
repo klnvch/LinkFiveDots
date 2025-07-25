@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 klnvch
+ * Copyright (c) 2023-2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,12 +27,17 @@ import by.klnvch.link5dots.R
 import by.klnvch.link5dots.domain.models.NetworkGameAction
 
 object RoomToTitleMapper {
-    fun actionToTitle(action: NetworkGameAction) = when(action) {
+    fun actionToTitle(action: NetworkGameAction) = when (action) {
+        NetworkGameAction.PICKER_CREATING -> R.string.connecting
+        NetworkGameAction.PICKER_DELETING -> R.string.connecting
+        NetworkGameAction.PICKER_CREATED -> R.string.progress_text
+        NetworkGameAction.PICKER_SCANNING -> R.string.searching
+        NetworkGameAction.PICKER_CONNECTING -> R.string.connecting
         NetworkGameAction.GAME_OVER_WIN -> R.string.end_win
         NetworkGameAction.GAME_OVER_LOSE -> R.string.end_lose
-        NetworkGameAction.DISCONNECTED -> R.string.end_lose
-        NetworkGameAction.MOVE -> R.string.bt_message_your_turn
-        NetworkGameAction.WAIT -> R.string.bt_message_opponents_turn
+        NetworkGameAction.GAME_DISCONNECTED -> R.string.end_lose
+        NetworkGameAction.GAME_MOVE -> R.string.bt_message_your_turn
+        NetworkGameAction.GAME_WAIT -> R.string.bt_message_opponents_turn
         NetworkGameAction.UNKNOWN -> 0
     }
 }

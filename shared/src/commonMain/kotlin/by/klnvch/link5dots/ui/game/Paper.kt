@@ -46,10 +46,12 @@ class Paper(sizePx: Int) {
     private val colorBlue = -16776961
     private val gridSize = 20
     private val imageSizePx = 600
+    private val arrowsSizePx = 37
     private val scale = sizePx / imageSizePx.toFloat()
 
     private val lineLocations = FloatArray(gridSize)
     private val dotLocations = FloatArray(gridSize)
+    private val arrowsLocations = FloatArray(gridSize)
 
     val user1Dot = createGameBitmap(BitmapType.DOT, colorRed, scale)
     val user2Dot = createGameBitmap(BitmapType.DOT, colorBlue, scale)
@@ -59,11 +61,15 @@ class Paper(sizePx: Int) {
         for (i in 0 until gridSize) {
             lineLocations[i] = sizePx / (2f * gridSize) + (i * sizePx) / gridSize.toFloat()
             dotLocations[i] = lineLocations[i] - dotSize / 2f
+            arrowsLocations[i] = lineLocations[i] - arrowsSizePx / 2f
         }
     }
 
-    fun toPaperPosition(dot: Dot): PaperPosition =
+    fun toDotPaperPosition(dot: Dot): PaperPosition =
         PaperPositionImpl(dotLocations[dot.x], dotLocations[dot.y])
+
+    fun toArrowsPaperPosition(dot: Dot): PaperPosition =
+        PaperPositionImpl(arrowsLocations[dot.x], arrowsLocations[dot.y])
 
     fun toBoardPosition(x: Float, y: Float) = Point(findClosestIndex(x), findClosestIndex(y))
 

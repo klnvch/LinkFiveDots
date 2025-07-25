@@ -31,16 +31,16 @@ import by.klnvch.link5dots.domain.models.RoomState
 import by.klnvch.link5dots.domain.repositories.ConnectOnlineRoomRepository
 
 class ConnectOnlineRoomRepositoryImpl(
-    private val firebaseDb: FirebaseDbUpdate,
+    private val firebaseDb: FirebaseDbSetConnected,
     private val onlineLocalStore: OnlineLocalStoreWriter,
 ) : ConnectOnlineRoomRepository {
     override suspend fun connect(descriptor: RemoteRoomDescriptor, user2: NetworkUser) {
         val key = (descriptor as OnlineRoomDescriptor).key
-        val update = mapOf(
-            "state" to RoomState.STARTED.ordinal,
-            "user2" to user2.mapToOnlineRemoteUser()
+        firebaseDb.setConnected(
+            arrayOf(key),
+            RoomState.STARTED.ordinal,
+            user2.mapToOnlineRemoteUser()
         )
-        firebaseDb.update(arrayOf(key), update)
         onlineLocalStore.save(key)
     }
 }

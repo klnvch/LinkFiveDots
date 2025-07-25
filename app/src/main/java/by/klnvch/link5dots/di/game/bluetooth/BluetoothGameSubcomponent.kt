@@ -25,6 +25,7 @@
 package by.klnvch.link5dots.di.game.bluetooth
 
 import by.klnvch.link5dots.di.ActivityScope
+import by.klnvch.link5dots.di.game.CommonBindingModule
 import by.klnvch.link5dots.di.game.GameFragmentBuilderModule
 import by.klnvch.link5dots.di.game.OnlineGameViewModelsModule
 import by.klnvch.link5dots.ui.game.activities.BluetoothGameActivity
@@ -37,6 +38,7 @@ import dagger.android.AndroidInjector
         OnlineGameViewModelsModule::class,
         GameFragmentBuilderModule::class,
         BluetoothGameRulesModule::class,
+        CommonBindingModule::class,
     ]
 )
 interface BluetoothGameSubcomponent : AndroidInjector<BluetoothGameActivity> {

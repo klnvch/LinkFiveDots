@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023-2025 klnvch
+ * Copyright (c) 2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,26 +21,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package by.klnvch.link5dots.di.game.online
 
-import by.klnvch.link5dots.di.ActivityScope
-import by.klnvch.link5dots.di.game.CommonBindingModule
-import by.klnvch.link5dots.di.game.GameFragmentBuilderModule
-import by.klnvch.link5dots.di.game.OnlineGameViewModelsModule
-import by.klnvch.link5dots.ui.game.activities.OnlineGameActivity
-import dagger.Subcomponent
-import dagger.android.AndroidInjector
+package by.klnvch.link5dots.domain.models
 
-@ActivityScope
-@Subcomponent(
-    modules = [
-        OnlineGameViewModelsModule::class,
-        GameFragmentBuilderModule::class,
-        OnlineGameRulesModule::class,
-        CommonBindingModule::class,
-    ]
-)
-interface OnlineGameSubcomponent : AndroidInjector<OnlineGameActivity> {
-    @Subcomponent.Factory
-    interface Factory : AndroidInjector.Factory<OnlineGameActivity>
+import kotlin.js.ExperimentalJsExport
+import kotlin.js.JsExport
+
+@OptIn(ExperimentalJsExport::class)
+@JsExport()
+enum class NetworkGameAction {
+    PICKER_CREATING,
+    PICKER_DELETING,
+    PICKER_CREATED,
+    PICKER_SCANNING,
+    PICKER_CONNECTING,
+    GAME_OVER_WIN,
+    GAME_OVER_LOSE,
+    GAME_DISCONNECTED,
+    GAME_MOVE,
+    GAME_WAIT,
+    UNKNOWN
 }

@@ -24,8 +24,8 @@
 package by.klnvch.link5dots.ui.game
 
 import androidx.lifecycle.viewModelScope
-import by.klnvch.link5dots.R
 import by.klnvch.link5dots.domain.models.FeatureDisabled
+import by.klnvch.link5dots.domain.models.INetworkRoom
 import by.klnvch.link5dots.domain.models.NetworkRoomExtended
 import by.klnvch.link5dots.domain.models.NetworkRoomState
 import by.klnvch.link5dots.domain.models.NetworkRoomStateCreated
@@ -58,15 +58,13 @@ import by.klnvch.link5dots.ui.game.activities.MultiplayerNavigationEvent
 import by.klnvch.link5dots.ui.game.picker.PickerViewStateImpl
 import by.klnvch.link5dots.ui.game.picker.states.createInitialPickerState
 import by.klnvch.link5dots.ui.game.picker.toPickerViewState
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.stateIn
@@ -111,22 +109,12 @@ class OnlineGameViewModel @Inject constructor(
         .map { it.toPickerViewState() }
         .stateIn(viewModelScope, SharingStarted.Eagerly, PickerViewStateImpl())
 
-    @OptIn(ExperimentalCoroutinesApi::class)
-    val uiTitleState = _pickerState.flatMapLatest {
-        when {
-            it.isCreating -> flowOf(R.string.connecting)
-            it.isDeleting -> flowOf(R.string.connecting)
-            it.isCreated -> flowOf(R.string.progress_text)
-            it.isScanning -> flowOf(R.string.searching)
-            it.isConnecting -> flowOf(R.string.connecting)
-            it.isDisconnected -> flowOf(R.string.disconnected)
-            it.isConnected -> roomFlow
-                .map { room -> getNetworkGameActionUseCase.get(room) }
-                .map { action -> actionToTitle(action) }
-
-            else -> flowOf(0)
-        }
-    }
+    val uiTitleState = combine(
+        roomFlowGuard.map { it as? INetworkRoom },
+        _pickerState
+    ) { room, pickerState ->
+        getNetworkGameActionUseCase.get(pickerState, room)
+    }.map { actionToTitle(it) }
 
     private var scanJob: Job? = null
 

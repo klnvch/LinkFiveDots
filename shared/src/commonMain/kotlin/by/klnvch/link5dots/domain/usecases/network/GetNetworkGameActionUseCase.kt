@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 klnvch
+ * Copyright (c) 2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,31 +21,40 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
 package by.klnvch.link5dots.domain.usecases.network
 
-import by.klnvch.link5dots.domain.models.IRoom
+import by.klnvch.link5dots.domain.models.INetworkRoom
 import by.klnvch.link5dots.domain.models.NetworkGameAction
-import by.klnvch.link5dots.domain.models.NetworkRoomExtended
 import by.klnvch.link5dots.domain.models.RoomState
-import javax.inject.Inject
+import by.klnvch.link5dots.domain.repositories.NetworkUserIdentity
+import by.klnvch.link5dots.ui.game.picker.states.PickerState
 
-class GetNetworkGameActionUseCase @Inject constructor() {
-    fun get(room: IRoom): NetworkGameAction {
-        return if (room is NetworkRoomExtended)
-            if (room.user1.id == room.yourId) map(room, 0)
-            else if (room.user2?.id == room.yourId) map(room, 1)
-            else NetworkGameAction.UNKNOWN
-        else
-            throw IllegalStateException("Wrong room type")
+class GetNetworkGameActionUseCase(private val identity: NetworkUserIdentity) {
+    suspend fun get(pickerState: PickerState, room: INetworkRoom?) = when {
+        pickerState.isCreating -> NetworkGameAction.PICKER_CREATING
+        pickerState.isDeleting -> NetworkGameAction.PICKER_DELETING
+        pickerState.isConnected && room != null -> get(room)
+        pickerState.isCreated -> NetworkGameAction.PICKER_CREATED
+        pickerState.isScanning -> NetworkGameAction.PICKER_SCANNING
+        pickerState.isConnecting -> NetworkGameAction.PICKER_CONNECTING
+        else -> NetworkGameAction.UNKNOWN
     }
 
-    private fun map(room: NetworkRoomExtended, expectedOrder: Int): NetworkGameAction {
+    private suspend fun get(room: INetworkRoom): NetworkGameAction {
+        val userId = identity.getUserId()
+        return if (room.user1.id == userId) map(room, 0)
+        else if (room.user2?.id == userId) map(room, 1)
+        else NetworkGameAction.UNKNOWN
+    }
+
+    private fun map(room: INetworkRoom, expectedOrder: Int): NetworkGameAction {
         val order = room.dots.size % 2
         return if (room.isOver())
             if (order == expectedOrder) NetworkGameAction.GAME_OVER_LOSE
             else NetworkGameAction.GAME_OVER_WIN
-        else if (room.state == RoomState.FINISHED) NetworkGameAction.DISCONNECTED
-        else if (order == expectedOrder) NetworkGameAction.MOVE
-        else NetworkGameAction.WAIT
+        else if (room.state == RoomState.FINISHED) NetworkGameAction.GAME_DISCONNECTED
+        else if (order == expectedOrder) NetworkGameAction.GAME_MOVE
+        else NetworkGameAction.GAME_WAIT
     }
 }

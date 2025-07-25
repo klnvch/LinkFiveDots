@@ -88,5 +88,7 @@ kotlin {
         jsMain {
             dependencies { }
         }
+
+        jsTest { }
     }
 }
