@@ -9,10 +9,10 @@
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- *
+ *  
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
- *
+ *  
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -22,11 +22,30 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.ui.game.picker.listeners
+package by.klnvch.link5dots.ui.game
 
-interface OnPickerClickListener {
-    fun onCreateButtonClicked()
-    fun onDeleteButtonClicked()
-    fun onStartScanButtonClicked()
-    fun onCancelScanButtonClicked()
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+
+@Composable
+fun GameScreen(
+    viewModel: OfflineGameViewModel,
+) {
+    val uiState by viewModel.uiState.collectAsState()
+    val focus by viewModel.focus.collectAsState()
+    Box(modifier = Modifier.fillMaxSize()) {
+        GameBoard(
+            Modifier.fillMaxSize(),
+            uiState.boardViewState,
+            focus,
+            onMoveDone = { viewModel.addDot(it) },
+            onUnfocus = { viewModel.unfocus() }
+        )
+        GameInfo(Modifier.align(Alignment.TopEnd), uiState.infoViewState)
+    }
 }

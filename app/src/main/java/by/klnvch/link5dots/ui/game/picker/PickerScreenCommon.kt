@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.ui.game
+package by.klnvch.link5dots.ui.game.picker
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
@@ -46,8 +46,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -60,39 +58,41 @@ import androidx.compose.ui.unit.dp
 import by.klnvch.link5dots.R
 import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
 import by.klnvch.link5dots.ui.common.CustomButtonWithText
-import by.klnvch.link5dots.ui.game.picker.PickerCommonViewState
-import by.klnvch.link5dots.ui.game.picker.PickerCreationViewState
-import by.klnvch.link5dots.ui.game.picker.PickerItemViewState
-import by.klnvch.link5dots.ui.game.picker.PickerScanningViewState
-import by.klnvch.link5dots.ui.game.picker.PickerViewState
+
 
 @Composable
-fun PickerScreen(viewModel: OnlineGameViewModel) {
-    val uiState by viewModel.pickerUiState.collectAsState()
+fun PickerScreenCommon(
+    uiState: PickerViewState,
+    onCreate: () -> Unit,
+    onDelete: () -> Unit,
+    onScan: () -> Unit,
+    onCancel: () -> Unit,
+    onConnect: (descriptor: RemoteRoomDescriptor) -> Unit,
+) {
     val configuration = LocalConfiguration.current
     when (configuration.orientation) {
         Configuration.ORIENTATION_PORTRAIT -> PickerScreenPortrait(
             uiState,
-            { viewModel.createRoom() },
-            { viewModel.deleteRoom() },
-            { viewModel.startScan() },
-            { viewModel.stopScan() },
-            { descriptor -> viewModel.connect(descriptor) },
+            onCreate,
+            onDelete,
+            onScan,
+            onCancel,
+            onConnect,
         )
 
         else -> PickerScreenLandscape(
             uiState,
-            { viewModel.createRoom() },
-            { viewModel.deleteRoom() },
-            { viewModel.startScan() },
-            { viewModel.stopScan() },
-            { descriptor -> viewModel.connect(descriptor) },
+            onCreate,
+            onDelete,
+            onScan,
+            onCancel,
+            onConnect,
         )
     }
 }
 
 @Composable
-fun PickerScreenPortrait(
+private fun PickerScreenPortrait(
     uiState: PickerViewState,
     onCreate: () -> Unit,
     onDelete: () -> Unit,
@@ -111,7 +111,7 @@ fun PickerScreenPortrait(
 }
 
 @Composable
-fun PickerScreenLandscape(
+private fun PickerScreenLandscape(
     uiState: PickerViewState,
     onCreate: () -> Unit,
     onDelete: () -> Unit,
@@ -134,7 +134,7 @@ fun PickerScreenLandscape(
 }
 
 @Composable
-fun CommonPart(uiState: PickerCommonViewState) {
+private fun CommonPart(uiState: PickerCommonViewState) {
     val progressAlpha = if (uiState.inProgress) 1f else 0f
     Box(
         modifier = Modifier
@@ -159,7 +159,11 @@ fun CommonPart(uiState: PickerCommonViewState) {
 }
 
 @Composable
-fun CreationPart(uiState: PickerCreationViewState, onCreate: () -> Unit, onDelete: () -> Unit) {
+private fun CreationPart(
+    uiState: PickerCreationViewState,
+    onCreate: () -> Unit,
+    onDelete: () -> Unit,
+) {
     if (uiState.isCreateButtonVisible) {
         CustomButtonWithText(
             textId = R.string.create,
@@ -193,7 +197,7 @@ fun CreationPart(uiState: PickerCreationViewState, onCreate: () -> Unit, onDelet
 }
 
 @Composable
-fun ScanPart(
+private fun ScanPart(
     uiState: PickerScanningViewState,
     onScan: () -> Unit,
     onCancel: () -> Unit,

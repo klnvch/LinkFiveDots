@@ -31,6 +31,8 @@ import kotlin.js.JsExport
 @OptIn(ExperimentalJsExport::class)
 @JsExport()
 interface PickerState {
+    val isNone: Boolean
+
     val isCreating: Boolean
     val isCreated: Boolean
     val isDeleting: Boolean
@@ -58,6 +60,7 @@ interface PickerState {
 
     fun connecting(): PickerState
     fun connected(d: RemoteRoomDescriptor): PickerState
+    fun connectFailed(e: Throwable): PickerState
     fun disconnected(): PickerState
 }
 
@@ -70,6 +73,9 @@ private data class PickerStateImpl(
     private val scanState: ScanState = ScanNone,
     private val connectState: ConnectState = ConnectNone,
 ) : PickerState {
+    override val isNone =
+        targetState is TargetNone && scanState is ScanNone && connectState is ConnectNone
+
     override val isCreating = targetState is TargetCreating
     override val isCreated = targetState is TargetCreated
     override val isDeleting = targetState is TargetDeleting
@@ -86,6 +92,7 @@ private data class PickerStateImpl(
     override val error = when {
         targetState is TargetFailed -> targetState.e
         scanState is ScanFailed -> scanState.e
+        connectState is ConnectFailed -> connectState.e
         else -> null
     }
 
@@ -105,6 +112,11 @@ private data class PickerStateImpl(
     override fun scanFailed(e: Throwable) = copy(scanState = ScanFailed(e))
 
     override fun connecting() = copy(connectState = ConnectConnecting)
-    override fun connected(d: RemoteRoomDescriptor) = copy(connectState = ConnectConnected(d))
-    override fun disconnected() = copy(connectState = ConnectDisconnected)
+    override fun connected(d: RemoteRoomDescriptor) =
+        copy(targetState = TargetNone, scanState = ScanNone, connectState = ConnectConnected(d))
+
+    override fun connectFailed(e: Throwable) = copy(connectState = ConnectFailed(e))
+
+    override fun disconnected() =
+        if (connectState is ConnectConnected) copy(connectState = ConnectDisconnected) else this
 }

@@ -27,4 +27,3 @@ sealed interface MultiplayerNavigationEvent
 object PickerScreen : MultiplayerNavigationEvent
 object GameScreen : MultiplayerNavigationEvent
 data class InitError(val e: Throwable) : MultiplayerNavigationEvent
-data class ConnectError(val dst: String, val e: Throwable) : MultiplayerNavigationEvent

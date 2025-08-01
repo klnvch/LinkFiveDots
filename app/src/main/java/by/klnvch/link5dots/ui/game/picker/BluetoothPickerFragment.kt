@@ -24,142 +24,67 @@
 
 package by.klnvch.link5dots.ui.game.picker
 
-import android.Manifest
-import android.app.Activity
-import android.bluetooth.BluetoothAdapter
-import android.content.Intent
-import android.content.pm.PackageManager
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.content.ContextCompat
-import androidx.lifecycle.Lifecycle
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.ImageShader
+import androidx.compose.ui.graphics.ShaderBrush
+import androidx.compose.ui.graphics.TileMode
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.compose.ui.res.imageResource
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
-import by.klnvch.link5dots.ui.game.picker.listeners.OnVisibilityClickListener
-import kotlinx.coroutines.launch
+import by.klnvch.link5dots.R
+import by.klnvch.link5dots.ui.game.OfflineGameViewModel
+import by.klnvch.link5dots.ui.game.OnlineGameViewModel
+import by.klnvch.link5dots.ui.theme.AppTheme
+import dagger.android.support.DaggerFragment
+import javax.inject.Inject
 
-class BluetoothPickerFragment : PickerFragmentDeprecated(), OnVisibilityClickListener {
-
-    private lateinit var viewModel: VisibilityViewModel
-
-    private val requestCreatePermissionLauncher =
-        registerForActivityResult(ActivityResultContracts.RequestPermission()) {
-            viewModel.setCreatePermissionGranted(it)
-            if (it) {
-                super.onCreateButtonClicked()
-            }
-        }
-
-    private val requestDiscoverPermissionLauncher =
-        registerForActivityResult(ActivityResultContracts.RequestPermission()) {
-            if (it) {
-                startDiscoverable()
-            }
-        }
-
-    private val requestScanPermissionLauncher =
-        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
-            val isGranted = it.values.all { it }
-            viewModel.setScanPermissionGranted(isGranted)
-            super.onStartScanButtonClicked()
-        }
-
-    private val startDiscoverableForResult =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            if (it.resultCode != Activity.RESULT_CANCELED) {
-                viewModel.startCountDown(it.resultCode)
-            }
-        }
+class BluetoothPickerFragment : DaggerFragment() {
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        val view = super.onCreateView(inflater, container, savedInstanceState)
-        binding.visibilityListener = this
+        val gameViewModel = ViewModelProvider(
+            requireActivity(),
+            viewModelFactory
+        )[OfflineGameViewModel.KEY, OnlineGameViewModel::class.java]
 
-        viewModel = ViewModelProvider(
+        val bluetoothViewModel = ViewModelProvider(
             requireActivity(),
             viewModelFactory
         )[VisibilityViewModel.KEY, VisibilityViewModel::class.java]
 
-        return view
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        viewLifecycleOwner.lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.uiState.collect {
-                    binding.bluetoothPickerViewState = it
+        return ComposeView(requireContext()).apply {
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setContent {
+                AppTheme {
+                    Box(
+                        modifier = Modifier
+                            .background(
+                                ShaderBrush(
+                                    ImageShader(
+                                        ImageBitmap.imageResource(R.drawable.paper),
+                                        TileMode.Repeated,
+                                        TileMode.Repeated
+                                    )
+                                )
+                            )
+                    ) {
+                        BluetoothPickerScreen(gameViewModel, bluetoothViewModel)
+                    }
                 }
             }
         }
-    }
-
-    override fun onCreateButtonClicked() {
-        if (isCreatePermissionGranted()) {
-            viewModel.setCreatePermissionGranted(true)
-            super.onCreateButtonClicked()
-        } else {
-            requestCreatePermissionLauncher.launch(Manifest.permission.BLUETOOTH_CONNECT)
-        }
-    }
-
-    private fun isCreatePermissionGranted() =
-        Build.VERSION.SDK_INT < Build.VERSION_CODES.S || hasPermission(Manifest.permission.BLUETOOTH_CONNECT)
-
-    override fun onStartScanButtonClicked() {
-        if (isScanPermissionGranted()) {
-            viewModel.setScanPermissionGranted(true)
-            super.onStartScanButtonClicked()
-        } else {
-            requestScanPermissionLauncher.launch(scanPermissions)
-        }
-    }
-
-    override fun onVisibilityButtonClicked() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            if (hasPermission(Manifest.permission.BLUETOOTH_CONNECT)) {
-                startDiscoverable()
-            } else {
-                requestDiscoverPermissionLauncher.launch(Manifest.permission.BLUETOOTH_CONNECT)
-            }
-        } else {
-            startDiscoverable()
-        }
-    }
-
-    private val scanPermissions = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-        arrayOf(
-            Manifest.permission.BLUETOOTH_SCAN,
-            Manifest.permission.BLUETOOTH_CONNECT,
-        )
-    } else {
-        arrayOf(Manifest.permission.ACCESS_FINE_LOCATION)
-    }
-
-    private fun isScanPermissionGranted() = scanPermissions.all { hasPermission(it) }
-
-    private fun startDiscoverable() {
-        val intent = Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE).apply {
-            putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, DISCOVERABLE_DURATION_SECONDS)
-        }
-        startDiscoverableForResult.launch(intent)
-    }
-
-    private fun hasPermission(permission: String) = ContextCompat.checkSelfPermission(
-        requireContext(),
-        permission
-    ) == PackageManager.PERMISSION_GRANTED
-
-    companion object {
-        private const val DISCOVERABLE_DURATION_SECONDS = 30
     }
 }

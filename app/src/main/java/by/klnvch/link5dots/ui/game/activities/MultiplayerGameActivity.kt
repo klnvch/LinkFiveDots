@@ -77,14 +77,6 @@ abstract class MultiplayerGameActivity : GameActivity() {
                         is InitError -> addErrorFragment(bundleOf("error" to it.e))
 
                         is PickerScreen -> {}
-
-                        is ConnectError -> {
-                            val msg = getString(R.string.connecting_error_message, it.dst)
-                            AlertDialog.Builder(this@MultiplayerGameActivity)
-                                .setMessage(msg)
-                                .setPositiveButton(R.string.okay, null)
-                                .show()
-                        }
                     }
                 }
             }

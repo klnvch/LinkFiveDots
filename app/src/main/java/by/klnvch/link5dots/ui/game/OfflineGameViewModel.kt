@@ -24,12 +24,11 @@
 package by.klnvch.link5dots.ui.game
 
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import by.klnvch.link5dots.domain.models.BotGameScore
 import by.klnvch.link5dots.domain.models.Point
+import by.klnvch.link5dots.domain.models.lastPoint
 import by.klnvch.link5dots.domain.repositories.Analytics
 import by.klnvch.link5dots.domain.repositories.Settings
 import by.klnvch.link5dots.domain.usecases.AddDotUseCase
@@ -44,7 +43,9 @@ import by.klnvch.link5dots.ui.game.create.NewGameViewState
 import by.klnvch.link5dots.ui.game.end.EndGameViewState
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
@@ -99,8 +100,8 @@ open class OfflineGameViewModel @Inject constructor(
         }
         .stateIn(viewModelScope, SharingStarted.Eagerly, MenuViewState())
 
-    private val _focusEvent = MutableLiveData<Unit>()
-    val focusEvent: LiveData<Unit> = _focusEvent
+    private val _focus = MutableStateFlow<Point?>(Point(9, 9))
+    val focus: StateFlow<Point?> = _focus
 
     init {
         viewModelScope.launch {
@@ -158,7 +159,13 @@ open class OfflineGameViewModel @Inject constructor(
 
     fun focus() {
         analytics.logEvent(Analytics.EVENT_SEARCH)
-        _focusEvent.value = Unit
+        viewModelScope.launch {
+            _focus.value = roomFlow.firstOrNull()?.lastPoint()
+        }
+    }
+
+    fun unfocus() {
+        _focus.value = null
     }
 
     companion object {

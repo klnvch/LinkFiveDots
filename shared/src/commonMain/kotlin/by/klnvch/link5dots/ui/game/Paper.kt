@@ -25,7 +25,9 @@
 package by.klnvch.link5dots.ui.game
 
 import by.klnvch.link5dots.domain.models.Dot
+import by.klnvch.link5dots.domain.models.LineOrientation
 import by.klnvch.link5dots.domain.models.Point
+import by.klnvch.link5dots.domain.models.WinningLine
 import kotlin.js.ExperimentalJsExport
 import kotlin.js.JsExport
 import kotlin.math.abs
@@ -37,7 +39,19 @@ interface PaperPosition {
     val y: Float
 }
 
+@OptIn(ExperimentalJsExport::class)
+@JsExport()
+interface LineOnPaper {
+    val lineBitmap: GameBitmap
+    val linePositions: Array<PaperPosition>
+}
+
 data class PaperPositionImpl(override val x: Float, override val y: Float) : PaperPosition
+
+class LineOnPaperImpl(
+    override val lineBitmap: GameBitmap,
+    override val linePositions: Array<PaperPosition>,
+) : LineOnPaper
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport()
@@ -65,6 +79,9 @@ class Paper(sizePx: Int) {
         }
     }
 
+    fun toLinePaperPosition(p: Point): PaperPosition =
+        PaperPositionImpl(dotLocations[p.x], dotLocations[p.y])
+
     fun toDotPaperPosition(dot: Dot): PaperPosition =
         PaperPositionImpl(dotLocations[dot.x], dotLocations[dot.y])
 
@@ -72,6 +89,30 @@ class Paper(sizePx: Int) {
         PaperPositionImpl(arrowsLocations[dot.x], arrowsLocations[dot.y])
 
     fun toBoardPosition(x: Float, y: Float) = Point(findClosestIndex(x), findClosestIndex(y))
+
+    fun toLineOnPaper(line: WinningLine): LineOnPaper {
+        val color = if (line.type == Dot.HOST) colorRed else colorBlue
+        val lineBitmap = when (line.orientation) {
+            LineOrientation.HORIZONTAL -> createGameBitmap(BitmapType.LINE_H, color, scale)
+            LineOrientation.VERTICAL -> createGameBitmap(BitmapType.LINE_V, color, scale)
+            LineOrientation.DIAGONAL_LEFT -> createGameBitmap(BitmapType.LINE_D_R, color, scale)
+            LineOrientation.DIAGONAL_RIGHT -> createGameBitmap(BitmapType.LINE_D_L, color, scale)
+        }
+        val d = when (line.orientation) {
+            LineOrientation.HORIZONTAL -> PaperPositionImpl(0f, lineBitmap.size / 2f)
+            LineOrientation.VERTICAL -> PaperPositionImpl(lineBitmap.size / 2f, 0f)
+            LineOrientation.DIAGONAL_LEFT -> PaperPositionImpl(0f, lineBitmap.size.toFloat())
+            LineOrientation.DIAGONAL_RIGHT -> PaperPositionImpl(0f, 0f)
+        }
+        val positions = line.points
+            .dropLast(1)
+            .map { PaperPositionImpl(lineLocations[it.x] - d.x, lineLocations[it.y] - d.y) }
+            .toTypedArray<PaperPosition>()
+        return LineOnPaperImpl(
+            lineBitmap,
+            positions
+        )
+    }
 
     private fun findClosestIndex(p: Float) =
         lineLocations.map { abs(p - it) }.withIndex().minBy { it.value }.index

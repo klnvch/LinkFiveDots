@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023-2025 klnvch
+ * Copyright (c) 2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,10 +22,22 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.ui.game.picker.adapters
+package by.klnvch.link5dots.ui.game.picker
 
-import by.klnvch.link5dots.ui.game.picker.PickerItemViewState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import by.klnvch.link5dots.ui.game.OnlineGameViewModel
 
-interface OnPickerItemSelected {
-    fun onPickerItemSelected(viewState: PickerItemViewState)
+@Composable
+fun PickerScreen(viewModel: OnlineGameViewModel) {
+    val uiState by viewModel.pickerUiState.collectAsState()
+    PickerScreenCommon(
+        uiState,
+        { viewModel.createRoom() },
+        { viewModel.deleteRoom() },
+        { viewModel.startScan() },
+        { viewModel.stopScan() },
+        { descriptor -> viewModel.connect(descriptor) },
+    )
 }

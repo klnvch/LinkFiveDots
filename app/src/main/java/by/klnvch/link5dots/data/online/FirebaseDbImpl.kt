@@ -28,8 +28,8 @@ import by.klnvch.link5dots.BuildConfig
 import by.klnvch.link5dots.data.firebase.OnlineDotRemote
 import by.klnvch.link5dots.data.firebase.OnlineRemoteUser
 import by.klnvch.link5dots.data.firebase.OnlineRoomInvitationRemote
-import com.google.firebase.database.ktx.database
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.Firebase
+import com.google.firebase.database.database
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 import javax.inject.Singleton

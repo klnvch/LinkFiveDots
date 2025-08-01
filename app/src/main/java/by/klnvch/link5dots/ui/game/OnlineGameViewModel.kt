@@ -51,7 +51,6 @@ import by.klnvch.link5dots.domain.usecases.network.GetNetworkRoomStateUseCase
 import by.klnvch.link5dots.domain.usecases.network.InitMultiplayerUseCase
 import by.klnvch.link5dots.domain.usecases.network.ScanUseCase
 import by.klnvch.link5dots.ui.game.RoomToTitleMapper.actionToTitle
-import by.klnvch.link5dots.ui.game.activities.ConnectError
 import by.klnvch.link5dots.ui.game.activities.GameScreen
 import by.klnvch.link5dots.ui.game.activities.InitError
 import by.klnvch.link5dots.ui.game.activities.MultiplayerNavigationEvent
@@ -67,6 +66,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -110,7 +110,7 @@ class OnlineGameViewModel @Inject constructor(
         .stateIn(viewModelScope, SharingStarted.Eagerly, PickerViewStateImpl())
 
     val uiTitleState = combine(
-        roomFlowGuard.map { it as? INetworkRoom },
+        roomFlowGuard.onStart { emit(null) }.map { it as? INetworkRoom },
         _pickerState
     ) { room, pickerState ->
         getNetworkGameActionUseCase.get(pickerState, room)
@@ -198,7 +198,7 @@ class OnlineGameViewModel @Inject constructor(
             try {
                 connectRemoteRoomUseCase.connect(descriptor)
             } catch (e: Throwable) {
-                _navigationEvent.emit(ConnectError(descriptor.title, e))
+                _pickerState.update { it.creationFailed(e) }
                 startScan()
             }
         }

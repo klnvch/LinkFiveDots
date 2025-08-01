@@ -31,26 +31,24 @@ import kotlin.js.JsExport
 @JsExport()
 interface WinningLine {
     val type: Int
-    val size: Int
-    operator fun get(i: Int): Point
-    val orientation: WinningLineOrientation
+    val points: Array<Point>
+    val orientation: LineOrientation
 }
 
-data class WinningLineImpl(private val points: List<Point>, override val type: Int) : WinningLine {
-    override val size = points.size
-    override operator fun get(i: Int) = points[i]
+class WinningLineImpl(points: List<Point>, override val type: Int) : WinningLine {
+    override val points = points.toTypedArray()
     private val first = points.first()
     private val last = points.last()
     override val orientation = when {
-        first.y == last.y -> WinningLineOrientation.HORIZONTAL
-        first.x == last.x -> WinningLineOrientation.VERTICAL
-        (first.x - last.x) * (first.y - last.y) < 0 -> WinningLineOrientation.DIAGONAL_LEFT
-        else -> WinningLineOrientation.DIAGONAL_RIGHT
+        first.y == last.y -> LineOrientation.HORIZONTAL
+        first.x == last.x -> LineOrientation.VERTICAL
+        (first.x - last.x) * (first.y - last.y) < 0 -> LineOrientation.DIAGONAL_LEFT
+        else -> LineOrientation.DIAGONAL_RIGHT
     }
 }
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport()
-enum class WinningLineOrientation {
+enum class LineOrientation {
     HORIZONTAL, VERTICAL, DIAGONAL_LEFT, DIAGONAL_RIGHT
 }

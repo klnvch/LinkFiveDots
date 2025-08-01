@@ -35,11 +35,11 @@ import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
 import by.klnvch.link5dots.domain.models.RoomState
 import by.klnvch.link5dots.domain.repositories.OnlineRoomRepository
 import by.klnvch.link5dots.domain.repositories.StringRepository
+import com.google.firebase.Firebase
 import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.ktx.database
+import com.google.firebase.database.database
 import com.google.firebase.database.snapshots
 import com.google.firebase.database.values
-import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged

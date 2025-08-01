@@ -26,35 +26,40 @@ package by.klnvch.link5dots.domain.usecases.network
 
 import by.klnvch.link5dots.domain.models.INetworkRoom
 import by.klnvch.link5dots.domain.models.NetworkGameAction
-import by.klnvch.link5dots.domain.models.RoomState
 import by.klnvch.link5dots.domain.repositories.NetworkUserIdentity
 import by.klnvch.link5dots.ui.game.picker.states.PickerState
 
 class GetNetworkGameActionUseCase(private val identity: NetworkUserIdentity) {
     suspend fun get(pickerState: PickerState, room: INetworkRoom?) = when {
+        pickerState.isNone -> NetworkGameAction.UNKNOWN
         pickerState.isCreating -> NetworkGameAction.PICKER_CREATING
         pickerState.isDeleting -> NetworkGameAction.PICKER_DELETING
-        pickerState.isConnected && room != null -> get(room)
         pickerState.isCreated -> NetworkGameAction.PICKER_CREATED
         pickerState.isScanning -> NetworkGameAction.PICKER_SCANNING
         pickerState.isConnecting -> NetworkGameAction.PICKER_CONNECTING
+        room.isWon(identity.getUserId()) -> NetworkGameAction.GAME_OVER_WIN
+        room.isLost(identity.getUserId()) -> NetworkGameAction.GAME_OVER_LOSE
+        pickerState.isDisconnected -> NetworkGameAction.GAME_DISCONNECTED
+        room.isMove(identity.getUserId()) -> NetworkGameAction.GAME_MOVE
+        room.isWait(identity.getUserId()) -> NetworkGameAction.GAME_WAIT
         else -> NetworkGameAction.UNKNOWN
     }
-
-    private suspend fun get(room: INetworkRoom): NetworkGameAction {
-        val userId = identity.getUserId()
-        return if (room.user1.id == userId) map(room, 0)
-        else if (room.user2?.id == userId) map(room, 1)
-        else NetworkGameAction.UNKNOWN
-    }
-
-    private fun map(room: INetworkRoom, expectedOrder: Int): NetworkGameAction {
-        val order = room.dots.size % 2
-        return if (room.isOver())
-            if (order == expectedOrder) NetworkGameAction.GAME_OVER_LOSE
-            else NetworkGameAction.GAME_OVER_WIN
-        else if (room.state == RoomState.FINISHED) NetworkGameAction.GAME_DISCONNECTED
-        else if (order == expectedOrder) NetworkGameAction.GAME_MOVE
-        else NetworkGameAction.GAME_WAIT
-    }
 }
+
+private fun INetworkRoom.canMove(userId: String) = when {
+    user1.id == userId -> dots.size % 2 == 0
+    user2?.id == userId -> dots.size % 2 == 1
+    else -> null
+}
+
+private fun INetworkRoom?.isMove(userId: String) =
+    this !== null && canMove(userId) == true
+
+private fun INetworkRoom?.isWait(userId: String) =
+    this !== null && canMove(userId) == false
+
+private fun INetworkRoom?.isWon(userId: String) =
+    this !== null && isOver() && canMove(userId) == false
+
+private fun INetworkRoom?.isLost(userId: String) =
+    this !== null && isOver() && canMove(userId) == true

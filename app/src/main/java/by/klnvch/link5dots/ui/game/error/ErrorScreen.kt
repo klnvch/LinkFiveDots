@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023-2025 klnvch
+ * Copyright (c) 2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,23 +21,37 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package by.klnvch.link5dots.ui.game
 
+package by.klnvch.link5dots.ui.game.error
+
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import by.klnvch.link5dots.R
-import by.klnvch.link5dots.domain.models.NetworkGameAction
+import by.klnvch.link5dots.ui.common.CustomButtonWithText
+import by.klnvch.link5dots.ui.common.TextNoSurface
 
-object RoomToTitleMapper {
-    fun actionToTitle(action: NetworkGameAction) = when (action) {
-        NetworkGameAction.PICKER_CREATING -> R.string.connecting
-        NetworkGameAction.PICKER_DELETING -> R.string.connecting
-        NetworkGameAction.PICKER_CREATED -> R.string.progress_text
-        NetworkGameAction.PICKER_SCANNING -> R.string.searching
-        NetworkGameAction.PICKER_CONNECTING -> R.string.connecting
-        NetworkGameAction.GAME_OVER_WIN -> R.string.end_win
-        NetworkGameAction.GAME_OVER_LOSE -> R.string.end_lose
-        NetworkGameAction.GAME_DISCONNECTED -> R.string.disconnected
-        NetworkGameAction.GAME_MOVE -> R.string.bt_message_your_turn
-        NetworkGameAction.GAME_WAIT -> R.string.bt_message_opponents_turn
-        NetworkGameAction.UNKNOWN -> 0
+@Preview
+@Composable
+fun ErrorScreen(
+    errorText: String = stringResource(R.string.error_feature_not_available),
+    onErrorAccepted: () -> Unit = {},
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(24.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        TextNoSurface(text = errorText)
+        CustomButtonWithText(onClick = onErrorAccepted, textId = R.string.okay)
     }
 }

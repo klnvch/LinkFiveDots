@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 klnvch
+ * Copyright (c) 2023-2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,9 +28,6 @@ object RoomExt {
 
     @JvmStatic
     fun IRoom.isNotEmpty() = dots.isNotEmpty()
-
-    @JvmStatic
-    fun IRoom.getHostDotType(host: IUser): Int {
-        return if (host == user1) Dot.HOST else Dot.GUEST
-    }
 }
+
+fun IRoom.lastPoint() = dots.lastOrNull()?.let { Point(it.x, it.y) }

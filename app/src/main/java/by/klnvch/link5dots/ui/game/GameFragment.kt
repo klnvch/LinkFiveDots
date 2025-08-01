@@ -31,25 +31,22 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.core.view.MenuProvider
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import by.klnvch.link5dots.R
-import by.klnvch.link5dots.databinding.GameBoardBinding
 import by.klnvch.link5dots.domain.models.ActionAvailability
-import by.klnvch.link5dots.domain.models.DotsStyleType
-import by.klnvch.link5dots.domain.models.Point
 import by.klnvch.link5dots.domain.repositories.Analytics
-import by.klnvch.link5dots.models.GameViewState
-import by.klnvch.link5dots.ui.game.GameView.OnMoveDoneListener
+import by.klnvch.link5dots.ui.theme.AppTheme
 import dagger.android.support.DaggerFragment
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class GameFragment : DaggerFragment(), OnMoveDoneListener, MenuProvider {
-    private lateinit var binding: GameBoardBinding
+class GameFragment : DaggerFragment(), MenuProvider {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -62,17 +59,23 @@ class GameFragment : DaggerFragment(), OnMoveDoneListener, MenuProvider {
     lateinit var analytics: Analytics
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        binding = GameBoardBinding.inflate(inflater, container, false)
-
         viewModel = ViewModelProvider(
             requireActivity(),
             viewModelFactory
         )[OfflineGameViewModel.KEY, OfflineGameViewModel::class.java]
 
-        return binding.root
+        return ComposeView(requireContext()).apply {
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setContent {
+                AppTheme {
+                    GameScreen(viewModel)
+                }
+            }
+        }
     }
 
     override fun onAttach(context: Context) {
@@ -87,52 +90,6 @@ class GameFragment : DaggerFragment(), OnMoveDoneListener, MenuProvider {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.gameView.setOnMoveDoneListener(this)
-
-        if (savedInstanceState != null) {
-            binding.gameView.viewState =
-                GameViewState.fromJson(savedInstanceState.getString(KEY_VIEW_STATE))
-        }
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.uiState.collect {
-                    binding.viewState = it
-                    when (it.infoViewState.dotsStyleType) {
-                        DotsStyleType.ORIGINAL -> {
-                            binding.textUser1.setCompoundDrawablesWithIntrinsicBounds(
-                                R.drawable.game_dot_circle_red,
-                                0,
-                                0,
-                                0
-                            )
-                            binding.textUser2.setCompoundDrawablesWithIntrinsicBounds(
-                                R.drawable.game_dot_circle_blue,
-                                0,
-                                0,
-                                0
-                            )
-                        }
-
-                        DotsStyleType.CROSS_AND_RING -> {
-                            binding.textUser1.setCompoundDrawablesWithIntrinsicBounds(
-                                R.drawable.game_dot_cross_red,
-                                0,
-                                0,
-                                0
-                            )
-                            binding.textUser2.setCompoundDrawablesWithIntrinsicBounds(
-                                R.drawable.game_dot_ring_blue,
-                                0,
-                                0,
-                                0
-                            )
-                        }
-                    }
-                }
-            }
-        }
-
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.menuUi.collect {
@@ -141,24 +98,12 @@ class GameFragment : DaggerFragment(), OnMoveDoneListener, MenuProvider {
             }
         }
 
-        viewModel.focusEvent.observe(viewLifecycleOwner) {
-            binding.gameView.focus()
-        }
-
         requireActivity().addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        outState.putString(KEY_VIEW_STATE, binding.gameView.viewState.toJson())
-        super.onSaveInstanceState(outState)
     }
 
     companion object {
         const val TAG = "GameFragment"
-        private const val KEY_VIEW_STATE = "KEY_VIEW_STATE"
     }
-
-    override fun onMoveDone(dot: Point) = viewModel.addDot(dot)
 
     override fun onPrepareMenu(menu: Menu) {
         val menuViewState = viewModel.menuUi.value

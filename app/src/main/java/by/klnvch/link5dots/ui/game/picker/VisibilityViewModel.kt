@@ -35,9 +35,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 
 class VisibilityViewModel @Inject constructor() : ViewModel() {
-    private val _uiState = MutableStateFlow<BluetoothPickerViewState>(
+    private val _uiState = MutableStateFlow(
         BluetoothPickerViewState(
-            InvisibleViewState, true, true
+            InvisibleViewState, isCreatePermissionGranted = true, isScanPermissionGranted = true
         )
     )
     val uiState: StateFlow<BluetoothPickerViewState> = _uiState.asStateFlow()

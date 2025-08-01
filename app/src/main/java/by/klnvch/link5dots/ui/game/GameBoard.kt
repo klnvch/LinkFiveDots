@@ -31,7 +31,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.gestures.rememberTransformableState
 import androidx.compose.foundation.gestures.transformable
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -56,6 +55,7 @@ import by.klnvch.link5dots.R
 import by.klnvch.link5dots.domain.models.Dot
 import by.klnvch.link5dots.domain.models.DotImpl
 import by.klnvch.link5dots.domain.models.Point
+import by.klnvch.link5dots.domain.models.WinningLineImpl
 import by.klnvch.link5dots.ui.game.utils.invertMap
 import by.klnvch.link5dots.ui.game.utils.postTranslate
 import by.klnvch.link5dots.ui.game.utils.scale
@@ -88,15 +88,29 @@ fun GameScreenPreview() {
                 DotImpl(18, 18, Dot.GUEST, 0),
                 DotImpl(19, 19, Dot.HOST, 0),
             ),
+            winningLine = WinningLineImpl(
+                listOf(
+                    Point(5, 5),
+                    Point(6, 5),
+                    Point(7, 5),
+                    Point(8, 5)
+                ), Dot.HOST
+            )
         ),
-        onMoveDone = {
-            Log.d("GameBoard", it.toString())
-        },
+        focus = Point(19, 19),
+        onMoveDone = { Log.d("GameBoard", it.toString()) },
+        onUnfocus = {}
     )
 }
 
 @Composable
-fun GameBoard(viewState: GameBoardViewState, onMoveDone: (point: Point) -> Unit) {
+fun GameBoard(
+    modifier: Modifier = Modifier,
+    viewState: GameBoardViewState,
+    focus: Point?,
+    onMoveDone: (point: Point) -> Unit,
+    onUnfocus: () -> Unit,
+) {
     val density = LocalDensity.current.density
 
     val arrowsImage = ImageBitmap.imageResource(id = R.drawable.arrows)
@@ -115,9 +129,8 @@ fun GameBoard(viewState: GameBoardViewState, onMoveDone: (point: Point) -> Unit)
     }
 
     Canvas(
-        modifier = Modifier
-            .background(Color.Gray)
-            .fillMaxSize()
+        modifier = modifier
+            .background(Color.Black)
             .transformable(state = state)
             .pointerInput(Unit) {
                 detectTapGestures(
@@ -129,6 +142,14 @@ fun GameBoard(viewState: GameBoardViewState, onMoveDone: (point: Point) -> Unit)
             }
     ) {
         matrix.fixScale(density)
+        focus?.let {
+            val paperPosition = paper.toLinePaperPosition(it).toOffset()
+            val diff = matrix.map(paperPosition)
+            val dx = size.width / 2.0f - diff.x
+            val dy = size.height / 2.0f - diff.y
+            matrix.postTranslate(dx, dy)
+            onUnfocus()
+        }
         matrix.fixPosition(size, paperSize)
 
         withTransform({
@@ -145,6 +166,13 @@ fun GameBoard(viewState: GameBoardViewState, onMoveDone: (point: Point) -> Unit)
                     dstSize = IntSize(37, 37),
                     dstOffset = it.toArrowsOffset(paper)
                 )
+            }
+            viewState.winningLine?.let {
+                val line = paper.toLineOnPaper(it)
+                val image = line.lineBitmap.toImageBitmap()
+                for (seg in line.linePositions) {
+                    drawImage(image, topLeft = seg.toOffset())
+                }
             }
         }
     }

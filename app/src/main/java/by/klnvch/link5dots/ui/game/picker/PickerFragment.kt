@@ -42,7 +42,6 @@ import androidx.lifecycle.ViewModelProvider
 import by.klnvch.link5dots.R
 import by.klnvch.link5dots.ui.game.OfflineGameViewModel
 import by.klnvch.link5dots.ui.game.OnlineGameViewModel
-import by.klnvch.link5dots.ui.game.PickerScreen
 import by.klnvch.link5dots.ui.theme.AppTheme
 import dagger.android.support.DaggerFragment
 import javax.inject.Inject
