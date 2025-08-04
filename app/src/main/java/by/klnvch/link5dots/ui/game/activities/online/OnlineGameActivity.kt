@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 klnvch
+ * Copyright (c) 2023-2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,8 +21,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package by.klnvch.link5dots.ui.game.error
+package by.klnvch.link5dots.ui.game.activities.online
 
-interface OnMultiplayerErrorClickListener {
-    fun onErrorAccepted()
+import android.os.Bundle
+import androidx.fragment.app.commit
+import by.klnvch.link5dots.R
+import by.klnvch.link5dots.ui.game.error.OnlineErrorFragment
+
+class OnlineGameActivity : MultiplayerGameActivity() {
+    override val defaultTitle = R.string.menu_online_game
+
+    override fun addErrorFragment(args: Bundle) {
+        supportFragmentManager.commit {
+            add(R.id.fragment, OnlineErrorFragment::class.java, args)
+        }
+    }
+
+    override fun onNewGameClicked() = disconnectFinal(false)
 }

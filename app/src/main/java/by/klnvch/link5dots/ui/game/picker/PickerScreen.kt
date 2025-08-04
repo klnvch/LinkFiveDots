@@ -27,10 +27,15 @@ package by.klnvch.link5dots.ui.game.picker
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.compose.viewModel
 import by.klnvch.link5dots.ui.game.OnlineGameViewModel
 
 @Composable
-fun PickerScreen(viewModel: OnlineGameViewModel) {
+fun PickerScreen(
+    getVMFactory: () -> ViewModelProvider.Factory,
+    viewModel: OnlineGameViewModel = viewModel(factory = getVMFactory()),
+) {
     val uiState by viewModel.pickerUiState.collectAsState()
     PickerScreenCommon(
         uiState,

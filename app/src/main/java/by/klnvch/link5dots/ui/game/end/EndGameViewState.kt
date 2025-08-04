@@ -30,12 +30,9 @@ import by.klnvch.link5dots.domain.models.GameResult
 import by.klnvch.link5dots.domain.models.GameScore
 import by.klnvch.link5dots.domain.models.NetworkGameScore
 import by.klnvch.link5dots.domain.models.SimpleGameScore
-import by.klnvch.link5dots.utils.FormatUtils.formatDuration
 
 data class EndGameViewState(
     val title: Int?,
-    val size: String,
-    val duration: String,
     val isShareable: Boolean,
     val isUndoMoveSupported: Boolean,
     val newGameAvailability: ActionAvailability,
@@ -58,8 +55,6 @@ data class EndGameViewState(
 
             is SimpleGameScore -> null
         },
-        score.size.toString(),
-        score.duration.formatDuration(),
         score is BotGameScore,
         isUndoMoveSupported,
         newGameAvailability,

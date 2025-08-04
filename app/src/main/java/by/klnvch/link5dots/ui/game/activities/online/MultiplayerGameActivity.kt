@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package by.klnvch.link5dots.ui.game.activities
+package by.klnvch.link5dots.ui.game.activities.online
 
 import android.os.Bundle
 import android.view.MenuItem
@@ -37,7 +37,7 @@ import by.klnvch.link5dots.R
 import by.klnvch.link5dots.ui.game.GameFragment
 import by.klnvch.link5dots.ui.game.OfflineGameViewModel
 import by.klnvch.link5dots.ui.game.OnlineGameViewModel
-import by.klnvch.link5dots.ui.game.error.MultiplayerErrorFragment
+import by.klnvch.link5dots.ui.game.activities.GameActivity
 import by.klnvch.link5dots.ui.game.picker.PickerFragment
 import kotlinx.coroutines.launch
 
@@ -104,11 +104,7 @@ abstract class MultiplayerGameActivity : GameActivity() {
         supportFragmentManager.commit { add(R.id.fragment, PickerFragment()) }
     }
 
-    protected open fun addErrorFragment(args: Bundle) {
-        supportFragmentManager.commit {
-            add(R.id.fragment, MultiplayerErrorFragment::class.java, args)
-        }
-    }
+    abstract fun addErrorFragment(args: Bundle)
 
     private fun disconnectGuard(isFullExit: Boolean) {
         if (supportFragmentManager.backStackEntryCount > 0 && viewModel.isConnected()) {

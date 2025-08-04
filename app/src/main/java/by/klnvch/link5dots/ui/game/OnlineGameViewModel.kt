@@ -51,9 +51,9 @@ import by.klnvch.link5dots.domain.usecases.network.GetNetworkRoomStateUseCase
 import by.klnvch.link5dots.domain.usecases.network.InitMultiplayerUseCase
 import by.klnvch.link5dots.domain.usecases.network.ScanUseCase
 import by.klnvch.link5dots.ui.game.RoomToTitleMapper.actionToTitle
-import by.klnvch.link5dots.ui.game.activities.GameScreen
-import by.klnvch.link5dots.ui.game.activities.InitError
-import by.klnvch.link5dots.ui.game.activities.MultiplayerNavigationEvent
+import by.klnvch.link5dots.ui.game.activities.online.GameScreen
+import by.klnvch.link5dots.ui.game.activities.online.InitError
+import by.klnvch.link5dots.ui.game.activities.online.MultiplayerNavigationEvent
 import by.klnvch.link5dots.ui.game.picker.PickerViewStateImpl
 import by.klnvch.link5dots.ui.game.picker.states.createInitialPickerState
 import by.klnvch.link5dots.ui.game.picker.toPickerViewState
@@ -112,9 +112,8 @@ class OnlineGameViewModel @Inject constructor(
     val uiTitleState = combine(
         roomFlowGuard.onStart { emit(null) }.map { it as? INetworkRoom },
         _pickerState
-    ) { room, pickerState ->
-        getNetworkGameActionUseCase.get(pickerState, room)
-    }.map { actionToTitle(it) }
+    ) { room, pickerState -> getNetworkGameActionUseCase.get(pickerState, room) }
+        .map { actionToTitle(it) }
 
     private var scanJob: Job? = null
 

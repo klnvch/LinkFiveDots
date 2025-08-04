@@ -21,21 +21,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package by.klnvch.link5dots.ui.game.activities
+package by.klnvch.link5dots.ui.game.activities.online
 
 import android.os.Bundle
 import androidx.fragment.app.commit
 import by.klnvch.link5dots.R
-import by.klnvch.link5dots.ui.game.error.OnlineErrorFragment
+import by.klnvch.link5dots.ui.game.error.NsdErrorFragment
 
-class OnlineGameActivity : MultiplayerGameActivity() {
-    override val defaultTitle = R.string.menu_online_game
+class NsdGameActivity : MultiplayerGameActivity() {
+    override val defaultTitle = R.string.menu_local_network
 
     override fun addErrorFragment(args: Bundle) {
         supportFragmentManager.commit {
-            add(R.id.fragment, OnlineErrorFragment::class.java, args)
+            add(R.id.fragment, NsdErrorFragment::class.java, args)
         }
     }
-
-    override fun onNewGameClicked() = disconnectFinal(false)
 }

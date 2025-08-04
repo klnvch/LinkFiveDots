@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 klnvch
+ * Copyright (c) 2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,18 +21,28 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package by.klnvch.link5dots.ui.game.activities
+
+package by.klnvch.link5dots.ui.game.activities.online
 
 import android.os.Bundle
+import androidx.fragment.app.commit
 import by.klnvch.link5dots.R
-import by.klnvch.link5dots.domain.models.RoomType
-import by.klnvch.link5dots.domain.usecases.RoomByType
+import by.klnvch.link5dots.ui.game.error.BluetoothErrorFragment
+import by.klnvch.link5dots.ui.game.picker.BluetoothPickerFragment
 
-class BotGameActivity : OfflineGameActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setTitle(R.string.app_name)
+class BluetoothGameActivity : MultiplayerGameActivity() {
+    override val defaultTitle = R.string.bluetooth
+
+    override fun addPickerFragment() {
+        supportFragmentManager
+            .beginTransaction()
+            .add(R.id.fragment, BluetoothPickerFragment())
+            .commit()
     }
 
-    override fun getParam() = RoomByType(RoomType.BOT)
+    override fun addErrorFragment(args: Bundle) {
+        supportFragmentManager.commit {
+            add(R.id.fragment, BluetoothErrorFragment::class.java, args)
+        }
+    }
 }

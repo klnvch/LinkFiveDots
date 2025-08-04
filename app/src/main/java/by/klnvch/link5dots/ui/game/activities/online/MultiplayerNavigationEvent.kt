@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2025 klnvch
+ * Copyright (c) 2023-2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,28 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+package by.klnvch.link5dots.ui.game.activities.online
 
-package by.klnvch.link5dots.ui.game.activities
-
-import android.os.Bundle
-import androidx.fragment.app.commit
-import by.klnvch.link5dots.R
-import by.klnvch.link5dots.ui.game.error.BluetoothErrorFragment
-import by.klnvch.link5dots.ui.game.picker.BluetoothPickerFragment
-
-class BluetoothGameActivity : MultiplayerGameActivity() {
-    override val defaultTitle = R.string.bluetooth
-
-    override fun addPickerFragment() {
-        supportFragmentManager
-            .beginTransaction()
-            .add(R.id.fragment, BluetoothPickerFragment())
-            .commit()
-    }
-
-    override fun addErrorFragment(args: Bundle) {
-        supportFragmentManager.commit {
-            add(R.id.fragment, BluetoothErrorFragment::class.java, args)
-        }
-    }
-}
+sealed interface MultiplayerNavigationEvent
+object PickerScreen : MultiplayerNavigationEvent
+object GameScreen : MultiplayerNavigationEvent
+data class InitError(val e: Throwable) : MultiplayerNavigationEvent

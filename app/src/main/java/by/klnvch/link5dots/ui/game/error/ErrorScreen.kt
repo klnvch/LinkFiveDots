@@ -41,7 +41,8 @@ import by.klnvch.link5dots.ui.common.TextNoSurface
 @Preview
 @Composable
 fun ErrorScreen(
-    errorText: String = stringResource(R.string.error_feature_not_available),
+    infoTextId: Int = R.string.error_feature_not_available,
+    buttonTextId: Int = R.string.okay,
     onErrorAccepted: () -> Unit = {},
 ) {
     Column(
@@ -51,7 +52,7 @@ fun ErrorScreen(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        TextNoSurface(text = errorText)
-        CustomButtonWithText(onClick = onErrorAccepted, textId = R.string.okay)
+        TextNoSurface(text = stringResource(infoTextId))
+        CustomButtonWithText(onClick = onErrorAccepted, textId = buttonTextId)
     }
 }

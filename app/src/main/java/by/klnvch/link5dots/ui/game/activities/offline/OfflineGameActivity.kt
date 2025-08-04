@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package by.klnvch.link5dots.ui.game.activities
+package by.klnvch.link5dots.ui.game.activities.offline
 
 import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
@@ -29,6 +29,7 @@ import by.klnvch.link5dots.R
 import by.klnvch.link5dots.domain.usecases.RoomParam
 import by.klnvch.link5dots.ui.game.GameFragment
 import by.klnvch.link5dots.ui.game.OfflineGameViewModel
+import by.klnvch.link5dots.ui.game.activities.GameActivity
 
 abstract class OfflineGameActivity : GameActivity() {
 
@@ -48,7 +49,6 @@ abstract class OfflineGameActivity : GameActivity() {
             supportFragmentManager.beginTransaction().add(R.id.fragment, GameFragment()).commit()
         }
     }
-
 
     abstract fun getParam(): RoomParam
 }

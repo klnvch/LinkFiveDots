@@ -30,6 +30,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.ImageShader
@@ -40,8 +41,6 @@ import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.imageResource
 import androidx.lifecycle.ViewModelProvider
 import by.klnvch.link5dots.R
-import by.klnvch.link5dots.ui.game.OfflineGameViewModel
-import by.klnvch.link5dots.ui.game.OnlineGameViewModel
 import by.klnvch.link5dots.ui.theme.AppTheme
 import dagger.android.support.DaggerFragment
 import javax.inject.Inject
@@ -55,19 +54,12 @@ class BluetoothPickerFragment : DaggerFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        val gameViewModel = ViewModelProvider(
-            requireActivity(),
-            viewModelFactory
-        )[OfflineGameViewModel.KEY, OnlineGameViewModel::class.java]
-
-        val bluetoothViewModel = ViewModelProvider(
-            requireActivity(),
-            viewModelFactory
-        )[VisibilityViewModel.KEY, VisibilityViewModel::class.java]
-
         return ComposeView(requireContext()).apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
+                val getVMFactory: () -> ViewModelProvider.Factory =
+                    remember { { viewModelFactory } }
+
                 AppTheme {
                     Box(
                         modifier = Modifier
@@ -81,7 +73,7 @@ class BluetoothPickerFragment : DaggerFragment() {
                                 )
                             )
                     ) {
-                        BluetoothPickerScreen(gameViewModel, bluetoothViewModel)
+                        BluetoothPickerScreen(getVMFactory)
                     }
                 }
             }

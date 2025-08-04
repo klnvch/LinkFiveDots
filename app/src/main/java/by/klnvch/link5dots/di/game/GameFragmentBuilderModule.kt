@@ -28,7 +28,6 @@ import by.klnvch.link5dots.ui.game.GameFragment
 import by.klnvch.link5dots.ui.game.create.NewGameDialog
 import by.klnvch.link5dots.ui.game.end.EndGameDialog
 import by.klnvch.link5dots.ui.game.error.BluetoothErrorFragment
-import by.klnvch.link5dots.ui.game.error.MultiplayerErrorFragment
 import by.klnvch.link5dots.ui.game.error.NsdErrorFragment
 import by.klnvch.link5dots.ui.game.error.OnlineErrorFragment
 import by.klnvch.link5dots.ui.game.picker.BluetoothPickerFragment
@@ -52,9 +51,6 @@ abstract class GameFragmentBuilderModule {
 
     @ContributesAndroidInjector
     abstract fun bindNewGameDialog(): NewGameDialog
-
-    @ContributesAndroidInjector
-    abstract fun bindMultiplayerErrorFragment(): MultiplayerErrorFragment
 
     @ContributesAndroidInjector
     abstract fun bindBluetoothErrorFragment(): BluetoothErrorFragment

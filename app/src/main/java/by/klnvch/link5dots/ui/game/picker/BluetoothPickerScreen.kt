@@ -37,6 +37,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.compose.viewModel
 import by.klnvch.link5dots.R
 import by.klnvch.link5dots.ui.common.CustomButtonWithText
 import by.klnvch.link5dots.ui.game.OnlineGameViewModel
@@ -46,8 +48,9 @@ import by.klnvch.link5dots.ui.game.picker.states.VisibleViewState
 
 @Composable
 fun BluetoothPickerScreen(
-    gameViewModel: OnlineGameViewModel,
-    bluetoothViewModel: VisibilityViewModel,
+    getVMFactory: () -> ViewModelProvider.Factory,
+    gameViewModel: OnlineGameViewModel = viewModel(factory = getVMFactory()),
+    bluetoothViewModel: VisibilityViewModel = viewModel(factory = getVMFactory()),
 ) {
     val context = LocalContext.current
     val uiState by gameViewModel.pickerUiState.collectAsState()

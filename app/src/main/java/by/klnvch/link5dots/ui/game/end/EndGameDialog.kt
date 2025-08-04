@@ -30,7 +30,6 @@ import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.ViewModelProvider
 import by.klnvch.link5dots.R
-import by.klnvch.link5dots.databinding.DialogEndGameBinding
 import by.klnvch.link5dots.domain.models.ActionAvailability
 import by.klnvch.link5dots.ui.game.OfflineGameViewModel
 import by.klnvch.link5dots.ui.game.OnNewGameClickListener
@@ -38,8 +37,6 @@ import dagger.android.support.DaggerDialogFragment
 import javax.inject.Inject
 
 class EndGameDialog : DaggerDialogFragment(), DialogInterface.OnClickListener {
-    private lateinit var binding: DialogEndGameBinding
-
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
@@ -48,18 +45,14 @@ class EndGameDialog : DaggerDialogFragment(), DialogInterface.OnClickListener {
     internal lateinit var onNewGameClickListener: OnNewGameClickListener
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        binding = DialogEndGameBinding.inflate(requireActivity().layoutInflater)
-
         viewModel = ViewModelProvider(
             requireActivity(),
             viewModelFactory
         )[OfflineGameViewModel.KEY, OfflineGameViewModel::class.java]
 
         val viewState = viewModel.scoreUi.value
-        binding.viewState = viewState
 
         val builder = AlertDialog.Builder(requireContext())
-            .setView(binding.root)
             .setTitle(if (viewState?.title != null) getString(viewState.title) else null)
 
         if (viewState?.newGameAvailability == ActionAvailability.Available) {

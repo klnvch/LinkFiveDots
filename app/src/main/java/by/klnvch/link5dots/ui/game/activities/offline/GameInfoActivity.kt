@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package by.klnvch.link5dots.ui.game.activities
+package by.klnvch.link5dots.ui.game.activities.offline
 
 import android.app.Activity
 import android.content.Intent

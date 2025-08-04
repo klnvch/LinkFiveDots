@@ -27,7 +27,7 @@ import by.klnvch.link5dots.di.ActivityScope
 import by.klnvch.link5dots.di.game.CommonBindingModule
 import by.klnvch.link5dots.di.game.GameFragmentBuilderModule
 import by.klnvch.link5dots.di.game.OnlineGameViewModelsModule
-import by.klnvch.link5dots.ui.game.activities.NsdGameActivity
+import by.klnvch.link5dots.ui.game.activities.online.NsdGameActivity
 import dagger.Subcomponent
 import dagger.android.AndroidInjector
 

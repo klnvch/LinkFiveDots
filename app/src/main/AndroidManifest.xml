@@ -111,14 +111,14 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="by.klnvch.link5dots.ui.game.activities.BotGameActivity"
+            android:name="by.klnvch.link5dots.ui.game.activities.offline.BotGameActivity"
             android:launchMode="singleTop">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="by.klnvch.link5dots.ui.menu.MenuActivity" />
         </activity>
         <activity
-            android:name="by.klnvch.link5dots.ui.game.activities.TwoPlayersGameActivity"
+            android:name="by.klnvch.link5dots.ui.game.activities.offline.TwoPlayersGameActivity"
             android:label="@string/menu_two_players"
             android:launchMode="singleTop">
             <meta-data
@@ -126,7 +126,7 @@
                 android:value="by.klnvch.link5dots.ui.menu.MenuActivity" />
         </activity>
         <activity
-            android:name="by.klnvch.link5dots.ui.game.activities.BluetoothGameActivity"
+            android:name="by.klnvch.link5dots.ui.game.activities.online.BluetoothGameActivity"
             android:label="@string/bluetooth"
             android:launchMode="singleTop">
             <meta-data
@@ -134,7 +134,7 @@
                 android:value="by.klnvch.link5dots.ui.menu.MenuActivity" />
         </activity>
         <activity
-            android:name="by.klnvch.link5dots.ui.game.activities.NsdGameActivity"
+            android:name="by.klnvch.link5dots.ui.game.activities.online.NsdGameActivity"
             android:label="@string/menu_local_network"
             android:launchMode="singleTop">
             <meta-data
@@ -142,7 +142,7 @@
                 android:value="by.klnvch.link5dots.ui.menu.MenuActivity" />
         </activity>
         <activity
-            android:name="by.klnvch.link5dots.ui.game.activities.OnlineGameActivity"
+            android:name="by.klnvch.link5dots.ui.game.activities.online.OnlineGameActivity"
             android:label="@string/menu_online_game"
             android:launchMode="singleTop">
             <meta-data
@@ -150,7 +150,7 @@
                 android:value="by.klnvch.link5dots.ui.menu.MenuActivity" />
         </activity>
         <activity
-            android:name="by.klnvch.link5dots.ui.game.activities.GameInfoActivity"
+            android:name="by.klnvch.link5dots.ui.game.activities.offline.GameInfoActivity"
             android:label="@string/application_info_label"
             android:launchMode="singleTop">
             <meta-data

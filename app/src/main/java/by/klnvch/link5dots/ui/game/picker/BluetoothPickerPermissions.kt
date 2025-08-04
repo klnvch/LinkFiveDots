@@ -75,6 +75,11 @@ fun Context.scanPermissionGuard(
 }
 
 //////////////// Discovery //////////////////////////////////////////////////////////
+private const val DISCOVERABLE_DURATION_SECONDS = 30
+val discoverableIntent = Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE).apply {
+    putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, DISCOVERABLE_DURATION_SECONDS)
+}
+
 fun Context.discoveryPermissionGuard(
     permissionLauncher: ManagedActivityResultLauncher<String, Boolean>,
     discoverLauncher: ManagedActivityResultLauncher<Intent, ActivityResult>,
@@ -91,13 +96,7 @@ fun Context.discoveryPermissionGuard(
 }
 
 //////////////// Common //////////////////////////////////////////////////////////
-
-fun Context.hasPermission(permission: String) = ContextCompat.checkSelfPermission(
+private fun Context.hasPermission(permission: String) = ContextCompat.checkSelfPermission(
     this,
     permission
 ) == PackageManager.PERMISSION_GRANTED
-
-private const val DISCOVERABLE_DURATION_SECONDS = 30
-val discoverableIntent = Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE).apply {
-    putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, DISCOVERABLE_DURATION_SECONDS)
-}

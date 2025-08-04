@@ -29,30 +29,72 @@ import android.net.wifi.WifiManager
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.ImageShader
+import androidx.compose.ui.graphics.ShaderBrush
+import androidx.compose.ui.graphics.TileMode
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.compose.ui.res.imageResource
 import androidx.core.os.BundleCompat
 import by.klnvch.link5dots.R
 import by.klnvch.link5dots.domain.models.FeatureDisabled
+import by.klnvch.link5dots.ui.theme.AppTheme
+import dagger.android.support.DaggerFragment
 
-class NsdErrorFragment : MultiplayerErrorFragment() {
+class NsdErrorFragment : DaggerFragment() {
     private val requestEnableWifiLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             parentFragmentManager.beginTransaction().remove(this).commitAllowingStateLoss()
         }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
+    ): View {
         val error = BundleCompat.getSerializable(requireArguments(), "error", Throwable::class.java)
 
-        if (error is FeatureDisabled) {
-            binding.errorMessage.setText(R.string.wifi_settings_primary_switch_title)
-            binding.errorButton.setText(R.string.confirmation_turn_on)
+        val infoTextId = when (error) {
+            is FeatureDisabled -> R.string.wifi_settings_primary_switch_title
+            else -> R.string.error_feature_not_available
+        }
+        val buttonTextId = when (error) {
+            is FeatureDisabled -> R.string.confirmation_turn_on
+            else -> R.string.okay
+        }
+
+        return ComposeView(requireContext()).apply {
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setContent {
+                AppTheme {
+                    Box(
+                        modifier = Modifier
+                            .background(
+                                ShaderBrush(
+                                    ImageShader(
+                                        ImageBitmap.imageResource(R.drawable.paper),
+                                        TileMode.Repeated,
+                                        TileMode.Repeated
+                                    )
+                                )
+                            )
+                    ) {
+                        ErrorScreen(infoTextId, buttonTextId) { onErrorAccepted() }
+                    }
+                }
+            }
         }
     }
 
-    override fun onErrorAccepted() {
+    private fun onErrorAccepted() {
         val error = BundleCompat.getSerializable(requireArguments(), "error", Throwable::class.java)
 
         if (error is FeatureDisabled) {
@@ -62,7 +104,7 @@ class NsdErrorFragment : MultiplayerErrorFragment() {
                 requestEnableWifiLauncher.launch(Intent(WifiManager.ACTION_PICK_WIFI_NETWORK))
             }
         } else {
-            super.onErrorAccepted()
+            requireActivity().finish()
         }
     }
 }

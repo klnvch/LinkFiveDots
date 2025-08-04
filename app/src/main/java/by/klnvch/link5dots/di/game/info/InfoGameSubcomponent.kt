@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 klnvch
+ * Copyright (c) 2023-2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,7 +26,7 @@ package by.klnvch.link5dots.di.game.info
 import by.klnvch.link5dots.di.ActivityScope
 import by.klnvch.link5dots.di.game.GameFragmentBuilderModule
 import by.klnvch.link5dots.di.game.OfflineGameViewModelsModule
-import by.klnvch.link5dots.ui.game.activities.GameInfoActivity
+import by.klnvch.link5dots.ui.game.activities.offline.GameInfoActivity
 import dagger.Subcomponent
 import dagger.android.AndroidInjector
 

@@ -30,6 +30,7 @@ import by.klnvch.link5dots.domain.models.IRoom
 import by.klnvch.link5dots.domain.models.WinningLine
 import kotlin.js.ExperimentalJsExport
 import kotlin.js.JsExport
+import kotlin.time.Duration.Companion.milliseconds
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport()
@@ -40,10 +41,19 @@ interface GameViewState {
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport()
+interface GameInfoUserViewState {
+    val name: String
+    val duration: String
+    val isSelected: Boolean
+}
+
+@OptIn(ExperimentalJsExport::class)
+@JsExport()
 interface GameInfoViewState {
     val dotsStyleType: DotsStyleType
-    val user1Name: String?
-    val user2Name: String?
+    val user1: GameInfoUserViewState
+    val user2: GameInfoUserViewState
+    val size: String
 }
 
 @OptIn(ExperimentalJsExport::class)
@@ -62,7 +72,20 @@ fun createGameViewState(
     user2Name: String?,
     room: IRoom?,
 ): GameViewState = GameViewStateImpl(
-    GameInfoViewStateImpl(dotsStyleType, user1Name, user2Name),
+    GameInfoViewStateImpl(
+        dotsStyleType,
+        GameInfoUserViewStateImpl(
+            user1Name ?: "",
+            room.getDuration(1).formatDuration(),
+            room.isSelected(0),
+        ),
+        GameInfoUserViewStateImpl(
+            user2Name ?: "",
+            room.getDuration(0).formatDuration(),
+            room.isSelected(1),
+        ),
+        (room?.dots?.size ?: 0).toString(),
+    ),
     GameBoardViewStateImpl(
         dotsStyleType,
         room?.isNew() != false,
@@ -76,10 +99,17 @@ data class GameViewStateImpl(
     override val boardViewState: GameBoardViewState = GameBoardViewStateImpl(),
 ) : GameViewState
 
+data class GameInfoUserViewStateImpl(
+    override val name: String = "",
+    override val duration: String = "",
+    override val isSelected: Boolean = false,
+) : GameInfoUserViewState
+
 class GameInfoViewStateImpl(
     override val dotsStyleType: DotsStyleType = DotsStyleType.ORIGINAL,
-    override val user1Name: String? = null,
-    override val user2Name: String? = null,
+    override val user1: GameInfoUserViewState = GameInfoUserViewStateImpl(),
+    override val user2: GameInfoUserViewState = GameInfoUserViewStateImpl(),
+    override val size: String = 0.toString(),
 ) : GameInfoViewState
 
 class GameBoardViewStateImpl(
@@ -90,6 +120,23 @@ class GameBoardViewStateImpl(
 ) : GameBoardViewState {
     override val lastDot = dots.lastOrNull()
 }
+
+private fun IRoom?.getDuration(d: Int) = this?.dots
+    ?.drop(d)
+    ?.chunked(2)
+    ?.filter { it.size > 1 }
+    ?.sumOf { it[1].dt - it[0].dt }
+    ?: 0
+
+private fun Int.formatDurationPart() = if (this < 10) "0${this}" else toString()
+
+private fun Int.formatDuration() =
+    if (this > 999) milliseconds.toComponents { hours, minutes, seconds, _ ->
+        if (hours > 0) "${hours}:${minutes.formatDurationPart()}:${seconds.formatDurationPart()}"
+        else "${minutes.formatDurationPart()}:${seconds.formatDurationPart()}"
+    } else ""
+
+private fun IRoom?.isSelected(n: Int) = if (this?.dots == null) false else dots.size % 2 == n
 
 data class MenuViewState(
     val newGameAvailability: ActionAvailability = ActionAvailability.Gone,

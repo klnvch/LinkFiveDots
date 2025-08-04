@@ -21,29 +21,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package by.klnvch.link5dots.ui.game.error
+package by.klnvch.link5dots.ui.game.activities.offline
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import by.klnvch.link5dots.databinding.FragmentMultiplayerErrorBinding
-import dagger.android.support.DaggerFragment
+import by.klnvch.link5dots.R
+import by.klnvch.link5dots.domain.models.RoomType
+import by.klnvch.link5dots.domain.usecases.RoomByType
 
-open class MultiplayerErrorFragment : DaggerFragment(), OnMultiplayerErrorClickListener {
-    protected lateinit var binding: FragmentMultiplayerErrorBinding
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?,
-    ): View {
-        binding = FragmentMultiplayerErrorBinding.inflate(inflater, container, false)
-        binding.listener = this
-        return binding.root
+class BotGameActivity : OfflineGameActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setTitle(R.string.app_name)
     }
 
-    override fun onErrorAccepted() {
-        requireActivity().finish()
-    }
+    override fun getParam() = RoomByType(RoomType.BOT)
 }

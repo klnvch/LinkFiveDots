@@ -25,9 +25,15 @@
 package by.klnvch.link5dots.ui.game
 
 import androidx.annotation.DrawableRes
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.Card
@@ -38,6 +44,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -49,11 +56,11 @@ import by.klnvch.link5dots.domain.models.DotsStyleType
 fun GameInfoPreview() {
     Box(modifier = Modifier.fillMaxSize()) {
         GameInfo(
-            modifier = Modifier.align(Alignment.TopEnd),
+            modifier = Modifier.align(Alignment.TopCenter),
             infoViewState = GameInfoViewStateImpl(
                 DotsStyleType.CROSS_AND_RING,
-                "User 1",
-                null
+                GameInfoUserViewStateImpl("User 1", "00:00", true),
+                GameInfoUserViewStateImpl("", ""),
             )
         )
     }
@@ -69,29 +76,75 @@ fun GameInfo(modifier: Modifier = Modifier, infoViewState: GameInfoViewState) {
         DotsStyleType.ORIGINAL -> R.drawable.game_dot_circle_blue
         DotsStyleType.CROSS_AND_RING -> R.drawable.game_dot_ring_blue
     }
-    Card(
-        modifier = modifier.wrapContentSize()
-    ) {
-        UserRow(user1Dot, infoViewState.user1Name)
-        UserRow(user2Dot, infoViewState.user2Name)
+    Row(modifier = modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+        Card {
+            Text(
+                modifier = Modifier.padding(horizontal = 4.dp),
+                text = infoViewState.size,
+            )
+        }
+        Card(
+            modifier = Modifier.wrapContentSize()
+        ) {
+            Row(
+                modifier = Modifier
+                    .height(IntrinsicSize.Min)
+                    .padding(8.dp)
+            ) {
+                Column(
+                    modifier = Modifier.fillMaxHeight(),
+                    verticalArrangement = Arrangement.SpaceAround,
+                    horizontalAlignment = Alignment.End,
+                ) {
+                    TextDuration(infoViewState.user1)
+                    TextDuration(infoViewState.user2)
+                }
+                Column(
+                    modifier = Modifier.fillMaxHeight(),
+                    verticalArrangement = Arrangement.SpaceAround,
+                ) {
+                    UserDot(dotResId = user1Dot)
+                    UserDot(dotResId = user2Dot)
+                }
+                Column(
+                    modifier = Modifier.fillMaxHeight(),
+                    verticalArrangement = Arrangement.SpaceAround,
+                ) {
+                    TextUserName(infoViewState.user1)
+                    TextUserName(infoViewState.user2)
+                }
+            }
+        }
     }
 }
 
 @Composable
-private fun UserRow(@DrawableRes dotResId: Int, name: String?) {
-    Row(
-        modifier = Modifier.padding(horizontal = 8.dp),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        Icon(
-            painter = painterResource(id = dotResId),
-            contentDescription = null,
-            tint = Color.Unspecified,
-        )
-        Text(
-            modifier = Modifier.padding(horizontal = 4.dp),
-            text = name ?: "",
-            textAlign = TextAlign.Center,
-        )
-    }
+private fun TextDuration(state: GameInfoUserViewState) {
+    Text(
+        modifier = Modifier.padding(horizontal = 4.dp),
+        text = state.duration,
+        fontWeight = if (state.isSelected) FontWeight.Bold else null,
+        maxLines = 1,
+        textAlign = TextAlign.Center,
+    )
+}
+
+@Composable
+private fun UserDot(@DrawableRes dotResId: Int) {
+    Icon(
+        painter = painterResource(id = dotResId),
+        contentDescription = null,
+        tint = Color.Unspecified,
+    )
+}
+
+@Composable
+private fun TextUserName(state: GameInfoUserViewState) {
+    Text(
+        modifier = Modifier.padding(horizontal = 4.dp),
+        text = state.name,
+        fontWeight = if (state.isSelected) FontWeight.Bold else null,
+        maxLines = 1,
+        textAlign = TextAlign.Center,
+    )
 }
