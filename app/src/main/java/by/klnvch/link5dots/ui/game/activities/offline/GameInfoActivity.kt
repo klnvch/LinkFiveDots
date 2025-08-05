@@ -42,8 +42,6 @@ class GameInfoActivity : OfflineGameActivity() {
         else throw IllegalArgumentException()
     }
 
-    override fun onGameEnd() = Unit
-
     companion object {
         private const val KEY = "key"
 

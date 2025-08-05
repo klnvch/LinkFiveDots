@@ -46,8 +46,7 @@ class PrepareScoreBotUseCase @Inject constructor() : PrepareScoreUseCase {
     )
 }
 
-class PrepareScoreMultiplayerUseCase @Inject constructor(
-) : PrepareScoreUseCase {
+class PrepareScoreMultiplayerUseCase @Inject constructor() : PrepareScoreUseCase {
     override fun get(room: IRoom): NetworkGameScore {
         val status = if (room is NetworkRoomExtended) {
             if (room.user1.id == room.yourId) {

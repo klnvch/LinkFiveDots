@@ -26,7 +26,6 @@ package by.klnvch.link5dots.di.game
 
 import by.klnvch.link5dots.ui.game.GameFragment
 import by.klnvch.link5dots.ui.game.create.NewGameDialog
-import by.klnvch.link5dots.ui.game.end.EndGameDialog
 import by.klnvch.link5dots.ui.game.error.BluetoothErrorFragment
 import by.klnvch.link5dots.ui.game.error.NsdErrorFragment
 import by.klnvch.link5dots.ui.game.error.OnlineErrorFragment
@@ -45,9 +44,6 @@ abstract class GameFragmentBuilderModule {
 
     @ContributesAndroidInjector
     abstract fun bindGameFragment(): GameFragment
-
-    @ContributesAndroidInjector
-    abstract fun bindEndGameDialog(): EndGameDialog
 
     @ContributesAndroidInjector
     abstract fun bindNewGameDialog(): NewGameDialog

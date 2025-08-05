@@ -123,7 +123,7 @@ private fun TextDuration(state: GameInfoUserViewState) {
     Text(
         modifier = Modifier.padding(horizontal = 4.dp),
         text = state.duration,
-        fontWeight = if (state.isSelected) FontWeight.Bold else null,
+        fontWeight = if (state.canMove || state.isWon) FontWeight.Bold else null,
         maxLines = 1,
         textAlign = TextAlign.Center,
     )
@@ -143,7 +143,7 @@ private fun TextUserName(state: GameInfoUserViewState) {
     Text(
         modifier = Modifier.padding(horizontal = 4.dp),
         text = state.name,
-        fontWeight = if (state.isSelected) FontWeight.Bold else null,
+        fontWeight = if (state.canMove || state.isWon) FontWeight.Bold else null,
         maxLines = 1,
         textAlign = TextAlign.Center,
     )

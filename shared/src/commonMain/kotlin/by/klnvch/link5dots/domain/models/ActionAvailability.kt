@@ -24,6 +24,13 @@
 
 package by.klnvch.link5dots.domain.models
 
-enum class ActionAvailability {
-    Gone, Disabled, Available
+import kotlin.js.ExperimentalJsExport
+import kotlin.js.JsExport
+
+@OptIn(ExperimentalJsExport::class)
+@JsExport()
+enum class ActionAvailability(val isVisible: Boolean, val isEnabled: Boolean) {
+    Gone(false, false),
+    Disabled(true, false),
+    Available(true, true),
 }

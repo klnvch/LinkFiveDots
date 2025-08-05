@@ -37,6 +37,8 @@ import kotlin.time.Duration.Companion.milliseconds
 interface GameViewState {
     val infoViewState: GameInfoViewState
     val boardViewState: GameBoardViewState
+    val menuViewState: MenuViewState
+    val showNextActions: Boolean
 }
 
 @OptIn(ExperimentalJsExport::class)
@@ -44,7 +46,8 @@ interface GameViewState {
 interface GameInfoUserViewState {
     val name: String
     val duration: String
-    val isSelected: Boolean
+    val canMove: Boolean
+    val isWon: Boolean
 }
 
 @OptIn(ExperimentalJsExport::class)
@@ -66,23 +69,35 @@ interface GameBoardViewState {
     val lastDot: Dot?
 }
 
+@OptIn(ExperimentalJsExport::class)
+@JsExport()
+interface MenuViewState {
+    val new: ActionAvailability
+    val undo: ActionAvailability
+    val share: ActionAvailability
+}
+
 fun createGameViewState(
     dotsStyleType: DotsStyleType,
     user1Name: String?,
     user2Name: String?,
     room: IRoom?,
+    newActionAvailability: ActionAvailability,
+    undoActionAvailability: ActionAvailability,
 ): GameViewState = GameViewStateImpl(
     GameInfoViewStateImpl(
         dotsStyleType,
         GameInfoUserViewStateImpl(
             user1Name ?: "",
             room.getDuration(1).formatDuration(),
-            room.isSelected(0),
+            room.canMove(0),
+            room.isWon(1),
         ),
         GameInfoUserViewStateImpl(
             user2Name ?: "",
             room.getDuration(0).formatDuration(),
-            room.isSelected(1),
+            room.canMove(1),
+            room.isWon(0),
         ),
         (room?.dots?.size ?: 0).toString(),
     ),
@@ -92,17 +107,26 @@ fun createGameViewState(
         room?.dots?.toTypedArray() ?: emptyArray(),
         room?.getWinningLine(),
     ),
+    MenuViewStateImpl(
+        newActionAvailability,
+        undoActionAvailability,
+        ActionAvailability.Gone,
+    ),
+    room?.isOver() == true && (newActionAvailability.isEnabled || undoActionAvailability.isEnabled),
 )
 
 data class GameViewStateImpl(
     override val infoViewState: GameInfoViewState = GameInfoViewStateImpl(),
     override val boardViewState: GameBoardViewState = GameBoardViewStateImpl(),
+    override val menuViewState: MenuViewState = MenuViewStateImpl(),
+    override val showNextActions: Boolean = false,
 ) : GameViewState
 
 data class GameInfoUserViewStateImpl(
     override val name: String = "",
     override val duration: String = "",
-    override val isSelected: Boolean = false,
+    override val canMove: Boolean = false,
+    override val isWon: Boolean = false,
 ) : GameInfoUserViewState
 
 class GameInfoViewStateImpl(
@@ -121,6 +145,12 @@ class GameBoardViewStateImpl(
     override val lastDot = dots.lastOrNull()
 }
 
+data class MenuViewStateImpl(
+    override val new: ActionAvailability = ActionAvailability.Gone,
+    override val undo: ActionAvailability = ActionAvailability.Gone,
+    override val share: ActionAvailability = ActionAvailability.Gone,
+) : MenuViewState
+
 private fun IRoom?.getDuration(d: Int) = this?.dots
     ?.drop(d)
     ?.chunked(2)
@@ -136,10 +166,8 @@ private fun Int.formatDuration() =
         else "${minutes.formatDurationPart()}:${seconds.formatDurationPart()}"
     } else ""
 
-private fun IRoom?.isSelected(n: Int) = if (this?.dots == null) false else dots.size % 2 == n
+private fun IRoom?.canMove(n: Int) =
+    if (this == null || this.isOver()) false else dots.size % 2 == n
 
-data class MenuViewState(
-    val newGameAvailability: ActionAvailability = ActionAvailability.Gone,
-    val isUndoSupported: Boolean = false,
-    val isUndoAvailable: Boolean = false,
-)
+private fun IRoom?.isWon(n: Int) =
+    if (this == null || this.isNotOver()) false else dots.size % 2 == n

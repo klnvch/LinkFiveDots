@@ -38,7 +38,9 @@ fun GameScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val focus by viewModel.focus.collectAsState()
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(
+        modifier = Modifier.fillMaxSize()
+    ) {
         GameBoard(
             Modifier.fillMaxSize(),
             uiState.boardViewState,
@@ -47,5 +49,14 @@ fun GameScreen(
             onUnfocus = { viewModel.unfocus() }
         )
         GameInfo(Modifier.align(Alignment.TopEnd), uiState.infoViewState)
+        if (uiState.showNextActions) {
+            GameNextAction(
+                Modifier.align(Alignment.Center),
+                uiState.menuViewState,
+                { viewModel.newGame() },
+                { viewModel.undoLastMove() },
+                { viewModel.saveScore() },
+            )
+        }
     }
 }

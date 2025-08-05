@@ -24,14 +24,30 @@
 package by.klnvch.link5dots.ui.game.activities.offline
 
 import android.os.Bundle
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import by.klnvch.link5dots.R
 import by.klnvch.link5dots.domain.models.RoomType
 import by.klnvch.link5dots.domain.usecases.RoomByType
+import kotlinx.coroutines.launch
 
 class BotGameActivity : OfflineGameActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setTitle(R.string.app_name)
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.uiState.collect {
+                    when {
+                        it.infoViewState.user1.isWon -> setTitle(R.string.end_win)
+                        it.infoViewState.user2.isWon -> setTitle(R.string.end_lose)
+                        else -> setTitle(R.string.app_name)
+                    }
+                }
+            }
+        }
     }
 
     override fun getParam() = RoomByType(RoomType.BOT)

@@ -25,17 +25,12 @@ package by.klnvch.link5dots.ui.game.activities
 
 import android.os.Bundle
 import android.view.MenuItem
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import by.klnvch.link5dots.R
 import by.klnvch.link5dots.ui.game.OfflineGameViewModel
 import by.klnvch.link5dots.ui.game.OnNewGameClickListener
 import by.klnvch.link5dots.ui.game.create.NewGameDialog
-import by.klnvch.link5dots.ui.game.end.EndGameDialog
 import dagger.android.support.DaggerAppCompatActivity
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 abstract class GameActivity : DaggerAppCompatActivity(), OnNewGameClickListener {
@@ -48,16 +43,6 @@ abstract class GameActivity : DaggerAppCompatActivity(), OnNewGameClickListener 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
-
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.scoreUi.collect {
-                    if (it != null) {
-                        onGameEnd()
-                    }
-                }
-            }
-        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -75,9 +60,6 @@ abstract class GameActivity : DaggerAppCompatActivity(), OnNewGameClickListener 
         viewModel.focus()
         return true
     }
-
-    protected open fun onGameEnd() =
-        EndGameDialog().show(supportFragmentManager, EndGameDialog.TAG)
 
     override fun onNewGameClicked() =
         NewGameDialog().show(supportFragmentManager, NewGameDialog.TAG)

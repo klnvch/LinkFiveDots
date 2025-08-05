@@ -40,7 +40,6 @@ import by.klnvch.link5dots.domain.usecases.RoomParam
 import by.klnvch.link5dots.domain.usecases.SaveScoreUseCase
 import by.klnvch.link5dots.domain.usecases.UndoMoveUseCase
 import by.klnvch.link5dots.ui.game.create.NewGameViewState
-import by.klnvch.link5dots.ui.game.end.EndGameViewState
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -78,27 +77,17 @@ open class OfflineGameViewModel @Inject constructor(
         val type = settings.getDotsType().first()
         val user1Name = getUserNameUseCase.get(it.user1)
         val user2Name = getUserNameUseCase.get(it.user2)
-        createGameViewState(type, user1Name, user2Name, it)
+        val newActionAvailability = newGameUseCase.actionAvailability
+        val undoActionAvailability = undoMoveUseCase.getActionAvailability(it)
+        createGameViewState(
+            type,
+            user1Name,
+            user2Name,
+            it,
+            newActionAvailability,
+            undoActionAvailability
+        )
     }.stateIn(viewModelScope, SharingStarted.Eagerly, GameViewStateImpl())
-
-    val scoreUi = roomFlow.map {
-        if (it.isOver()) {
-            val score = prepareScoreUseCase.get(it)
-            EndGameViewState(score, undoMoveUseCase.isSupported, newGameUseCase.actionAvailability)
-        } else {
-            null
-        }
-    }.stateIn(viewModelScope, SharingStarted.Eagerly, null)
-
-    val menuUi = roomFlow
-        .map {
-            MenuViewState(
-                newGameUseCase.actionAvailability,
-                undoMoveUseCase.isSupported,
-                undoMoveUseCase.isAvailable(it)
-            )
-        }
-        .stateIn(viewModelScope, SharingStarted.Eagerly, MenuViewState())
 
     private val _focus = MutableStateFlow<Point?>(Point(9, 9))
     val focus: StateFlow<Point?> = _focus
@@ -134,6 +123,12 @@ open class OfflineGameViewModel @Inject constructor(
         analytics.logEvent(if (seed != null) Analytics.EVENT_GENERATE_GAME else Analytics.EVENT_NEW_GAME)
         viewModelScope.launch {
             newGameUseCase.create(seed)
+        }
+    }
+
+    fun newGame() {
+        viewModelScope.launch {
+            newGameUseCase.create(Random().nextInt(0xFFFF).toLong())
         }
     }
 

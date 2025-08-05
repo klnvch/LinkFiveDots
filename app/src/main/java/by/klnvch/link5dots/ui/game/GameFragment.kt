@@ -39,10 +39,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import by.klnvch.link5dots.R
-import by.klnvch.link5dots.domain.models.ActionAvailability
 import by.klnvch.link5dots.domain.repositories.Analytics
 import by.klnvch.link5dots.ui.theme.AppTheme
 import dagger.android.support.DaggerFragment
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -92,7 +92,7 @@ class GameFragment : DaggerFragment(), MenuProvider {
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.menuUi.collect {
+                viewModel.uiState.map { it.menuViewState }.collect {
                     requireActivity().invalidateMenu()
                 }
             }
@@ -106,28 +106,13 @@ class GameFragment : DaggerFragment(), MenuProvider {
     }
 
     override fun onPrepareMenu(menu: Menu) {
-        val menuViewState = viewModel.menuUi.value
+        val menuViewState = viewModel.uiState.value.menuViewState
 
-        val newGameItem = menu.findItem(R.id.menu_new_game)
-        when (menuViewState.newGameAvailability) {
-            ActionAvailability.Gone -> {
-                newGameItem.isVisible = false
-                newGameItem.isEnabled = false
-            }
+        menu.findItem(R.id.menu_new_game).isVisible = menuViewState.new.isVisible
+        menu.findItem(R.id.menu_new_game).isEnabled = menuViewState.new.isEnabled
 
-            ActionAvailability.Disabled -> {
-                newGameItem.isVisible = true
-                newGameItem.isEnabled = false
-            }
-
-            ActionAvailability.Available -> {
-                newGameItem.isVisible = true
-                newGameItem.isEnabled = true
-            }
-        }
-
-        menu.findItem(R.id.menu_undo).isVisible = menuViewState.isUndoSupported
-        menu.findItem(R.id.menu_undo).isEnabled = menuViewState.isUndoAvailable
+        menu.findItem(R.id.menu_undo).isVisible = menuViewState.undo.isVisible
+        menu.findItem(R.id.menu_undo).isEnabled = menuViewState.undo.isEnabled
     }
 
     override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {

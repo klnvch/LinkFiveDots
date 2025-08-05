@@ -24,6 +24,7 @@
 
 package by.klnvch.link5dots.domain.usecases
 
+import by.klnvch.link5dots.domain.models.ActionAvailability
 import by.klnvch.link5dots.domain.models.IRoom
 import by.klnvch.link5dots.domain.models.NetworkRoom
 import by.klnvch.link5dots.domain.models.Room
@@ -36,24 +37,23 @@ import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
 interface UndoMoveUseCase {
-    val isSupported: Boolean
-    suspend fun isAvailable(room: IRoom): Boolean
+    suspend fun getActionAvailability(room: IRoom): ActionAvailability
     suspend fun undo(room: IRoom)
 }
 
 class UndoMoveInfoUseCase @Inject constructor() : UndoMoveUseCase {
-    override val isSupported = false
-    override suspend fun isAvailable(room: IRoom) = false
+    override suspend fun getActionAvailability(room: IRoom) = ActionAvailability.Gone
     override suspend fun undo(room: IRoom) = Unit
 }
 
 abstract class UndoMoveRealUseCase(
     private val roomRepository: RoomRepository,
 ) : UndoMoveUseCase {
-    override val isSupported = true
-    override suspend fun isAvailable(room: IRoom) = room.dots.isNotEmpty()
+    override suspend fun getActionAvailability(room: IRoom) =
+        if (room.dots.isNotEmpty()) ActionAvailability.Available else ActionAvailability.Disabled
+
     override suspend fun undo(room: IRoom) {
-        if (isAvailable(room)) {
+        if (room.dots.isNotEmpty()) {
             val updatedRoom = undoInternal(room)
             roomRepository.save(updatedRoom)
         }
@@ -87,10 +87,9 @@ class UndoMoveBluetoothUseCase @Inject constructor(
     private val settings: Settings,
     private val repository: BluetoothRoomRepository,
 ) : UndoMoveUseCase {
-    override val isSupported = true
-    override suspend fun isAvailable(room: IRoom): Boolean {
+    override suspend fun getActionAvailability(room: IRoom): ActionAvailability {
         val currentRoom = repository.get().filterNotNull().first()
-        return isAvailable(currentRoom)
+        return if (isAvailable(currentRoom)) ActionAvailability.Available else ActionAvailability.Disabled
     }
 
     override suspend fun undo(room: IRoom) {
@@ -119,10 +118,9 @@ class UndoMoveNsdUseCase @Inject constructor(
     private val settings: Settings,
     private val repository: NsdRoomRepository,
 ) : UndoMoveUseCase {
-    override val isSupported = true
-    override suspend fun isAvailable(room: IRoom): Boolean {
+    override suspend fun getActionAvailability(room: IRoom): ActionAvailability {
         val currentRoom = repository.get().filterNotNull().first()
-        return isAvailable(currentRoom)
+        return if (isAvailable(currentRoom)) ActionAvailability.Available else ActionAvailability.Disabled
     }
 
     override suspend fun undo(room: IRoom) {
