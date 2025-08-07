@@ -37,18 +37,23 @@ import by.klnvch.link5dots.R
 import by.klnvch.link5dots.ui.game.GameFragment
 import by.klnvch.link5dots.ui.game.OfflineGameViewModel
 import by.klnvch.link5dots.ui.game.OnlineGameViewModel
-import by.klnvch.link5dots.ui.game.activities.GameActivity
 import by.klnvch.link5dots.ui.game.picker.PickerFragment
+import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 
-abstract class MultiplayerGameActivity : GameActivity() {
+abstract class MultiplayerGameActivity : DaggerAppCompatActivity() {
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+
     abstract val defaultTitle: Int
 
-    override lateinit var viewModel: OnlineGameViewModel
+    lateinit var viewModel: OnlineGameViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_game)
 
         viewModel = ViewModelProvider(
             this,
@@ -94,6 +99,11 @@ abstract class MultiplayerGameActivity : GameActivity() {
 
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    override fun onSearchRequested(): Boolean {
+        viewModel.focus()
+        return true
     }
 
     override fun setTitle(titleId: Int) =

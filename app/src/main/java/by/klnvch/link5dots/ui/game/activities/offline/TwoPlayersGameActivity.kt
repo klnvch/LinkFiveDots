@@ -24,15 +24,36 @@
 package by.klnvch.link5dots.ui.game.activities.offline
 
 import android.os.Bundle
+import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
+import androidx.lifecycle.ViewModelProvider
 import by.klnvch.link5dots.R
 import by.klnvch.link5dots.domain.models.RoomType
 import by.klnvch.link5dots.domain.usecases.RoomByType
+import by.klnvch.link5dots.ui.game.OfflineGameViewModel
+import dagger.android.support.DaggerAppCompatActivity
+import javax.inject.Inject
 
-class TwoPlayersGameActivity : OfflineGameActivity() {
+class TwoPlayersGameActivity : DaggerAppCompatActivity() {
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+
     override fun onCreate(savedInstanceState: Bundle?) {
+        enableEdgeToEdge()
         super.onCreate(savedInstanceState)
-        setTitle(R.string.menu_two_players)
-    }
 
-    override fun getParam() = RoomByType(RoomType.TWO_PLAYERS)
+        val viewModel = ViewModelProvider(
+            this,
+            viewModelFactory
+        )[OfflineGameViewModel.KEY, OfflineGameViewModel::class.java]
+
+        setContent {
+            GameContent(
+                viewModel = viewModel,
+                param = RoomByType(RoomType.TWO_PLAYERS),
+                title = { GameAppBarTitle(R.string.menu_two_players) },
+                navigateUp = { finish() },
+            )
+        }
+    }
 }

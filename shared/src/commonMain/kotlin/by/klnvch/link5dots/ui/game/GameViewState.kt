@@ -84,6 +84,7 @@ fun createGameViewState(
     room: IRoom?,
     newActionAvailability: ActionAvailability,
     undoActionAvailability: ActionAvailability,
+    shareActionAvailability: ActionAvailability,
 ): GameViewState = GameViewStateImpl(
     GameInfoViewStateImpl(
         dotsStyleType,
@@ -110,9 +111,9 @@ fun createGameViewState(
     MenuViewStateImpl(
         newActionAvailability,
         undoActionAvailability,
-        ActionAvailability.Gone,
+        shareActionAvailability,
     ),
-    room?.isOver() == true && (newActionAvailability.isEnabled || undoActionAvailability.isEnabled),
+    room?.isOver() == true && (newActionAvailability.isEnabled || undoActionAvailability.isEnabled || shareActionAvailability.isEnabled),
 )
 
 data class GameViewStateImpl(

@@ -36,6 +36,4 @@ class OnlineGameActivity : MultiplayerGameActivity() {
             add(R.id.fragment, OnlineErrorFragment::class.java, args)
         }
     }
-
-    override fun onNewGameClicked() = disconnectFinal(false)
 }

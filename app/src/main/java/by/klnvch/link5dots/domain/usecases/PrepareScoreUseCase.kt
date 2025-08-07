@@ -23,6 +23,7 @@
  */
 package by.klnvch.link5dots.domain.usecases
 
+import by.klnvch.link5dots.domain.models.ActionAvailability
 import by.klnvch.link5dots.domain.models.BotGameScore
 import by.klnvch.link5dots.domain.models.Dot
 import by.klnvch.link5dots.domain.models.GameResult
@@ -33,11 +34,12 @@ import by.klnvch.link5dots.domain.models.NetworkRoomExtended
 import by.klnvch.link5dots.domain.models.SimpleGameScore
 import javax.inject.Inject
 
-interface PrepareScoreUseCase {
+interface PrepareScoreUseCase : ActionAvailabilityForUseCase {
     fun get(room: IRoom): GameScore
 }
 
 class PrepareScoreBotUseCase @Inject constructor() : PrepareScoreUseCase {
+    override val actionAvailability = ActionAvailability.Available
     override fun get(room: IRoom) = BotGameScore(
         room.dots.size,
         room.getDuration(),
@@ -47,6 +49,7 @@ class PrepareScoreBotUseCase @Inject constructor() : PrepareScoreUseCase {
 }
 
 class PrepareScoreMultiplayerUseCase @Inject constructor() : PrepareScoreUseCase {
+    override val actionAvailability = ActionAvailability.Gone
     override fun get(room: IRoom): NetworkGameScore {
         val status = if (room is NetworkRoomExtended) {
             if (room.user1.id == room.yourId) {
@@ -68,6 +71,7 @@ class PrepareScoreMultiplayerUseCase @Inject constructor() : PrepareScoreUseCase
 }
 
 class PrepareScoreOtherUseCase @Inject constructor() : PrepareScoreUseCase {
+    override val actionAvailability = ActionAvailability.Gone
     override fun get(room: IRoom) = SimpleGameScore(
         room.dots.size,
         room.getDuration(),

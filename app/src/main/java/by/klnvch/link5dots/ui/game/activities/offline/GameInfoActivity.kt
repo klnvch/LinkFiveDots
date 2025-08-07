@@ -26,17 +26,40 @@ package by.klnvch.link5dots.ui.game.activities.offline
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
+import androidx.lifecycle.ViewModelProvider
 import by.klnvch.link5dots.R
 import by.klnvch.link5dots.domain.usecases.RoomByKey
 import by.klnvch.link5dots.domain.usecases.RoomParam
+import by.klnvch.link5dots.ui.game.OfflineGameViewModel
+import dagger.android.support.DaggerAppCompatActivity
+import javax.inject.Inject
 
-class GameInfoActivity : OfflineGameActivity() {
+class GameInfoActivity : DaggerAppCompatActivity() {
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+
     override fun onCreate(savedInstanceState: Bundle?) {
+        enableEdgeToEdge()
         super.onCreate(savedInstanceState)
-        setTitle(R.string.application_info_label)
+
+        val viewModel = ViewModelProvider(
+            this,
+            viewModelFactory
+        )[OfflineGameViewModel.KEY, OfflineGameViewModel::class.java]
+
+        setContent {
+            GameContent(
+                viewModel = viewModel,
+                param = getParam(),
+                title = { GameAppBarTitle(R.string.application_info_label) },
+                navigateUp = { finish() },
+            )
+        }
     }
 
-    override fun getParam(): RoomParam {
+    private fun getParam(): RoomParam {
         val key = intent.getStringExtra(KEY)
         if (key != null) return RoomByKey(key)
         else throw IllegalArgumentException()

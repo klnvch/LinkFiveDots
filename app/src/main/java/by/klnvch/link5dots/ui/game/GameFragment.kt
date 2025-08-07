@@ -23,7 +23,6 @@
  */
 package by.klnvch.link5dots.ui.game
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
@@ -39,7 +38,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import by.klnvch.link5dots.R
-import by.klnvch.link5dots.domain.repositories.Analytics
 import by.klnvch.link5dots.ui.theme.AppTheme
 import dagger.android.support.DaggerFragment
 import kotlinx.coroutines.flow.map
@@ -52,11 +50,6 @@ class GameFragment : DaggerFragment(), MenuProvider {
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private lateinit var viewModel: OfflineGameViewModel
-
-    internal lateinit var onNewGameClickListener: OnNewGameClickListener
-
-    @Inject
-    lateinit var analytics: Analytics
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -72,18 +65,9 @@ class GameFragment : DaggerFragment(), MenuProvider {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
                 AppTheme {
-                    GameScreen(viewModel)
+                    GameScreen(viewModel = viewModel)
                 }
             }
-        }
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        try {
-            onNewGameClickListener = context as OnNewGameClickListener
-        } catch (_: ClassCastException) {
-            throw ClassCastException(("$context must implement NoticeDialogListener"))
         }
     }
 
@@ -131,7 +115,7 @@ class GameFragment : DaggerFragment(), MenuProvider {
         }
 
         R.id.menu_new_game -> {
-            onNewGameClickListener.onNewGameClicked()
+            viewModel.newGame()
             true
         }
 

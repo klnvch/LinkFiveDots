@@ -24,50 +24,60 @@
 
 package by.klnvch.link5dots.ui.game.activities.offline
 
-import android.os.Bundle
-import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.lifecycle.ViewModelProvider
-import by.klnvch.link5dots.R
-import by.klnvch.link5dots.domain.models.RoomType
-import by.klnvch.link5dots.domain.usecases.RoomByType
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import by.klnvch.link5dots.domain.usecases.RoomParam
+import by.klnvch.link5dots.ui.game.GameScreen
 import by.klnvch.link5dots.ui.game.OfflineGameViewModel
-import dagger.android.support.DaggerAppCompatActivity
-import javax.inject.Inject
+import by.klnvch.link5dots.ui.theme.AppTheme
 
 @Composable
-private fun BotGameTitle(viewModel: OfflineGameViewModel) {
+private fun TopBar(
+    viewModel: OfflineGameViewModel,
+    title: @Composable () -> Unit,
+    navigateUp: () -> Unit,
+) {
     val uiState by viewModel.uiState.collectAsState()
-    val titleId = when {
-        uiState.infoViewState.user1.isWon -> R.string.end_win
-        uiState.infoViewState.user2.isWon -> R.string.end_lose
-        else -> R.string.app_name
-    }
-    GameAppBarTitle(titleId)
+    GameAppBar(
+        title = title,
+        navigateUp = navigateUp,
+        viewState = uiState.menuViewState,
+        onNew = { viewModel.newGame() },
+        onUndo = { viewModel.undoLastMove() },
+        onFocus = { viewModel.focus() },
+    )
 }
 
-class BotGameActivity : DaggerAppCompatActivity() {
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        enableEdgeToEdge()
-        super.onCreate(savedInstanceState)
-
-        val viewModel = ViewModelProvider(
-            this,
-            viewModelFactory
-        )[OfflineGameViewModel.KEY, OfflineGameViewModel::class.java]
-
-        setContent {
-            GameContent(
+@Composable
+fun GameContent(
+    viewModel: OfflineGameViewModel,
+    param: RoomParam,
+    title: @Composable () -> Unit,
+    navigateUp: () -> Unit,
+) {
+    LaunchedEffect(true) {
+        viewModel.setParam(param)
+    }
+    AppTheme {
+        Scaffold(
+            containerColor = Color.Transparent,
+            topBar = {
+                TopBar(
+                    viewModel = viewModel,
+                    title = title,
+                    navigateUp = navigateUp
+                )
+            },
+        ) { innerPadding ->
+            GameScreen(
+                modifier = Modifier.padding(innerPadding),
                 viewModel = viewModel,
-                param = RoomByType(RoomType.BOT),
-                title = { BotGameTitle(viewModel) },
-                navigateUp = { finish() },
             )
         }
     }

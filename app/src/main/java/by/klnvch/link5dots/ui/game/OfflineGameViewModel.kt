@@ -39,7 +39,6 @@ import by.klnvch.link5dots.domain.usecases.PrepareScoreUseCase
 import by.klnvch.link5dots.domain.usecases.RoomParam
 import by.klnvch.link5dots.domain.usecases.SaveScoreUseCase
 import by.klnvch.link5dots.domain.usecases.UndoMoveUseCase
-import by.klnvch.link5dots.ui.game.create.NewGameViewState
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -79,13 +78,15 @@ open class OfflineGameViewModel @Inject constructor(
         val user2Name = getUserNameUseCase.get(it.user2)
         val newActionAvailability = newGameUseCase.actionAvailability
         val undoActionAvailability = undoMoveUseCase.getActionAvailability(it)
+        val shareActionAvailability = prepareScoreUseCase.actionAvailability
         createGameViewState(
             type,
             user1Name,
             user2Name,
             it,
             newActionAvailability,
-            undoActionAvailability
+            undoActionAvailability,
+            shareActionAvailability,
         )
     }.stateIn(viewModelScope, SharingStarted.Eagerly, GameViewStateImpl())
 
@@ -119,13 +120,6 @@ open class OfflineGameViewModel @Inject constructor(
         }
     }
 
-    fun newGame(seed: Long?) {
-        analytics.logEvent(if (seed != null) Analytics.EVENT_GENERATE_GAME else Analytics.EVENT_NEW_GAME)
-        viewModelScope.launch {
-            newGameUseCase.create(seed)
-        }
-    }
-
     fun newGame() {
         viewModelScope.launch {
             newGameUseCase.create(Random().nextInt(0xFFFF).toLong())
@@ -134,11 +128,6 @@ open class OfflineGameViewModel @Inject constructor(
 
     fun addDot(p: Point) {
         viewModelScope.launch { roomFlow.firstOrNull()?.let { addDotUseCase.addDot(it, p) } }
-    }
-
-    fun getNewGameViewState(): NewGameViewState {
-        val seed = Random().nextInt(0xFFFF)
-        return NewGameViewState(seed.toString())
     }
 
     fun saveScore() {

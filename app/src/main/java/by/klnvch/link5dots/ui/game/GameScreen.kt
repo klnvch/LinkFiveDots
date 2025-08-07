@@ -34,12 +34,13 @@ import androidx.compose.ui.Modifier
 
 @Composable
 fun GameScreen(
+    modifier: Modifier = Modifier,
     viewModel: OfflineGameViewModel,
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val focus by viewModel.focus.collectAsState()
     Box(
-        modifier = Modifier.fillMaxSize()
+        modifier = modifier.fillMaxSize()
     ) {
         GameBoard(
             Modifier.fillMaxSize(),
