@@ -34,19 +34,20 @@ import androidx.lifecycle.ViewModelProvider
 import by.klnvch.link5dots.R
 import by.klnvch.link5dots.domain.models.RoomType
 import by.klnvch.link5dots.domain.usecases.RoomByType
+import by.klnvch.link5dots.ui.common.TopBarTitle
 import by.klnvch.link5dots.ui.game.OfflineGameViewModel
 import dagger.android.support.DaggerAppCompatActivity
 import javax.inject.Inject
 
 @Composable
-private fun BotGameTitle(viewModel: OfflineGameViewModel) {
+private fun GameTitle(viewModel: OfflineGameViewModel) {
     val uiState by viewModel.uiState.collectAsState()
     val titleId = when {
         uiState.infoViewState.user1.isWon -> R.string.end_win
         uiState.infoViewState.user2.isWon -> R.string.end_lose
         else -> R.string.app_name
     }
-    GameAppBarTitle(titleId)
+    TopBarTitle(titleId)
 }
 
 class BotGameActivity : DaggerAppCompatActivity() {
@@ -66,7 +67,7 @@ class BotGameActivity : DaggerAppCompatActivity() {
             GameContent(
                 viewModel = viewModel,
                 param = RoomByType(RoomType.BOT),
-                title = { BotGameTitle(viewModel) },
+                title = { GameTitle(viewModel) },
                 navigateUp = { finish() },
             )
         }

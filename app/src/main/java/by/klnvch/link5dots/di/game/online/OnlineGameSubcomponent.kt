@@ -25,7 +25,6 @@ package by.klnvch.link5dots.di.game.online
 
 import by.klnvch.link5dots.di.ActivityScope
 import by.klnvch.link5dots.di.game.CommonBindingModule
-import by.klnvch.link5dots.di.game.GameFragmentBuilderModule
 import by.klnvch.link5dots.di.game.OnlineGameViewModelsModule
 import by.klnvch.link5dots.ui.game.activities.online.OnlineGameActivity
 import dagger.Subcomponent
@@ -35,7 +34,6 @@ import dagger.android.AndroidInjector
 @Subcomponent(
     modules = [
         OnlineGameViewModelsModule::class,
-        GameFragmentBuilderModule::class,
         OnlineGameRulesModule::class,
         CommonBindingModule::class,
     ]

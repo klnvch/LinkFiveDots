@@ -32,6 +32,7 @@ import androidx.lifecycle.ViewModelProvider
 import by.klnvch.link5dots.R
 import by.klnvch.link5dots.domain.usecases.RoomByKey
 import by.klnvch.link5dots.domain.usecases.RoomParam
+import by.klnvch.link5dots.ui.common.TopBarTitle
 import by.klnvch.link5dots.ui.game.OfflineGameViewModel
 import dagger.android.support.DaggerAppCompatActivity
 import javax.inject.Inject
@@ -53,7 +54,7 @@ class GameInfoActivity : DaggerAppCompatActivity() {
             GameContent(
                 viewModel = viewModel,
                 param = getParam(),
-                title = { GameAppBarTitle(R.string.application_info_label) },
+                title = { TopBarTitle(R.string.application_info_label) },
                 navigateUp = { finish() },
             )
         }

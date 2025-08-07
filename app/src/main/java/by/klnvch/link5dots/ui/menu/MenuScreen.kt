@@ -24,21 +24,14 @@
 
 package by.klnvch.link5dots.ui.menu
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
-import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -46,12 +39,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
-import androidx.compose.ui.graphics.ImageShader
-import androidx.compose.ui.graphics.ShaderBrush
-import androidx.compose.ui.graphics.TileMode
 import androidx.compose.ui.res.imageResource
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -60,6 +48,10 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import by.klnvch.link5dots.R
 import by.klnvch.link5dots.di.viewmodels.SavedStateViewModelFactory
+import by.klnvch.link5dots.ui.common.NavigationIcon
+import by.klnvch.link5dots.ui.common.TopBarTitle
+import by.klnvch.link5dots.ui.common.tiledBackground
+import by.klnvch.link5dots.ui.common.topAppBarColors
 import by.klnvch.link5dots.ui.scores.ScoresScreen
 import by.klnvch.link5dots.ui.settings.SettingsScreen
 import kotlinx.coroutines.launch
@@ -73,29 +65,10 @@ fun AppBar(
     modifier: Modifier = Modifier,
 ) {
     TopAppBar(
-        title = {
-            Text(
-                stringResource(currentScreen.title),
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
-        },
-        colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = Color(33, 33, 33),
-            titleContentColor = Color(250, 250, 250),
-            navigationIconContentColor = Color(250, 250, 250),
-        ),
+        title = { TopBarTitle(currentScreen.title) },
+        colors = topAppBarColors(),
         modifier = modifier,
-        navigationIcon = {
-            if (canNavigateBack) {
-                IconButton(onClick = navigateUp) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = ""
-                    )
-                }
-            }
-        }
+        navigationIcon = { if (canNavigateBack) NavigationIcon(onClick = navigateUp) }
     )
 }
 
@@ -113,15 +86,7 @@ fun App(
     val snackbarHostState = remember { SnackbarHostState() }
 
     Scaffold(
-        modifier = Modifier.background(
-            ShaderBrush(
-                ImageShader(
-                    ImageBitmap.imageResource(R.drawable.paper),
-                    TileMode.Repeated,
-                    TileMode.Repeated
-                )
-            )
-        ),
+        modifier = Modifier.tiledBackground(ImageBitmap.imageResource(R.drawable.paper)),
         containerColor = Color.Transparent,
         topBar = {
             AppBar(

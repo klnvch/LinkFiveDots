@@ -24,16 +24,39 @@
 package by.klnvch.link5dots.ui.game.activities.online
 
 import android.os.Bundle
-import androidx.fragment.app.commit
+import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
+import androidx.lifecycle.ViewModelProvider
 import by.klnvch.link5dots.R
-import by.klnvch.link5dots.ui.game.error.NsdErrorFragment
+import by.klnvch.link5dots.ui.game.OfflineGameViewModel
+import by.klnvch.link5dots.ui.game.OnlineGameViewModel
+import by.klnvch.link5dots.ui.game.error.ErrorScreenNsd
+import by.klnvch.link5dots.ui.game.picker.PickerScreen
+import dagger.android.support.DaggerAppCompatActivity
+import javax.inject.Inject
 
-class NsdGameActivity : MultiplayerGameActivity() {
-    override val defaultTitle = R.string.menu_local_network
+class NsdGameActivity : DaggerAppCompatActivity() {
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    override fun addErrorFragment(args: Bundle) {
-        supportFragmentManager.commit {
-            add(R.id.fragment, NsdErrorFragment::class.java, args)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        enableEdgeToEdge()
+        super.onCreate(savedInstanceState)
+
+        val viewModel = ViewModelProvider(
+            this,
+            viewModelFactory
+        )[OfflineGameViewModel.KEY, OnlineGameViewModel::class.java]
+
+        setContent {
+            GameContent(
+                viewModelFactory = viewModelFactory,
+                viewModel = viewModel,
+                defaultTitle = R.string.menu_local_network,
+                pickerScreen = { factory -> PickerScreen(factory) },
+                errorScreen = { e, onDone -> ErrorScreenNsd(e, onDone) },
+                onFinish = { finish() }
+            )
         }
     }
 }

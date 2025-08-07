@@ -25,24 +25,40 @@
 package by.klnvch.link5dots.ui.game.activities.online
 
 import android.os.Bundle
-import androidx.fragment.app.commit
+import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
+import androidx.lifecycle.ViewModelProvider
 import by.klnvch.link5dots.R
-import by.klnvch.link5dots.ui.game.error.BluetoothErrorFragment
-import by.klnvch.link5dots.ui.game.picker.BluetoothPickerFragment
+import by.klnvch.link5dots.ui.game.OfflineGameViewModel
+import by.klnvch.link5dots.ui.game.OnlineGameViewModel
+import by.klnvch.link5dots.ui.game.error.ErrorScreenBluetooth
+import by.klnvch.link5dots.ui.game.picker.BluetoothPickerScreen
+import dagger.android.support.DaggerAppCompatActivity
+import javax.inject.Inject
 
-class BluetoothGameActivity : MultiplayerGameActivity() {
-    override val defaultTitle = R.string.bluetooth
+class BluetoothGameActivity : DaggerAppCompatActivity() {
 
-    override fun addPickerFragment() {
-        supportFragmentManager
-            .beginTransaction()
-            .add(R.id.fragment, BluetoothPickerFragment())
-            .commit()
-    }
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    override fun addErrorFragment(args: Bundle) {
-        supportFragmentManager.commit {
-            add(R.id.fragment, BluetoothErrorFragment::class.java, args)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        enableEdgeToEdge()
+        super.onCreate(savedInstanceState)
+
+        val viewModel = ViewModelProvider(
+            this,
+            viewModelFactory
+        )[OfflineGameViewModel.KEY, OnlineGameViewModel::class.java]
+
+        setContent {
+            GameContent(
+                viewModelFactory = viewModelFactory,
+                viewModel = viewModel,
+                defaultTitle = R.string.bluetooth,
+                pickerScreen = { factory -> BluetoothPickerScreen(factory) },
+                errorScreen = { e, onDone -> ErrorScreenBluetooth(e, onDone) },
+                onFinish = { finish() }
+            )
         }
     }
 }

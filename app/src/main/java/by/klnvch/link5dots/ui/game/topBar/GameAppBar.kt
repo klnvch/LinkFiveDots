@@ -22,44 +22,48 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.ui.game.activities.offline
+package by.klnvch.link5dots.ui.game.topBar
 
-import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextOverflow
 import by.klnvch.link5dots.R
+import by.klnvch.link5dots.ui.common.IconMenuItem
+import by.klnvch.link5dots.ui.common.NavigationIcon
+import by.klnvch.link5dots.ui.common.topAppBarColors
 import by.klnvch.link5dots.ui.game.MenuViewState
+import by.klnvch.link5dots.ui.game.OfflineGameViewModel
 
 @Composable
-fun GameAppBarTitle(@StringRes textId: Int) {
-    Text(
-        stringResource(textId),
-        maxLines = 1,
-        overflow = TextOverflow.Ellipsis
+fun TopBar(
+    viewModel: OfflineGameViewModel,
+    title: @Composable () -> Unit,
+    navigateUp: () -> Unit,
+) {
+    val uiState by viewModel.uiState.collectAsState()
+    GameTopBar(
+        title = title,
+        navigateUp = navigateUp,
+        viewState = uiState.menuViewState,
+        onNew = { viewModel.newGame() },
+        onUndo = { viewModel.undoLastMove() },
+        onFocus = { viewModel.focus() },
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun GameAppBar(
+private fun GameTopBar(
     viewState: MenuViewState,
     title: @Composable () -> Unit,
     navigateUp: () -> Unit,
@@ -70,55 +74,29 @@ fun GameAppBar(
     var expanded by remember { mutableStateOf(false) }
     TopAppBar(
         title = title,
-        colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = Color(33, 33, 33),
-            titleContentColor = Color(250, 250, 250),
-            navigationIconContentColor = Color(250, 250, 250),
-        ),
-        navigationIcon = {
-            IconButton(onClick = navigateUp) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = ""
-                )
-            }
-        },
+        colors = topAppBarColors(),
+        navigationIcon = { NavigationIcon(onClick = navigateUp) },
         actions = {
-            IconButton(onClick = onFocus) {
-                Icon(
-                    imageVector = Icons.Filled.Search,
-                    contentDescription = stringResource(R.string.search),
-                    tint = Color(250, 250, 250),
-                )
-            }
+            IconMenuItem(
+                imageVector = Icons.Filled.Search,
+                onClick = onFocus,
+                contentDescription = stringResource(R.string.search)
+            )
             if (viewState.undo.isVisible || viewState.new.isVisible) {
-                IconButton(onClick = { expanded = true }) {
-                    Icon(
-                        Icons.Filled.MoreVert,
-                        contentDescription = null,
-                        tint = Color(250, 250, 250),
-                    )
-                }
+                IconMenuItem(
+                    imageVector = Icons.Filled.MoreVert,
+                    onClick = { expanded = true },
+                )
                 DropdownMenu(
                     expanded = expanded,
                     onDismissRequest = { expanded = false }
                 ) {
-                    if (viewState.undo.isVisible) {
-                        DropdownMenuItem(
-                            text = { Text(stringResource(R.string.undo)) },
-                            onClick = onUndo,
-                            enabled = viewState.undo.isEnabled,
-                        )
+                    GameDropdownMenuItem(viewState.undo, R.string.undo) {
+                        onUndo()
                     }
-                    if (viewState.undo.isVisible) {
-                        DropdownMenuItem(
-                            text = { Text(stringResource(R.string.new_game)) },
-                            onClick = {
-                                onNew
-                                expanded = false
-                            },
-                            enabled = viewState.new.isEnabled,
-                        )
+                    GameDropdownMenuItem(viewState.new, R.string.new_game) {
+                        onNew()
+                        expanded = false
                     }
                 }
             }

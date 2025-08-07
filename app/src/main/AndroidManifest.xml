@@ -130,7 +130,8 @@
         <activity
             android:name="by.klnvch.link5dots.ui.game.activities.online.BluetoothGameActivity"
             android:label="@string/bluetooth"
-            android:launchMode="singleTop">
+            android:launchMode="singleTop"
+            android:theme="@style/Theme.Material3.Dark.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="by.klnvch.link5dots.ui.menu.MenuActivity" />
@@ -138,7 +139,8 @@
         <activity
             android:name="by.klnvch.link5dots.ui.game.activities.online.NsdGameActivity"
             android:label="@string/menu_local_network"
-            android:launchMode="singleTop">
+            android:launchMode="singleTop"
+            android:theme="@style/Theme.Material3.Dark.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="by.klnvch.link5dots.ui.menu.MenuActivity" />
@@ -146,7 +148,8 @@
         <activity
             android:name="by.klnvch.link5dots.ui.game.activities.online.OnlineGameActivity"
             android:label="@string/menu_online_game"
-            android:launchMode="singleTop">
+            android:launchMode="singleTop"
+            android:theme="@style/Theme.Material3.Dark.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="by.klnvch.link5dots.ui.menu.MenuActivity" />

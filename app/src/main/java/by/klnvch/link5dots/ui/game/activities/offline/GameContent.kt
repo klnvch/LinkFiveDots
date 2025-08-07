@@ -28,31 +28,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import by.klnvch.link5dots.domain.usecases.RoomParam
 import by.klnvch.link5dots.ui.game.GameScreen
 import by.klnvch.link5dots.ui.game.OfflineGameViewModel
+import by.klnvch.link5dots.ui.game.topBar.TopBar
 import by.klnvch.link5dots.ui.theme.AppTheme
-
-@Composable
-private fun TopBar(
-    viewModel: OfflineGameViewModel,
-    title: @Composable () -> Unit,
-    navigateUp: () -> Unit,
-) {
-    val uiState by viewModel.uiState.collectAsState()
-    GameAppBar(
-        title = title,
-        navigateUp = navigateUp,
-        viewState = uiState.menuViewState,
-        onNew = { viewModel.newGame() },
-        onUndo = { viewModel.undoLastMove() },
-        onFocus = { viewModel.focus() },
-    )
-}
 
 @Composable
 fun GameContent(

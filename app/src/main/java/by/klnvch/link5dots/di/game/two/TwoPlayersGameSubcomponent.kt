@@ -24,7 +24,6 @@
 package by.klnvch.link5dots.di.game.two
 
 import by.klnvch.link5dots.di.ActivityScope
-import by.klnvch.link5dots.di.game.GameFragmentBuilderModule
 import by.klnvch.link5dots.di.game.OfflineGameViewModelsModule
 import by.klnvch.link5dots.ui.game.activities.offline.TwoPlayersGameActivity
 import dagger.Subcomponent
@@ -34,7 +33,6 @@ import dagger.android.AndroidInjector
 @Subcomponent(
     modules = [
         OfflineGameViewModelsModule::class,
-        GameFragmentBuilderModule::class,
         TwoPlayersGameRulesModule::class,
     ]
 )

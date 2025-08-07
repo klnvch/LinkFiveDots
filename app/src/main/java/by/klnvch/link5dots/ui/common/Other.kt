@@ -22,24 +22,21 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.di.game.bluetooth
+package by.klnvch.link5dots.ui.common
 
-import by.klnvch.link5dots.di.ActivityScope
-import by.klnvch.link5dots.di.game.CommonBindingModule
-import by.klnvch.link5dots.di.game.OnlineGameViewModelsModule
-import by.klnvch.link5dots.ui.game.activities.online.BluetoothGameActivity
-import dagger.Subcomponent
-import dagger.android.AndroidInjector
+import androidx.compose.foundation.background
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.ImageShader
+import androidx.compose.ui.graphics.ShaderBrush
+import androidx.compose.ui.graphics.TileMode
 
-@ActivityScope
-@Subcomponent(
-    modules = [
-        OnlineGameViewModelsModule::class,
-        BluetoothGameRulesModule::class,
-        CommonBindingModule::class,
-    ]
+fun Modifier.tiledBackground(image: ImageBitmap) = this.background(
+    ShaderBrush(
+        ImageShader(
+            image,
+            TileMode.Repeated,
+            TileMode.Repeated
+        )
+    )
 )
-interface BluetoothGameSubcomponent : AndroidInjector<BluetoothGameActivity> {
-    @Subcomponent.Factory
-    interface Factory : AndroidInjector.Factory<BluetoothGameActivity>
-}

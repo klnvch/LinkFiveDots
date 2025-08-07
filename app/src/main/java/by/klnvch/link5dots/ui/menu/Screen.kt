@@ -24,7 +24,6 @@
 
 package by.klnvch.link5dots.ui.menu
 
-import androidx.annotation.StringRes
 import by.klnvch.link5dots.R
 
 enum class Route() {
@@ -32,7 +31,7 @@ enum class Route() {
 }
 
 sealed class Screen() {
-    open class ComposeScreen(route: Route, @StringRes val title: Int) : Screen() {
+    open class ComposeScreen(route: Route, val title: Int) : Screen() {
         val route = route.name
     }
 

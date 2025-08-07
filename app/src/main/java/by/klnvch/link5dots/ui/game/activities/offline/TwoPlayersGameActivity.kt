@@ -30,6 +30,7 @@ import androidx.lifecycle.ViewModelProvider
 import by.klnvch.link5dots.R
 import by.klnvch.link5dots.domain.models.RoomType
 import by.klnvch.link5dots.domain.usecases.RoomByType
+import by.klnvch.link5dots.ui.common.TopBarTitle
 import by.klnvch.link5dots.ui.game.OfflineGameViewModel
 import dagger.android.support.DaggerAppCompatActivity
 import javax.inject.Inject
@@ -51,7 +52,7 @@ class TwoPlayersGameActivity : DaggerAppCompatActivity() {
             GameContent(
                 viewModel = viewModel,
                 param = RoomByType(RoomType.TWO_PLAYERS),
-                title = { GameAppBarTitle(R.string.menu_two_players) },
+                title = { TopBarTitle(R.string.menu_two_players) },
                 navigateUp = { finish() },
             )
         }

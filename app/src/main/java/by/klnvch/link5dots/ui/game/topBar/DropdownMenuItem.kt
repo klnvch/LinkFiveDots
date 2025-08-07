@@ -22,24 +22,26 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.di.game.bluetooth
+package by.klnvch.link5dots.ui.game.topBar
 
-import by.klnvch.link5dots.di.ActivityScope
-import by.klnvch.link5dots.di.game.CommonBindingModule
-import by.klnvch.link5dots.di.game.OnlineGameViewModelsModule
-import by.klnvch.link5dots.ui.game.activities.online.BluetoothGameActivity
-import dagger.Subcomponent
-import dagger.android.AndroidInjector
+import androidx.annotation.StringRes
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
+import by.klnvch.link5dots.domain.models.ActionAvailability
 
-@ActivityScope
-@Subcomponent(
-    modules = [
-        OnlineGameViewModelsModule::class,
-        BluetoothGameRulesModule::class,
-        CommonBindingModule::class,
-    ]
-)
-interface BluetoothGameSubcomponent : AndroidInjector<BluetoothGameActivity> {
-    @Subcomponent.Factory
-    interface Factory : AndroidInjector.Factory<BluetoothGameActivity>
+@Composable
+fun GameDropdownMenuItem(
+    availability: ActionAvailability,
+    @StringRes textId: Int,
+    onClick: () -> Unit,
+) {
+    if (availability.isVisible) {
+        DropdownMenuItem(
+            text = { Text(stringResource(textId)) },
+            onClick = onClick,
+            enabled = availability.isEnabled,
+        )
+    }
 }
