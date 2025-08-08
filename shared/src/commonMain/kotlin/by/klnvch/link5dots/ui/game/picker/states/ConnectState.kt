@@ -30,5 +30,4 @@ sealed interface ConnectState
 object ConnectNone : ConnectState
 object ConnectConnecting : ConnectState
 class ConnectConnected(val descriptor: RemoteRoomDescriptor) : ConnectState
-class ConnectFailed(val e: Throwable) : ConnectState
 object ConnectDisconnected : ConnectState

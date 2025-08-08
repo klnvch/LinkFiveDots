@@ -38,7 +38,6 @@ import by.klnvch.link5dots.domain.models.RoomState
 import by.klnvch.link5dots.domain.models.RoomType
 import by.klnvch.link5dots.domain.models.translate
 import by.klnvch.link5dots.domain.repositories.BluetoothRoomRepository
-import by.klnvch.link5dots.domain.repositories.GetOnlineRoomRepository
 import by.klnvch.link5dots.domain.repositories.NsdRoomRepository
 import by.klnvch.link5dots.domain.repositories.RoomKeyGenerator
 import by.klnvch.link5dots.domain.repositories.RoomRepository
@@ -47,10 +46,6 @@ import by.klnvch.link5dots.domain.repositories.TimeService
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import javax.inject.Inject
-
-interface NewGameUseCase : ActionAvailabilityForUseCase {
-    suspend fun create(seed: Long?)
-}
 
 class NewGameEmptyUseCase @Inject constructor() : NewGameUseCase {
     override suspend fun create(seed: Long?) = throw IllegalStateException()
@@ -126,16 +121,6 @@ class NewGameTwoUseCase @Inject constructor(
     override val user1 = null
     override val user2 = null
     override val type = RoomType.TWO_PLAYERS
-}
-
-class NewGameOnlineUseCase @Inject constructor(
-    private val repository: GetOnlineRoomRepository,
-) : NewGameUseCase {
-    override suspend fun create(seed: Long?) = throw IllegalStateException()
-    override val actionAvailability
-        get() =
-            if (repository.room?.isOver() == true) ActionAvailability.Available
-            else ActionAvailability.Disabled
 }
 
 class NewGameBluetoothUseCase @Inject constructor(

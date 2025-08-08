@@ -64,8 +64,6 @@ data class NetworkRoomExtended(
     override val state: RoomState,
     override val yourId: String,
 ) : INetworkRoomExtended {
-    val opponent = if (user1.id == yourId) user2 else user1
-
     constructor(room: NetworkRoom, yourId: String) : this(
         room.key,
         room.timestamp,

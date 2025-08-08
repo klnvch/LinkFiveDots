@@ -24,9 +24,7 @@
 package by.klnvch.link5dots.ui.game
 
 import androidx.lifecycle.viewModelScope
-import by.klnvch.link5dots.domain.models.FeatureDisabled
 import by.klnvch.link5dots.domain.models.INetworkRoom
-import by.klnvch.link5dots.domain.models.NetworkRoomExtended
 import by.klnvch.link5dots.domain.models.NetworkRoomState
 import by.klnvch.link5dots.domain.models.NetworkRoomStateCreated
 import by.klnvch.link5dots.domain.models.NetworkRoomStateDeleted
@@ -51,17 +49,12 @@ import by.klnvch.link5dots.domain.usecases.network.GetNetworkRoomStateUseCase
 import by.klnvch.link5dots.domain.usecases.network.InitMultiplayerUseCase
 import by.klnvch.link5dots.domain.usecases.network.ScanUseCase
 import by.klnvch.link5dots.ui.game.RoomToTitleMapper.actionToTitle
-import by.klnvch.link5dots.ui.game.activities.online.GameScreen
-import by.klnvch.link5dots.ui.game.activities.online.InitError
-import by.klnvch.link5dots.ui.game.activities.online.MultiplayerNavigationEvent
 import by.klnvch.link5dots.ui.game.picker.PickerViewStateImpl
 import by.klnvch.link5dots.ui.game.picker.states.createInitialPickerState
 import by.klnvch.link5dots.ui.game.picker.toPickerViewState
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
@@ -80,7 +73,7 @@ class OnlineGameViewModel @Inject constructor(
     private val scanUseCase: ScanUseCase,
     private val connectRemoteRoomUseCase: ConnectRemoteRoomUseCase,
     private val getNetworkGameActionUseCase: GetNetworkGameActionUseCase,
-    private val getUserNameUseCase: GetUserNameUseCase,
+    getUserNameUseCase: GetUserNameUseCase,
     getRoomUseCase: GetRoomUseCase,
     newGameUseCase: NewGameUseCase,
     addDotUseCase: AddDotUseCase,
@@ -100,9 +93,6 @@ class OnlineGameViewModel @Inject constructor(
     settings,
     getUserNameUseCase,
 ) {
-    private val _navigationEvent = MutableSharedFlow<MultiplayerNavigationEvent>()
-    val navigationEvent = _navigationEvent.asSharedFlow()
-
     private val _pickerState = MutableStateFlow(createInitialPickerState())
 
     val pickerUiState = _pickerState
@@ -117,28 +107,16 @@ class OnlineGameViewModel @Inject constructor(
 
     private var scanJob: Job? = null
 
-    lateinit var disconnectViewState: DisconnectViewState
-
     init {
         viewModelScope.launch {
             try {
                 initMultiplayerUseCase.init()
             } catch (e: Throwable) {
-                _navigationEvent.emit(InitError(e))
-            }
-        }
-        viewModelScope.launch {
-            roomFlow.collect {
-                if (it is NetworkRoomExtended) {
-                    disconnectViewState =
-                        DisconnectViewState(getUserNameUseCase.get(it.opponent) ?: "")
-                }
+                _pickerState.update { it.failed(e) }
             }
         }
         viewModelScope.launch { getNetworkRoomStateUseCase.get().collect { onStatedChanged(it) } }
     }
-
-    fun isConnected() = _pickerState.value.isConnected
 
     fun createRoom() {
         viewModelScope.launch {
@@ -146,16 +124,7 @@ class OnlineGameViewModel @Inject constructor(
             try {
                 createMultiplayerRoomUseCase.create()
             } catch (e: Throwable) {
-                when (e) {
-                    is FeatureDisabled -> {
-                        _pickerState.update { it.reset() }
-                        _navigationEvent.emit(InitError(e))
-                    }
-
-                    else -> {
-                        _pickerState.update { it.creationFailed(e) }
-                    }
-                }
+                _pickerState.update { it.failed(e) }
             }
         }
     }
@@ -176,11 +145,10 @@ class OnlineGameViewModel @Inject constructor(
                             _pickerState.update { state -> state.scanDone() }
                         }
                     }
-                    .catch { e -> _pickerState.update { it.scanFailed(e) } }
+                    .catch { e -> _pickerState.update { it.failed(e) } }
                     .collect { items -> _pickerState.update { it.scanning(items.toTypedArray()) } }
             } catch (e: Throwable) {
-                _pickerState.update { it.reset() }
-                _navigationEvent.emit(InitError(e))
+                _pickerState.update { it.failed(e) }
             }
         }
     }
@@ -197,8 +165,7 @@ class OnlineGameViewModel @Inject constructor(
             try {
                 connectRemoteRoomUseCase.connect(descriptor)
             } catch (e: Throwable) {
-                _pickerState.update { it.creationFailed(e) }
-                startScan()
+                _pickerState.update { it.failed(e) }
             }
         }
     }
@@ -213,7 +180,7 @@ class OnlineGameViewModel @Inject constructor(
         _pickerState.update { it.reset() }
     }
 
-    private suspend fun onStatedChanged(state: NetworkRoomState) {
+    private fun onStatedChanged(state: NetworkRoomState) {
         when (state) {
             is NetworkRoomStateCreated -> _pickerState.update { it.created(state.descriptor) }
             is NetworkRoomStateDeleted -> _pickerState.update { it.reset() }
@@ -222,11 +189,8 @@ class OnlineGameViewModel @Inject constructor(
         }
     }
 
-    private suspend fun onConnected(descriptor: RemoteRoomDescriptor) {
+    private fun onConnected(descriptor: RemoteRoomDescriptor) {
         _pickerState.update { it.connected(descriptor) }
         setParam(RoomByDescriptor(descriptor))
-        _navigationEvent.emit(GameScreen)
     }
 }
-
-data class DisconnectViewState(val name: String)

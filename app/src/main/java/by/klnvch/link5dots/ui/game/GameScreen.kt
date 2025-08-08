@@ -49,7 +49,10 @@ fun GameScreen(
             onMoveDone = { viewModel.addDot(it) },
             onUnfocus = { viewModel.unfocus() }
         )
-        GameInfo(Modifier.align(Alignment.TopEnd), uiState.infoViewState)
+        GameInfo(
+            Modifier.align(Alignment.TopEnd),
+            uiState.infoViewState,
+        )
         if (uiState.showNextActions) {
             GameNextAction(
                 Modifier.align(Alignment.Center),

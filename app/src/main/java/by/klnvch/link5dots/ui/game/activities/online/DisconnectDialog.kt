@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023-2025 klnvch
+ * Copyright (c) 2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,16 +22,33 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.utils
+package by.klnvch.link5dots.ui.game.activities.online
 
-import android.graphics.Typeface
-import android.widget.TextView
-import androidx.databinding.BindingAdapter
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
+import by.klnvch.link5dots.R
 
-
-object BindingUtils {
-    @JvmStatic
-    @BindingAdapter("setTextStyle")
-    fun setTextStyle(view: TextView, isBold: Boolean) =
-        view.setTypeface(view.typeface, if (isBold) Typeface.BOLD else Typeface.NORMAL)
+@Composable
+fun DisconnectDialog(connectionName: String, onOk: () -> Unit, onCancel: () -> Unit) {
+    AlertDialog(
+        text = {
+            Text(
+                text = stringResource(R.string.is_disconnect_question, connectionName)
+            )
+        },
+        onDismissRequest = onCancel,
+        confirmButton = {
+            TextButton(onClick = onOk) {
+                Text(text = stringResource(R.string.okay))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onCancel) {
+                Text(text = stringResource(R.string.cancel))
+            }
+        }
+    )
 }

@@ -82,7 +82,7 @@ private fun GameTopBar(
                 onClick = onFocus,
                 contentDescription = stringResource(R.string.search)
             )
-            if (viewState.undo.isVisible || viewState.new.isVisible) {
+            if (viewState.undoOption.isVisible || viewState.newOption.isVisible) {
                 IconMenuItem(
                     imageVector = Icons.Filled.MoreVert,
                     onClick = { expanded = true },
@@ -91,10 +91,10 @@ private fun GameTopBar(
                     expanded = expanded,
                     onDismissRequest = { expanded = false }
                 ) {
-                    GameDropdownMenuItem(viewState.undo, R.string.undo) {
+                    GameDropdownMenuItem(viewState.undoOption, R.string.undo) {
                         onUndo()
                     }
-                    GameDropdownMenuItem(viewState.new, R.string.new_game) {
+                    GameDropdownMenuItem(viewState.newOption, R.string.new_game) {
                         onNew()
                         expanded = false
                     }

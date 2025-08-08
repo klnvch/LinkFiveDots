@@ -36,6 +36,5 @@ interface ScanWithResult {
 }
 
 object ScanNone : ScanState
-data class ScanFailed(val e: Throwable) : ScanState
 data class ScanOn(override val items: List<RemoteRoomDescriptor>) : ScanState, ScanWithResult
 data class ScanDone(override val items: List<RemoteRoomDescriptor>) : ScanState, ScanWithResult

@@ -26,8 +26,11 @@ package by.klnvch.link5dots
 
 import by.klnvch.link5dots.data.firebase.RemoteRoomItem
 import by.klnvch.link5dots.data.online.mapToDescriptors
+import by.klnvch.link5dots.domain.models.ActionAvailability
 import by.klnvch.link5dots.domain.models.DotsStyleType
 import by.klnvch.link5dots.domain.models.NetworkRoom
+import by.klnvch.link5dots.domain.repositories.GetOnlineRoomRepository
+import by.klnvch.link5dots.domain.usecases.NewGameOnlineUseCase
 import by.klnvch.link5dots.ui.game.GameViewState
 import by.klnvch.link5dots.ui.game.createGameViewState
 import kotlin.js.collections.JsReadonlyArray
@@ -40,8 +43,24 @@ fun mapToDescriptors(items: JsReadonlyArray<RemoteRoomItem>, defaultName: String
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport()
-fun mapToGameViewState(defaultName: String, room: NetworkRoom): GameViewState {
+fun mapToGameViewState(
+    defaultName: String,
+    room: NetworkRoom,
+): GameViewState {
     val user1Name = room.user1.name ?: defaultName
     val user2Name = room.user2?.name ?: defaultName
-    return createGameViewState(DotsStyleType.ORIGINAL, user1Name, user2Name, room)
+
+    val newGameOnlineUseCase = NewGameOnlineUseCase(object : GetOnlineRoomRepository {
+        override var room: NetworkRoom? = room
+    })
+
+    return createGameViewState(
+        DotsStyleType.ORIGINAL,
+        user1Name,
+        user2Name,
+        room,
+        newGameOnlineUseCase.actionAvailability,
+        ActionAvailability.Gone,
+        ActionAvailability.Gone
+    )
 }

@@ -72,7 +72,7 @@ fun GameNextAction(
             .width(IntrinsicSize.Min)
             .alpha(.9f)
     ) {
-        if (menuViewState.new.isEnabled) {
+        if (menuViewState.newOption.isEnabled) {
             OutlinedButton(
                 modifier = Modifier.fillMaxWidth(),
                 onClick = onNew,
@@ -81,7 +81,7 @@ fun GameNextAction(
                 Text(text = stringResource(R.string.new_game), fontWeight = FontWeight.Bold)
             }
         }
-        if (menuViewState.undo.isEnabled) {
+        if (menuViewState.undoOption.isEnabled) {
             OutlinedButton(
                 modifier = Modifier.fillMaxWidth(),
                 onClick = onUndo,
@@ -90,7 +90,7 @@ fun GameNextAction(
                 Text(text = stringResource(R.string.undo), fontWeight = FontWeight.Bold)
             }
         }
-        if (menuViewState.share.isEnabled) {
+        if (menuViewState.shareOption.isEnabled) {
             OutlinedButton(
                 modifier = Modifier.fillMaxWidth(),
                 onClick = onShare,

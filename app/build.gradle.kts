@@ -101,7 +101,6 @@ android {
     }
     buildFeatures {
         compose = true
-        dataBinding = true
         buildConfig = true
     }
 }
@@ -122,7 +121,6 @@ dependencies {
     implementation(project(":shared"))
     debugImplementation(libs.androidx.compose.ui)
 
-    implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -131,7 +129,6 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.multidex)
     implementation(libs.androidx.navigation.compose)
-    implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
     ksp(libs.androidx.room.compiler)

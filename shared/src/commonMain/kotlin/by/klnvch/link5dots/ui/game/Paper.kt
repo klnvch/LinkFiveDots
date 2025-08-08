@@ -25,6 +25,7 @@
 package by.klnvch.link5dots.ui.game
 
 import by.klnvch.link5dots.domain.models.Dot
+import by.klnvch.link5dots.domain.models.DotsStyleType
 import by.klnvch.link5dots.domain.models.LineOrientation
 import by.klnvch.link5dots.domain.models.Point
 import by.klnvch.link5dots.domain.models.WinningLine
@@ -55,7 +56,7 @@ class LineOnPaperImpl(
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport()
-class Paper(sizePx: Int) {
+class Paper(styleType: DotsStyleType, sizePx: Int) {
     private val colorRed = -65536
     private val colorBlue = -16776961
     private val gridSize = 20
@@ -67,8 +68,14 @@ class Paper(sizePx: Int) {
     private val dotLocations = FloatArray(gridSize)
     private val arrowsLocations = FloatArray(gridSize)
 
-    val user1Dot = createGameBitmap(BitmapType.DOT, colorRed, scale)
-    val user2Dot = createGameBitmap(BitmapType.DOT, colorBlue, scale)
+    val user1Dot = when (styleType) {
+        DotsStyleType.ORIGINAL -> createGameBitmap(BitmapType.DOT, colorRed, scale)
+        DotsStyleType.CROSS_AND_RING -> createGameBitmap(BitmapType.CROSS, colorRed, scale)
+    }
+    val user2Dot = when (styleType) {
+        DotsStyleType.ORIGINAL -> createGameBitmap(BitmapType.DOT, colorBlue, scale)
+        DotsStyleType.CROSS_AND_RING -> createGameBitmap(BitmapType.RING, colorBlue, scale)
+    }
 
     init {
         val dotSize = user1Dot.size

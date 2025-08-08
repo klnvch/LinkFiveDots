@@ -32,7 +32,24 @@ import kotlin.js.JsExport
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport()
+sealed interface PickerScreen
+
+@OptIn(ExperimentalJsExport::class)
+@JsExport()
+object PickerScreenNone : PickerScreen
+
+@OptIn(ExperimentalJsExport::class)
+@JsExport()
+class PickerScreenGame(val name: String) : PickerScreen
+
+@OptIn(ExperimentalJsExport::class)
+@JsExport()
+class PickerScreenError(val e: Throwable) : PickerScreen
+
+@OptIn(ExperimentalJsExport::class)
+@JsExport()
 interface PickerViewState {
+    val screen: PickerScreen
     val common: PickerCommonViewState
     val creation: PickerCreationViewState
     val scanning: PickerScanningViewState
@@ -78,9 +95,18 @@ interface PickerItemViewState {
 @JsExport()
 fun PickerState.toPickerViewState(): PickerViewState = PickerViewStateImpl(this)
 
-data class PickerViewStateImpl(val state: PickerState = createInitialPickerState()) :
-    PickerViewState {
+data class PickerViewStateImpl(
+    val state: PickerState = createInitialPickerState(),
+) : PickerViewState {
+    private val connectionName = state.connectionName
+    private val error = state.error
     private val isTargetChanging = state.isCreating || state.isDeleting || state.isConnecting
+
+    override val screen = when {
+        connectionName != null -> PickerScreenGame(connectionName)
+        error != null -> PickerScreenError(error)
+        else -> PickerScreenNone
+    }
 
     override val common = PickerCommonViewStateImpl(
         isTargetChanging || state.isScanning,

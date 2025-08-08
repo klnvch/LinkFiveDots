@@ -115,7 +115,7 @@ fun GameBoard(
 
     val arrowsImage = ImageBitmap.imageResource(id = R.drawable.arrows)
     val paperImage = ImageBitmap.imageResource(id = R.drawable.background)
-    val paper = Paper(paperImage.width)
+    val paper = Paper(viewState.dotsStyleType, paperImage.width)
 
     val user1Image = paper.user1Dot.toImageBitmap()
     val user2Image = paper.user2Dot.toImageBitmap()

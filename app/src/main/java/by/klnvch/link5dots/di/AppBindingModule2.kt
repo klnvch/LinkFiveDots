@@ -47,6 +47,7 @@ import by.klnvch.link5dots.domain.repositories.TimeService
 import by.klnvch.link5dots.domain.repositories.UpdateStateOnlineRoomRepository
 import by.klnvch.link5dots.domain.repositories.UserNameSettings
 import by.klnvch.link5dots.domain.usecases.AddDotOnlineUseCase
+import by.klnvch.link5dots.domain.usecases.NewGameOnlineUseCase
 import by.klnvch.link5dots.domain.usecases.network.ConnectOnlineRoomUseCase
 import by.klnvch.link5dots.domain.usecases.network.CreateOnlineRoomUseCase
 import dagger.Module
@@ -117,6 +118,11 @@ class AppBindingModule2 {
         updateStateRepository,
         getRepository
     )
+
+    @Singleton
+    @Provides
+    fun provideNewGameOnlineUseCase(getRepository: GetOnlineRoomRepository) =
+        NewGameOnlineUseCase(getRepository)
 
     @Singleton
     @Provides

@@ -26,10 +26,7 @@ package by.klnvch.link5dots.ui.game.activities.online
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -40,7 +37,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.res.imageResource
-import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -50,6 +46,9 @@ import by.klnvch.link5dots.ui.common.TopBarTitle
 import by.klnvch.link5dots.ui.common.tiledBackground
 import by.klnvch.link5dots.ui.game.GameScreen
 import by.klnvch.link5dots.ui.game.OnlineGameViewModel
+import by.klnvch.link5dots.ui.game.picker.PickerScreenError
+import by.klnvch.link5dots.ui.game.picker.PickerScreenGame
+import by.klnvch.link5dots.ui.game.picker.PickerScreenNone
 import by.klnvch.link5dots.ui.game.topBar.TopBar
 import by.klnvch.link5dots.ui.theme.AppTheme
 
@@ -72,8 +71,9 @@ fun GameContent(
 ) {
     AppTheme {
         val navController = rememberNavController()
-        val event by viewModel.navigationEvent.collectAsState(PickerScreen)
-        val disconnectDialog = remember { mutableStateOf(false) }
+        val pickerUiState by viewModel.pickerUiState.collectAsState()
+        val pickerScreen = pickerUiState.screen
+        val disconnectDialog = remember { mutableStateOf<String?>(null) }
 
         val disconnectFinal: () -> Unit = {
             viewModel.cleanUp()
@@ -81,18 +81,18 @@ fun GameContent(
         }
 
         val disconnectGuard: () -> Unit = {
-            if (navController.previousBackStackEntry != null && viewModel.isConnected()) {
-                disconnectDialog.value = true
+            if (pickerScreen is PickerScreenGame) {
+                disconnectDialog.value = pickerScreen.name
             } else {
                 disconnectFinal()
             }
         }
 
-        LaunchedEffect(event) {
-            when (event) {
-                PickerScreen -> navController.navigate(MultiplayerRoute.Picker.name)
-                GameScreen -> navController.navigate(MultiplayerRoute.Game.name)
-                is InitError -> navController.navigate(MultiplayerRoute.Error.name)
+        LaunchedEffect(pickerScreen) {
+            when (pickerScreen) {
+                PickerScreenNone -> {}
+                is PickerScreenGame -> navController.navigate(MultiplayerRoute.Game.name)
+                is PickerScreenError -> navController.navigate(MultiplayerRoute.Error.name)
             }
         }
         Scaffold(
@@ -122,50 +122,26 @@ fun GameContent(
                     )
                 }
                 composable(route = MultiplayerRoute.Error.name) {
-                    event.let {
-                        if (it is InitError)
-                            errorScreen(it.e) { isSuccess ->
-                                when (isSuccess) {
-                                    true -> navController.navigateUp()
-                                    else -> onFinish()
-                                }
+                    if (pickerScreen is PickerScreenError)
+                        errorScreen(pickerScreen.e) { isSuccess ->
+                            when (isSuccess) {
+                                true -> navController.navigateUp()
+                                else -> onFinish()
                             }
-                        else
-                            navController.navigateUp()
-                    }
+                        }
+                    else
+                        navController.navigateUp()
                 }
             }
         }
 
-        if (disconnectDialog.value) {
-            AlertDialog(
-                text = {
-                    Text(
-                        text = stringResource(
-                            R.string.is_disconnect_question,
-                            viewModel.disconnectViewState.name
-                        )
-                    )
-                },
-                onDismissRequest = { disconnectDialog.value = false },
-                confirmButton = {
-                    TextButton(
-                        onClick = {
-                            disconnectDialog.value = false
-                            disconnectFinal()
-                        }
-                    ) {
-                        Text(text = stringResource(R.string.okay))
-                    }
-                },
-                dismissButton = {
-                    TextButton(
-                        onClick = { disconnectDialog.value = false }
-                    ) {
-                        Text(text = stringResource(R.string.cancel))
-                    }
-                }
-            )
+        disconnectDialog.value?.let {
+            DisconnectDialog(it, {
+                disconnectDialog.value = null
+                disconnectFinal()
+            }, {
+                disconnectDialog.value = null
+            })
         }
     }
 }

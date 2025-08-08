@@ -33,6 +33,5 @@ sealed interface TargetState
 
 object TargetNone : TargetState
 object TargetCreating : TargetState
-class TargetFailed(val e: Throwable) : TargetState
 data class TargetCreated(val descriptor: RemoteRoomDescriptor) : TargetState
 object TargetDeleting : TargetState

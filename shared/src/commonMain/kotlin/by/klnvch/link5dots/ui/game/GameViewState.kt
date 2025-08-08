@@ -72,9 +72,9 @@ interface GameBoardViewState {
 @OptIn(ExperimentalJsExport::class)
 @JsExport()
 interface MenuViewState {
-    val new: ActionAvailability
-    val undo: ActionAvailability
-    val share: ActionAvailability
+    val newOption: ActionAvailability
+    val undoOption: ActionAvailability
+    val shareOption: ActionAvailability
 }
 
 fun createGameViewState(
@@ -147,9 +147,9 @@ class GameBoardViewStateImpl(
 }
 
 data class MenuViewStateImpl(
-    override val new: ActionAvailability = ActionAvailability.Gone,
-    override val undo: ActionAvailability = ActionAvailability.Gone,
-    override val share: ActionAvailability = ActionAvailability.Gone,
+    override val newOption: ActionAvailability = ActionAvailability.Gone,
+    override val undoOption: ActionAvailability = ActionAvailability.Gone,
+    override val shareOption: ActionAvailability = ActionAvailability.Gone,
 ) : MenuViewState
 
 private fun IRoom?.getDuration(d: Int) = this?.dots
