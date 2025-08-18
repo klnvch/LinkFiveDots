@@ -30,7 +30,8 @@ import java.util.Locale
 
 actual fun currentTime() = System.currentTimeMillis().toDouble()
 actual val platformKeyPart = "a"
-actual fun Double.formatDateTime(): String {
+
+actual fun Int.formatDateTime(): String {
     val timeFormat = SimpleDateFormat("MMM-dd HH:mm", Locale.getDefault())
-    return timeFormat.format(Date(this.toLong()))
+    return timeFormat.format(Date(this * 1000L))
 }

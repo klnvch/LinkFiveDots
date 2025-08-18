@@ -31,7 +31,7 @@ import kotlin.js.JsExport
 @JsExport()
 interface INetworkRoomInvitation {
     val key: String
-    val timestamp: Double
+    val time: Int
     val user1: NetworkUser
     val type: Int // TODO: delete it
 }
@@ -48,7 +48,7 @@ interface INetworkRoom : INetworkRoomInvitation, IRoom {
 @JsExport()
 data class NetworkRoomInvitation(
     override val key: String,
-    override val timestamp: Double,
+    override val time: Int,
     override val user1: NetworkUser,
     override val type: Int,
 ) : INetworkRoomInvitation
@@ -57,7 +57,7 @@ data class NetworkRoomInvitation(
 @JsExport()
 data class NetworkRoom(
     override val key: String,
-    override val timestamp: Double,
+    override val time: Int,
     override val dots: List<Dot>,
     override val user1: NetworkUser,
     override val user2: NetworkUser?,
@@ -65,6 +65,6 @@ data class NetworkRoom(
     override val state: RoomState,
 ) : INetworkRoom {
     override fun toString(): String {
-        return "NetworkRoom(key=$key, timestamp=$timestamp, dots=${dots.size}, user1=${user1.name}, user2=${user2?.name})"
+        return "NetworkRoom(key=$key, time=$time, dots=${dots.size}, user1=${user1.name}, user2=${user2?.name})"
     }
 }

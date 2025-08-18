@@ -31,13 +31,13 @@ import kotlin.js.JsExport
 @JsExport()
 interface IRoom {
     val key: String
-    val timestamp: Double
+    val time: Int
     val dots: List<Dot>
     val user1: IUser?
     val user2: IUser?
     val type: Int
     fun getDuration() = dots.lastOrNull()?.dt ?: 0
-    fun getEndTime() = timestamp + getDuration()
+    fun getEndTime() = time + getDuration()
     fun getWinningLine() = dots.findWinningLine()
     fun isNotOver() = getWinningLine() == null
     fun isOver() = getWinningLine() != null

@@ -24,11 +24,11 @@
 
 package by.klnvch.link5dots.utils
 
-import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Duration.Companion.seconds
 
 object FormatUtils {
     fun Int.formatDuration(): String {
-        return milliseconds.toComponents { hours, minutes, seconds, _ ->
+        return seconds.toComponents { hours, minutes, seconds, _ ->
             if (hours > 0) "%02d:%02d:%02d".format(hours, minutes, seconds)
             else "%02d:%02d".format(minutes, seconds)
         }

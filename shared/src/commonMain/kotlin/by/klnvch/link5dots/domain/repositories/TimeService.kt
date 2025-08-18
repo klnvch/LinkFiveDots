@@ -31,4 +31,6 @@ import kotlin.js.JsExport
 @JsExport
 interface TimeService {
     fun now(): Double
+    fun time(): Int
+    fun dt(time: Int): Int
 }

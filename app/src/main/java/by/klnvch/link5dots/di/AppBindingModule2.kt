@@ -77,13 +77,11 @@ class AppBindingModule2 {
     @Provides
     fun provideCreateOnlineRoomUseCase(
         userNameSettings: UserNameSettings,
-        timeService: TimeService,
         roomKeyGenerator: RoomKeyGenerator,
         firebaseAuthManager: FirebaseAuthManager,
         createOnlineRoomRepository: CreateOnlineRoomRepository,
     ) = CreateOnlineRoomUseCase(
         userNameSettings,
-        timeService,
         roomKeyGenerator,
         firebaseAuthManager,
         createOnlineRoomRepository,
@@ -105,14 +103,12 @@ class AppBindingModule2 {
     @Provides
     fun provideAddDotOnlineUseCase(
         firebaseAuthManager: FirebaseAuthManager,
-        timeService: TimeService,
         board: Board,
         addDotRepository: AddDotOnlineRoomRepository,
         updateStateRepository: UpdateStateOnlineRoomRepository,
         getRepository: GetOnlineRoomRepository,
     ) = AddDotOnlineUseCase(
         firebaseAuthManager,
-        timeService,
         board,
         addDotRepository,
         updateStateRepository,

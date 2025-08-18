@@ -22,31 +22,21 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.domain.repositories
+package by.klnvch.link5dots.data.online.models
 
-import by.klnvch.link5dots.data.online.models.CreateOnlineRoomInvitation
-import by.klnvch.link5dots.domain.models.NetworkRoom
 import by.klnvch.link5dots.domain.models.NetworkUser
-import by.klnvch.link5dots.domain.models.Point
-import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
-import by.klnvch.link5dots.domain.models.RoomState
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlin.js.ExperimentalJsExport
+import kotlin.js.JsExport
 
-interface CreateOnlineRoomRepository {
-    suspend fun create(invitation: CreateOnlineRoomInvitation)
+@OptIn(DelicateCoroutinesApi::class, ExperimentalJsExport::class)
+@JsExport()
+interface CreateOnlineRoomInvitation {
+    val key: String
+    val user1: NetworkUser
 }
 
-interface ConnectOnlineRoomRepository {
-    suspend fun connect(descriptor: RemoteRoomDescriptor, user2: NetworkUser)
-}
-
-interface AddDotOnlineRoomRepository {
-    suspend fun addDot(key: String, position: Int, p: Point)
-}
-
-interface UpdateStateOnlineRoomRepository {
-    suspend fun update(key: String, state: RoomState)
-}
-
-interface GetOnlineRoomRepository {
-    var room: NetworkRoom?
-}
+data class CreateOnlineRoomInvitationImpl(
+    override val key: String,
+    override val user1: NetworkUser,
+) : CreateOnlineRoomInvitation

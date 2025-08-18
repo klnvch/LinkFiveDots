@@ -25,14 +25,18 @@
 package by.klnvch.link5dots.data.online
 
 import by.klnvch.link5dots.BuildConfig
-import by.klnvch.link5dots.data.firebase.OnlineDotRemote
 import by.klnvch.link5dots.data.firebase.OnlineRemoteUser
-import by.klnvch.link5dots.data.firebase.OnlineRoomInvitationRemote
+import by.klnvch.link5dots.data.firebase.mapToOnlineRemoteUser
+import by.klnvch.link5dots.data.online.models.CreateOnlineRoomInvitation
+import by.klnvch.link5dots.domain.models.Point
+import by.klnvch.link5dots.domain.models.RoomState
 import com.google.firebase.Firebase
+import com.google.firebase.database.ServerValue
 import com.google.firebase.database.database
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 import javax.inject.Singleton
+
 
 @Singleton
 class FirebaseDbImpl @Inject constructor() : FirebaseDb {
@@ -47,7 +51,14 @@ class FirebaseDbImpl @Inject constructor() : FirebaseDb {
         reference.child(path.joinToString(separator = "/")).updateChildren(update).await()
     }
 
-    override suspend fun setDot(path: Array<String>, dot: OnlineDotRemote) = set(path, dot)
+    override suspend fun setDot(path: Array<String>, p: Point) {
+        val data = mapOf(
+            "x" to p.x,
+            "y" to p.y,
+            "t" to ServerValue.TIMESTAMP,
+        )
+        reference.child(path.joinToString(separator = "/")).setValue(data).await()
+    }
 
     override suspend fun setConnected(
         path: Array<String>,
@@ -55,10 +66,14 @@ class FirebaseDbImpl @Inject constructor() : FirebaseDb {
         user2: OnlineRemoteUser,
     ) = update(path, mapOf("state" to state, "user2" to user2))
 
-    override suspend fun setInvitation(
-        path: Array<String>,
-        invitation: OnlineRoomInvitationRemote,
-    ) = set(path, invitation)
+    override suspend fun createInvitation(invitation: CreateOnlineRoomInvitation) {
+        val data = mapOf(
+            "time" to ServerValue.TIMESTAMP,
+            "state" to RoomState.CREATED.ordinal,
+            "user1" to invitation.user1.mapToOnlineRemoteUser(),
+        )
+        reference.child(invitation.key).setValue(data).await()
+    }
 
     override suspend fun setState(path: Array<String>, state: Int) = set(path, state)
 }

@@ -24,20 +24,20 @@
 
 package by.klnvch.link5dots.data.online
 
-import by.klnvch.link5dots.data.firebase.OnlineDotRemote
 import by.klnvch.link5dots.data.firebase.OnlineRemoteUser
-import by.klnvch.link5dots.data.firebase.OnlineRoomInvitationRemote
+import by.klnvch.link5dots.data.online.models.CreateOnlineRoomInvitation
+import by.klnvch.link5dots.domain.models.Point
 
 interface FirebaseDbSetDot {
-    suspend fun setDot(path: Array<String>, dot: OnlineDotRemote)
+    suspend fun setDot(path: Array<String>, p: Point)
 }
 
 interface FirebaseDbSetConnected {
     suspend fun setConnected(path: Array<String>, state: Int, user2: OnlineRemoteUser)
 }
 
-interface FirebaseDbSetRoom {
-    suspend fun setInvitation(path: Array<String>, invitation: OnlineRoomInvitationRemote)
+interface FirebaseDbCreateInvitation {
+    suspend fun createInvitation(invitation: CreateOnlineRoomInvitation)
 }
 
 interface FirebaseDbSetState {
@@ -45,4 +45,4 @@ interface FirebaseDbSetState {
 }
 
 interface FirebaseDb :
-    FirebaseDbSetDot, FirebaseDbSetConnected, FirebaseDbSetRoom, FirebaseDbSetState
+    FirebaseDbSetDot, FirebaseDbSetConnected, FirebaseDbCreateInvitation, FirebaseDbSetState

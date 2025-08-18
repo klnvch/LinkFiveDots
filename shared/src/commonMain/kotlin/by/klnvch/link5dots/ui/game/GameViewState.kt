@@ -30,7 +30,7 @@ import by.klnvch.link5dots.domain.models.IRoom
 import by.klnvch.link5dots.domain.models.WinningLine
 import kotlin.js.ExperimentalJsExport
 import kotlin.js.JsExport
-import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Duration.Companion.seconds
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport()
@@ -162,7 +162,7 @@ private fun IRoom?.getDuration(d: Int) = this?.dots
 private fun Int.formatDurationPart() = if (this < 10) "0${this}" else toString()
 
 private fun Int.formatDuration() =
-    if (this > 999) milliseconds.toComponents { hours, minutes, seconds, _ ->
+    if (this > 0) seconds.toComponents { hours, minutes, seconds, _ ->
         if (hours > 0) "${hours}:${minutes.formatDurationPart()}:${seconds.formatDurationPart()}"
         else "${minutes.formatDurationPart()}:${seconds.formatDurationPart()}"
     } else ""

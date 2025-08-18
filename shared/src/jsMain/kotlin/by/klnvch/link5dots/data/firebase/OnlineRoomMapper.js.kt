@@ -35,8 +35,8 @@ actual fun Any.mapToOnlineRoomRemote(): OnlineRoomRemote {
         (jsRoom.dots as JsArray<dynamic>?)
             ?.toList()
             ?.filterNotNull()
-            ?.map { OnlineDotRemote(it.dt as Int?, it.x as Int?, it.y as Int?) },
-        jsRoom.time as Double?,
+            ?.map { OnlineDotRemote((it.t as Double?)?.toLong(), it.x as Int?, it.y as Int?) },
+        (jsRoom.time as Double?)?.toLong(),
         if (jsRoom.user1 != null) OnlineRemoteUser(jsRoom.user1.id, jsRoom.user1.name) else null,
         if (jsRoom.user2 != null) OnlineRemoteUser(jsRoom.user2.id, jsRoom.user2.name) else null,
     )

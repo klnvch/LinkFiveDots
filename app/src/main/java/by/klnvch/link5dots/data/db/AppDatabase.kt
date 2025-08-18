@@ -23,13 +23,14 @@
  */
 package by.klnvch.link5dots.data.db
 
+import android.annotation.SuppressLint
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 
-@Database(entities = [RoomLocal::class], version = 4)
+@Database(entities = [RoomLocal::class], version = 5)
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun roomDao(): RoomDao
@@ -49,6 +50,12 @@ abstract class AppDatabase : RoomDatabase() {
         val MIGRATION_3_4: Migration = object : Migration(3, 4) {
             override fun migrate(db: SupportSQLiteDatabase) {
                 db.execSQL("ALTER TABLE rooms ADD COLUMN is_test INTEGER NOT NULL DEFAULT 0")
+            }
+        }
+        val MIGRATION_4_5: Migration = object : Migration(4, 5) {
+            @SuppressLint("Range")
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("UPDATE rooms SET timestamp = timestamp / 1000")
             }
         }
     }

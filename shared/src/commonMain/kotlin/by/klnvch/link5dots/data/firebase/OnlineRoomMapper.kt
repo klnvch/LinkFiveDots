@@ -47,12 +47,6 @@ fun RemoteRoomItem.mapToNetworkRoom(): NetworkRoom? =
 
 expect fun Any.mapToOnlineRoomRemote(): OnlineRoomRemote
 
-fun NetworkRoomInvitation.mapToOnlineRoomInvitationRemote() = OnlineRoomInvitationRemote(
-    RoomState.CREATED.ordinal,
-    timestamp,
-    user1.mapToOnlineRemoteUser(),
-)
-
 fun NetworkUser.mapToOnlineRemoteUser() = OnlineRemoteUser(id, name)
 
 fun OnlineRemoteUser.mapToNetworkUser() = id?.let { NetworkUser(it, name) }
@@ -60,7 +54,7 @@ fun OnlineRemoteUser.mapToNetworkUser() = id?.let { NetworkUser(it, name) }
 fun OnlineRoomRemote.mapToNetworkRoomInvitation(key: String): NetworkRoomInvitation? {
     val user1 = user1?.mapToNetworkUser()
     return if (time != null && user1 != null)
-        NetworkRoomInvitation(key, time, user1, 3)
+        NetworkRoomInvitation(key, (time / 1000).toInt(), user1, 3)
     else
         null
 }
@@ -72,8 +66,8 @@ fun OnlineRoomRemote.mapToNetworkRoom(key: String): NetworkRoom {
     val state = RoomState.entries[state ?: throw IllegalArgumentException("state is null")]
     return NetworkRoom(
         key,
-        timestamp,
-        dots?.mapToDotList() ?: emptyList(),
+        (timestamp / 1000).toInt(),
+        dots?.mapToDotList(time) ?: emptyList(),
         user1,
         user2,
         3,
@@ -81,9 +75,12 @@ fun OnlineRoomRemote.mapToNetworkRoom(key: String): NetworkRoom {
     )
 }
 
-fun Dot.mapToOnlineDotRemote() = OnlineDotRemote(dt, x, y)
-
-fun List<OnlineDotRemote>.mapToDotList() = this
+fun List<OnlineDotRemote>.mapToDotList(time: Long) = this
     .mapIndexed { i, d ->
-        DotImpl(d.x!!, d.y!!, if (i % 2 == 0) Dot.HOST else Dot.GUEST, d.dt!!)
+        DotImpl(
+            d.x!!,
+            d.y!!,
+            if (i % 2 == 0) Dot.HOST else Dot.GUEST,
+            ((d.t!! - time) / 1000).toInt()
+        )
     }

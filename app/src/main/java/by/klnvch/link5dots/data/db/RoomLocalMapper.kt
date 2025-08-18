@@ -35,7 +35,7 @@ import javax.inject.Inject
 class RoomLocalMapper @Inject constructor() {
     fun map(room: IRoom) = RoomLocal(
         room.key,
-        room.timestamp.toLong(),
+        room.time.toLong(),
         room.dots.toList(),
         map(room.user1),
         map(room.user2),
@@ -47,7 +47,7 @@ class RoomLocalMapper @Inject constructor() {
 
     fun map(local: RoomLocal): IRoom = Room(
         local.key,
-        local.timestamp.toDouble(),
+        (local.timestamp).toInt(),
         local.dots?.toMutableList() ?: mutableListOf(),
         map(local.user1),
         map(local.user2),

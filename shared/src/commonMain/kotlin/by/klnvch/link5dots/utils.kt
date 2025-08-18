@@ -26,4 +26,4 @@ package by.klnvch.link5dots
 
 expect fun currentTime(): Double
 expect val platformKeyPart: String
-expect fun Double.formatDateTime(): String
+expect fun Int.formatDateTime(): String

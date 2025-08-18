@@ -24,8 +24,6 @@
 
 package by.klnvch.link5dots
 
-import by.klnvch.link5dots.data.TimeServiceImpl
-import by.klnvch.link5dots.data.firebase.OnlineDotRemote
 import by.klnvch.link5dots.data.online.AddDotOnlineRoomRepositoryImpl
 import by.klnvch.link5dots.data.online.FirebaseDbSetDot
 import by.klnvch.link5dots.data.online.FirebaseDbSetState
@@ -42,7 +40,6 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.await
 import kotlinx.coroutines.launch
 import kotlin.js.Promise
-import kotlin.js.json
 
 @OptIn(DelicateCoroutinesApi::class, ExperimentalJsExport::class)
 @JsExport()
@@ -51,29 +48,19 @@ fun roomAddDot(
     room: IRoom,
     p: Point,
     onDbSet: (key: String, value: Any) -> Promise<Unit>,
+    onDbSetDot: (path: String, p: Point) -> Promise<Unit>,
 ): Promise<Unit> {
     val firebaseAuthManager = object : FirebaseAuthManager {
         override fun getUserId() = firebaseUserId
     }
-    val timeService = TimeServiceImpl()
     val board = Board()
 
     val firebaseDb = object : FirebaseDbSetDot, FirebaseDbSetState {
-        override suspend fun setDot(
-            path: Array<String>,
-            dot: OnlineDotRemote,
-        ) {
-            val jsObject = json().also {
-                it["dt"] = dot.dt
-                it["x"] = dot.x
-                it["y"] = dot.y
-            }
-            onDbSet(path.joinToString("/"), jsObject).await()
-        }
+        override suspend fun setDot(path: Array<String>, p: Point) =
+            onDbSetDot(path.joinToString("/"), p).await()
 
-        override suspend fun setState(path: Array<String>, state: Int) {
+        override suspend fun setState(path: Array<String>, state: Int) =
             onDbSet(path.joinToString("/"), state).await()
-        }
     }
     val addDotRepository = AddDotOnlineRoomRepositoryImpl(firebaseDb)
     val updateStateRepository = UpdateStateOnlineRoomRepositoryImpl(firebaseDb)
@@ -82,7 +69,6 @@ fun roomAddDot(
 
     val useCase = AddDotOnlineUseCase(
         firebaseAuthManager,
-        timeService,
         board,
         addDotRepository,
         updateStateRepository,

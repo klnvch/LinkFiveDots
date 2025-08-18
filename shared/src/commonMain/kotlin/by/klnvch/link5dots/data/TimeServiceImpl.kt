@@ -29,4 +29,6 @@ import by.klnvch.link5dots.domain.repositories.TimeService
 
 class TimeServiceImpl : TimeService {
     override fun now() = currentTime()
+    override fun time() = (currentTime() / 1000).toInt()
+    override fun dt(time: Int) = time() - time
 }

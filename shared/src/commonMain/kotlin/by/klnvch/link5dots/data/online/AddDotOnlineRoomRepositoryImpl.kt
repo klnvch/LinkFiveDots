@@ -24,14 +24,13 @@
 
 package by.klnvch.link5dots.data.online
 
-import by.klnvch.link5dots.data.firebase.mapToOnlineDotRemote
-import by.klnvch.link5dots.domain.models.Dot
+import by.klnvch.link5dots.domain.models.Point
 import by.klnvch.link5dots.domain.repositories.AddDotOnlineRoomRepository
 
 class AddDotOnlineRoomRepositoryImpl(
     private val firebaseDb: FirebaseDbSetDot,
 ) : AddDotOnlineRoomRepository {
-    override suspend fun addDot(key: String, position: Int, dot: Dot) {
-        firebaseDb.setDot(arrayOf(key, "dots", position.toString()), dot.mapToOnlineDotRemote())
+    override suspend fun addDot(key: String, position: Int, p: Point) {
+        firebaseDb.setDot(arrayOf(key, "dots", position.toString()), p)
     }
 }

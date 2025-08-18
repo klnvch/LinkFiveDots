@@ -26,10 +26,10 @@ package by.klnvch.link5dots
 
 import by.klnvch.link5dots.data.RoomKeyGeneratorImpl
 import by.klnvch.link5dots.data.TimeServiceImpl
-import by.klnvch.link5dots.data.firebase.OnlineRoomInvitationRemote
 import by.klnvch.link5dots.data.online.CreateOnlineRoomRepositoryImpl
-import by.klnvch.link5dots.data.online.FirebaseDbSetRoom
+import by.klnvch.link5dots.data.online.FirebaseDbCreateInvitation
 import by.klnvch.link5dots.data.online.OnlineLocalStoreWriter
+import by.klnvch.link5dots.data.online.models.CreateOnlineRoomInvitation
 import by.klnvch.link5dots.domain.repositories.FirebaseAuthManager
 import by.klnvch.link5dots.domain.repositories.UserNameSettings
 import by.klnvch.link5dots.domain.usecases.network.CreateOnlineRoomUseCase
@@ -38,14 +38,13 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.await
 import kotlinx.coroutines.launch
 import kotlin.js.Promise
-import kotlin.js.json
 
 @OptIn(DelicateCoroutinesApi::class, ExperimentalJsExport::class)
 @JsExport()
 fun roomCreate(
     userName: String?,
     firebaseUserId: String,
-    onDbSet: (key: String, value: Any) -> Promise<Unit>,
+    onDbCreateInvitation: (invitation: CreateOnlineRoomInvitation) -> Promise<Unit>,
 ): Promise<String> {
     val userNameSettings = object : UserNameSettings {
         override suspend fun getUserName() = userName
@@ -56,21 +55,9 @@ fun roomCreate(
         override fun getUserId() = firebaseUserId
     }
 
-    val firebaseDb = object : FirebaseDbSetRoom {
-        override suspend fun setInvitation(
-            path: Array<String>,
-            invitation: OnlineRoomInvitationRemote,
-        ) {
-            val jsObject = json().also {
-                it["state"] = invitation.state
-                it["time"] = invitation.time
-                it["user1"] = json().also { userJson ->
-                    userJson["id"] = invitation.user1?.id
-                    userJson["name"] = invitation.user1?.name
-                }
-            }
-            onDbSet(path.joinToString("/"), jsObject).await()
-        }
+    val firebaseDb = object : FirebaseDbCreateInvitation {
+        override suspend fun createInvitation(invitation: CreateOnlineRoomInvitation) =
+            onDbCreateInvitation(invitation).await()
     }
 
     return Promise { resolve, reject ->
@@ -82,7 +69,6 @@ fun roomCreate(
 
         val useCase = CreateOnlineRoomUseCase(
             userNameSettings,
-            timeService,
             roomKeyGenerator,
             firebaseAuthManager,
             repository,

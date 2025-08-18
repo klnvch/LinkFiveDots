@@ -44,12 +44,13 @@ class AddDotInfoUseCase @Inject constructor() : AddDotUseCase {
 }
 
 abstract class AddDotRealUseCase(
-    private val timeRepository: TimeService,
+    private val timeService: TimeService,
     private val board: Board,
 ) : AddDotUseCase {
+    fun dt(time: Int) = timeService.dt(time)
     override suspend fun addDot(room: IRoom, p: Point) {
         if (board.isInside(p) && room.isFree(p) && room.isNotOver()) {
-            val dt = (timeRepository.now() - room.timestamp).toInt()
+            val dt = dt(room.time)
             addInternal(room, p, dt)
         }
     }
@@ -58,9 +59,9 @@ abstract class AddDotRealUseCase(
 }
 
 abstract class AddDotMultiplayerUseCase(
-    timeRepository: TimeService,
+    timeService: TimeService,
     board: Board,
-) : AddDotRealUseCase(timeRepository, board) {
+) : AddDotRealUseCase(timeService, board) {
     abstract suspend fun addMultiplayerDot(room: IRoom, dot: Dot)
     override suspend fun addInternal(room: IRoom, p: Point, dt: Int) {
         if (room is NetworkRoomExtended) {
@@ -77,10 +78,10 @@ abstract class AddDotMultiplayerUseCase(
 }
 
 class AddDotNsdUseCase @Inject constructor(
-    timeRepository: TimeService,
+    timeService: TimeService,
     board: Board,
     private val repository: NsdRoomRepository,
-) : AddDotMultiplayerUseCase(timeRepository, board) {
+) : AddDotMultiplayerUseCase(timeService, board) {
     override suspend fun addMultiplayerDot(room: IRoom, dot: Dot) {
         val currentRoom = repository.get().filterNotNull().first()
         val updatedRoom = currentRoom.copy(dots = currentRoom.dots + dot)
@@ -89,10 +90,10 @@ class AddDotNsdUseCase @Inject constructor(
 }
 
 class AddDotBluetoothUseCase @Inject constructor(
-    timeRepository: TimeService,
+    timeService: TimeService,
     board: Board,
     private val repository: BluetoothRoomRepository,
-) : AddDotMultiplayerUseCase(timeRepository, board) {
+) : AddDotMultiplayerUseCase(timeService, board) {
     override suspend fun addMultiplayerDot(room: IRoom, dot: Dot) {
         val currentRoom = repository.get().filterNotNull().first()
         val updatedRoom = currentRoom.copy(dots = currentRoom.dots + dot)
@@ -124,7 +125,7 @@ class AddDotBotUseCase @Inject constructor(
             room.add(DotImpl(p, Dot.HOST, dt))
             if (room.isNotOver()) {
                 val botDot = bot.findAnswer(room.dots)
-                val botDt = (timeRepository.now() - room.timestamp).toInt()
+                val botDt = timeRepository.dt(room.time)
                 room.add(DotImpl(botDot.x, botDot.y, type = Dot.GUEST, dt = botDt))
             }
         }

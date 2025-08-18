@@ -34,7 +34,6 @@ import by.klnvch.link5dots.domain.models.findWinningLine
 import by.klnvch.link5dots.domain.repositories.AddDotOnlineRoomRepository
 import by.klnvch.link5dots.domain.repositories.FirebaseAuthManager
 import by.klnvch.link5dots.domain.repositories.GetOnlineRoomRepository
-import by.klnvch.link5dots.domain.repositories.TimeService
 import by.klnvch.link5dots.domain.repositories.UpdateStateOnlineRoomRepository
 
 interface AddDotUseCase {
@@ -44,7 +43,6 @@ interface AddDotUseCase {
 
 class AddDotOnlineUseCase(
     private val firebaseAuthManager: FirebaseAuthManager,
-    private val timeService: TimeService,
     private val board: Board,
     private val addDotRepository: AddDotOnlineRoomRepository,
     private val updateStateRepository: UpdateStateOnlineRoomRepository,
@@ -64,9 +62,8 @@ class AddDotOnlineUseCase(
                 }
 
                 type?.let { type ->
-                    val dt = (timeService.now() - room.timestamp).toInt()
-                    val dot = DotImpl(p, type, dt)
-                    addDotRepository.addDot(room.key, room.dots.size, dot)
+                    val dot = DotImpl(p, type, 0)
+                    addDotRepository.addDot(room.key, room.dots.size, p)
                     if ((room.dots + dot).findWinningLine() != null) {
                         updateStateRepository.update(room.key, RoomState.FINISHED)
                     }

@@ -26,7 +26,7 @@ package by.klnvch.link5dots.domain.models
 
 data class Room(
     override val key: String,
-    override val timestamp: Double,
+    override val time: Int,
     override val dots: MutableList<Dot>,
     override val user1: IUser?,
     override val user2: IUser?,
@@ -34,7 +34,7 @@ data class Room(
 ) : IRoom {
     constructor(room: IRoom) : this(
         room.key,
-        room.timestamp,
+        room.time,
         room.dots.toMutableList(),
         room.user1,
         room.user2,
@@ -56,7 +56,7 @@ interface INetworkRoomExtended : INetworkRoom {
 
 data class NetworkRoomExtended(
     override val key: String,
-    override val timestamp: Double,
+    override val time: Int,
     override val dots: List<Dot>,
     override val user1: NetworkUser,
     override val user2: NetworkUser?,
@@ -66,7 +66,7 @@ data class NetworkRoomExtended(
 ) : INetworkRoomExtended {
     constructor(room: NetworkRoom, yourId: String) : this(
         room.key,
-        room.timestamp,
+        room.time,
         room.dots,
         room.user1,
         room.user2,

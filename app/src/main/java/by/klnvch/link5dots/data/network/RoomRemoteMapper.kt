@@ -34,7 +34,7 @@ import javax.inject.Inject
 class RoomRemoteMapper @Inject constructor() {
     fun map(room: IRoom, isTest: Boolean): RoomRemote {
         return RoomRemote(
-            room.timestamp.toLong(),
+            room.time.toLong(),
             room.dots,
             map(room.user1),
             map(room.user2),

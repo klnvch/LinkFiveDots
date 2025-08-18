@@ -43,7 +43,7 @@ data class HistoryItemViewState(
         room,
         user1Name,
         userName2,
-        room.timestamp.formatDateTime(),
+        room.time.formatDateTime(),
         room.getDuration().formatDuration(),
         room.dots.size.toString(),
         room.type.toStringRes()
