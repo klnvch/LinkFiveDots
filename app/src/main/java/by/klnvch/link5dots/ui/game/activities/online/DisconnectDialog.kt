@@ -32,16 +32,14 @@ import androidx.compose.ui.res.stringResource
 import by.klnvch.link5dots.R
 
 @Composable
-fun DisconnectDialog(connectionName: String, onOk: () -> Unit, onCancel: () -> Unit) {
+fun DisconnectDialog(onConfirm: () -> Unit, onCancel: () -> Unit) {
     AlertDialog(
-        text = {
-            Text(
-                text = stringResource(R.string.is_disconnect_question, connectionName)
-            )
+        title = {
+            Text(text = stringResource(R.string.wifi_p2p_disconnect_title))
         },
         onDismissRequest = onCancel,
         confirmButton = {
-            TextButton(onClick = onOk) {
+            TextButton(onClick = onConfirm) {
                 Text(text = stringResource(R.string.okay))
             }
         },

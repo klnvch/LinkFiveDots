@@ -63,7 +63,7 @@
     <string name="runtime_permissions_summary_no_permissions_granted">"Немає дозволів"</string>
     <string name="wifi_settings_primary_switch_title">"Використовувати Wi-Fi"</string>
     <string name="audio_sharing_retry_dialog_content">"Сталася помилка. Повторіть спробу."</string>
-    <string name="is_disconnect_question">"Відключити пристрій <ns0:g id="DEVICE_NAME">%1$s</ns0:g>?"</string>
+    <string name="wifi_p2p_disconnect_title">"Від’єднатися?"</string>
     <string name="connection_dialog_text">"Підключитися до пристрою \"<ns0:g id="DEVICE_NAME">%1$s</ns0:g>\"?"</string>
     <string name="cancel">"Скасувати"</string>
     <string name="okay">"ОК"</string>

@@ -73,16 +73,16 @@ fun GameContent(
         val navController = rememberNavController()
         val pickerUiState by viewModel.pickerUiState.collectAsState()
         val pickerScreen = pickerUiState.screen
-        val disconnectDialog = remember { mutableStateOf<String?>(null) }
+        val disconnectDialog = remember { mutableStateOf(false) }
 
         val disconnectFinal: () -> Unit = {
-            viewModel.cleanUp()
+            viewModel.exitGame()
             if (navController.previousBackStackEntry != null) navController.navigateUp() else onFinish()
         }
 
         val disconnectGuard: () -> Unit = {
             if (pickerScreen is PickerScreenGame) {
-                disconnectDialog.value = pickerScreen.name
+                disconnectDialog.value = true
             } else {
                 disconnectFinal()
             }
@@ -119,6 +119,7 @@ fun GameContent(
                 composable(route = MultiplayerRoute.Game.name) {
                     GameScreen(
                         viewModel = viewModel,
+                        onNewGameNotImplemented = { disconnectGuard() },
                     )
                 }
                 composable(route = MultiplayerRoute.Error.name) {
@@ -135,12 +136,12 @@ fun GameContent(
             }
         }
 
-        disconnectDialog.value?.let {
-            DisconnectDialog(it, {
-                disconnectDialog.value = null
+        if (disconnectDialog.value) {
+            DisconnectDialog({
+                disconnectDialog.value = false
                 disconnectFinal()
             }, {
-                disconnectDialog.value = null
+                disconnectDialog.value = false
             })
         }
     }

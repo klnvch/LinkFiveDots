@@ -40,7 +40,7 @@ object PickerScreenNone : PickerScreen
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport()
-class PickerScreenGame(val name: String) : PickerScreen
+object PickerScreenGame : PickerScreen
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport()
@@ -98,12 +98,12 @@ fun PickerState.toPickerViewState(): PickerViewState = PickerViewStateImpl(this)
 data class PickerViewStateImpl(
     val state: PickerState = createInitialPickerState(),
 ) : PickerViewState {
-    private val connectionName = state.connectionName
+    private val isConnected = state.isConnected
     private val error = state.error
     private val isTargetChanging = state.isCreating || state.isDeleting || state.isConnecting
 
     override val screen = when {
-        connectionName != null -> PickerScreenGame(connectionName)
+        isConnected -> PickerScreenGame
         error != null -> PickerScreenError(error)
         else -> PickerScreenNone
     }

@@ -48,14 +48,16 @@ import kotlinx.coroutines.flow.firstOrNull
 import javax.inject.Inject
 
 class NewGameEmptyUseCase @Inject constructor() : NewGameUseCase {
-    override suspend fun create(seed: Long?) = throw IllegalStateException()
+    override val isImplemented = false
+    override suspend fun create(seed: Long?) = Unit
     override val actionAvailability = ActionAvailability.Gone
 }
 
 abstract class NewGameCommonUseCase(
     private val initialGameGenerator: InitialGameGenerator,
 ) : NewGameUseCase {
-    fun getDots(seed: Long?): MutableList<Dot> {
+    override val isImplemented = true
+    protected fun getDots(seed: Long?): MutableList<Dot> {
         if (seed != null) {
             val tp = Point(8, 8)
             return initialGameGenerator.get(seed).map { it.translate(tp) }.withIndex()

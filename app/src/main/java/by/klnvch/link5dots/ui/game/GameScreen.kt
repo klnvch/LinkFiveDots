@@ -36,18 +36,18 @@ import androidx.compose.ui.Modifier
 fun GameScreen(
     modifier: Modifier = Modifier,
     viewModel: OfflineGameViewModel,
+    onNewGameNotImplemented: (() -> Unit)? = null,
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val focus by viewModel.focus.collectAsState()
-    Box(
-        modifier = modifier.fillMaxSize()
-    ) {
+
+    Box(modifier = modifier.fillMaxSize()) {
         GameBoard(
             Modifier.fillMaxSize(),
             uiState.boardViewState,
             focus,
             onMoveDone = { viewModel.addDot(it) },
-            onUnfocus = { viewModel.unfocus() }
+            onUnfocus = { viewModel.unfocus() },
         )
         GameInfo(
             Modifier.align(Alignment.TopEnd),
@@ -57,7 +57,7 @@ fun GameScreen(
             GameNextAction(
                 Modifier.align(Alignment.Center),
                 uiState.menuViewState,
-                { viewModel.newGame() },
+                { if (!viewModel.newGame()) onNewGameNotImplemented?.invoke() },
                 { viewModel.undoLastMove() },
                 { viewModel.saveScore() },
             )

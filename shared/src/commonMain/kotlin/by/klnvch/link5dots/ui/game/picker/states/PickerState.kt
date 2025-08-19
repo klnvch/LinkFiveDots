@@ -44,7 +44,6 @@ interface PickerState {
     val isConnected: Boolean
     val isConnecting: Boolean
     val isDisconnected: Boolean
-    val connectionName: String?
 
     val error: Throwable?
 
@@ -88,8 +87,6 @@ private data class PickerStateImpl(
     override val isConnected = connectState is ConnectConnected
     override val isConnecting = connectState is ConnectConnecting
     override val isDisconnected = connectState is ConnectDisconnected
-    override val connectionName =
-        if (connectState is ConnectConnected) connectState.descriptor.title else null
 
     override fun reset() = createInitialPickerState()
     override fun failed(e: Throwable) = PickerStateImpl(error = e)

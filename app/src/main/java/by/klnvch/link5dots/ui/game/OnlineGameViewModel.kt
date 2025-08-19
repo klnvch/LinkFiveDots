@@ -170,10 +170,7 @@ class OnlineGameViewModel @Inject constructor(
         }
     }
 
-    fun cleanUp() {
-        if (_pickerState.value.isCreated) {
-            deleteMultiplayerRoomUseCase.delete()
-        }
+    fun exitGame() {
         if (_pickerState.value.isConnected) {
             deleteMultiplayerRoomUseCase.finish()
         }

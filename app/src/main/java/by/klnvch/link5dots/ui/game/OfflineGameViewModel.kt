@@ -120,10 +120,11 @@ open class OfflineGameViewModel @Inject constructor(
         }
     }
 
-    fun newGame() {
+    fun newGame(): Boolean {
         viewModelScope.launch {
             newGameUseCase.create(Random().nextInt(0xFFFF).toLong())
         }
+        return newGameUseCase.isImplemented
     }
 
     fun addDot(p: Point) {

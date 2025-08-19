@@ -113,8 +113,6 @@ composeCompiler {
 }
 
 dependencies {
-    implementation(libs.androidx.appcompat)
-
     implementation(platform(libs.androidx.compose))
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.ui.preview)

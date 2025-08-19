@@ -28,13 +28,15 @@ import by.klnvch.link5dots.domain.models.ActionAvailability
 import by.klnvch.link5dots.domain.repositories.GetOnlineRoomRepository
 
 interface NewGameUseCase : ActionAvailabilityForUseCase {
+    val isImplemented: Boolean
     suspend fun create(seed: Long?)
 }
 
 class NewGameOnlineUseCase(
     private val repository: GetOnlineRoomRepository,
 ) : NewGameUseCase {
-    override suspend fun create(seed: Long?) = throw IllegalStateException()
+    override val isImplemented = false
+    override suspend fun create(seed: Long?) = Unit
     override val actionAvailability
         get() =
             if (repository.room?.isOver() == true) ActionAvailability.Available
