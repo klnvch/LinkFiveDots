@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023-2025 klnvch
+ * Copyright (c) 2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,23 +21,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package by.klnvch.link5dots.ui.game
 
-import by.klnvch.link5dots.R
-import by.klnvch.link5dots.domain.models.NetworkGameAction
+package by.klnvch.link5dots.data.online
 
-object RoomToTitleMapper {
-    fun actionToTitle(action: NetworkGameAction) = when (action) {
-        NetworkGameAction.PICKER_CREATING -> R.string.connecting
-        NetworkGameAction.PICKER_DELETING -> R.string.connecting
-        NetworkGameAction.PICKER_CREATED -> R.string.progress_text
-        NetworkGameAction.PICKER_SCANNING -> R.string.searching
-        NetworkGameAction.PICKER_CONNECTING -> R.string.connecting
-        NetworkGameAction.GAME_OVER_WIN -> R.string.end_win
-        NetworkGameAction.GAME_OVER_LOSE -> R.string.end_lose
-        NetworkGameAction.GAME_DISCONNECTED -> R.string.disconnected
-        NetworkGameAction.GAME_MOVE -> R.string.bt_message_your_turn
-        NetworkGameAction.GAME_WAIT -> R.string.bt_message_opponents_turn
-        NetworkGameAction.UNKNOWN -> 0
-    }
+import com.google.firebase.Firebase
+import com.google.firebase.database.database
+import com.google.firebase.database.values
+import kotlinx.coroutines.flow.map
+import javax.inject.Inject
+
+class OnlineValidator @Inject constructor() {
+    fun isConnected() = Firebase
+        .database
+        .getReference(".info/connected")
+        .values<Boolean>()
+        .map { it ?: false }
 }

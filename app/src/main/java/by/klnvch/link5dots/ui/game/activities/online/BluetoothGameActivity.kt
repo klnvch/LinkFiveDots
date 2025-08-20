@@ -33,6 +33,7 @@ import by.klnvch.link5dots.ui.game.OfflineGameViewModel
 import by.klnvch.link5dots.ui.game.OnlineGameViewModel
 import by.klnvch.link5dots.ui.game.error.ErrorScreenBluetooth
 import by.klnvch.link5dots.ui.game.picker.BluetoothPickerScreen
+import by.klnvch.link5dots.ui.game.picker.VisibilityViewModel
 import dagger.android.support.DaggerAppCompatActivity
 import javax.inject.Inject
 
@@ -45,17 +46,21 @@ class BluetoothGameActivity : DaggerAppCompatActivity() {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
 
-        val viewModel = ViewModelProvider(
+        val gameViewModel = ViewModelProvider(
             this,
             viewModelFactory
         )[OfflineGameViewModel.KEY, OnlineGameViewModel::class.java]
 
+        val visibilityViewModel = ViewModelProvider(
+            this,
+            viewModelFactory
+        )[VisibilityViewModel.KEY, VisibilityViewModel::class.java]
+
         setContent {
             GameContent(
-                viewModelFactory = viewModelFactory,
-                viewModel = viewModel,
+                viewModel = gameViewModel,
                 defaultTitle = R.string.bluetooth,
-                pickerScreen = { factory -> BluetoothPickerScreen(factory) },
+                pickerScreen = { BluetoothPickerScreen(gameViewModel, visibilityViewModel) },
                 errorScreen = { e, onDone -> ErrorScreenBluetooth(e, onDone) },
                 onFinish = { finish() }
             )

@@ -50,10 +50,9 @@ class NsdGameActivity : DaggerAppCompatActivity() {
 
         setContent {
             GameContent(
-                viewModelFactory = viewModelFactory,
                 viewModel = viewModel,
                 defaultTitle = R.string.menu_local_network,
-                pickerScreen = { factory -> PickerScreen(factory) },
+                pickerScreen = { PickerScreen(viewModel) },
                 errorScreen = { e, onDone -> ErrorScreenNsd(e, onDone) },
                 onFinish = { finish() }
             )

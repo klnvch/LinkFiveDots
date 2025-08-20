@@ -30,7 +30,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface OnlineRoomRepository {
     val state: Flow<NetworkRoomState>
-    suspend fun isConnected(): Boolean
     fun get(): Flow<NetworkRoom>
     fun getRemoteRooms(): Flow<List<RemoteRoomDescriptor>>
     fun delete()

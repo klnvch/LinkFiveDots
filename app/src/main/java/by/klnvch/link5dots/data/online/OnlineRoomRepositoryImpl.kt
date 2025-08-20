@@ -31,7 +31,6 @@ import by.klnvch.link5dots.data.firebase.mapToNetworkRoom
 import by.klnvch.link5dots.data.online.CleanUpOnlineRoomWorker.Companion.launchCleanUpOnlineRoomWorker
 import by.klnvch.link5dots.domain.models.NetworkRoomStateDeleted
 import by.klnvch.link5dots.domain.models.NetworkRoomStateFinished
-import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
 import by.klnvch.link5dots.domain.models.RoomState
 import by.klnvch.link5dots.domain.repositories.OnlineRoomRepository
 import by.klnvch.link5dots.domain.repositories.StringRepository
@@ -39,12 +38,9 @@ import com.google.firebase.Firebase
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.database
 import com.google.firebase.database.snapshots
-import com.google.firebase.database.values
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
@@ -74,16 +70,13 @@ class OnlineRoomRepositoryImpl @Inject constructor(
         return@map state
     }.distinctUntilChanged()
 
-    override fun getRemoteRooms(): Flow<List<RemoteRoomDescriptor>> = reference
+    override fun getRemoteRooms() = reference
         .orderByChild(CHILD_STATE)
         .equalTo(RoomState.CREATED.ordinal.toDouble())
         .snapshots
         .map { it.children }
         .map { it.map { snapshot -> snapshot.toRemoteRoomItem() } }
         .map { mapToDescriptors(it, stringRepository.getUnknownName()) }
-
-    override suspend fun isConnected() =
-        Firebase.database.getReference(".info/connected").values<Boolean>().first() == true
 
     override fun delete() = context.launchCleanUpOnlineRoomWorker(RoomState.DELETED)
 

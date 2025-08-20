@@ -40,5 +40,5 @@ enum class NetworkGameAction {
     GAME_DISCONNECTED,
     GAME_MOVE,
     GAME_WAIT,
-    UNKNOWN,
+    DEFAULT,
 }

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 klnvch
+ * Copyright (c) 2023-2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,10 +27,15 @@ package by.klnvch.link5dots.di
 import android.content.Context
 import android.os.StrictMode
 import androidx.multidex.MultiDex
-import androidx.work.*
+import androidx.work.Configuration
+import androidx.work.Constraints
+import androidx.work.ExistingWorkPolicy
+import androidx.work.NetworkType
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
 import by.klnvch.link5dots.BuildConfig
-import by.klnvch.link5dots.di.workers.DaggerWorkerFactory
 import by.klnvch.link5dots.data.workers.SyncHistoryWorker
+import by.klnvch.link5dots.di.workers.DaggerWorkerFactory
 import dagger.android.AndroidInjector
 import dagger.android.DaggerApplication
 import java.util.concurrent.TimeUnit

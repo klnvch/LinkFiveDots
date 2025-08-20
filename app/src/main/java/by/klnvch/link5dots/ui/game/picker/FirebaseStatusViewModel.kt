@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023-2025 klnvch
+ * Copyright (c) 2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,31 +22,22 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.di.game
+package by.klnvch.link5dots.ui.game.picker
 
 import androidx.lifecycle.ViewModel
-import by.klnvch.link5dots.di.viewmodels.ViewModelKey
-import by.klnvch.link5dots.ui.game.OnlineGameViewModel
-import by.klnvch.link5dots.ui.game.picker.FirebaseStatusViewModel
-import by.klnvch.link5dots.ui.game.picker.VisibilityViewModel
-import dagger.Binds
-import dagger.Module
-import dagger.multibindings.IntoMap
+import androidx.lifecycle.viewModelScope
+import by.klnvch.link5dots.data.online.OnlineValidator
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.stateIn
+import javax.inject.Inject
 
-@Module
-abstract class OnlineGameViewModelsModule {
-    @Binds
-    @IntoMap
-    @ViewModelKey(OnlineGameViewModel::class)
-    abstract fun bindOnlineGameViewModel(viewModel: OnlineGameViewModel): ViewModel
+class FirebaseStatusViewModel @Inject constructor(
+    onlineValidator: OnlineValidator,
+) : ViewModel() {
+    val isConnected = onlineValidator.isConnected()
+        .stateIn(viewModelScope, SharingStarted.Eagerly, true)
 
-    @Binds
-    @IntoMap
-    @ViewModelKey(VisibilityViewModel::class)
-    abstract fun bindVisibilityViewModel(viewModel: VisibilityViewModel): ViewModel
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(FirebaseStatusViewModel::class)
-    abstract fun bindFirebaseStatusViewModel(viewModel: FirebaseStatusViewModel): ViewModel
+    companion object {
+        const val KEY = "FIREBASE_STATUS_VIEW_MODEL_KEY"
+    }
 }

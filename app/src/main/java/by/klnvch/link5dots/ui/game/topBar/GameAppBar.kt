@@ -61,6 +61,39 @@ fun TopBar(
     )
 }
 
+@Composable
+private fun GameActions(
+    viewState: MenuViewState,
+    onNew: () -> Unit,
+    onUndo: () -> Unit,
+    onFocus: () -> Unit,
+) {
+    var expanded by remember { mutableStateOf(false) }
+    IconMenuItem(
+        imageVector = Icons.Filled.Search,
+        onClick = onFocus,
+        contentDescription = stringResource(R.string.search)
+    )
+    if (viewState.undoOption.isVisible || viewState.newOption.isVisible) {
+        IconMenuItem(
+            imageVector = Icons.Filled.MoreVert,
+            onClick = { expanded = true },
+        )
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false }
+        ) {
+            GameDropdownMenuItem(viewState.undoOption, R.string.undo) {
+                onUndo()
+            }
+            GameDropdownMenuItem(viewState.newOption, R.string.new_game) {
+                onNew()
+                expanded = false
+            }
+        }
+    }
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun GameTopBar(
@@ -71,35 +104,10 @@ private fun GameTopBar(
     onUndo: () -> Unit,
     onFocus: () -> Unit,
 ) {
-    var expanded by remember { mutableStateOf(false) }
     TopAppBar(
         title = title,
         colors = topAppBarColors(),
         navigationIcon = { NavigationIcon(onClick = navigateUp) },
-        actions = {
-            IconMenuItem(
-                imageVector = Icons.Filled.Search,
-                onClick = onFocus,
-                contentDescription = stringResource(R.string.search)
-            )
-            if (viewState.undoOption.isVisible || viewState.newOption.isVisible) {
-                IconMenuItem(
-                    imageVector = Icons.Filled.MoreVert,
-                    onClick = { expanded = true },
-                )
-                DropdownMenu(
-                    expanded = expanded,
-                    onDismissRequest = { expanded = false }
-                ) {
-                    GameDropdownMenuItem(viewState.undoOption, R.string.undo) {
-                        onUndo()
-                    }
-                    GameDropdownMenuItem(viewState.newOption, R.string.new_game) {
-                        onNew()
-                        expanded = false
-                    }
-                }
-            }
-        },
+        actions = { GameActions(viewState, onNew, onUndo, onFocus) },
     )
 }

@@ -96,7 +96,7 @@ private data class PickerStateImpl(
     override fun deleting() = copy(targetState = TargetDeleting)
 
     override fun scanning(items: Array<RemoteRoomDescriptor>) =
-        copy(scanState = ScanOn(items.toList()))
+        copy(scanState = ScanOn(items.toList()), error = null)
 
     override fun scanDone() =
         if (scanState is ScanOn) copy(scanState = ScanDone(scanState.items)) else this

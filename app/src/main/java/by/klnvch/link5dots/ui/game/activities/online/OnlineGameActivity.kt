@@ -26,14 +26,43 @@ package by.klnvch.link5dots.ui.game.activities.online
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.lifecycle.ViewModelProvider
+import by.klnvch.link5dots.BuildConfig
 import by.klnvch.link5dots.R
 import by.klnvch.link5dots.ui.game.OfflineGameViewModel
 import by.klnvch.link5dots.ui.game.OnlineGameViewModel
 import by.klnvch.link5dots.ui.game.error.ErrorScreenOnline
+import by.klnvch.link5dots.ui.game.picker.FirebaseStatusViewModel
 import by.klnvch.link5dots.ui.game.picker.PickerScreen
 import dagger.android.support.DaggerAppCompatActivity
 import javax.inject.Inject
+
+@Composable
+fun ConnectionStatus(statusViewModel: FirebaseStatusViewModel) {
+    if (BuildConfig.DEBUG) {
+        val isConnected by statusViewModel.isConnected.collectAsState()
+        val textId = if (isConnected) R.string.connected else R.string.disconnected
+        val color = if (isConnected) Color.Green else Color.Red
+        Text(
+            modifier = Modifier
+                .background(color)
+                .fillMaxWidth(),
+            textAlign = TextAlign.Center,
+            text = stringResource(textId),
+        )
+    }
+}
 
 class OnlineGameActivity : DaggerAppCompatActivity() {
     @Inject
@@ -48,12 +77,21 @@ class OnlineGameActivity : DaggerAppCompatActivity() {
             viewModelFactory
         )[OfflineGameViewModel.KEY, OnlineGameViewModel::class.java]
 
+        val statusViewModel = ViewModelProvider(
+            this,
+            viewModelFactory
+        )[FirebaseStatusViewModel.KEY, FirebaseStatusViewModel::class.java]
+
         setContent {
             GameContent(
-                viewModelFactory = viewModelFactory,
                 viewModel = viewModel,
                 defaultTitle = R.string.menu_online_game,
-                pickerScreen = { factory -> PickerScreen(factory) },
+                pickerScreen = {
+                    Column {
+                        ConnectionStatus(statusViewModel)
+                        PickerScreen(viewModel)
+                    }
+                },
                 errorScreen = { e, onDone -> ErrorScreenOnline(e, onDone) },
                 onFinish = { finish() }
             )

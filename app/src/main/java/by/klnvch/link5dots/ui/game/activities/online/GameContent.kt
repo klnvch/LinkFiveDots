@@ -37,11 +37,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.res.imageResource
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import by.klnvch.link5dots.R
+import by.klnvch.link5dots.domain.models.NetworkGameAction
 import by.klnvch.link5dots.ui.common.TopBarTitle
 import by.klnvch.link5dots.ui.common.tiledBackground
 import by.klnvch.link5dots.ui.game.GameScreen
@@ -55,22 +55,34 @@ import by.klnvch.link5dots.ui.theme.AppTheme
 private enum class MultiplayerRoute() { Picker, Game, Error }
 
 @Composable
-private fun GameTitle(viewModel: OnlineGameViewModel, @StringRes defaultTitle: Int) {
-    val titleId by viewModel.uiTitleState.collectAsState(defaultTitle)
-    TopBarTitle(if (titleId == 0) defaultTitle else titleId)
+private fun GameTitle(action: NetworkGameAction, @StringRes defaultTitle: Int) {
+    val id = when (action) {
+        NetworkGameAction.PICKER_CREATING -> R.string.connecting
+        NetworkGameAction.PICKER_DELETING -> R.string.connecting
+        NetworkGameAction.PICKER_CREATED -> R.string.progress_text
+        NetworkGameAction.PICKER_SCANNING -> R.string.searching
+        NetworkGameAction.PICKER_CONNECTING -> R.string.connecting
+        NetworkGameAction.GAME_OVER_WIN -> R.string.end_win
+        NetworkGameAction.GAME_OVER_LOSE -> R.string.end_lose
+        NetworkGameAction.GAME_DISCONNECTED -> R.string.disconnected
+        NetworkGameAction.GAME_MOVE -> R.string.bt_message_your_turn
+        NetworkGameAction.GAME_WAIT -> R.string.bt_message_opponents_turn
+        NetworkGameAction.DEFAULT -> defaultTitle
+    }
+    TopBarTitle(id)
 }
 
 @Composable
 fun GameContent(
-    viewModelFactory: ViewModelProvider.Factory,
     viewModel: OnlineGameViewModel,
     @StringRes defaultTitle: Int,
-    pickerScreen: @Composable (getVMFactory: () -> ViewModelProvider.Factory) -> Unit,
+    pickerScreen: @Composable () -> Unit,
     errorScreen: @Composable (e: Throwable, onDone: (isSuccess: Boolean) -> Unit) -> Unit,
     onFinish: () -> Unit,
 ) {
     AppTheme {
         val navController = rememberNavController()
+        val action by viewModel.uiTitleState.collectAsState(NetworkGameAction.DEFAULT)
         val pickerUiState by viewModel.pickerUiState.collectAsState()
         val pickerScreen = pickerUiState.screen
         val disconnectDialog = remember { mutableStateOf(false) }
@@ -91,7 +103,7 @@ fun GameContent(
         LaunchedEffect(pickerScreen) {
             when (pickerScreen) {
                 PickerScreenNone -> {}
-                is PickerScreenGame -> navController.navigate(MultiplayerRoute.Game.name)
+                PickerScreenGame -> navController.navigate(MultiplayerRoute.Game.name)
                 is PickerScreenError -> navController.navigate(MultiplayerRoute.Error.name)
             }
         }
@@ -99,11 +111,18 @@ fun GameContent(
             modifier = Modifier.tiledBackground(ImageBitmap.imageResource(R.drawable.paper)),
             containerColor = Color.Transparent,
             topBar = {
-                TopBar(
-                    viewModel = viewModel,
-                    title = { GameTitle(viewModel, defaultTitle) },
-                    navigateUp = { disconnectGuard() }
-                )
+                if (pickerScreen == PickerScreenGame) {
+                    TopBar(
+                        viewModel = viewModel,
+                        title = { GameTitle(action, defaultTitle) },
+                        navigateUp = disconnectGuard,
+                    )
+                } else {
+                    PickerTopBar(
+                        title = { GameTitle(action, defaultTitle) },
+                        navigateUp = disconnectFinal,
+                    )
+                }
             },
         ) { innerPadding ->
             NavHost(
@@ -112,9 +131,7 @@ fun GameContent(
                 modifier = Modifier.padding(innerPadding)
             ) {
                 composable(route = MultiplayerRoute.Picker.name) {
-                    val getVMFactory: () -> ViewModelProvider.Factory =
-                        remember { { viewModelFactory } }
-                    pickerScreen(getVMFactory)
+                    pickerScreen()
                 }
                 composable(route = MultiplayerRoute.Game.name) {
                     GameScreen(

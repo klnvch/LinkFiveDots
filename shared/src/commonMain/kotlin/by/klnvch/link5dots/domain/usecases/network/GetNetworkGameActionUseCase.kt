@@ -31,7 +31,7 @@ import by.klnvch.link5dots.ui.game.picker.states.PickerState
 
 class GetNetworkGameActionUseCase(private val identity: NetworkUserIdentity) {
     suspend fun get(pickerState: PickerState, room: INetworkRoom?) = when {
-        pickerState.isNone -> NetworkGameAction.UNKNOWN
+        pickerState.isNone -> NetworkGameAction.DEFAULT
         pickerState.isCreating -> NetworkGameAction.PICKER_CREATING
         pickerState.isDeleting -> NetworkGameAction.PICKER_DELETING
         pickerState.isCreated -> NetworkGameAction.PICKER_CREATED
@@ -42,7 +42,7 @@ class GetNetworkGameActionUseCase(private val identity: NetworkUserIdentity) {
         pickerState.isDisconnected -> NetworkGameAction.GAME_DISCONNECTED
         room.isMove(identity.getUserId()) -> NetworkGameAction.GAME_MOVE
         room.isWait(identity.getUserId()) -> NetworkGameAction.GAME_WAIT
-        else -> NetworkGameAction.UNKNOWN
+        else -> NetworkGameAction.DEFAULT
     }
 }
 

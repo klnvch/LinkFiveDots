@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023-2025 klnvch
+ * Copyright (c) 2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,31 +22,23 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.di.game
+package by.klnvch.link5dots.ui.game.activities.online
 
-import androidx.lifecycle.ViewModel
-import by.klnvch.link5dots.di.viewmodels.ViewModelKey
-import by.klnvch.link5dots.ui.game.OnlineGameViewModel
-import by.klnvch.link5dots.ui.game.picker.FirebaseStatusViewModel
-import by.klnvch.link5dots.ui.game.picker.VisibilityViewModel
-import dagger.Binds
-import dagger.Module
-import dagger.multibindings.IntoMap
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.TopAppBar
+import androidx.compose.runtime.Composable
+import by.klnvch.link5dots.ui.common.NavigationIcon
+import by.klnvch.link5dots.ui.common.topAppBarColors
 
-@Module
-abstract class OnlineGameViewModelsModule {
-    @Binds
-    @IntoMap
-    @ViewModelKey(OnlineGameViewModel::class)
-    abstract fun bindOnlineGameViewModel(viewModel: OnlineGameViewModel): ViewModel
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(VisibilityViewModel::class)
-    abstract fun bindVisibilityViewModel(viewModel: VisibilityViewModel): ViewModel
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(FirebaseStatusViewModel::class)
-    abstract fun bindFirebaseStatusViewModel(viewModel: FirebaseStatusViewModel): ViewModel
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun PickerTopBar(
+    title: @Composable () -> Unit,
+    navigateUp: () -> Unit,
+) {
+    TopAppBar(
+        title = title,
+        colors = topAppBarColors(),
+        navigationIcon = { NavigationIcon(onClick = navigateUp) },
+    )
 }
