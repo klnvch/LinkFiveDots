@@ -31,5 +31,4 @@ import kotlin.js.JsExport
 @JsExport()
 data class Point(val x: Int, val y: Int)
 
-fun Point.translate(tp: Point) = Point(x + tp.x, y + tp.y)
 fun Point.invert() = Point(y, x)

@@ -28,6 +28,7 @@ import by.klnvch.link5dots.domain.models.Dot
 import by.klnvch.link5dots.domain.models.DotsStyleType
 import by.klnvch.link5dots.domain.models.IRoom
 import by.klnvch.link5dots.domain.models.WinningLine
+import by.klnvch.link5dots.domain.models.getDuration
 import kotlin.js.ExperimentalJsExport
 import kotlin.js.JsExport
 import kotlin.time.Duration.Companion.seconds
@@ -63,7 +64,6 @@ interface GameInfoViewState {
 @JsExport()
 interface GameBoardViewState {
     val dotsStyleType: DotsStyleType
-    val isNew: Boolean
     val dots: Array<Dot>
     val winningLine: WinningLine?
     val lastDot: Dot?
@@ -90,13 +90,13 @@ fun createGameViewState(
         dotsStyleType,
         GameInfoUserViewStateImpl(
             user1Name ?: "",
-            room.getDuration(1).formatDuration(),
+            room?.dots.getDuration(1).formatDuration(),
             room.canMove(0),
             room.isWon(1),
         ),
         GameInfoUserViewStateImpl(
             user2Name ?: "",
-            room.getDuration(0).formatDuration(),
+            room?.dots.getDuration(0).formatDuration(),
             room.canMove(1),
             room.isWon(0),
         ),
@@ -104,7 +104,6 @@ fun createGameViewState(
     ),
     GameBoardViewStateImpl(
         dotsStyleType,
-        room?.isNew() != false,
         room?.dots?.toTypedArray() ?: emptyArray(),
         room?.getWinningLine(),
     ),
@@ -139,7 +138,6 @@ class GameInfoViewStateImpl(
 
 class GameBoardViewStateImpl(
     override val dotsStyleType: DotsStyleType = DotsStyleType.ORIGINAL,
-    override val isNew: Boolean = true,
     override val dots: Array<Dot> = emptyArray(),
     override val winningLine: WinningLine? = null,
 ) : GameBoardViewState {
@@ -151,13 +149,6 @@ data class MenuViewStateImpl(
     override val undoOption: ActionAvailability = ActionAvailability.Gone,
     override val shareOption: ActionAvailability = ActionAvailability.Gone,
 ) : MenuViewState
-
-private fun IRoom?.getDuration(d: Int) = this?.dots
-    ?.drop(d)
-    ?.chunked(2)
-    ?.filter { it.size > 1 }
-    ?.sumOf { it[1].dt - it[0].dt }
-    ?: 0
 
 private fun Int.formatDurationPart() = if (this < 10) "0${this}" else toString()
 

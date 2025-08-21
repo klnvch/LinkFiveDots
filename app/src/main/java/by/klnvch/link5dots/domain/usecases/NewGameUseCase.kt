@@ -29,14 +29,12 @@ import by.klnvch.link5dots.domain.models.DeviceOwnerUser
 import by.klnvch.link5dots.domain.models.Dot
 import by.klnvch.link5dots.domain.models.DotImpl
 import by.klnvch.link5dots.domain.models.IUser
-import by.klnvch.link5dots.domain.models.InitialGameGenerator
 import by.klnvch.link5dots.domain.models.NetworkRoom
 import by.klnvch.link5dots.domain.models.NetworkUser
-import by.klnvch.link5dots.domain.models.Point
 import by.klnvch.link5dots.domain.models.Room
 import by.klnvch.link5dots.domain.models.RoomState
 import by.klnvch.link5dots.domain.models.RoomType
-import by.klnvch.link5dots.domain.models.translate
+import by.klnvch.link5dots.domain.models.generateInitialGame
 import by.klnvch.link5dots.domain.repositories.BluetoothRoomRepository
 import by.klnvch.link5dots.domain.repositories.NsdRoomRepository
 import by.klnvch.link5dots.domain.repositories.RoomKeyGenerator
@@ -53,28 +51,20 @@ class NewGameEmptyUseCase @Inject constructor() : NewGameUseCase {
     override val actionAvailability = ActionAvailability.Gone
 }
 
-abstract class NewGameCommonUseCase(
-    private val initialGameGenerator: InitialGameGenerator,
-) : NewGameUseCase {
+abstract class NewGameCommonUseCase() : NewGameUseCase {
     override val isImplemented = true
-    protected fun getDots(seed: Long?): MutableList<Dot> {
-        if (seed != null) {
-            val tp = Point(8, 8)
-            return initialGameGenerator.get(seed).map { it.translate(tp) }.withIndex()
-                .map { (i, p) -> DotImpl(p, if (i % 2 == 0) Dot.HOST else Dot.GUEST, 0) }
-                .toMutableList()
-        } else {
-            return mutableListOf()
-        }
-    }
+    protected fun getDots(seed: Long?) =
+        if (seed != null) generateInitialGame(seed)
+            .mapIndexed { i, p -> DotImpl(p, if (i % 2 == 0) Dot.HOST else Dot.GUEST, 0) }
+            .toMutableList<Dot>()
+        else mutableListOf()
 }
 
 abstract class NewGameOfflineUseCase(
     private val roomKeyGenerator: RoomKeyGenerator,
     private val timeRepository: TimeService,
     private val roomRepository: RoomRepository,
-    initialGameGenerator: InitialGameGenerator,
-) : NewGameCommonUseCase(initialGameGenerator) {
+) : NewGameCommonUseCase() {
     override val actionAvailability = ActionAvailability.Available
     override suspend fun create(seed: Long?) {
         val room = Room(
@@ -96,13 +86,11 @@ abstract class NewGameOfflineUseCase(
 class NewGameBotUseCase @Inject constructor(
     roomKeyGenerator: RoomKeyGenerator,
     timeRepository: TimeService,
-    initialGameGenerator: InitialGameGenerator,
     roomRepository: RoomRepository,
 ) : NewGameOfflineUseCase(
     roomKeyGenerator,
     timeRepository,
     roomRepository,
-    initialGameGenerator,
 ) {
     override val user1 = DeviceOwnerUser
     override val user2 = BotUser
@@ -112,13 +100,11 @@ class NewGameBotUseCase @Inject constructor(
 class NewGameTwoUseCase @Inject constructor(
     roomKeyGenerator: RoomKeyGenerator,
     timeRepository: TimeService,
-    initialGameGenerator: InitialGameGenerator,
     roomRepository: RoomRepository,
 ) : NewGameOfflineUseCase(
     roomKeyGenerator,
     timeRepository,
     roomRepository,
-    initialGameGenerator,
 ) {
     override val user1 = null
     override val user2 = null
@@ -130,8 +116,7 @@ class NewGameBluetoothUseCase @Inject constructor(
     private val timeRepository: TimeService,
     private val roomKeyGenerator: RoomKeyGenerator,
     private val repository: BluetoothRoomRepository,
-    initialGameGenerator: InitialGameGenerator,
-) : NewGameCommonUseCase(initialGameGenerator) {
+) : NewGameCommonUseCase() {
     override suspend fun create(seed: Long?) {
         if (repository.isServer()) {
             val prevRoom = repository.get().firstOrNull()
@@ -167,8 +152,7 @@ class NewGameNsdUseCase @Inject constructor(
     private val timeRepository: TimeService,
     private val roomKeyGenerator: RoomKeyGenerator,
     private val repository: NsdRoomRepository,
-    initialGameGenerator: InitialGameGenerator,
-) : NewGameCommonUseCase(initialGameGenerator) {
+) : NewGameCommonUseCase() {
     override suspend fun create(seed: Long?) {
         if (repository.isServer()) {
             val prevRoom = repository.get().firstOrNull()

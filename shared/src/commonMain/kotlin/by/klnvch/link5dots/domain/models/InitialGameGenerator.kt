@@ -22,32 +22,20 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.data.online
+package by.klnvch.link5dots.domain.models
 
-import by.klnvch.link5dots.data.firebase.OnlineRemoteUser
-import by.klnvch.link5dots.data.online.models.CreateOnlineRoomInvitation
-import by.klnvch.link5dots.domain.models.Point
+import kotlin.random.Random
 
-interface FirebaseDbSetDot {
-    suspend fun setDot(path: Array<String>, p: Point)
+private val topLeft = Point(8, 8)
+private val bottomRight = Point(12, 12)
+
+fun generateInitialGame(seed: Long): MutableList<Point> {
+    val points = mutableListOf<Point>()
+    for (i in topLeft.x..bottomRight.x) {
+        for (j in topLeft.y..bottomRight.y) {
+            points.add(Point(i, j))
+        }
+    }
+    points.shuffle(Random(seed))
+    return points.subList(0, 6)
 }
-
-interface FirebaseDbSetConnected {
-    suspend fun setConnected(
-        path: Array<String>,
-        state: Int,
-        user2: OnlineRemoteUser,
-        dots: List<Point>,
-    )
-}
-
-interface FirebaseDbCreateInvitation {
-    suspend fun createInvitation(invitation: CreateOnlineRoomInvitation)
-}
-
-interface FirebaseDbSetState {
-    suspend fun setState(path: Array<String>, state: Int)
-}
-
-interface FirebaseDb :
-    FirebaseDbSetDot, FirebaseDbSetConnected, FirebaseDbCreateInvitation, FirebaseDbSetState

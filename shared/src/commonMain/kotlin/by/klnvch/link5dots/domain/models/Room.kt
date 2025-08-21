@@ -42,7 +42,6 @@ interface IRoom {
     fun isNotOver() = getWinningLine() == null
     fun isOver() = getWinningLine() != null
     fun isFree(p: Point) = dots.find { it.x == p.x && it.y == p.y } == null
-    fun isNew() = dots.size <= 1 || dots.last().dt == 0
 }
 
 fun List<Dot>.findWinningLine(): WinningLine? {

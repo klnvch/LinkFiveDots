@@ -37,7 +37,7 @@ class MyJsTests {
             "({" +
                     "state:2," +
                     "time: 1753106016872," +
-                    "dots: [{dt: 35971, x: 5, y: 8,}]," +
+                    "dots: [{t: 1753106018872, x: 5, y: 8,}]," +
                     "user1: {id: '111'}," +
                     "user2: {id: '222', name: 'web user'}" +
                     "})"
@@ -47,7 +47,7 @@ class MyJsTests {
             OnlineRoomRemote(
                 state = 2,
                 time = 1753106016872,
-                dots = listOf(OnlineDotRemote(35971, 5, 8)),
+                dots = listOf(OnlineDotRemote(1753106018872, 5, 8)),
                 user1 = OnlineRemoteUser("111", null),
                 user2 = OnlineRemoteUser("222", "web user"),
             ), actual

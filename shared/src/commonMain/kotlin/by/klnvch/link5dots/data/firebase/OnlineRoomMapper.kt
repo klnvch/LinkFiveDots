@@ -81,6 +81,6 @@ fun List<OnlineDotRemote>.mapToDotList(time: Long) = this
             d.x!!,
             d.y!!,
             if (i % 2 == 0) Dot.HOST else Dot.GUEST,
-            ((d.t!! - time) / 1000).toInt()
+            d.t?.let { ((it - time) / 1000).toInt() } ?: 0,
         )
     }

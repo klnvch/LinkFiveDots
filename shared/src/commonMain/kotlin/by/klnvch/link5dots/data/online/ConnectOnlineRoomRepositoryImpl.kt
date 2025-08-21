@@ -28,7 +28,9 @@ import by.klnvch.link5dots.data.firebase.mapToOnlineRemoteUser
 import by.klnvch.link5dots.domain.models.NetworkUser
 import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
 import by.klnvch.link5dots.domain.models.RoomState
+import by.klnvch.link5dots.domain.models.generateInitialGame
 import by.klnvch.link5dots.domain.repositories.ConnectOnlineRoomRepository
+import kotlin.random.Random
 
 class ConnectOnlineRoomRepositoryImpl(
     private val firebaseDb: FirebaseDbSetConnected,
@@ -36,11 +38,15 @@ class ConnectOnlineRoomRepositoryImpl(
 ) : ConnectOnlineRoomRepository {
     override suspend fun connect(descriptor: RemoteRoomDescriptor, user2: NetworkUser) {
         val key = (descriptor as OnlineRoomDescriptor).key
+        val dots = generateInitialGame(Random.nextLong())
+
         firebaseDb.setConnected(
             arrayOf(key),
             RoomState.STARTED.ordinal,
-            user2.mapToOnlineRemoteUser()
+            user2.mapToOnlineRemoteUser(),
+            dots,
         )
+
         onlineLocalStore.save(key)
     }
 }

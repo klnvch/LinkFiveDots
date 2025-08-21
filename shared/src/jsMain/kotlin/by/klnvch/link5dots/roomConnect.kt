@@ -28,6 +28,7 @@ import by.klnvch.link5dots.data.firebase.OnlineRemoteUser
 import by.klnvch.link5dots.data.online.ConnectOnlineRoomRepositoryImpl
 import by.klnvch.link5dots.data.online.FirebaseDbSetConnected
 import by.klnvch.link5dots.data.online.OnlineLocalStoreWriter
+import by.klnvch.link5dots.domain.models.Point
 import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
 import by.klnvch.link5dots.domain.repositories.FirebaseAuthManager
 import by.klnvch.link5dots.domain.repositories.UserNameSettings
@@ -59,14 +60,13 @@ fun roomConnect(
             path: Array<String>,
             state: Int,
             user2: OnlineRemoteUser,
+            dots: List<Point>,
         ) {
-            val jsObject = json().also {
-                it["state"] = state
-                it["user2"] = json().also { userJson ->
-                    userJson["id"] = user2.id
-                    userJson["name"] = user2.name
-                }
-            }
+            val jsObject = json(
+                "state" to state,
+                "user2" to json("id" to user2.id, "name" to user2.name),
+                "dots" to dots.map { p -> json("x" to p.x, "y" to p.y) }.toTypedArray(),
+            )
             onDbUpdate(path.joinToString("/"), jsObject).await()
         }
     }

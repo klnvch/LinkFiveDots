@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 klnvch
+ * Copyright (c) 2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,18 +24,10 @@
 
 package by.klnvch.link5dots.domain.models
 
-import javax.inject.Inject
-import kotlin.random.Random
-
-class InitialGameGenerator @Inject constructor() {
-    fun get(seed: Long): List<Point> {
-        val points = mutableListOf<Point>()
-        for (i in 0..4) {
-            for (j in 0..4) {
-                points.add(Point(i, j))
-            }
-        }
-        points.shuffle(Random(seed))
-        return points.subList(0, 6)
-    }
-}
+fun List<Dot>?.getDuration(d: Int) = this
+    ?.drop(d)
+    ?.chunked(2)
+    ?.filter { it.size > 1 }
+    ?.filter { it[0].dt > 0 && it[1].dt > 0 }
+    ?.sumOf { it[1].dt - it[0].dt }
+    ?: 0

@@ -64,7 +64,8 @@ class FirebaseDbImpl @Inject constructor() : FirebaseDb {
         path: Array<String>,
         state: Int,
         user2: OnlineRemoteUser,
-    ) = update(path, mapOf("state" to state, "user2" to user2))
+        dots: List<Point>,
+    ) = update(path, mapOf("state" to state, "user2" to user2, "dots" to dots))
 
     override suspend fun createInvitation(invitation: CreateOnlineRoomInvitation) {
         val data = mapOf(
