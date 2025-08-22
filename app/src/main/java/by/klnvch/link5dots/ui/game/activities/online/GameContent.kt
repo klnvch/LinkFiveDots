@@ -24,6 +24,7 @@
 
 package by.klnvch.link5dots.ui.game.activities.online
 
+import androidx.activity.compose.BackHandler
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -151,6 +152,7 @@ fun GameContent(
                         navController.navigateUp()
                 }
             }
+            BackHandler(onBack = disconnectGuard)
         }
 
         if (disconnectDialog.value) {

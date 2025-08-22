@@ -79,7 +79,7 @@ fun GameInfo(modifier: Modifier = Modifier, infoViewState: GameInfoViewState) {
     Row(modifier = modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
         Card {
             Text(
-                modifier = Modifier.padding(horizontal = 4.dp),
+                modifier = Modifier.padding(horizontal = 8.dp),
                 text = infoViewState.size,
             )
         }
