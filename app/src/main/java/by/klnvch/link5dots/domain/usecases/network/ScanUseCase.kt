@@ -26,8 +26,9 @@ package by.klnvch.link5dots.domain.usecases.network
 import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
 import by.klnvch.link5dots.domain.repositories.BluetoothRoomRepository
 import by.klnvch.link5dots.domain.repositories.NsdRoomRepository
-import by.klnvch.link5dots.domain.repositories.OnlineRoomRepository
+import by.klnvch.link5dots.domain.repositories.ScanOnlineRoomRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 interface ScanUseCase {
@@ -35,9 +36,10 @@ interface ScanUseCase {
 }
 
 class OnlineScanUseCase @Inject constructor(
-    val repository: OnlineRoomRepository,
+    private val repository: ScanOnlineRoomRepository,
+    private val factory: ScanOnlineRoomDescriptorFactory,
 ) : ScanUseCase {
-    override fun scan() = repository.getRemoteRooms()
+    override fun scan() = repository.getInvitations().map { list -> factory.map(list) }
 }
 
 class NsdScanUseCase @Inject constructor(

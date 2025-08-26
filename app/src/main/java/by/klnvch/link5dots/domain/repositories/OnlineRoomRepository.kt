@@ -25,13 +25,16 @@ package by.klnvch.link5dots.domain.repositories
 
 import by.klnvch.link5dots.domain.models.NetworkRoom
 import by.klnvch.link5dots.domain.models.NetworkRoomState
-import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
+import by.klnvch.link5dots.domain.models.online.OnlineRoomInvitation
 import kotlinx.coroutines.flow.Flow
+
+interface ScanOnlineRoomRepository {
+    fun getInvitations(): Flow<List<OnlineRoomInvitation>>
+}
 
 interface OnlineRoomRepository {
     val state: Flow<NetworkRoomState>
     fun get(): Flow<NetworkRoom>
-    fun getRemoteRooms(): Flow<List<RemoteRoomDescriptor>>
     fun delete()
     fun finish()
 }

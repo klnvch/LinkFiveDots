@@ -33,6 +33,7 @@ import by.klnvch.link5dots.data.online.FirebaseDbImpl
 import by.klnvch.link5dots.data.online.GetOnlineRoomRepositoryImpl
 import by.klnvch.link5dots.data.online.OnlineLocalStore
 import by.klnvch.link5dots.data.online.OnlineLocalStoreWriter
+import by.klnvch.link5dots.data.online.ScanOnlineRoomRepositoryImpl
 import by.klnvch.link5dots.data.online.UpdateStateOnlineRoomRepositoryImpl
 import by.klnvch.link5dots.domain.models.Board
 import by.klnvch.link5dots.domain.repositories.AddDotOnlineRoomRepository
@@ -42,7 +43,10 @@ import by.klnvch.link5dots.domain.repositories.FirebaseAuthManager
 import by.klnvch.link5dots.domain.repositories.FirebaseManager
 import by.klnvch.link5dots.domain.repositories.GetOnlineRoomRepository
 import by.klnvch.link5dots.domain.repositories.RoomKeyGenerator
+import by.klnvch.link5dots.domain.repositories.ScanOnlineRoomRepository
 import by.klnvch.link5dots.domain.repositories.Settings
+import by.klnvch.link5dots.domain.repositories.StringProvider
+import by.klnvch.link5dots.domain.repositories.StringRepository
 import by.klnvch.link5dots.domain.repositories.TimeService
 import by.klnvch.link5dots.domain.repositories.UpdateStateOnlineRoomRepository
 import by.klnvch.link5dots.domain.repositories.UserNameSettings
@@ -50,6 +54,7 @@ import by.klnvch.link5dots.domain.usecases.AddDotOnlineUseCase
 import by.klnvch.link5dots.domain.usecases.NewGameOnlineUseCase
 import by.klnvch.link5dots.domain.usecases.network.ConnectOnlineRoomUseCase
 import by.klnvch.link5dots.domain.usecases.network.CreateOnlineRoomUseCase
+import by.klnvch.link5dots.domain.usecases.network.ScanOnlineRoomDescriptorFactory
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -89,15 +94,26 @@ class AppBindingModule2 {
 
     @Singleton
     @Provides
-    fun provideConnectOnlineRoomUseCase(
+    fun provideConnectOnlineRoomUseCase() = ConnectOnlineRoomUseCase()
+
+    @Singleton
+    @Provides
+    fun provideScanOnlineRoomRepository(
+        connectRepository: ConnectOnlineRoomRepository,
+    ): ScanOnlineRoomRepository = ScanOnlineRoomRepositoryImpl(connectRepository)
+
+    @Singleton
+    @Provides
+    fun provideStringProvider(stringRepository: StringRepository): StringProvider =
+        stringRepository
+
+    @Singleton
+    @Provides
+    fun provideScanOnlineRoomDescriptorFactory(
+        stringProvider: StringProvider,
         userNameSettings: UserNameSettings,
         firebaseAuthManager: FirebaseAuthManager,
-        connectOnlineRoomRepository: ConnectOnlineRoomRepository,
-    ) = ConnectOnlineRoomUseCase(
-        userNameSettings,
-        firebaseAuthManager,
-        connectOnlineRoomRepository,
-    )
+    ) = ScanOnlineRoomDescriptorFactory(stringProvider, userNameSettings, firebaseAuthManager)
 
     @Singleton
     @Provides

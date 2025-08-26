@@ -24,29 +24,38 @@
 
 package by.klnvch.link5dots.data.online
 
-import by.klnvch.link5dots.data.firebase.mapToOnlineRemoteUser
+import by.klnvch.link5dots.BuildConfig
 import by.klnvch.link5dots.data.online.models.AcceptOnlineRoomInvitation
 import by.klnvch.link5dots.domain.models.RoomState
+import by.klnvch.link5dots.domain.models.online.OnlineRoomInvitationRemote
+import by.klnvch.link5dots.domain.models.online.toOnlineRoomInvitation
 import by.klnvch.link5dots.domain.repositories.ConnectOnlineRoomRepository
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import by.klnvch.link5dots.domain.repositories.ScanOnlineRoomRepository
+import com.google.firebase.Firebase
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.database
+import com.google.firebase.database.snapshots
+import kotlinx.coroutines.flow.map
+import javax.inject.Inject
 
-class ConnectOnlineRoomRepositoryImpl(
-    private val firebaseDb: FirebaseDbSetConnected,
-    private val onlineLocalStore: OnlineLocalStoreWriter,
-) : ConnectOnlineRoomRepository {
-    private val scope = CoroutineScope(Dispatchers.Default)
+class ScanOnlineRoomRepositoryImpl @Inject constructor(
+    private val connectRepository: ConnectOnlineRoomRepository,
+) : ScanOnlineRoomRepository {
+    private val path = if (BuildConfig.DEBUG) "rooms_debug" else "rooms_v2"
+    private val reference = Firebase.database.reference.child(path)
 
-    override fun connect(key: String, accept: AcceptOnlineRoomInvitation) {
-        scope.launch {
-            firebaseDb.setConnected(
-                arrayOf(key),
-                RoomState.STARTED.ordinal,
-                accept.user2.mapToOnlineRemoteUser(),
-                accept.dots.toList(),
-            )
-            onlineLocalStore.save(key)
+    override fun getInvitations() = reference
+        .orderByChild("state")
+        .equalTo(RoomState.CREATED.ordinal.toDouble())
+        .snapshots
+        .map { it.children }
+        .map {
+            it.mapNotNull { snapshot ->
+                snapshot.toInvitation(connectRepository::connect)
+            }
         }
-    }
+
+    private fun DataSnapshot.toInvitation(
+        onConnect: (key: String, accept: AcceptOnlineRoomInvitation) -> Unit,
+    ) = toOnlineRoomInvitation(key, getValue(OnlineRoomInvitationRemote::class.java), onConnect)
 }

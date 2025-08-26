@@ -70,22 +70,10 @@ class OnlineRoomRepositoryImpl @Inject constructor(
         return@map state
     }.distinctUntilChanged()
 
-    override fun getRemoteRooms() = reference
-        .orderByChild(CHILD_STATE)
-        .equalTo(RoomState.CREATED.ordinal.toDouble())
-        .snapshots
-        .map { it.children }
-        .map { it.map { snapshot -> snapshot.toRemoteRoomItem() } }
-        .map { mapToDescriptors(it, stringRepository.getUnknownName()) }
-
     override fun delete() = context.launchCleanUpOnlineRoomWorker(RoomState.DELETED)
 
     override fun finish() = context.launchCleanUpOnlineRoomWorker(RoomState.FINISHED)
 
     private fun DataSnapshot.toRemoteRoomItem() =
         RemoteRoomItem(key, getValue(OnlineRoomRemote::class.java))
-
-    companion object {
-        private const val CHILD_STATE = "state"
-    }
 }

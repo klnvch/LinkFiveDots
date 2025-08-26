@@ -22,7 +22,7 @@
   ~ SOFTWARE.
   -->
 
-<resources xmlns:ns0="urn:oasis:names:tc:xliff:document:1.2">
+<resources xmlns:ns0="urn:oasis:names:tc:xliff:document:1.2" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="app_name">Junta cinco puntos</string>
     <string name="language">Español</string>
     <string name="greetings">¡Hola, %1$s!</string>
@@ -108,4 +108,17 @@
     <string name="username">"Nombre"</string>
     <string name="history">"Historial"</string>
 
+    <string name="posted_just_now" msgid="6632467048088811568">"Ahora mismo"</string>
+    <plurals name="num_minutes_ago" formatted="false" msgid="4085627474543076735">
+        <item quantity="other"><xliff:g id="COUNT_1">%d</xliff:g> min</item>
+        <item quantity="one"><xliff:g id="COUNT_0">%d</xliff:g> min</item>
+    </plurals>
+    <plurals name="num_hours_ago" formatted="false" msgid="8010868301590914325">
+        <item quantity="other"><xliff:g id="COUNT_1">%d</xliff:g> horas</item>
+        <item quantity="one"><xliff:g id="COUNT_0">%d</xliff:g> hora</item>
+    </plurals>
+    <plurals name="num_days_ago" formatted="false" msgid="8753803762044567843">
+        <item quantity="other"><xliff:g id="COUNT_1">%d</xliff:g> días</item>
+        <item quantity="one"><xliff:g id="COUNT_0">%d</xliff:g> día</item>
+    </plurals>
 </resources>

@@ -31,6 +31,11 @@ import kotlin.js.JsExport
 @JsExport()
 interface RemoteRoomDescriptor {
     val title: String
-    val description: String
+    val description: String?
+    val time: Int?
     val isFavorite: Boolean
+}
+
+interface FoundRemoteRoom : RemoteRoomDescriptor {
+    fun connect()
 }

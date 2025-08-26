@@ -22,7 +22,7 @@
   ~ SOFTWARE.
   -->
 
-<resources xmlns:ns0="urn:oasis:names:tc:xliff:document:1.2">
+<resources xmlns:ns0="urn:oasis:names:tc:xliff:document:1.2" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="app_name">Combiner Cinq Points</string>
     <string name="language">Français</string>
     <string name="greetings">Salut, %1$s!</string>
@@ -107,4 +107,18 @@
     <string name="connection_error_message">"Aucune connexion"</string>
     <string name="username">"Nom"</string>
     <string name="history">"Historique"</string>
+
+    <string name="posted_just_now" msgid="6632467048088811568">"À l\'instant"</string>
+    <plurals name="num_minutes_ago" formatted="false" msgid="4085627474543076735">
+        <item quantity="one"><xliff:g id="COUNT_1">%d</xliff:g> min</item>
+        <item quantity="other"><xliff:g id="COUNT_1">%d</xliff:g> min</item>
+    </plurals>
+    <plurals name="num_hours_ago" formatted="false" msgid="8010868301590914325">
+        <item quantity="one"><xliff:g id="COUNT_1">%d</xliff:g> heure</item>
+        <item quantity="other"><xliff:g id="COUNT_1">%d</xliff:g> heures</item>
+    </plurals>
+    <plurals name="num_days_ago" formatted="false" msgid="8753803762044567843">
+        <item quantity="one"><xliff:g id="COUNT_1">%d</xliff:g> jour</item>
+        <item quantity="other"><xliff:g id="COUNT_1">%d</xliff:g> jours</item>
+    </plurals>
 </resources>

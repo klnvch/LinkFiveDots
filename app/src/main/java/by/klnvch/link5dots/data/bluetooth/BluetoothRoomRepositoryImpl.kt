@@ -76,8 +76,13 @@ class BluetoothRoomRepositoryImpl @Inject constructor(
         return merge(knownFlow, foundFlow)
             .scan(emptyMap<String, BluetoothDevice>()) { acc, d -> acc.plus(d.address to d) }
             .map { it.values }
-            .map { it.sortedWith(compareBy<BluetoothDevice> { !it.isBonded }.thenBy(nullsLast()) { it.deviceName }) }
-            .map { it.map { BluetoothRemoteRoomDescriptor(it) } }
+            .map { devices ->
+                devices.sortedWith(
+                    compareBy<BluetoothDevice> { !it.isBonded }.thenBy(
+                        nullsLast()
+                    ) { it.deviceName })
+            }
+            .map { devices -> devices.map { BluetoothRemoteRoomDescriptor(it) } }
     }
 
     override suspend fun connect(descriptor: RemoteRoomDescriptor, user2: NetworkUser) {
@@ -89,11 +94,11 @@ class BluetoothRoomRepositoryImpl @Inject constructor(
         }
     }
 
-    private inner class BluetoothLocalRoomDescriptor() :
-        RemoteRoomDescriptor {
+    private inner class BluetoothLocalRoomDescriptor() : RemoteRoomDescriptor {
         override val title = bluetoothManager.getDeviceName()
         override val description = bluetoothManager.getDeviceAddress()
         override val isFavorite = false
+        override val time = null
     }
 }
 
@@ -101,4 +106,5 @@ class BluetoothRemoteRoomDescriptor(val device: BluetoothDevice) : RemoteRoomDes
     override val title get() = device.deviceName ?: ""
     override val description get() = device.address ?: ""
     override val isFavorite get() = device.isBonded
+    override val time = null
 }

@@ -52,6 +52,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -189,10 +190,26 @@ private fun CreationPart(
         Text(
             text = stringResource(R.string.name) + ":"
         )
-        Text(
-            modifier = Modifier.padding(horizontal = 8.dp),
-            text = uiState.targetName ?: stringResource(R.string.name_not_set)
-        )
+        if (uiState.text.isEmpty()) {
+            Text(
+                modifier = Modifier.padding(horizontal = 8.dp),
+                text = stringResource(R.string.name_not_set)
+            )
+        } else {
+            Row(
+                modifier = Modifier
+                    .padding(horizontal = 8.dp)
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                uiState.text.map {
+                    when (it) {
+                        is String -> Text(text = it)
+                        is PassedTime -> PassedTimeText(it)
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -262,12 +279,49 @@ private fun ScanPart(
                     .fillParentMaxWidth(),
                 onClick = { openConnectDialog.value = room }
             ) {
-                Text(modifier = Modifier.padding(8.dp), text = room.longName)
+                Row(
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                ) {
+                    room.longName.map { Text(text = it) }
+                }
             }
         }
     }
 
     if (uiState.isEmptyMessageVisible) {
         Text(text = stringResource(R.string.search_no_results))
+    }
+}
+
+@Composable
+fun PassedTimeText(passedTime: PassedTime) {
+    when (passedTime.unit) {
+        PassedTimeUnit.JustNow -> Text(stringResource(R.string.posted_just_now))
+        PassedTimeUnit.Minutes -> Text(
+            pluralStringResource(
+                R.plurals.num_minutes_ago,
+                passedTime.count,
+                passedTime.count,
+            )
+        )
+
+        PassedTimeUnit.Hours -> Text(
+            pluralStringResource(
+                R.plurals.num_hours_ago,
+                passedTime.count,
+                passedTime.count,
+            )
+        )
+
+        PassedTimeUnit.Days -> Text(
+            pluralStringResource(
+                R.plurals.num_days_ago,
+                passedTime.count,
+                passedTime.count,
+            )
+        )
     }
 }

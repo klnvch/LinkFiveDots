@@ -28,33 +28,95 @@ import by.klnvch.link5dots.data.firebase.OnlineRemoteUser
 import by.klnvch.link5dots.data.online.ConnectOnlineRoomRepositoryImpl
 import by.klnvch.link5dots.data.online.FirebaseDbSetConnected
 import by.klnvch.link5dots.data.online.OnlineLocalStoreWriter
+import by.klnvch.link5dots.domain.models.NetworkUser
 import by.klnvch.link5dots.domain.models.Point
-import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
+import by.klnvch.link5dots.domain.models.online.OnlineRoomInvitation
+import by.klnvch.link5dots.domain.models.online.OnlineRoomInvitationRemote
+import by.klnvch.link5dots.domain.models.online.toOnlineRoomInvitation
+import by.klnvch.link5dots.domain.repositories.ConnectOnlineRoomRepository
 import by.klnvch.link5dots.domain.repositories.FirebaseAuthManager
+import by.klnvch.link5dots.domain.repositories.StringProvider
 import by.klnvch.link5dots.domain.repositories.UserNameSettings
-import by.klnvch.link5dots.domain.usecases.network.ConnectOnlineRoomUseCase
+import by.klnvch.link5dots.domain.usecases.network.ScanOnlineRoomDescriptor
+import by.klnvch.link5dots.domain.usecases.network.ScanOnlineRoomDescriptorFactory
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.await
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.promise
 import kotlin.js.Json
 import kotlin.js.Promise
 import kotlin.js.json
 
+@OptIn(ExperimentalJsExport::class)
+@JsExport()
+data class RemoteInvitation(
+    val key: String?,
+    val value: dynamic?,
+)
+
 @OptIn(DelicateCoroutinesApi::class, ExperimentalJsExport::class)
 @JsExport()
-fun roomConnect(
-    userName: String?,
-    firebaseUserId: String,
-    descriptor: RemoteRoomDescriptor,
+fun toDescriptors(
+    user2: NetworkUser,
+    invitations: Array<RemoteInvitation>,
+    defaultName: String,
     onDbUpdate: (key: String, update: Json) -> Promise<Unit>,
-): Promise<String> {
+    onSaveKey: (key: String) -> Unit,
+): Promise<Array<ScanOnlineRoomDescriptor>> {
+    val connectRepository = createConnectRepository(onDbUpdate, onSaveKey)
+    val factory = createScanOnlineRoomDescriptorFactory(user2, defaultName)
+
+    val list = invitations.mapNotNull { invitation ->
+        map(
+            invitation.key,
+            invitation.value,
+            connectRepository
+        )
+    }
+
+    return GlobalScope.promise {
+        factory.map(list).toTypedArray()
+    }
+}
+
+@OptIn(DelicateCoroutinesApi::class)
+private fun map(
+    key: String?,
+    value: dynamic?,
+    connectRepository: ConnectOnlineRoomRepository,
+): OnlineRoomInvitation? {
+    val remote = OnlineRoomInvitationRemote(
+        value.time as Double?,
+        if (value.user1 != null) OnlineRemoteUser(value.user1.id, value.user1.name) else null
+    )
+    return toOnlineRoomInvitation(
+        key,
+        remote
+    ) { key, accept ->
+        connectRepository.connect(key, accept)
+    }
+}
+
+private fun createScanOnlineRoomDescriptorFactory(
+    user2: NetworkUser,
+    defaultName: String,
+): ScanOnlineRoomDescriptorFactory {
     val userNameSettings = object : UserNameSettings {
-        override suspend fun getUserName() = userName
+        override suspend fun getUserName() = user2.name
     }
     val firebaseAuthManager = object : FirebaseAuthManager {
-        override fun getUserId() = firebaseUserId
+        override fun getUserId() = user2.id
     }
+    val stringProvider = object : StringProvider {
+        override fun getUnknownName() = defaultName
+    }
+    return ScanOnlineRoomDescriptorFactory(stringProvider, userNameSettings, firebaseAuthManager)
+}
+
+private fun createConnectRepository(
+    onDbUpdate: (key: String, update: Json) -> Promise<Unit>,
+    onSaveKey: (key: String) -> Unit,
+): ConnectOnlineRoomRepository {
     val firebaseDb = object : FirebaseDbSetConnected {
         override suspend fun setConnected(
             path: Array<String>,
@@ -70,16 +132,9 @@ fun roomConnect(
             onDbUpdate(path.joinToString("/"), jsObject).await()
         }
     }
-
-    return Promise { resolve, reject ->
-        val onlineLocalStore = object : OnlineLocalStoreWriter {
-            override suspend fun save(key: String) = resolve(key)
-        }
-
-        val repository = ConnectOnlineRoomRepositoryImpl(firebaseDb, onlineLocalStore)
-
-        val useCase = ConnectOnlineRoomUseCase(userNameSettings, firebaseAuthManager, repository)
-
-        GlobalScope.launch { useCase.connect(descriptor) }
+    val onlineLocalStore = object : OnlineLocalStoreWriter {
+        override suspend fun save(key: String) = onSaveKey(key)
     }
+
+    return ConnectOnlineRoomRepositoryImpl(firebaseDb, onlineLocalStore)
 }

@@ -22,7 +22,7 @@
   ~ SOFTWARE.
   -->
 
-<resources xmlns:ns0="urn:oasis:names:tc:xliff:document:1.2">
+<resources xmlns:ns0="urn:oasis:names:tc:xliff:document:1.2" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="app_name">Collega cinque punti</string>
     <string name="language">Italiano</string>
     <string name="greetings">Ciao, %1$s!</string>
@@ -108,4 +108,17 @@
     <string name="username">"Nome"</string>
     <string name="history">"Cronologia"</string>
 
+    <string name="posted_just_now" msgid="6632467048088811568">"Adesso"</string>
+    <plurals name="num_minutes_ago" formatted="false" msgid="4085627474543076735">
+        <item quantity="other"><xliff:g id="COUNT_1">%d</xliff:g> min</item>
+        <item quantity="one"><xliff:g id="COUNT_0">%d</xliff:g> min</item>
+    </plurals>
+    <plurals name="num_hours_ago" formatted="false" msgid="8010868301590914325">
+        <item quantity="other"><xliff:g id="COUNT_1">%d</xliff:g> ore</item>
+        <item quantity="one"><xliff:g id="COUNT_0">%d</xliff:g> ora</item>
+    </plurals>
+    <plurals name="num_days_ago" formatted="false" msgid="8753803762044567843">
+        <item quantity="other"><xliff:g id="COUNT_1">%d</xliff:g> giorni</item>
+        <item quantity="one"><xliff:g id="COUNT_0">%d</xliff:g> giorno</item>
+    </plurals>
 </resources>

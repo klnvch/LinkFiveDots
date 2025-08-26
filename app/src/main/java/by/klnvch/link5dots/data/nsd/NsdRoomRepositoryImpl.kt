@@ -92,4 +92,5 @@ data class NsdRoomDescriptor(
         if (serviceInfo.port == 0) null else serviceInfo.port.toString()
     ).joinToString(":")
     override val isFavorite = false
+    override val time = null
 }

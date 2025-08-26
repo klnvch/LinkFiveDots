@@ -39,7 +39,7 @@ fun ErrorScreenOnline(error: Throwable, onDone: (isSuccess: Boolean) -> Unit) {
     val infoTextId = when (error) {
         is FeatureDisabled -> R.string.connection_error_message
         is UnknownException -> R.string.audio_sharing_retry_dialog_content
-        else -> R.string.confirmation_turn_on
+        else -> R.string.audio_sharing_retry_dialog_content
     }
     val buttonTextId = when (error) {
         is FeatureDisabled -> R.string.bluetooth_devices_card_off_summary

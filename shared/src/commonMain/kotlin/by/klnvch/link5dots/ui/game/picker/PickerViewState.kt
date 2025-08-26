@@ -24,11 +24,39 @@
 
 package by.klnvch.link5dots.ui.game.picker
 
+import by.klnvch.link5dots.currentTime
 import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
+import by.klnvch.link5dots.formatDateTime
 import by.klnvch.link5dots.ui.game.picker.states.PickerState
 import by.klnvch.link5dots.ui.game.picker.states.createInitialPickerState
 import kotlin.js.ExperimentalJsExport
 import kotlin.js.JsExport
+import kotlin.time.Duration.Companion.seconds
+
+enum class PassedTimeUnit { JustNow, Minutes, Hours, Days }
+data class PassedTime(val time: Int) {
+    init {
+        val dt = (currentTime() / 1000).toInt() - time
+        dt.seconds.toComponents { days, hours, minutes, seconds, nanoseconds ->
+            if (days > 0) {
+                unit = PassedTimeUnit.Days
+                count = days.toInt()
+            } else if (hours > 0) {
+                unit = PassedTimeUnit.Hours
+                count = hours
+            } else if (minutes > 0) {
+                unit = PassedTimeUnit.Minutes
+                count = minutes
+            } else {
+                unit = PassedTimeUnit.JustNow
+                count = seconds
+            }
+        }
+    }
+
+    val unit: PassedTimeUnit
+    val count: Int
+}
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport()
@@ -65,7 +93,7 @@ interface PickerCommonViewState {
 @OptIn(ExperimentalJsExport::class)
 @JsExport()
 interface PickerCreationViewState {
-    val targetName: String?
+    val text: Array<Any>
     val isEnabled: Boolean
     val isCreateButtonVisible: Boolean
     val isDeleteButtonVisible: Boolean
@@ -87,13 +115,17 @@ interface PickerItemViewState {
     val id: Int
     val descriptor: RemoteRoomDescriptor
     val shortName: String
-    val longName: String
+    val longName: Array<String>
     val isBold: Boolean
 }
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport()
 fun PickerState.toPickerViewState(): PickerViewState = PickerViewStateImpl(this)
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// Implementation
+///////////////////////////////////////////////////////////////////////////////////////////////////
 
 data class PickerViewStateImpl(
     val state: PickerState = createInitialPickerState(),
@@ -114,7 +146,11 @@ data class PickerViewStateImpl(
     )
 
     override val creation = PickerCreationViewStateImpl(
-        state.result?.let { "${it.title} ${it.description}" },
+        listOfNotNull(
+            state.result?.title,
+            state.result?.description,
+            state.result?.time?.formatDateTime()
+        ).toTypedArray(),
         !isTargetChanging && !state.isScanning && !state.isConnected,
         !state.isCreated,
         state.isCreated,
@@ -135,7 +171,7 @@ data class PickerCommonViewStateImpl(
 ) : PickerCommonViewState
 
 class PickerCreationViewStateImpl(
-    override val targetName: String?,
+    override val text: Array<Any>,
     override val isEnabled: Boolean,
     override val isCreateButtonVisible: Boolean,
     override val isDeleteButtonVisible: Boolean,
@@ -154,6 +190,11 @@ class PickerItemViewStateImpl(
     override val descriptor: RemoteRoomDescriptor,
 ) : PickerItemViewState {
     override val shortName = descriptor.title
-    override val longName = "${descriptor.title} ${descriptor.description}"
+    override val longName =
+        listOfNotNull(
+            descriptor.title,
+            descriptor.description,
+            descriptor.time?.formatDateTime()
+        ).toTypedArray()
     override val isBold = descriptor.isFavorite
 }

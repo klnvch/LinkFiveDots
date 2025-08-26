@@ -118,4 +118,18 @@
     <string name="connection_error_message">"اتصال برقرار نیست"</string>
     <string name="username">"نام"</string>
     <string name="history">"سابقه"</string>
+
+    <string name="posted_just_now" msgid="6632467048088811568">"هم‌اکنون"</string>
+    <plurals name="num_minutes_ago" formatted="false" msgid="4085627474543076735">
+        <item quantity="one">‏<xliff:g id="COUNT_1">%d</xliff:g> دقیقه</item>
+        <item quantity="other">‏<xliff:g id="COUNT_1">%d</xliff:g> دقیقه</item>
+    </plurals>
+    <plurals name="num_hours_ago" formatted="false" msgid="8010868301590914325">
+        <item quantity="one">‏<xliff:g id="COUNT_1">%d</xliff:g> ساعت</item>
+        <item quantity="other">‏<xliff:g id="COUNT_1">%d</xliff:g> ساعت</item>
+    </plurals>
+    <plurals name="num_days_ago" formatted="false" msgid="8753803762044567843">
+        <item quantity="one">‏<xliff:g id="COUNT_1">%d</xliff:g> روز</item>
+        <item quantity="other">‏<xliff:g id="COUNT_1">%d</xliff:g> روز</item>
+    </plurals>
 </resources>

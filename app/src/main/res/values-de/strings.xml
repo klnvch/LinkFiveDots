@@ -22,7 +22,7 @@
   ~ SOFTWARE.
   -->
 
-<resources xmlns:ns0="urn:oasis:names:tc:xliff:document:1.2">
+<resources xmlns:ns0="urn:oasis:names:tc:xliff:document:1.2" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="app_name">Fünf Punkte Verbinden</string>
     <string name="language">Deutsch</string>
     <string name="greetings">Hallo, %1$s!</string>
@@ -107,4 +107,18 @@
     <string name="connection_error_message">"Keine Verbindung"</string>
     <string name="username">"Name"</string>
     <string name="history">"Verlauf"</string>
+
+    <string name="posted_just_now" msgid="6632467048088811568">"Gerade eben"</string>
+    <plurals name="num_minutes_ago" formatted="false" msgid="4085627474543076735">
+        <item quantity="other"><xliff:g id="COUNT_1">%d</xliff:g> min</item>
+        <item quantity="one"><xliff:g id="COUNT_0">%d</xliff:g> min</item>
+    </plurals>
+    <plurals name="num_hours_ago" formatted="false" msgid="8010868301590914325">
+        <item quantity="other"><xliff:g id="COUNT_1">%d</xliff:g> Stunden</item>
+        <item quantity="one"><xliff:g id="COUNT_0">%d</xliff:g> Stunde</item>
+    </plurals>
+    <plurals name="num_days_ago" formatted="false" msgid="8753803762044567843">
+        <item quantity="other"><xliff:g id="COUNT_1">%d</xliff:g> Tage</item>
+        <item quantity="one"><xliff:g id="COUNT_0">%d</xliff:g> Tag</item>
+    </plurals>
 </resources>

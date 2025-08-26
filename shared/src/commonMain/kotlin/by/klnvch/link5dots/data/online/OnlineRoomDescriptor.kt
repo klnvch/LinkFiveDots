@@ -35,24 +35,23 @@ import by.klnvch.link5dots.domain.models.NetworkRoomStateFinished
 import by.klnvch.link5dots.domain.models.NetworkRoomStateStarted
 import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
 import by.klnvch.link5dots.domain.models.RoomState
-import by.klnvch.link5dots.formatDateTime
 import kotlin.js.ExperimentalJsExport
 import kotlin.js.JsExport
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport()
-data class OnlineRoomDescriptor(
+class OnlineRoomDescriptor(
     override val title: String,
-    override val description: String,
-    override val isFavorite: Boolean,
+    override val time: Int,
     val key: String,
-) : RemoteRoomDescriptor
-
+) : RemoteRoomDescriptor {
+    override val description = null
+    override val isFavorite = false
+}
 
 fun INetworkRoomInvitation.createDescriptor(defaultName: String) = OnlineRoomDescriptor(
     user1.name ?: defaultName,
-    time.formatDateTime(),
-    false,
+    time,
     key,
 )
 

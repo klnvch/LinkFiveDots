@@ -22,15 +22,8 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.domain.usecases.network
+package by.klnvch.link5dots.domain.repositories
 
-import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
-
-interface ConnectRemoteRoomUseCase {
-    suspend fun connect(descriptor: RemoteRoomDescriptor)
-}
-
-class ConnectOnlineRoomUseCase() : ConnectRemoteRoomUseCase {
-    override suspend fun connect(descriptor: RemoteRoomDescriptor) =
-        (descriptor as ScanOnlineRoomDescriptor).onConnect()
+interface StringProvider {
+    fun getUnknownName(): String
 }

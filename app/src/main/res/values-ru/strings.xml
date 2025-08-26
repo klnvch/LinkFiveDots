@@ -22,7 +22,7 @@
   ~ SOFTWARE.
   -->
 
-<resources xmlns:ns0="urn:oasis:names:tc:xliff:document:1.2">
+<resources xmlns:ns0="urn:oasis:names:tc:xliff:document:1.2" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="app_name">Соедини пять точек</string>
     <string name="language">Русский</string>
     <string name="greetings">Привет, %1$s!</string>
@@ -108,4 +108,23 @@
     <string name="username">"Имя"</string>
     <string name="history">"История"</string>
 
+    <string name="posted_just_now" msgid="6632467048088811568">"Только что"</string>
+    <plurals name="num_minutes_ago" formatted="false" msgid="4085627474543076735">
+        <item quantity="one"><xliff:g id="COUNT_1">%d</xliff:g> минута</item>
+        <item quantity="few"><xliff:g id="COUNT_1">%d</xliff:g> минуты</item>
+        <item quantity="many"><xliff:g id="COUNT_1">%d</xliff:g> минут</item>
+        <item quantity="other"><xliff:g id="COUNT_1">%d</xliff:g> минуты</item>
+    </plurals>
+    <plurals name="num_hours_ago" formatted="false" msgid="8010868301590914325">
+        <item quantity="one"><xliff:g id="COUNT_1">%d</xliff:g> час</item>
+        <item quantity="few"><xliff:g id="COUNT_1">%d</xliff:g> часа</item>
+        <item quantity="many"><xliff:g id="COUNT_1">%d</xliff:g> часов</item>
+        <item quantity="other"><xliff:g id="COUNT_1">%d</xliff:g> часа</item>
+    </plurals>
+    <plurals name="num_days_ago" formatted="false" msgid="8753803762044567843">
+        <item quantity="one"><xliff:g id="COUNT_1">%d</xliff:g> день</item>
+        <item quantity="few"><xliff:g id="COUNT_1">%d</xliff:g> дня</item>
+        <item quantity="many"><xliff:g id="COUNT_1">%d</xliff:g> дней</item>
+        <item quantity="other"><xliff:g id="COUNT_1">%d</xliff:g> дня</item>
+    </plurals>
 </resources>
