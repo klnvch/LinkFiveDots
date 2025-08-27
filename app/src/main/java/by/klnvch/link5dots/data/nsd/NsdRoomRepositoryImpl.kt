@@ -30,6 +30,7 @@ import by.klnvch.link5dots.data.sockets.SocketData
 import by.klnvch.link5dots.data.sockets.SocketRoomRepository
 import by.klnvch.link5dots.domain.models.NetworkUser
 import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
+import by.klnvch.link5dots.domain.models.RoomInvitation
 import by.klnvch.link5dots.domain.repositories.NsdRoomRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -68,15 +69,20 @@ class NsdRoomRepositoryImpl @Inject constructor(
         super.delete()
     }
 
-    override fun getRemoteRooms(): Flow<List<RemoteRoomDescriptor>> {
+    override fun getInvitations(): Flow<List<RoomInvitation>> {
         nsdValidator.validate()
-        return nsdDiscovery.discover().map { list -> list.map { NsdRoomDescriptor(it) } }
+        return nsdDiscovery.discover().map { list -> list.map { NsdRoomInvitationImpl(it) } }
     }
 
+    private inner class NsdRoomInvitationImpl(
+        private val info: NsdServiceInfo,
+    ) : RoomInvitation {
+        override val title = info.title()
+        override val description = info.description()
+        override val time = null
+        override val isFavorite = false
 
-    override suspend fun connect(descriptor: RemoteRoomDescriptor, user2: NetworkUser) {
-        connect(descriptor, user2) {
-            val info = (descriptor as NsdRoomDescriptor).serviceInfo
+        override suspend fun onConnect(user2: NetworkUser) = connect(this, user2) {
             val socket = Socket(info.address, info.port)
             SocketData(socket, socket.inputStream, socket.outputStream)
         }
@@ -86,11 +92,14 @@ class NsdRoomRepositoryImpl @Inject constructor(
 data class NsdRoomDescriptor(
     val serviceInfo: NsdServiceInfo,
 ) : RemoteRoomDescriptor {
-    override val title = serviceInfo.serviceName ?: ""
-    override val description = listOfNotNull<String>(
-        serviceInfo.address?.toString(),
-        if (serviceInfo.port == 0) null else serviceInfo.port.toString()
-    ).joinToString(":")
+    override val title = serviceInfo.title()
+    override val description = serviceInfo.description()
     override val isFavorite = false
     override val time = null
 }
+
+private fun NsdServiceInfo.title() = serviceName ?: ""
+private fun NsdServiceInfo.description() = listOfNotNull(
+    address?.toString(),
+    if (port == 0) null else port.toString()
+).joinToString(":")

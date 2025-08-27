@@ -52,7 +52,6 @@ import by.klnvch.link5dots.domain.repositories.UpdateStateOnlineRoomRepository
 import by.klnvch.link5dots.domain.repositories.UserNameSettings
 import by.klnvch.link5dots.domain.usecases.AddDotOnlineUseCase
 import by.klnvch.link5dots.domain.usecases.NewGameOnlineUseCase
-import by.klnvch.link5dots.domain.usecases.network.ConnectOnlineRoomUseCase
 import by.klnvch.link5dots.domain.usecases.network.CreateOnlineRoomUseCase
 import by.klnvch.link5dots.domain.usecases.network.ScanOnlineRoomDescriptorFactory
 import dagger.Module
@@ -91,10 +90,6 @@ class AppBindingModule2 {
         firebaseAuthManager,
         createOnlineRoomRepository,
     )
-
-    @Singleton
-    @Provides
-    fun provideConnectOnlineRoomUseCase() = ConnectOnlineRoomUseCase()
 
     @Singleton
     @Provides

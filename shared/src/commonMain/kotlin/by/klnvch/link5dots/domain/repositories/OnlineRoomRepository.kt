@@ -35,7 +35,7 @@ interface CreateOnlineRoomRepository {
 }
 
 interface ConnectOnlineRoomRepository {
-    fun connect(key: String, accept: AcceptOnlineRoomInvitation)
+    suspend fun connect(key: String, accept: AcceptOnlineRoomInvitation)
 }
 
 interface AddDotOnlineRoomRepository {

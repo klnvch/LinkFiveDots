@@ -24,6 +24,7 @@
 
 package by.klnvch.link5dots.ui.game.picker.states
 
+import by.klnvch.link5dots.domain.models.FoundRemoteRoom
 import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
 import kotlin.js.ExperimentalJsExport
 import kotlin.js.JsExport
@@ -39,7 +40,7 @@ interface PickerState {
     val result: RemoteRoomDescriptor?
 
     val isScanning: Boolean
-    val scanResult: Array<RemoteRoomDescriptor>
+    val scanResult: Array<FoundRemoteRoom>
 
     val isConnected: Boolean
     val isConnecting: Boolean
@@ -54,7 +55,7 @@ interface PickerState {
     fun created(d: RemoteRoomDescriptor): PickerState
     fun deleting(): PickerState
 
-    fun scanning(items: Array<RemoteRoomDescriptor> = emptyArray()): PickerState
+    fun scanning(items: Array<FoundRemoteRoom> = emptyArray()): PickerState
     fun scanDone(): PickerState
 
     fun connecting(): PickerState
@@ -95,7 +96,7 @@ private data class PickerStateImpl(
     override fun created(d: RemoteRoomDescriptor) = copy(targetState = TargetCreated(d))
     override fun deleting() = copy(targetState = TargetDeleting)
 
-    override fun scanning(items: Array<RemoteRoomDescriptor>) =
+    override fun scanning(items: Array<FoundRemoteRoom>) =
         copy(scanState = ScanOn(items.toList()), error = null)
 
     override fun scanDone() =

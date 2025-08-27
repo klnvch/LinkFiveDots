@@ -35,8 +35,6 @@ import by.klnvch.link5dots.domain.usecases.PrepareScoreMultiplayerUseCase
 import by.klnvch.link5dots.domain.usecases.PrepareScoreUseCase
 import by.klnvch.link5dots.domain.usecases.UndoMoveNsdUseCase
 import by.klnvch.link5dots.domain.usecases.UndoMoveUseCase
-import by.klnvch.link5dots.domain.usecases.network.ConnectNsdRoomUseCase
-import by.klnvch.link5dots.domain.usecases.network.ConnectRemoteRoomUseCase
 import by.klnvch.link5dots.domain.usecases.network.CreateMultiplayerRoomUseCase
 import by.klnvch.link5dots.domain.usecases.network.CreateNsdRoomUseCase
 import by.klnvch.link5dots.domain.usecases.network.DeleteMultiplayerRoomUseCase
@@ -78,9 +76,6 @@ interface NsdGameRulesModule {
 
     @Binds
     fun bindScanUseCase(impl: NsdScanUseCase): ScanUseCase
-
-    @Binds
-    fun bindConnectRemoteRoomUseCase(impl: ConnectNsdRoomUseCase): ConnectRemoteRoomUseCase
 
     @Binds
     fun bindDeleteMultiplayerRoomUseCase(impl: DeleteNsdRoomUseCase): DeleteMultiplayerRoomUseCase

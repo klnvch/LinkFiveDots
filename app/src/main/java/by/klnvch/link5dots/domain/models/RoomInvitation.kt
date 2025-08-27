@@ -22,24 +22,8 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.data.online
+package by.klnvch.link5dots.domain.models
 
-import by.klnvch.link5dots.data.firebase.mapToOnlineRemoteUser
-import by.klnvch.link5dots.data.online.models.AcceptOnlineRoomInvitation
-import by.klnvch.link5dots.domain.models.RoomState
-import by.klnvch.link5dots.domain.repositories.ConnectOnlineRoomRepository
-
-class ConnectOnlineRoomRepositoryImpl(
-    private val firebaseDb: FirebaseDbSetConnected,
-    private val onlineLocalStore: OnlineLocalStoreWriter,
-) : ConnectOnlineRoomRepository {
-    override suspend fun connect(key: String, accept: AcceptOnlineRoomInvitation) {
-        firebaseDb.setConnected(
-            arrayOf(key),
-            RoomState.STARTED.ordinal,
-            accept.user2.mapToOnlineRemoteUser(),
-            accept.dots.toList(),
-        )
-        onlineLocalStore.save(key)
-    }
+interface RoomInvitation : RemoteRoomDescriptor {
+    suspend fun onConnect(user2: NetworkUser)
 }

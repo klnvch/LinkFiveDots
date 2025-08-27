@@ -25,7 +25,7 @@
 package by.klnvch.link5dots.ui.game.picker
 
 import by.klnvch.link5dots.currentTime
-import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
+import by.klnvch.link5dots.domain.models.FoundRemoteRoom
 import by.klnvch.link5dots.formatDateTime
 import by.klnvch.link5dots.ui.game.picker.states.PickerState
 import by.klnvch.link5dots.ui.game.picker.states.createInitialPickerState
@@ -113,7 +113,7 @@ interface PickerScanningViewState {
 @JsExport()
 interface PickerItemViewState {
     val id: Int
-    val descriptor: RemoteRoomDescriptor
+    val descriptor: FoundRemoteRoom
     val shortName: String
     val longName: Array<String>
     val isBold: Boolean
@@ -187,7 +187,7 @@ class PickerScanningViewStateImpl(
 
 class PickerItemViewStateImpl(
     override val id: Int,
-    override val descriptor: RemoteRoomDescriptor,
+    override val descriptor: FoundRemoteRoom,
 ) : PickerItemViewState {
     override val shortName = descriptor.title
     override val longName =

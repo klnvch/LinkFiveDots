@@ -57,7 +57,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import by.klnvch.link5dots.R
-import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
+import by.klnvch.link5dots.domain.models.FoundRemoteRoom
 import by.klnvch.link5dots.ui.common.CustomButtonWithText
 
 
@@ -68,7 +68,7 @@ fun PickerScreenCommon(
     onDelete: () -> Unit,
     onScan: () -> Unit,
     onCancel: () -> Unit,
-    onConnect: (descriptor: RemoteRoomDescriptor) -> Unit,
+    onConnect: (invitation: FoundRemoteRoom) -> Unit,
 ) {
     val configuration = LocalConfiguration.current
     when (configuration.orientation) {
@@ -99,7 +99,7 @@ private fun PickerScreenPortrait(
     onDelete: () -> Unit,
     onScan: () -> Unit,
     onCancel: () -> Unit,
-    onConnect: (descriptor: RemoteRoomDescriptor) -> Unit,
+    onConnect: (invitation: FoundRemoteRoom) -> Unit,
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -118,7 +118,7 @@ private fun PickerScreenLandscape(
     onDelete: () -> Unit,
     onScan: () -> Unit,
     onCancel: () -> Unit,
-    onConnect: (descriptor: RemoteRoomDescriptor) -> Unit,
+    onConnect: (invitation: FoundRemoteRoom) -> Unit,
 ) {
     Column {
         CommonPart(uiState.common)
@@ -218,7 +218,7 @@ private fun ScanPart(
     uiState: PickerScanningViewState,
     onScan: () -> Unit,
     onCancel: () -> Unit,
-    onConnect: (descriptor: RemoteRoomDescriptor) -> Unit,
+    onConnect: (invitation: FoundRemoteRoom) -> Unit,
 ) {
     if (uiState.isStartScanButtonVisible) {
         CustomButtonWithText(

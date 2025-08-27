@@ -22,15 +22,11 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.domain.usecases.network
+package by.klnvch.link5dots.domain.repositories
 
-import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
+import by.klnvch.link5dots.domain.models.RoomInvitation
+import kotlinx.coroutines.flow.Flow
 
-interface ConnectRemoteRoomUseCase {
-    suspend fun connect(descriptor: RemoteRoomDescriptor)
-}
-
-class ConnectOnlineRoomUseCase() : ConnectRemoteRoomUseCase {
-    override suspend fun connect(descriptor: RemoteRoomDescriptor) =
-        (descriptor as ScanOnlineRoomDescriptor).onConnect()
+interface ScanRoomInvitationRepository {
+    fun getInvitations(): Flow<List<RoomInvitation>>
 }

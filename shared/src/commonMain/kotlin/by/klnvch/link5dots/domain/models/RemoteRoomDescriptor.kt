@@ -36,6 +36,8 @@ interface RemoteRoomDescriptor {
     val isFavorite: Boolean
 }
 
+@OptIn(ExperimentalJsExport::class)
+@JsExport()
 interface FoundRemoteRoom : RemoteRoomDescriptor {
-    fun connect()
+    fun connect(onSuccess: () -> Unit, onError: (Throwable) -> Unit)
 }

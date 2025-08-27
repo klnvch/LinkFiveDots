@@ -56,6 +56,6 @@ class ScanOnlineRoomRepositoryImpl @Inject constructor(
         }
 
     private fun DataSnapshot.toInvitation(
-        onConnect: (key: String, accept: AcceptOnlineRoomInvitation) -> Unit,
+        onConnect: suspend (key: String, accept: AcceptOnlineRoomInvitation) -> Unit,
     ) = toOnlineRoomInvitation(key, getValue(OnlineRoomInvitationRemote::class.java), onConnect)
 }

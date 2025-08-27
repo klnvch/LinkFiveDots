@@ -37,8 +37,6 @@ import by.klnvch.link5dots.domain.usecases.PrepareScoreUseCase
 import by.klnvch.link5dots.domain.usecases.UndoMoveBluetoothUseCase
 import by.klnvch.link5dots.domain.usecases.UndoMoveUseCase
 import by.klnvch.link5dots.domain.usecases.network.BluetoothScanUseCase
-import by.klnvch.link5dots.domain.usecases.network.ConnectBluetoothRoomUseCase
-import by.klnvch.link5dots.domain.usecases.network.ConnectRemoteRoomUseCase
 import by.klnvch.link5dots.domain.usecases.network.CreateBluetoothRoomUseCase
 import by.klnvch.link5dots.domain.usecases.network.CreateMultiplayerRoomUseCase
 import by.klnvch.link5dots.domain.usecases.network.DeleteBluetoothRoomUseCase
@@ -79,9 +77,6 @@ interface BluetoothGameRulesModule {
 
     @Binds
     fun bindScanUseCase(impl: BluetoothScanUseCase): ScanUseCase
-
-    @Binds
-    fun bindConnectRemoteRoomUseCase(impl: ConnectBluetoothRoomUseCase): ConnectRemoteRoomUseCase
 
     @Binds
     fun bindDeleteMultiplayerRoomUseCase(impl: DeleteBluetoothRoomUseCase): DeleteMultiplayerRoomUseCase

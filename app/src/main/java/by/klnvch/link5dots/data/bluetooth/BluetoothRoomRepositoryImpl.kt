@@ -36,6 +36,7 @@ import by.klnvch.link5dots.data.sockets.SocketData
 import by.klnvch.link5dots.data.sockets.SocketRoomRepository
 import by.klnvch.link5dots.domain.models.NetworkUser
 import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
+import by.klnvch.link5dots.domain.models.RoomInvitation
 import by.klnvch.link5dots.domain.repositories.BluetoothRoomRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
@@ -69,7 +70,7 @@ class BluetoothRoomRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun getRemoteRooms(): Flow<List<RemoteRoomDescriptor>> {
+    override fun getInvitations(): Flow<List<RoomInvitation>> {
         bluetoothValidator.validate()
         val knownFlow = flow { emitAll(bluetoothBondedStore.getKnown().asFlow()) }
         val foundFlow = bluetoothDiscoveryService.discover().filterNotNull()
@@ -82,16 +83,7 @@ class BluetoothRoomRepositoryImpl @Inject constructor(
                         nullsLast()
                     ) { it.deviceName })
             }
-            .map { devices -> devices.map { BluetoothRemoteRoomDescriptor(it) } }
-    }
-
-    override suspend fun connect(descriptor: RemoteRoomDescriptor, user2: NetworkUser) {
-        connect(descriptor, user2) {
-            val device = (descriptor as BluetoothRemoteRoomDescriptor).device
-            val socket = bluetoothConnectService.connect(device)
-            bluetoothBondedStore.save(device)
-            SocketData(socket, socket.inputStream, socket.outputStream)
-        }
+            .map { devices -> devices.map { BluetoothRoomInvitationImpl(it) } }
     }
 
     private inner class BluetoothLocalRoomDescriptor() : RemoteRoomDescriptor {
@@ -100,11 +92,18 @@ class BluetoothRoomRepositoryImpl @Inject constructor(
         override val isFavorite = false
         override val time = null
     }
-}
 
-class BluetoothRemoteRoomDescriptor(val device: BluetoothDevice) : RemoteRoomDescriptor {
-    override val title get() = device.deviceName ?: ""
-    override val description get() = device.address ?: ""
-    override val isFavorite get() = device.isBonded
-    override val time = null
+    private inner class BluetoothRoomInvitationImpl(
+        private val device: BluetoothDevice,
+    ) : RoomInvitation {
+        override val title get() = device.deviceName ?: ""
+        override val description get() = device.address ?: ""
+        override val isFavorite get() = device.isBonded
+        override val time = null
+        override suspend fun onConnect(user2: NetworkUser) = connect(this, user2) {
+            val socket = bluetoothConnectService.connect(device)
+            bluetoothBondedStore.save(device)
+            SocketData(socket, socket.inputStream, socket.outputStream)
+        }
+    }
 }

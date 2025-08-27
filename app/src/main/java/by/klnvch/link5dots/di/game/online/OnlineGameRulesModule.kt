@@ -35,8 +35,6 @@ import by.klnvch.link5dots.domain.usecases.PrepareScoreMultiplayerUseCase
 import by.klnvch.link5dots.domain.usecases.PrepareScoreUseCase
 import by.klnvch.link5dots.domain.usecases.UndoMoveInfoUseCase
 import by.klnvch.link5dots.domain.usecases.UndoMoveUseCase
-import by.klnvch.link5dots.domain.usecases.network.ConnectOnlineRoomUseCase
-import by.klnvch.link5dots.domain.usecases.network.ConnectRemoteRoomUseCase
 import by.klnvch.link5dots.domain.usecases.network.CreateMultiplayerRoomUseCase
 import by.klnvch.link5dots.domain.usecases.network.CreateOnlineRoomUseCase
 import by.klnvch.link5dots.domain.usecases.network.DeleteMultiplayerRoomUseCase
@@ -78,9 +76,6 @@ interface OnlineGameRulesModule {
 
     @Binds
     fun bindScanUseCase(impl: OnlineScanUseCase): ScanUseCase
-
-    @Binds
-    fun bindConnectRemoteRoomUseCase(impl: ConnectOnlineRoomUseCase): ConnectRemoteRoomUseCase
 
     @Binds
     fun bindDeleteMultiplayerRoomUseCase(impl: DeleteOnlineRoomUseCase): DeleteMultiplayerRoomUseCase

@@ -23,16 +23,25 @@
  */
 package by.klnvch.link5dots.domain.usecases.network
 
-import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
+import by.klnvch.link5dots.domain.models.FoundRemoteRoom
+import by.klnvch.link5dots.domain.models.NetworkUser
 import by.klnvch.link5dots.domain.repositories.BluetoothRoomRepository
 import by.klnvch.link5dots.domain.repositories.NsdRoomRepository
 import by.klnvch.link5dots.domain.repositories.ScanOnlineRoomRepository
+import by.klnvch.link5dots.domain.repositories.ScanRoomInvitationRepository
+import by.klnvch.link5dots.domain.repositories.Settings
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emitAll
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 interface ScanUseCase {
-    fun scan(): Flow<List<RemoteRoomDescriptor>>
+    fun scan(): Flow<List<FoundRemoteRoom>>
 }
 
 class OnlineScanUseCase @Inject constructor(
@@ -42,14 +51,47 @@ class OnlineScanUseCase @Inject constructor(
     override fun scan() = repository.getInvitations().map { list -> factory.map(list) }
 }
 
-class NsdScanUseCase @Inject constructor(
-    val repository: NsdRoomRepository,
+abstract class CommonScanUseCase(
+    private val repository: ScanRoomInvitationRepository,
+    private val settings: Settings,
 ) : ScanUseCase {
-    override fun scan() = repository.getRemoteRooms()
+    override fun scan(): Flow<List<FoundRemoteRoom>> = flow {
+        val userId = settings.getUserId().first()
+        val userName = settings.getUserName()
+        val user2 = NetworkUser(userId, userName)
+        emitAll(repository.getInvitations().map { list ->
+            list.map {
+                object : FoundRemoteRoom {
+                    override fun connect(
+                        onSuccess: () -> Unit,
+                        onError: (Throwable) -> Unit,
+                    ) {
+                        CoroutineScope(Dispatchers.Default).launch {
+                            try {
+                                it.onConnect(user2)
+                                onSuccess()
+                            } catch (e: Throwable) {
+                                onError(e)
+                            }
+                        }
+                    }
+
+                    override val title = it.title
+                    override val description = it.description
+                    override val time = it.time
+                    override val isFavorite = it.isFavorite
+                }
+            }
+        })
+    }
 }
 
+class NsdScanUseCase @Inject constructor(
+    repository: NsdRoomRepository,
+    settings: Settings,
+) : CommonScanUseCase(repository, settings)
+
 class BluetoothScanUseCase @Inject constructor(
-    val repository: BluetoothRoomRepository,
-) : ScanUseCase {
-    override fun scan() = repository.getRemoteRooms()
-}
+    repository: BluetoothRoomRepository,
+    settings: Settings,
+) : CommonScanUseCase(repository, settings)

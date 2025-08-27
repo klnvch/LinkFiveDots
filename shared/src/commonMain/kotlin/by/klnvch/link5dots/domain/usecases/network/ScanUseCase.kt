@@ -32,20 +32,28 @@ import by.klnvch.link5dots.domain.models.online.OnlineRoomInvitation
 import by.klnvch.link5dots.domain.repositories.FirebaseAuthManager
 import by.klnvch.link5dots.domain.repositories.StringProvider
 import by.klnvch.link5dots.domain.repositories.UserNameSettings
-import kotlin.js.ExperimentalJsExport
-import kotlin.js.JsExport
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlin.random.Random
 
-@OptIn(ExperimentalJsExport::class)
-@JsExport()
 class ScanOnlineRoomDescriptor(
     override val title: String,
     override val time: Int,
-    val onConnect: () -> Unit,
+    val onConnect: suspend () -> Unit,
 ) : FoundRemoteRoom {
     override val description = null
     override val isFavorite = false
-    override fun connect() = onConnect()
+    override fun connect(onSuccess: () -> Unit, onError: (Throwable) -> Unit) {
+        CoroutineScope(Dispatchers.Default).launch {
+            try {
+                onConnect()
+                onSuccess()
+            } catch (e: Throwable) {
+                onError(e)
+            }
+        }
+    }
 }
 
 class ScanOnlineRoomDescriptorFactory(

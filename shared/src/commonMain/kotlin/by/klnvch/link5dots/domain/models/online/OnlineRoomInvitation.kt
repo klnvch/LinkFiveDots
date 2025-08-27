@@ -40,7 +40,7 @@ data class OnlineRoomInvitationRemote(
 class OnlineRoomInvitation(
     val time: Int,
     val user1: NetworkUser,
-    val onConnect: (accept: AcceptOnlineRoomInvitation) -> Unit,
+    val onConnect: suspend (accept: AcceptOnlineRoomInvitation) -> Unit,
 )
 
 inline fun <T1 : Any, T2 : Any, R : Any> safeLet(p1: T1?, p2: T2?, block: (T1, T2) -> R?): R? {
@@ -50,7 +50,7 @@ inline fun <T1 : Any, T2 : Any, R : Any> safeLet(p1: T1?, p2: T2?, block: (T1, T
 private fun OnlineRemoteUser.toNetworkUser() = id?.let { NetworkUser(it, name) }
 private fun OnlineRoomInvitationRemote.toOnlineRoomInvitation(
     key: String,
-    onConnect: (key: String, accept: AcceptOnlineRoomInvitation) -> Unit,
+    onConnect: suspend (key: String, accept: AcceptOnlineRoomInvitation) -> Unit,
 ) =
     safeLet(time, user1?.toNetworkUser()) { t, u ->
         OnlineRoomInvitation(
@@ -62,7 +62,7 @@ private fun OnlineRoomInvitationRemote.toOnlineRoomInvitation(
 fun toOnlineRoomInvitation(
     key: String?,
     value: OnlineRoomInvitationRemote?,
-    onConnect: (key: String, accept: AcceptOnlineRoomInvitation) -> Unit,
+    onConnect: suspend (key: String, accept: AcceptOnlineRoomInvitation) -> Unit,
 ): OnlineRoomInvitation? {
     return key?.let { value?.toOnlineRoomInvitation(it, onConnect) }
 }

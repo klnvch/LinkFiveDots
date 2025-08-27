@@ -24,7 +24,7 @@
 
 package by.klnvch.link5dots.ui.game.picker.states
 
-import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
+import by.klnvch.link5dots.domain.models.FoundRemoteRoom
 
 /**
  * All possible states for game scanning
@@ -32,9 +32,9 @@ import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
 sealed interface ScanState
 
 interface ScanWithResult {
-    val items: List<RemoteRoomDescriptor>
+    val items: List<FoundRemoteRoom>
 }
 
 object ScanNone : ScanState
-data class ScanOn(override val items: List<RemoteRoomDescriptor>) : ScanState, ScanWithResult
-data class ScanDone(override val items: List<RemoteRoomDescriptor>) : ScanState, ScanWithResult
+data class ScanOn(override val items: List<FoundRemoteRoom>) : ScanState, ScanWithResult
+data class ScanDone(override val items: List<FoundRemoteRoom>) : ScanState, ScanWithResult

@@ -24,6 +24,7 @@
 package by.klnvch.link5dots.ui.game
 
 import androidx.lifecycle.viewModelScope
+import by.klnvch.link5dots.domain.models.FoundRemoteRoom
 import by.klnvch.link5dots.domain.models.INetworkRoom
 import by.klnvch.link5dots.domain.models.NetworkRoomState
 import by.klnvch.link5dots.domain.models.NetworkRoomStateCreated
@@ -41,7 +42,6 @@ import by.klnvch.link5dots.domain.usecases.PrepareScoreUseCase
 import by.klnvch.link5dots.domain.usecases.RoomByDescriptor
 import by.klnvch.link5dots.domain.usecases.SaveScoreUseCase
 import by.klnvch.link5dots.domain.usecases.UndoMoveUseCase
-import by.klnvch.link5dots.domain.usecases.network.ConnectRemoteRoomUseCase
 import by.klnvch.link5dots.domain.usecases.network.CreateMultiplayerRoomUseCase
 import by.klnvch.link5dots.domain.usecases.network.DeleteMultiplayerRoomUseCase
 import by.klnvch.link5dots.domain.usecases.network.GetNetworkGameActionUseCase
@@ -70,7 +70,6 @@ class OnlineGameViewModel @Inject constructor(
     private val getNetworkRoomStateUseCase: GetNetworkRoomStateUseCase,
     private val deleteMultiplayerRoomUseCase: DeleteMultiplayerRoomUseCase,
     private val scanUseCase: ScanUseCase,
-    private val connectRemoteRoomUseCase: ConnectRemoteRoomUseCase,
     private val getNetworkGameActionUseCase: GetNetworkGameActionUseCase,
     getUserNameUseCase: GetUserNameUseCase,
     getRoomUseCase: GetRoomUseCase,
@@ -152,16 +151,10 @@ class OnlineGameViewModel @Inject constructor(
         scanJob?.cancel()
     }
 
-    fun connect(descriptor: RemoteRoomDescriptor) {
+    fun connect(invitation: FoundRemoteRoom) {
         scanJob?.cancel()
         _pickerState.update { it.connecting() }
-        viewModelScope.launch {
-            try {
-                connectRemoteRoomUseCase.connect(descriptor)
-            } catch (e: Throwable) {
-                _pickerState.update { it.failed(e) }
-            }
-        }
+        invitation.connect({}, { e -> _pickerState.update { it.failed(e) } })
     }
 
     fun exitGame() {

@@ -28,6 +28,7 @@ import by.klnvch.link5dots.data.firebase.OnlineRemoteUser
 import by.klnvch.link5dots.data.online.ConnectOnlineRoomRepositoryImpl
 import by.klnvch.link5dots.data.online.FirebaseDbSetConnected
 import by.klnvch.link5dots.data.online.OnlineLocalStoreWriter
+import by.klnvch.link5dots.domain.models.FoundRemoteRoom
 import by.klnvch.link5dots.domain.models.NetworkUser
 import by.klnvch.link5dots.domain.models.Point
 import by.klnvch.link5dots.domain.models.online.OnlineRoomInvitation
@@ -37,7 +38,6 @@ import by.klnvch.link5dots.domain.repositories.ConnectOnlineRoomRepository
 import by.klnvch.link5dots.domain.repositories.FirebaseAuthManager
 import by.klnvch.link5dots.domain.repositories.StringProvider
 import by.klnvch.link5dots.domain.repositories.UserNameSettings
-import by.klnvch.link5dots.domain.usecases.network.ScanOnlineRoomDescriptor
 import by.klnvch.link5dots.domain.usecases.network.ScanOnlineRoomDescriptorFactory
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
@@ -62,7 +62,7 @@ fun toDescriptors(
     defaultName: String,
     onDbUpdate: (key: String, update: Json) -> Promise<Unit>,
     onSaveKey: (key: String) -> Unit,
-): Promise<Array<ScanOnlineRoomDescriptor>> {
+): Promise<Array<FoundRemoteRoom>> {
     val connectRepository = createConnectRepository(onDbUpdate, onSaveKey)
     val factory = createScanOnlineRoomDescriptorFactory(user2, defaultName)
 
