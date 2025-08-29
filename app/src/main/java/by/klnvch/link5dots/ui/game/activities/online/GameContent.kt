@@ -112,7 +112,7 @@ fun GameContent(
             modifier = Modifier.tiledBackground(ImageBitmap.imageResource(R.drawable.paper)),
             containerColor = Color.Transparent,
             topBar = {
-                if (pickerScreen == PickerScreenGame) {
+                if (navController.previousBackStackEntry != null) {
                     TopBar(
                         viewModel = viewModel,
                         title = { GameTitle(action, defaultTitle) },
