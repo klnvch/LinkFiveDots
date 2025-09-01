@@ -130,7 +130,7 @@ fun GameBoard(
 
     Canvas(
         modifier = modifier
-            .background(Color.Black)
+            .background(Color.DarkGray)
             .transformable(state = state)
             .pointerInput(Unit) {
                 detectTapGestures(

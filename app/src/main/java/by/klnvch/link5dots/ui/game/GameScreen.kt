@@ -36,7 +36,6 @@ import androidx.compose.ui.Modifier
 fun GameScreen(
     modifier: Modifier = Modifier,
     viewModel: OfflineGameViewModel,
-    onNewGameNotImplemented: (() -> Unit)? = null,
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val focus by viewModel.focus.collectAsState()
@@ -53,14 +52,5 @@ fun GameScreen(
             Modifier.align(Alignment.TopEnd),
             uiState.infoViewState,
         )
-        if (uiState.showNextActions) {
-            GameNextAction(
-                Modifier.align(Alignment.Center),
-                uiState.menuViewState,
-                { if (!viewModel.newGame()) onNewGameNotImplemented?.invoke() },
-                { viewModel.undoLastMove() },
-                { viewModel.saveScore() },
-            )
-        }
     }
 }

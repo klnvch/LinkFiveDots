@@ -31,6 +31,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import by.klnvch.link5dots.domain.usecases.RoomParam
+import by.klnvch.link5dots.ui.game.GameBottomAppBar
 import by.klnvch.link5dots.ui.game.GameScreen
 import by.klnvch.link5dots.ui.game.OfflineGameViewModel
 import by.klnvch.link5dots.ui.game.topBar.TopBar
@@ -56,6 +57,7 @@ fun GameContent(
                     navigateUp = navigateUp
                 )
             },
+            bottomBar = { GameBottomAppBar(viewModel) }
         ) { innerPadding ->
             GameScreen(
                 modifier = Modifier.padding(innerPadding),

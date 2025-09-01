@@ -38,13 +38,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.res.imageResource
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import by.klnvch.link5dots.R
 import by.klnvch.link5dots.domain.models.NetworkGameAction
 import by.klnvch.link5dots.ui.common.TopBarTitle
 import by.klnvch.link5dots.ui.common.tiledBackground
+import by.klnvch.link5dots.ui.game.GameBottomAppBar
 import by.klnvch.link5dots.ui.game.GameScreen
 import by.klnvch.link5dots.ui.game.OnlineGameViewModel
 import by.klnvch.link5dots.ui.game.picker.PickerScreenError
@@ -83,6 +86,7 @@ fun GameContent(
 ) {
     AppTheme {
         val navController = rememberNavController()
+        val navBackStackEntry by navController.currentBackStackEntryAsState()
         val action by viewModel.uiTitleState.collectAsState(NetworkGameAction.DEFAULT)
         val pickerUiState by viewModel.pickerUiState.collectAsState()
         val pickerScreen = pickerUiState.screen
@@ -90,7 +94,7 @@ fun GameContent(
 
         val disconnectFinal: () -> Unit = {
             viewModel.exitGame()
-            if (navController.previousBackStackEntry != null) navController.navigateUp() else onFinish()
+            if (navBackStackEntry.isGameScreen()) navController.navigateUp() else onFinish()
         }
 
         val disconnectGuard: () -> Unit = {
@@ -112,7 +116,7 @@ fun GameContent(
             modifier = Modifier.tiledBackground(ImageBitmap.imageResource(R.drawable.paper)),
             containerColor = Color.Transparent,
             topBar = {
-                if (navController.previousBackStackEntry != null) {
+                if (navBackStackEntry.isGameScreen()) {
                     TopBar(
                         viewModel = viewModel,
                         title = { GameTitle(action, defaultTitle) },
@@ -125,6 +129,14 @@ fun GameContent(
                     )
                 }
             },
+            bottomBar = {
+                if (navBackStackEntry.isGameScreen()) {
+                    GameBottomAppBar(
+                        viewModel = viewModel,
+                        onNewGameNotImplemented = { disconnectGuard() },
+                    )
+                }
+            }
         ) { innerPadding ->
             NavHost(
                 navController = navController,
@@ -135,10 +147,7 @@ fun GameContent(
                     pickerScreen()
                 }
                 composable(route = MultiplayerRoute.Game.name) {
-                    GameScreen(
-                        viewModel = viewModel,
-                        onNewGameNotImplemented = { disconnectGuard() },
-                    )
+                    GameScreen(viewModel = viewModel)
                 }
                 composable(route = MultiplayerRoute.Error.name) {
                     if (pickerScreen is PickerScreenError)
@@ -165,3 +174,6 @@ fun GameContent(
         }
     }
 }
+
+private fun NavBackStackEntry?.isGameScreen() =
+    this?.destination?.route == MultiplayerRoute.Game.name
