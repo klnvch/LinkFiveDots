@@ -24,14 +24,13 @@
 
 package by.klnvch.link5dots.ui.scores.scores
 
-import androidx.annotation.StringRes
 import by.klnvch.link5dots.R
 import by.klnvch.link5dots.data.firebase.GameScoreRemote
 import by.klnvch.link5dots.domain.models.FeatureDisabled
 
 sealed class ScoresViewState {
     data class Success(val items: List<HighScoreViewState>) : ScoresViewState()
-    data class Fail(@StringRes val msg: Int) : ScoresViewState()
+    data class Fail(val msg: Int) : ScoresViewState()
 
     companion object {
         fun initial() = Fail(R.string.loading)

@@ -28,7 +28,6 @@ import by.klnvch.link5dots.domain.models.Dot
 import by.klnvch.link5dots.domain.models.DotsStyleType
 import by.klnvch.link5dots.domain.models.IRoom
 import by.klnvch.link5dots.domain.models.WinningLine
-import by.klnvch.link5dots.domain.models.getDuration
 import kotlin.js.ExperimentalJsExport
 import kotlin.js.JsExport
 import kotlin.time.Duration.Companion.seconds
@@ -163,3 +162,11 @@ private fun IRoom?.canMove(n: Int) =
 
 private fun IRoom?.isWon(n: Int) =
     if (this == null || this.isNotOver()) false else dots.size % 2 == n
+
+fun List<Dot>?.getDuration(d: Int) = this
+    ?.drop(d)
+    ?.chunked(2)
+    ?.filter { it.size > 1 }
+    ?.filter { it[0].dt > 0 && it[1].dt > 0 }
+    ?.sumOf { it[1].dt - it[0].dt }
+    ?: 0

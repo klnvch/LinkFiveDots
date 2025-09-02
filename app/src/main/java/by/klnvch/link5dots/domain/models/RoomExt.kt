@@ -24,10 +24,6 @@
 
 package by.klnvch.link5dots.domain.models
 
-object RoomExt {
-
-    @JvmStatic
-    fun IRoom.isNotEmpty() = dots.isNotEmpty()
-}
-
+fun IRoom.isNotEmpty() = dots.isNotEmpty()
 fun IRoom.lastPoint() = dots.lastOrNull()?.let { Point(it.x, it.y) }
+fun IRoom.isNew() = dots.lastOrNull()?.dt == 0

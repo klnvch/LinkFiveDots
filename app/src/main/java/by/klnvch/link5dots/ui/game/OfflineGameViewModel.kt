@@ -23,13 +23,12 @@
  */
 package by.klnvch.link5dots.ui.game
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import by.klnvch.link5dots.domain.models.BotGameScore
 import by.klnvch.link5dots.domain.models.Point
+import by.klnvch.link5dots.domain.models.isNew
 import by.klnvch.link5dots.domain.models.lastPoint
-import by.klnvch.link5dots.domain.repositories.Analytics
 import by.klnvch.link5dots.domain.repositories.Settings
 import by.klnvch.link5dots.domain.usecases.AddDotUseCase
 import by.klnvch.link5dots.domain.usecases.GetRoomUseCase
@@ -60,7 +59,6 @@ open class OfflineGameViewModel @Inject constructor(
     private val addDotUseCase: AddDotUseCase,
     private val undoMoveUseCase: UndoMoveUseCase,
     private val prepareScoreUseCase: PrepareScoreUseCase,
-    private val analytics: Analytics,
     private val saveScoreUseCase: SaveScoreUseCase,
     private val settings: Settings,
     private val getUserNameUseCase: GetUserNameUseCase,
@@ -96,27 +94,27 @@ open class OfflineGameViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             roomFlowGuard.collect {
-                Log.d(TAG, "non null room guard: $it")
                 if (it === null) {
                     val seed = Random().nextInt(0xFFFF).toLong()
                     newGameUseCase.create(seed)
                 }
             }
         }
-    }
-
-    fun setParam(param: RoomParam) {
-        Log.d(TAG, "param: $param")
-        viewModelScope.launch { _searchQueryFlow.emit(param) }
-    }
-
-    fun undoLastMove() {
-        analytics.logEvent(Analytics.EVENT_UNDO_MOVE)
         viewModelScope.launch {
-            val room = roomFlow.firstOrNull()
-            if (room != null) {
-                undoMoveUseCase.undo(room)
+            roomFlow.collect {
+                if (it.isNew()) {
+                    focus()
+                }
             }
+        }
+    }
+
+    fun setParam(param: RoomParam) = viewModelScope.launch { _searchQueryFlow.emit(param) }
+
+    fun undoLastMove() = viewModelScope.launch {
+        val room = roomFlow.firstOrNull()
+        if (room != null) {
+            undoMoveUseCase.undo(room)
         }
     }
 
@@ -131,22 +129,16 @@ open class OfflineGameViewModel @Inject constructor(
         viewModelScope.launch { roomFlow.firstOrNull()?.let { addDotUseCase.addDot(it, p) } }
     }
 
-    fun saveScore() {
-        analytics.logEvent(Analytics.EVENT_GAME_FINISHED)
-        viewModelScope.launch {
-            val room = roomFlow.firstOrNull()
-            if (room != null) {
-                val score = prepareScoreUseCase.get(room)
-                saveScoreUseCase.save(score as BotGameScore)
-            }
+    fun saveScore() = viewModelScope.launch {
+        val room = roomFlow.firstOrNull()
+        if (room != null) {
+            val score = prepareScoreUseCase.get(room)
+            saveScoreUseCase.save(score as BotGameScore)
         }
     }
 
-    fun focus() {
-        analytics.logEvent(Analytics.EVENT_SEARCH)
-        viewModelScope.launch {
-            _focus.value = roomFlow.firstOrNull()?.lastPoint()
-        }
+    fun focus() = viewModelScope.launch {
+        _focus.value = roomFlow.firstOrNull()?.lastPoint()
     }
 
     fun unfocus() {

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 klnvch
+ * Copyright (c) 2023-2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,7 +25,7 @@
 package by.klnvch.link5dots.domain.usecases
 
 import by.klnvch.link5dots.domain.models.IRoom
-import by.klnvch.link5dots.domain.models.RoomExt.isNotEmpty
+import by.klnvch.link5dots.domain.models.isNotEmpty
 import by.klnvch.link5dots.domain.repositories.RoomRepository
 import javax.inject.Inject
 
