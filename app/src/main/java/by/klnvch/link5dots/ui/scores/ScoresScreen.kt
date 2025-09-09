@@ -24,7 +24,6 @@
 
 package by.klnvch.link5dots.ui.scores
 
-import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.PrimaryTabRow
@@ -45,7 +44,7 @@ import by.klnvch.link5dots.ui.scores.history.HistoryTab
 import by.klnvch.link5dots.ui.scores.scores.ScoresTab
 
 enum class ScoresDestination(
-    @StringRes val title: Int = 0,
+    val title: Int = 0,
 ) {
     SCORES(R.string.scores_title),
     HISTORY(R.string.history),
