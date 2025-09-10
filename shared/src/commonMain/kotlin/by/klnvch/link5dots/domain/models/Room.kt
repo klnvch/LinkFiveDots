@@ -35,13 +35,29 @@ interface IRoom {
     val dots: List<Dot>
     val user1: IUser?
     val user2: IUser?
-    val type: Int
+    val type: RoomType
+
+    fun move(dot: Dot): IRoom
+    fun undo(): IRoom
+
     fun getDuration() = dots.lastOrNull()?.dt ?: 0
     fun getEndTime() = time + getDuration()
     fun getWinningLine() = dots.findWinningLine()
     fun isNotOver() = getWinningLine() == null
     fun isOver() = getWinningLine() != null
     fun isFree(p: Point) = dots.find { it.x == p.x && it.y == p.y } == null
+}
+
+data class Room(
+    override val key: String,
+    override val time: Int,
+    override val dots: List<Dot>,
+    override val user1: IUser?,
+    override val user2: IUser?,
+    override val type: RoomType,
+) : IRoom {
+    override fun move(dot: Dot) = copy(dots = dots + dot)
+    override fun undo() = copy(dots = dots.dropLast(1))
 }
 
 fun List<Dot>.findWinningLine(): WinningLine? {

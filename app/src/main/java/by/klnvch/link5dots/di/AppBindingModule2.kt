@@ -44,6 +44,7 @@ import by.klnvch.link5dots.domain.repositories.FirebaseAuthManager
 import by.klnvch.link5dots.domain.repositories.FirebaseManager
 import by.klnvch.link5dots.domain.repositories.GetOnlineRoomRepository
 import by.klnvch.link5dots.domain.repositories.RoomKeyGenerator
+import by.klnvch.link5dots.domain.repositories.RoomRepository
 import by.klnvch.link5dots.domain.repositories.ScanOnlineRoomRepository
 import by.klnvch.link5dots.domain.repositories.Settings
 import by.klnvch.link5dots.domain.repositories.StringProvider
@@ -52,6 +53,7 @@ import by.klnvch.link5dots.domain.repositories.TimeService
 import by.klnvch.link5dots.domain.repositories.UpdateStateOnlineRoomRepository
 import by.klnvch.link5dots.domain.repositories.UserNameSettings
 import by.klnvch.link5dots.domain.usecases.AddDotOnlineUseCase
+import by.klnvch.link5dots.domain.usecases.NewGameBotUseCase
 import by.klnvch.link5dots.domain.usecases.NewGameOnlineUseCase
 import by.klnvch.link5dots.domain.usecases.network.CreateOnlineRoomUseCase
 import by.klnvch.link5dots.domain.usecases.network.ScanOnlineRoomDescriptorFactory
@@ -126,6 +128,15 @@ class AppBindingModule2 {
         updateStateRepository,
         getRepository
     )
+
+    @Singleton
+    @Provides
+    fun provideNewGameBotUseCase(
+        roomKeyGenerator: RoomKeyGenerator,
+        timeService: TimeService,
+        roomRepository: RoomRepository,
+    ) =
+        NewGameBotUseCase(roomKeyGenerator, timeService, roomRepository)
 
     @Singleton
     @Provides

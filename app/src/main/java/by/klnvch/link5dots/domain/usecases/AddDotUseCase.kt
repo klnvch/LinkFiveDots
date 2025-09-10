@@ -30,7 +30,6 @@ import by.klnvch.link5dots.domain.models.DotImpl
 import by.klnvch.link5dots.domain.models.IRoom
 import by.klnvch.link5dots.domain.models.NetworkRoomExtended
 import by.klnvch.link5dots.domain.models.Point
-import by.klnvch.link5dots.domain.models.Room
 import by.klnvch.link5dots.domain.repositories.BluetoothRoomRepository
 import by.klnvch.link5dots.domain.repositories.NsdRoomRepository
 import by.klnvch.link5dots.domain.repositories.RoomRepository
@@ -84,7 +83,7 @@ class AddDotNsdUseCase @Inject constructor(
 ) : AddDotMultiplayerUseCase(timeService, board) {
     override suspend fun addMultiplayerDot(room: IRoom, dot: Dot) {
         val currentRoom = repository.get().filterNotNull().first()
-        val updatedRoom = currentRoom.copy(dots = currentRoom.dots + dot)
+        val updatedRoom = currentRoom.move(dot)
         repository.update(updatedRoom)
     }
 }
@@ -96,7 +95,7 @@ class AddDotBluetoothUseCase @Inject constructor(
 ) : AddDotMultiplayerUseCase(timeService, board) {
     override suspend fun addMultiplayerDot(room: IRoom, dot: Dot) {
         val currentRoom = repository.get().filterNotNull().first()
-        val updatedRoom = currentRoom.copy(dots = currentRoom.dots + dot)
+        val updatedRoom = currentRoom.move(dot)
         repository.update(updatedRoom)
     }
 }
@@ -107,11 +106,11 @@ abstract class AddDotOfflineUseCase(
     private val roomRepository: RoomRepository,
 ) : AddDotRealUseCase(timeRepository, board) {
     override suspend fun addInternal(room: IRoom, p: Point, dt: Int) {
-        val updatedRoom = modify(Room(room), p, dt)
+        val updatedRoom = modify(room, p, dt)
         roomRepository.save(updatedRoom)
     }
 
-    abstract fun modify(room: Room, p: Point, dt: Int): Room
+    abstract fun modify(room: IRoom, p: Point, dt: Int): IRoom
 }
 
 class AddDotBotUseCase @Inject constructor(
@@ -120,16 +119,17 @@ class AddDotBotUseCase @Inject constructor(
     roomRepository: RoomRepository,
     private val bot: Bot,
 ) : AddDotOfflineUseCase(timeRepository, board, roomRepository) {
-    override fun modify(room: Room, p: Point, dt: Int): Room {
+    override fun modify(room: IRoom, p: Point, dt: Int): IRoom {
+        var result = room
         if (room.dots.size % 2 == 0) {
-            room.add(DotImpl(p, Dot.HOST, dt))
-            if (room.isNotOver()) {
-                val botDot = bot.findAnswer(room.dots)
+            result = room.move(DotImpl(p, Dot.HOST, dt))
+            if (result.isNotOver()) {
+                val botDot = bot.findAnswer(result.dots)
                 val botDt = timeRepository.dt(room.time)
-                room.add(DotImpl(botDot.x, botDot.y, type = Dot.GUEST, dt = botDt))
+                result = result.move(DotImpl(botDot.x, botDot.y, type = Dot.GUEST, dt = botDt))
             }
         }
-        return room
+        return result
     }
 }
 
@@ -138,10 +138,9 @@ class AddDotTwoUseCase @Inject constructor(
     board: Board,
     roomRepository: RoomRepository,
 ) : AddDotOfflineUseCase(timeRepository, board, roomRepository) {
-    override fun modify(room: Room, p: Point, dt: Int): Room {
+    override fun modify(room: IRoom, p: Point, dt: Int): IRoom {
         val lastDotType = room.dots.lastOrNull()?.type ?: Dot.GUEST
         val type = if (lastDotType == Dot.GUEST) Dot.HOST else Dot.GUEST
-        room.add(DotImpl(p, type, dt))
-        return room
+        return room.move(DotImpl(p, type, dt))
     }
 }

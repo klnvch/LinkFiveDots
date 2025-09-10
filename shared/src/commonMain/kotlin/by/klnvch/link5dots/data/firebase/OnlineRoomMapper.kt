@@ -30,6 +30,7 @@ import by.klnvch.link5dots.domain.models.NetworkRoom
 import by.klnvch.link5dots.domain.models.NetworkRoomInvitation
 import by.klnvch.link5dots.domain.models.NetworkUser
 import by.klnvch.link5dots.domain.models.RoomState
+import by.klnvch.link5dots.domain.models.RoomType
 import kotlin.js.ExperimentalJsExport
 import kotlin.js.JsExport
 
@@ -54,7 +55,7 @@ fun OnlineRemoteUser.mapToNetworkUser() = id?.let { NetworkUser(it, name) }
 fun OnlineRoomRemote.mapToNetworkRoomInvitation(key: String): NetworkRoomInvitation? {
     val user1 = user1?.mapToNetworkUser()
     return if (time != null && user1 != null)
-        NetworkRoomInvitation(key, (time / 1000).toInt(), user1, 3)
+        NetworkRoomInvitation(key, (time / 1000).toInt(), user1, RoomType.ONLINE)
     else
         null
 }
@@ -70,7 +71,7 @@ fun OnlineRoomRemote.mapToNetworkRoom(key: String): NetworkRoom {
         dots?.mapToDotList(time) ?: emptyList(),
         user1,
         user2,
-        3,
+        RoomType.ONLINE,
         state,
     )
 }

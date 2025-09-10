@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 klnvch
+ * Copyright (c) 2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,10 +24,6 @@
 
 package by.klnvch.link5dots.domain.models
 
-object RoomType {
-    const val BLUETOOTH = 1
-    const val NSD = 2
-    const val ONLINE = 3
-    const val TWO_PLAYERS = 4
-    const val BOT = 5
-}
+import kotlin.random.Random
+
+fun gameSeed() = Random.Default.nextLong(0xFFFF)

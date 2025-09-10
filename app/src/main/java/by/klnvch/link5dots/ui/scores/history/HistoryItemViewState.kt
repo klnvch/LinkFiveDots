@@ -50,14 +50,13 @@ data class HistoryItemViewState(
     )
 
     companion object {
-        private fun Int.toStringRes(): Int {
+        private fun RoomType.toStringRes(): Int {
             return when (this) {
                 RoomType.BLUETOOTH -> R.string.bluetooth
                 RoomType.NSD -> R.string.menu_local_network
                 RoomType.ONLINE -> R.string.menu_online_game
                 RoomType.TWO_PLAYERS -> R.string.menu_two_players
                 RoomType.BOT -> R.string.menu_single_player
-                else -> R.string.unknown
             }
         }
     }

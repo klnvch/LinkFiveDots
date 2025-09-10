@@ -63,7 +63,7 @@ class OnlineRoomRepositoryImpl @Inject constructor(
     }
 
     override val state = get().map {
-        val state = it.toNetworkRoomState(stringRepository.getUnknownName())
+        val state = it.toNetworkRoomState(stringRepository.unknownName)
         if (state is NetworkRoomStateDeleted || state is NetworkRoomStateFinished) {
             onlineLocalStore.clear()
         }

@@ -45,6 +45,8 @@ private fun GameTitle(viewModel: OfflineGameViewModel) {
     val titleId = when {
         uiState.infoViewState.user1.isWon -> R.string.end_win
         uiState.infoViewState.user2.isWon -> R.string.end_lose
+        uiState.infoViewState.user1.canMove -> R.string.bt_message_your_turn
+        uiState.infoViewState.user2.canMove -> R.string.bt_message_opponents_turn
         else -> R.string.app_name
     }
     TopBarTitle(titleId)

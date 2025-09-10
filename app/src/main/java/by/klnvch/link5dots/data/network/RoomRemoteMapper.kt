@@ -29,6 +29,7 @@ import by.klnvch.link5dots.domain.models.DeviceOwnerUser
 import by.klnvch.link5dots.domain.models.IRoom
 import by.klnvch.link5dots.domain.models.IUser
 import by.klnvch.link5dots.domain.models.NetworkUser
+import by.klnvch.link5dots.domain.models.RoomType
 import javax.inject.Inject
 
 class RoomRemoteMapper @Inject constructor() {
@@ -38,7 +39,7 @@ class RoomRemoteMapper @Inject constructor() {
             room.dots,
             map(room.user1),
             map(room.user2),
-            room.type,
+            map(room.type),
             isTest,
         )
     }
@@ -48,5 +49,13 @@ class RoomRemoteMapper @Inject constructor() {
         is DeviceOwnerUser -> UserRemote("host", null)
         is NetworkUser -> UserRemote("", user.name)
         else -> null
+    }
+
+    private fun map(type: RoomType) = when (type) {
+        RoomType.BLUETOOTH -> 1
+        RoomType.NSD -> 2
+        RoomType.ONLINE -> 3
+        RoomType.TWO_PLAYERS -> 4
+        RoomType.BOT -> 5
     }
 }

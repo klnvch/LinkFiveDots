@@ -27,7 +27,6 @@ package by.klnvch.link5dots.domain.usecases
 import by.klnvch.link5dots.domain.models.ActionAvailability
 import by.klnvch.link5dots.domain.models.IRoom
 import by.klnvch.link5dots.domain.models.NetworkRoom
-import by.klnvch.link5dots.domain.models.Room
 import by.klnvch.link5dots.domain.repositories.BluetoothRoomRepository
 import by.klnvch.link5dots.domain.repositories.NsdRoomRepository
 import by.klnvch.link5dots.domain.repositories.RoomRepository
@@ -65,22 +64,13 @@ abstract class UndoMoveRealUseCase(
 class UndoMoveBotUseCase @Inject constructor(
     roomRepository: RoomRepository,
 ) : UndoMoveRealUseCase(roomRepository) {
-    override suspend fun undoInternal(room: IRoom): IRoom {
-        val r = Room(room)
-        r.undo()
-        r.undo()
-        return r
-    }
+    override suspend fun undoInternal(room: IRoom) = room.undo().undo()
 }
 
 class UndoMoveTwoUseCase @Inject constructor(
     roomRepository: RoomRepository,
 ) : UndoMoveRealUseCase(roomRepository) {
-    override suspend fun undoInternal(room: IRoom): IRoom {
-        val r = Room(room)
-        r.undo()
-        return r
-    }
+    override suspend fun undoInternal(room: IRoom) = room.undo()
 }
 
 class UndoMoveBluetoothUseCase @Inject constructor(
@@ -95,8 +85,7 @@ class UndoMoveBluetoothUseCase @Inject constructor(
     override suspend fun undo(room: IRoom) {
         val currentRoom = repository.get().filterNotNull().first()
         if (isAvailable(currentRoom)) {
-            val dots = room.dots
-            repository.update(currentRoom.copy(dots = dots.subList(0, dots.size - 1)))
+            repository.update(currentRoom.undo())
         }
     }
 
@@ -126,8 +115,7 @@ class UndoMoveNsdUseCase @Inject constructor(
     override suspend fun undo(room: IRoom) {
         val currentRoom = repository.get().filterNotNull().first()
         if (isAvailable(currentRoom)) {
-            val dots = room.dots
-            repository.update(currentRoom.copy(dots = dots.subList(0, dots.size - 1)))
+            repository.update(currentRoom.undo())
         }
     }
 

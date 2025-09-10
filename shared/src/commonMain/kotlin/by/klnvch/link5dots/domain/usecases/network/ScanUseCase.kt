@@ -27,6 +27,7 @@ package by.klnvch.link5dots.domain.usecases.network
 import by.klnvch.link5dots.data.online.models.AcceptOnlineRoomInvitation
 import by.klnvch.link5dots.domain.models.FoundRemoteRoom
 import by.klnvch.link5dots.domain.models.NetworkUser
+import by.klnvch.link5dots.domain.models.gameSeed
 import by.klnvch.link5dots.domain.models.generateInitialGame
 import by.klnvch.link5dots.domain.models.online.OnlineRoomInvitation
 import by.klnvch.link5dots.domain.repositories.FirebaseAuthManager
@@ -35,7 +36,6 @@ import by.klnvch.link5dots.domain.repositories.UserNameSettings
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlin.random.Random
 
 class ScanOnlineRoomDescriptor(
     override val title: String,
@@ -63,14 +63,14 @@ class ScanOnlineRoomDescriptorFactory(
 ) {
     suspend fun map(invitations: List<OnlineRoomInvitation>): List<ScanOnlineRoomDescriptor> {
         val userId = firebaseAuthManager.getUserId()
-        val dots = generateInitialGame(Random.nextLong()).toTypedArray()
+        val dots = generateInitialGame(gameSeed()).toTypedArray()
         val userName = userNameSettings.getUserName()
         val user2 = NetworkUser(userId, userName)
         val accept = AcceptOnlineRoomInvitation(user2, dots)
 
         return invitations.map { invitation ->
             ScanOnlineRoomDescriptor(
-                invitation.user1.name ?: stringProvider.getUnknownName(),
+                invitation.user1.name ?: stringProvider.unknownName,
                 invitation.time
             ) { invitation.onConnect(accept) }
         }

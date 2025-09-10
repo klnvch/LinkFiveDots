@@ -29,7 +29,7 @@ class Bot(private val board: Board) {
     private val net1: Array<IntArray> = Array(board.width) { IntArray(board.height) }
     private val net2: Array<IntArray> = Array(board.width) { IntArray(board.height) }
 
-    fun findAnswer(dots: MutableList<Dot>): Dot {
+    fun findAnswer(dots: List<Dot>): Dot {
         val net = Array<Array<Dot>>(board.width) { i ->
             Array(board.height) { j ->
                 DotImpl(i, j, Dot.EMPTY, 0)

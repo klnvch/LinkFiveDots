@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 klnvch
+ * Copyright (c) 2023-2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,9 +27,8 @@ package by.klnvch.link5dots.domain.repositories
 import by.klnvch.link5dots.domain.models.IRoom
 import kotlinx.coroutines.flow.Flow
 
-interface RoomRepository {
+interface RoomRepository : RoomSaveRepository {
     suspend fun sync(isTestDevice: Boolean)
-    suspend fun save(room: IRoom)
     suspend fun delete(room: IRoom)
     fun getAll(): Flow<List<IRoom>>
     fun getByKey(key: String): Flow<IRoom?>

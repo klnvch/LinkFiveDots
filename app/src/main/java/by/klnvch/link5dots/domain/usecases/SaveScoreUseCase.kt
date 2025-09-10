@@ -42,7 +42,7 @@ class SaveScoreUseCase @Inject constructor(
     suspend fun save(score: BotGameScore) {
         val deviceId = deviceInfo.getAndroidId()
         val userId = firebaseManager.getUserId()
-        val userName = settings.getUserName() ?: stringRepository.getUnknownName()
+        val userName = settings.getUserName() ?: stringRepository.unknownName
         gameScoreRepository.save(score, userName, userId, deviceId)
     }
 }

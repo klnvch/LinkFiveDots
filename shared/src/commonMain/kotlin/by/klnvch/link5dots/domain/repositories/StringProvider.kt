@@ -24,6 +24,7 @@
 
 package by.klnvch.link5dots.domain.repositories
 
-interface StringProvider {
-    fun getUnknownName(): String
+expect interface StringProvider {
+    val botName: String
+    val unknownName: String
 }

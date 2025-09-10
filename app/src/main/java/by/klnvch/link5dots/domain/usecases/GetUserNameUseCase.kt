@@ -23,7 +23,6 @@
  */
 package by.klnvch.link5dots.domain.usecases
 
-import by.klnvch.link5dots.R
 import by.klnvch.link5dots.domain.models.BotUser
 import by.klnvch.link5dots.domain.models.DeviceOwnerUser
 import by.klnvch.link5dots.domain.models.IUser
@@ -34,14 +33,14 @@ import javax.inject.Inject
 
 class GetUserNameUseCase @Inject constructor(
     private val settings: Settings,
-    private val stringRepository: StringRepository,
+    private val stringProvider: StringRepository,
 ) {
     fun get() = settings.getUserNameFlow()
 
     suspend fun get(user: IUser?) = when (user) {
-        is BotUser -> stringRepository.getString(R.string.computer)
-        is NetworkUser -> user.name ?: stringRepository.getUnknownName()
-        is DeviceOwnerUser -> settings.getUserName() ?: stringRepository.getUnknownName()
+        is BotUser -> stringProvider.botName
+        is NetworkUser -> user.name ?: stringProvider.unknownName
+        is DeviceOwnerUser -> settings.getUserName() ?: stringProvider.unknownName
         null -> null
     }
 }

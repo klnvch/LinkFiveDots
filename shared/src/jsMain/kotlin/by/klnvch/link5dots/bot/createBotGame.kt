@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023-2025 klnvch
+ * Copyright (c) 2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,33 +22,29 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.domain.models
+package by.klnvch.link5dots.bot
 
-interface INetworkRoomExtended : INetworkRoom {
-    val yourId: String
-}
+import by.klnvch.link5dots.data.RoomKeyGeneratorImpl
+import by.klnvch.link5dots.data.TimeServiceImpl
+import by.klnvch.link5dots.domain.models.IRoom
+import by.klnvch.link5dots.domain.models.gameSeed
+import by.klnvch.link5dots.domain.repositories.RoomSaveRepository
+import by.klnvch.link5dots.domain.usecases.NewGameBotUseCase
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.promise
+import kotlin.js.Promise
 
-data class NetworkRoomExtended(
-    override val key: String,
-    override val time: Int,
-    override val dots: List<Dot>,
-    override val user1: NetworkUser,
-    override val user2: NetworkUser?,
-    override val type: RoomType,
-    override val state: RoomState,
-    override val yourId: String,
-) : INetworkRoomExtended {
-    constructor(room: NetworkRoom, yourId: String) : this(
-        room.key,
-        room.time,
-        room.dots,
-        room.user1,
-        room.user2,
-        room.type,
-        room.state,
-        yourId,
-    )
+@OptIn(DelicateCoroutinesApi::class, ExperimentalJsExport::class)
+@JsExport()
+fun createBotGame(onGameCreated: (room: IRoom) -> Unit): Promise<Unit> = GlobalScope.promise {
+    val timeService = TimeServiceImpl()
+    val roomKeyGenerator = RoomKeyGeneratorImpl(timeService)
 
-    override fun move(dot: Dot) = copy(dots = dots + dot)
-    override fun undo() = copy(dots = dots.dropLast(1))
+    val repository = object : RoomSaveRepository {
+        override suspend fun save(room: IRoom) = onGameCreated(room)
+    }
+
+    val useCase = NewGameBotUseCase(roomKeyGenerator, timeService, repository)
+    useCase.create(gameSeed())
 }

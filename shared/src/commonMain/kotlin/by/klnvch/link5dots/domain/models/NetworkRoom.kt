@@ -33,7 +33,7 @@ interface INetworkRoomInvitation {
     val key: String
     val time: Int
     val user1: NetworkUser
-    val type: Int // TODO: delete it
+    val type: RoomType // TODO: delete it
 }
 
 @OptIn(ExperimentalJsExport::class)
@@ -50,7 +50,7 @@ data class NetworkRoomInvitation(
     override val key: String,
     override val time: Int,
     override val user1: NetworkUser,
-    override val type: Int,
+    override val type: RoomType,
 ) : INetworkRoomInvitation
 
 @OptIn(ExperimentalJsExport::class)
@@ -61,10 +61,11 @@ data class NetworkRoom(
     override val dots: List<Dot>,
     override val user1: NetworkUser,
     override val user2: NetworkUser?,
-    override val type: Int,
+    override val type: RoomType,
     override val state: RoomState,
 ) : INetworkRoom {
-    override fun toString(): String {
-        return "NetworkRoom(key=$key, time=$time, dots=${dots.size}, user1=${user1.name}, user2=${user2?.name})"
-    }
+    override fun move(dot: Dot) = copy(dots = dots + dot)
+    override fun undo() = copy(dots = dots.dropLast(1))
+    override fun toString() =
+        "NetworkRoom(key=$key, time=$time, dots=${dots.size}, user1=${user1.name}, user2=${user2?.name})"
 }

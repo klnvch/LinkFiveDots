@@ -24,17 +24,10 @@
 package by.klnvch.link5dots.domain.usecases
 
 import by.klnvch.link5dots.domain.models.ActionAvailability
-import by.klnvch.link5dots.domain.models.BotUser
-import by.klnvch.link5dots.domain.models.DeviceOwnerUser
-import by.klnvch.link5dots.domain.models.Dot
-import by.klnvch.link5dots.domain.models.DotImpl
-import by.klnvch.link5dots.domain.models.IUser
 import by.klnvch.link5dots.domain.models.NetworkRoom
 import by.klnvch.link5dots.domain.models.NetworkUser
-import by.klnvch.link5dots.domain.models.Room
 import by.klnvch.link5dots.domain.models.RoomState
 import by.klnvch.link5dots.domain.models.RoomType
-import by.klnvch.link5dots.domain.models.generateInitialGame
 import by.klnvch.link5dots.domain.repositories.BluetoothRoomRepository
 import by.klnvch.link5dots.domain.repositories.NsdRoomRepository
 import by.klnvch.link5dots.domain.repositories.RoomKeyGenerator
@@ -49,52 +42,6 @@ class NewGameEmptyUseCase @Inject constructor() : NewGameUseCase {
     override val isImplemented = false
     override suspend fun create(seed: Long?) = Unit
     override val actionAvailability = ActionAvailability.Gone
-}
-
-abstract class NewGameCommonUseCase() : NewGameUseCase {
-    override val isImplemented = true
-    protected fun getDots(seed: Long?) =
-        if (seed != null) generateInitialGame(seed)
-            .mapIndexed { i, p -> DotImpl(p, if (i % 2 == 0) Dot.HOST else Dot.GUEST, 0) }
-            .toMutableList<Dot>()
-        else mutableListOf()
-}
-
-abstract class NewGameOfflineUseCase(
-    private val roomKeyGenerator: RoomKeyGenerator,
-    private val timeRepository: TimeService,
-    private val roomRepository: RoomRepository,
-) : NewGameCommonUseCase() {
-    override val actionAvailability = ActionAvailability.Available
-    override suspend fun create(seed: Long?) {
-        val room = Room(
-            roomKeyGenerator.generate(),
-            timeRepository.time(),
-            getDots(seed),
-            user1,
-            user2,
-            type,
-        )
-        roomRepository.save(room)
-    }
-
-    abstract val user1: IUser?
-    abstract val user2: IUser?
-    abstract val type: Int
-}
-
-class NewGameBotUseCase @Inject constructor(
-    roomKeyGenerator: RoomKeyGenerator,
-    timeRepository: TimeService,
-    roomRepository: RoomRepository,
-) : NewGameOfflineUseCase(
-    roomKeyGenerator,
-    timeRepository,
-    roomRepository,
-) {
-    override val user1 = DeviceOwnerUser
-    override val user2 = BotUser
-    override val type = RoomType.BOT
 }
 
 class NewGameTwoUseCase @Inject constructor(

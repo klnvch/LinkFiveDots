@@ -108,7 +108,8 @@ private fun createScanOnlineRoomDescriptorFactory(
         override fun getUserId() = user2.id
     }
     val stringProvider = object : StringProvider {
-        override fun getUnknownName() = defaultName
+        override val botName = ""
+        override val unknownName = defaultName
     }
     return ScanOnlineRoomDescriptorFactory(stringProvider, userNameSettings, firebaseAuthManager)
 }

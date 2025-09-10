@@ -27,6 +27,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import by.klnvch.link5dots.domain.models.BotGameScore
 import by.klnvch.link5dots.domain.models.Point
+import by.klnvch.link5dots.domain.models.gameSeed
 import by.klnvch.link5dots.domain.models.isNew
 import by.klnvch.link5dots.domain.models.lastPoint
 import by.klnvch.link5dots.domain.repositories.Settings
@@ -50,7 +51,6 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import java.util.Random
 import javax.inject.Inject
 
 open class OfflineGameViewModel @Inject constructor(
@@ -95,8 +95,7 @@ open class OfflineGameViewModel @Inject constructor(
         viewModelScope.launch {
             roomFlowGuard.collect {
                 if (it === null) {
-                    val seed = Random().nextInt(0xFFFF).toLong()
-                    newGameUseCase.create(seed)
+                    newGameUseCase.create(gameSeed())
                 }
             }
         }
@@ -120,7 +119,7 @@ open class OfflineGameViewModel @Inject constructor(
 
     fun newGame(): Boolean {
         viewModelScope.launch {
-            newGameUseCase.create(Random().nextInt(0xFFFF).toLong())
+            newGameUseCase.create(gameSeed())
         }
         return newGameUseCase.isImplemented
     }

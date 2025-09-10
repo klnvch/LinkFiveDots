@@ -26,6 +26,7 @@ package by.klnvch.link5dots.domain.usecases
 import by.klnvch.link5dots.domain.models.IRoom
 import by.klnvch.link5dots.domain.models.NetworkRoomExtended
 import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
+import by.klnvch.link5dots.domain.models.RoomType
 import by.klnvch.link5dots.domain.repositories.BluetoothRoomRepository
 import by.klnvch.link5dots.domain.repositories.FirebaseManager
 import by.klnvch.link5dots.domain.repositories.GetOnlineRoomRepository
@@ -44,9 +45,17 @@ class GetRoomOfflineUseCase @Inject constructor(
     private val repository: RoomRepository,
 ) : GetRoomUseCase {
     override fun get(param: RoomParam) = when (param) {
-        is RoomByType -> repository.getRecentByType(param.type)
+        is RoomByType -> repository.getRecentByType(map(param.type))
         is RoomByKey -> repository.getByKey(param.key)
         else -> throw IllegalArgumentException("Wrong param")
+    }
+
+    private fun map(type: RoomType) = when (type) {
+        RoomType.BLUETOOTH -> 1
+        RoomType.NSD -> 2
+        RoomType.ONLINE -> 3
+        RoomType.TWO_PLAYERS -> 4
+        RoomType.BOT -> 5
     }
 }
 
@@ -95,6 +104,6 @@ class GetRoomBluetoothUseCase @Inject constructor(
 }
 
 sealed interface RoomParam
-data class RoomByType(val type: Int) : RoomParam
+data class RoomByType(val type: RoomType) : RoomParam
 data class RoomByKey(val key: String) : RoomParam
 data class RoomByDescriptor(val descriptor: RemoteRoomDescriptor) : RoomParam

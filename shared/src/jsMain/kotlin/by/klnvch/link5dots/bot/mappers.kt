@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023-2025 klnvch
+ * Copyright (c) 2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,33 +22,32 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.domain.models
+package by.klnvch.link5dots.bot
 
-interface INetworkRoomExtended : INetworkRoom {
-    val yourId: String
-}
+import by.klnvch.link5dots.domain.models.ActionAvailability
+import by.klnvch.link5dots.domain.models.DotsStyleType
+import by.klnvch.link5dots.domain.models.IRoom
+import by.klnvch.link5dots.domain.repositories.StringProvider
+import by.klnvch.link5dots.ui.game.GameViewState
+import by.klnvch.link5dots.ui.game.createGameViewState
 
-data class NetworkRoomExtended(
-    override val key: String,
-    override val time: Int,
-    override val dots: List<Dot>,
-    override val user1: NetworkUser,
-    override val user2: NetworkUser?,
-    override val type: RoomType,
-    override val state: RoomState,
-    override val yourId: String,
-) : INetworkRoomExtended {
-    constructor(room: NetworkRoom, yourId: String) : this(
-        room.key,
-        room.time,
-        room.dots,
-        room.user1,
-        room.user2,
-        room.type,
-        room.state,
-        yourId,
+@OptIn(ExperimentalJsExport::class)
+@JsExport()
+fun mapToBotGameViewState(
+    userName: String?,
+    stringProvider: StringProvider,
+    room: IRoom,
+): GameViewState {
+    val user1Name = userName ?: stringProvider.unknownName
+    val user2Name = stringProvider.botName
+
+    return createGameViewState(
+        DotsStyleType.ORIGINAL,
+        user1Name,
+        user2Name,
+        room,
+        ActionAvailability.Available,
+        ActionAvailability.Gone,
+        ActionAvailability.Gone
     )
-
-    override fun move(dot: Dot) = copy(dots = dots + dot)
-    override fun undo() = copy(dots = dots.dropLast(1))
 }

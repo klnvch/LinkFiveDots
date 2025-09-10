@@ -30,6 +30,7 @@ import by.klnvch.link5dots.domain.models.IRoom
 import by.klnvch.link5dots.domain.models.IUser
 import by.klnvch.link5dots.domain.models.NetworkUser
 import by.klnvch.link5dots.domain.models.Room
+import by.klnvch.link5dots.domain.models.RoomType
 import javax.inject.Inject
 
 class RoomLocalMapper @Inject constructor() {
@@ -39,7 +40,7 @@ class RoomLocalMapper @Inject constructor() {
         room.dots.toList(),
         map(room.user1),
         map(room.user2),
-        room.type,
+        map(room.type),
         false,
         -1,
         false,
@@ -51,7 +52,7 @@ class RoomLocalMapper @Inject constructor() {
         local.dots?.toMutableList() ?: mutableListOf(),
         map(local.user1),
         map(local.user2),
-        local.type
+        map(local.type)
     )
 
     private fun map(user: IUser?) = when (user) {
@@ -66,5 +67,22 @@ class RoomLocalMapper @Inject constructor() {
         "host" -> DeviceOwnerUser
         null -> null
         else -> if (user.name.isNullOrEmpty()) null else NetworkUser(user.id, user.name)
+    }
+
+    private fun map(type: RoomType) = when (type) {
+        RoomType.BLUETOOTH -> 1
+        RoomType.NSD -> 2
+        RoomType.ONLINE -> 3
+        RoomType.TWO_PLAYERS -> 4
+        RoomType.BOT -> 5
+    }
+
+    private fun map(type: Int) = when (type) {
+        1 -> RoomType.BLUETOOTH
+        2 -> RoomType.NSD
+        3 -> RoomType.ONLINE
+        4 -> RoomType.TWO_PLAYERS
+        5 -> RoomType.BOT
+        else -> RoomType.TWO_PLAYERS
     }
 }
