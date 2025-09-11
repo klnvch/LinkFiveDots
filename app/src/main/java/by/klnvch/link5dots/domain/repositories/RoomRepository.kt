@@ -25,13 +25,28 @@
 package by.klnvch.link5dots.domain.repositories
 
 import by.klnvch.link5dots.domain.models.IRoom
+import by.klnvch.link5dots.domain.models.RoomType
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.firstOrNull
+import javax.inject.Inject
 
 interface RoomRepository : RoomSaveRepository {
     suspend fun sync(isTestDevice: Boolean)
     suspend fun delete(room: IRoom)
     fun getAll(): Flow<List<IRoom>>
     fun getByKey(key: String): Flow<IRoom?>
-    fun getRecentByType(type: Int): Flow<IRoom?>
+    fun getRecentByType(type: RoomType): Flow<IRoom?>
     suspend fun deleteAll()
+}
+
+class RoomBotGetRepository @Inject constructor(
+    private val repository: RoomRepository,
+) : RoomGetRepository {
+    override suspend fun get() = repository.getRecentByType(RoomType.BOT).firstOrNull()
+}
+
+class RoomTwoGetRepository @Inject constructor(
+    private val repository: RoomRepository,
+) : RoomGetRepository {
+    override suspend fun get() = repository.getRecentByType(RoomType.TWO_PLAYERS).firstOrNull()
 }

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 klnvch
+ * Copyright (c) 2023-2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,6 +23,8 @@
  */
 package by.klnvch.link5dots.di.game.bot
 
+import by.klnvch.link5dots.domain.repositories.RoomBotGetRepository
+import by.klnvch.link5dots.domain.repositories.RoomGetRepository
 import by.klnvch.link5dots.domain.usecases.AddDotBotUseCase
 import by.klnvch.link5dots.domain.usecases.AddDotUseCase
 import by.klnvch.link5dots.domain.usecases.GetRoomOfflineUseCase
@@ -52,4 +54,7 @@ interface BotGameRulesModule {
 
     @Binds
     fun bindPrepareScoreUseCase(impl: PrepareScoreBotUseCase): PrepareScoreUseCase
+
+    @Binds
+    fun bindRoomGetRepository(impl: RoomBotGetRepository): RoomGetRepository
 }

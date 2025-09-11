@@ -45,17 +45,9 @@ class GetRoomOfflineUseCase @Inject constructor(
     private val repository: RoomRepository,
 ) : GetRoomUseCase {
     override fun get(param: RoomParam) = when (param) {
-        is RoomByType -> repository.getRecentByType(map(param.type))
+        is RoomByType -> repository.getRecentByType(param.type)
         is RoomByKey -> repository.getByKey(param.key)
         else -> throw IllegalArgumentException("Wrong param")
-    }
-
-    private fun map(type: RoomType) = when (type) {
-        RoomType.BLUETOOTH -> 1
-        RoomType.NSD -> 2
-        RoomType.ONLINE -> 3
-        RoomType.TWO_PLAYERS -> 4
-        RoomType.BOT -> 5
     }
 }
 
@@ -79,7 +71,7 @@ class GetRoomNsdUseCase @Inject constructor(
     private val settings: Settings,
 ) : GetRoomUseCase {
     override fun get(param: RoomParam) = when (param) {
-        is RoomByDescriptor -> repository.get()
+        is RoomByDescriptor -> repository.getFlow()
             .onEach { if (it !== null) dbRepository.save(it) }
             .combine(settings.getUserId())
             { room, userId -> if (room !== null) NetworkRoomExtended(room, userId) else null }
@@ -94,7 +86,7 @@ class GetRoomBluetoothUseCase @Inject constructor(
     private val settings: Settings,
 ) : GetRoomUseCase {
     override fun get(param: RoomParam) = when (param) {
-        is RoomByDescriptor -> repository.get()
+        is RoomByDescriptor -> repository.getFlow()
             .onEach { if (it !== null) dbRepository.save(it) }
             .combine(settings.getUserId())
             { room, userId -> if (room !== null) NetworkRoomExtended(room, userId) else null }

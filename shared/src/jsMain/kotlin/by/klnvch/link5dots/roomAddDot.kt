@@ -75,5 +75,5 @@ fun roomAddDot(
         getRepository,
     )
 
-    return Promise { resolve, reject -> GlobalScope.launch { useCase.addDot(room, p) } }
+    return Promise { resolve, reject -> GlobalScope.launch { useCase.addDot(p) } }
 }

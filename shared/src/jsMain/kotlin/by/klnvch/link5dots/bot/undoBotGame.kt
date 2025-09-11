@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023-2025 klnvch
+ * Copyright (c) 2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,18 +21,30 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package by.klnvch.link5dots.domain.repositories
 
-import by.klnvch.link5dots.domain.models.NetworkRoom
-import by.klnvch.link5dots.domain.models.NetworkRoomState
-import kotlinx.coroutines.flow.Flow
+package by.klnvch.link5dots.bot
 
-interface NsdRoomRepository : ScanRoomInvitationRepository, RoomGetRepository {
-    suspend fun create()
-    fun delete()
-    val state: Flow<NetworkRoomState>
-    fun getFlow(): Flow<NetworkRoom?>
-    suspend fun update(room: NetworkRoom)
-    fun finish()
-    fun isServer(): Boolean
-}
+import by.klnvch.link5dots.domain.models.IRoom
+import by.klnvch.link5dots.domain.repositories.RoomGetRepository
+import by.klnvch.link5dots.domain.repositories.RoomSaveRepository
+import by.klnvch.link5dots.domain.usecases.UndoMoveBotUseCase
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.promise
+import kotlin.js.Promise
+
+@OptIn(DelicateCoroutinesApi::class, ExperimentalJsExport::class)
+@JsExport()
+fun undoBotGame(room: IRoom?, onGameUpdate: (room: IRoom) -> Unit): Promise<Unit> =
+    GlobalScope.promise {
+        val getRepository = object : RoomGetRepository {
+            override suspend fun get() = room
+        }
+
+        val saveRepository = object : RoomSaveRepository {
+            override suspend fun save(room: IRoom) = onGameUpdate(room)
+        }
+
+        val useCase = UndoMoveBotUseCase(getRepository, saveRepository)
+        useCase.undo()
+    }

@@ -25,20 +25,31 @@
 package by.klnvch.link5dots.domain.usecases
 
 import by.klnvch.link5dots.domain.models.Board
+import by.klnvch.link5dots.domain.models.Bot
+import by.klnvch.link5dots.domain.models.BotUser
+import by.klnvch.link5dots.domain.models.DeviceOwnerUser
 import by.klnvch.link5dots.domain.models.Dot
 import by.klnvch.link5dots.domain.models.DotImpl
 import by.klnvch.link5dots.domain.models.IRoom
+import by.klnvch.link5dots.domain.models.IUser
 import by.klnvch.link5dots.domain.models.Point
 import by.klnvch.link5dots.domain.models.RoomState
 import by.klnvch.link5dots.domain.models.findWinningLine
 import by.klnvch.link5dots.domain.repositories.AddDotOnlineRoomRepository
 import by.klnvch.link5dots.domain.repositories.FirebaseAuthManager
 import by.klnvch.link5dots.domain.repositories.GetOnlineRoomRepository
+import by.klnvch.link5dots.domain.repositories.RoomGetRepository
+import by.klnvch.link5dots.domain.repositories.RoomSaveRepository
+import by.klnvch.link5dots.domain.repositories.TimeService
 import by.klnvch.link5dots.domain.repositories.UpdateStateOnlineRoomRepository
 
+fun Point.isValidToBeAdded(board: Board, room: IRoom) =
+    board.isInside(this) && room.isFree(this) && room.isNotOver()
+
+fun IRoom.canMove(user: IUser) = (if (dots.size % 2 == 0) DeviceOwnerUser else BotUser) == user
+
 interface AddDotUseCase {
-    // TODO: remove room as param
-    suspend fun addDot(room: IRoom, p: Point)
+    suspend fun addDot(p: Point)
 }
 
 class AddDotOnlineUseCase(
@@ -48,9 +59,9 @@ class AddDotOnlineUseCase(
     private val updateStateRepository: UpdateStateOnlineRoomRepository,
     private val getRepository: GetOnlineRoomRepository,
 ) : AddDotUseCase {
-    override suspend fun addDot(room: IRoom, p: Point) {
+    override suspend fun addDot(p: Point) {
         getRepository.room?.let { room ->
-            if (board.isInside(p) && room.isFree(p) && room.isNotOver()) {
+            if (p.isValidToBeAdded(board, room)) {
                 val userId = firebaseAuthManager.getUserId()
 
                 val type = if (room.user1.id == userId && room.dots.size % 2 == 0) {
@@ -68,6 +79,30 @@ class AddDotOnlineUseCase(
                         updateStateRepository.update(room.key, RoomState.FINISHED)
                     }
                 }
+            }
+        }
+    }
+}
+
+class AddDotBotUseCase(
+    private val timeService: TimeService,
+    private val board: Board,
+    private val getRepository: RoomGetRepository,
+    private val saveRepository: RoomSaveRepository,
+    private val bot: Bot,
+) : AddDotUseCase {
+    override suspend fun addDot(p: Point) {
+        getRepository.get()?.let { room ->
+            if (p.isValidToBeAdded(board, room) && room.canMove(DeviceOwnerUser)) {
+                val dt = timeService.dt(room.time)
+                var updatedRoom = room.move(DotImpl(p, Dot.HOST, dt))
+
+                if (updatedRoom.isNotOver()) {
+                    val botPoint = bot.findAnswer(updatedRoom.dots)
+                    updatedRoom = updatedRoom.move(DotImpl(botPoint, Dot.GUEST, dt))
+                }
+
+                saveRepository.save(updatedRoom)
             }
         }
     }

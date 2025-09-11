@@ -27,10 +27,10 @@ import by.klnvch.link5dots.domain.models.NetworkRoom
 import by.klnvch.link5dots.domain.models.NetworkRoomState
 import kotlinx.coroutines.flow.Flow
 
-interface BluetoothRoomRepository : ScanRoomInvitationRepository {
+interface BluetoothRoomRepository : ScanRoomInvitationRepository, RoomGetRepository {
     suspend fun create()
     fun delete()
-    fun get(): Flow<NetworkRoom?>
+    fun getFlow(): Flow<NetworkRoom?>
     suspend fun update(room: NetworkRoom)
     fun finish()
     fun isServer(): Boolean

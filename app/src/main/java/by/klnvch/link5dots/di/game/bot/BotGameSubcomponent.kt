@@ -35,6 +35,7 @@ import dagger.android.AndroidInjector
     modules = [
         OfflineGameViewModelsModule::class,
         BotGameRulesModule::class,
+        BotGameRulesModule2::class,
     ]
 )
 interface BotGameSubcomponent : AndroidInjector<BotGameActivity> {

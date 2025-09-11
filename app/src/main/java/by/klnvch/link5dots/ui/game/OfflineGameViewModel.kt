@@ -75,7 +75,7 @@ open class OfflineGameViewModel @Inject constructor(
         val user1Name = getUserNameUseCase.get(it.user1)
         val user2Name = getUserNameUseCase.get(it.user2)
         val newActionAvailability = newGameUseCase.actionAvailability
-        val undoActionAvailability = undoMoveUseCase.getActionAvailability(it)
+        val undoActionAvailability = undoMoveUseCase.getActionAvailability()
         val shareActionAvailability = prepareScoreUseCase.actionAvailability
         createGameViewState(
             type,
@@ -110,12 +110,7 @@ open class OfflineGameViewModel @Inject constructor(
 
     fun setParam(param: RoomParam) = viewModelScope.launch { _searchQueryFlow.emit(param) }
 
-    fun undoLastMove() = viewModelScope.launch {
-        val room = roomFlow.firstOrNull()
-        if (room != null) {
-            undoMoveUseCase.undo(room)
-        }
-    }
+    fun undoLastMove() = viewModelScope.launch { undoMoveUseCase.undo() }
 
     fun newGame(): Boolean {
         viewModelScope.launch {
@@ -124,9 +119,7 @@ open class OfflineGameViewModel @Inject constructor(
         return newGameUseCase.isImplemented
     }
 
-    fun addDot(p: Point) {
-        viewModelScope.launch { roomFlow.firstOrNull()?.let { addDotUseCase.addDot(it, p) } }
-    }
+    fun addDot(p: Point) = viewModelScope.launch { addDotUseCase.addDot(p) }
 
     fun saveScore() = viewModelScope.launch {
         val room = roomFlow.firstOrNull()

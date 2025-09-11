@@ -69,7 +69,7 @@ class RoomLocalMapper @Inject constructor() {
         else -> if (user.name.isNullOrEmpty()) null else NetworkUser(user.id, user.name)
     }
 
-    private fun map(type: RoomType) = when (type) {
+    fun map(type: RoomType) = when (type) {
         RoomType.BLUETOOTH -> 1
         RoomType.NSD -> 2
         RoomType.ONLINE -> 3

@@ -21,18 +21,37 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package by.klnvch.link5dots.domain.repositories
+package by.klnvch.link5dots.di.game.bot
 
-import by.klnvch.link5dots.domain.models.NetworkRoom
-import by.klnvch.link5dots.domain.models.NetworkRoomState
-import kotlinx.coroutines.flow.Flow
+import by.klnvch.link5dots.domain.models.Board
+import by.klnvch.link5dots.domain.models.Bot
+import by.klnvch.link5dots.domain.repositories.RoomGetRepository
+import by.klnvch.link5dots.domain.repositories.RoomRepository
+import by.klnvch.link5dots.domain.repositories.TimeService
+import by.klnvch.link5dots.domain.usecases.AddDotBotUseCase
+import by.klnvch.link5dots.domain.usecases.UndoMoveBotUseCase
+import dagger.Module
+import dagger.Provides
 
-interface NsdRoomRepository : ScanRoomInvitationRepository, RoomGetRepository {
-    suspend fun create()
-    fun delete()
-    val state: Flow<NetworkRoomState>
-    fun getFlow(): Flow<NetworkRoom?>
-    suspend fun update(room: NetworkRoom)
-    fun finish()
-    fun isServer(): Boolean
+@Module
+class BotGameRulesModule2 {
+    @Provides
+    fun provideBot(board: Board) = Bot(board)
+
+    @Provides
+    fun provideAddDotBotUseCase(
+        timeService: TimeService,
+        board: Board,
+        roomGetRepository: RoomGetRepository,
+        roomSaveRepository: RoomRepository,
+        bot: Bot,
+    ) =
+        AddDotBotUseCase(timeService, board, roomGetRepository, roomSaveRepository, bot)
+
+    @Provides
+    fun provideUndoMoveBotUseCase(
+        roomGetRepository: RoomGetRepository,
+        roomSaveRepository: RoomRepository,
+    ) =
+        UndoMoveBotUseCase(roomGetRepository, roomSaveRepository)
 }

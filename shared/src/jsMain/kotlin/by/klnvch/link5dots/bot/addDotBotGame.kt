@@ -24,30 +24,35 @@
 
 package by.klnvch.link5dots.bot
 
-import by.klnvch.link5dots.domain.models.ActionAvailability
-import by.klnvch.link5dots.domain.models.DotsStyleType
+import by.klnvch.link5dots.data.TimeServiceImpl
+import by.klnvch.link5dots.domain.models.Board
+import by.klnvch.link5dots.domain.models.Bot
 import by.klnvch.link5dots.domain.models.IRoom
-import by.klnvch.link5dots.domain.repositories.StringProvider
-import by.klnvch.link5dots.ui.game.GameViewState
-import by.klnvch.link5dots.ui.game.createGameViewState
+import by.klnvch.link5dots.domain.models.Point
+import by.klnvch.link5dots.domain.repositories.RoomGetRepository
+import by.klnvch.link5dots.domain.repositories.RoomSaveRepository
+import by.klnvch.link5dots.domain.usecases.AddDotBotUseCase
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.promise
+import kotlin.js.Promise
 
-@OptIn(ExperimentalJsExport::class)
+@OptIn(DelicateCoroutinesApi::class, ExperimentalJsExport::class)
 @JsExport()
-fun mapToBotGameViewState(
-    userName: String?,
-    stringProvider: StringProvider,
-    room: IRoom,
-): GameViewState {
-    val user1Name = userName ?: stringProvider.unknownName
-    val user2Name = stringProvider.botName
+fun addDotBotGame(room: IRoom?, p: Point, onGameUpdate: (room: IRoom) -> Unit): Promise<Unit> =
+    GlobalScope.promise {
+        val timeService = TimeServiceImpl()
+        val board = Board()
+        val bot = Bot(board)
 
-    return createGameViewState(
-        DotsStyleType.ORIGINAL,
-        user1Name,
-        user2Name,
-        room,
-        ActionAvailability.Available,
-        ActionAvailability.Available,
-        ActionAvailability.Gone
-    )
-}
+        val getRepository = object : RoomGetRepository {
+            override suspend fun get() = room
+        }
+
+        val saveRepository = object : RoomSaveRepository {
+            override suspend fun save(room: IRoom) = onGameUpdate(room)
+        }
+
+        val useCase = AddDotBotUseCase(timeService, board, getRepository, saveRepository, bot)
+        useCase.addDot(p)
+    }

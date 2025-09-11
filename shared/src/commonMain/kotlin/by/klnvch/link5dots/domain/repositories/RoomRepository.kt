@@ -29,3 +29,7 @@ import by.klnvch.link5dots.domain.models.IRoom
 interface RoomSaveRepository {
     suspend fun save(room: IRoom)
 }
+
+interface RoomGetRepository {
+    suspend fun get(): IRoom?
+}

@@ -25,7 +25,9 @@
 package by.klnvch.link5dots.di.game.bluetooth
 
 import by.klnvch.link5dots.data.LocalUserIdentity
+import by.klnvch.link5dots.data.bluetooth.BluetoothRoomRepositoryImpl
 import by.klnvch.link5dots.domain.repositories.NetworkUserIdentity
+import by.klnvch.link5dots.domain.repositories.RoomGetRepository
 import by.klnvch.link5dots.domain.usecases.AddDotBluetoothUseCase
 import by.klnvch.link5dots.domain.usecases.AddDotUseCase
 import by.klnvch.link5dots.domain.usecases.GetRoomBluetoothUseCase
@@ -83,4 +85,7 @@ interface BluetoothGameRulesModule {
 
     @Binds
     fun bindNetworkUserIdentity(impl: LocalUserIdentity): NetworkUserIdentity
+
+    @Binds
+    fun bindRoomGetRepository(impl: BluetoothRoomRepositoryImpl): RoomGetRepository
 }

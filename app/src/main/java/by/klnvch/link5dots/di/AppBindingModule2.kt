@@ -36,7 +36,6 @@ import by.klnvch.link5dots.data.online.OnlineLocalStoreWriter
 import by.klnvch.link5dots.data.online.ScanOnlineRoomRepositoryImpl
 import by.klnvch.link5dots.data.online.UpdateStateOnlineRoomRepositoryImpl
 import by.klnvch.link5dots.domain.models.Board
-import by.klnvch.link5dots.domain.models.Bot
 import by.klnvch.link5dots.domain.repositories.AddDotOnlineRoomRepository
 import by.klnvch.link5dots.domain.repositories.ConnectOnlineRoomRepository
 import by.klnvch.link5dots.domain.repositories.CreateOnlineRoomRepository
@@ -181,8 +180,4 @@ class AppBindingModule2 {
     @Singleton
     @Provides
     fun provideBoard() = Board()
-
-    @Singleton
-    @Provides
-    fun provideBot(board: Board) = Bot(board)
 }

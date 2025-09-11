@@ -66,7 +66,7 @@ class NewGameBluetoothUseCase @Inject constructor(
 ) : NewGameCommonUseCase() {
     override suspend fun create(seed: Long?) {
         if (repository.isServer()) {
-            val prevRoom = repository.get().firstOrNull()
+            val prevRoom = repository.getFlow().firstOrNull()
 
             val key = roomKeyGenerator.generate()
             val time = timeRepository.time()
@@ -102,7 +102,7 @@ class NewGameNsdUseCase @Inject constructor(
 ) : NewGameCommonUseCase() {
     override suspend fun create(seed: Long?) {
         if (repository.isServer()) {
-            val prevRoom = repository.get().firstOrNull()
+            val prevRoom = repository.getFlow().firstOrNull()
 
             val key = roomKeyGenerator.generate()
             val time = timeRepository.time()

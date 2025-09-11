@@ -37,6 +37,7 @@ import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.runBlocking
 import java.io.Closeable
 import java.io.DataInputStream
@@ -172,7 +173,9 @@ abstract class SocketRoomRepository(private val mapper: RoomJsonMapper) {
 
     val state = stateFlow
 
-    fun get() = roomFlow
+    fun getFlow() = roomFlow
+
+    suspend fun get() = roomFlow.firstOrNull()
 
     protected fun DataOutputStream.writeRoom(room: NetworkRoom) {
         val json = mapper.toJson(room)

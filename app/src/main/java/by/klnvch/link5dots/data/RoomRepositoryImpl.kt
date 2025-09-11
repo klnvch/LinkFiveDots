@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 klnvch
+ * Copyright (c) 2023-2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -30,6 +30,7 @@ import by.klnvch.link5dots.data.db.RoomLocalMapper
 import by.klnvch.link5dots.data.network.NetworkService
 import by.klnvch.link5dots.data.network.RoomRemoteMapper
 import by.klnvch.link5dots.domain.models.IRoom
+import by.klnvch.link5dots.domain.models.RoomType
 import by.klnvch.link5dots.domain.repositories.RoomRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -63,8 +64,8 @@ class RoomRepositoryImpl @Inject constructor(
         .getByKey(key)
         .map { list -> list.map { roomLocalMapper.map(it) }.firstOrNull() }
 
-    override fun getRecentByType(type: Int) = roomLocalSource
-        .getRecentByType(type)
+    override fun getRecentByType(type: RoomType) = roomLocalSource
+        .getRecentByType(roomLocalMapper.map(type))
         .map { list -> list.map { roomLocalMapper.map(it) }.firstOrNull() }
 
     override suspend fun deleteAll() = roomLocalSource.deleteAll()

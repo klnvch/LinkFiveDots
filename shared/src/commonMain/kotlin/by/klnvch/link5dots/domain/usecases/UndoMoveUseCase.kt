@@ -1,0 +1,67 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2025 klnvch
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
+package by.klnvch.link5dots.domain.usecases
+
+import by.klnvch.link5dots.domain.models.ActionAvailability
+import by.klnvch.link5dots.domain.models.IRoom
+import by.klnvch.link5dots.domain.repositories.RoomGetRepository
+import by.klnvch.link5dots.domain.repositories.RoomSaveRepository
+
+interface UndoMoveUseCase {
+    suspend fun getActionAvailability(): ActionAvailability
+    suspend fun undo()
+}
+
+abstract class UndoMoveRealUseCase(
+    private val getRepository: RoomGetRepository,
+    private val saveRepository: RoomSaveRepository,
+) : UndoMoveUseCase {
+    override suspend fun getActionAvailability(): ActionAvailability {
+        val room = getRepository.get()
+        return when {
+            room == null -> ActionAvailability.Gone
+            room.dots.isNotEmpty() -> ActionAvailability.Available
+            else -> ActionAvailability.Disabled
+        }
+    }
+
+    override suspend fun undo() {
+        getRepository.get()?.let { room ->
+            if (room.dots.isNotEmpty()) {
+                val updatedRoom = undoInternal(room)
+                saveRepository.save(updatedRoom)
+            }
+        }
+    }
+
+    protected abstract suspend fun undoInternal(room: IRoom): IRoom
+}
+
+class UndoMoveBotUseCase(
+    getRepository: RoomGetRepository,
+    saveRepository: RoomSaveRepository,
+) : UndoMoveRealUseCase(getRepository, saveRepository) {
+    override suspend fun undoInternal(room: IRoom) = room.undo().undo()
+}
