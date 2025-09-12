@@ -24,6 +24,8 @@
 
 package by.klnvch.link5dots.domain.models
 
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 import kotlin.js.ExperimentalJsExport
 import kotlin.js.JsExport
 
@@ -48,12 +50,14 @@ interface IRoom {
     fun isFree(p: Point) = dots.find { it.x == p.x && it.y == p.y } == null
 }
 
+@Serializable
 data class Room(
     override val key: String,
     override val time: Int,
     override val dots: List<Dot>,
     override val user1: IUser?,
     override val user2: IUser?,
+    @SerialName("roomType")
     override val type: RoomType,
 ) : IRoom {
     override fun move(dot: Dot) = copy(dots = dots + dot)

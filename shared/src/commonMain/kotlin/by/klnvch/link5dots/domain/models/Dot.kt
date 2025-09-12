@@ -24,6 +24,8 @@
 
 package by.klnvch.link5dots.domain.models
 
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 import kotlin.js.ExperimentalJsExport
 import kotlin.js.JsExport
 
@@ -42,9 +44,11 @@ interface Dot {
     }
 }
 
+@Serializable
 data class DotImpl(
     override val x: Int,
     override val y: Int,
+    @SerialName("dotType")
     override val type: Int,
     override val dt: Int,
 ) : Dot {

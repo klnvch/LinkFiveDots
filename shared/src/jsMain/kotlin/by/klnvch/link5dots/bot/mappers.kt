@@ -25,11 +25,21 @@
 package by.klnvch.link5dots.bot
 
 import by.klnvch.link5dots.domain.models.ActionAvailability
+import by.klnvch.link5dots.domain.models.BotUser
+import by.klnvch.link5dots.domain.models.DeviceOwnerUser
+import by.klnvch.link5dots.domain.models.Dot
+import by.klnvch.link5dots.domain.models.DotImpl
 import by.klnvch.link5dots.domain.models.DotsStyleType
 import by.klnvch.link5dots.domain.models.IRoom
+import by.klnvch.link5dots.domain.models.IUser
+import by.klnvch.link5dots.domain.models.Room
 import by.klnvch.link5dots.domain.repositories.StringProvider
 import by.klnvch.link5dots.ui.game.GameViewState
 import by.klnvch.link5dots.ui.game.createGameViewState
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.modules.SerializersModule
+import kotlinx.serialization.modules.polymorphic
+import kotlinx.serialization.modules.subclass
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport()
@@ -51,3 +61,27 @@ fun mapToBotGameViewState(
         ActionAvailability.Gone
     )
 }
+
+private val json = Json {
+    ignoreUnknownKeys = true
+    serializersModule = SerializersModule {
+        polymorphic(IRoom::class) {
+            subclass(Room::class)
+        }
+        polymorphic(Dot::class) {
+            subclass(DotImpl::class)
+        }
+        polymorphic(IUser::class) {
+            subclass(BotUser::class)
+            subclass(DeviceOwnerUser::class)
+        }
+    }
+}
+
+@OptIn(ExperimentalJsExport::class)
+@JsExport()
+fun roomToJson(room: IRoom) = json.encodeToString(room)
+
+@OptIn(ExperimentalJsExport::class)
+@JsExport()
+fun jsonToRoom(str: String): IRoom = json.decodeFromString<Room>(str)

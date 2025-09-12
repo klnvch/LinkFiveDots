@@ -24,6 +24,7 @@
 
 package by.klnvch.link5dots.domain.models
 
+import kotlinx.serialization.Serializable
 import kotlin.js.ExperimentalJsExport
 import kotlin.js.JsExport
 
@@ -31,7 +32,10 @@ import kotlin.js.JsExport
 @JsExport()
 sealed interface IUser
 
+@Serializable
 object BotUser : IUser
+
+@Serializable
 object DeviceOwnerUser : IUser
 
 @OptIn(ExperimentalJsExport::class)
