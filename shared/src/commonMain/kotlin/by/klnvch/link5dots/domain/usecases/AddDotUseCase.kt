@@ -26,14 +26,13 @@ package by.klnvch.link5dots.domain.usecases
 
 import by.klnvch.link5dots.domain.models.Board
 import by.klnvch.link5dots.domain.models.Bot
-import by.klnvch.link5dots.domain.models.BotUser
 import by.klnvch.link5dots.domain.models.DeviceOwnerUser
 import by.klnvch.link5dots.domain.models.Dot
 import by.klnvch.link5dots.domain.models.DotImpl
 import by.klnvch.link5dots.domain.models.IRoom
-import by.klnvch.link5dots.domain.models.IUser
 import by.klnvch.link5dots.domain.models.Point
 import by.klnvch.link5dots.domain.models.RoomState
+import by.klnvch.link5dots.domain.models.canMove
 import by.klnvch.link5dots.domain.models.findWinningLine
 import by.klnvch.link5dots.domain.repositories.AddDotOnlineRoomRepository
 import by.klnvch.link5dots.domain.repositories.FirebaseAuthManager
@@ -45,8 +44,6 @@ import by.klnvch.link5dots.domain.repositories.UpdateStateOnlineRoomRepository
 
 fun Point.isValidToBeAdded(board: Board, room: IRoom) =
     board.isInside(this) && room.isFree(this) && room.isNotOver()
-
-fun IRoom.canMove(user: IUser) = (if (dots.size % 2 == 0) DeviceOwnerUser else BotUser) == user
 
 interface AddDotUseCase {
     suspend fun addDot(p: Point)
@@ -92,7 +89,7 @@ class AddDotBotUseCase(
     private val bot: Bot,
 ) : AddDotUseCase {
     override suspend fun addDot(p: Point) {
-        getRepository.get()?.let { room ->
+        getRepository.room?.let { room ->
             if (p.isValidToBeAdded(board, room) && room.canMove(DeviceOwnerUser)) {
                 val dt = timeService.dt(room.time)
                 var updatedRoom = room.move(DotImpl(p, Dot.HOST, dt))

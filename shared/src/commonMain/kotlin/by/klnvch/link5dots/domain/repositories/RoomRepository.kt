@@ -31,5 +31,5 @@ interface RoomSaveRepository {
 }
 
 interface RoomGetRepository {
-    suspend fun get(): IRoom?
+    val room: IRoom?
 }

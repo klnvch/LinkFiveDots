@@ -40,4 +40,7 @@ object DeviceOwnerUser : IUser
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport()
-data class NetworkUser(val id: String, val name: String?) : IUser
+data class NetworkUser(val id: String, val name: String?) : IUser {
+    override fun equals(other: Any?) = id == (other as? NetworkUser)?.id
+    override fun hashCode() = id.hashCode()
+}

@@ -35,9 +35,9 @@ import by.klnvch.link5dots.domain.models.NetworkRoomStateStarted
 import by.klnvch.link5dots.domain.models.NetworkUser
 import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.runBlocking
 import java.io.Closeable
 import java.io.DataInputStream
@@ -48,7 +48,7 @@ import kotlin.concurrent.thread
 
 abstract class SocketRoomRepository(private val mapper: RoomJsonMapper) {
     protected abstract val TAG: String
-    private val roomFlow = MutableSharedFlow<NetworkRoom?>(1)
+    private val roomFlow = MutableStateFlow<NetworkRoom?>(null)
     private val stateFlow = MutableSharedFlow<NetworkRoomState>(1)
     private var _serverSocket: Closeable? = null
     private var _socket: Closeable? = null
@@ -175,7 +175,7 @@ abstract class SocketRoomRepository(private val mapper: RoomJsonMapper) {
 
     fun getFlow() = roomFlow
 
-    suspend fun get() = roomFlow.firstOrNull()
+    val room = roomFlow.value
 
     protected fun DataOutputStream.writeRoom(room: NetworkRoom) {
         val json = mapper.toJson(room)

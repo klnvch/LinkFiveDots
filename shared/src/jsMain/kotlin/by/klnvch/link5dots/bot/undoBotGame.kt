@@ -38,7 +38,7 @@ import kotlin.js.Promise
 fun undoBotGame(room: IRoom?, onGameUpdate: (room: IRoom) -> Unit): Promise<Unit> =
     GlobalScope.promise {
         val getRepository = object : RoomGetRepository {
-            override suspend fun get() = room
+            override val room = room
         }
 
         val saveRepository = object : RoomSaveRepository {

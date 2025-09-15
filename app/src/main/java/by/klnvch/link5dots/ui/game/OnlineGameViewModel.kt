@@ -34,6 +34,7 @@ import by.klnvch.link5dots.domain.models.NetworkRoomStateStarted
 import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
 import by.klnvch.link5dots.domain.repositories.Settings
 import by.klnvch.link5dots.domain.usecases.AddDotUseCase
+import by.klnvch.link5dots.domain.usecases.GameActionsUseCase
 import by.klnvch.link5dots.domain.usecases.GetRoomUseCase
 import by.klnvch.link5dots.domain.usecases.GetUserNameUseCase
 import by.klnvch.link5dots.domain.usecases.NewGameUseCase
@@ -70,6 +71,7 @@ class OnlineGameViewModel @Inject constructor(
     private val deleteMultiplayerRoomUseCase: DeleteMultiplayerRoomUseCase,
     private val scanUseCase: ScanUseCase,
     private val getNetworkGameActionUseCase: GetNetworkGameActionUseCase,
+    getGameActionsUseCase: GameActionsUseCase,
     getUserNameUseCase: GetUserNameUseCase,
     getRoomUseCase: GetRoomUseCase,
     newGameUseCase: NewGameUseCase,
@@ -87,6 +89,7 @@ class OnlineGameViewModel @Inject constructor(
     saveScoreUseCase,
     settings,
     getUserNameUseCase,
+    getGameActionsUseCase,
 ) {
     private val _pickerState = MutableStateFlow(createInitialPickerState())
 

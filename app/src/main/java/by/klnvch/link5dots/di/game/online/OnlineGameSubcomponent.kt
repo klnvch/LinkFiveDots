@@ -35,6 +35,7 @@ import dagger.android.AndroidInjector
     modules = [
         OnlineGameViewModelsModule::class,
         OnlineGameRulesModule::class,
+        OnlineGameRulesModule2::class,
         CommonBindingModule::class,
     ]
 )

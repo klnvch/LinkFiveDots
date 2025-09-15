@@ -29,8 +29,6 @@ import by.klnvch.link5dots.domain.usecases.AddDotOnlineUseCase
 import by.klnvch.link5dots.domain.usecases.AddDotUseCase
 import by.klnvch.link5dots.domain.usecases.GetRoomOnlineUseCase
 import by.klnvch.link5dots.domain.usecases.GetRoomUseCase
-import by.klnvch.link5dots.domain.usecases.NewGameOnlineUseCase
-import by.klnvch.link5dots.domain.usecases.NewGameUseCase
 import by.klnvch.link5dots.domain.usecases.PrepareScoreMultiplayerUseCase
 import by.klnvch.link5dots.domain.usecases.PrepareScoreUseCase
 import by.klnvch.link5dots.domain.usecases.UndoMoveInfoUseCase
@@ -55,9 +53,6 @@ interface OnlineGameRulesModule {
 
     @Binds
     fun bindGetMultiplayerRoomStateUseCase(impl: GetOnlineRoomStateUseCase): GetNetworkRoomStateUseCase
-
-    @Binds
-    fun bindNewGameUseCase(impl: NewGameOnlineUseCase): NewGameUseCase
 
     @Binds
     fun bindAddDotUseCase(impl: AddDotOnlineUseCase): AddDotUseCase

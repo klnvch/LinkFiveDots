@@ -27,6 +27,8 @@ import by.klnvch.link5dots.domain.repositories.RoomGetRepository
 import by.klnvch.link5dots.domain.repositories.RoomTwoGetRepository
 import by.klnvch.link5dots.domain.usecases.AddDotTwoUseCase
 import by.klnvch.link5dots.domain.usecases.AddDotUseCase
+import by.klnvch.link5dots.domain.usecases.GameActionsTwoUseCase
+import by.klnvch.link5dots.domain.usecases.GameActionsUseCase
 import by.klnvch.link5dots.domain.usecases.GetRoomOfflineUseCase
 import by.klnvch.link5dots.domain.usecases.GetRoomUseCase
 import by.klnvch.link5dots.domain.usecases.NewGameTwoUseCase
@@ -57,4 +59,7 @@ interface TwoPlayersGameRulesModule {
 
     @Binds
     fun bindRoomGetRepository(impl: RoomTwoGetRepository): RoomGetRepository
+
+    @Binds
+    fun bindGameActionsUseCase(impl: GameActionsTwoUseCase): GameActionsUseCase
 }

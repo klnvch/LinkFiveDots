@@ -32,6 +32,7 @@ import by.klnvch.link5dots.domain.models.isNew
 import by.klnvch.link5dots.domain.models.lastPoint
 import by.klnvch.link5dots.domain.repositories.Settings
 import by.klnvch.link5dots.domain.usecases.AddDotUseCase
+import by.klnvch.link5dots.domain.usecases.GameActionsUseCase
 import by.klnvch.link5dots.domain.usecases.GetRoomUseCase
 import by.klnvch.link5dots.domain.usecases.GetUserNameUseCase
 import by.klnvch.link5dots.domain.usecases.NewGameUseCase
@@ -62,6 +63,7 @@ open class OfflineGameViewModel @Inject constructor(
     private val saveScoreUseCase: SaveScoreUseCase,
     private val settings: Settings,
     private val getUserNameUseCase: GetUserNameUseCase,
+    private val getGameActionsUseCase: GameActionsUseCase,
 ) : ViewModel() {
     private val _searchQueryFlow = MutableSharedFlow<RoomParam>(1)
 
@@ -74,9 +76,9 @@ open class OfflineGameViewModel @Inject constructor(
         val type = settings.getDotsType().first()
         val user1Name = getUserNameUseCase.get(it.user1)
         val user2Name = getUserNameUseCase.get(it.user2)
-        val newActionAvailability = newGameUseCase.actionAvailability
-        val undoActionAvailability = undoMoveUseCase.getActionAvailability()
-        val shareActionAvailability = prepareScoreUseCase.actionAvailability
+        val newActionAvailability = getGameActionsUseCase.getNewAvailability()
+        val undoActionAvailability = getGameActionsUseCase.getUndoAvailability()
+        val shareActionAvailability = getGameActionsUseCase.getShareAvailability()
         createGameViewState(
             type,
             user1Name,

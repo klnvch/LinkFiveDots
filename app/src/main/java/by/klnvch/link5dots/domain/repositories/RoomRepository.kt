@@ -26,8 +26,11 @@ package by.klnvch.link5dots.domain.repositories
 
 import by.klnvch.link5dots.domain.models.IRoom
 import by.klnvch.link5dots.domain.models.RoomType
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
 interface RoomRepository : RoomSaveRepository {
@@ -39,14 +42,22 @@ interface RoomRepository : RoomSaveRepository {
     suspend fun deleteAll()
 }
 
-class RoomBotGetRepository @Inject constructor(
-    private val repository: RoomRepository,
+abstract class RoomStateGetRepository(
+    repository: RoomRepository,
+    type: RoomType,
 ) : RoomGetRepository {
-    override suspend fun get() = repository.getRecentByType(RoomType.BOT).firstOrNull()
+    private val roomFlow = repository.getRecentByType(type).stateIn(
+        scope = CoroutineScope(Dispatchers.IO),
+        started = SharingStarted.WhileSubscribed(),
+        initialValue = null
+    )
+    override val room = roomFlow.value
 }
 
+class RoomBotGetRepository @Inject constructor(
+    repository: RoomRepository,
+) : RoomStateGetRepository(repository, RoomType.BOT), RoomGetRepository
+
 class RoomTwoGetRepository @Inject constructor(
-    private val repository: RoomRepository,
-) : RoomGetRepository {
-    override suspend fun get() = repository.getRecentByType(RoomType.TWO_PLAYERS).firstOrNull()
-}
+    repository: RoomRepository,
+) : RoomStateGetRepository(repository, RoomType.TWO_PLAYERS), RoomGetRepository

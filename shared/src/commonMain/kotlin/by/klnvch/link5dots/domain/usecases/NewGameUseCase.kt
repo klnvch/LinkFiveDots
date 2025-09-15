@@ -24,7 +24,6 @@
 
 package by.klnvch.link5dots.domain.usecases
 
-import by.klnvch.link5dots.domain.models.ActionAvailability
 import by.klnvch.link5dots.domain.models.BotUser
 import by.klnvch.link5dots.domain.models.DeviceOwnerUser
 import by.klnvch.link5dots.domain.models.Dot
@@ -33,12 +32,11 @@ import by.klnvch.link5dots.domain.models.IUser
 import by.klnvch.link5dots.domain.models.Room
 import by.klnvch.link5dots.domain.models.RoomType
 import by.klnvch.link5dots.domain.models.generateInitialGame
-import by.klnvch.link5dots.domain.repositories.GetOnlineRoomRepository
 import by.klnvch.link5dots.domain.repositories.RoomKeyGenerator
 import by.klnvch.link5dots.domain.repositories.RoomSaveRepository
 import by.klnvch.link5dots.domain.repositories.TimeService
 
-interface NewGameUseCase : ActionAvailabilityForUseCase {
+interface NewGameUseCase {
     val isImplemented: Boolean
     suspend fun create(seed: Long?)
 }
@@ -57,7 +55,6 @@ abstract class NewGameOfflineUseCase(
     private val timeRepository: TimeService,
     private val roomRepository: RoomSaveRepository,
 ) : NewGameCommonUseCase() {
-    override val actionAvailability = ActionAvailability.Available
     override suspend fun create(seed: Long?) {
         val room = Room(
             roomKeyGenerator.generate(),
@@ -89,13 +86,7 @@ class NewGameBotUseCase(
     override val type = RoomType.BOT
 }
 
-class NewGameOnlineUseCase(
-    private val repository: GetOnlineRoomRepository,
-) : NewGameUseCase {
+class NewGameOnlineUseCase() : NewGameUseCase {
     override val isImplemented = false
     override suspend fun create(seed: Long?) = Unit
-    override val actionAvailability
-        get() =
-            if (repository.room?.isOver() == true) ActionAvailability.Available
-            else ActionAvailability.Disabled
 }

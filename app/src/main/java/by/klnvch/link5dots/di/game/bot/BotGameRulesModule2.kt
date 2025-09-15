@@ -29,6 +29,8 @@ import by.klnvch.link5dots.domain.repositories.RoomGetRepository
 import by.klnvch.link5dots.domain.repositories.RoomRepository
 import by.klnvch.link5dots.domain.repositories.TimeService
 import by.klnvch.link5dots.domain.usecases.AddDotBotUseCase
+import by.klnvch.link5dots.domain.usecases.GameActionsBotUseCase
+import by.klnvch.link5dots.domain.usecases.GameActionsUseCase
 import by.klnvch.link5dots.domain.usecases.UndoMoveBotUseCase
 import dagger.Module
 import dagger.Provides
@@ -54,4 +56,8 @@ class BotGameRulesModule2 {
         roomSaveRepository: RoomRepository,
     ) =
         UndoMoveBotUseCase(roomGetRepository, roomSaveRepository)
+
+    @Provides
+    fun provideGameActionsUseCase(roomGetRepository: RoomGetRepository): GameActionsUseCase =
+        GameActionsBotUseCase(roomGetRepository)
 }

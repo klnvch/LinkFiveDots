@@ -46,7 +46,7 @@ fun addDotBotGame(room: IRoom?, p: Point, onGameUpdate: (room: IRoom) -> Unit): 
         val bot = Bot(board)
 
         val getRepository = object : RoomGetRepository {
-            override suspend fun get() = room
+            override val room = room
         }
 
         val saveRepository = object : RoomSaveRepository {

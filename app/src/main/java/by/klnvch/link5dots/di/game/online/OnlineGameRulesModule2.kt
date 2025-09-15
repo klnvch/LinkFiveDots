@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2025 klnvch
+ * Copyright (c) 2023-2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,11 +21,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+package by.klnvch.link5dots.di.game.online
 
-package by.klnvch.link5dots.domain.usecases
+import by.klnvch.link5dots.domain.repositories.GetOnlineRoomRepository
+import by.klnvch.link5dots.domain.usecases.GameActionsOnlineUseCase
+import by.klnvch.link5dots.domain.usecases.GameActionsUseCase
+import by.klnvch.link5dots.domain.usecases.NewGameOnlineUseCase
+import by.klnvch.link5dots.domain.usecases.NewGameUseCase
+import dagger.Module
+import dagger.Provides
 
-import by.klnvch.link5dots.domain.models.ActionAvailability
+@Module
+class OnlineGameRulesModule2 {
+    @Provides
+    fun provideNewGameUseCase(): NewGameUseCase = NewGameOnlineUseCase()
 
-interface ActionAvailabilityForUseCase {
-    val actionAvailability: ActionAvailability
+    @Provides
+    fun provideGameActionsUseCase(getRepository: GetOnlineRoomRepository): GameActionsUseCase =
+        GameActionsOnlineUseCase(getRepository)
 }

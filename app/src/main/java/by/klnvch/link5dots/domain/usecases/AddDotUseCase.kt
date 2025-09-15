@@ -49,7 +49,7 @@ abstract class AddDotRealUseCase(
 ) : AddDotUseCase {
     fun dt(time: Int) = timeService.dt(time)
     override suspend fun addDot(p: Point) {
-        getRepository.get()?.let { room ->
+        getRepository.room?.let { room ->
             if (p.isValidToBeAdded(board, room)) {
                 val dt = dt(room.time)
                 addInternal(room, p, dt)

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 klnvch
+ * Copyright (c) 2023-2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,6 +25,8 @@ package by.klnvch.link5dots.di.game.info
 
 import by.klnvch.link5dots.domain.usecases.AddDotInfoUseCase
 import by.klnvch.link5dots.domain.usecases.AddDotUseCase
+import by.klnvch.link5dots.domain.usecases.GameActionsInfoUseCase
+import by.klnvch.link5dots.domain.usecases.GameActionsUseCase
 import by.klnvch.link5dots.domain.usecases.GetRoomOfflineUseCase
 import by.klnvch.link5dots.domain.usecases.GetRoomUseCase
 import by.klnvch.link5dots.domain.usecases.NewGameEmptyUseCase
@@ -40,6 +42,7 @@ import dagger.Module
 interface InfoGameRulesModule {
     @Binds
     fun bindGetRoomUseCase(impl: GetRoomOfflineUseCase): GetRoomUseCase
+
     @Binds
     fun bindNewGameUseCase(impl: NewGameEmptyUseCase): NewGameUseCase
 
@@ -51,4 +54,7 @@ interface InfoGameRulesModule {
 
     @Binds
     fun bindPrepareScoreUseCase(impl: PrepareScoreOtherUseCase): PrepareScoreUseCase
+
+    @Binds
+    fun bindGameActionsUseCase(impl: GameActionsInfoUseCase): GameActionsUseCase
 }

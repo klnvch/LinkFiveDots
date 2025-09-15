@@ -50,6 +50,9 @@ interface IRoom {
     fun isFree(p: Point) = dots.find { it.x == p.x && it.y == p.y } == null
 }
 
+fun IRoom.canMove(user: IUser) = (if (dots.size % 2 == 0) user1 else user2) == user
+fun IRoom.isNotEmpty() = dots.isNotEmpty()
+
 @Serializable
 data class Room(
     override val key: String,

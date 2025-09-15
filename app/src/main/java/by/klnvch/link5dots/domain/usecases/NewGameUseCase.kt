@@ -23,7 +23,6 @@
  */
 package by.klnvch.link5dots.domain.usecases
 
-import by.klnvch.link5dots.domain.models.ActionAvailability
 import by.klnvch.link5dots.domain.models.NetworkRoom
 import by.klnvch.link5dots.domain.models.NetworkUser
 import by.klnvch.link5dots.domain.models.RoomState
@@ -41,7 +40,6 @@ import javax.inject.Inject
 class NewGameEmptyUseCase @Inject constructor() : NewGameUseCase {
     override val isImplemented = false
     override suspend fun create(seed: Long?) = Unit
-    override val actionAvailability = ActionAvailability.Gone
 }
 
 class NewGameTwoUseCase @Inject constructor(
@@ -89,9 +87,6 @@ class NewGameBluetoothUseCase @Inject constructor(
             repository.update(newRoom)
         }
     }
-
-    override val actionAvailability
-        get() = if (repository.isServer()) ActionAvailability.Available else ActionAvailability.Gone
 }
 
 class NewGameNsdUseCase @Inject constructor(
@@ -125,7 +120,4 @@ class NewGameNsdUseCase @Inject constructor(
             repository.update(newRoom)
         }
     }
-
-    override val actionAvailability
-        get() = if (repository.isServer()) ActionAvailability.Available else ActionAvailability.Gone
 }

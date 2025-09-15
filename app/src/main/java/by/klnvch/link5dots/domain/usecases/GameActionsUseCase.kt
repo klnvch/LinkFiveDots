@@ -24,38 +24,52 @@
 
 package by.klnvch.link5dots.domain.usecases
 
-import by.klnvch.link5dots.domain.models.IRoom
+import by.klnvch.link5dots.domain.models.ActionAvailability
 import by.klnvch.link5dots.domain.models.NetworkRoom
+import by.klnvch.link5dots.domain.models.isNotEmpty
 import by.klnvch.link5dots.domain.repositories.BluetoothRoomRepository
 import by.klnvch.link5dots.domain.repositories.NsdRoomRepository
 import by.klnvch.link5dots.domain.repositories.RoomGetRepository
-import by.klnvch.link5dots.domain.repositories.RoomRepository
 import by.klnvch.link5dots.domain.repositories.Settings
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
-class UndoMoveInfoUseCase @Inject constructor() : UndoMoveUseCase {
-    override suspend fun undo() = Unit
+class GameActionsInfoUseCase @Inject constructor() : GameActionsUseCase {
+    override suspend fun getUndoAvailability() = ActionAvailability.Gone
+    override suspend fun getNewAvailability() = ActionAvailability.Gone
+    override suspend fun getShareAvailability() = ActionAvailability.Gone
 }
 
-class UndoMoveTwoUseCase @Inject constructor(
-    getRepository: RoomGetRepository,
-    saveRepository: RoomRepository,
-) : UndoMoveRealUseCase(getRepository, saveRepository) {
-    override suspend fun undoInternal(room: IRoom) = room.undo()
+class GameActionsTwoUseCase @Inject constructor(
+    private val getRepository: RoomGetRepository,
+) : GameActionsUseCase {
+    override suspend fun getUndoAvailability(): ActionAvailability {
+        val room = getRepository.room
+        return when {
+            room == null -> ActionAvailability.Gone
+            room.isNotEmpty() -> ActionAvailability.Available
+            else -> ActionAvailability.Disabled
+        }
+    }
+
+    override suspend fun getNewAvailability() = ActionAvailability.Available
+    override suspend fun getShareAvailability() = ActionAvailability.Gone
 }
 
-class UndoMoveBluetoothUseCase @Inject constructor(
-    private val settings: Settings,
+class GameActionsBluetoothUseCase @Inject constructor(
     private val repository: BluetoothRoomRepository,
-) : UndoMoveUseCase {
-    override suspend fun undo() {
+    private val settings: Settings,
+) : GameActionsUseCase {
+    override suspend fun getUndoAvailability(): ActionAvailability {
         val currentRoom = repository.getFlow().filterNotNull().first()
-        if (isAvailable(currentRoom)) {
-            repository.update(currentRoom.undo())
-        }
+        return if (isAvailable(currentRoom)) ActionAvailability.Available else ActionAvailability.Disabled
     }
+
+    override suspend fun getNewAvailability() =
+        if (repository.isServer()) ActionAvailability.Available else ActionAvailability.Gone
+
+    override suspend fun getShareAvailability() = ActionAvailability.Gone
 
     private suspend fun isAvailable(room: NetworkRoom): Boolean {
         val dots = room.dots
@@ -71,16 +85,17 @@ class UndoMoveBluetoothUseCase @Inject constructor(
     }
 }
 
-class UndoMoveNsdUseCase @Inject constructor(
-    private val settings: Settings,
+class GameActionsNsdUseCase @Inject constructor(
     private val repository: NsdRoomRepository,
-) : UndoMoveUseCase {
-    override suspend fun undo() {
+    private val settings: Settings,
+) : GameActionsUseCase {
+    override suspend fun getUndoAvailability(): ActionAvailability {
         val currentRoom = repository.getFlow().filterNotNull().first()
-        if (isAvailable(currentRoom)) {
-            repository.update(currentRoom.undo())
-        }
+        return if (isAvailable(currentRoom)) ActionAvailability.Available else ActionAvailability.Disabled
     }
+
+    override suspend fun getNewAvailability() =
+        if (repository.isServer()) ActionAvailability.Available else ActionAvailability.Gone
 
     private suspend fun isAvailable(room: NetworkRoom): Boolean {
         val dots = room.dots
@@ -94,4 +109,6 @@ class UndoMoveNsdUseCase @Inject constructor(
         }
         return false
     }
+
+    override suspend fun getShareAvailability() = ActionAvailability.Gone
 }

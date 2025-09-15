@@ -26,13 +26,16 @@ package by.klnvch.link5dots
 
 import by.klnvch.link5dots.data.firebase.RemoteRoomItem
 import by.klnvch.link5dots.data.online.mapToDescriptors
-import by.klnvch.link5dots.domain.models.ActionAvailability
 import by.klnvch.link5dots.domain.models.DotsStyleType
 import by.klnvch.link5dots.domain.models.NetworkRoom
 import by.klnvch.link5dots.domain.repositories.GetOnlineRoomRepository
-import by.klnvch.link5dots.domain.usecases.NewGameOnlineUseCase
+import by.klnvch.link5dots.domain.usecases.GameActionsOnlineUseCase
 import by.klnvch.link5dots.ui.game.GameViewState
 import by.klnvch.link5dots.ui.game.createGameViewState
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.promise
+import kotlin.js.Promise
 import kotlin.js.collections.JsReadonlyArray
 import kotlin.js.collections.toList
 
@@ -41,26 +44,26 @@ import kotlin.js.collections.toList
 fun mapToDescriptors(items: JsReadonlyArray<RemoteRoomItem>, defaultName: String) =
     mapToDescriptors(items.toList(), defaultName).toTypedArray()
 
-@OptIn(ExperimentalJsExport::class)
+@OptIn(ExperimentalJsExport::class, DelicateCoroutinesApi::class)
 @JsExport()
 fun mapToGameViewState(
     defaultName: String,
     room: NetworkRoom,
-): GameViewState {
+): Promise<GameViewState> = GlobalScope.promise {
     val user1Name = room.user1.name ?: defaultName
     val user2Name = room.user2?.name ?: defaultName
 
-    val newGameOnlineUseCase = NewGameOnlineUseCase(object : GetOnlineRoomRepository {
+    val gameActionsOnlineUseCase = GameActionsOnlineUseCase(object : GetOnlineRoomRepository {
         override var room: NetworkRoom? = room
     })
 
-    return createGameViewState(
+    createGameViewState(
         DotsStyleType.ORIGINAL,
         user1Name,
         user2Name,
         room,
-        newGameOnlineUseCase.actionAvailability,
-        ActionAvailability.Gone,
-        ActionAvailability.Gone
+        gameActionsOnlineUseCase.getNewAvailability(),
+        gameActionsOnlineUseCase.getUndoAvailability(),
+        gameActionsOnlineUseCase.getShareAvailability(),
     )
 }

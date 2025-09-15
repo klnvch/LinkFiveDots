@@ -29,6 +29,8 @@ import by.klnvch.link5dots.domain.repositories.NetworkUserIdentity
 import by.klnvch.link5dots.domain.repositories.RoomGetRepository
 import by.klnvch.link5dots.domain.usecases.AddDotNsdUseCase
 import by.klnvch.link5dots.domain.usecases.AddDotUseCase
+import by.klnvch.link5dots.domain.usecases.GameActionsNsdUseCase
+import by.klnvch.link5dots.domain.usecases.GameActionsUseCase
 import by.klnvch.link5dots.domain.usecases.GetRoomNsdUseCase
 import by.klnvch.link5dots.domain.usecases.GetRoomUseCase
 import by.klnvch.link5dots.domain.usecases.NewGameNsdUseCase
@@ -87,4 +89,7 @@ interface NsdGameRulesModule {
 
     @Binds
     fun bindRoomGetRepository(impl: NsdRoomRepositoryImpl): RoomGetRepository
+
+    @Binds
+    fun bindGameActionsUseCase(impl: GameActionsNsdUseCase): GameActionsUseCase
 }
