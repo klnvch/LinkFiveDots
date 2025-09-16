@@ -24,6 +24,8 @@
 
 package by.klnvch.link5dots.domain.repositories
 
-interface NetworkUserIdentity {
-    suspend fun getUserId(): String
+import by.klnvch.link5dots.domain.models.NetworkUser
+
+interface NetworkUserProvider {
+    val networkUser: NetworkUser?
 }

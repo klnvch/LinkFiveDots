@@ -26,7 +26,6 @@ package by.klnvch.link5dots.ui.game.topBar
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.TopAppBar
@@ -36,7 +35,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.res.stringResource
 import by.klnvch.link5dots.R
 import by.klnvch.link5dots.ui.common.IconMenuItem
 import by.klnvch.link5dots.ui.common.NavigationIcon
@@ -57,7 +55,6 @@ fun TopBar(
         viewState = uiState.menuViewState,
         onNew = { viewModel.newGame() },
         onUndo = { viewModel.undoLastMove() },
-        onFocus = { viewModel.focus() },
     )
 }
 
@@ -66,14 +63,8 @@ private fun GameActions(
     viewState: MenuViewState,
     onNew: () -> Unit,
     onUndo: () -> Unit,
-    onFocus: () -> Unit,
 ) {
     var expanded by remember { mutableStateOf(false) }
-    IconMenuItem(
-        imageVector = Icons.Filled.Search,
-        onClick = onFocus,
-        contentDescription = stringResource(R.string.search)
-    )
     if (viewState.undoOption.isVisible || viewState.newOption.isVisible) {
         IconMenuItem(
             imageVector = Icons.Filled.MoreVert,
@@ -102,12 +93,11 @@ private fun GameTopBar(
     navigateUp: () -> Unit,
     onNew: () -> Unit,
     onUndo: () -> Unit,
-    onFocus: () -> Unit,
 ) {
     TopAppBar(
         title = title,
         colors = topAppBarColors(),
         navigationIcon = { NavigationIcon(onClick = navigateUp) },
-        actions = { GameActions(viewState, onNew, onUndo, onFocus) },
+        actions = { GameActions(viewState, onNew, onUndo) },
     )
 }

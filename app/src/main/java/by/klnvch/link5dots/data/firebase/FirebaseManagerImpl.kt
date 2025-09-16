@@ -35,7 +35,11 @@ import com.google.firebase.Firebase
 import com.google.firebase.FirebaseException
 import com.google.firebase.FirebaseNetworkException
 import com.google.firebase.auth.AuthResult
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.suspendCancellableCoroutine
 import javax.inject.Inject
 import kotlin.coroutines.resume
@@ -73,6 +77,7 @@ class FirebaseManagerImpl @Inject constructor(
 
             cont.invokeOnCancellation { auth.signOut() }
             auth.signInAnonymously().addOnCompleteListener(listener)
+
         }
     }
 
@@ -80,4 +85,14 @@ class FirebaseManagerImpl @Inject constructor(
 
     override fun getUserId() =
         Firebase.auth.currentUser?.uid ?: throw UnauthorizedException()
+
+    override val userIdFlow: Flow<String?> = callbackFlow {
+        val listener = FirebaseAuth.AuthStateListener {
+            trySend(it.currentUser?.uid)
+        }
+        Firebase.auth.addAuthStateListener(listener)
+        awaitClose {
+            Firebase.auth.removeAuthStateListener(listener)
+        }
+    }
 }

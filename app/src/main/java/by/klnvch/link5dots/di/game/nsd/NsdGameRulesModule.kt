@@ -23,13 +23,13 @@
  */
 package by.klnvch.link5dots.di.game.nsd
 
-import by.klnvch.link5dots.data.LocalUserIdentity
 import by.klnvch.link5dots.data.nsd.NsdRoomRepositoryImpl
-import by.klnvch.link5dots.domain.repositories.NetworkUserIdentity
+import by.klnvch.link5dots.domain.repositories.NetworkUserLocalProvider
+import by.klnvch.link5dots.domain.repositories.NetworkUserProvider
 import by.klnvch.link5dots.domain.repositories.RoomGetRepository
 import by.klnvch.link5dots.domain.usecases.AddDotNsdUseCase
 import by.klnvch.link5dots.domain.usecases.AddDotUseCase
-import by.klnvch.link5dots.domain.usecases.GameActionsNsdUseCase
+import by.klnvch.link5dots.domain.usecases.GameActionsSocketUseCase
 import by.klnvch.link5dots.domain.usecases.GameActionsUseCase
 import by.klnvch.link5dots.domain.usecases.GetRoomNsdUseCase
 import by.klnvch.link5dots.domain.usecases.GetRoomUseCase
@@ -85,11 +85,11 @@ interface NsdGameRulesModule {
     fun bindDeleteMultiplayerRoomUseCase(impl: DeleteNsdRoomUseCase): DeleteMultiplayerRoomUseCase
 
     @Binds
-    fun bindNetworkUserIdentity(impl: LocalUserIdentity): NetworkUserIdentity
+    fun bindNetworkUserProvider(impl: NetworkUserLocalProvider): NetworkUserProvider
 
     @Binds
     fun bindRoomGetRepository(impl: NsdRoomRepositoryImpl): RoomGetRepository
 
     @Binds
-    fun bindGameActionsUseCase(impl: GameActionsNsdUseCase): GameActionsUseCase
+    fun bindGameActionsUseCase(impl: GameActionsSocketUseCase): GameActionsUseCase
 }

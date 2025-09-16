@@ -32,7 +32,9 @@ import by.klnvch.link5dots.domain.repositories.FirebaseManager
 import by.klnvch.link5dots.domain.repositories.GetOnlineRoomRepository
 import by.klnvch.link5dots.domain.repositories.NsdRoomRepository
 import by.klnvch.link5dots.domain.repositories.OnlineRoomRepository
+import by.klnvch.link5dots.domain.repositories.RoomBotGetRepository
 import by.klnvch.link5dots.domain.repositories.RoomRepository
+import by.klnvch.link5dots.domain.repositories.RoomTwoGetRepository
 import by.klnvch.link5dots.domain.repositories.Settings
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
@@ -43,9 +45,16 @@ interface GetRoomUseCase : GetUseCase<IRoom, RoomParam>
 
 class GetRoomOfflineUseCase @Inject constructor(
     private val repository: RoomRepository,
+    private val botGetRepository: RoomBotGetRepository,
+    private val twoGetRepository: RoomTwoGetRepository,
 ) : GetRoomUseCase {
     override fun get(param: RoomParam) = when (param) {
-        is RoomByType -> repository.getRecentByType(param.type)
+        is RoomByType -> when (param.type) {
+            RoomType.BOT -> botGetRepository.roomFlow
+            RoomType.TWO_PLAYERS -> twoGetRepository.roomFlow
+            else -> repository.getRecentByType(param.type)
+        }
+
         is RoomByKey -> repository.getByKey(param.key)
         else -> throw IllegalArgumentException("Wrong param")
     }

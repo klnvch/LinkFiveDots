@@ -31,6 +31,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Icon
@@ -111,6 +112,34 @@ private fun BottomBar(
 }
 
 @Composable
+private fun BottomBarDefault(
+    menuViewState: MenuViewState,
+    onUndo: () -> Unit,
+    onFocus: () -> Unit,
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceEvenly,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        BottomBarButton(
+            Modifier.weight(1f),
+            menuViewState.undoOption.isEnabled,
+            Icons.Filled.Clear,
+            R.string.undo,
+            onUndo
+        )
+        BottomBarButton(
+            Modifier.weight(1f),
+            true,
+            Icons.Filled.Search,
+            R.string.search,
+            onFocus
+        )
+    }
+}
+
+@Composable
 fun GameBottomAppBar(
     viewModel: OfflineGameViewModel,
     onNewGameNotImplemented: (() -> Unit)? = null,
@@ -127,6 +156,12 @@ fun GameBottomAppBar(
                 { if (!viewModel.newGame()) onNewGameNotImplemented?.invoke() },
                 { viewModel.undoLastMove() },
                 { viewModel.saveScore() },
+            )
+        } else {
+            BottomBarDefault(
+                uiState.menuViewState,
+                { viewModel.undoLastMove() },
+                { viewModel.focus() },
             )
         }
     }

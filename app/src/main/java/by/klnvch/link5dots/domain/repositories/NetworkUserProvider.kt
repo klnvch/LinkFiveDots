@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023-2025 klnvch
+ * Copyright (c) 2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,43 +24,43 @@
 
 package by.klnvch.link5dots.domain.repositories
 
-import by.klnvch.link5dots.domain.models.IRoom
-import by.klnvch.link5dots.domain.models.RoomType
+import by.klnvch.link5dots.domain.models.NetworkUser
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 import javax.inject.Singleton
 
-interface RoomRepository : RoomSaveRepository {
-    suspend fun sync(isTestDevice: Boolean)
-    suspend fun delete(room: IRoom)
-    fun getAll(): Flow<List<IRoom>>
-    fun getByKey(key: String): Flow<IRoom?>
-    fun getRecentByType(type: RoomType): Flow<IRoom?>
-    suspend fun deleteAll()
-}
-
-abstract class RoomStateGetRepository(
-    repository: RoomRepository,
-    type: RoomType,
-) : RoomGetRepository {
-    val roomFlow = repository.getRecentByType(type).stateIn(
+@Singleton
+class NetworkUserFirebaseProvider @Inject constructor(
+    firebaseManager: FirebaseManager,
+    settings: Settings,
+) : NetworkUserProvider {
+    private val userFlow = combine(
+        firebaseManager.userIdFlow.filterNotNull(),
+        settings.getUserNameFlow()
+    ) { id, name -> NetworkUser(id, name) }.stateIn(
         scope = CoroutineScope(Dispatchers.IO),
         started = SharingStarted.Eagerly,
         initialValue = null
     )
-    override val room get() = roomFlow.value
+    override val networkUser = userFlow.value
 }
 
 @Singleton
-class RoomBotGetRepository @Inject constructor(
-    repository: RoomRepository,
-) : RoomStateGetRepository(repository, RoomType.BOT), RoomGetRepository
-
-@Singleton
-class RoomTwoGetRepository @Inject constructor(
-    repository: RoomRepository,
-) : RoomStateGetRepository(repository, RoomType.TWO_PLAYERS), RoomGetRepository
+class NetworkUserLocalProvider @Inject constructor(
+    settings: Settings,
+) : NetworkUserProvider {
+    private val userFlow = combine(
+        settings.getUserId(),
+        settings.getUserNameFlow()
+    ) { id, name -> NetworkUser(id, name) }.stateIn(
+        scope = CoroutineScope(Dispatchers.IO),
+        started = SharingStarted.Eagerly,
+        initialValue = null
+    )
+    override val networkUser = userFlow.value
+}

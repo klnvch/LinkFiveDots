@@ -25,41 +25,42 @@
 package by.klnvch.link5dots.domain.usecases.network
 
 import by.klnvch.link5dots.domain.models.INetworkRoom
+import by.klnvch.link5dots.domain.models.IUser
 import by.klnvch.link5dots.domain.models.NetworkGameAction
-import by.klnvch.link5dots.domain.repositories.NetworkUserIdentity
+import by.klnvch.link5dots.domain.repositories.NetworkUserProvider
 import by.klnvch.link5dots.ui.game.picker.states.PickerState
 
-class GetNetworkGameActionUseCase(private val identity: NetworkUserIdentity) {
-    suspend fun get(pickerState: PickerState, room: INetworkRoom?) = when {
+class GetNetworkGameActionUseCase(private val networkUserProvider: NetworkUserProvider) {
+    fun get(pickerState: PickerState, room: INetworkRoom?) = when {
         pickerState.isNone -> NetworkGameAction.DEFAULT
         pickerState.isCreating -> NetworkGameAction.PICKER_CREATING
         pickerState.isDeleting -> NetworkGameAction.PICKER_DELETING
         pickerState.isCreated -> NetworkGameAction.PICKER_CREATED
         pickerState.isScanning -> NetworkGameAction.PICKER_SCANNING
         pickerState.isConnecting -> NetworkGameAction.PICKER_CONNECTING
-        room.isWon(identity.getUserId()) -> NetworkGameAction.GAME_OVER_WIN
-        room.isLost(identity.getUserId()) -> NetworkGameAction.GAME_OVER_LOSE
+        room.isWon(networkUserProvider.networkUser) -> NetworkGameAction.GAME_OVER_WIN
+        room.isLost(networkUserProvider.networkUser) -> NetworkGameAction.GAME_OVER_LOSE
         pickerState.isDisconnected -> NetworkGameAction.GAME_DISCONNECTED
-        room.isMove(identity.getUserId()) -> NetworkGameAction.GAME_MOVE
-        room.isWait(identity.getUserId()) -> NetworkGameAction.GAME_WAIT
+        room.isMove(networkUserProvider.networkUser) -> NetworkGameAction.GAME_MOVE
+        room.isWait(networkUserProvider.networkUser) -> NetworkGameAction.GAME_WAIT
         else -> NetworkGameAction.DEFAULT
     }
 }
 
-private fun INetworkRoom.canMove(userId: String) = when {
-    user1.id == userId -> dots.size % 2 == 0
-    user2?.id == userId -> dots.size % 2 == 1
+private fun INetworkRoom.canMove(user: IUser?) = when {
+    user1 == user -> dots.size % 2 == 0
+    user2 == user -> dots.size % 2 == 1
     else -> null
 }
 
-private fun INetworkRoom?.isMove(userId: String) =
-    this !== null && canMove(userId) == true
+private fun INetworkRoom?.isMove(user: IUser?) =
+    this !== null && canMove(user) == true
 
-private fun INetworkRoom?.isWait(userId: String) =
-    this !== null && canMove(userId) == false
+private fun INetworkRoom?.isWait(user: IUser?) =
+    this !== null && canMove(user) == false
 
-private fun INetworkRoom?.isWon(userId: String) =
-    this !== null && isOver() && canMove(userId) == false
+private fun INetworkRoom?.isWon(user: IUser?) =
+    this !== null && isOver() && canMove(user) == false
 
-private fun INetworkRoom?.isLost(userId: String) =
-    this !== null && isOver() && canMove(userId) == true
+private fun INetworkRoom?.isLost(user: IUser?) =
+    this !== null && isOver() && canMove(user) == true

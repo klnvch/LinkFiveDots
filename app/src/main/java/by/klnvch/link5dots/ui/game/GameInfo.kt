@@ -36,6 +36,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -89,7 +91,8 @@ fun GameInfo(modifier: Modifier = Modifier, infoViewState: GameInfoViewState) {
             Row(
                 modifier = Modifier
                     .height(IntrinsicSize.Min)
-                    .padding(8.dp)
+                    .padding(8.dp),
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Column(
                     modifier = Modifier.fillMaxHeight(),
@@ -102,9 +105,10 @@ fun GameInfo(modifier: Modifier = Modifier, infoViewState: GameInfoViewState) {
                 Column(
                     modifier = Modifier.fillMaxHeight(),
                     verticalArrangement = Arrangement.SpaceAround,
+                    horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
-                    UserDot(dotResId = user1Dot)
-                    UserDot(dotResId = user2Dot)
+                    UserDot(infoViewState.user1, user1Dot, Color.Red)
+                    UserDot(infoViewState.user2, user2Dot, Color.Blue)
                 }
                 Column(
                     modifier = Modifier.fillMaxHeight(),
@@ -130,12 +134,20 @@ private fun TextDuration(state: GameInfoUserViewState) {
 }
 
 @Composable
-private fun UserDot(@DrawableRes dotResId: Int) {
-    Icon(
-        painter = painterResource(id = dotResId),
-        contentDescription = null,
-        tint = Color.Unspecified,
-    )
+private fun UserDot(state: GameInfoUserViewState, @DrawableRes dotResId: Int, tint: Color) {
+    if (state.isWon) {
+        Icon(
+            imageVector = Icons.Filled.Star,
+            contentDescription = null,
+            tint = tint,
+        )
+    } else {
+        Icon(
+            painter = painterResource(id = dotResId),
+            contentDescription = null,
+            tint = tint,
+        )
+    }
 }
 
 @Composable

@@ -25,23 +25,23 @@
 package by.klnvch.link5dots
 
 import by.klnvch.link5dots.domain.models.INetworkRoom
-import by.klnvch.link5dots.domain.repositories.NetworkUserIdentity
+import by.klnvch.link5dots.domain.models.NetworkGameAction
+import by.klnvch.link5dots.domain.models.NetworkUser
+import by.klnvch.link5dots.domain.repositories.NetworkUserProvider
 import by.klnvch.link5dots.domain.usecases.network.GetNetworkGameActionUseCase
 import by.klnvch.link5dots.ui.game.picker.states.PickerState
 import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.promise
 
 @OptIn(ExperimentalJsExport::class, DelicateCoroutinesApi::class)
 @JsExport()
 fun getRoomActionTitle(
-    userId: String,
+    user: NetworkUser,
     pickerState: PickerState,
     room: INetworkRoom?,
-) = GlobalScope.promise {
-    val identity = object : NetworkUserIdentity {
-        override suspend fun getUserId() = userId
+): NetworkGameAction {
+    val identity = object : NetworkUserProvider {
+        override val networkUser = user
     }
     val useCase = GetNetworkGameActionUseCase(identity)
-    useCase.get(pickerState, room)
+    return useCase.get(pickerState, room)
 }

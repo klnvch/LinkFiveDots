@@ -23,8 +23,11 @@
  */
 package by.klnvch.link5dots.domain.repositories
 
+import kotlinx.coroutines.flow.Flow
+
 interface FirebaseManager : FirebaseAuthManager {
     fun isSupported(): Boolean
     suspend fun signInAnonymously(): String
     fun signOut()
+    val userIdFlow: Flow<String?>
 }

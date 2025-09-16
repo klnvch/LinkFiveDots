@@ -30,31 +30,32 @@ import by.klnvch.link5dots.domain.repositories.GetOnlineRoomRepository
 import by.klnvch.link5dots.domain.repositories.RoomGetRepository
 
 interface GameActionsUseCase {
-    suspend fun getUndoAvailability(): ActionAvailability
-    suspend fun getNewAvailability(): ActionAvailability
-    suspend fun getShareAvailability(): ActionAvailability
+    val undoAction: ActionAvailability
+    val newAction: ActionAvailability
+    val shareAction: ActionAvailability
 }
 
 class GameActionsBotUseCase(private val getRepository: RoomGetRepository) : GameActionsUseCase {
-    override suspend fun getUndoAvailability(): ActionAvailability {
-        val room = getRepository.room
-        return when {
-            room == null -> ActionAvailability.Gone
-            room.isNotEmpty() -> ActionAvailability.Available
-            else -> ActionAvailability.Disabled
+    override val undoAction: ActionAvailability
+        get() {
+            val room = getRepository.room
+            return when {
+                room == null -> ActionAvailability.Gone
+                room.isNotEmpty() -> ActionAvailability.Available
+                else -> ActionAvailability.Disabled
+            }
         }
-    }
 
-    override suspend fun getNewAvailability() = ActionAvailability.Available
-    override suspend fun getShareAvailability() = ActionAvailability.Available
+    override val newAction = ActionAvailability.Available
+    override val shareAction = ActionAvailability.Available
 }
 
-class GameActionsOnlineUseCase(private val repository: GetOnlineRoomRepository) :
+class GameActionsOnlineUseCase(repository: GetOnlineRoomRepository) :
     GameActionsUseCase {
-    override suspend fun getUndoAvailability() = ActionAvailability.Gone
-    override suspend fun getNewAvailability() =
+    override val undoAction = ActionAvailability.Gone
+    override val newAction =
         if (repository.room?.isOver() == true) ActionAvailability.Available
         else ActionAvailability.Disabled
 
-    override suspend fun getShareAvailability() = ActionAvailability.Gone
+    override val shareAction = ActionAvailability.Gone
 }

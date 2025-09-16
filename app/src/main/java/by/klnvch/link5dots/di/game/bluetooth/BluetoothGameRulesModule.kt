@@ -24,13 +24,13 @@
 
 package by.klnvch.link5dots.di.game.bluetooth
 
-import by.klnvch.link5dots.data.LocalUserIdentity
 import by.klnvch.link5dots.data.bluetooth.BluetoothRoomRepositoryImpl
-import by.klnvch.link5dots.domain.repositories.NetworkUserIdentity
+import by.klnvch.link5dots.domain.repositories.NetworkUserLocalProvider
+import by.klnvch.link5dots.domain.repositories.NetworkUserProvider
 import by.klnvch.link5dots.domain.repositories.RoomGetRepository
 import by.klnvch.link5dots.domain.usecases.AddDotBluetoothUseCase
 import by.klnvch.link5dots.domain.usecases.AddDotUseCase
-import by.klnvch.link5dots.domain.usecases.GameActionsBluetoothUseCase
+import by.klnvch.link5dots.domain.usecases.GameActionsSocketUseCase
 import by.klnvch.link5dots.domain.usecases.GameActionsUseCase
 import by.klnvch.link5dots.domain.usecases.GetRoomBluetoothUseCase
 import by.klnvch.link5dots.domain.usecases.GetRoomUseCase
@@ -86,11 +86,11 @@ interface BluetoothGameRulesModule {
     fun bindDeleteMultiplayerRoomUseCase(impl: DeleteBluetoothRoomUseCase): DeleteMultiplayerRoomUseCase
 
     @Binds
-    fun bindNetworkUserIdentity(impl: LocalUserIdentity): NetworkUserIdentity
+    fun bindNetworkUserProvider(impl: NetworkUserLocalProvider): NetworkUserProvider
 
     @Binds
     fun bindRoomGetRepository(impl: BluetoothRoomRepositoryImpl): RoomGetRepository
 
     @Binds
-    fun bindGameActionsUseCase(impl: GameActionsBluetoothUseCase): GameActionsUseCase
+    fun bindGameActionsUseCase(impl: GameActionsSocketUseCase): GameActionsUseCase
 }

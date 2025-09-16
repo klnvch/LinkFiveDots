@@ -33,9 +33,6 @@ import by.klnvch.link5dots.domain.usecases.GameActionsOnlineUseCase
 import by.klnvch.link5dots.ui.game.GameViewState
 import by.klnvch.link5dots.ui.game.createGameViewState
 import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.promise
-import kotlin.js.Promise
 import kotlin.js.collections.JsReadonlyArray
 import kotlin.js.collections.toList
 
@@ -49,7 +46,7 @@ fun mapToDescriptors(items: JsReadonlyArray<RemoteRoomItem>, defaultName: String
 fun mapToGameViewState(
     defaultName: String,
     room: NetworkRoom,
-): Promise<GameViewState> = GlobalScope.promise {
+): GameViewState {
     val user1Name = room.user1.name ?: defaultName
     val user2Name = room.user2?.name ?: defaultName
 
@@ -57,13 +54,13 @@ fun mapToGameViewState(
         override var room: NetworkRoom? = room
     })
 
-    createGameViewState(
+    return createGameViewState(
         DotsStyleType.ORIGINAL,
         user1Name,
         user2Name,
         room,
-        gameActionsOnlineUseCase.getNewAvailability(),
-        gameActionsOnlineUseCase.getUndoAvailability(),
-        gameActionsOnlineUseCase.getShareAvailability(),
+        gameActionsOnlineUseCase.newAction,
+        gameActionsOnlineUseCase.undoAction,
+        gameActionsOnlineUseCase.shareAction,
     )
 }

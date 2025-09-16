@@ -25,90 +25,60 @@
 package by.klnvch.link5dots.domain.usecases
 
 import by.klnvch.link5dots.domain.models.ActionAvailability
-import by.klnvch.link5dots.domain.models.NetworkRoom
+import by.klnvch.link5dots.domain.models.canMove
 import by.klnvch.link5dots.domain.models.isNotEmpty
-import by.klnvch.link5dots.domain.repositories.BluetoothRoomRepository
-import by.klnvch.link5dots.domain.repositories.NsdRoomRepository
+import by.klnvch.link5dots.domain.repositories.NetworkUserProvider
 import by.klnvch.link5dots.domain.repositories.RoomGetRepository
-import by.klnvch.link5dots.domain.repositories.Settings
-import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
 class GameActionsInfoUseCase @Inject constructor() : GameActionsUseCase {
-    override suspend fun getUndoAvailability() = ActionAvailability.Gone
-    override suspend fun getNewAvailability() = ActionAvailability.Gone
-    override suspend fun getShareAvailability() = ActionAvailability.Gone
+    override val undoAction = ActionAvailability.Gone
+    override val newAction = ActionAvailability.Gone
+    override val shareAction = ActionAvailability.Gone
 }
 
 class GameActionsTwoUseCase @Inject constructor(
     private val getRepository: RoomGetRepository,
 ) : GameActionsUseCase {
-    override suspend fun getUndoAvailability(): ActionAvailability {
-        val room = getRepository.room
-        return when {
-            room == null -> ActionAvailability.Gone
-            room.isNotEmpty() -> ActionAvailability.Available
-            else -> ActionAvailability.Disabled
-        }
-    }
-
-    override suspend fun getNewAvailability() = ActionAvailability.Available
-    override suspend fun getShareAvailability() = ActionAvailability.Gone
-}
-
-class GameActionsBluetoothUseCase @Inject constructor(
-    private val repository: BluetoothRoomRepository,
-    private val settings: Settings,
-) : GameActionsUseCase {
-    override suspend fun getUndoAvailability(): ActionAvailability {
-        val currentRoom = repository.getFlow().filterNotNull().first()
-        return if (isAvailable(currentRoom)) ActionAvailability.Available else ActionAvailability.Disabled
-    }
-
-    override suspend fun getNewAvailability() =
-        if (repository.isServer()) ActionAvailability.Available else ActionAvailability.Gone
-
-    override suspend fun getShareAvailability() = ActionAvailability.Gone
-
-    private suspend fun isAvailable(room: NetworkRoom): Boolean {
-        val dots = room.dots
-        if (dots.isNotEmpty()) {
-            val userId = settings.getUserId().first()
-            if (room.user1.id == userId) {
-                if (dots.size % 2 == 1) return true
-            } else {
-                if (dots.size % 2 == 0) return true
+    override val undoAction: ActionAvailability
+        get() {
+            val room = getRepository.room
+            return when {
+                room == null -> ActionAvailability.Gone
+                room.isNotEmpty() -> ActionAvailability.Available
+                else -> ActionAvailability.Disabled
             }
         }
-        return false
-    }
+
+    override val newAction = ActionAvailability.Available
+    override val shareAction = ActionAvailability.Gone
 }
 
-class GameActionsNsdUseCase @Inject constructor(
-    private val repository: NsdRoomRepository,
-    private val settings: Settings,
+class GameActionsSocketUseCase @Inject constructor(
+    private val repository: RoomGetRepository,
+    private val networkUserProvider: NetworkUserProvider,
 ) : GameActionsUseCase {
-    override suspend fun getUndoAvailability(): ActionAvailability {
-        val currentRoom = repository.getFlow().filterNotNull().first()
-        return if (isAvailable(currentRoom)) ActionAvailability.Available else ActionAvailability.Disabled
-    }
-
-    override suspend fun getNewAvailability() =
-        if (repository.isServer()) ActionAvailability.Available else ActionAvailability.Gone
-
-    private suspend fun isAvailable(room: NetworkRoom): Boolean {
-        val dots = room.dots
-        if (dots.isNotEmpty()) {
-            val userId = settings.getUserId().first()
-            if (room.user1.id == userId) {
-                if (dots.size % 2 == 1) return true
-            } else {
-                if (dots.size % 2 == 0) return true
+    override val undoAction: ActionAvailability
+        get() {
+            val room = repository.room
+            val user = networkUserProvider.networkUser
+            return when {
+                room == null || user == null -> ActionAvailability.Gone
+                room.isNotEmpty() && !room.canMove(user) -> ActionAvailability.Available
+                else -> ActionAvailability.Disabled
             }
         }
-        return false
-    }
 
-    override suspend fun getShareAvailability() = ActionAvailability.Gone
+    override val newAction: ActionAvailability
+        get() {
+            val room = repository.room
+            val user = networkUserProvider.networkUser
+            return when {
+                room == null || user == null -> ActionAvailability.Gone
+                room.user1 == user -> ActionAvailability.Available
+                else -> ActionAvailability.Gone
+            }
+        }
+
+    override val shareAction = ActionAvailability.Gone
 }

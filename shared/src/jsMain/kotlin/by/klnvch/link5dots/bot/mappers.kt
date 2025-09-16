@@ -38,13 +38,10 @@ import by.klnvch.link5dots.domain.usecases.GameActionsBotUseCase
 import by.klnvch.link5dots.ui.game.GameViewState
 import by.klnvch.link5dots.ui.game.createGameViewState
 import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.promise
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
 import kotlinx.serialization.modules.subclass
-import kotlin.js.Promise
 
 @OptIn(ExperimentalJsExport::class, DelicateCoroutinesApi::class)
 @JsExport()
@@ -52,7 +49,7 @@ fun mapToBotGameViewState(
     userName: String?,
     stringProvider: StringProvider,
     room: IRoom?,
-): Promise<GameViewState> = GlobalScope.promise {
+): GameViewState {
     val user1Name = userName ?: stringProvider.unknownName
     val user2Name = stringProvider.botName
 
@@ -60,14 +57,14 @@ fun mapToBotGameViewState(
         override val room = room
     })
 
-    createGameViewState(
+    return createGameViewState(
         DotsStyleType.ORIGINAL,
         user1Name,
         user2Name,
         room,
-        gameActionsOnlineUseCase.getNewAvailability(),
-        gameActionsOnlineUseCase.getUndoAvailability(),
-        gameActionsOnlineUseCase.getShareAvailability(),
+        gameActionsOnlineUseCase.newAction,
+        gameActionsOnlineUseCase.undoAction,
+        gameActionsOnlineUseCase.shareAction,
     )
 }
 

@@ -76,9 +76,9 @@ open class OfflineGameViewModel @Inject constructor(
         val type = settings.getDotsType().first()
         val user1Name = getUserNameUseCase.get(it.user1)
         val user2Name = getUserNameUseCase.get(it.user2)
-        val newActionAvailability = getGameActionsUseCase.getNewAvailability()
-        val undoActionAvailability = getGameActionsUseCase.getUndoAvailability()
-        val shareActionAvailability = getGameActionsUseCase.getShareAvailability()
+        val newActionAvailability = getGameActionsUseCase.newAction
+        val undoActionAvailability = getGameActionsUseCase.undoAction
+        val shareActionAvailability = getGameActionsUseCase.shareAction
         createGameViewState(
             type,
             user1Name,

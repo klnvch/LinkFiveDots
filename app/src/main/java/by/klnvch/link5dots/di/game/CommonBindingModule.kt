@@ -24,7 +24,7 @@
 
 package by.klnvch.link5dots.di.game
 
-import by.klnvch.link5dots.domain.repositories.NetworkUserIdentity
+import by.klnvch.link5dots.domain.repositories.NetworkUserProvider
 import by.klnvch.link5dots.domain.usecases.network.GetNetworkGameActionUseCase
 import dagger.Module
 import dagger.Provides
@@ -32,6 +32,6 @@ import dagger.Provides
 @Module
 class CommonBindingModule {
     @Provides
-    fun provideGetNetworkGameActionUseCase(identity: NetworkUserIdentity) =
-        GetNetworkGameActionUseCase(identity)
+    fun provideGetNetworkGameActionUseCase(networkUserProvider: NetworkUserProvider) =
+        GetNetworkGameActionUseCase(networkUserProvider)
 }
