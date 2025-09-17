@@ -25,7 +25,6 @@
 package by.klnvch.link5dots.ui.settings.items
 
 import androidx.annotation.ArrayRes
-import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -47,7 +46,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
@@ -56,7 +55,7 @@ import by.klnvch.link5dots.R
 
 @Composable
 fun ListPreferenceItem(
-    @DrawableRes icon: Int,
+    imageVector: ImageVector,
     @StringRes title: Int,
     @ArrayRes values: Int,
     @ArrayRes labels: Int,
@@ -68,7 +67,7 @@ fun ListPreferenceItem(
     when {
         openDialog.value -> {
             RadioButtonsDialog(
-                icon = icon,
+                imageVector = imageVector,
                 title = title,
                 options = options,
                 key = value,
@@ -81,7 +80,7 @@ fun ListPreferenceItem(
     }
 
     PreferenceItem(
-        icon = icon,
+        imageVector = imageVector,
         title = title,
         value = options[value] ?: "",
         onClick = { openDialog.value = true },
@@ -90,7 +89,7 @@ fun ListPreferenceItem(
 
 @Composable
 fun RadioButtonsDialog(
-    @DrawableRes icon: Int,
+    imageVector: ImageVector,
     @StringRes title: Int,
     options: Map<String, String>,
     key: String,
@@ -100,7 +99,7 @@ fun RadioButtonsDialog(
     val (selectedKey, onKeySelected) = remember { mutableStateOf(key) }
     AlertDialog(
         icon = {
-            Icon(painter = painterResource(icon), contentDescription = null)
+            Icon(imageVector, contentDescription = null)
         },
         title = { Text(text = stringResource(title)) },
         text = {

@@ -24,7 +24,6 @@
 
 package by.klnvch.link5dots.ui.settings.items
 
-import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.clickable
 import androidx.compose.material3.HorizontalDivider
@@ -36,13 +35,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 
 @Composable
 fun PreferenceItem(
-    @DrawableRes icon: Int,
+    imageVector: ImageVector,
     @StringRes title: Int,
     value: String? = null,
     trailing: @Composable (() -> Unit)? = null,
@@ -52,7 +51,7 @@ fun PreferenceItem(
         modifier = Modifier.clickable(onClick = onClick),
         headlineContent = { Text(stringResource(title), fontWeight = FontWeight.Bold) },
         supportingContent = { value?.let { Text(it) } },
-        leadingContent = { Icon(painter = painterResource(icon), contentDescription = null) },
+        leadingContent = { Icon(imageVector, contentDescription = null) },
         trailingContent = trailing,
         colors = ListItemDefaults.colors(
             containerColor = Color.Transparent,

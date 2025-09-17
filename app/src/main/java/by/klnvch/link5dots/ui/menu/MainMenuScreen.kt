@@ -25,7 +25,6 @@
 package by.klnvch.link5dots.ui.menu
 
 import android.content.res.Configuration
-import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -37,6 +36,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Help
+import androidx.compose.material.icons.filled.Android
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Icon
@@ -48,8 +53,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -127,12 +132,12 @@ private fun GameButtonColumn(onNavigate: (Screen) -> Unit) {
     Column {
         MenuTextButton(
             onClick = { onNavigate(Screen.BotGame) },
-            iconId = R.drawable.ic_android_48dp,
+            imageVector = Icons.Filled.Android,
             textId = R.string.menu_single_player,
         )
         MenuTextButton(
             onClick = { onNavigate(Screen.MultiplayerMenu) },
-            iconId = R.drawable.ic_person_48dp,
+            imageVector = Icons.Filled.Person,
             textId = R.string.menu_multi_player,
         )
     }
@@ -143,7 +148,7 @@ private fun InfoButtonColumn(onNavigate: (Screen) -> Unit) {
     Column {
         MenuTextButton(
             onClick = { onNavigate(Screen.Scores) },
-            iconId = R.drawable.ic_star_48dp,
+            imageVector = Icons.Filled.Star,
             textId = R.string.scores_title,
         )
         Row(
@@ -153,19 +158,19 @@ private fun InfoButtonColumn(onNavigate: (Screen) -> Unit) {
         ) {
             MenuIconButton(
                 onClick = { onNavigate(Screen.Settings) },
-                iconId = R.drawable.ic_settings_48dp,
+                imageVector = Icons.Filled.Settings,
                 textId = R.string.settings,
                 modifier = Modifier.weight(1f),
             )
             MenuIconButton(
                 onClick = { onNavigate(Screen.Info) },
-                iconId = R.drawable.ic_info_48dp,
+                imageVector = Icons.Filled.Info,
                 textId = R.string.application_info_label,
                 modifier = Modifier.weight(1f),
             )
             MenuIconButton(
                 onClick = { onNavigate(Screen.Help) },
-                iconId = R.drawable.ic_help_48dp,
+                imageVector = Icons.AutoMirrored.Filled.Help,
                 textId = R.string.help,
                 modifier = Modifier.weight(1f),
             )
@@ -216,7 +221,7 @@ private fun GreetingText(
 @Composable
 private fun MenuIconButton(
     onClick: () -> Unit,
-    @DrawableRes iconId: Int,
+    imageVector: ImageVector,
     @StringRes textId: Int,
     modifier: Modifier,
 ) {
@@ -225,7 +230,7 @@ private fun MenuIconButton(
         modifier,
     ) {
         Icon(
-            painter = painterResource(iconId),
+            imageVector = imageVector,
             contentDescription = stringResource(textId),
             modifier = Modifier.size(24.dp),
         )

@@ -29,6 +29,11 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Bluetooth
+import androidx.compose.material.icons.filled.People
+import androidx.compose.material.icons.filled.Public
+import androidx.compose.material.icons.filled.Router
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -74,12 +79,12 @@ private fun ButtonColumn1(onNavigate: (Screen) -> Unit) {
     Column {
         MenuTextButton(
             onClick = { onNavigate(Screen.MultiplayerTwo) },
-            iconId = R.drawable.ic_people_48dp,
+            imageVector = Icons.Filled.People,
             textId = R.string.menu_two_players,
         )
         MenuTextButton(
             onClick = { onNavigate(Screen.MultiplayerBluetooth) },
-            iconId = R.drawable.ic_bluetooth_48dp,
+            imageVector = Icons.Filled.Bluetooth,
             textId = R.string.bluetooth,
         )
     }
@@ -90,12 +95,12 @@ private fun ButtonColumn2(onNavigate: (Screen) -> Unit) {
     Column {
         MenuTextButton(
             onClick = { onNavigate(Screen.MultiplayerNsd) },
-            iconId = R.drawable.ic_router_48dp,
+            imageVector = Icons.Filled.Router,
             textId = R.string.menu_local_network,
         )
         MenuTextButton(
             onClick = { onNavigate(Screen.MultiplayerOnline) },
-            iconId = R.drawable.ic_public_48dp,
+            imageVector = Icons.Filled.Public,
             textId = R.string.menu_online_game,
         )
     }

@@ -27,6 +27,12 @@ package by.klnvch.link5dots.ui.settings
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Language
+import androidx.compose.material.icons.filled.Mood
+import androidx.compose.material.icons.filled.Vibration
+import androidx.compose.material.icons.filled.WbSunny
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -55,13 +61,13 @@ fun SettingsScreen(
             modifier = Modifier.verticalScroll(rememberScrollState())
         ) {
             EditTextPreferenceItem(
-                icon = R.drawable.ic_mood_48dp,
+                imageVector = Icons.Filled.Mood,
                 title = R.string.username,
                 value = state.settings.userName ?: stringResource(R.string.unknown),
                 onChange = { viewModel.setUserName(it) },
             )
             ListPreferenceItem(
-                icon = R.drawable.ic_language_48dp,
+                imageVector = Icons.Filled.Language,
                 title = R.string.settings_language,
                 values = R.array.languages_values,
                 labels = R.array.languages_entries,
@@ -69,13 +75,13 @@ fun SettingsScreen(
                 onChange = { viewModel.setLanguage(it) },
             )
             SwitchPreferenceItem(
-                icon = R.drawable.ic_vibration_48dp,
+                imageVector = Icons.Filled.Vibration,
                 title = R.string.settings_vibration,
                 value = state.settings.isVibrationEnabled,
                 onChange = { viewModel.setVibration(it) },
             )
             ListPreferenceItem(
-                icon = R.drawable.ic_wb_sunny_48dp,
+                imageVector = Icons.Filled.WbSunny,
                 title = R.string.settings_night_mode,
                 values = R.array.night_modes_values,
                 labels = R.array.night_modes_entries,
@@ -87,7 +93,7 @@ fun SettingsScreen(
                 onChange = { viewModel.setDotsStyle(it) },
             )
             PreferenceItem(
-                icon = R.drawable.ic_delete_48dp,
+                imageVector = Icons.Filled.Delete,
                 title = R.string.settings_delete_all,
                 onClick = { viewModel.reset() },
             )

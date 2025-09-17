@@ -24,16 +24,16 @@
 
 package by.klnvch.link5dots.ui.settings.items
 
-import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.graphics.vector.ImageVector
 import by.klnvch.link5dots.ui.common.UsernameDialog
 
 @Composable
 fun EditTextPreferenceItem(
-    @DrawableRes icon: Int,
+    imageVector: ImageVector,
     @StringRes title: Int,
     value: String,
     onChange: (value: String?) -> Unit,
@@ -50,7 +50,7 @@ fun EditTextPreferenceItem(
         }
     }
     PreferenceItem(
-        icon = icon,
+        imageVector = imageVector,
         title = title,
         value = value,
         onClick = { openDialog.value = true },

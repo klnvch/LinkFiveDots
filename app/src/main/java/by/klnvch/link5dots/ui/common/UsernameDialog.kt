@@ -24,6 +24,8 @@
 
 package by.klnvch.link5dots.ui.common
 
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Mood
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -32,7 +34,6 @@ import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import by.klnvch.link5dots.R
 
@@ -46,7 +47,7 @@ fun UsernameDialog(
     AlertDialog(
         icon = {
             Icon(
-                painter = painterResource(R.drawable.ic_mood_48dp),
+                imageVector = Icons.Filled.Mood,
                 contentDescription = null
             )
         },

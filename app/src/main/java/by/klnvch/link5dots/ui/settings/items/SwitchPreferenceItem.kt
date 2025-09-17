@@ -24,22 +24,22 @@
 
 package by.klnvch.link5dots.ui.settings.items
 
-import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.material3.Switch
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import by.klnvch.link5dots.R
 
 @Composable
 fun SwitchPreferenceItem(
-    @DrawableRes icon: Int,
+    imageVector: ImageVector,
     @StringRes title: Int,
     value: Boolean,
     onChange: (value: Boolean) -> Unit,
 ) {
     PreferenceItem(
-        icon = icon,
+        imageVector = imageVector,
         title = title,
         value =
             if (value) stringResource(R.string.switch_on_text)

@@ -26,6 +26,8 @@ package by.klnvch.link5dots.ui.settings.items
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Row
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Grain
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
@@ -39,7 +41,7 @@ fun DotsStylePreferenceItem(
     onChange: (value: DotsStyleType) -> Unit,
 ) {
     PreferenceItem(
-        icon = R.drawable.ic_grain_48dp,
+        imageVector = Icons.Filled.Grain,
         title = R.string.settings_dots,
         trailing = { DotsTrailing(value) },
         onClick = {

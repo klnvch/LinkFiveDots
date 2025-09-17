@@ -45,9 +45,10 @@ interface GameViewState {
 @JsExport()
 interface GameInfoUserViewState {
     val name: String
-    val duration: String
+    val duration: Int
     val canMove: Boolean
     val isWon: Boolean
+    val time: Int?
 }
 
 @OptIn(ExperimentalJsExport::class)
@@ -84,35 +85,44 @@ fun createGameViewState(
     newActionAvailability: ActionAvailability,
     undoActionAvailability: ActionAvailability,
     shareActionAvailability: ActionAvailability,
-): GameViewState = GameViewStateImpl(
-    GameInfoViewStateImpl(
-        dotsStyleType,
-        GameInfoUserViewStateImpl(
-            user1Name ?: "",
-            room?.dots.getDuration(1).formatDuration(),
-            room.canMove(0),
-            room.isWon(1),
+): GameViewState {
+    val dt = room?.dots?.lastOrNull()?.dt ?: 0
+    val lastDotTime = if (room != null && dt > 0) room.time + dt else null
+    val user1CanMove = room.canMove(0)
+    val user2CanMove = room.canMove(1)
+
+    return GameViewStateImpl(
+        GameInfoViewStateImpl(
+            dotsStyleType,
+            GameInfoUserViewStateImpl(
+                user1Name ?: "",
+                room?.dots.getDuration(1),
+                user1CanMove,
+                room.isWon(1),
+                if (user1CanMove) lastDotTime else null,
+            ),
+            GameInfoUserViewStateImpl(
+                user2Name ?: "",
+                room?.dots.getDuration(0),
+                user2CanMove,
+                room.isWon(0),
+                if (user2CanMove) lastDotTime else null,
+            ),
+            (room?.dots?.size ?: 0).toString(),
         ),
-        GameInfoUserViewStateImpl(
-            user2Name ?: "",
-            room?.dots.getDuration(0).formatDuration(),
-            room.canMove(1),
-            room.isWon(0),
+        GameBoardViewStateImpl(
+            dotsStyleType,
+            room?.dots?.toTypedArray() ?: emptyArray(),
+            room?.getWinningLine(),
         ),
-        (room?.dots?.size ?: 0).toString(),
-    ),
-    GameBoardViewStateImpl(
-        dotsStyleType,
-        room?.dots?.toTypedArray() ?: emptyArray(),
-        room?.getWinningLine(),
-    ),
-    MenuViewStateImpl(
-        newActionAvailability,
-        undoActionAvailability,
-        shareActionAvailability,
-    ),
-    room?.isOver() == true && (newActionAvailability.isEnabled || undoActionAvailability.isEnabled || shareActionAvailability.isEnabled),
-)
+        MenuViewStateImpl(
+            newActionAvailability,
+            undoActionAvailability,
+            shareActionAvailability,
+        ),
+        room?.isOver() == true && (newActionAvailability.isEnabled || undoActionAvailability.isEnabled || shareActionAvailability.isEnabled),
+    )
+}
 
 data class GameViewStateImpl(
     override val infoViewState: GameInfoViewState = GameInfoViewStateImpl(),
@@ -123,9 +133,10 @@ data class GameViewStateImpl(
 
 data class GameInfoUserViewStateImpl(
     override val name: String = "",
-    override val duration: String = "",
+    override val duration: Int = 0,
     override val canMove: Boolean = false,
     override val isWon: Boolean = false,
+    override val time: Int? = null,
 ) : GameInfoUserViewState
 
 class GameInfoViewStateImpl(
@@ -151,7 +162,9 @@ data class MenuViewStateImpl(
 
 private fun Int.formatDurationPart() = if (this < 10) "0${this}" else toString()
 
-private fun Int.formatDuration() =
+@OptIn(ExperimentalJsExport::class)
+@JsExport()
+fun Int.formatDuration() =
     if (this > 0) seconds.toComponents { hours, minutes, seconds, _ ->
         if (hours > 0) "${hours}:${minutes.formatDurationPart()}:${seconds.formatDurationPart()}"
         else "${minutes.formatDurationPart()}:${seconds.formatDurationPart()}"

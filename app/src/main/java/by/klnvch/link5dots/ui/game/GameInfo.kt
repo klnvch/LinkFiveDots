@@ -42,6 +42,11 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -52,6 +57,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import by.klnvch.link5dots.R
 import by.klnvch.link5dots.domain.models.DotsStyleType
+import kotlinx.coroutines.delay
 
 @Preview()
 @Composable
@@ -61,8 +67,8 @@ fun GameInfoPreview() {
             modifier = Modifier.align(Alignment.TopCenter),
             infoViewState = GameInfoViewStateImpl(
                 DotsStyleType.CROSS_AND_RING,
-                GameInfoUserViewStateImpl("User 1", "00:00", true),
-                GameInfoUserViewStateImpl("", ""),
+                GameInfoUserViewStateImpl("User 1", 200, true),
+                GameInfoUserViewStateImpl("", 0),
             )
         )
     }
@@ -124,9 +130,22 @@ fun GameInfo(modifier: Modifier = Modifier, infoViewState: GameInfoViewState) {
 
 @Composable
 private fun TextDuration(state: GameInfoUserViewState) {
+    var elapsedTime by remember { mutableIntStateOf(0) }
+    LaunchedEffect(state) {
+        val startTime = state.time
+        if (startTime == null) {
+            elapsedTime = 0
+        } else {
+            while (true) {
+                val now = (System.currentTimeMillis() / 1000).toInt()
+                elapsedTime = now - startTime
+                delay(1000)
+            }
+        }
+    }
     Text(
         modifier = Modifier.padding(horizontal = 4.dp),
-        text = state.duration,
+        text = (state.duration + elapsedTime).formatDuration(),
         fontWeight = if (state.canMove || state.isWon) FontWeight.Bold else null,
         maxLines = 1,
         textAlign = TextAlign.Center,
