@@ -24,16 +24,16 @@
 
 package by.klnvch.link5dots.ui.settings.items
 
-import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Grain
-import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import by.klnvch.link5dots.R
 import by.klnvch.link5dots.domain.models.DotsStyleType
+import by.klnvch.link5dots.ui.common.BlueCircle
+import by.klnvch.link5dots.ui.common.BlueDot
+import by.klnvch.link5dots.ui.common.RedCross
+import by.klnvch.link5dots.ui.common.RedDot
 
 @Composable
 fun DotsStylePreferenceItem(
@@ -53,29 +53,19 @@ fun DotsStylePreferenceItem(
     )
 }
 
-
 @Composable
-fun DotsTrailing(dotsStyleType: DotsStyleType) {
+private fun DotsTrailing(dotsStyleType: DotsStyleType) {
     Row {
         when (dotsStyleType) {
             DotsStyleType.ORIGINAL -> {
-                DotIcon(R.drawable.game_dot_circle_red)
-                DotIcon(R.drawable.game_dot_circle_blue)
+                RedDot()
+                BlueDot()
             }
 
             DotsStyleType.CROSS_AND_RING -> {
-                DotIcon(R.drawable.game_dot_cross_red)
-                DotIcon(R.drawable.game_dot_ring_blue)
+                RedCross()
+                BlueCircle()
             }
         }
     }
-}
-
-@Composable
-fun DotIcon(@DrawableRes id: Int) {
-    Icon(
-        painter = painterResource(id),
-        contentDescription = null,
-        tint = Color.Unspecified,
-    )
 }

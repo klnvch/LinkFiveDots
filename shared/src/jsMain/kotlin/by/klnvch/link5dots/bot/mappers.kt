@@ -46,6 +46,7 @@ import kotlinx.serialization.modules.subclass
 @OptIn(ExperimentalJsExport::class, DelicateCoroutinesApi::class)
 @JsExport()
 fun mapToBotGameViewState(
+    dotsStyleType: DotsStyleType,
     userName: String?,
     stringProvider: StringProvider,
     room: IRoom?,
@@ -58,7 +59,7 @@ fun mapToBotGameViewState(
     })
 
     return createGameViewState(
-        DotsStyleType.ORIGINAL,
+        dotsStyleType,
         user1Name,
         user2Name,
         room,

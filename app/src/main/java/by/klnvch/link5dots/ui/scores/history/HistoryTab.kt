@@ -24,7 +24,6 @@
 
 package by.klnvch.link5dots.ui.scores.history
 
-import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -53,13 +52,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import by.klnvch.link5dots.R
 import by.klnvch.link5dots.di.viewmodels.SavedStateViewModelFactory
+import by.klnvch.link5dots.ui.common.BlueDot
+import by.klnvch.link5dots.ui.common.RedDot
 import by.klnvch.link5dots.ui.common.TextCenterInfo
 import by.klnvch.link5dots.ui.menu.Screen
 
@@ -149,7 +149,7 @@ fun HistoryRoomRow(
                     horizontalAlignment = Alignment.Start,
                     modifier = Modifier.weight(1.0f),
                 ) {
-                    UserName(R.drawable.game_dot_circle_red, room.userName1 ?: "")
+                    UserName({ RedDot() }, room.userName1)
                     RoomProperty(R.string.type, stringResource(room.typeStringRes))
                     RoomProperty(R.string.time, room.startTime)
                     RoomProperty(R.string.duration, room.duration)
@@ -158,7 +158,7 @@ fun HistoryRoomRow(
                     horizontalAlignment = Alignment.End,
                     verticalArrangement = Arrangement.SpaceBetween,
                 ) {
-                    UserName(R.drawable.game_dot_circle_blue, room.userName2 ?: "")
+                    UserName({ BlueDot() }, room.userName2)
                     RoomProperty(R.string.settings_dots, room.size)
                 }
             }
@@ -167,18 +167,13 @@ fun HistoryRoomRow(
 }
 
 @Composable
-private fun UserName(@DrawableRes iconId: Int, userName: String) {
+private fun UserName(dot: @Composable () -> Unit, userName: String?) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Icon(
-            modifier = Modifier.padding(8.dp),
-            painter = painterResource(iconId),
-            contentDescription = userName,
-            tint = Color.Unspecified,
-        )
+        dot()
         Text(
-            text = userName,
+            text = userName ?: "",
             fontWeight = FontWeight.Bold,
         )
     }

@@ -44,6 +44,7 @@ fun mapToDescriptors(items: JsReadonlyArray<RemoteRoomItem>, defaultName: String
 @OptIn(ExperimentalJsExport::class, DelicateCoroutinesApi::class)
 @JsExport()
 fun mapToGameViewState(
+    dotsStyleType: DotsStyleType,
     defaultName: String,
     room: NetworkRoom,
 ): GameViewState {
@@ -55,7 +56,7 @@ fun mapToGameViewState(
     })
 
     return createGameViewState(
-        DotsStyleType.ORIGINAL,
+        dotsStyleType,
         user1Name,
         user2Name,
         room,

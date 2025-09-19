@@ -24,7 +24,6 @@
 
 package by.klnvch.link5dots.ui.game
 
-import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -50,13 +49,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import by.klnvch.link5dots.R
 import by.klnvch.link5dots.domain.models.DotsStyleType
+import by.klnvch.link5dots.ui.common.Circle
+import by.klnvch.link5dots.ui.common.Cross
+import by.klnvch.link5dots.ui.common.Dot
 import kotlinx.coroutines.delay
 
 @Preview()
@@ -64,8 +65,7 @@ import kotlinx.coroutines.delay
 fun GameInfoPreview() {
     Box(modifier = Modifier.fillMaxSize()) {
         GameInfo(
-            modifier = Modifier.align(Alignment.TopCenter),
-            infoViewState = GameInfoViewStateImpl(
+            modifier = Modifier.align(Alignment.TopCenter), infoViewState = GameInfoViewStateImpl(
                 DotsStyleType.CROSS_AND_RING,
                 GameInfoUserViewStateImpl("User 1", 200, true),
                 GameInfoUserViewStateImpl("", 0),
@@ -77,12 +77,12 @@ fun GameInfoPreview() {
 @Composable
 fun GameInfo(modifier: Modifier = Modifier, infoViewState: GameInfoViewState) {
     val user1Dot = when (infoViewState.dotsStyleType) {
-        DotsStyleType.ORIGINAL -> R.drawable.game_dot_circle_red
-        DotsStyleType.CROSS_AND_RING -> R.drawable.game_dot_cross_red
+        DotsStyleType.ORIGINAL -> Dot
+        DotsStyleType.CROSS_AND_RING -> Cross
     }
     val user2Dot = when (infoViewState.dotsStyleType) {
-        DotsStyleType.ORIGINAL -> R.drawable.game_dot_circle_blue
-        DotsStyleType.CROSS_AND_RING -> R.drawable.game_dot_ring_blue
+        DotsStyleType.ORIGINAL -> Dot
+        DotsStyleType.CROSS_AND_RING -> Circle
     }
     Row(modifier = modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
         Card {
@@ -153,7 +153,7 @@ private fun TextDuration(state: GameInfoUserViewState) {
 }
 
 @Composable
-private fun UserDot(state: GameInfoUserViewState, @DrawableRes dotResId: Int, tint: Color) {
+private fun UserDot(state: GameInfoUserViewState, imageVector: ImageVector, tint: Color) {
     if (state.isWon) {
         Icon(
             imageVector = Icons.Filled.Star,
@@ -162,7 +162,7 @@ private fun UserDot(state: GameInfoUserViewState, @DrawableRes dotResId: Int, ti
         )
     } else {
         Icon(
-            painter = painterResource(id = dotResId),
+            imageVector = imageVector,
             contentDescription = null,
             tint = tint,
         )
