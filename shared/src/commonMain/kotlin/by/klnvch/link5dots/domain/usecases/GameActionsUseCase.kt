@@ -50,11 +50,11 @@ class GameActionsBotUseCase(private val getRepository: RoomGetRepository) : Game
     override val shareAction = ActionAvailability.Available
 }
 
-class GameActionsOnlineUseCase(repository: GetOnlineRoomRepository) :
+class GameActionsOnlineUseCase(private val repository: GetOnlineRoomRepository) :
     GameActionsUseCase {
     override val undoAction = ActionAvailability.Gone
-    override val newAction =
-        if (repository.room?.isOver() == true) ActionAvailability.Available
+    override val newAction
+        get() = if (repository.room?.isOver() == true) ActionAvailability.Available
         else ActionAvailability.Disabled
 
     override val shareAction = ActionAvailability.Gone

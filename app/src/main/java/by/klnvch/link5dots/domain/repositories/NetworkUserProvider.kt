@@ -47,7 +47,7 @@ class NetworkUserFirebaseProvider @Inject constructor(
         started = SharingStarted.Eagerly,
         initialValue = null
     )
-    override val networkUser = userFlow.value
+    override val networkUser get() = userFlow.value
 }
 
 @Singleton
@@ -62,5 +62,5 @@ class NetworkUserLocalProvider @Inject constructor(
         started = SharingStarted.Eagerly,
         initialValue = null
     )
-    override val networkUser = userFlow.value
+    override val networkUser get() = userFlow.value
 }

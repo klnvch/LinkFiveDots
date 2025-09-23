@@ -59,6 +59,7 @@ import androidx.compose.ui.unit.dp
 import by.klnvch.link5dots.R
 import by.klnvch.link5dots.domain.models.FoundRemoteRoom
 import by.klnvch.link5dots.ui.common.CustomButtonWithText
+import by.klnvch.link5dots.ui.common.TextNoSurface
 
 
 @Composable
@@ -187,11 +188,11 @@ private fun CreationPart(
             .padding(horizontal = 32.dp)
             .alpha(statusAlpha)
     ) {
-        Text(
+        TextNoSurface(
             text = stringResource(R.string.name) + ":"
         )
         if (uiState.text.isEmpty()) {
-            Text(
+            TextNoSurface(
                 modifier = Modifier.padding(horizontal = 8.dp),
                 text = stringResource(R.string.name_not_set)
             )
@@ -204,7 +205,7 @@ private fun CreationPart(
             ) {
                 uiState.text.map {
                     when (it) {
-                        is String -> Text(text = it)
+                        is String -> TextNoSurface(text = it)
                         is PassedTime -> PassedTimeText(it)
                     }
                 }
@@ -292,7 +293,7 @@ private fun ScanPart(
     }
 
     if (uiState.isEmptyMessageVisible) {
-        Text(text = stringResource(R.string.search_no_results))
+        TextNoSurface(text = stringResource(R.string.search_no_results))
     }
 }
 
