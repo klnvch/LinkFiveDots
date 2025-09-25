@@ -60,7 +60,6 @@
 
 
     <string name="scores_number" translatable="false">#</string>
-    <string name="seed_hint" translatable="false">45664</string>
     <string name="btn_github" translatable="false">GitHub</string>
     <string name="colon" translatable="false">:</string>
 

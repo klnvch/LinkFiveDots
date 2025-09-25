@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?><!--
   ~ MIT License
   ~
-  ~ Copyright (c) 2017 klnvch
+  ~ Copyright (c) 2017-2025 klnvch
   ~
   ~ Permission is hereby granted, free of charge, to any person obtaining a copy
   ~ of this software and associated documentation files (the "Software"), to deal
@@ -26,15 +26,8 @@
 
     <style name="AppTheme" parent="@style/Theme.AppCompat.DayNight.DarkActionBar">
         <item name="android:windowBackground">@null</item>
-        <item name="buttonStyle">@style/ButtonStyle</item>
-        <item name="android:buttonStyleToggle">@style/ButtonStyle</item>
         <item name="colorButtonNormal">@color/background_color</item>
         <item name="colorAccent">@color/text_color</item>
-    </style>
-
-    <style name="ButtonStyle" parent="Widget.AppCompat.Button">
-        <item name="android:textSize">@dimen/btn_text_size</item>
-        <item name="android:textStyle">bold</item>
     </style>
 
 </resources>

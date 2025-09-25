@@ -56,9 +56,12 @@ class LineOnPaperImpl(
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport()
-class Paper(styleType: DotsStyleType, sizePx: Int) {
-    private val colorRed = -65536
-    private val colorBlue = -16776961
+class Paper(
+    styleType: DotsStyleType,
+    sizePx: Int,
+    private val colorRed: Int,
+    private val colorBlue: Int,
+) {
     private val gridSize = 20
     private val imageSizePx = 600
     private val arrowsSizePx = 37

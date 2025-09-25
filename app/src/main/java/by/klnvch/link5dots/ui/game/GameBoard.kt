@@ -31,6 +31,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.gestures.rememberTransformableState
 import androidx.compose.foundation.gestures.transformable
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -45,6 +46,7 @@ import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.Matrix
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.drawscope.withTransform
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.imageResource
@@ -60,6 +62,7 @@ import by.klnvch.link5dots.ui.game.utils.invertMap
 import by.klnvch.link5dots.ui.game.utils.postTranslate
 import by.klnvch.link5dots.ui.game.utils.scale
 import by.klnvch.link5dots.ui.game.utils.scaleAndTranslate
+import by.klnvch.link5dots.ui.theme.dotColorsPalette
 
 @Preview()
 @Composable
@@ -112,10 +115,13 @@ fun GameBoard(
     onUnfocus: () -> Unit,
 ) {
     val density = LocalDensity.current.density
+    val user1Tint = MaterialTheme.dotColorsPalette.user1
+    val user2Tint = MaterialTheme.dotColorsPalette.user2
 
     val arrowsImage = ImageBitmap.imageResource(id = R.drawable.arrows)
     val paperImage = ImageBitmap.imageResource(id = R.drawable.background)
-    val paper = Paper(viewState.dotsStyleType, paperImage.width)
+    val paper =
+        Paper(viewState.dotsStyleType, paperImage.width, user1Tint.toArgb(), user2Tint.toArgb())
 
     val user1Image = paper.user1Dot.toImageBitmap()
     val user2Image = paper.user2Dot.toImageBitmap()

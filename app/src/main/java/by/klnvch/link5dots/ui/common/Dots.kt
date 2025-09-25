@@ -24,11 +24,10 @@
 
 package by.klnvch.link5dots.ui.common
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathFillType
 import androidx.compose.ui.graphics.SolidColor
@@ -36,11 +35,12 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import by.klnvch.link5dots.ui.theme.dotColorsPalette
 
 @Preview
 @Composable
 fun Dots() {
-    Row(modifier = Modifier.background(Color.Black)) {
+    Row {
         RedDot()
         BlueDot()
         RedCross()
@@ -50,22 +50,26 @@ fun Dots() {
 
 @Composable
 fun RedDot() {
-    Icon(imageVector = Dot, contentDescription = null, tint = Color.Red)
+    val tint = MaterialTheme.dotColorsPalette.user1
+    Icon(imageVector = Dot, contentDescription = null, tint = tint)
 }
 
 @Composable
 fun BlueDot() {
-    Icon(imageVector = Dot, contentDescription = null, tint = Color.Blue)
+    val tint = MaterialTheme.dotColorsPalette.user2
+    Icon(imageVector = Dot, contentDescription = null, tint = tint)
 }
 
 @Composable
 fun RedCross() {
-    Icon(imageVector = Cross, contentDescription = null, tint = Color.Red)
+    val tint = MaterialTheme.dotColorsPalette.user1
+    Icon(imageVector = Cross, contentDescription = null, tint = tint)
 }
 
 @Composable
 fun BlueCircle() {
-    Icon(imageVector = Circle, contentDescription = null, tint = Color.Blue)
+    val tint = MaterialTheme.dotColorsPalette.user2
+    Icon(imageVector = Circle, contentDescription = null, tint = tint)
 }
 
 val Dot: ImageVector

@@ -39,6 +39,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -58,6 +59,7 @@ import by.klnvch.link5dots.domain.models.DotsStyleType
 import by.klnvch.link5dots.ui.common.Circle
 import by.klnvch.link5dots.ui.common.Cross
 import by.klnvch.link5dots.ui.common.Dot
+import by.klnvch.link5dots.ui.theme.dotColorsPalette
 import kotlinx.coroutines.delay
 
 @Preview()
@@ -84,6 +86,8 @@ fun GameInfo(modifier: Modifier = Modifier, infoViewState: GameInfoViewState) {
         DotsStyleType.ORIGINAL -> Dot
         DotsStyleType.CROSS_AND_RING -> Circle
     }
+    val user1Tint = MaterialTheme.dotColorsPalette.user1
+    val user2Tint = MaterialTheme.dotColorsPalette.user2
     Row(modifier = modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
         Card {
             Text(
@@ -113,8 +117,8 @@ fun GameInfo(modifier: Modifier = Modifier, infoViewState: GameInfoViewState) {
                     verticalArrangement = Arrangement.SpaceAround,
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
-                    UserDot(infoViewState.user1, user1Dot, Color.Red)
-                    UserDot(infoViewState.user2, user2Dot, Color.Blue)
+                    UserDot(infoViewState.user1, user1Dot, user1Tint)
+                    UserDot(infoViewState.user2, user2Dot, user2Tint)
                 }
                 Column(
                     modifier = Modifier.fillMaxHeight(),
