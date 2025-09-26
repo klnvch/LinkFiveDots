@@ -34,12 +34,10 @@ import by.klnvch.link5dots.data.NightModeManagerImpl
 import by.klnvch.link5dots.data.RoomRepositoryImpl
 import by.klnvch.link5dots.data.StringProvider
 import by.klnvch.link5dots.data.bluetooth.BluetoothRoomRepositoryImpl
-import by.klnvch.link5dots.data.firebase.AnalyticsImpl
 import by.klnvch.link5dots.data.firebase.FirebaseManagerImpl
 import by.klnvch.link5dots.data.nsd.NsdRoomRepositoryImpl
 import by.klnvch.link5dots.data.online.OnlineRoomRepositoryImpl
 import by.klnvch.link5dots.data.settings.SettingsImpl
-import by.klnvch.link5dots.domain.repositories.Analytics
 import by.klnvch.link5dots.domain.repositories.BluetoothRoomRepository
 import by.klnvch.link5dots.domain.repositories.CrashRepository
 import by.klnvch.link5dots.domain.repositories.DeviceInfo
@@ -90,10 +88,6 @@ interface AppBindingModule {
     @Singleton
     @Binds
     fun bindGameScoreRemoteSource(impl: GameScoreRepositoryImpl): GameScoreRepository
-
-    @Singleton
-    @Binds
-    fun bindAnalytics(impl: AnalyticsImpl): Analytics
 
     @Singleton
     @Binds

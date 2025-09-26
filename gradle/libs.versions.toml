@@ -1,5 +1,5 @@
 [versions]
-compose = "2025.09.00"
+compose = "2025.09.01"
 coreKtx = "1.17.0"
 dagger = "2.57.1"
 datastorePreferences = "1.1.7"
@@ -16,12 +16,12 @@ kotlinxSerialization = "1.9.0"
 lifecycle = "2.9.4"
 material = "1.13.0"
 multidex = "2.0.1"
-androidxNavigation = "2.9.4"
+androidxNavigation = "2.9.5"
 retrofit = "3.0.0"
-room = "2.8.0"
+room = "2.8.1"
 rules = "1.7.0"
 uiautomator = "2.3.0"
-workRuntimeKtx = "2.10.4"
+workRuntimeKtx = "2.10.5"
 ksp = "2.2.20-2.0.2"
 runner = "1.7.0"
 core = "1.7.0"
@@ -55,7 +55,6 @@ dagger-android-support = { group = "com.google.dagger", name = "dagger-android-s
 dagger-compiler = { group = "com.google.dagger", name = "dagger-compiler", version.ref = "dagger" }
 dagger-android-processor = { group = "com.google.dagger", name = "dagger-android-processor", version.ref = "dagger" }
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }
-firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics" }
 firebase-auth = { group = "com.google.firebase", name = "firebase-auth" }
 firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics" }
 firebase-database = { group = "com.google.firebase", name = "firebase-database" }
