@@ -24,8 +24,8 @@
 
 package by.klnvch.link5dots.ui.game.activities.online
 
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import by.klnvch.link5dots.ui.common.NavigationIcon
 import by.klnvch.link5dots.ui.common.topAppBarColors
@@ -36,7 +36,7 @@ fun PickerTopBar(
     title: @Composable () -> Unit,
     navigateUp: () -> Unit,
 ) {
-    TopAppBar(
+    CenterAlignedTopAppBar(
         title = title,
         colors = topAppBarColors(),
         navigationIcon = { NavigationIcon(onClick = navigateUp) },

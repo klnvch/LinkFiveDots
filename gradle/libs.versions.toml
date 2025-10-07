@@ -1,7 +1,7 @@
 [versions]
 compose = "2025.09.01"
 coreKtx = "1.17.0"
-dagger = "2.57.1"
+dagger = "2.57.2"
 datastorePreferences = "1.1.7"
 espressoCore = "3.7.0"
 firebaseBom = "34.3.0"

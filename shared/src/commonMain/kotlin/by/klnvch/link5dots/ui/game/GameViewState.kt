@@ -38,7 +38,7 @@ interface GameViewState {
     val infoViewState: GameInfoViewState
     val boardViewState: GameBoardViewState
     val menuViewState: MenuViewState
-    val showNextActions: Boolean
+    val isOver: Boolean
 }
 
 @OptIn(ExperimentalJsExport::class)
@@ -120,7 +120,7 @@ fun createGameViewState(
             undoActionAvailability,
             shareActionAvailability,
         ),
-        room?.isOver() == true && (newActionAvailability.isEnabled || undoActionAvailability.isEnabled || shareActionAvailability.isEnabled),
+        room?.isOver() == true,
     )
 }
 
@@ -128,7 +128,7 @@ data class GameViewStateImpl(
     override val infoViewState: GameInfoViewState = GameInfoViewStateImpl(),
     override val boardViewState: GameBoardViewState = GameBoardViewStateImpl(),
     override val menuViewState: MenuViewState = MenuViewStateImpl(),
-    override val showNextActions: Boolean = false,
+    override val isOver: Boolean = false,
 ) : GameViewState
 
 data class GameInfoUserViewStateImpl(

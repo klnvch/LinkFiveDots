@@ -25,13 +25,13 @@
 package by.klnvch.link5dots.ui.menu
 
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -64,7 +64,7 @@ fun AppBar(
     navigateUp: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    TopAppBar(
+    CenterAlignedTopAppBar(
         title = { TopBarTitle(currentScreen.title) },
         colors = topAppBarColors(),
         modifier = modifier,

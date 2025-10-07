@@ -69,8 +69,8 @@ fun GameInfoPreview() {
         GameInfo(
             modifier = Modifier.align(Alignment.TopCenter), infoViewState = GameInfoViewStateImpl(
                 DotsStyleType.CROSS_AND_RING,
-                GameInfoUserViewStateImpl("User 1", 200, true),
-                GameInfoUserViewStateImpl("", 0),
+                GameInfoUserViewStateImpl("User 1", 200, canMove = true, isWon = true),
+                GameInfoUserViewStateImpl("a", 0),
             )
         )
     }

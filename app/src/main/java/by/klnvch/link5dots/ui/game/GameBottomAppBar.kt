@@ -150,7 +150,7 @@ fun GameBottomAppBar(
         containerColor = Color(33, 33, 33),
         contentColor = Color(250, 250, 250),
     ) {
-        if (uiState.showNextActions) {
+        if (uiState.isOver) {
             BottomBar(
                 uiState.menuViewState,
                 { if (!viewModel.newGame()) onNewGameNotImplemented?.invoke() },
