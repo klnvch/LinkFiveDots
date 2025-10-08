@@ -41,6 +41,7 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
+import by.klnvch.link5dots.domain.models.NightMode
 
 private val lightScheme = lightColorScheme(
     primary = primaryLight,
@@ -284,11 +285,17 @@ val unspecified_scheme = ColorFamily(
 
 @Composable
 fun AppTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
+    nightMode: NightMode = NightMode.System,
     // Dynamic color is available on Android 12+
     dynamicColor: Boolean = true,
     content: @Composable() () -> Unit,
 ) {
+    val darkTheme = when (nightMode) {
+        NightMode.On -> true
+        NightMode.Off -> false
+        NightMode.System -> isSystemInDarkTheme()
+    }
+
     val colorScheme = when {
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
             val context = LocalContext.current

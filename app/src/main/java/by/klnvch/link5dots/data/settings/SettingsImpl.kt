@@ -31,7 +31,9 @@ import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import by.klnvch.link5dots.domain.models.AllSettings
 import by.klnvch.link5dots.domain.models.DotsStyleType
+import by.klnvch.link5dots.domain.models.NightMode
 import by.klnvch.link5dots.domain.repositories.Settings
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -40,7 +42,6 @@ import javax.inject.Inject
 
 class SettingsImpl @Inject constructor(
     private val dataStore: DataStore<Preferences>,
-    private val mapper: SettingsMapper,
 ) : Settings {
 
     companion object {
@@ -54,7 +55,6 @@ class SettingsImpl @Inject constructor(
 
         private const val DEFAULT_LANGUAGE = ""
         private const val DEFAULT_VIBRATION = true
-        private const val DEFAULT_NIGHT_MODE = ""
         private const val DEFAULT_FIRST_RUN = false
     }
 
@@ -65,8 +65,8 @@ class SettingsImpl @Inject constructor(
                     it[USER_NAME],
                     it[LANGUAGE] ?: DEFAULT_LANGUAGE,
                     it[VIBRATION] ?: DEFAULT_VIBRATION,
-                    it[NIGHT_MODE] ?: DEFAULT_NIGHT_MODE,
-                    mapper.map(it[DOTS_TYPE]),
+                    SettingsMapper.Night.map(it[NIGHT_MODE]),
+                    SettingsMapper.Dots.map(it[DOTS_TYPE]),
                 )
             }
             .distinctUntilChanged()
@@ -90,12 +90,12 @@ class SettingsImpl @Inject constructor(
         dataStore.edit { it[VIBRATION] = isOn }
     }
 
-    override suspend fun setNightMode(nightMode: String) {
-        dataStore.edit { it[NIGHT_MODE] = nightMode }
+    override suspend fun setNightMode(mode: NightMode) {
+        dataStore.edit { it[NIGHT_MODE] = SettingsMapper.Night.map(mode) }
     }
 
     override suspend fun setDotsStyle(style: DotsStyleType) {
-        dataStore.edit { it[DOTS_TYPE] = mapper.map(style) }
+        dataStore.edit { it[DOTS_TYPE] = SettingsMapper.Dots.map(style) }
     }
 
     override fun getUserId() = dataStore.data
@@ -124,12 +124,13 @@ class SettingsImpl @Inject constructor(
         .distinctUntilChanged()
 
     override fun getDotsType() = dataStore.data
-        .map { mapper.map(it[DOTS_TYPE]) }
+        .map { SettingsMapper.Dots.map(it[DOTS_TYPE]) }
         .distinctUntilChanged()
 
-    override fun getNightMode() = dataStore.data
-        .map { it[NIGHT_MODE] ?: DEFAULT_NIGHT_MODE }
-        .distinctUntilChanged()
+    override val nightMode: Flow<NightMode>
+        get() = dataStore.data
+            .map { SettingsMapper.Night.map(it[NIGHT_MODE]) }
+            .distinctUntilChanged()
 
     override suspend fun reset() {
         dataStore.edit {
@@ -137,8 +138,8 @@ class SettingsImpl @Inject constructor(
             it[USER_ID] = UUID.randomUUID().toString()
             it[LANGUAGE] = DEFAULT_LANGUAGE
             it[VIBRATION] = DEFAULT_VIBRATION
-            it[NIGHT_MODE] = DEFAULT_NIGHT_MODE
-            it[DOTS_TYPE] = mapper.map(null as DotsStyleType?)
+            it.remove(NIGHT_MODE)
+            it[DOTS_TYPE] = SettingsMapper.Dots.map(null as DotsStyleType?)
             it[FIRST_RUN] = DEFAULT_FIRST_RUN
         }
     }

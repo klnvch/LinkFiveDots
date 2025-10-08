@@ -29,7 +29,6 @@ import androidx.lifecycle.viewModelScope
 import by.klnvch.link5dots.domain.usecases.CheckTheFirstRunUseCase
 import by.klnvch.link5dots.domain.usecases.GetUserNameUseCase
 import by.klnvch.link5dots.domain.usecases.SetUserNameUseCase
-import by.klnvch.link5dots.domain.usecases.SyncNightModeUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -40,7 +39,6 @@ class MainMenuViewModel @Inject constructor(
     private val checkTheFirstRunUseCase: CheckTheFirstRunUseCase,
     private val getUserNameUseCase: GetUserNameUseCase,
     private val setUserNameUseCase: SetUserNameUseCase,
-    private val syncNightModeUseCase: SyncNightModeUseCase,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(MainMenuViewState())
@@ -52,14 +50,9 @@ class MainMenuViewModel @Inject constructor(
         }
 
         viewModelScope.launch {
-            syncNightModeUseCase.sync()
-        }
-
-        viewModelScope.launch {
             getUserNameUseCase.get().collect { _uiState.value = MainMenuViewState(it) }
         }
     }
 
     fun setUserName(userName: String?) = viewModelScope.launch { setUserNameUseCase.set(userName) }
-
 }

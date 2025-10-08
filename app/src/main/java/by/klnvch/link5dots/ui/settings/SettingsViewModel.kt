@@ -27,14 +27,16 @@ package by.klnvch.link5dots.ui.settings
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import by.klnvch.link5dots.domain.models.DotsStyleType
+import by.klnvch.link5dots.domain.models.NightMode
 import by.klnvch.link5dots.domain.repositories.Settings
 import by.klnvch.link5dots.domain.usecases.GetSettingsUseCase
 import by.klnvch.link5dots.domain.usecases.ResetAllDataUseCase
 import by.klnvch.link5dots.domain.usecases.SetUserNameUseCase
 import by.klnvch.link5dots.domain.usecases.SyncLanguageUseCase
-import by.klnvch.link5dots.domain.usecases.SyncNightModeUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -43,14 +45,12 @@ class SettingsViewModel @Inject constructor(
     private val getSettingsUseCase: GetSettingsUseCase,
     private val saveUserNameUseCase: SetUserNameUseCase,
     private val resetAllDataUseCase: ResetAllDataUseCase,
-    private val syncNightModeUseCase: SyncNightModeUseCase,
     private val syncLanguageUseCase: SyncLanguageUseCase,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow<SettingsViewState>(SettingsViewState.Loading)
     val uiState: StateFlow<SettingsViewState> = _uiState
 
     init {
-        viewModelScope.launch { syncNightModeUseCase.sync() }
         viewModelScope.launch { syncLanguageUseCase.sync() }
         viewModelScope.launch {
             getSettingsUseCase.get().collect {
@@ -59,10 +59,13 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
+    val nightMode = settings.nightMode
+        .stateIn(viewModelScope, SharingStarted.Eagerly, NightMode.System)
+
     fun setUserName(userName: String?) = viewModelScope.launch { saveUserNameUseCase.set(userName) }
     fun setLanguage(language: String) = viewModelScope.launch { settings.setLanguage(language) }
     fun setVibration(isOn: Boolean) = viewModelScope.launch { settings.setVibration(isOn) }
-    fun setNightMode(nightMode: String) = viewModelScope.launch { settings.setNightMode(nightMode) }
+    fun setNightMode(mode: NightMode) = viewModelScope.launch { settings.setNightMode(mode) }
     fun setDotsStyle(style: DotsStyleType) = viewModelScope.launch { settings.setDotsStyle(style) }
     fun reset() = viewModelScope.launch { resetAllDataUseCase.reset() }
 }

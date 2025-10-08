@@ -69,41 +69,33 @@ import by.klnvch.link5dots.ui.theme.dotColorsPalette
 fun GameScreenPreview() {
     GameBoard(
         viewState = GameBoardViewStateImpl(
-            dots = arrayOf(
-                DotImpl(0, 0, Dot.GUEST, 0),
-                DotImpl(1, 1, Dot.HOST, 0),
-                DotImpl(2, 2, Dot.GUEST, 0),
-                DotImpl(3, 3, Dot.HOST, 0),
-                DotImpl(4, 4, Dot.GUEST, 0),
-                DotImpl(5, 5, Dot.HOST, 0),
-                DotImpl(6, 6, Dot.GUEST, 0),
-                DotImpl(7, 7, Dot.HOST, 0),
-                DotImpl(8, 8, Dot.GUEST, 0),
-                DotImpl(9, 9, Dot.HOST, 0),
-                DotImpl(10, 10, Dot.GUEST, 0),
-                DotImpl(11, 11, Dot.HOST, 0),
-                DotImpl(12, 12, Dot.GUEST, 0),
-                DotImpl(13, 13, Dot.HOST, 0),
-                DotImpl(14, 14, Dot.GUEST, 0),
-                DotImpl(15, 15, Dot.HOST, 0),
-                DotImpl(16, 16, Dot.GUEST, 0),
-                DotImpl(17, 17, Dot.HOST, 0),
-                DotImpl(18, 18, Dot.GUEST, 0),
-                DotImpl(19, 19, Dot.HOST, 0),
-            ),
-            winningLine = WinningLineImpl(
-                listOf(
-                    Point(5, 5),
-                    Point(6, 5),
-                    Point(7, 5),
-                    Point(8, 5)
-                ), Dot.HOST
-            )
-        ),
-        focus = Point(19, 19),
-        onMoveDone = { Log.d("GameBoard", it.toString()) },
-        onUnfocus = {}
-    )
+        dots = arrayOf(
+            DotImpl(0, 0, Dot.GUEST, 0),
+            DotImpl(1, 1, Dot.HOST, 0),
+            DotImpl(2, 2, Dot.GUEST, 0),
+            DotImpl(3, 3, Dot.HOST, 0),
+            DotImpl(4, 4, Dot.GUEST, 0),
+            DotImpl(5, 5, Dot.HOST, 0),
+            DotImpl(6, 6, Dot.GUEST, 0),
+            DotImpl(7, 7, Dot.HOST, 0),
+            DotImpl(8, 8, Dot.GUEST, 0),
+            DotImpl(9, 9, Dot.HOST, 0),
+            DotImpl(10, 10, Dot.GUEST, 0),
+            DotImpl(11, 11, Dot.HOST, 0),
+            DotImpl(12, 12, Dot.GUEST, 0),
+            DotImpl(13, 13, Dot.HOST, 0),
+            DotImpl(14, 14, Dot.GUEST, 0),
+            DotImpl(15, 15, Dot.HOST, 0),
+            DotImpl(16, 16, Dot.GUEST, 0),
+            DotImpl(17, 17, Dot.HOST, 0),
+            DotImpl(18, 18, Dot.GUEST, 0),
+            DotImpl(19, 19, Dot.HOST, 0),
+        ), winningLine = WinningLineImpl(
+            listOf(
+                Point(5, 5), Point(6, 5), Point(7, 5), Point(8, 5)
+            ), Dot.HOST
+        )
+    ), focus = Point(19, 19), onMoveDone = { Log.d("GameBoard", it.toString()) }, onUnfocus = {})
 }
 
 @Composable
@@ -117,6 +109,7 @@ fun GameBoard(
     val density = LocalDensity.current.density
     val user1Tint = MaterialTheme.dotColorsPalette.user1
     val user2Tint = MaterialTheme.dotColorsPalette.user2
+    val paperColorFilter = MaterialTheme.dotColorsPalette.paperColorFilter
 
     val arrowsImage = ImageBitmap.imageResource(id = R.drawable.arrows)
     val paperImage = ImageBitmap.imageResource(id = R.drawable.background)
@@ -143,10 +136,8 @@ fun GameBoard(
                     onTap = { tapOffset ->
                         val paperPosition = matrix.invertMap(tapOffset)
                         onMoveDone(paper.toBoardPosition(paperPosition.x, paperPosition.y))
-                    }
-                )
-            }
-    ) {
+                    })
+            }) {
         matrix.fixScale(density)
         focus?.let {
             val paperPosition = paper.toLinePaperPosition(it).toOffset()
@@ -161,7 +152,10 @@ fun GameBoard(
         withTransform({
             transform(matrix)
         }) {
-            drawImage(paperImage)
+            drawImage(
+                image = paperImage,
+                colorFilter = paperColorFilter,
+            )
             for (dot in viewState.dots) {
                 val dotImage = if (dot.type == Dot.HOST) user1Image else user2Image
                 drawImage(dotImage, topLeft = dot.toDotOffset(paper))
@@ -226,8 +220,7 @@ private fun dy(screenHeight: Float, paperRect: MutableRect): Float {
 
 private fun Matrix.fixPosition(screenSize: Size, paperSize: Float) {
     val paperRect = MutableRect(
-        topLeft = Offset(.0f, .0f),
-        bottomRight = Offset(paperSize, paperSize)
+        topLeft = Offset(.0f, .0f), bottomRight = Offset(paperSize, paperSize)
     )
 
     map(paperRect)
@@ -238,9 +231,8 @@ private fun Matrix.fixPosition(screenSize: Size, paperSize: Float) {
     postTranslate(dx, dy)
 }
 
-private fun GameBitmap.toImageBitmap() = Bitmap
-    .createBitmap(buffer, size, size, Bitmap.Config.ARGB_8888)
-    .asImageBitmap()
+private fun GameBitmap.toImageBitmap() =
+    Bitmap.createBitmap(buffer, size, size, Bitmap.Config.ARGB_8888).asImageBitmap()
 
 private fun PaperPosition.toOffset() = Offset(x, y)
 private fun PaperPosition.toIntOffset() = IntOffset(x.toInt(), y.toInt())

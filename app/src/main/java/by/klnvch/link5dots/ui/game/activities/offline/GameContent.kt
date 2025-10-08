@@ -30,6 +30,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import by.klnvch.link5dots.domain.models.NightMode
 import by.klnvch.link5dots.domain.usecases.RoomParam
 import by.klnvch.link5dots.ui.game.GameBottomAppBar
 import by.klnvch.link5dots.ui.game.GameScreen
@@ -40,6 +41,7 @@ import by.klnvch.link5dots.ui.theme.AppTheme
 @Composable
 fun GameContent(
     viewModel: OfflineGameViewModel,
+    nightMode: NightMode,
     param: RoomParam,
     title: @Composable () -> Unit,
     navigateUp: () -> Unit,
@@ -47,7 +49,7 @@ fun GameContent(
     LaunchedEffect(true) {
         viewModel.setParam(param)
     }
-    AppTheme {
+    AppTheme(nightMode) {
         Scaffold(
             containerColor = Color.Transparent,
             topBar = {

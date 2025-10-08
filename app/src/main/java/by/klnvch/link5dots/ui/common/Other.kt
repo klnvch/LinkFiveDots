@@ -24,19 +24,37 @@
 
 package by.klnvch.link5dots.ui.common
 
-import androidx.compose.foundation.background
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.ImageShader
 import androidx.compose.ui.graphics.ShaderBrush
 import androidx.compose.ui.graphics.TileMode
+import androidx.compose.ui.res.imageResource
+import by.klnvch.link5dots.R
+import by.klnvch.link5dots.ui.theme.dotColorsPalette
 
-fun Modifier.tiledBackground(image: ImageBitmap) = this.background(
-    ShaderBrush(
-        ImageShader(
-            image,
-            TileMode.Repeated,
-            TileMode.Repeated
+@Composable
+fun Modifier.tiledBackground(): Modifier {
+    val image = ImageBitmap.imageResource(R.drawable.paper)
+    val imageBrush = remember(image) {
+        ShaderBrush(
+            shader = ImageShader(
+                image = image,
+                tileModeX = TileMode.Repeated,
+                tileModeY = TileMode.Repeated,
+            )
         )
-    )
-)
+    }
+    val paperColorFilter = MaterialTheme.dotColorsPalette.paperColorFilter
+
+    return this.drawBehind {
+        drawRect(
+            brush = imageBrush,
+            colorFilter = paperColorFilter,
+        )
+    }
+}

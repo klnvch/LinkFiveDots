@@ -29,6 +29,7 @@ import by.klnvch.link5dots.di.viewmodels.ViewModelKey
 import by.klnvch.link5dots.ui.game.OnlineGameViewModel
 import by.klnvch.link5dots.ui.game.picker.FirebaseStatusViewModel
 import by.klnvch.link5dots.ui.game.picker.VisibilityViewModel
+import by.klnvch.link5dots.ui.settings.SettingsViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
@@ -49,4 +50,9 @@ abstract class OnlineGameViewModelsModule {
     @IntoMap
     @ViewModelKey(FirebaseStatusViewModel::class)
     abstract fun bindFirebaseStatusViewModel(viewModel: FirebaseStatusViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(SettingsViewModel::class)
+    abstract fun bindSettingsViewModel(viewModel: SettingsViewModel): ViewModel
 }

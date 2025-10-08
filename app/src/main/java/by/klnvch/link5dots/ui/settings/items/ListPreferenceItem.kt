@@ -54,15 +54,13 @@ import androidx.compose.ui.unit.dp
 import by.klnvch.link5dots.R
 
 @Composable
-fun ListPreferenceItem(
+fun <Key> ListPreferenceItem(
     imageVector: ImageVector,
     @StringRes title: Int,
-    @ArrayRes values: Int,
-    @ArrayRes labels: Int,
-    value: String,
-    onChange: (value: String) -> Unit,
+    options: Map<Key, String>,
+    value: Key,
+    onChange: (value: Key) -> Unit,
 ) {
-    val options = optionsFromResource(values, labels)
     val openDialog = remember { mutableStateOf(false) }
     when {
         openDialog.value -> {
@@ -88,12 +86,12 @@ fun ListPreferenceItem(
 }
 
 @Composable
-fun RadioButtonsDialog(
+fun <Key> RadioButtonsDialog(
     imageVector: ImageVector,
     @StringRes title: Int,
-    options: Map<String, String>,
-    key: String,
-    onConfirmation: (value: String) -> Unit,
+    options: Map<Key, String>,
+    key: Key,
+    onConfirmation: (value: Key) -> Unit,
     onDismissRequest: () -> Unit,
 ) {
     val (selectedKey, onKeySelected) = remember { mutableStateOf(key) }
@@ -124,11 +122,11 @@ fun RadioButtonsDialog(
 }
 
 @Composable
-fun RadioButtonSingleSelection(
+fun <Key> RadioButtonSingleSelection(
     modifier: Modifier = Modifier,
-    options: Map<String, String>,
-    selectedKey: String,
-    onKeySelected: (key: String) -> Unit,
+    options: Map<Key, String>,
+    selectedKey: Key,
+    onKeySelected: (key: Key) -> Unit,
 ) {
     Column(
         modifier

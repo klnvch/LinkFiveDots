@@ -36,8 +36,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ImageBitmap
-import androidx.compose.ui.res.imageResource
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -45,6 +43,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import by.klnvch.link5dots.R
 import by.klnvch.link5dots.domain.models.NetworkGameAction
+import by.klnvch.link5dots.domain.models.NightMode
 import by.klnvch.link5dots.ui.common.TopBarTitle
 import by.klnvch.link5dots.ui.common.tiledBackground
 import by.klnvch.link5dots.ui.game.GameBottomAppBar
@@ -79,12 +78,13 @@ private fun GameTitle(action: NetworkGameAction, @StringRes defaultTitle: Int) {
 @Composable
 fun GameContent(
     viewModel: OnlineGameViewModel,
+    nightMode: NightMode,
     @StringRes defaultTitle: Int,
     pickerScreen: @Composable () -> Unit,
     errorScreen: @Composable (e: Throwable, onDone: (isSuccess: Boolean) -> Unit) -> Unit,
     onFinish: () -> Unit,
 ) {
-    AppTheme {
+    AppTheme(nightMode) {
         val navController = rememberNavController()
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val action by viewModel.uiTitleState.collectAsState(NetworkGameAction.DEFAULT)
@@ -113,7 +113,7 @@ fun GameContent(
             }
         }
         Scaffold(
-            modifier = Modifier.tiledBackground(ImageBitmap.imageResource(R.drawable.paper)),
+            modifier = Modifier.tiledBackground(),
             containerColor = Color.Transparent,
             topBar = {
                 if (navBackStackEntry.isGameScreen()) {

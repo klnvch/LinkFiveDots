@@ -30,23 +30,49 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.ColorMatrix
+
+private val paperColorFilterLight = ColorFilter.colorMatrix(
+    ColorMatrix(
+        floatArrayOf(
+            1f, 0f, 0f, 0f, 0f,
+            0f, 1f, 0f, 0f, 0f,
+            0f, 0f, 1f, 0f, 0f,
+            0f, 0f, 0f, 1f, 0f
+        )
+    )
+)
+private val paperColorFilterDark = ColorFilter.colorMatrix(
+    ColorMatrix(
+        floatArrayOf(
+            -1f, 0f, 0f, 0f, 255f,
+            0f, -1f, 0f, 0f, 255f,
+            0f, 0f, -1f, 0f, 255f,
+            0f, 0f, 0f, 1f, 0f
+        )
+    )
+)
 
 @Immutable
 data class DotColorsPalette(
     val user1: Color = Color.Unspecified,
     val user2: Color = Color.Unspecified,
+    val paperColorFilter: ColorFilter = paperColorFilterLight,
 )
 
 val LocalCustomColorsPalette = staticCompositionLocalOf { DotColorsPalette() }
 
 val OnLightDotColorsPalette = DotColorsPalette(
     user1 = Color(color = 0xFFFF0000),
-    user2 = Color(color = 0xFF0000FF)
+    user2 = Color(color = 0xFF0000FF),
+    paperColorFilter = paperColorFilterLight,
 )
 
 val OnDarkDotColorsPalette = DotColorsPalette(
     user1 = Color(color = 0xFFFF8080),
-    user2 = Color(color = 0xFF8080FF)
+    user2 = Color(color = 0xFF8080FF),
+    paperColorFilter = paperColorFilterDark,
 )
 
 val MaterialTheme.dotColorsPalette: DotColorsPalette

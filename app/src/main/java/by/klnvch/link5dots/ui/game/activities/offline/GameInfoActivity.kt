@@ -28,12 +28,17 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.compose.viewModel
 import by.klnvch.link5dots.R
 import by.klnvch.link5dots.domain.usecases.RoomByKey
 import by.klnvch.link5dots.domain.usecases.RoomParam
 import by.klnvch.link5dots.ui.common.TopBarTitle
 import by.klnvch.link5dots.ui.game.OfflineGameViewModel
+import by.klnvch.link5dots.ui.settings.SettingsViewModel
 import dagger.android.support.DaggerAppCompatActivity
 import javax.inject.Inject
 
@@ -45,14 +50,18 @@ class GameInfoActivity : DaggerAppCompatActivity() {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
 
-        val viewModel = ViewModelProvider(
+        val gameViewModel = ViewModelProvider(
             this,
             viewModelFactory
         )[OfflineGameViewModel.KEY, OfflineGameViewModel::class.java]
 
         setContent {
+            val getVMFactory: () -> ViewModelProvider.Factory = remember { { viewModelFactory } }
+            val settingsViewModel: SettingsViewModel = viewModel(factory = getVMFactory())
+            val nightMode by settingsViewModel.nightMode.collectAsState()
             GameContent(
-                viewModel = viewModel,
+                viewModel = gameViewModel,
+                nightMode = nightMode,
                 param = getParam(),
                 title = { TopBarTitle(R.string.application_info_label) },
                 navigateUp = { finish() },

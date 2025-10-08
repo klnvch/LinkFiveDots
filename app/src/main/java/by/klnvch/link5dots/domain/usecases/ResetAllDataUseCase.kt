@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 klnvch
+ * Copyright (c) 2023-2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,7 +25,6 @@
 package by.klnvch.link5dots.domain.usecases
 
 import by.klnvch.link5dots.domain.repositories.LanguageManager
-import by.klnvch.link5dots.domain.repositories.NightModeManager
 import by.klnvch.link5dots.domain.repositories.RoomRepository
 import by.klnvch.link5dots.domain.repositories.Settings
 import javax.inject.Inject
@@ -33,13 +32,11 @@ import javax.inject.Inject
 class ResetAllDataUseCase @Inject constructor(
     private val settings: Settings,
     private val roomRepository: RoomRepository,
-    private val nighModeManager: NightModeManager,
-    private val languageManager: LanguageManager
+    private val languageManager: LanguageManager,
 ) {
     suspend fun reset() {
         settings.reset()
         roomRepository.deleteAll()
-        nighModeManager.reset()
         languageManager.reset()
     }
 }

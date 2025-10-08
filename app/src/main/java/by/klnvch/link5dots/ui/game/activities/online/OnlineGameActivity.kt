@@ -33,11 +33,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.compose.viewModel
 import by.klnvch.link5dots.BuildConfig
 import by.klnvch.link5dots.R
 import by.klnvch.link5dots.ui.game.OfflineGameViewModel
@@ -45,6 +47,7 @@ import by.klnvch.link5dots.ui.game.OnlineGameViewModel
 import by.klnvch.link5dots.ui.game.error.ErrorScreenOnline
 import by.klnvch.link5dots.ui.game.picker.FirebaseStatusViewModel
 import by.klnvch.link5dots.ui.game.picker.PickerScreen
+import by.klnvch.link5dots.ui.settings.SettingsViewModel
 import dagger.android.support.DaggerAppCompatActivity
 import javax.inject.Inject
 
@@ -83,8 +86,12 @@ class OnlineGameActivity : DaggerAppCompatActivity() {
         )[FirebaseStatusViewModel.KEY, FirebaseStatusViewModel::class.java]
 
         setContent {
+            val getVMFactory: () -> ViewModelProvider.Factory = remember { { viewModelFactory } }
+            val settingsViewModel: SettingsViewModel = viewModel(factory = getVMFactory())
+            val nightMode by settingsViewModel.nightMode.collectAsState()
             GameContent(
                 viewModel = viewModel,
+                nightMode = nightMode,
                 defaultTitle = R.string.menu_online_game,
                 pickerScreen = {
                     Column {

@@ -33,9 +33,12 @@ import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AlertDialog
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.core.net.toUri
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.compose.viewModel
 import by.klnvch.link5dots.R
 import by.klnvch.link5dots.di.viewmodels.SavedStateViewModelFactory
 import by.klnvch.link5dots.ui.game.activities.offline.BotGameActivity
@@ -44,6 +47,7 @@ import by.klnvch.link5dots.ui.game.activities.offline.TwoPlayersGameActivity
 import by.klnvch.link5dots.ui.game.activities.online.BluetoothGameActivity
 import by.klnvch.link5dots.ui.game.activities.online.NsdGameActivity
 import by.klnvch.link5dots.ui.game.activities.online.OnlineGameActivity
+import by.klnvch.link5dots.ui.settings.SettingsViewModel
 import by.klnvch.link5dots.ui.theme.AppTheme
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import dagger.android.support.DaggerAppCompatActivity
@@ -62,10 +66,10 @@ class MenuActivity : DaggerAppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            AppTheme {
-                val getVMFactory: () -> ViewModelProvider.Factory = remember {
-                    { viewModelFactory }
-                }
+            val getVMFactory: () -> ViewModelProvider.Factory = remember { { viewModelFactory } }
+            val settingsViewModel: SettingsViewModel = viewModel(factory = getVMFactory())
+            val nightMode by settingsViewModel.nightMode.collectAsState()
+            AppTheme(nightMode) {
                 val getSSVMFactory: () -> SavedStateViewModelFactory = remember {
                     { savedStateViewModelFactory }
                 }

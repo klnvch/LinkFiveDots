@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 klnvch
+ * Copyright (c) 2023-2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,16 +25,32 @@
 package by.klnvch.link5dots.data.settings
 
 import by.klnvch.link5dots.domain.models.DotsStyleType
-import javax.inject.Inject
+import by.klnvch.link5dots.domain.models.NightMode
 
-class SettingsMapper @Inject constructor() {
-    fun map(type: DotsStyleType?) = when (type) {
-        DotsStyleType.CROSS_AND_RING -> 2
-        else -> 1
+object SettingsMapper {
+    object Dots {
+        fun map(type: DotsStyleType?) = when (type) {
+            DotsStyleType.CROSS_AND_RING -> 2
+            else -> 1
+        }
+
+        fun map(type: Int?) = when (type) {
+            2 -> DotsStyleType.CROSS_AND_RING
+            else -> DotsStyleType.ORIGINAL
+        }
     }
 
-    fun map(type: Int?) = when (type) {
-        2 -> DotsStyleType.CROSS_AND_RING
-        else -> DotsStyleType.ORIGINAL
+    object Night {
+        fun map(mode: NightMode?) = when (mode) {
+            NightMode.On -> "on"
+            NightMode.Off -> "off"
+            else -> "system"
+        }
+
+        fun map(mode: String?) = when (mode) {
+            "on" -> NightMode.On
+            "off" -> NightMode.Off
+            else -> NightMode.System
+        }
     }
 }

@@ -30,12 +30,15 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.compose.viewModel
 import by.klnvch.link5dots.R
 import by.klnvch.link5dots.domain.models.RoomType
 import by.klnvch.link5dots.domain.usecases.RoomByType
 import by.klnvch.link5dots.ui.common.TopBarTitle
 import by.klnvch.link5dots.ui.game.OfflineGameViewModel
+import by.klnvch.link5dots.ui.settings.SettingsViewModel
 import dagger.android.support.DaggerAppCompatActivity
 import javax.inject.Inject
 
@@ -60,16 +63,20 @@ class BotGameActivity : DaggerAppCompatActivity() {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
 
-        val viewModel = ViewModelProvider(
+        val gameViewModel = ViewModelProvider(
             this,
             viewModelFactory
         )[OfflineGameViewModel.KEY, OfflineGameViewModel::class.java]
 
         setContent {
+            val getVMFactory: () -> ViewModelProvider.Factory = remember { { viewModelFactory } }
+            val settingsViewModel: SettingsViewModel = viewModel(factory = getVMFactory())
+            val nightMode by settingsViewModel.nightMode.collectAsState()
             GameContent(
-                viewModel = viewModel,
+                viewModel = gameViewModel,
+                nightMode = nightMode,
                 param = RoomByType(RoomType.BOT),
-                title = { GameTitle(viewModel) },
+                title = { GameTitle(gameViewModel) },
                 navigateUp = { finish() },
             )
         }

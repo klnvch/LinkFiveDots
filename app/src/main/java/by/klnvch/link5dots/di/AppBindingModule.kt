@@ -30,7 +30,6 @@ import by.klnvch.link5dots.data.CrashRepositoryImpl
 import by.klnvch.link5dots.data.DeviceInfoImpl
 import by.klnvch.link5dots.data.GameScoreRepositoryImpl
 import by.klnvch.link5dots.data.LanguageManagerImpl
-import by.klnvch.link5dots.data.NightModeManagerImpl
 import by.klnvch.link5dots.data.RoomRepositoryImpl
 import by.klnvch.link5dots.data.StringProvider
 import by.klnvch.link5dots.data.bluetooth.BluetoothRoomRepositoryImpl
@@ -44,7 +43,6 @@ import by.klnvch.link5dots.domain.repositories.DeviceInfo
 import by.klnvch.link5dots.domain.repositories.FirebaseManager
 import by.klnvch.link5dots.domain.repositories.GameScoreRepository
 import by.klnvch.link5dots.domain.repositories.LanguageManager
-import by.klnvch.link5dots.domain.repositories.NightModeManager
 import by.klnvch.link5dots.domain.repositories.NsdRoomRepository
 import by.klnvch.link5dots.domain.repositories.OnlineRoomRepository
 import by.klnvch.link5dots.domain.repositories.RoomRepository
@@ -64,10 +62,6 @@ interface AppBindingModule {
     @Singleton
     @Binds
     fun bindSettings(impl: SettingsImpl): Settings
-
-    @Singleton
-    @Binds
-    fun bindNighModeManager(impl: NightModeManagerImpl): NightModeManager
 
     @Singleton
     @Binds
