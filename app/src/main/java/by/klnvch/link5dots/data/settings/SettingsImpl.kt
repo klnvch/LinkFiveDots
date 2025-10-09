@@ -33,10 +33,13 @@ import by.klnvch.link5dots.domain.models.AllSettings
 import by.klnvch.link5dots.domain.models.DotsStyleType
 import by.klnvch.link5dots.domain.models.NightMode
 import by.klnvch.link5dots.domain.repositories.Settings
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import java.util.UUID
 import javax.inject.Inject
 
@@ -127,10 +130,10 @@ class SettingsImpl @Inject constructor(
         .map { SettingsMapper.Dots.map(it[DOTS_TYPE]) }
         .distinctUntilChanged()
 
-    override val nightMode: Flow<NightMode>
-        get() = dataStore.data
-            .map { SettingsMapper.Night.map(it[NIGHT_MODE]) }
-            .distinctUntilChanged()
+    @OptIn(DelicateCoroutinesApi::class)
+    override val nightMode = dataStore.data
+        .map { SettingsMapper.Night.map(it[NIGHT_MODE]) }
+        .stateIn(GlobalScope, SharingStarted.Eagerly, NightMode.System)
 
     override suspend fun reset() {
         dataStore.edit {

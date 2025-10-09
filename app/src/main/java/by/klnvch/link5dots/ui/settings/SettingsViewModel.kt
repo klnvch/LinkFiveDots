@@ -34,9 +34,7 @@ import by.klnvch.link5dots.domain.usecases.ResetAllDataUseCase
 import by.klnvch.link5dots.domain.usecases.SetUserNameUseCase
 import by.klnvch.link5dots.domain.usecases.SyncLanguageUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -60,8 +58,6 @@ class SettingsViewModel @Inject constructor(
     }
 
     val nightMode = settings.nightMode
-        .stateIn(viewModelScope, SharingStarted.Eagerly, NightMode.System)
-
     fun setUserName(userName: String?) = viewModelScope.launch { saveUserNameUseCase.set(userName) }
     fun setLanguage(language: String) = viewModelScope.launch { settings.setLanguage(language) }
     fun setVibration(isOn: Boolean) = viewModelScope.launch { settings.setVibration(isOn) }
