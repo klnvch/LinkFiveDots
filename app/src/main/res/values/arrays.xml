@@ -31,7 +31,6 @@
         <item>Italiano</item>
         <item>Polski</item>
         <item>Беларуская</item>
-        <item>Русский</item>
         <item>Українська</item>
         <item>فارسی</item>
     </string-array>
@@ -44,7 +43,6 @@
         <item>it</item>
         <item>pl</item>
         <item>be</item>
-        <item>ru</item>
         <item>uk</item>
         <item>fa</item>
     </string-array>
