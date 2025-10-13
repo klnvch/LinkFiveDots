@@ -24,20 +24,15 @@
 package by.klnvch.link5dots.domain.usecases
 
 import by.klnvch.link5dots.domain.models.IRoom
-import by.klnvch.link5dots.domain.models.NetworkRoomExtended
 import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
 import by.klnvch.link5dots.domain.models.RoomType
 import by.klnvch.link5dots.domain.repositories.BluetoothRoomRepository
-import by.klnvch.link5dots.domain.repositories.FirebaseManager
 import by.klnvch.link5dots.domain.repositories.GetOnlineRoomRepository
 import by.klnvch.link5dots.domain.repositories.NsdRoomRepository
 import by.klnvch.link5dots.domain.repositories.OnlineRoomRepository
 import by.klnvch.link5dots.domain.repositories.RoomBotGetRepository
 import by.klnvch.link5dots.domain.repositories.RoomRepository
 import by.klnvch.link5dots.domain.repositories.RoomTwoGetRepository
-import by.klnvch.link5dots.domain.repositories.Settings
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
@@ -63,12 +58,10 @@ class GetRoomOfflineUseCase @Inject constructor(
 class GetRoomOnlineUseCase @Inject constructor(
     private val repository: OnlineRoomRepository,
     private val getRepository: GetOnlineRoomRepository,
-    private val firebaseManager: FirebaseManager,
 ) : GetRoomUseCase {
     override fun get(param: RoomParam) = when (param) {
         is RoomByDescriptor -> repository.get()
             .onEach { getRepository.room = it }
-            .map { NetworkRoomExtended(it, firebaseManager.getUserId()) }
 
         else -> throw IllegalArgumentException("Wrong param")
     }
@@ -77,13 +70,10 @@ class GetRoomOnlineUseCase @Inject constructor(
 class GetRoomNsdUseCase @Inject constructor(
     private val dbRepository: RoomRepository,
     private val repository: NsdRoomRepository,
-    private val settings: Settings,
 ) : GetRoomUseCase {
     override fun get(param: RoomParam) = when (param) {
         is RoomByDescriptor -> repository.getFlow()
             .onEach { if (it !== null) dbRepository.save(it) }
-            .combine(settings.getUserId())
-            { room, userId -> if (room !== null) NetworkRoomExtended(room, userId) else null }
 
         else -> throw IllegalArgumentException("Wrong param")
     }
@@ -92,13 +82,10 @@ class GetRoomNsdUseCase @Inject constructor(
 class GetRoomBluetoothUseCase @Inject constructor(
     private val dbRepository: RoomRepository,
     private val repository: BluetoothRoomRepository,
-    private val settings: Settings,
 ) : GetRoomUseCase {
     override fun get(param: RoomParam) = when (param) {
         is RoomByDescriptor -> repository.getFlow()
             .onEach { if (it !== null) dbRepository.save(it) }
-            .combine(settings.getUserId())
-            { room, userId -> if (room !== null) NetworkRoomExtended(room, userId) else null }
 
         else -> throw IllegalArgumentException("Wrong param")
     }

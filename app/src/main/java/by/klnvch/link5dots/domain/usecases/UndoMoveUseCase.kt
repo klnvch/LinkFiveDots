@@ -27,10 +27,10 @@ package by.klnvch.link5dots.domain.usecases
 import by.klnvch.link5dots.domain.models.IRoom
 import by.klnvch.link5dots.domain.models.NetworkRoom
 import by.klnvch.link5dots.domain.repositories.BluetoothRoomRepository
+import by.klnvch.link5dots.domain.repositories.NetworkUserProvider
 import by.klnvch.link5dots.domain.repositories.NsdRoomRepository
 import by.klnvch.link5dots.domain.repositories.RoomGetRepository
 import by.klnvch.link5dots.domain.repositories.RoomRepository
-import by.klnvch.link5dots.domain.repositories.Settings
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
@@ -47,8 +47,8 @@ class UndoMoveTwoUseCase @Inject constructor(
 }
 
 class UndoMoveBluetoothUseCase @Inject constructor(
-    private val settings: Settings,
     private val repository: BluetoothRoomRepository,
+    private val networkUserProvider: NetworkUserProvider,
 ) : UndoMoveUseCase {
     override suspend fun undo() {
         val currentRoom = repository.getFlow().filterNotNull().first()
@@ -57,11 +57,11 @@ class UndoMoveBluetoothUseCase @Inject constructor(
         }
     }
 
-    private suspend fun isAvailable(room: NetworkRoom): Boolean {
+    private fun isAvailable(room: NetworkRoom): Boolean {
         val dots = room.dots
         if (dots.isNotEmpty()) {
-            val userId = settings.getUserId().first()
-            if (room.user1.id == userId) {
+            val user = networkUserProvider.networkUser
+            if (room.user1 == user) {
                 if (dots.size % 2 == 1) return true
             } else {
                 if (dots.size % 2 == 0) return true
@@ -72,8 +72,8 @@ class UndoMoveBluetoothUseCase @Inject constructor(
 }
 
 class UndoMoveNsdUseCase @Inject constructor(
-    private val settings: Settings,
     private val repository: NsdRoomRepository,
+    private val networkUserProvider: NetworkUserProvider,
 ) : UndoMoveUseCase {
     override suspend fun undo() {
         val currentRoom = repository.getFlow().filterNotNull().first()
@@ -82,11 +82,11 @@ class UndoMoveNsdUseCase @Inject constructor(
         }
     }
 
-    private suspend fun isAvailable(room: NetworkRoom): Boolean {
+    private fun isAvailable(room: NetworkRoom): Boolean {
         val dots = room.dots
         if (dots.isNotEmpty()) {
-            val userId = settings.getUserId().first()
-            if (room.user1.id == userId) {
+            val user = networkUserProvider.networkUser
+            if (room.user1 == user) {
                 if (dots.size % 2 == 1) return true
             } else {
                 if (dots.size % 2 == 0) return true

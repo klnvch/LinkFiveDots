@@ -43,8 +43,18 @@ fun RemoteRoomItem.mapToNetworkRoomInvitation(): NetworkRoomInvitation? =
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport()
-fun RemoteRoomItem.mapToNetworkRoom(): NetworkRoom? =
-    key?.let { value?.mapToOnlineRoomRemote()?.mapToNetworkRoom(it) }
+fun RemoteRoomItem.mapToNetworkRoom() = key?.let {
+    value?.mapToOnlineRoomRemote()?.mapToNetworkRoom(it)
+        ?: NetworkRoom(
+            key,
+            0,
+            emptyList(),
+            NetworkUser("", null),
+            null,
+            RoomType.ONLINE,
+            RoomState.DELETED,
+        )
+}
 
 expect fun Any.mapToOnlineRoomRemote(): OnlineRoomRemote
 

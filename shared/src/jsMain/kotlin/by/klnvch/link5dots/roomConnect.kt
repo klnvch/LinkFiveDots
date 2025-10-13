@@ -35,9 +35,8 @@ import by.klnvch.link5dots.domain.models.online.OnlineRoomInvitation
 import by.klnvch.link5dots.domain.models.online.OnlineRoomInvitationRemote
 import by.klnvch.link5dots.domain.models.online.toOnlineRoomInvitation
 import by.klnvch.link5dots.domain.repositories.ConnectOnlineRoomRepository
-import by.klnvch.link5dots.domain.repositories.FirebaseAuthManager
+import by.klnvch.link5dots.domain.repositories.NetworkUserProvider
 import by.klnvch.link5dots.domain.repositories.StringProvider
-import by.klnvch.link5dots.domain.repositories.UserNameSettings
 import by.klnvch.link5dots.domain.usecases.network.ScanOnlineRoomDescriptorFactory
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
@@ -98,20 +97,17 @@ private fun map(
 }
 
 private fun createScanOnlineRoomDescriptorFactory(
-    user2: NetworkUser,
+    user2: NetworkUser?,
     defaultName: String,
 ): ScanOnlineRoomDescriptorFactory {
-    val userNameSettings = object : UserNameSettings {
-        override suspend fun getUserName() = user2.name
-    }
-    val firebaseAuthManager = object : FirebaseAuthManager {
-        override fun getUserId() = user2.id
+    val networkUserProvider = object : NetworkUserProvider {
+        override val networkUser = user2
     }
     val stringProvider = object : StringProvider {
         override val botName = ""
         override val unknownName = defaultName
     }
-    return ScanOnlineRoomDescriptorFactory(stringProvider, userNameSettings, firebaseAuthManager)
+    return ScanOnlineRoomDescriptorFactory(networkUserProvider, stringProvider)
 }
 
 private fun createConnectRepository(

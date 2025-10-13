@@ -32,8 +32,9 @@ import by.klnvch.link5dots.data.online.UpdateStateOnlineRoomRepositoryImpl
 import by.klnvch.link5dots.domain.models.Board
 import by.klnvch.link5dots.domain.models.IRoom
 import by.klnvch.link5dots.domain.models.NetworkRoom
+import by.klnvch.link5dots.domain.models.NetworkUser
 import by.klnvch.link5dots.domain.models.Point
-import by.klnvch.link5dots.domain.repositories.FirebaseAuthManager
+import by.klnvch.link5dots.domain.repositories.NetworkUserProvider
 import by.klnvch.link5dots.domain.usecases.AddDotOnlineUseCase
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
@@ -44,14 +45,14 @@ import kotlin.js.Promise
 @OptIn(DelicateCoroutinesApi::class, ExperimentalJsExport::class)
 @JsExport()
 fun roomAddDot(
-    firebaseUserId: String,
+    user: NetworkUser?,
     room: IRoom,
     p: Point,
     onDbSet: (key: String, value: Any) -> Promise<Unit>,
     onDbSetDot: (path: String, p: Point) -> Promise<Unit>,
 ): Promise<Unit> {
-    val firebaseAuthManager = object : FirebaseAuthManager {
-        override fun getUserId() = firebaseUserId
+    val networkUserProvider = object : NetworkUserProvider {
+        override val networkUser = user
     }
     val board = Board()
 
@@ -68,7 +69,7 @@ fun roomAddDot(
     getRepository.room = room as NetworkRoom
 
     val useCase = AddDotOnlineUseCase(
-        firebaseAuthManager,
+        networkUserProvider,
         board,
         addDotRepository,
         updateStateRepository,

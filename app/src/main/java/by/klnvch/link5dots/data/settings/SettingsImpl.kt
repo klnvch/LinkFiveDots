@@ -37,8 +37,10 @@ import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import java.util.UUID
 import javax.inject.Inject
@@ -101,16 +103,17 @@ class SettingsImpl @Inject constructor(
         dataStore.edit { it[DOTS_TYPE] = SettingsMapper.Dots.map(style) }
     }
 
-    override fun getUserId() = dataStore.data
-        .map {
-            val userId = it[USER_ID]
-            if (userId == null) {
-                val newId = UUID.randomUUID().toString()
-                setUserId(newId)
-                newId
-            } else userId
+    @OptIn(DelicateCoroutinesApi::class)
+    override val userId = dataStore.data
+        .map { it[USER_ID] }
+        .onEach { id ->
+            if (id == null) {
+                dataStore.edit {
+                    it[USER_ID] = UUID.randomUUID().toString()
+                }
+            }
         }
-        .distinctUntilChanged()
+        .filterNotNull()
 
     override fun getLanguage() = dataStore.data
         .map { it[LANGUAGE] ?: DEFAULT_LANGUAGE }
@@ -145,9 +148,5 @@ class SettingsImpl @Inject constructor(
             it[DOTS_TYPE] = SettingsMapper.Dots.map(null as DotsStyleType?)
             it[FIRST_RUN] = DEFAULT_FIRST_RUN
         }
-    }
-
-    private suspend fun setUserId(userId: String) {
-        dataStore.edit { it[USER_ID] = userId }
     }
 }

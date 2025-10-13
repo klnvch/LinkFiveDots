@@ -30,8 +30,8 @@ import by.klnvch.link5dots.data.online.CreateOnlineRoomRepositoryImpl
 import by.klnvch.link5dots.data.online.FirebaseDbCreateInvitation
 import by.klnvch.link5dots.data.online.OnlineLocalStoreWriter
 import by.klnvch.link5dots.data.online.models.CreateOnlineRoomInvitation
-import by.klnvch.link5dots.domain.repositories.FirebaseAuthManager
-import by.klnvch.link5dots.domain.repositories.UserNameSettings
+import by.klnvch.link5dots.domain.models.NetworkUser
+import by.klnvch.link5dots.domain.repositories.NetworkUserProvider
 import by.klnvch.link5dots.domain.usecases.network.CreateOnlineRoomUseCase
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
@@ -42,18 +42,14 @@ import kotlin.js.Promise
 @OptIn(DelicateCoroutinesApi::class, ExperimentalJsExport::class)
 @JsExport()
 fun roomCreate(
-    userName: String?,
-    firebaseUserId: String,
+    user: NetworkUser?,
     onDbCreateInvitation: (invitation: CreateOnlineRoomInvitation) -> Promise<Unit>,
 ): Promise<String> {
-    val userNameSettings = object : UserNameSettings {
-        override suspend fun getUserName() = userName
+    val networkUserProvider = object : NetworkUserProvider {
+        override val networkUser = user
     }
     val timeService = TimeServiceImpl()
     val roomKeyGenerator = RoomKeyGeneratorImpl(timeService)
-    val firebaseAuthManager = object : FirebaseAuthManager {
-        override fun getUserId() = firebaseUserId
-    }
 
     val firebaseDb = object : FirebaseDbCreateInvitation {
         override suspend fun createInvitation(invitation: CreateOnlineRoomInvitation) =
@@ -68,9 +64,8 @@ fun roomCreate(
         val repository = CreateOnlineRoomRepositoryImpl(firebaseDb, onlineLocalStore)
 
         val useCase = CreateOnlineRoomUseCase(
-            userNameSettings,
             roomKeyGenerator,
-            firebaseAuthManager,
+            networkUserProvider,
             repository,
         )
 

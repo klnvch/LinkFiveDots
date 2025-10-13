@@ -33,7 +33,7 @@ import kotlinx.coroutines.flow.StateFlow
 interface Settings : UserNameSettings {
     fun getAllSettings(): Flow<AllSettings>
     fun getUserNameFlow(): Flow<String?>
-    fun getUserId(): Flow<String>
+    val userId: Flow<String>
     suspend fun setUserName(userName: String?)
     suspend fun setLanguage(language: String)
     suspend fun setVibration(isOn: Boolean)

@@ -23,11 +23,21 @@
  */
 package by.klnvch.link5dots.di.game.online
 
+import by.klnvch.link5dots.domain.models.Board
+import by.klnvch.link5dots.domain.repositories.AddDotOnlineRoomRepository
+import by.klnvch.link5dots.domain.repositories.CreateOnlineRoomRepository
 import by.klnvch.link5dots.domain.repositories.GetOnlineRoomRepository
+import by.klnvch.link5dots.domain.repositories.NetworkUserProvider
+import by.klnvch.link5dots.domain.repositories.RoomKeyGenerator
+import by.klnvch.link5dots.domain.repositories.StringProvider
+import by.klnvch.link5dots.domain.repositories.UpdateStateOnlineRoomRepository
+import by.klnvch.link5dots.domain.usecases.AddDotOnlineUseCase
 import by.klnvch.link5dots.domain.usecases.GameActionsOnlineUseCase
 import by.klnvch.link5dots.domain.usecases.GameActionsUseCase
 import by.klnvch.link5dots.domain.usecases.NewGameOnlineUseCase
 import by.klnvch.link5dots.domain.usecases.NewGameUseCase
+import by.klnvch.link5dots.domain.usecases.network.CreateOnlineRoomUseCase
+import by.klnvch.link5dots.domain.usecases.network.ScanOnlineRoomDescriptorFactory
 import dagger.Module
 import dagger.Provides
 
@@ -39,4 +49,39 @@ class OnlineGameRulesModule2 {
     @Provides
     fun provideGameActionsUseCase(getRepository: GetOnlineRoomRepository): GameActionsUseCase =
         GameActionsOnlineUseCase(getRepository)
+
+    @Provides
+    fun provideCreateOnlineRoomUseCase(
+        roomKeyGenerator: RoomKeyGenerator,
+        networkUserProvider: NetworkUserProvider,
+        createOnlineRoomRepository: CreateOnlineRoomRepository,
+    ) = CreateOnlineRoomUseCase(
+        roomKeyGenerator,
+        networkUserProvider,
+        createOnlineRoomRepository,
+    )
+
+    @Provides
+    fun provideAddDotOnlineUseCase(
+        networkUserProvider: NetworkUserProvider,
+        board: Board,
+        addDotRepository: AddDotOnlineRoomRepository,
+        updateStateRepository: UpdateStateOnlineRoomRepository,
+        getRepository: GetOnlineRoomRepository,
+    ) = AddDotOnlineUseCase(
+        networkUserProvider,
+        board,
+        addDotRepository,
+        updateStateRepository,
+        getRepository
+    )
+
+    @Provides
+    fun provideScanOnlineRoomDescriptorFactory(
+        networkUserProvider: NetworkUserProvider,
+        stringProvider: StringProvider,
+    ) = ScanOnlineRoomDescriptorFactory(
+        networkUserProvider,
+        stringProvider,
+    )
 }

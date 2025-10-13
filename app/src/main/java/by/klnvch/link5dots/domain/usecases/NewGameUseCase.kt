@@ -24,16 +24,15 @@
 package by.klnvch.link5dots.domain.usecases
 
 import by.klnvch.link5dots.domain.models.NetworkRoom
-import by.klnvch.link5dots.domain.models.NetworkUser
 import by.klnvch.link5dots.domain.models.RoomState
 import by.klnvch.link5dots.domain.models.RoomType
 import by.klnvch.link5dots.domain.repositories.BluetoothRoomRepository
+import by.klnvch.link5dots.domain.repositories.NetworkUserProvider
 import by.klnvch.link5dots.domain.repositories.NsdRoomRepository
 import by.klnvch.link5dots.domain.repositories.RoomKeyGenerator
 import by.klnvch.link5dots.domain.repositories.RoomRepository
-import by.klnvch.link5dots.domain.repositories.Settings
 import by.klnvch.link5dots.domain.repositories.TimeService
-import kotlinx.coroutines.flow.first
+import by.klnvch.link5dots.domain.repositories.UnauthorizedException
 import kotlinx.coroutines.flow.firstOrNull
 import javax.inject.Inject
 
@@ -57,10 +56,10 @@ class NewGameTwoUseCase @Inject constructor(
 }
 
 class NewGameBluetoothUseCase @Inject constructor(
-    private val settings: Settings,
     private val timeRepository: TimeService,
     private val roomKeyGenerator: RoomKeyGenerator,
     private val repository: BluetoothRoomRepository,
+    private val networkUserProvider: NetworkUserProvider,
 ) : NewGameCommonUseCase() {
     override suspend fun create(seed: Long?) {
         if (repository.isServer()) {
@@ -69,9 +68,7 @@ class NewGameBluetoothUseCase @Inject constructor(
             val key = roomKeyGenerator.generate()
             val time = timeRepository.time()
 
-            val userName = settings.getUserName()
-            val userId = settings.getUserId().first()
-            val user1 = NetworkUser(userId, userName)
+            val user1 = networkUserProvider.networkUser ?: throw UnauthorizedException()
             val user2 = prevRoom?.user2
 
             val newRoom = NetworkRoom(
@@ -90,10 +87,10 @@ class NewGameBluetoothUseCase @Inject constructor(
 }
 
 class NewGameNsdUseCase @Inject constructor(
-    private val settings: Settings,
     private val timeRepository: TimeService,
     private val roomKeyGenerator: RoomKeyGenerator,
     private val repository: NsdRoomRepository,
+    private val networkUserProvider: NetworkUserProvider,
 ) : NewGameCommonUseCase() {
     override suspend fun create(seed: Long?) {
         if (repository.isServer()) {
@@ -102,9 +99,7 @@ class NewGameNsdUseCase @Inject constructor(
             val key = roomKeyGenerator.generate()
             val time = timeRepository.time()
 
-            val userName = settings.getUserName()
-            val userId = settings.getUserId().first()
-            val user1 = NetworkUser(userId, userName)
+            val user1 = networkUserProvider.networkUser ?: throw UnauthorizedException()
             val user2 = prevRoom?.user2
 
             val newRoom = NetworkRoom(

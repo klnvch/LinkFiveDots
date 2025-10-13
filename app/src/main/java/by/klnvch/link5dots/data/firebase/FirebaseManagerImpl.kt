@@ -25,7 +25,6 @@ package by.klnvch.link5dots.data.firebase
 
 import android.content.Context
 import by.klnvch.link5dots.domain.models.FeatureDisabled
-import by.klnvch.link5dots.domain.models.UnauthorizedException
 import by.klnvch.link5dots.domain.models.UnknownException
 import by.klnvch.link5dots.domain.repositories.FirebaseManager
 import com.google.android.gms.common.ConnectionResult
@@ -83,10 +82,7 @@ class FirebaseManagerImpl @Inject constructor(
 
     override fun signOut() = Firebase.auth.signOut()
 
-    override fun getUserId() =
-        Firebase.auth.currentUser?.uid ?: throw UnauthorizedException()
-
-    override val userIdFlow: Flow<String?> = callbackFlow {
+    override val userId: Flow<String?> = callbackFlow {
         val listener = FirebaseAuth.AuthStateListener {
             trySend(it.currentUser?.uid)
         }

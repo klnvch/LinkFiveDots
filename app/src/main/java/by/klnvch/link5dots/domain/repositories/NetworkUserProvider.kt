@@ -40,7 +40,7 @@ class NetworkUserFirebaseProvider @Inject constructor(
     settings: Settings,
 ) : NetworkUserProvider {
     private val userFlow = combine(
-        firebaseManager.userIdFlow.filterNotNull(),
+        firebaseManager.userId.filterNotNull(),
         settings.getUserNameFlow()
     ) { id, name -> NetworkUser(id, name) }.stateIn(
         scope = CoroutineScope(Dispatchers.IO),
@@ -55,7 +55,7 @@ class NetworkUserLocalProvider @Inject constructor(
     settings: Settings,
 ) : NetworkUserProvider {
     private val userFlow = combine(
-        settings.getUserId(),
+        settings.userId,
         settings.getUserNameFlow()
     ) { id, name -> NetworkUser(id, name) }.stateIn(
         scope = CoroutineScope(Dispatchers.IO),

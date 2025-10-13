@@ -25,29 +25,23 @@
 package by.klnvch.link5dots.domain.usecases.network
 
 import by.klnvch.link5dots.data.online.models.CreateOnlineRoomInvitationImpl
-import by.klnvch.link5dots.domain.models.NetworkUser
 import by.klnvch.link5dots.domain.repositories.CreateOnlineRoomRepository
-import by.klnvch.link5dots.domain.repositories.FirebaseAuthManager
+import by.klnvch.link5dots.domain.repositories.NetworkUserProvider
 import by.klnvch.link5dots.domain.repositories.RoomKeyGenerator
-import by.klnvch.link5dots.domain.repositories.UserNameSettings
+import by.klnvch.link5dots.domain.repositories.UnauthorizedException
 
 interface CreateMultiplayerRoomUseCase {
     suspend fun create()
 }
 
 class CreateOnlineRoomUseCase(
-    private val userNameSettings: UserNameSettings,
     private val roomKeyGenerator: RoomKeyGenerator,
-    private val firebaseAuthManager: FirebaseAuthManager,
+    private val networkUserProvider: NetworkUserProvider,
     private val repository: CreateOnlineRoomRepository,
 ) : CreateMultiplayerRoomUseCase {
     override suspend fun create() {
         val key = roomKeyGenerator.generate()
-
-        val userId = firebaseAuthManager.getUserId()
-        val userName = userNameSettings.getUserName()
-        val user1 = NetworkUser(userId, userName)
-
+        val user1 = networkUserProvider.networkUser ?: throw UnauthorizedException()
         val invitation = CreateOnlineRoomInvitationImpl(key, user1)
         repository.create(invitation)
     }

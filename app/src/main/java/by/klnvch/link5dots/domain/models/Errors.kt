@@ -23,10 +23,6 @@
  */
 package by.klnvch.link5dots.domain.models
 
-class UnauthorizedException : Exception("No Firebase User Found")
-
 class FeatureDisabled : Exception()
-
 class FeatureUnsupported : Exception()
-
 class UnknownException : Exception()

@@ -26,13 +26,12 @@ package by.klnvch.link5dots.domain.usecases.network
 
 import by.klnvch.link5dots.data.online.models.AcceptOnlineRoomInvitation
 import by.klnvch.link5dots.domain.models.FoundRemoteRoom
-import by.klnvch.link5dots.domain.models.NetworkUser
 import by.klnvch.link5dots.domain.models.gameSeed
 import by.klnvch.link5dots.domain.models.generateInitialGame
 import by.klnvch.link5dots.domain.models.online.OnlineRoomInvitation
-import by.klnvch.link5dots.domain.repositories.FirebaseAuthManager
+import by.klnvch.link5dots.domain.repositories.NetworkUserProvider
 import by.klnvch.link5dots.domain.repositories.StringProvider
-import by.klnvch.link5dots.domain.repositories.UserNameSettings
+import by.klnvch.link5dots.domain.repositories.UnauthorizedException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -57,15 +56,12 @@ class ScanOnlineRoomDescriptor(
 }
 
 class ScanOnlineRoomDescriptorFactory(
+    private val networkUserProvider: NetworkUserProvider,
     private val stringProvider: StringProvider,
-    private val userNameSettings: UserNameSettings,
-    private val firebaseAuthManager: FirebaseAuthManager,
 ) {
-    suspend fun map(invitations: List<OnlineRoomInvitation>): List<ScanOnlineRoomDescriptor> {
-        val userId = firebaseAuthManager.getUserId()
+    fun map(invitations: List<OnlineRoomInvitation>): List<ScanOnlineRoomDescriptor> {
         val dots = generateInitialGame(gameSeed()).toTypedArray()
-        val userName = userNameSettings.getUserName()
-        val user2 = NetworkUser(userId, userName)
+        val user2 = networkUserProvider.networkUser ?: throw UnauthorizedException()
         val accept = AcceptOnlineRoomInvitation(user2, dots)
 
         return invitations.map { invitation ->

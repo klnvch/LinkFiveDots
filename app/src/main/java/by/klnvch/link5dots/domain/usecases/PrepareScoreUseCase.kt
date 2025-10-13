@@ -29,8 +29,8 @@ import by.klnvch.link5dots.domain.models.GameResult
 import by.klnvch.link5dots.domain.models.GameScore
 import by.klnvch.link5dots.domain.models.IRoom
 import by.klnvch.link5dots.domain.models.NetworkGameScore
-import by.klnvch.link5dots.domain.models.NetworkRoomExtended
 import by.klnvch.link5dots.domain.models.SimpleGameScore
+import by.klnvch.link5dots.domain.repositories.NetworkUserProvider
 import javax.inject.Inject
 
 interface PrepareScoreUseCase {
@@ -46,17 +46,18 @@ class PrepareScoreBotUseCase @Inject constructor() : PrepareScoreUseCase {
     )
 }
 
-class PrepareScoreMultiplayerUseCase @Inject constructor() : PrepareScoreUseCase {
+class PrepareScoreMultiplayerUseCase @Inject constructor(
+    private val networkUserProvider: NetworkUserProvider,
+) : PrepareScoreUseCase {
     override fun get(room: IRoom): NetworkGameScore {
-        val status = if (room is NetworkRoomExtended) {
-            if (room.user1.id == room.yourId) {
-                if (room.dots.size % 2 == 1) GameResult.WON
-                else GameResult.LOST
-            } else if (room.user2?.id == room.yourId) {
-                if (room.dots.size % 2 == 0) GameResult.WON
-                else GameResult.LOST
-            } else throw IllegalStateException("User not found")
-        } else throw IllegalStateException("Wrong room type")
+        val user = networkUserProvider.networkUser
+        val status = if (room.user1 == user) {
+            if (room.dots.size % 2 == 1) GameResult.WON
+            else GameResult.LOST
+        } else if (room.user2 == user) {
+            if (room.dots.size % 2 == 0) GameResult.WON
+            else GameResult.LOST
+        } else throw IllegalStateException("User not found")
 
         return NetworkGameScore(
             room.dots.size,

@@ -35,8 +35,8 @@ import by.klnvch.link5dots.domain.models.RoomState
 import by.klnvch.link5dots.domain.models.canMove
 import by.klnvch.link5dots.domain.models.findWinningLine
 import by.klnvch.link5dots.domain.repositories.AddDotOnlineRoomRepository
-import by.klnvch.link5dots.domain.repositories.FirebaseAuthManager
 import by.klnvch.link5dots.domain.repositories.GetOnlineRoomRepository
+import by.klnvch.link5dots.domain.repositories.NetworkUserProvider
 import by.klnvch.link5dots.domain.repositories.RoomGetRepository
 import by.klnvch.link5dots.domain.repositories.RoomSaveRepository
 import by.klnvch.link5dots.domain.repositories.TimeService
@@ -50,7 +50,7 @@ interface AddDotUseCase {
 }
 
 class AddDotOnlineUseCase(
-    private val firebaseAuthManager: FirebaseAuthManager,
+    private val networkUserProvider: NetworkUserProvider,
     private val board: Board,
     private val addDotRepository: AddDotOnlineRoomRepository,
     private val updateStateRepository: UpdateStateOnlineRoomRepository,
@@ -59,11 +59,11 @@ class AddDotOnlineUseCase(
     override suspend fun addDot(p: Point) {
         getRepository.room?.let { room ->
             if (p.isValidToBeAdded(board, room)) {
-                val userId = firebaseAuthManager.getUserId()
+                val user = networkUserProvider.networkUser
 
-                val type = if (room.user1.id == userId && room.dots.size % 2 == 0) {
+                val type = if (room.user1 == user && room.dots.size % 2 == 0) {
                     Dot.HOST
-                } else if (room.user2?.id == userId && room.dots.size % 2 == 1) {
+                } else if (room.user2 == user && room.dots.size % 2 == 1) {
                     Dot.GUEST
                 } else {
                     null

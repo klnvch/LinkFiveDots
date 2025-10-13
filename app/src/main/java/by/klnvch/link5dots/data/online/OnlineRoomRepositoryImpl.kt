@@ -54,13 +54,16 @@ class OnlineRoomRepositoryImpl @Inject constructor(
     private val path = if (BuildConfig.DEBUG) "rooms_debug" else "rooms_v2"
     private val reference = Firebase.database.reference.child(path)
 
+    private val key = onlineLocalStore.getKey().filterNotNull()
+
     @OptIn(ExperimentalCoroutinesApi::class)
-    override fun get() = onlineLocalStore.getKey().filterNotNull().flatMapLatest { key ->
+    private val remote = key.flatMapLatest { key ->
         reference.child(key).snapshots
             .map { it }
             .map { it.toRemoteRoomItem() }
-            .mapNotNull { it.mapToNetworkRoom() }
     }
+
+    override fun get() = remote.mapNotNull { it.mapToNetworkRoom() }
 
     override val state = get().map {
         val state = it.toNetworkRoomState(stringRepository.unknownName)
