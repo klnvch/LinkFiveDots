@@ -25,13 +25,13 @@
 package by.klnvch.link5dots.domain.usecases
 
 import by.klnvch.link5dots.domain.models.Board
-import by.klnvch.link5dots.domain.models.Bot
 import by.klnvch.link5dots.domain.models.DeviceOwnerUser
-import by.klnvch.link5dots.domain.models.Dot
 import by.klnvch.link5dots.domain.models.DotImpl
 import by.klnvch.link5dots.domain.models.IRoom
 import by.klnvch.link5dots.domain.models.Point
 import by.klnvch.link5dots.domain.models.RoomState
+import by.klnvch.link5dots.domain.models.RoomType
+import by.klnvch.link5dots.domain.models.bot.Bot
 import by.klnvch.link5dots.domain.models.canMove
 import by.klnvch.link5dots.domain.models.findWinningLine
 import by.klnvch.link5dots.domain.repositories.AddDotOnlineRoomRepository
@@ -40,6 +40,7 @@ import by.klnvch.link5dots.domain.repositories.NetworkUserProvider
 import by.klnvch.link5dots.domain.repositories.RoomGetRepository
 import by.klnvch.link5dots.domain.repositories.RoomSaveRepository
 import by.klnvch.link5dots.domain.repositories.TimeService
+import by.klnvch.link5dots.domain.repositories.UnauthorizedException
 import by.klnvch.link5dots.domain.repositories.UpdateStateOnlineRoomRepository
 
 fun Point.isValidToBeAdded(board: Board, room: IRoom) =
@@ -59,18 +60,9 @@ class AddDotOnlineUseCase(
     override suspend fun addDot(p: Point) {
         getRepository.room?.let { room ->
             if (p.isValidToBeAdded(board, room)) {
-                val user = networkUserProvider.networkUser
-
-                val type = if (room.user1 == user && room.dots.size % 2 == 0) {
-                    Dot.HOST
-                } else if (room.user2 == user && room.dots.size % 2 == 1) {
-                    Dot.GUEST
-                } else {
-                    null
-                }
-
-                type?.let { type ->
-                    val dot = DotImpl(p, type, 0)
+                val user = networkUserProvider.networkUser ?: throw UnauthorizedException()
+                if (room.canMove(user)) {
+                    val dot = DotImpl(p, 0)
                     addDotRepository.addDot(room.key, room.dots.size, p)
                     if ((room.dots + dot).findWinningLine() != null) {
                         updateStateRepository.update(room.key, RoomState.FINISHED)
@@ -92,14 +84,14 @@ class AddDotBotUseCase(
         getRepository.room?.let { room ->
             if (p.isValidToBeAdded(board, room) && room.canMove(DeviceOwnerUser)) {
                 val dt = timeService.dt(room.time)
-                var updatedRoom = room.move(DotImpl(p, Dot.HOST, dt))
+                var updatedRoom = room.move(DotImpl(p, dt))
 
                 if (updatedRoom.isNotOver()) {
-                    val botPoint = bot.findAnswer(updatedRoom.dots)
-                    updatedRoom = updatedRoom.move(DotImpl(botPoint, Dot.GUEST, dt))
+                    val botPoint = bot.findAnswer(updatedRoom.dots.map { Point(it.x, it.y) })
+                    updatedRoom = updatedRoom.move(DotImpl(botPoint, dt))
                 }
 
-                saveRepository.save(updatedRoom)
+                saveRepository.save(updatedRoom, RoomType.BOT)
             }
         }
     }

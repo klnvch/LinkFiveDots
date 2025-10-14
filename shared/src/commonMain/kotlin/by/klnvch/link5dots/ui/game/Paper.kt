@@ -59,8 +59,8 @@ class LineOnPaperImpl(
 class Paper(
     styleType: DotsStyleType,
     sizePx: Int,
-    private val colorRed: Int,
-    private val colorBlue: Int,
+    colorRed: Int,
+    colorBlue: Int,
 ) {
     private val gridSize = 20
     private val imageSizePx = 600
@@ -100,8 +100,7 @@ class Paper(
 
     fun toBoardPosition(x: Float, y: Float) = Point(findClosestIndex(x), findClosestIndex(y))
 
-    fun toLineOnPaper(line: WinningLine): LineOnPaper {
-        val color = if (line.type == Dot.HOST) colorRed else colorBlue
+    fun toLineOnPaper(line: WinningLine, color: Int): LineOnPaper {
         val lineBitmap = when (line.orientation) {
             LineOrientation.HORIZONTAL -> createGameBitmap(BitmapType.LINE_H, color, scale)
             LineOrientation.VERTICAL -> createGameBitmap(BitmapType.LINE_V, color, scale)

@@ -25,13 +25,13 @@
 package by.klnvch.link5dots.ui.scores.history
 
 import by.klnvch.link5dots.R
-import by.klnvch.link5dots.domain.models.IRoom
+import by.klnvch.link5dots.domain.models.HistoryRoom
 import by.klnvch.link5dots.domain.models.RoomType
 import by.klnvch.link5dots.formatDateTime
 import by.klnvch.link5dots.utils.FormatUtils.formatDuration
 
 data class HistoryItemViewState(
-    val room: IRoom,
+    val room: HistoryRoom,
     val userName1: String?,
     val userName2: String?,
     val startTime: String,
@@ -39,9 +39,9 @@ data class HistoryItemViewState(
     val size: String,
     val typeStringRes: Int,
 ) {
-    constructor(room: IRoom, user1Name: String?, userName2: String?) : this(
+    constructor(room: HistoryRoom, userName1: String?, userName2: String?) : this(
         room,
-        user1Name,
+        userName1,
         userName2,
         room.time.formatDateTime(),
         room.getDuration().formatDuration(),

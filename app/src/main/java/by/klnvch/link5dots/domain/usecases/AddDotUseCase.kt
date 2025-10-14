@@ -28,12 +28,15 @@ import by.klnvch.link5dots.domain.models.Dot
 import by.klnvch.link5dots.domain.models.DotImpl
 import by.klnvch.link5dots.domain.models.IRoom
 import by.klnvch.link5dots.domain.models.Point
+import by.klnvch.link5dots.domain.models.RoomType
+import by.klnvch.link5dots.domain.models.canMove
 import by.klnvch.link5dots.domain.repositories.BluetoothRoomRepository
 import by.klnvch.link5dots.domain.repositories.NetworkUserProvider
 import by.klnvch.link5dots.domain.repositories.NsdRoomRepository
 import by.klnvch.link5dots.domain.repositories.RoomGetRepository
 import by.klnvch.link5dots.domain.repositories.RoomRepository
 import by.klnvch.link5dots.domain.repositories.TimeService
+import by.klnvch.link5dots.domain.repositories.UnauthorizedException
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
@@ -68,11 +71,9 @@ abstract class AddDotMultiplayerUseCase(
 ) : AddDotRealUseCase(timeService, board, getRepository) {
     abstract suspend fun addMultiplayerDot(room: IRoom, dot: Dot)
     override suspend fun addInternal(room: IRoom, p: Point, dt: Int) {
-        val user = networkUserProvider.networkUser
-        if (room.user1 == user && room.dots.size % 2 == 0) {
-            addMultiplayerDot(room, DotImpl(p, Dot.HOST, dt))
-        } else if (room.user2 == user && room.dots.size % 2 == 1) {
-            addMultiplayerDot(room, DotImpl(p, Dot.GUEST, dt))
+        val user = networkUserProvider.networkUser ?: throw UnauthorizedException()
+        if (room.canMove(user)) {
+            addMultiplayerDot(room, DotImpl(p, dt))
         }
     }
 }
@@ -110,9 +111,7 @@ class AddDotTwoUseCase @Inject constructor(
     private val saveRepository: RoomRepository,
 ) : AddDotRealUseCase(timeRepository, board, getRepository) {
     override suspend fun addInternal(room: IRoom, p: Point, dt: Int) {
-        val lastDotType = room.dots.lastOrNull()?.type ?: Dot.GUEST
-        val type = if (lastDotType == Dot.GUEST) Dot.HOST else Dot.GUEST
-        val updatedRoom = room.move(DotImpl(p, type, dt))
-        saveRepository.save(updatedRoom)
+        val updatedRoom = room.move(DotImpl(p, dt))
+        saveRepository.save(updatedRoom, RoomType.TWO_PLAYERS)
     }
 }

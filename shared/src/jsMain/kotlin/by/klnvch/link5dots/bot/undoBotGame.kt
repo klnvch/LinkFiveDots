@@ -25,6 +25,7 @@
 package by.klnvch.link5dots.bot
 
 import by.klnvch.link5dots.domain.models.IRoom
+import by.klnvch.link5dots.domain.models.RoomType
 import by.klnvch.link5dots.domain.repositories.RoomGetRepository
 import by.klnvch.link5dots.domain.repositories.RoomSaveRepository
 import by.klnvch.link5dots.domain.usecases.UndoMoveBotUseCase
@@ -42,7 +43,7 @@ fun undoBotGame(room: IRoom?, onGameUpdate: (room: IRoom) -> Unit): Promise<Unit
         }
 
         val saveRepository = object : RoomSaveRepository {
-            override suspend fun save(room: IRoom) = onGameUpdate(room)
+            override suspend fun save(room: IRoom, roomType: RoomType) = onGameUpdate(room)
         }
 
         val useCase = UndoMoveBotUseCase(getRepository, saveRepository)

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023-2025 klnvch
+ * Copyright (c) 2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,37 +22,20 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.data.db
+package by.klnvch.link5dots.domain.models
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
-import kotlinx.coroutines.flow.Flow
+interface HistoryRoom : IRoom {
+    val type: RoomType
+}
 
-@Dao
-interface RoomDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(room: RoomLocal)
-
-    @Query("DELETE FROM rooms WHERE key = :key")
-    suspend fun deleteByKey(key: String)
-
-    @Query("SELECT * FROM rooms ORDER BY timestamp DESC")
-    fun getAll(): Flow<List<RoomLocal>>
-
-    @Query("SELECT * FROM rooms WHERE is_send = 0 ORDER BY timestamp DESC")
-    suspend fun getNotSent(): List<RoomLocal>
-
-    @Query("UPDATE rooms SET is_send = 1 WHERE key = :key")
-    suspend fun setSent(key: String)
-
-    @Query("DELETE FROM rooms")
-    suspend fun deleteAll()
-
-    @Query("SELECT * FROM rooms WHERE type = :type ORDER BY timestamp DESC LIMIT 1")
-    fun getRecentByType(type: Int): Flow<List<RoomLocal>>
-
-    @Query("SELECT * FROM rooms WHERE key = :key LIMIT 1")
-    fun getByKey(key: String): Flow<List<RoomLocal>>
+data class HistoryRoomImpl(
+    override val key: String,
+    override val time: Int,
+    override val dots: List<Dot>,
+    override val user1: IUser?,
+    override val user2: IUser?,
+    override val type: RoomType,
+) : HistoryRoom {
+    override fun move(dot: Dot) = this // TODO remove it
+    override fun undo() = this // TODO remove it
 }

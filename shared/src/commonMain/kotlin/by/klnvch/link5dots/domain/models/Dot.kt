@@ -24,7 +24,6 @@
 
 package by.klnvch.link5dots.domain.models
 
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlin.js.ExperimentalJsExport
 import kotlin.js.JsExport
@@ -34,23 +33,14 @@ import kotlin.js.JsExport
 interface Dot {
     val x: Int
     val y: Int
-    val type: Int
     val dt: Int
-
-    companion object {
-        const val EMPTY = 1
-        const val HOST = 2
-        const val GUEST = 4
-    }
 }
 
 @Serializable
 data class DotImpl(
     override val x: Int,
     override val y: Int,
-    @SerialName("dotType")
-    override val type: Int,
     override val dt: Int,
 ) : Dot {
-    constructor(p: Point, type: Int, dt: Int) : this(p.x, p.y, type, dt)
+    constructor(p: Point, dt: Int) : this(p.x, p.y, dt)
 }

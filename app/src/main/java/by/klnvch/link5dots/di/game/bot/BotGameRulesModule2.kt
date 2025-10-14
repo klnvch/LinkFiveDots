@@ -24,7 +24,7 @@
 package by.klnvch.link5dots.di.game.bot
 
 import by.klnvch.link5dots.domain.models.Board
-import by.klnvch.link5dots.domain.models.Bot
+import by.klnvch.link5dots.domain.models.bot.Bot
 import by.klnvch.link5dots.domain.repositories.RoomGetRepository
 import by.klnvch.link5dots.domain.repositories.RoomRepository
 import by.klnvch.link5dots.domain.repositories.TimeService

@@ -24,7 +24,6 @@
 
 package by.klnvch.link5dots.domain.models
 
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlin.js.ExperimentalJsExport
 import kotlin.js.JsExport
@@ -37,7 +36,6 @@ interface IRoom {
     val dots: List<Dot>
     val user1: IUser?
     val user2: IUser?
-    val type: RoomType
 
     fun move(dot: Dot): IRoom
     fun undo(): IRoom
@@ -60,8 +58,6 @@ data class Room(
     override val dots: List<Dot>,
     override val user1: IUser?,
     override val user2: IUser?,
-    @SerialName("roomType")
-    override val type: RoomType,
 ) : IRoom {
     override fun move(dot: Dot) = copy(dots = dots + dot)
     override fun undo() = copy(dots = dots.dropLast(1))
@@ -71,7 +67,9 @@ fun List<Dot>.findWinningLine(): WinningLine? {
     if (size < 9) return null
 
     val lastDot = last()
-    val points = filter { it.type == lastDot.type }.map { Point(it.x, it.y) }
+    val lastIndex = lastIndex % 2
+
+    val points = filterIndexed { i, _ -> i % 2 == lastIndex }.map { Point(it.x, it.y) }
 
     // y = x + (py - px)
     // y = -x + (py + px)
@@ -82,7 +80,7 @@ fun List<Dot>.findWinningLine(): WinningLine? {
         ?: points.findMaxLine { it.y == lastDot.y }
         ?: points.map { it.invert() }.findMaxLine { it.y == lastDot.x }?.map { it.invert() }
 
-    return if (line != null) WinningLineImpl(line, lastDot.type) else null
+    return if (line != null) WinningLineImpl(line) else null
 }
 
 private inline fun List<Point>.findMaxLine(predicate: (Point) -> Boolean): List<Point>? = this

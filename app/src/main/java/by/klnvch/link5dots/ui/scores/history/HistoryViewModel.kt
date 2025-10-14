@@ -28,7 +28,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import by.klnvch.link5dots.di.viewmodels.AssistedSavedStateViewModelFactory
-import by.klnvch.link5dots.domain.models.IRoom
+import by.klnvch.link5dots.domain.models.HistoryRoom
 import by.klnvch.link5dots.domain.usecases.DeleteRoomUseCase
 import by.klnvch.link5dots.domain.usecases.GetRoomsUseCase
 import by.klnvch.link5dots.domain.usecases.GetUserNameUseCase
@@ -62,9 +62,9 @@ class HistoryViewModel @AssistedInject constructor(
         }
     }
 
-    fun deleteRoom(room: IRoom) = viewModelScope.launch { deleteRoomUseCase.delete(room) }
+    fun deleteRoom(room: HistoryRoom) = viewModelScope.launch { deleteRoomUseCase.delete(room) }
 
-    fun insertRoom(room: IRoom) = viewModelScope.launch { saveRoomUseCase.save(room) }
+    fun insertRoom(room: HistoryRoom) = viewModelScope.launch { saveRoomUseCase.save(room) }
 
     @AssistedFactory
     interface Factory : AssistedSavedStateViewModelFactory<HistoryViewModel>

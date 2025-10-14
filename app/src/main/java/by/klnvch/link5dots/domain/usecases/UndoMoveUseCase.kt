@@ -26,6 +26,7 @@ package by.klnvch.link5dots.domain.usecases
 
 import by.klnvch.link5dots.domain.models.IRoom
 import by.klnvch.link5dots.domain.models.NetworkRoom
+import by.klnvch.link5dots.domain.models.RoomType
 import by.klnvch.link5dots.domain.repositories.BluetoothRoomRepository
 import by.klnvch.link5dots.domain.repositories.NetworkUserProvider
 import by.klnvch.link5dots.domain.repositories.NsdRoomRepository
@@ -41,9 +42,10 @@ class UndoMoveInfoUseCase @Inject constructor() : UndoMoveUseCase {
 
 class UndoMoveTwoUseCase @Inject constructor(
     getRepository: RoomGetRepository,
-    saveRepository: RoomRepository,
-) : UndoMoveRealUseCase(getRepository, saveRepository) {
+    private val saveRepository: RoomRepository,
+) : UndoMoveRealUseCase(getRepository) {
     override suspend fun undoInternal(room: IRoom) = room.undo()
+    override suspend fun save(room: IRoom) = saveRepository.save(room, RoomType.TWO_PLAYERS)
 }
 
 class UndoMoveBluetoothUseCase @Inject constructor(

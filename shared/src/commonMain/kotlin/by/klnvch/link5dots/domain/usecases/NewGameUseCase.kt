@@ -28,6 +28,7 @@ import by.klnvch.link5dots.domain.models.BotUser
 import by.klnvch.link5dots.domain.models.DeviceOwnerUser
 import by.klnvch.link5dots.domain.models.Dot
 import by.klnvch.link5dots.domain.models.DotImpl
+import by.klnvch.link5dots.domain.models.IRoom
 import by.klnvch.link5dots.domain.models.IUser
 import by.klnvch.link5dots.domain.models.Room
 import by.klnvch.link5dots.domain.models.RoomType
@@ -45,7 +46,7 @@ abstract class NewGameCommonUseCase() : NewGameUseCase {
     override val isImplemented = true
     protected fun getDots(seed: Long?) =
         if (seed != null) generateInitialGame(seed)
-            .mapIndexed { i, p -> DotImpl(p, if (i % 2 == 0) Dot.HOST else Dot.GUEST, 0) }
+            .mapIndexed { i, p -> DotImpl(p, 0) }
             .toMutableList<Dot>()
         else mutableListOf()
 }
@@ -53,7 +54,6 @@ abstract class NewGameCommonUseCase() : NewGameUseCase {
 abstract class NewGameOfflineUseCase(
     private val roomKeyGenerator: RoomKeyGenerator,
     private val timeRepository: TimeService,
-    private val roomRepository: RoomSaveRepository,
 ) : NewGameCommonUseCase() {
     override suspend fun create(seed: Long?) {
         val room = Room(
@@ -62,28 +62,26 @@ abstract class NewGameOfflineUseCase(
             getDots(seed),
             user1,
             user2,
-            type,
         )
-        roomRepository.save(room)
+        save(room)
     }
 
     protected abstract val user1: IUser?
     protected abstract val user2: IUser?
-    protected abstract val type: RoomType
+    protected abstract suspend fun save(room: IRoom)
 }
 
 class NewGameBotUseCase(
     roomKeyGenerator: RoomKeyGenerator,
     timeRepository: TimeService,
-    roomRepository: RoomSaveRepository,
+    private val roomRepository: RoomSaveRepository,
 ) : NewGameOfflineUseCase(
     roomKeyGenerator,
     timeRepository,
-    roomRepository,
 ) {
     override val user1 = DeviceOwnerUser
     override val user2 = BotUser
-    override val type = RoomType.BOT
+    override suspend fun save(room: IRoom) = roomRepository.save(room, RoomType.BOT)
 }
 
 class NewGameOnlineUseCase() : NewGameUseCase {

@@ -70,30 +70,30 @@ fun GameScreenPreview() {
     GameBoard(
         viewState = GameBoardViewStateImpl(
         dots = arrayOf(
-            DotImpl(0, 0, Dot.GUEST, 0),
-            DotImpl(1, 1, Dot.HOST, 0),
-            DotImpl(2, 2, Dot.GUEST, 0),
-            DotImpl(3, 3, Dot.HOST, 0),
-            DotImpl(4, 4, Dot.GUEST, 0),
-            DotImpl(5, 5, Dot.HOST, 0),
-            DotImpl(6, 6, Dot.GUEST, 0),
-            DotImpl(7, 7, Dot.HOST, 0),
-            DotImpl(8, 8, Dot.GUEST, 0),
-            DotImpl(9, 9, Dot.HOST, 0),
-            DotImpl(10, 10, Dot.GUEST, 0),
-            DotImpl(11, 11, Dot.HOST, 0),
-            DotImpl(12, 12, Dot.GUEST, 0),
-            DotImpl(13, 13, Dot.HOST, 0),
-            DotImpl(14, 14, Dot.GUEST, 0),
-            DotImpl(15, 15, Dot.HOST, 0),
-            DotImpl(16, 16, Dot.GUEST, 0),
-            DotImpl(17, 17, Dot.HOST, 0),
-            DotImpl(18, 18, Dot.GUEST, 0),
-            DotImpl(19, 19, Dot.HOST, 0),
+            DotImpl(0, 0, 0),
+            DotImpl(1, 1, 0),
+            DotImpl(2, 2, 0),
+            DotImpl(3, 3, 0),
+            DotImpl(4, 4, 0),
+            DotImpl(5, 5, 0),
+            DotImpl(6, 6, 0),
+            DotImpl(7, 7, 0),
+            DotImpl(8, 8, 0),
+            DotImpl(9, 9, 0),
+            DotImpl(10, 10, 0),
+            DotImpl(11, 11, 0),
+            DotImpl(12, 12, 0),
+            DotImpl(13, 13, 0),
+            DotImpl(14, 14, 0),
+            DotImpl(15, 15, 0),
+            DotImpl(16, 16, 0),
+            DotImpl(17, 17, 0),
+            DotImpl(18, 18, 0),
+            DotImpl(19, 19, 0),
         ), winningLine = WinningLineImpl(
             listOf(
                 Point(5, 5), Point(6, 5), Point(7, 5), Point(8, 5)
-            ), Dot.HOST
+            )
         )
     ), focus = Point(19, 19), onMoveDone = { Log.d("GameBoard", it.toString()) }, onUnfocus = {})
 }
@@ -107,17 +107,18 @@ fun GameBoard(
     onUnfocus: () -> Unit,
 ) {
     val density = LocalDensity.current.density
-    val user1Tint = MaterialTheme.dotColorsPalette.user1
-    val user2Tint = MaterialTheme.dotColorsPalette.user2
+    val user1Tint = MaterialTheme.dotColorsPalette.user1.toArgb()
+    val user2Tint = MaterialTheme.dotColorsPalette.user2.toArgb()
     val paperColorFilter = MaterialTheme.dotColorsPalette.paperColorFilter
 
     val arrowsImage = ImageBitmap.imageResource(id = R.drawable.arrows)
     val paperImage = ImageBitmap.imageResource(id = R.drawable.background)
     val paper =
-        Paper(viewState.dotsStyleType, paperImage.width, user1Tint.toArgb(), user2Tint.toArgb())
+        Paper(viewState.dotsStyleType, paperImage.width, user1Tint, user2Tint)
 
     val user1Image = paper.user1Dot.toImageBitmap()
     val user2Image = paper.user2Dot.toImageBitmap()
+    fun Int.toImage() = if(this % 2 == 0) user1Image else user2Image
 
     val paperSize = paperImage.width.toFloat()
 
@@ -156,10 +157,10 @@ fun GameBoard(
                 image = paperImage,
                 colorFilter = paperColorFilter,
             )
-            for (dot in viewState.dots) {
-                val dotImage = if (dot.type == Dot.HOST) user1Image else user2Image
-                drawImage(dotImage, topLeft = dot.toDotOffset(paper))
+            viewState.dots.forEachIndexed { i, dot ->
+                drawImage(image = i.toImage(), topLeft = dot.toDotOffset(paper))
             }
+
             viewState.lastDot?.let {
                 drawImage(
                     image = arrowsImage,
@@ -168,7 +169,8 @@ fun GameBoard(
                 )
             }
             viewState.winningLine?.let {
-                val line = paper.toLineOnPaper(it)
+                val color = if(viewState.dots.size % 2 == 1) user1Tint else user2Tint
+                val line = paper.toLineOnPaper(it, color)
                 val image = line.lineBitmap.toImageBitmap()
                 for (seg in line.linePositions) {
                     drawImage(image, topLeft = seg.toOffset())

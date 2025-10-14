@@ -25,9 +25,10 @@
 package by.klnvch.link5dots.domain.repositories
 
 import by.klnvch.link5dots.domain.models.IRoom
+import by.klnvch.link5dots.domain.models.RoomType
 
 interface RoomSaveRepository {
-    suspend fun save(room: IRoom)
+    suspend fun save(room: IRoom, roomType: RoomType)
 }
 
 interface RoomGetRepository {

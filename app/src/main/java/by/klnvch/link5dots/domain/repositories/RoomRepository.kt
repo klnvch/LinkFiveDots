@@ -24,6 +24,7 @@
 
 package by.klnvch.link5dots.domain.repositories
 
+import by.klnvch.link5dots.domain.models.HistoryRoom
 import by.klnvch.link5dots.domain.models.IRoom
 import by.klnvch.link5dots.domain.models.RoomType
 import kotlinx.coroutines.CoroutineScope
@@ -36,8 +37,8 @@ import javax.inject.Singleton
 
 interface RoomRepository : RoomSaveRepository {
     suspend fun sync(isTestDevice: Boolean)
-    suspend fun delete(room: IRoom)
-    fun getAll(): Flow<List<IRoom>>
+    suspend fun delete(key: String)
+    fun getAll(): Flow<List<HistoryRoom>>
     fun getByKey(key: String): Flow<IRoom?>
     fun getRecentByType(type: RoomType): Flow<IRoom?>
     suspend fun deleteAll()

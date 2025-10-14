@@ -73,7 +73,7 @@ class GetRoomNsdUseCase @Inject constructor(
 ) : GetRoomUseCase {
     override fun get(param: RoomParam) = when (param) {
         is RoomByDescriptor -> repository.getFlow()
-            .onEach { if (it !== null) dbRepository.save(it) }
+            .onEach { if (it !== null) dbRepository.save(it, RoomType.NSD) }
 
         else -> throw IllegalArgumentException("Wrong param")
     }
@@ -85,7 +85,7 @@ class GetRoomBluetoothUseCase @Inject constructor(
 ) : GetRoomUseCase {
     override fun get(param: RoomParam) = when (param) {
         is RoomByDescriptor -> repository.getFlow()
-            .onEach { if (it !== null) dbRepository.save(it) }
+            .onEach { if (it !== null) dbRepository.save(it, RoomType.BLUETOOTH) }
 
         else -> throw IllegalArgumentException("Wrong param")
     }

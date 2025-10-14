@@ -27,6 +27,7 @@ package by.klnvch.link5dots.bot
 import by.klnvch.link5dots.data.RoomKeyGeneratorImpl
 import by.klnvch.link5dots.data.TimeServiceImpl
 import by.klnvch.link5dots.domain.models.IRoom
+import by.klnvch.link5dots.domain.models.RoomType
 import by.klnvch.link5dots.domain.models.gameSeed
 import by.klnvch.link5dots.domain.repositories.RoomSaveRepository
 import by.klnvch.link5dots.domain.usecases.NewGameBotUseCase
@@ -42,7 +43,7 @@ fun createBotGame(onGameCreated: (room: IRoom) -> Unit): Promise<Unit> = GlobalS
     val roomKeyGenerator = RoomKeyGeneratorImpl(timeService)
 
     val repository = object : RoomSaveRepository {
-        override suspend fun save(room: IRoom) = onGameCreated(room)
+        override suspend fun save(room: IRoom, roomType: RoomType) = onGameCreated(room)
     }
 
     val useCase = NewGameBotUseCase(roomKeyGenerator, timeService, repository)

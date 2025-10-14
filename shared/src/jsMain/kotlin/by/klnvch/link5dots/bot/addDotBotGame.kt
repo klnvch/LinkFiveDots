@@ -26,9 +26,10 @@ package by.klnvch.link5dots.bot
 
 import by.klnvch.link5dots.data.TimeServiceImpl
 import by.klnvch.link5dots.domain.models.Board
-import by.klnvch.link5dots.domain.models.Bot
 import by.klnvch.link5dots.domain.models.IRoom
 import by.klnvch.link5dots.domain.models.Point
+import by.klnvch.link5dots.domain.models.RoomType
+import by.klnvch.link5dots.domain.models.bot.Bot
 import by.klnvch.link5dots.domain.repositories.RoomGetRepository
 import by.klnvch.link5dots.domain.repositories.RoomSaveRepository
 import by.klnvch.link5dots.domain.usecases.AddDotBotUseCase
@@ -50,7 +51,7 @@ fun addDotBotGame(room: IRoom?, p: Point, onGameUpdate: (room: IRoom) -> Unit): 
         }
 
         val saveRepository = object : RoomSaveRepository {
-            override suspend fun save(room: IRoom) = onGameUpdate(room)
+            override suspend fun save(room: IRoom, roomType: RoomType) = onGameUpdate(room)
         }
 
         val useCase = AddDotBotUseCase(timeService, board, getRepository, saveRepository, bot)

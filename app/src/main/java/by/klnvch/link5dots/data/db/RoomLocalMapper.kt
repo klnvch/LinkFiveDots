@@ -26,63 +26,69 @@ package by.klnvch.link5dots.data.db
 
 import by.klnvch.link5dots.domain.models.BotUser
 import by.klnvch.link5dots.domain.models.DeviceOwnerUser
+import by.klnvch.link5dots.domain.models.HistoryRoom
+import by.klnvch.link5dots.domain.models.HistoryRoomImpl
 import by.klnvch.link5dots.domain.models.IRoom
 import by.klnvch.link5dots.domain.models.IUser
 import by.klnvch.link5dots.domain.models.NetworkUser
 import by.klnvch.link5dots.domain.models.Room
 import by.klnvch.link5dots.domain.models.RoomType
-import javax.inject.Inject
 
-class RoomLocalMapper @Inject constructor() {
-    fun map(room: IRoom) = RoomLocal(
-        room.key,
-        room.time.toLong(),
-        room.dots.toList(),
-        map(room.user1),
-        map(room.user2),
-        map(room.type),
-        false,
-        -1,
-        false,
-    )
+fun RoomLocal.mapToRoom(): IRoom = Room(
+    key,
+    timestamp.toInt(),
+    dots?.toMutableList() ?: mutableListOf(),
+    user1?.mapToUser(),
+    user2?.mapToUser(),
+)
 
-    fun map(local: RoomLocal): IRoom = Room(
-        local.key,
-        (local.timestamp).toInt(),
-        local.dots?.toMutableList() ?: mutableListOf(),
-        map(local.user1),
-        map(local.user2),
-        map(local.type)
-    )
+fun RoomLocal.mapToHistoryRoom(): HistoryRoom = HistoryRoomImpl(
+    key,
+    timestamp.toInt(),
+    dots?.toMutableList() ?: mutableListOf(),
+    user1?.mapToUser(),
+    user2?.mapToUser(),
+    type.mapToRoomType(),
+)
 
-    private fun map(user: IUser?) = when (user) {
-        is BotUser -> UserLocal("bot", null)
-        is DeviceOwnerUser -> UserLocal("host", null)
-        is NetworkUser -> UserLocal("", user.name)
-        else -> null
-    }
+fun IRoom.mapToDbEntity(type: RoomType) = RoomLocal(
+    key,
+    time.toLong(),
+    dots.toList(),
+    user1?.mapToDbEntity(),
+    user2?.mapToDbEntity(),
+    type.mapToDbValue(),
+    false,
+    -1,
+    false,
+)
 
-    private fun map(user: UserLocal?): IUser? = when (user?.id) {
-        "bot" -> BotUser
-        "host" -> DeviceOwnerUser
-        null -> null
-        else -> if (user.name.isNullOrEmpty()) null else NetworkUser(user.id, user.name)
-    }
+private fun IUser.mapToDbEntity() = when (this) {
+    is BotUser -> UserLocal("bot", null)
+    is DeviceOwnerUser -> UserLocal("host", null)
+    is NetworkUser -> UserLocal(id, name)
+}
 
-    fun map(type: RoomType) = when (type) {
-        RoomType.BLUETOOTH -> 1
-        RoomType.NSD -> 2
-        RoomType.ONLINE -> 3
-        RoomType.TWO_PLAYERS -> 4
-        RoomType.BOT -> 5
-    }
+private fun UserLocal.mapToUser(): IUser? = when (id) {
+    "bot" -> BotUser
+    "host" -> DeviceOwnerUser
+    null -> null
+    else -> NetworkUser(id, name)
+}
 
-    private fun map(type: Int) = when (type) {
-        1 -> RoomType.BLUETOOTH
-        2 -> RoomType.NSD
-        3 -> RoomType.ONLINE
-        4 -> RoomType.TWO_PLAYERS
-        5 -> RoomType.BOT
-        else -> RoomType.TWO_PLAYERS
-    }
+fun RoomType.mapToDbValue() = when (this) {
+    RoomType.BLUETOOTH -> 1
+    RoomType.NSD -> 2
+    RoomType.ONLINE -> 3
+    RoomType.TWO_PLAYERS -> 4
+    RoomType.BOT -> 5
+}
+
+private fun Int.mapToRoomType() = when (this) {
+    1 -> RoomType.BLUETOOTH
+    2 -> RoomType.NSD
+    3 -> RoomType.ONLINE
+    4 -> RoomType.TWO_PLAYERS
+    5 -> RoomType.BOT
+    else -> RoomType.TWO_PLAYERS
 }

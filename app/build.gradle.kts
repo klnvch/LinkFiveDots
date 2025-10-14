@@ -65,14 +65,14 @@ android {
         minSdk = 23
         targetSdk = 36
         versionCode = 48
-        versionName = "4.4.12"
+        versionName = "5.0.0"
 
         multiDexEnabled = true
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
     androidResources {
-        localeFilters += listOf("en", "be", "de", "es", "fr", "it", "pl", "ru", "uk", "fa")
+        localeFilters += listOf("en", "be", "de", "es", "fr", "it", "pl", "uk", "fa")
     }
     sourceSets {
         /* androidTest.assets.srcDirs += files("$projectDir/schemas".toString()) */

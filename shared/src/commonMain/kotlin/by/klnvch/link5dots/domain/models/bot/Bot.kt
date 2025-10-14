@@ -22,23 +22,37 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.domain.models
+package by.klnvch.link5dots.domain.models.bot
+
+import by.klnvch.link5dots.domain.models.Board
+import by.klnvch.link5dots.domain.models.Point
+
+
+private data class Dot(val x: Int, val y: Int, val type: Int) {
+    constructor(p: Point, i: Int) : this(p.x, p.y, if (i % 2 == 0) HOST else GUEST)
+
+    val isEmpty = type == EMPTY
+
+    companion object {
+        const val EMPTY = 1
+        const val HOST = 2
+        const val GUEST = 4
+    }
+}
 
 class Bot(private val board: Board) {
     //temporary table for dots rate
     private val net1: Array<IntArray> = Array(board.width) { IntArray(board.height) }
     private val net2: Array<IntArray> = Array(board.width) { IntArray(board.height) }
 
-    fun findAnswer(dots: List<Dot>): Point {
-        val net = Array<Array<Dot>>(board.width) { i ->
+    fun findAnswer(dots: List<Point>): Point {
+        val net = Array(board.width) { i ->
             Array(board.height) { j ->
-                DotImpl(i, j, Dot.EMPTY, 0)
+                Dot(i, j, Dot.EMPTY)
             }
         }
 
-        for (dot in dots) {
-            net[dot.x][dot.y] = dot
-        }
+        dots.forEachIndexed { i, p -> net[p.x][p.y] = Dot(p, i) }
 
         var maxUserRate = -1f
         val listUser = ArrayList<Dot>()
@@ -47,7 +61,7 @@ class Bot(private val board: Board) {
 
         for (i in 0..<board.width) {
             for (j in 0..<board.height) {
-                if (net[i][j].type == Dot.EMPTY) {
+                if (net[i][j].isEmpty) {
                     val userRate = getDotRate(net, net[i][j], Dot.HOST)
                     net1[i][j] = userRate.toInt()
                     val botRate = getDotRate(net, net[i][j], Dot.GUEST)

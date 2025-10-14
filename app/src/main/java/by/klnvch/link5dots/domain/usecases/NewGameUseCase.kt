@@ -23,6 +23,7 @@
  */
 package by.klnvch.link5dots.domain.usecases
 
+import by.klnvch.link5dots.domain.models.IRoom
 import by.klnvch.link5dots.domain.models.NetworkRoom
 import by.klnvch.link5dots.domain.models.RoomState
 import by.klnvch.link5dots.domain.models.RoomType
@@ -44,15 +45,14 @@ class NewGameEmptyUseCase @Inject constructor() : NewGameUseCase {
 class NewGameTwoUseCase @Inject constructor(
     roomKeyGenerator: RoomKeyGenerator,
     timeRepository: TimeService,
-    roomRepository: RoomRepository,
+    private val roomRepository: RoomRepository,
 ) : NewGameOfflineUseCase(
     roomKeyGenerator,
     timeRepository,
-    roomRepository,
 ) {
     override val user1 = null
     override val user2 = null
-    override val type = RoomType.TWO_PLAYERS
+    override suspend fun save(room: IRoom) = roomRepository.save(room, RoomType.TWO_PLAYERS)
 }
 
 class NewGameBluetoothUseCase @Inject constructor(
@@ -77,7 +77,6 @@ class NewGameBluetoothUseCase @Inject constructor(
                 getDots(seed),
                 user1,
                 user2,
-                RoomType.BLUETOOTH,
                 RoomState.CREATED
             )
 
@@ -108,7 +107,6 @@ class NewGameNsdUseCase @Inject constructor(
                 getDots(seed),
                 user1,
                 user2,
-                RoomType.NSD,
                 RoomState.CREATED,
             )
 

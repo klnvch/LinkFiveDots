@@ -24,7 +24,6 @@
 package by.klnvch.link5dots.domain.usecases
 
 import by.klnvch.link5dots.domain.models.BotGameScore
-import by.klnvch.link5dots.domain.models.Dot
 import by.klnvch.link5dots.domain.models.GameResult
 import by.klnvch.link5dots.domain.models.GameScore
 import by.klnvch.link5dots.domain.models.IRoom
@@ -42,7 +41,7 @@ class PrepareScoreBotUseCase @Inject constructor() : PrepareScoreUseCase {
         room.dots.size,
         room.getDuration(),
         room.getEndTime().toLong(),
-        if (room.dots.last().type == Dot.HOST) GameResult.WON else GameResult.LOST
+        if (room.dots.size % 2 == 1) GameResult.WON else GameResult.LOST
     )
 }
 

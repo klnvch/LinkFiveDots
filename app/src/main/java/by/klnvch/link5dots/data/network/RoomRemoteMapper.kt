@@ -26,14 +26,14 @@ package by.klnvch.link5dots.data.network
 
 import by.klnvch.link5dots.domain.models.BotUser
 import by.klnvch.link5dots.domain.models.DeviceOwnerUser
-import by.klnvch.link5dots.domain.models.IRoom
+import by.klnvch.link5dots.domain.models.HistoryRoom
 import by.klnvch.link5dots.domain.models.IUser
 import by.klnvch.link5dots.domain.models.NetworkUser
 import by.klnvch.link5dots.domain.models.RoomType
 import javax.inject.Inject
 
 class RoomRemoteMapper @Inject constructor() {
-    fun map(room: IRoom, isTest: Boolean): RoomRemote {
+    fun map(room: HistoryRoom, isTest: Boolean): RoomRemote {
         return RoomRemote(
             room.time.toLong(),
             room.dots,

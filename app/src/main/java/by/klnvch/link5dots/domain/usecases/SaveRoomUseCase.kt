@@ -24,15 +24,15 @@
 
 package by.klnvch.link5dots.domain.usecases
 
-import by.klnvch.link5dots.domain.models.IRoom
+import by.klnvch.link5dots.domain.models.HistoryRoom
 import by.klnvch.link5dots.domain.models.isNotEmpty
 import by.klnvch.link5dots.domain.repositories.RoomRepository
 import javax.inject.Inject
 
 class SaveRoomUseCase @Inject constructor(private val roomRepository: RoomRepository) {
-    suspend fun save(room: IRoom?) {
+    suspend fun save(room: HistoryRoom?) {
         if (room?.isNotEmpty() == true) {
-            roomRepository.save(room)
+            roomRepository.save(room, room.type)
         }
     }
 }

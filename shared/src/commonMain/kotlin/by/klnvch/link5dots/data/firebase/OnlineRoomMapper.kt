@@ -24,13 +24,11 @@
 
 package by.klnvch.link5dots.data.firebase
 
-import by.klnvch.link5dots.domain.models.Dot
 import by.klnvch.link5dots.domain.models.DotImpl
 import by.klnvch.link5dots.domain.models.NetworkRoom
 import by.klnvch.link5dots.domain.models.NetworkRoomInvitation
 import by.klnvch.link5dots.domain.models.NetworkUser
 import by.klnvch.link5dots.domain.models.RoomState
-import by.klnvch.link5dots.domain.models.RoomType
 import kotlin.js.ExperimentalJsExport
 import kotlin.js.JsExport
 
@@ -51,7 +49,6 @@ fun RemoteRoomItem.mapToNetworkRoom() = key?.let {
             emptyList(),
             NetworkUser("", null),
             null,
-            RoomType.ONLINE,
             RoomState.DELETED,
         )
 }
@@ -65,7 +62,7 @@ fun OnlineRemoteUser.mapToNetworkUser() = id?.let { NetworkUser(it, name) }
 fun OnlineRoomRemote.mapToNetworkRoomInvitation(key: String): NetworkRoomInvitation? {
     val user1 = user1?.mapToNetworkUser()
     return if (time != null && user1 != null)
-        NetworkRoomInvitation(key, (time / 1000).toInt(), user1, RoomType.ONLINE)
+        NetworkRoomInvitation(key, (time / 1000).toInt(), user1)
     else
         null
 }
@@ -81,7 +78,6 @@ fun OnlineRoomRemote.mapToNetworkRoom(key: String): NetworkRoom {
         dots?.mapToDotList(time) ?: emptyList(),
         user1,
         user2,
-        RoomType.ONLINE,
         state,
     )
 }
@@ -91,7 +87,6 @@ fun List<OnlineDotRemote>.mapToDotList(time: Long) = this
         DotImpl(
             d.x!!,
             d.y!!,
-            if (i % 2 == 0) Dot.HOST else Dot.GUEST,
             d.t?.let { ((it - time) / 1000).toInt() } ?: 0,
         )
     }

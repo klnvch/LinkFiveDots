@@ -26,47 +26,49 @@ package by.klnvch.link5dots.data
 
 import by.klnvch.link5dots.BuildConfig
 import by.klnvch.link5dots.data.db.RoomDao
-import by.klnvch.link5dots.data.db.RoomLocalMapper
+import by.klnvch.link5dots.data.db.mapToDbEntity
+import by.klnvch.link5dots.data.db.mapToDbValue
+import by.klnvch.link5dots.data.db.mapToHistoryRoom
+import by.klnvch.link5dots.data.db.mapToRoom
 import by.klnvch.link5dots.data.network.NetworkService
 import by.klnvch.link5dots.data.network.RoomRemoteMapper
 import by.klnvch.link5dots.domain.models.IRoom
 import by.klnvch.link5dots.domain.models.RoomType
 import by.klnvch.link5dots.domain.repositories.RoomRepository
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class RoomRepositoryImpl @Inject constructor(
     private val roomLocalSource: RoomDao,
-    private val roomLocalMapper: RoomLocalMapper,
     private val roomRemoteSource: NetworkService,
     private val roomRemoteMapper: RoomRemoteMapper,
 ) : RoomRepository {
     override suspend fun sync(isTestDevice: Boolean) = roomLocalSource
         .getNotSent()
-        .map { roomLocalMapper.map(it) }
+        .map { it.mapToHistoryRoom() }
         .forEach {
             roomRemoteSource.addRoom(HISTORY_TABLE, it.key, roomRemoteMapper.map(it, isTestDevice))
             roomLocalSource.setSent(it.key)
         }
 
-    override suspend fun save(room: IRoom) = roomLocalSource
-        .insert(roomLocalMapper.map(room))
+    override suspend fun save(room: IRoom, roomType: RoomType) = roomLocalSource
+        .insert(room.mapToDbEntity(roomType))
 
-    override suspend fun delete(room: IRoom) = roomLocalSource
-        .delete(roomLocalMapper.map(room))
+    override suspend fun delete(key: String) = roomLocalSource.deleteByKey(key)
 
-    override fun getAll(): Flow<List<IRoom>> = roomLocalSource
+    override fun getAll() = roomLocalSource
         .getAll()
-        .map { list -> list.map { roomLocalMapper.map(it) } }
+        .map { list -> list.map { it.mapToHistoryRoom() } }
 
     override fun getByKey(key: String) = roomLocalSource
         .getByKey(key)
-        .map { list -> list.map { roomLocalMapper.map(it) }.firstOrNull() }
+        .map { it.firstOrNull() }
+        .map { it?.mapToRoom() }
 
     override fun getRecentByType(type: RoomType) = roomLocalSource
-        .getRecentByType(roomLocalMapper.map(type))
-        .map { list -> list.map { roomLocalMapper.map(it) }.firstOrNull() }
+        .getRecentByType(type.mapToDbValue())
+        .map { it.firstOrNull() }
+        .map { it?.mapToRoom() }
 
     override suspend fun deleteAll() = roomLocalSource.deleteAll()
 

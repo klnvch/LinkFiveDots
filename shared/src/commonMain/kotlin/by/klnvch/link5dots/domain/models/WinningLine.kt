@@ -30,12 +30,11 @@ import kotlin.js.JsExport
 @OptIn(ExperimentalJsExport::class)
 @JsExport()
 interface WinningLine {
-    val type: Int
     val points: Array<Point>
     val orientation: LineOrientation
 }
 
-class WinningLineImpl(points: List<Point>, override val type: Int) : WinningLine {
+class WinningLineImpl(points: List<Point>) : WinningLine {
     override val points = points.toTypedArray()
     private val first = points.first()
     private val last = points.last()
