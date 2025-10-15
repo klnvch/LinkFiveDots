@@ -195,6 +195,6 @@ class PickerItemViewStateImpl(
             descriptor.title,
             descriptor.description,
             descriptor.time?.formatDateTime()
-        ).toTypedArray()
+        ).filter { it.isNotEmpty() }.toTypedArray()
     override val isBold = descriptor.isFavorite
 }

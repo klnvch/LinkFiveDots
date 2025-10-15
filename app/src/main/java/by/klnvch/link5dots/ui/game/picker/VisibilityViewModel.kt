@@ -35,11 +35,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 
 class VisibilityViewModel @Inject constructor() : ViewModel() {
-    private val _uiState = MutableStateFlow(
-        BluetoothPickerViewState(
-            InvisibleViewState, isCreatePermissionGranted = true, isScanPermissionGranted = true
-        )
-    )
+    private val _uiState = MutableStateFlow(BluetoothPickerViewState(InvisibleViewState))
     val uiState: StateFlow<BluetoothPickerViewState> = _uiState.asStateFlow()
     private var _timer: CountDownTimer? = null
 
@@ -59,14 +55,6 @@ class VisibilityViewModel @Inject constructor() : ViewModel() {
                 _uiState.value = _uiState.value.copy(visibility = InvisibleViewState)
             }
         }.start()
-    }
-
-    fun setCreatePermissionGranted(isGranted: Boolean) {
-        _uiState.value = _uiState.value.copy(isCreatePermissionGranted = isGranted)
-    }
-
-    fun setScanPermissionGranted(isGranted: Boolean) {
-        _uiState.value = _uiState.value.copy(isScanPermissionGranted = isGranted)
     }
 
     override fun onCleared() {

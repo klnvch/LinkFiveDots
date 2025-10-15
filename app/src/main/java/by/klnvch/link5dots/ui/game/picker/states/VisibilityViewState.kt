@@ -34,6 +34,4 @@ class VisibleViewState(durationMs: Long) : VisibilityViewState {
 
 data class BluetoothPickerViewState(
     val visibility: VisibilityViewState,
-    val isCreatePermissionGranted: Boolean,
-    val isScanPermissionGranted: Boolean,
 )

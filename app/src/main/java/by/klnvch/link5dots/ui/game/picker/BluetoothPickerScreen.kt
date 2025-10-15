@@ -29,16 +29,22 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import by.klnvch.link5dots.R
 import by.klnvch.link5dots.ui.common.CustomButtonWithText
+import by.klnvch.link5dots.ui.common.TextNoSurface
 import by.klnvch.link5dots.ui.game.OnlineGameViewModel
 import by.klnvch.link5dots.ui.game.picker.states.InvisibleViewState
 import by.klnvch.link5dots.ui.game.picker.states.VisibilityViewState
@@ -52,21 +58,19 @@ fun BluetoothPickerScreen(
     val context = LocalContext.current
     val uiState by gameViewModel.pickerUiState.collectAsState()
     val uiVisibilityState by bluetoothViewModel.uiState.collectAsState()
+    val showPermissionRationale = remember { mutableStateOf(false) }
 
     val requestCreatePermissionLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) {
-        bluetoothViewModel.setCreatePermissionGranted(it)
-        if (it) {
-            gameViewModel.createRoom()
-        }
+        if (it) gameViewModel.createRoom() else showPermissionRationale.value = true
     }
 
     val requestScanPermissionLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
     ) { result ->
         val isGranted = result.values.all { it }
-        bluetoothViewModel.setScanPermissionGranted(isGranted)
+        if (!isGranted) showPermissionRationale.value = true
         gameViewModel.startScan()
     }
 
@@ -79,10 +83,25 @@ fun BluetoothPickerScreen(
 
     val requestDiscoverPermissionLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) {
-            if (it) {
-                startDiscoverableForResult.launch(discoverableIntent)
-            }
+            if (it) startDiscoverableForResult.launch(discoverableIntent)
+            else showPermissionRationale.value = true
         }
+
+    if (showPermissionRationale.value) {
+        AlertDialog(
+            text = {
+                Text(text = stringResource(R.string.runtime_permissions_summary_no_permissions_granted))
+            },
+            onDismissRequest = { },
+            confirmButton = {
+                TextButton(
+                    onClick = { showPermissionRationale.value = false }
+                ) {
+                    Text(text = stringResource(R.string.okay))
+                }
+            },
+        )
+    }
 
     Column {
         BluetoothVisibilityPart(uiVisibilityState.visibility) {
@@ -93,22 +112,22 @@ fun BluetoothPickerScreen(
         }
 
         PickerScreenCommon(
-            uiState,
-            {
-                context.createPermissionGuard(requestCreatePermissionLauncher) {
-                    bluetoothViewModel.setCreatePermissionGranted(true)
-                    gameViewModel.createRoom()
-                }
+            uiState = uiState,
+            onCreate = {
+                context.createPermissionGuard(
+                    launcher = requestCreatePermissionLauncher,
+                    onPermissionGranted = { gameViewModel.createRoom() },
+                )
             },
-            { gameViewModel.deleteRoom() },
-            {
-                context.scanPermissionGuard(requestScanPermissionLauncher) {
-                    bluetoothViewModel.setScanPermissionGranted(true)
-                    gameViewModel.startScan()
-                }
+            onDelete = { gameViewModel.deleteRoom() },
+            onScan = {
+                context.scanPermissionGuard(
+                    launcher = requestScanPermissionLauncher,
+                    onPermissionGranted = { gameViewModel.startScan() }
+                )
             },
-            { gameViewModel.stopScan() },
-            { descriptor -> gameViewModel.connect(descriptor) },
+            onCancel = { gameViewModel.stopScan() },
+            onConnect = { gameViewModel.connect(it) },
         )
     }
 }
@@ -124,8 +143,9 @@ fun BluetoothVisibilityPart(state: VisibilityViewState, onSetVisible: () -> Unit
             textId = R.string.bluetooth_not_discoverable,
             onClick = onSetVisible,
         )
-        Text(
-            text = text
+        TextNoSurface(
+            text = text,
+            textAlign = TextAlign.Center,
         )
     }
 }

@@ -70,11 +70,12 @@ class BluetoothRoomRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun getInvitations(): Flow<List<RoomInvitation>> {
+    override fun getInvitations(): Flow<List<RoomInvitation>> = flow {
         bluetoothValidator.validate()
         val knownFlow = flow { emitAll(bluetoothBondedStore.getKnown().asFlow()) }
         val foundFlow = bluetoothDiscoveryService.discover().filterNotNull()
-        return merge(knownFlow, foundFlow)
+        emitAll(
+            merge(knownFlow, foundFlow)
             .scan(emptyMap<String, BluetoothDevice>()) { acc, d -> acc.plus(d.address to d) }
             .map { it.values }
             .map { devices ->
@@ -83,7 +84,7 @@ class BluetoothRoomRepositoryImpl @Inject constructor(
                         nullsLast()
                     ) { it.deviceName })
             }
-            .map { devices -> devices.map { BluetoothRoomInvitationImpl(it) } }
+            .map { devices -> devices.map { BluetoothRoomInvitationImpl(it) } })
     }
 
     private inner class BluetoothLocalRoomDescriptor() : RemoteRoomDescriptor {

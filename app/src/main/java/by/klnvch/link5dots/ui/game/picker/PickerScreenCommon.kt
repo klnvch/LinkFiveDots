@@ -28,6 +28,7 @@ import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -280,7 +281,7 @@ private fun ScanPart(
                     .fillParentMaxWidth(),
                 onClick = { openConnectDialog.value = room }
             ) {
-                Row(
+                FlowRow(
                     modifier = Modifier
                         .padding(8.dp)
                         .fillMaxWidth(),

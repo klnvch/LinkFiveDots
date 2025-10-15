@@ -35,23 +35,18 @@ import androidx.activity.result.ActivityResult
 import androidx.core.content.ContextCompat
 
 //////////////// Create //////////////////////////////////////////////////////////
-
 private fun Context.isCreatePermissionGranted() =
     Build.VERSION.SDK_INT < Build.VERSION_CODES.S || hasPermission(Manifest.permission.BLUETOOTH_CONNECT)
 
 fun Context.createPermissionGuard(
     launcher: ManagedActivityResultLauncher<String, Boolean>,
-    action: () -> Unit,
+    onPermissionGranted: () -> Unit,
 ) {
-    if (isCreatePermissionGranted()) {
-        action()
-    } else {
-        launcher.launch(Manifest.permission.BLUETOOTH_CONNECT)
-    }
+    if (isCreatePermissionGranted()) onPermissionGranted()
+    else launcher.launch(Manifest.permission.BLUETOOTH_CONNECT)
 }
 
 //////////////// Scan //////////////////////////////////////////////////////////
-
 private val scanPermissions = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
     arrayOf(
         Manifest.permission.BLUETOOTH_SCAN,
@@ -65,14 +60,9 @@ private fun Context.isScanPermissionGranted() = scanPermissions.all { hasPermiss
 
 fun Context.scanPermissionGuard(
     launcher: ManagedActivityResultLauncher<Array<String>, Map<String, @JvmSuppressWildcards Boolean>>,
-    action: () -> Unit,
-) {
-    if (isScanPermissionGranted()) {
-        action()
-    } else {
-        launcher.launch(scanPermissions)
-    }
-}
+    onPermissionGranted: () -> Unit,
+) = if (isScanPermissionGranted()) onPermissionGranted() else launcher.launch(scanPermissions)
+
 
 //////////////// Discovery //////////////////////////////////////////////////////////
 private const val DISCOVERABLE_DURATION_SECONDS = 30
@@ -96,7 +86,5 @@ fun Context.discoveryPermissionGuard(
 }
 
 //////////////// Common //////////////////////////////////////////////////////////
-private fun Context.hasPermission(permission: String) = ContextCompat.checkSelfPermission(
-    this,
-    permission
-) == PackageManager.PERMISSION_GRANTED
+private fun Context.hasPermission(permission: String) =
+    ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED

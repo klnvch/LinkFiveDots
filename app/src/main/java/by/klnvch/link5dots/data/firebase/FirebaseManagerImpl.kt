@@ -70,13 +70,11 @@ class FirebaseManagerImpl @Inject constructor(
                         is Exception -> cont.resumeWithException(exception)
                         else -> cont.resumeWithException(UnknownException())
                     }
-
                 }
             }
 
             cont.invokeOnCancellation { auth.signOut() }
             auth.signInAnonymously().addOnCompleteListener(listener)
-
         }
     }
 
