@@ -33,7 +33,7 @@ import by.klnvch.link5dots.domain.repositories.NsdRoomRepository
 import by.klnvch.link5dots.domain.repositories.RoomKeyGenerator
 import by.klnvch.link5dots.domain.repositories.RoomRepository
 import by.klnvch.link5dots.domain.repositories.TimeService
-import by.klnvch.link5dots.domain.repositories.UnauthorizedException
+import by.klnvch.link5dots.domain.repositories.networkUserOrThrow
 import kotlinx.coroutines.flow.firstOrNull
 import javax.inject.Inject
 
@@ -68,7 +68,7 @@ class NewGameBluetoothUseCase @Inject constructor(
             val key = roomKeyGenerator.generate()
             val time = timeRepository.time()
 
-            val user1 = networkUserProvider.networkUser ?: throw UnauthorizedException()
+            val user1 = networkUserProvider.networkUserOrThrow
             val user2 = prevRoom?.user2
 
             val newRoom = NetworkRoom(
@@ -98,7 +98,7 @@ class NewGameNsdUseCase @Inject constructor(
             val key = roomKeyGenerator.generate()
             val time = timeRepository.time()
 
-            val user1 = networkUserProvider.networkUser ?: throw UnauthorizedException()
+            val user1 = networkUserProvider.networkUserOrThrow
             val user2 = prevRoom?.user2
 
             val newRoom = NetworkRoom(

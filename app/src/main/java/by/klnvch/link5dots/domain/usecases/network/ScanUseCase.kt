@@ -24,17 +24,16 @@
 package by.klnvch.link5dots.domain.usecases.network
 
 import by.klnvch.link5dots.domain.models.FoundRemoteRoom
+import by.klnvch.link5dots.domain.models.NetworkUser
+import by.klnvch.link5dots.domain.models.RoomInvitation
 import by.klnvch.link5dots.domain.repositories.BluetoothRoomRepository
 import by.klnvch.link5dots.domain.repositories.NetworkUserProvider
 import by.klnvch.link5dots.domain.repositories.NsdRoomRepository
 import by.klnvch.link5dots.domain.repositories.ScanOnlineRoomRepository
 import by.klnvch.link5dots.domain.repositories.ScanRoomInvitationRepository
-import by.klnvch.link5dots.domain.repositories.UnauthorizedException
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import by.klnvch.link5dots.domain.repositories.networkUserOrThrow
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 interface ScanUseCase {
@@ -45,7 +44,17 @@ class OnlineScanUseCase @Inject constructor(
     private val repository: ScanOnlineRoomRepository,
     private val factory: ScanOnlineRoomDescriptorFactory,
 ) : ScanUseCase {
-    override fun scan() = repository.getInvitations().map { list -> factory.map(list) }
+    override fun scan() = repository.getInvitations().map { factory.map(it) }
+}
+
+private class SocketFoundRemoteRoom(
+    invitation: RoomInvitation,
+    getUser: () -> NetworkUser,
+) : CommonOnlineFoundRemoteRoom({ invitation.onConnect(getUser()) }) {
+    override val title = invitation.title
+    override val description = invitation.description
+    override val time = invitation.time
+    override val isFavorite = invitation.isFavorite
 }
 
 abstract class CommonScanUseCase(
@@ -53,30 +62,7 @@ abstract class CommonScanUseCase(
     private val networkUserProvider: NetworkUserProvider,
 ) : ScanUseCase {
     override fun scan(): Flow<List<FoundRemoteRoom>> = repository.getInvitations().map { list ->
-        list.map {
-            object : FoundRemoteRoom {
-                override fun connect(
-                    onSuccess: () -> Unit,
-                    onError: (Throwable) -> Unit,
-                ) {
-                    CoroutineScope(Dispatchers.Default).launch {
-                        try {
-                            val user2 =
-                                networkUserProvider.networkUser ?: throw UnauthorizedException()
-                            it.onConnect(user2)
-                            onSuccess()
-                        } catch (e: Throwable) {
-                            onError(e)
-                        }
-                    }
-                }
-
-                override val title = it.title
-                override val description = it.description
-                override val time = it.time
-                override val isFavorite = it.isFavorite
-            }
-        }
+        list.map { SocketFoundRemoteRoom(it) { networkUserProvider.networkUserOrThrow } }
     }
 }
 

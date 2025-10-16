@@ -25,50 +25,56 @@
 package by.klnvch.link5dots.domain.usecases.network
 
 import by.klnvch.link5dots.data.online.models.AcceptOnlineRoomInvitation
+import by.klnvch.link5dots.domain.models.ConnectException
 import by.klnvch.link5dots.domain.models.FoundRemoteRoom
 import by.klnvch.link5dots.domain.models.gameSeed
 import by.klnvch.link5dots.domain.models.generateInitialGame
 import by.klnvch.link5dots.domain.models.online.OnlineRoomInvitation
 import by.klnvch.link5dots.domain.repositories.NetworkUserProvider
 import by.klnvch.link5dots.domain.repositories.StringProvider
-import by.klnvch.link5dots.domain.repositories.UnauthorizedException
+import by.klnvch.link5dots.domain.repositories.networkUserOrThrow
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class ScanOnlineRoomDescriptor(
-    override val title: String,
-    override val time: Int,
-    val onConnect: suspend () -> Unit,
+abstract class CommonOnlineFoundRemoteRoom(
+    open val onConnect: suspend () -> Unit,
 ) : FoundRemoteRoom {
-    override val description = null
-    override val isFavorite = false
     override fun connect(onSuccess: () -> Unit, onError: (Throwable) -> Unit) {
         CoroutineScope(Dispatchers.Default).launch {
             try {
                 onConnect()
                 onSuccess()
             } catch (e: Throwable) {
-                onError(e)
+                onError(ConnectException(title, e))
             }
         }
     }
+}
+
+private class OnlineFoundRemoteRoom(
+    invitation: OnlineRoomInvitation,
+    defaultTitle: String,
+    getAccept: () -> AcceptOnlineRoomInvitation,
+) : CommonOnlineFoundRemoteRoom({
+    invitation.onConnect(getAccept())
+}) {
+    override val title = invitation.user1.name ?: defaultTitle
+    override val time = invitation.time
+    override val description = null
+    override val isFavorite = false
 }
 
 class ScanOnlineRoomDescriptorFactory(
     private val networkUserProvider: NetworkUserProvider,
     private val stringProvider: StringProvider,
 ) {
-    fun map(invitations: List<OnlineRoomInvitation>): List<ScanOnlineRoomDescriptor> {
-        val dots = generateInitialGame(gameSeed()).toTypedArray()
-        val user2 = networkUserProvider.networkUser ?: throw UnauthorizedException()
-        val accept = AcceptOnlineRoomInvitation(user2, dots)
-
-        return invitations.map { invitation ->
-            ScanOnlineRoomDescriptor(
-                invitation.user1.name ?: stringProvider.unknownName,
-                invitation.time
-            ) { invitation.onConnect(accept) }
+    fun map(invitations: List<OnlineRoomInvitation>): List<FoundRemoteRoom> = invitations.map {
+        OnlineFoundRemoteRoom(it, stringProvider.unknownName) {
+            AcceptOnlineRoomInvitation(
+                user2 = networkUserProvider.networkUserOrThrow,
+                dots = generateInitialGame(gameSeed()).toTypedArray(),
+            )
         }
     }
 }

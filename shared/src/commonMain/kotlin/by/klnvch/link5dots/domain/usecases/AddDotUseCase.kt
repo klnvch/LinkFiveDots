@@ -40,8 +40,8 @@ import by.klnvch.link5dots.domain.repositories.NetworkUserProvider
 import by.klnvch.link5dots.domain.repositories.RoomGetRepository
 import by.klnvch.link5dots.domain.repositories.RoomSaveRepository
 import by.klnvch.link5dots.domain.repositories.TimeService
-import by.klnvch.link5dots.domain.repositories.UnauthorizedException
 import by.klnvch.link5dots.domain.repositories.UpdateStateOnlineRoomRepository
+import by.klnvch.link5dots.domain.repositories.networkUserOrThrow
 
 fun Point.isValidToBeAdded(board: Board, room: IRoom) =
     board.isInside(this) && room.isFree(this) && room.isNotOver()
@@ -60,7 +60,7 @@ class AddDotOnlineUseCase(
     override suspend fun addDot(p: Point) {
         getRepository.room?.let { room ->
             if (p.isValidToBeAdded(board, room)) {
-                val user = networkUserProvider.networkUser ?: throw UnauthorizedException()
+                val user = networkUserProvider.networkUserOrThrow
                 if (room.canMove(user)) {
                     val dot = DotImpl(p, 0)
                     addDotRepository.addDot(room.key, room.dots.size, p)

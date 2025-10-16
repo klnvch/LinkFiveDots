@@ -30,6 +30,7 @@ import by.klnvch.link5dots.domain.models.IRoom
 import by.klnvch.link5dots.domain.models.NetworkGameScore
 import by.klnvch.link5dots.domain.models.SimpleGameScore
 import by.klnvch.link5dots.domain.repositories.NetworkUserProvider
+import by.klnvch.link5dots.domain.repositories.networkUserOrThrow
 import javax.inject.Inject
 
 interface PrepareScoreUseCase {
@@ -49,7 +50,7 @@ class PrepareScoreMultiplayerUseCase @Inject constructor(
     private val networkUserProvider: NetworkUserProvider,
 ) : PrepareScoreUseCase {
     override fun get(room: IRoom): NetworkGameScore {
-        val user = networkUserProvider.networkUser
+        val user = networkUserProvider.networkUserOrThrow
         val status = if (room.user1 == user) {
             if (room.dots.size % 2 == 1) GameResult.WON
             else GameResult.LOST

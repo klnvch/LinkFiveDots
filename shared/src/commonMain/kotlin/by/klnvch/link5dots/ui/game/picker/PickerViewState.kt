@@ -26,6 +26,7 @@ package by.klnvch.link5dots.ui.game.picker
 
 import by.klnvch.link5dots.currentTime
 import by.klnvch.link5dots.domain.models.FoundRemoteRoom
+import by.klnvch.link5dots.domain.models.RecoverableGameException
 import by.klnvch.link5dots.formatDateTime
 import by.klnvch.link5dots.ui.game.picker.states.PickerState
 import by.klnvch.link5dots.ui.game.picker.states.createInitialPickerState
@@ -87,7 +88,7 @@ interface PickerViewState {
 @JsExport()
 interface PickerCommonViewState {
     val inProgress: Boolean
-    val msg: String?
+    val error: RecoverableGameException?
 }
 
 @OptIn(ExperimentalJsExport::class)
@@ -136,13 +137,13 @@ data class PickerViewStateImpl(
 
     override val screen = when {
         isConnected -> PickerScreenGame
-        error != null -> PickerScreenError(error)
+        error != null && error !is RecoverableGameException -> PickerScreenError(error)
         else -> PickerScreenNone
     }
 
     override val common = PickerCommonViewStateImpl(
         isTargetChanging || state.isScanning,
-        state.error?.message
+        error as? RecoverableGameException
     )
 
     override val creation = PickerCreationViewStateImpl(
@@ -167,7 +168,7 @@ data class PickerViewStateImpl(
 
 data class PickerCommonViewStateImpl(
     override val inProgress: Boolean,
-    override val msg: String?,
+    override val error: RecoverableGameException?,
 ) : PickerCommonViewState
 
 class PickerCreationViewStateImpl(

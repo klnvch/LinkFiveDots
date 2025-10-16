@@ -24,12 +24,12 @@
 package by.klnvch.link5dots.domain.usecases
 
 import by.klnvch.link5dots.domain.models.BotGameScore
+import by.klnvch.link5dots.domain.models.UnauthorizedException
 import by.klnvch.link5dots.domain.repositories.DeviceInfo
 import by.klnvch.link5dots.domain.repositories.FirebaseManager
 import by.klnvch.link5dots.domain.repositories.GameScoreRepository
 import by.klnvch.link5dots.domain.repositories.Settings
 import by.klnvch.link5dots.domain.repositories.StringRepository
-import by.klnvch.link5dots.domain.repositories.UnauthorizedException
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 

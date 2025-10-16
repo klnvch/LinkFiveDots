@@ -25,9 +25,10 @@
 package by.klnvch.link5dots.domain.repositories
 
 import by.klnvch.link5dots.domain.models.NetworkUser
-
-class UnauthorizedException : Exception()
+import by.klnvch.link5dots.domain.models.UnauthorizedException
 
 interface NetworkUserProvider {
     val networkUser: NetworkUser?
 }
+
+val NetworkUserProvider.networkUserOrThrow get() = networkUser ?: throw UnauthorizedException()

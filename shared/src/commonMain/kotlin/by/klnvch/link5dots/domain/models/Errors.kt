@@ -22,27 +22,15 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.domain.usecases.network
+package by.klnvch.link5dots.domain.models
 
-import by.klnvch.link5dots.data.online.models.CreateOnlineRoomInvitationImpl
-import by.klnvch.link5dots.domain.repositories.CreateOnlineRoomRepository
-import by.klnvch.link5dots.domain.repositories.NetworkUserProvider
-import by.klnvch.link5dots.domain.repositories.RoomKeyGenerator
-import by.klnvch.link5dots.domain.repositories.networkUserOrThrow
+import kotlin.js.ExperimentalJsExport
+import kotlin.js.JsExport
 
-interface CreateMultiplayerRoomUseCase {
-    suspend fun create()
-}
+class UnauthorizedException : Exception()
 
-class CreateOnlineRoomUseCase(
-    private val roomKeyGenerator: RoomKeyGenerator,
-    private val networkUserProvider: NetworkUserProvider,
-    private val repository: CreateOnlineRoomRepository,
-) : CreateMultiplayerRoomUseCase {
-    override suspend fun create() {
-        val key = roomKeyGenerator.generate()
-        val user1 = networkUserProvider.networkUserOrThrow
-        val invitation = CreateOnlineRoomInvitationImpl(key, user1)
-        repository.create(invitation)
-    }
-}
+@OptIn(ExperimentalJsExport::class)
+@JsExport()
+sealed class RecoverableGameException(cause: Throwable?) : Exception(cause)
+class ConnectException(val target: String, cause: Throwable?) : RecoverableGameException(cause)
+class PermissionException() : RecoverableGameException(null)

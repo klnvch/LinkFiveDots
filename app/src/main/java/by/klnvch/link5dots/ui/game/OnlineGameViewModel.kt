@@ -131,14 +131,14 @@ class OnlineGameViewModel @Inject constructor(
         deleteMultiplayerRoomUseCase.delete()
     }
 
-    fun startScan() {
+    fun startScan(e: Throwable? = null) {
         _pickerState.update { it.scanning() }
         scanJob = viewModelScope.launch {
             scanUseCase
                 .scan()
                 .onCompletion {
                     if (it == null) {
-                        _pickerState.update { state -> state.scanDone() }
+                        _pickerState.update { state -> state.scanDone(e) }
                     }
                 }
                 .catch { e -> _pickerState.update { it.failed(e) } }
@@ -156,6 +156,8 @@ class OnlineGameViewModel @Inject constructor(
         _pickerState.update { it.connecting() }
         invitation.connect({}, { e -> _pickerState.update { it.failed(e) } })
     }
+
+    fun setError(e: Throwable) = _pickerState.update { it.failed(e) }
 
     fun exitGame() {
         if (_pickerState.value.isConnected) {

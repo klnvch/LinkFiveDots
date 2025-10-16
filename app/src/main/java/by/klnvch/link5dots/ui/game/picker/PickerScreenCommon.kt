@@ -34,6 +34,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
@@ -58,7 +59,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import by.klnvch.link5dots.R
+import by.klnvch.link5dots.domain.models.ConnectException
 import by.klnvch.link5dots.domain.models.FoundRemoteRoom
+import by.klnvch.link5dots.domain.models.PermissionException
 import by.klnvch.link5dots.ui.common.CustomButtonWithText
 import by.klnvch.link5dots.ui.common.TextNoSurface
 
@@ -142,7 +145,7 @@ private fun CommonPart(uiState: PickerCommonViewState) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(32.dp)
+            .heightIn(min = 32.dp)
     ) {
         LinearProgressIndicator(
             modifier = Modifier
@@ -150,10 +153,14 @@ private fun CommonPart(uiState: PickerCommonViewState) {
                 .height(16.dp)
                 .fillMaxWidth()
         )
-        uiState.msg?.let {
+        uiState.error?.let {
+            val text = when (it) {
+                is ConnectException -> stringResource(R.string.connecting_error_message, it.target)
+                is PermissionException -> stringResource(R.string.runtime_permissions_summary_no_permissions_granted)
+            }
             Text(
                 modifier = Modifier.fillMaxWidth(),
-                text = it,
+                text = text,
                 color = MaterialTheme.colorScheme.error,
                 textAlign = TextAlign.Center,
             )
@@ -239,31 +246,24 @@ private fun ScanPart(
 
     val openConnectDialog = remember { mutableStateOf<PickerItemViewState?>(null) }
     openConnectDialog.value?.let {
-        AlertDialog(
-            text = {
-                Text(
-                    text = stringResource(R.string.connection_dialog_text, it.shortName)
-                )
-            },
-            onDismissRequest = { openConnectDialog.value = null },
-            confirmButton = {
-                TextButton(
-                    onClick = {
-                        openConnectDialog.value = null
-                        onConnect(it.descriptor)
-                    }
-                ) {
-                    Text(text = stringResource(R.string.okay))
-                }
-            },
-            dismissButton = {
-                TextButton(
-                    onClick = { openConnectDialog.value = null }
-                ) {
-                    Text(text = stringResource(R.string.cancel))
-                }
+        AlertDialog(text = {
+            Text(
+                text = stringResource(R.string.connection_dialog_text, it.shortName)
+            )
+        }, onDismissRequest = { openConnectDialog.value = null }, confirmButton = {
+            TextButton(
+                onClick = {
+                    openConnectDialog.value = null
+                    onConnect(it.descriptor)
+                }) {
+                Text(text = stringResource(R.string.okay))
             }
-        )
+        }, dismissButton = {
+            TextButton(
+                onClick = { openConnectDialog.value = null }) {
+                Text(text = stringResource(R.string.cancel))
+            }
+        })
     }
 
     LazyColumn(
@@ -279,8 +279,7 @@ private fun ScanPart(
                 modifier = Modifier
                     .animateItem()
                     .fillParentMaxWidth(),
-                onClick = { openConnectDialog.value = room }
-            ) {
+                onClick = { openConnectDialog.value = room }) {
                 FlowRow(
                     modifier = Modifier
                         .padding(8.dp)

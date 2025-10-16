@@ -36,8 +36,8 @@ class GetNetworkGameActionUseCase(private val networkUserProvider: NetworkUserPr
         pickerState.isCreating -> NetworkGameAction.PICKER_CREATING
         pickerState.isDeleting -> NetworkGameAction.PICKER_DELETING
         pickerState.isCreated -> NetworkGameAction.PICKER_CREATED
-        pickerState.isScanning -> NetworkGameAction.PICKER_SCANNING
         pickerState.isConnecting -> NetworkGameAction.PICKER_CONNECTING
+        pickerState.isScanning -> NetworkGameAction.PICKER_SCANNING
         room.isWon(networkUserProvider.networkUser) -> NetworkGameAction.GAME_OVER_WIN
         room.isLost(networkUserProvider.networkUser) -> NetworkGameAction.GAME_OVER_LOSE
         pickerState.isDisconnected -> NetworkGameAction.GAME_DISCONNECTED

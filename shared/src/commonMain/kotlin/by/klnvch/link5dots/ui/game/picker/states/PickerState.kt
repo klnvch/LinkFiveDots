@@ -49,14 +49,14 @@ interface PickerState {
     val error: Throwable?
 
     fun reset(): PickerState
-    fun failed(e: Throwable): PickerState
+    fun failed(e: Throwable?): PickerState
 
     fun creating(): PickerState
     fun created(d: RemoteRoomDescriptor): PickerState
     fun deleting(): PickerState
 
     fun scanning(items: Array<FoundRemoteRoom> = emptyArray()): PickerState
-    fun scanDone(): PickerState
+    fun scanDone(e: Throwable? = null): PickerState
 
     fun connecting(): PickerState
     fun connected(d: RemoteRoomDescriptor): PickerState
@@ -90,7 +90,7 @@ private data class PickerStateImpl(
     override val isDisconnected = connectState is ConnectDisconnected
 
     override fun reset() = createInitialPickerState()
-    override fun failed(e: Throwable) = PickerStateImpl(error = e)
+    override fun failed(e: Throwable?) = PickerStateImpl(error = e)
 
     override fun creating() = copy(targetState = TargetCreating)
     override fun created(d: RemoteRoomDescriptor) = copy(targetState = TargetCreated(d))
@@ -99,8 +99,8 @@ private data class PickerStateImpl(
     override fun scanning(items: Array<FoundRemoteRoom>) =
         copy(scanState = ScanOn(items.toList()), error = null)
 
-    override fun scanDone() =
-        if (scanState is ScanOn) copy(scanState = ScanDone(scanState.items)) else this
+    override fun scanDone(e: Throwable?) =
+        if (scanState is ScanOn) copy(scanState = ScanDone(scanState.items), error = e) else this
 
     override fun connecting() = copy(connectState = ConnectConnecting)
     override fun connected(d: RemoteRoomDescriptor) =

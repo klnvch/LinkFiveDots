@@ -36,7 +36,7 @@ import by.klnvch.link5dots.domain.repositories.NsdRoomRepository
 import by.klnvch.link5dots.domain.repositories.RoomGetRepository
 import by.klnvch.link5dots.domain.repositories.RoomRepository
 import by.klnvch.link5dots.domain.repositories.TimeService
-import by.klnvch.link5dots.domain.repositories.UnauthorizedException
+import by.klnvch.link5dots.domain.repositories.networkUserOrThrow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
@@ -71,7 +71,7 @@ abstract class AddDotMultiplayerUseCase(
 ) : AddDotRealUseCase(timeService, board, getRepository) {
     abstract suspend fun addMultiplayerDot(room: IRoom, dot: Dot)
     override suspend fun addInternal(room: IRoom, p: Point, dt: Int) {
-        val user = networkUserProvider.networkUser ?: throw UnauthorizedException()
+        val user = networkUserProvider.networkUserOrThrow
         if (room.canMove(user)) {
             addMultiplayerDot(room, DotImpl(p, dt))
         }
