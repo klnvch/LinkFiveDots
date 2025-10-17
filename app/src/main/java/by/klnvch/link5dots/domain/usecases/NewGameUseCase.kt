@@ -80,7 +80,7 @@ class NewGameBluetoothUseCase @Inject constructor(
                 RoomState.CREATED
             )
 
-            repository.update(newRoom)
+            repository.send(newRoom)
         }
     }
 }
@@ -110,7 +110,7 @@ class NewGameNsdUseCase @Inject constructor(
                 RoomState.CREATED,
             )
 
-            repository.update(newRoom)
+            repository.send(newRoom)
         }
     }
 }

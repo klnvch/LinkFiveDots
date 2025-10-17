@@ -29,6 +29,7 @@ import by.klnvch.link5dots.domain.models.canMove
 import by.klnvch.link5dots.domain.models.isNotEmpty
 import by.klnvch.link5dots.domain.repositories.NetworkUserProvider
 import by.klnvch.link5dots.domain.repositories.RoomGetRepository
+import by.klnvch.link5dots.domain.repositories.SocketGetRepository
 import javax.inject.Inject
 
 class GameActionsInfoUseCase @Inject constructor() : GameActionsUseCase {
@@ -55,7 +56,7 @@ class GameActionsTwoUseCase @Inject constructor(
 }
 
 class GameActionsSocketUseCase @Inject constructor(
-    private val repository: RoomGetRepository,
+    private val repository: SocketGetRepository,
     private val networkUserProvider: NetworkUserProvider,
 ) : GameActionsUseCase {
     override val undoAction: ActionAvailability

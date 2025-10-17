@@ -25,7 +25,8 @@
 package by.klnvch.link5dots.data.sockets
 
 import android.util.Log
-import by.klnvch.link5dots.data.RoomJsonMapper
+import by.klnvch.link5dots.data.toJson
+import by.klnvch.link5dots.data.toNetworkRoom
 import by.klnvch.link5dots.domain.models.NetworkRoom
 import by.klnvch.link5dots.domain.models.NetworkRoomState
 import by.klnvch.link5dots.domain.models.NetworkRoomStateCreated
@@ -46,7 +47,7 @@ import java.io.InputStream
 import java.io.OutputStream
 import kotlin.concurrent.thread
 
-abstract class SocketRoomRepository(private val mapper: RoomJsonMapper) {
+abstract class SocketRoomRepository {
     protected abstract val TAG: String
     private val roomFlow = MutableStateFlow<NetworkRoom?>(null)
     private val stateFlow = MutableSharedFlow<NetworkRoomState>(1)
@@ -77,13 +78,14 @@ abstract class SocketRoomRepository(private val mapper: RoomJsonMapper) {
 
                 // get a new generated game and send it
                 val newRoom = runBlocking { roomFlow.filterNotNull().first() }
-                Log.d(TAG, "accepting: new room created")
+                Log.d(TAG, "accepting: new room created $newRoom")
                 outputStream.writeRoom(newRoom)
 
                 // receive a game with filled user
                 Log.d(TAG, "accepting: wait for user2")
-                val newRoomWithUser2 = inputStream.readRoom()
-                roomFlow.tryEmit(newRoomWithUser2)
+                val acceptedRoom = inputStream.readRoom()
+                Log.d(TAG, "accepting: new room accepted $acceptedRoom")
+                roomFlow.tryEmit(acceptedRoom)
 
                 // now we can communicate
                 startCommunication(socket, outputStream, inputStream)
@@ -116,6 +118,7 @@ abstract class SocketRoomRepository(private val mapper: RoomJsonMapper) {
             // add user2 to the new room
             Log.d(TAG, "connect: new game received $newRoom")
             val roomWithUser2 = newRoom.copy(user2 = user2)
+            Log.d(TAG, "connect: new game accepted $roomWithUser2")
             outputStream.writeRoom(roomWithUser2)
             roomFlow.tryEmit(roomWithUser2)
 
@@ -151,7 +154,7 @@ abstract class SocketRoomRepository(private val mapper: RoomJsonMapper) {
         }
     }
 
-    suspend fun update(room: NetworkRoom) {
+    suspend fun send(room: NetworkRoom) {
         Log.d(TAG, "game updated: $room")
         roomFlow.emit(room)
         _outputStream?.writeRoom(room)
@@ -175,17 +178,19 @@ abstract class SocketRoomRepository(private val mapper: RoomJsonMapper) {
 
     fun getFlow() = roomFlow
 
-    val room = roomFlow.value
+    val room get() = roomFlow.value
 
     protected fun DataOutputStream.writeRoom(room: NetworkRoom) {
-        val json = mapper.toJson(room)
+        val json = room.toJson()
+        Log.d(TAG, "write: $json")
         writeUTF(json)
         flush()
     }
 
     protected fun DataInputStream.readRoom(): NetworkRoom {
         val json = readUTF()
-        return mapper.toRoom(json)
+        Log.d(TAG, "read: $json")
+        return json.toNetworkRoom()
     }
 
     protected fun Closeable.closeSafely() = try {

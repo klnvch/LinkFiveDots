@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023-2025 klnvch
+ * Copyright (c) 2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,13 +21,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
 package by.klnvch.link5dots.data
 
+import by.klnvch.link5dots.domain.models.Dot
+import by.klnvch.link5dots.domain.models.DotImpl
 import by.klnvch.link5dots.domain.models.NetworkRoom
-import com.google.gson.Gson
-import javax.inject.Inject
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.modules.SerializersModule
+import kotlinx.serialization.modules.polymorphic
+import kotlinx.serialization.modules.subclass
 
-class RoomJsonMapper @Inject constructor(private val gson: Gson) {
-    fun toJson(room: NetworkRoom): String = gson.toJson(room)
-    fun toRoom(json: String): NetworkRoom = gson.fromJson(json, NetworkRoom::class.java)
+private val json = Json {
+    serializersModule = SerializersModule {
+        polymorphic(Dot::class) {
+            subclass(DotImpl::class)
+        }
+    }
 }
+
+fun NetworkRoom.toJson() = json.encodeToString(this)
+fun String.toNetworkRoom() = json.decodeFromString<NetworkRoom>(this)

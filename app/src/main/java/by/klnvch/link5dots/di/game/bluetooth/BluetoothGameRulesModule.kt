@@ -27,8 +27,9 @@ package by.klnvch.link5dots.di.game.bluetooth
 import by.klnvch.link5dots.data.bluetooth.BluetoothRoomRepositoryImpl
 import by.klnvch.link5dots.domain.repositories.NetworkUserLocalProvider
 import by.klnvch.link5dots.domain.repositories.NetworkUserProvider
-import by.klnvch.link5dots.domain.repositories.RoomGetRepository
-import by.klnvch.link5dots.domain.usecases.AddDotBluetoothUseCase
+import by.klnvch.link5dots.domain.repositories.SocketGetRepository
+import by.klnvch.link5dots.domain.repositories.SocketSendRepository
+import by.klnvch.link5dots.domain.usecases.AddDotSocketUseCase
 import by.klnvch.link5dots.domain.usecases.AddDotUseCase
 import by.klnvch.link5dots.domain.usecases.GameActionsSocketUseCase
 import by.klnvch.link5dots.domain.usecases.GameActionsUseCase
@@ -65,7 +66,7 @@ interface BluetoothGameRulesModule {
     fun bindNewGameUseCase(impl: NewGameBluetoothUseCase): NewGameUseCase
 
     @Binds
-    fun bindAddDotUseCase(impl: AddDotBluetoothUseCase): AddDotUseCase
+    fun bindAddDotUseCase(impl: AddDotSocketUseCase): AddDotUseCase
 
     @Binds
     fun bindUndoMoveUseCase(impl: UndoMoveBluetoothUseCase): UndoMoveUseCase
@@ -89,7 +90,10 @@ interface BluetoothGameRulesModule {
     fun bindNetworkUserProvider(impl: NetworkUserLocalProvider): NetworkUserProvider
 
     @Binds
-    fun bindRoomGetRepository(impl: BluetoothRoomRepositoryImpl): RoomGetRepository
+    fun bindSocketGetRepository(impl: BluetoothRoomRepositoryImpl): SocketGetRepository
+
+    @Binds
+    fun bindSocketSendRepository(impl: BluetoothRoomRepositoryImpl): SocketSendRepository
 
     @Binds
     fun bindGameActionsUseCase(impl: GameActionsSocketUseCase): GameActionsUseCase

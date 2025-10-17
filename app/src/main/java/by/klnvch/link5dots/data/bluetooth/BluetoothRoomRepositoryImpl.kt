@@ -26,7 +26,6 @@ package by.klnvch.link5dots.data.bluetooth
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
 import android.content.Context
-import by.klnvch.link5dots.data.RoomJsonMapper
 import by.klnvch.link5dots.data.bluetooth.BluetoothExt.createServerSocket
 import by.klnvch.link5dots.data.bluetooth.BluetoothExt.deviceName
 import by.klnvch.link5dots.data.bluetooth.BluetoothExt.getDeviceAddress
@@ -54,8 +53,7 @@ class BluetoothRoomRepositoryImpl @Inject constructor(
     private val bluetoothDiscoveryService: BluetoothDiscoveryService,
     private val bluetoothConnectService: BluetoothConnectService,
     private val bluetoothBondedStore: BluetoothBondedStore,
-    mapper: RoomJsonMapper,
-) : SocketRoomRepository(mapper), BluetoothRoomRepository {
+) : SocketRoomRepository(), BluetoothRoomRepository {
     private val bluetoothManager = context.getSystemService(BluetoothManager::class.java)
     override val TAG = BluetoothParams.TAG
 
@@ -76,15 +74,15 @@ class BluetoothRoomRepositoryImpl @Inject constructor(
         val foundFlow = bluetoothDiscoveryService.discover().filterNotNull()
         emitAll(
             merge(knownFlow, foundFlow)
-            .scan(emptyMap<String, BluetoothDevice>()) { acc, d -> acc.plus(d.address to d) }
-            .map { it.values }
-            .map { devices ->
-                devices.sortedWith(
-                    compareBy<BluetoothDevice> { !it.isBonded }.thenBy(
-                        nullsLast()
-                    ) { it.deviceName })
-            }
-            .map { devices -> devices.map { BluetoothRoomInvitationImpl(it) } })
+                .scan(emptyMap<String, BluetoothDevice>()) { acc, d -> acc.plus(d.address to d) }
+                .map { it.values }
+                .map { devices ->
+                    devices.sortedWith(
+                        compareBy<BluetoothDevice> { !it.isBonded }.thenBy(
+                            nullsLast()
+                        ) { it.deviceName })
+                }
+                .map { devices -> devices.map { BluetoothRoomInvitationImpl(it) } })
     }
 
     private inner class BluetoothLocalRoomDescriptor() : RemoteRoomDescriptor {

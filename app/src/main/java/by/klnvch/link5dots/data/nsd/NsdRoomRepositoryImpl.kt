@@ -24,7 +24,6 @@
 package by.klnvch.link5dots.data.nsd
 
 import android.net.nsd.NsdServiceInfo
-import by.klnvch.link5dots.data.RoomJsonMapper
 import by.klnvch.link5dots.data.nsd.NsdExt.address
 import by.klnvch.link5dots.data.sockets.SocketData
 import by.klnvch.link5dots.data.sockets.SocketRoomRepository
@@ -43,8 +42,7 @@ class NsdRoomRepositoryImpl @Inject constructor(
     private val nsdValidator: NsdValidator,
     private val nsdRegistration: NsdRegistration,
     private val nsdDiscovery: NsdDiscovery,
-    mapper: RoomJsonMapper,
-) : SocketRoomRepository(mapper), NsdRoomRepository {
+) : SocketRoomRepository(), NsdRoomRepository {
     override val TAG = NsdParams.TAG
 
     override suspend fun create() {

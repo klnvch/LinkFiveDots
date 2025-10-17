@@ -121,7 +121,9 @@ open class OfflineGameViewModel @Inject constructor(
         return newGameUseCase.isImplemented
     }
 
-    fun addDot(p: Point) = viewModelScope.launch { addDotUseCase.addDot(p) }
+    fun addDot(p: Point) = viewModelScope.launch {
+        addDotUseCase.addDot(p)
+    }
 
     fun saveScore() = viewModelScope.launch {
         val room = roomFlow.firstOrNull()

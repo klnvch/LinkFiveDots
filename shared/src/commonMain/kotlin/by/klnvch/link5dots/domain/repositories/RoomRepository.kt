@@ -31,6 +31,8 @@ interface RoomSaveRepository {
     suspend fun save(room: IRoom, roomType: RoomType)
 }
 
-interface RoomGetRepository {
-    val room: IRoom?
+interface RoomGetRepository : GetRoomRepository<IRoom>
+
+interface GetRoomRepository<Room : IRoom> {
+    val room: Room?
 }

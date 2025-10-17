@@ -21,18 +21,35 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
 package by.klnvch.link5dots.domain.repositories
 
 import by.klnvch.link5dots.domain.models.NetworkRoom
 import by.klnvch.link5dots.domain.models.NetworkRoomState
 import kotlinx.coroutines.flow.Flow
 
-interface BluetoothRoomRepository : ScanRoomInvitationRepository, RoomGetRepository {
+interface SocketSendRepository {
+    suspend fun send(room: NetworkRoom)
+}
+
+interface SocketGetRepository : GetRoomRepository<NetworkRoom>
+
+interface BluetoothRoomRepository : ScanRoomInvitationRepository, SocketGetRepository,
+    SocketSendRepository {
     suspend fun create()
     fun delete()
     fun getFlow(): Flow<NetworkRoom?>
-    suspend fun update(room: NetworkRoom)
     fun finish()
     fun isServer(): Boolean
     val state: Flow<NetworkRoomState>
+}
+
+interface NsdRoomRepository : ScanRoomInvitationRepository, SocketGetRepository,
+    SocketSendRepository {
+    suspend fun create()
+    fun delete()
+    val state: Flow<NetworkRoomState>
+    fun getFlow(): Flow<NetworkRoom?>
+    fun finish()
+    fun isServer(): Boolean
 }

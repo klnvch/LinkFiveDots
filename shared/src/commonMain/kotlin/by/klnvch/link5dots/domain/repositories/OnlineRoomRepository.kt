@@ -46,6 +46,6 @@ interface UpdateStateOnlineRoomRepository {
     suspend fun update(key: String, state: RoomState)
 }
 
-interface GetOnlineRoomRepository {
-    var room: NetworkRoom?
+interface GetOnlineRoomRepository : GetRoomRepository<NetworkRoom> {
+    override var room: NetworkRoom?
 }

@@ -26,8 +26,9 @@ package by.klnvch.link5dots.di.game.nsd
 import by.klnvch.link5dots.data.nsd.NsdRoomRepositoryImpl
 import by.klnvch.link5dots.domain.repositories.NetworkUserLocalProvider
 import by.klnvch.link5dots.domain.repositories.NetworkUserProvider
-import by.klnvch.link5dots.domain.repositories.RoomGetRepository
-import by.klnvch.link5dots.domain.usecases.AddDotNsdUseCase
+import by.klnvch.link5dots.domain.repositories.SocketGetRepository
+import by.klnvch.link5dots.domain.repositories.SocketSendRepository
+import by.klnvch.link5dots.domain.usecases.AddDotSocketUseCase
 import by.klnvch.link5dots.domain.usecases.AddDotUseCase
 import by.klnvch.link5dots.domain.usecases.GameActionsSocketUseCase
 import by.klnvch.link5dots.domain.usecases.GameActionsUseCase
@@ -64,7 +65,7 @@ interface NsdGameRulesModule {
     fun bindNewGameUseCase(impl: NewGameNsdUseCase): NewGameUseCase
 
     @Binds
-    fun bindAddDotUseCase(impl: AddDotNsdUseCase): AddDotUseCase
+    fun bindAddDotUseCase(impl: AddDotSocketUseCase): AddDotUseCase
 
     @Binds
     fun bindUndoMoveUseCase(impl: UndoMoveNsdUseCase): UndoMoveUseCase
@@ -88,7 +89,10 @@ interface NsdGameRulesModule {
     fun bindNetworkUserProvider(impl: NetworkUserLocalProvider): NetworkUserProvider
 
     @Binds
-    fun bindRoomGetRepository(impl: NsdRoomRepositoryImpl): RoomGetRepository
+    fun bindSocketGetRepository(impl: NsdRoomRepositoryImpl): SocketGetRepository
+
+    @Binds
+    fun bindSocketSendRepository(impl: NsdRoomRepositoryImpl): SocketSendRepository
 
     @Binds
     fun bindGameActionsUseCase(impl: GameActionsSocketUseCase): GameActionsUseCase

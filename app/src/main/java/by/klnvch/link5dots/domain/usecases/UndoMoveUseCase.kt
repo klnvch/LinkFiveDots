@@ -55,7 +55,7 @@ class UndoMoveBluetoothUseCase @Inject constructor(
     override suspend fun undo() {
         val currentRoom = repository.getFlow().filterNotNull().first()
         if (isAvailable(currentRoom)) {
-            repository.update(currentRoom.undo())
+            repository.send(currentRoom.undo())
         }
     }
 
@@ -80,7 +80,7 @@ class UndoMoveNsdUseCase @Inject constructor(
     override suspend fun undo() {
         val currentRoom = repository.getFlow().filterNotNull().first()
         if (isAvailable(currentRoom)) {
-            repository.update(currentRoom.undo())
+            repository.send(currentRoom.undo())
         }
     }
 

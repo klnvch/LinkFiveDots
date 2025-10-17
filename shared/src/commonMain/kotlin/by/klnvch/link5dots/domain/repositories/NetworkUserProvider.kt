@@ -24,8 +24,18 @@
 
 package by.klnvch.link5dots.domain.repositories
 
+import by.klnvch.link5dots.domain.models.DeviceOwnerUser
+import by.klnvch.link5dots.domain.models.IUser
 import by.klnvch.link5dots.domain.models.NetworkUser
 import by.klnvch.link5dots.domain.models.UnauthorizedException
+
+interface UserProvider {
+    val user: IUser?
+}
+
+class BotUserProvide : UserProvider {
+    override val user = DeviceOwnerUser
+}
 
 interface NetworkUserProvider {
     val networkUser: NetworkUser?

@@ -24,6 +24,7 @@
 
 package by.klnvch.link5dots.domain.models
 
+import kotlinx.serialization.Serializable
 import kotlin.js.ExperimentalJsExport
 import kotlin.js.JsExport
 
@@ -53,6 +54,7 @@ data class NetworkRoomInvitation(
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport()
+@Serializable
 data class NetworkRoom(
     override val key: String,
     override val time: Int,
@@ -61,7 +63,7 @@ data class NetworkRoom(
     override val user2: NetworkUser?,
     override val state: RoomState,
 ) : INetworkRoom {
-    override fun move(dot: Dot) = copy(dots = dots + dot)
+    override fun move(dot: Dot): NetworkRoom = copy(dots = dots + dot)
     override fun undo() = copy(dots = dots.dropLast(1))
     override fun toString() =
         "NetworkRoom(key=$key, time=$time, dots=${dots.size}, user1=${user1.name}, user2=${user2?.name})"

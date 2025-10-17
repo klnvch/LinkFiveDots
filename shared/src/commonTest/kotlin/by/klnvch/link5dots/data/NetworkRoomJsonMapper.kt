@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023-2025 klnvch
+ * Copyright (c) 2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,18 +21,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package by.klnvch.link5dots.domain.repositories
 
+package by.klnvch.link5dots.data
+
+import by.klnvch.link5dots.domain.models.DotImpl
 import by.klnvch.link5dots.domain.models.NetworkRoom
-import by.klnvch.link5dots.domain.models.NetworkRoomState
-import kotlinx.coroutines.flow.Flow
+import by.klnvch.link5dots.domain.models.NetworkUser
+import by.klnvch.link5dots.domain.models.RoomState
+import kotlin.test.Test
+import kotlin.test.assertEquals
 
-interface NsdRoomRepository : ScanRoomInvitationRepository, RoomGetRepository {
-    suspend fun create()
-    fun delete()
-    val state: Flow<NetworkRoomState>
-    fun getFlow(): Flow<NetworkRoom?>
-    suspend fun update(room: NetworkRoom)
-    fun finish()
-    fun isServer(): Boolean
+class NetworkRoomJsonMapper {
+    @Test
+    fun json() {
+        val expected = NetworkRoom(
+            "key",
+            1,
+            listOf(DotImpl(1, 1, 1), DotImpl(2, 2, 2)),
+            NetworkUser("1", "a"),
+            NetworkUser("2", "b"),
+            RoomState.FINISHED,
+        )
+        val json = expected.toJson()
+        val actual = json.toNetworkRoom()
+        assertEquals(expected, actual)
+    }
 }
