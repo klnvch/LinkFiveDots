@@ -63,17 +63,17 @@ class OnlineGameRulesModule2 {
 
     @Provides
     fun provideAddDotOnlineUseCase(
-        networkUserProvider: NetworkUserProvider,
+        getRepository: GetOnlineRoomRepository,
         board: Board,
+        networkUserProvider: NetworkUserProvider,
         addDotRepository: AddDotOnlineRoomRepository,
         updateStateRepository: UpdateStateOnlineRoomRepository,
-        getRepository: GetOnlineRoomRepository,
     ) = AddDotOnlineUseCase(
-        networkUserProvider,
+        getRepository,
         board,
+        networkUserProvider,
         addDotRepository,
         updateStateRepository,
-        getRepository
     )
 
     @Provides

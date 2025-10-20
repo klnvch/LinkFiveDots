@@ -26,10 +26,10 @@ package by.klnvch.link5dots.domain.usecases
 import by.klnvch.link5dots.domain.models.Board
 import by.klnvch.link5dots.domain.models.DotImpl
 import by.klnvch.link5dots.domain.models.IRoom
+import by.klnvch.link5dots.domain.models.IUser
 import by.klnvch.link5dots.domain.models.NetworkRoom
 import by.klnvch.link5dots.domain.models.Point
 import by.klnvch.link5dots.domain.models.RoomType
-import by.klnvch.link5dots.domain.models.canMove
 import by.klnvch.link5dots.domain.repositories.NetworkUserProvider
 import by.klnvch.link5dots.domain.repositories.RoomGetRepository
 import by.klnvch.link5dots.domain.repositories.RoomRepository
@@ -50,13 +50,11 @@ class AddDotSocketUseCase @Inject constructor(
     private val sendRepository: SocketSendRepository,
     private val networkUserProvider: NetworkUserProvider,
 ) : AddDotCommonUseCase<NetworkRoom>(getRepository, board) {
+    override val user: IUser? get() = networkUserProvider.networkUserOrThrow
     override suspend fun addDot(room: NetworkRoom, p: Point) {
-        val user = networkUserProvider.networkUserOrThrow
-        if (room.canMove(user)) {
-            val dt = timeService.dt(room.time)
-            val updatedRoom = room.move(DotImpl(p, dt))
-            sendRepository.send(updatedRoom)
-        }
+        val dt = timeService.dt(room.time)
+        val updatedRoom = room.move(DotImpl(p, dt))
+        sendRepository.send(updatedRoom)
     }
 }
 
@@ -66,6 +64,7 @@ class AddDotTwoUseCase @Inject constructor(
     private val timeService: TimeService,
     private val saveRepository: RoomRepository,
 ) : AddDotCommonUseCase<IRoom>(getRepository, board) {
+    override val user: IUser? get() = null
     override suspend fun addDot(room: IRoom, p: Point) {
         val dt = timeService.dt(room.time)
         val updatedRoom = room.move(DotImpl(p, dt))

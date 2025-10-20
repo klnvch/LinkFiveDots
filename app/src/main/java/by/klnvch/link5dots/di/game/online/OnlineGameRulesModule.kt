@@ -23,6 +23,8 @@
  */
 package by.klnvch.link5dots.di.game.online
 
+import by.klnvch.link5dots.data.online.OnlineRoomRepositoryImpl
+import by.klnvch.link5dots.domain.repositories.NetworkRoomStateRepository
 import by.klnvch.link5dots.domain.repositories.NetworkUserFirebaseProvider
 import by.klnvch.link5dots.domain.repositories.NetworkUserProvider
 import by.klnvch.link5dots.domain.usecases.AddDotOnlineUseCase
@@ -37,8 +39,6 @@ import by.klnvch.link5dots.domain.usecases.network.CreateMultiplayerRoomUseCase
 import by.klnvch.link5dots.domain.usecases.network.CreateOnlineRoomUseCase
 import by.klnvch.link5dots.domain.usecases.network.DeleteMultiplayerRoomUseCase
 import by.klnvch.link5dots.domain.usecases.network.DeleteOnlineRoomUseCase
-import by.klnvch.link5dots.domain.usecases.network.GetNetworkRoomStateUseCase
-import by.klnvch.link5dots.domain.usecases.network.GetOnlineRoomStateUseCase
 import by.klnvch.link5dots.domain.usecases.network.InitMultiplayerUseCase
 import by.klnvch.link5dots.domain.usecases.network.InitOnlineUseCase
 import by.klnvch.link5dots.domain.usecases.network.OnlineScanUseCase
@@ -52,7 +52,7 @@ interface OnlineGameRulesModule {
     fun bindGetRoomUseCase(impl: GetRoomOnlineUseCase): GetRoomUseCase
 
     @Binds
-    fun bindGetMultiplayerRoomStateUseCase(impl: GetOnlineRoomStateUseCase): GetNetworkRoomStateUseCase
+    fun bindNetworkRoomStateRepository(impl: OnlineRoomRepositoryImpl): NetworkRoomStateRepository
 
     @Binds
     fun bindAddDotUseCase(impl: AddDotOnlineUseCase): AddDotUseCase

@@ -69,11 +69,11 @@ fun roomAddDot(
     getRepository.room = room as NetworkRoom
 
     val useCase = AddDotOnlineUseCase(
-        networkUserProvider,
+        getRepository,
         board,
+        networkUserProvider,
         addDotRepository,
         updateStateRepository,
-        getRepository,
     )
 
     return Promise { resolve, reject -> GlobalScope.launch { useCase.addDot(p) } }

@@ -23,18 +23,11 @@
  */
 package by.klnvch.link5dots.domain.usecases.network
 
-import by.klnvch.link5dots.domain.repositories.BluetoothRoomRepository
-import by.klnvch.link5dots.domain.repositories.NsdRoomRepository
+import by.klnvch.link5dots.domain.repositories.SocketCreateRepository
 import javax.inject.Inject
 
-class CreateNsdRoomUseCase @Inject constructor(
-    private val repository: NsdRoomRepository,
-) : CreateMultiplayerRoomUseCase {
-    override suspend fun create() = repository.create()
-}
-
-class CreateBluetoothRoomUseCase @Inject constructor(
-    private val repository: BluetoothRoomRepository,
+class CreateSocketRoomUseCase @Inject constructor(
+    private val repository: SocketCreateRepository,
 ) : CreateMultiplayerRoomUseCase {
     override suspend fun create() = repository.create()
 }

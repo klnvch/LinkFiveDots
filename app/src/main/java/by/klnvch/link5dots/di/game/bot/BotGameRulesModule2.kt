@@ -42,13 +42,13 @@ class BotGameRulesModule2 {
 
     @Provides
     fun provideAddDotBotUseCase(
-        timeService: TimeService,
-        board: Board,
         roomGetRepository: RoomGetRepository,
+        board: Board,
+        timeService: TimeService,
         roomSaveRepository: RoomRepository,
         bot: Bot,
     ) =
-        AddDotBotUseCase(timeService, board, roomGetRepository, roomSaveRepository, bot)
+        AddDotBotUseCase(roomGetRepository, board, timeService, roomSaveRepository, bot)
 
     @Provides
     fun provideUndoMoveBotUseCase(

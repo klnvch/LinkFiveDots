@@ -49,6 +49,7 @@ interface IRoom {
 }
 
 fun IRoom.canMove(user: IUser?) = (if (dots.size % 2 == 0) user1 else user2) == user
+fun IRoom.canUndo(user: IUser?) = (if (dots.size % 2 == 1) user1 else user2) == user
 fun IRoom.isNotEmpty() = dots.isNotEmpty()
 
 @Serializable

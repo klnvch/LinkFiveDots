@@ -24,8 +24,12 @@
 
 package by.klnvch.link5dots.domain.usecases
 
+import by.klnvch.link5dots.domain.models.BotUser
 import by.klnvch.link5dots.domain.models.IRoom
 import by.klnvch.link5dots.domain.models.RoomType
+import by.klnvch.link5dots.domain.models.canUndo
+import by.klnvch.link5dots.domain.models.isNotEmpty
+import by.klnvch.link5dots.domain.repositories.GetRoomRepository
 import by.klnvch.link5dots.domain.repositories.RoomGetRepository
 import by.klnvch.link5dots.domain.repositories.RoomSaveRepository
 
@@ -33,26 +37,25 @@ interface UndoMoveUseCase {
     suspend fun undo()
 }
 
-abstract class UndoMoveRealUseCase(
-    private val getRepository: RoomGetRepository,
+abstract class UndoMoveCommonUseCase<Room : IRoom>(
+    private val getRepository: GetRoomRepository<Room>,
 ) : UndoMoveUseCase {
     override suspend fun undo() {
         getRepository.room?.let { room ->
-            if (room.dots.isNotEmpty()) {
-                val updatedRoom = undoInternal(room)
-                save(updatedRoom)
-            }
+            if (room.isNotEmpty()) undo(room)?.let { save(it) }
         }
     }
 
-    protected abstract suspend fun undoInternal(room: IRoom): IRoom
-    protected abstract suspend fun save(room: IRoom)
+    protected abstract suspend fun undo(room: Room): Room?
+    protected abstract suspend fun save(room: Room)
 }
 
 class UndoMoveBotUseCase(
     getRepository: RoomGetRepository,
     private val saveRepository: RoomSaveRepository,
-) : UndoMoveRealUseCase(getRepository) {
-    override suspend fun undoInternal(room: IRoom) = room.undo().undo()
+) : UndoMoveCommonUseCase<IRoom>(getRepository) {
+    override suspend fun undo(room: IRoom) =
+        if (room.canUndo(BotUser)) room.undo().undo() else room.undo()
+
     override suspend fun save(room: IRoom) = saveRepository.save(room, RoomType.BOT)
 }

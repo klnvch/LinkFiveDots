@@ -25,7 +25,7 @@
 package by.klnvch.link5dots.domain.usecases
 
 import by.klnvch.link5dots.domain.models.ActionAvailability
-import by.klnvch.link5dots.domain.models.canMove
+import by.klnvch.link5dots.domain.models.canUndo
 import by.klnvch.link5dots.domain.models.isNotEmpty
 import by.klnvch.link5dots.domain.repositories.NetworkUserProvider
 import by.klnvch.link5dots.domain.repositories.RoomGetRepository
@@ -65,7 +65,7 @@ class GameActionsSocketUseCase @Inject constructor(
             val user = networkUserProvider.networkUser
             return when {
                 room == null || user == null -> ActionAvailability.Gone
-                room.isNotEmpty() && !room.canMove(user) -> ActionAvailability.Available
+                room.isNotEmpty() && room.canUndo(user) -> ActionAvailability.Available
                 else -> ActionAvailability.Disabled
             }
         }

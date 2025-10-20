@@ -27,7 +27,7 @@ package by.klnvch.link5dots.data.bluetooth
 import java.util.UUID
 
 object BluetoothParams {
-    const val TAG = "Bluetooth"
+    const val TAG = "BluetoothRepository"
     const val NAME_SECURE = "BluetoothLinkFiveDotsSecure"
     val UUID_SECURE: UUID = UUID.fromString("fa87c0d0-afac-11de-8a39-0800200c9a66")
     const val FAKE_ADDRESS = "02:00:00:00:00:00"

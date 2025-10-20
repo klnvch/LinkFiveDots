@@ -25,15 +25,16 @@
 package by.klnvch.link5dots.domain.usecases
 
 import by.klnvch.link5dots.domain.models.IRoom
+import by.klnvch.link5dots.domain.models.IUser
 import by.klnvch.link5dots.domain.models.NetworkRoom
 import by.klnvch.link5dots.domain.models.RoomType
-import by.klnvch.link5dots.domain.repositories.BluetoothRoomRepository
+import by.klnvch.link5dots.domain.models.canUndo
 import by.klnvch.link5dots.domain.repositories.NetworkUserProvider
-import by.klnvch.link5dots.domain.repositories.NsdRoomRepository
 import by.klnvch.link5dots.domain.repositories.RoomGetRepository
 import by.klnvch.link5dots.domain.repositories.RoomRepository
-import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.first
+import by.klnvch.link5dots.domain.repositories.SocketGetRepository
+import by.klnvch.link5dots.domain.repositories.SocketSendRepository
+import by.klnvch.link5dots.domain.repositories.networkUserOrThrow
 import javax.inject.Inject
 
 class UndoMoveInfoUseCase @Inject constructor() : UndoMoveUseCase {
@@ -43,57 +44,17 @@ class UndoMoveInfoUseCase @Inject constructor() : UndoMoveUseCase {
 class UndoMoveTwoUseCase @Inject constructor(
     getRepository: RoomGetRepository,
     private val saveRepository: RoomRepository,
-) : UndoMoveRealUseCase(getRepository) {
-    override suspend fun undoInternal(room: IRoom) = room.undo()
+) : UndoMoveCommonUseCase<IRoom>(getRepository) {
+    override suspend fun undo(room: IRoom) = room.undo()
     override suspend fun save(room: IRoom) = saveRepository.save(room, RoomType.TWO_PLAYERS)
 }
 
-class UndoMoveBluetoothUseCase @Inject constructor(
-    private val repository: BluetoothRoomRepository,
+class UndoMoveSocketUseCase @Inject constructor(
+    getRepository: SocketGetRepository,
+    private val sendRepository: SocketSendRepository,
     private val networkUserProvider: NetworkUserProvider,
-) : UndoMoveUseCase {
-    override suspend fun undo() {
-        val currentRoom = repository.getFlow().filterNotNull().first()
-        if (isAvailable(currentRoom)) {
-            repository.send(currentRoom.undo())
-        }
-    }
-
-    private fun isAvailable(room: NetworkRoom): Boolean {
-        val dots = room.dots
-        if (dots.isNotEmpty()) {
-            val user = networkUserProvider.networkUser
-            if (room.user1 == user) {
-                if (dots.size % 2 == 1) return true
-            } else {
-                if (dots.size % 2 == 0) return true
-            }
-        }
-        return false
-    }
-}
-
-class UndoMoveNsdUseCase @Inject constructor(
-    private val repository: NsdRoomRepository,
-    private val networkUserProvider: NetworkUserProvider,
-) : UndoMoveUseCase {
-    override suspend fun undo() {
-        val currentRoom = repository.getFlow().filterNotNull().first()
-        if (isAvailable(currentRoom)) {
-            repository.send(currentRoom.undo())
-        }
-    }
-
-    private fun isAvailable(room: NetworkRoom): Boolean {
-        val dots = room.dots
-        if (dots.isNotEmpty()) {
-            val user = networkUserProvider.networkUser
-            if (room.user1 == user) {
-                if (dots.size % 2 == 1) return true
-            } else {
-                if (dots.size % 2 == 0) return true
-            }
-        }
-        return false
-    }
+) : UndoMoveCommonUseCase<NetworkRoom>(getRepository) {
+    private val user: IUser get() = networkUserProvider.networkUserOrThrow
+    override suspend fun undo(room: NetworkRoom) = if (room.canUndo(user)) room.undo() else null
+    override suspend fun save(room: NetworkRoom) = sendRepository.send(room)
 }

@@ -37,7 +37,6 @@ import java.net.ServerSocket
 import java.net.Socket
 import javax.inject.Inject
 
-
 class NsdRoomRepositoryImpl @Inject constructor(
     private val nsdValidator: NsdValidator,
     private val nsdRegistration: NsdRegistration,

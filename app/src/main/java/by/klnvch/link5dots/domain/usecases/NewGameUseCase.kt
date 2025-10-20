@@ -27,14 +27,14 @@ import by.klnvch.link5dots.domain.models.IRoom
 import by.klnvch.link5dots.domain.models.NetworkRoom
 import by.klnvch.link5dots.domain.models.RoomState
 import by.klnvch.link5dots.domain.models.RoomType
-import by.klnvch.link5dots.domain.repositories.BluetoothRoomRepository
 import by.klnvch.link5dots.domain.repositories.NetworkUserProvider
-import by.klnvch.link5dots.domain.repositories.NsdRoomRepository
 import by.klnvch.link5dots.domain.repositories.RoomKeyGenerator
 import by.klnvch.link5dots.domain.repositories.RoomRepository
+import by.klnvch.link5dots.domain.repositories.SocketGetRepository
+import by.klnvch.link5dots.domain.repositories.SocketSendRepository
+import by.klnvch.link5dots.domain.repositories.SocketServerRepository
 import by.klnvch.link5dots.domain.repositories.TimeService
 import by.klnvch.link5dots.domain.repositories.networkUserOrThrow
-import kotlinx.coroutines.flow.firstOrNull
 import javax.inject.Inject
 
 class NewGameEmptyUseCase @Inject constructor() : NewGameUseCase {
@@ -55,21 +55,21 @@ class NewGameTwoUseCase @Inject constructor(
     override suspend fun save(room: IRoom) = roomRepository.save(room, RoomType.TWO_PLAYERS)
 }
 
-class NewGameBluetoothUseCase @Inject constructor(
+class NewGameSocketUseCase @Inject constructor(
     private val timeRepository: TimeService,
     private val roomKeyGenerator: RoomKeyGenerator,
-    private val repository: BluetoothRoomRepository,
+    private val repository: SocketServerRepository,
     private val networkUserProvider: NetworkUserProvider,
+    private val getRepository: SocketGetRepository,
+    private val sendRepository: SocketSendRepository,
 ) : NewGameCommonUseCase() {
     override suspend fun create(seed: Long?) {
-        if (repository.isServer()) {
-            val prevRoom = repository.getFlow().firstOrNull()
-
+        if (repository.isServer) {
             val key = roomKeyGenerator.generate()
             val time = timeRepository.time()
 
             val user1 = networkUserProvider.networkUserOrThrow
-            val user2 = prevRoom?.user2
+            val user2 = getRepository.room?.user2
 
             val newRoom = NetworkRoom(
                 key,
@@ -80,37 +80,7 @@ class NewGameBluetoothUseCase @Inject constructor(
                 RoomState.CREATED
             )
 
-            repository.send(newRoom)
-        }
-    }
-}
-
-class NewGameNsdUseCase @Inject constructor(
-    private val timeRepository: TimeService,
-    private val roomKeyGenerator: RoomKeyGenerator,
-    private val repository: NsdRoomRepository,
-    private val networkUserProvider: NetworkUserProvider,
-) : NewGameCommonUseCase() {
-    override suspend fun create(seed: Long?) {
-        if (repository.isServer()) {
-            val prevRoom = repository.getFlow().firstOrNull()
-
-            val key = roomKeyGenerator.generate()
-            val time = timeRepository.time()
-
-            val user1 = networkUserProvider.networkUserOrThrow
-            val user2 = prevRoom?.user2
-
-            val newRoom = NetworkRoom(
-                key,
-                time,
-                getDots(seed),
-                user1,
-                user2,
-                RoomState.CREATED,
-            )
-
-            repository.send(newRoom)
+            sendRepository.send(newRoom)
         }
     }
 }

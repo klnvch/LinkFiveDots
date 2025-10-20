@@ -46,7 +46,7 @@ abstract class NewGameCommonUseCase() : NewGameUseCase {
     override val isImplemented = true
     protected fun getDots(seed: Long?) =
         if (seed != null) generateInitialGame(seed)
-            .mapIndexed { i, p -> DotImpl(p, 0) }
+            .map { DotImpl(it, 0) }
             .toMutableList<Dot>()
         else mutableListOf()
 }

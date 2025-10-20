@@ -160,7 +160,7 @@ abstract class SocketRoomRepository {
         _outputStream?.writeRoom(room)
     }
 
-    fun isServer() = _serverSocket !== null
+    val isServer get() = _serverSocket !== null
 
     open fun delete() {
         _serverSocket?.closeSafely()

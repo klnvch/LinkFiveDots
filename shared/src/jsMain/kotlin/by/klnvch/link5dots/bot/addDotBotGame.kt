@@ -54,6 +54,6 @@ fun addDotBotGame(room: IRoom?, p: Point, onGameUpdate: (room: IRoom) -> Unit): 
             override suspend fun save(room: IRoom, roomType: RoomType) = onGameUpdate(room)
         }
 
-        val useCase = AddDotBotUseCase(timeService, board, getRepository, saveRepository, bot)
+        val useCase = AddDotBotUseCase(getRepository, board, timeService, saveRepository, bot)
         useCase.addDot(p)
     }
