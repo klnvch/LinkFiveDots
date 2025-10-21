@@ -28,10 +28,9 @@ import by.klnvch.link5dots.data.TimeServiceImpl
 import by.klnvch.link5dots.domain.models.Board
 import by.klnvch.link5dots.domain.models.IRoom
 import by.klnvch.link5dots.domain.models.Point
-import by.klnvch.link5dots.domain.models.RoomType
 import by.klnvch.link5dots.domain.models.bot.Bot
 import by.klnvch.link5dots.domain.repositories.RoomGetRepository
-import by.klnvch.link5dots.domain.repositories.RoomSaveRepository
+import by.klnvch.link5dots.domain.repositories.RoomSaveLocalRepository
 import by.klnvch.link5dots.domain.usecases.AddDotBotUseCase
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
@@ -50,8 +49,8 @@ fun addDotBotGame(room: IRoom?, p: Point, onGameUpdate: (room: IRoom) -> Unit): 
             override val room = room
         }
 
-        val saveRepository = object : RoomSaveRepository {
-            override suspend fun save(room: IRoom, roomType: RoomType) = onGameUpdate(room)
+        val saveRepository = object : RoomSaveLocalRepository {
+            override suspend fun save(room: IRoom) = onGameUpdate(room)
         }
 
         val useCase = AddDotBotUseCase(getRepository, board, timeService, saveRepository, bot)

@@ -27,7 +27,8 @@ import android.net.nsd.NsdServiceInfo
 import by.klnvch.link5dots.data.nsd.NsdExt.address
 import by.klnvch.link5dots.data.sockets.SocketData
 import by.klnvch.link5dots.data.sockets.SocketRoomRepository
-import by.klnvch.link5dots.domain.models.NetworkUser
+import by.klnvch.link5dots.domain.models.INetworkRoomAcceptance
+import by.klnvch.link5dots.domain.models.INetworkRoomInvitation
 import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
 import by.klnvch.link5dots.domain.models.RoomInvitation
 import by.klnvch.link5dots.domain.repositories.NsdRoomRepository
@@ -44,13 +45,13 @@ class NsdRoomRepositoryImpl @Inject constructor(
 ) : SocketRoomRepository(), NsdRoomRepository {
     override val TAG = NsdParams.TAG
 
-    override suspend fun create() {
+    override suspend fun create(invitation: INetworkRoomInvitation) {
         nsdValidator.validate()
         val serverSocket = ServerSocket(0)
         try {
             val info = nsdRegistration.register(serverSocket.localPort)
             val descriptor = NsdRoomDescriptor(info)
-            startAccepting(descriptor, serverSocket) {
+            startAccepting(descriptor, serverSocket, invitation) {
                 val socket = serverSocket.accept()
                 SocketData(socket, socket.inputStream, socket.outputStream)
             }
@@ -79,10 +80,11 @@ class NsdRoomRepositoryImpl @Inject constructor(
         override val time = null
         override val isFavorite = false
 
-        override suspend fun onConnect(user2: NetworkUser) = connect(this, user2) {
-            val socket = Socket(info.address, info.port)
-            SocketData(socket, socket.inputStream, socket.outputStream)
-        }
+        override suspend fun onConnect(acceptance: INetworkRoomAcceptance) =
+            connect(this, acceptance) {
+                val socket = Socket(info.address, info.port)
+                SocketData(socket, socket.inputStream, socket.outputStream)
+            }
     }
 }
 

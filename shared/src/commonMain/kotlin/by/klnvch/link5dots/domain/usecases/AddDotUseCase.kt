@@ -32,7 +32,6 @@ import by.klnvch.link5dots.domain.models.IUser
 import by.klnvch.link5dots.domain.models.NetworkRoom
 import by.klnvch.link5dots.domain.models.Point
 import by.klnvch.link5dots.domain.models.RoomState
-import by.klnvch.link5dots.domain.models.RoomType
 import by.klnvch.link5dots.domain.models.bot.Bot
 import by.klnvch.link5dots.domain.models.canMove
 import by.klnvch.link5dots.domain.models.findWinningLine
@@ -41,7 +40,7 @@ import by.klnvch.link5dots.domain.repositories.GetOnlineRoomRepository
 import by.klnvch.link5dots.domain.repositories.GetRoomRepository
 import by.klnvch.link5dots.domain.repositories.NetworkUserProvider
 import by.klnvch.link5dots.domain.repositories.RoomGetRepository
-import by.klnvch.link5dots.domain.repositories.RoomSaveRepository
+import by.klnvch.link5dots.domain.repositories.RoomSaveLocalRepository
 import by.klnvch.link5dots.domain.repositories.TimeService
 import by.klnvch.link5dots.domain.repositories.UpdateStateOnlineRoomRepository
 import by.klnvch.link5dots.domain.repositories.networkUserOrThrow
@@ -94,7 +93,7 @@ class AddDotBotUseCase(
     getRepository: RoomGetRepository,
     board: Board,
     private val timeService: TimeService,
-    private val saveRepository: RoomSaveRepository,
+    private val saveRepository: RoomSaveLocalRepository,
     private val bot: Bot,
 ) : AddDotCommonUseCase<IRoom>(getRepository, board) {
     override val user: IUser get() = DeviceOwnerUser
@@ -107,6 +106,6 @@ class AddDotBotUseCase(
             updatedRoom = updatedRoom.move(DotImpl(botPoint, dt))
         }
 
-        saveRepository.save(updatedRoom, RoomType.BOT)
+        saveRepository.save(updatedRoom)
     }
 }

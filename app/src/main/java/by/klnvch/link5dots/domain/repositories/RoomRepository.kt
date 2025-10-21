@@ -27,6 +27,7 @@ package by.klnvch.link5dots.domain.repositories
 import by.klnvch.link5dots.domain.models.HistoryRoom
 import by.klnvch.link5dots.domain.models.IRoom
 import by.klnvch.link5dots.domain.models.RoomType
+import by.klnvch.link5dots.domain.models.RoomTypeProvider
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -35,20 +36,39 @@ import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 import javax.inject.Singleton
 
-interface RoomRepository : RoomSaveRepository {
+interface RoomRepository {
     suspend fun sync(isTestDevice: Boolean)
     suspend fun delete(key: String)
     fun getAll(): Flow<List<HistoryRoom>>
     fun getByKey(key: String): Flow<IRoom?>
     fun getRecentByType(type: RoomType): Flow<IRoom?>
+    suspend fun save(room: IRoom, roomType: RoomType)
     suspend fun deleteAll()
+}
+
+interface RoomFlowLocalRepository {
+    val roomFlow: Flow<IRoom?>
+}
+
+class RoomFlowLocalRepositoryImpl @Inject constructor(
+    repository: RoomRepository,
+    roomTypeProvider: RoomTypeProvider,
+) : RoomFlowLocalRepository {
+    override val roomFlow = repository.getRecentByType(roomTypeProvider.type)
+}
+
+class RoomSaveLocalRepositoryImpl @Inject constructor(
+    private val repository: RoomRepository,
+    private val roomTypeProvider: RoomTypeProvider,
+) : RoomSaveLocalRepository {
+    override suspend fun save(room: IRoom) = repository.save(room, roomTypeProvider.type)
 }
 
 abstract class RoomStateGetRepository(
     repository: RoomRepository,
     type: RoomType,
 ) : RoomGetRepository {
-    val roomFlow = repository.getRecentByType(type).stateIn(
+    private val roomFlow = repository.getRecentByType(type).stateIn(
         scope = CoroutineScope(Dispatchers.IO),
         started = SharingStarted.Eagerly,
         initialValue = null

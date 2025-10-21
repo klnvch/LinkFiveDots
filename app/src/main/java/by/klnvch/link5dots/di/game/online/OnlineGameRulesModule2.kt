@@ -34,7 +34,7 @@ import by.klnvch.link5dots.domain.repositories.UpdateStateOnlineRoomRepository
 import by.klnvch.link5dots.domain.usecases.AddDotOnlineUseCase
 import by.klnvch.link5dots.domain.usecases.GameActionsOnlineUseCase
 import by.klnvch.link5dots.domain.usecases.GameActionsUseCase
-import by.klnvch.link5dots.domain.usecases.NewGameOnlineUseCase
+import by.klnvch.link5dots.domain.usecases.NewGameEmptyUseCase
 import by.klnvch.link5dots.domain.usecases.NewGameUseCase
 import by.klnvch.link5dots.domain.usecases.network.CreateOnlineRoomUseCase
 import by.klnvch.link5dots.domain.usecases.network.ScanOnlineRoomDescriptorFactory
@@ -44,7 +44,7 @@ import dagger.Provides
 @Module
 class OnlineGameRulesModule2 {
     @Provides
-    fun provideNewGameUseCase(): NewGameUseCase = NewGameOnlineUseCase()
+    fun provideNewGameUseCase(): NewGameUseCase = NewGameEmptyUseCase()
 
     @Provides
     fun provideGameActionsUseCase(getRepository: GetOnlineRoomRepository): GameActionsUseCase =

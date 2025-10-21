@@ -27,7 +27,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import by.klnvch.link5dots.domain.models.BotGameScore
 import by.klnvch.link5dots.domain.models.Point
-import by.klnvch.link5dots.domain.models.gameSeed
 import by.klnvch.link5dots.domain.models.isNew
 import by.klnvch.link5dots.domain.models.lastPoint
 import by.klnvch.link5dots.domain.repositories.Settings
@@ -45,7 +44,6 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flatMapLatest
@@ -68,9 +66,7 @@ open class OfflineGameViewModel @Inject constructor(
     private val _searchQueryFlow = MutableSharedFlow<RoomParam>(1)
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    protected val roomFlowGuard = _searchQueryFlow.flatMapLatest { getRoomUseCase.get(it) }
-
-    protected val roomFlow = roomFlowGuard.filterNotNull()
+    protected val roomFlow = _searchQueryFlow.flatMapLatest { getRoomUseCase.get(it) }
 
     val uiState = roomFlow.map {
         val type = settings.getDotsType().first()
@@ -95,13 +91,6 @@ open class OfflineGameViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            roomFlowGuard.collect {
-                if (it === null) {
-                    newGameUseCase.create(gameSeed())
-                }
-            }
-        }
-        viewModelScope.launch {
             roomFlow.collect {
                 if (it.isNew()) {
                     focus()
@@ -115,9 +104,7 @@ open class OfflineGameViewModel @Inject constructor(
     fun undoLastMove() = viewModelScope.launch { undoMoveUseCase.undo() }
 
     fun newGame(): Boolean {
-        viewModelScope.launch {
-            newGameUseCase.create(gameSeed())
-        }
+        viewModelScope.launch { newGameUseCase.create() }
         return newGameUseCase.isImplemented
     }
 

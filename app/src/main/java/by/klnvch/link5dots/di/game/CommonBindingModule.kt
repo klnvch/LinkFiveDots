@@ -24,14 +24,28 @@
 
 package by.klnvch.link5dots.di.game
 
-import by.klnvch.link5dots.domain.repositories.NetworkUserProvider
-import by.klnvch.link5dots.domain.usecases.network.GetNetworkGameActionUseCase
+import by.klnvch.link5dots.domain.models.RoomTypeProvider
+import by.klnvch.link5dots.domain.repositories.RoomFlowLocalRepository
+import by.klnvch.link5dots.domain.repositories.RoomFlowLocalRepositoryImpl
+import by.klnvch.link5dots.domain.repositories.RoomRepository
+import by.klnvch.link5dots.domain.repositories.RoomSaveLocalRepository
+import by.klnvch.link5dots.domain.repositories.RoomSaveLocalRepositoryImpl
 import dagger.Module
 import dagger.Provides
 
 @Module
 class CommonBindingModule {
     @Provides
-    fun provideGetNetworkGameActionUseCase(networkUserProvider: NetworkUserProvider) =
-        GetNetworkGameActionUseCase(networkUserProvider)
+    fun bindRoomSaveLocalRepository(
+        repository: RoomRepository,
+        roomTypeProvider: RoomTypeProvider,
+    ): RoomSaveLocalRepository =
+        RoomSaveLocalRepositoryImpl(repository, roomTypeProvider)
+
+    @Provides
+    fun bindRoomFlowLocalRepository(
+        repository: RoomRepository,
+        roomTypeProvider: RoomTypeProvider,
+    ): RoomFlowLocalRepository =
+        RoomFlowLocalRepositoryImpl(repository, roomTypeProvider)
 }

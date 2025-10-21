@@ -26,19 +26,22 @@ package by.klnvch.link5dots.data.sockets
 
 import android.util.Log
 import by.klnvch.link5dots.data.toJson
-import by.klnvch.link5dots.data.toNetworkRoom
+import by.klnvch.link5dots.data.toRoom
+import by.klnvch.link5dots.domain.models.INetworkRoomAcceptance
+import by.klnvch.link5dots.domain.models.INetworkRoomInvitation
 import by.klnvch.link5dots.domain.models.NetworkRoom
+import by.klnvch.link5dots.domain.models.NetworkRoomEntity
 import by.klnvch.link5dots.domain.models.NetworkRoomState
 import by.klnvch.link5dots.domain.models.NetworkRoomStateCreated
 import by.klnvch.link5dots.domain.models.NetworkRoomStateDeleted
 import by.klnvch.link5dots.domain.models.NetworkRoomStateFinished
 import by.klnvch.link5dots.domain.models.NetworkRoomStateStarted
-import by.klnvch.link5dots.domain.models.NetworkUser
 import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
+import by.klnvch.link5dots.domain.models.combine
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import java.io.Closeable
 import java.io.DataInputStream
@@ -49,7 +52,7 @@ import kotlin.concurrent.thread
 
 abstract class SocketRoomRepository {
     protected abstract val TAG: String
-    private val roomFlow = MutableStateFlow<NetworkRoom?>(null)
+    private val _roomFlow = MutableStateFlow<NetworkRoom?>(null)
     private val stateFlow = MutableSharedFlow<NetworkRoomState>(1)
     private var _serverSocket: Closeable? = null
     private var _socket: Closeable? = null
@@ -58,6 +61,7 @@ abstract class SocketRoomRepository {
     protected fun startAccepting(
         descriptor: RemoteRoomDescriptor,
         serverSocket: Closeable,
+        invitation: INetworkRoomInvitation,
         accept: suspend () -> SocketData,
     ) {
         thread {
@@ -65,7 +69,6 @@ abstract class SocketRoomRepository {
             try {
                 // reset current game to generate a new one
                 stateFlow.tryEmit(NetworkRoomStateCreated(descriptor))
-                roomFlow.tryEmit(null)
 
                 Log.d(TAG, "accepting: waiting")
                 val socketData = runBlocking { accept() }
@@ -77,20 +80,19 @@ abstract class SocketRoomRepository {
                 stateFlow.tryEmit(NetworkRoomStateStarted(descriptor))
 
                 // get a new generated game and send it
-                val newRoom = runBlocking { roomFlow.filterNotNull().first() }
-                Log.d(TAG, "accepting: new room created $newRoom")
-                outputStream.writeRoom(newRoom)
+                Log.d(TAG, "accepting: invitation $invitation")
+                outputStream.writeRoom(invitation)
 
                 // receive a game with filled user
                 Log.d(TAG, "accepting: wait for user2")
-                val acceptedRoom = inputStream.readRoom()
+                val acceptedRoom = inputStream.readRoom<NetworkRoom>()
                 Log.d(TAG, "accepting: new room accepted $acceptedRoom")
-                roomFlow.tryEmit(acceptedRoom)
+                _roomFlow.tryEmit(acceptedRoom)
 
                 // now we can communicate
                 startCommunication(socket, outputStream, inputStream)
             } catch (e: Throwable) {
-                Log.d(TAG, "accepting: ${e.message}")
+                Log.d(TAG, "accepting: $e")
                 stateFlow.tryEmit(NetworkRoomStateDeleted(descriptor))
             }
         }
@@ -98,7 +100,7 @@ abstract class SocketRoomRepository {
 
     protected suspend fun connect(
         descriptor: RemoteRoomDescriptor,
-        user2: NetworkUser,
+        acceptance: INetworkRoomAcceptance,
         connect: suspend () -> SocketData,
     ): Unit =
         try {
@@ -113,14 +115,14 @@ abstract class SocketRoomRepository {
 
             // receive new room
             Log.d(TAG, "connect: waiting for new game")
-            val newRoom = inputStream.readRoom()
+            val invitation = inputStream.readRoom<INetworkRoomInvitation>()
 
             // add user2 to the new room
-            Log.d(TAG, "connect: new game received $newRoom")
-            val roomWithUser2 = newRoom.copy(user2 = user2)
-            Log.d(TAG, "connect: new game accepted $roomWithUser2")
-            outputStream.writeRoom(roomWithUser2)
-            roomFlow.tryEmit(roomWithUser2)
+            Log.d(TAG, "connect: new game received $invitation")
+            val room = combine(invitation, acceptance)
+            Log.d(TAG, "connect: new game accepted $room")
+            outputStream.writeRoom(room)
+            _roomFlow.tryEmit(room)
 
             // now we can communicate
             startCommunication(socket, outputStream, inputStream)
@@ -140,8 +142,8 @@ abstract class SocketRoomRepository {
         thread {
             try {
                 while (true) {
-                    val room = inputStream.readRoom()
-                    roomFlow.tryEmit(room)
+                    val room = inputStream.readRoom<NetworkRoom>()
+                    _roomFlow.tryEmit(room)
                     Log.d(TAG, "received: $room")
                 }
             } catch (e: Throwable) {
@@ -156,11 +158,9 @@ abstract class SocketRoomRepository {
 
     suspend fun send(room: NetworkRoom) {
         Log.d(TAG, "game updated: $room")
-        roomFlow.emit(room)
+        _roomFlow.emit(room)
         _outputStream?.writeRoom(room)
     }
-
-    val isServer get() = _serverSocket !== null
 
     open fun delete() {
         _serverSocket?.closeSafely()
@@ -176,21 +176,20 @@ abstract class SocketRoomRepository {
 
     val state = stateFlow
 
-    fun getFlow() = roomFlow
+    val roomFlow: Flow<NetworkRoom> = _roomFlow.filterNotNull()
+    val room get() = _roomFlow.value
 
-    val room get() = roomFlow.value
-
-    protected fun DataOutputStream.writeRoom(room: NetworkRoom) {
+    private fun DataOutputStream.writeRoom(room: NetworkRoomEntity) {
         val json = room.toJson()
         Log.d(TAG, "write: $json")
         writeUTF(json)
         flush()
     }
 
-    protected fun DataInputStream.readRoom(): NetworkRoom {
+    private inline fun <reified T : NetworkRoomEntity> DataInputStream.readRoom(): T {
         val json = readUTF()
         Log.d(TAG, "read: $json")
-        return json.toNetworkRoom()
+        return json.toRoom<T>()
     }
 
     protected fun Closeable.closeSafely() = try {

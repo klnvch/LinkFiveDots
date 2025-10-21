@@ -23,11 +23,25 @@
  */
 package by.klnvch.link5dots.domain.usecases.network
 
+import by.klnvch.link5dots.domain.models.NetworkRoomInvitation
+import by.klnvch.link5dots.domain.repositories.NetworkUserProvider
+import by.klnvch.link5dots.domain.repositories.RoomKeyGenerator
 import by.klnvch.link5dots.domain.repositories.SocketCreateRepository
+import by.klnvch.link5dots.domain.repositories.TimeService
+import by.klnvch.link5dots.domain.repositories.networkUserOrThrow
 import javax.inject.Inject
 
 class CreateSocketRoomUseCase @Inject constructor(
+    private val roomKeyGenerator: RoomKeyGenerator,
+    private val networkUserProvider: NetworkUserProvider,
+    private val timeService: TimeService,
     private val repository: SocketCreateRepository,
 ) : CreateMultiplayerRoomUseCase {
-    override suspend fun create() = repository.create()
+    override suspend fun create() = repository.create(
+        NetworkRoomInvitation(
+            roomKeyGenerator.generate(),
+            timeService.time(),
+            networkUserProvider.networkUserOrThrow,
+        )
+    )
 }

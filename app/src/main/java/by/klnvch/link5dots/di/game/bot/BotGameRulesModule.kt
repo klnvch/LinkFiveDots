@@ -23,34 +23,24 @@
  */
 package by.klnvch.link5dots.di.game.bot
 
+import by.klnvch.link5dots.domain.models.RoomTypeBotProvider
+import by.klnvch.link5dots.domain.models.RoomTypeProvider
 import by.klnvch.link5dots.domain.repositories.RoomBotGetRepository
 import by.klnvch.link5dots.domain.repositories.RoomGetRepository
-import by.klnvch.link5dots.domain.usecases.AddDotBotUseCase
-import by.klnvch.link5dots.domain.usecases.AddDotUseCase
-import by.klnvch.link5dots.domain.usecases.GetRoomOfflineUseCase
+import by.klnvch.link5dots.domain.usecases.GetRoomCommonUseCase
 import by.klnvch.link5dots.domain.usecases.GetRoomUseCase
-import by.klnvch.link5dots.domain.usecases.NewGameBotUseCase
-import by.klnvch.link5dots.domain.usecases.NewGameUseCase
 import by.klnvch.link5dots.domain.usecases.PrepareScoreBotUseCase
 import by.klnvch.link5dots.domain.usecases.PrepareScoreUseCase
-import by.klnvch.link5dots.domain.usecases.UndoMoveBotUseCase
-import by.klnvch.link5dots.domain.usecases.UndoMoveUseCase
 import dagger.Binds
 import dagger.Module
 
 @Module
 interface BotGameRulesModule {
     @Binds
-    fun bindGetRoomUseCase(impl: GetRoomOfflineUseCase): GetRoomUseCase
+    fun bindRoomTypeProvider(impl: RoomTypeBotProvider): RoomTypeProvider
 
     @Binds
-    fun bindNewGameUseCase(impl: NewGameBotUseCase): NewGameUseCase
-
-    @Binds
-    fun bindAddDotUseCase(impl: AddDotBotUseCase): AddDotUseCase
-
-    @Binds
-    fun bindUndoMoveUseCase(impl: UndoMoveBotUseCase): UndoMoveUseCase
+    fun bindGetRoomUseCase(impl: GetRoomCommonUseCase): GetRoomUseCase
 
     @Binds
     fun bindPrepareScoreUseCase(impl: PrepareScoreBotUseCase): PrepareScoreUseCase

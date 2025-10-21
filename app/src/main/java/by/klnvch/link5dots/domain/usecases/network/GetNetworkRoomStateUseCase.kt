@@ -23,11 +23,11 @@
  */
 package by.klnvch.link5dots.domain.usecases.network
 
-import by.klnvch.link5dots.domain.repositories.NetworkRoomStateRepository
+import by.klnvch.link5dots.domain.repositories.RoomStateRemoteRepository
 import javax.inject.Inject
 
 class GetNetworkRoomStateUseCase @Inject constructor(
-    private val repository: NetworkRoomStateRepository,
+    private val repository: RoomStateRemoteRepository,
 ) {
     fun get() = repository.state
 }

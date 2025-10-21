@@ -25,9 +25,8 @@
 package by.klnvch.link5dots.bot
 
 import by.klnvch.link5dots.domain.models.IRoom
-import by.klnvch.link5dots.domain.models.RoomType
 import by.klnvch.link5dots.domain.repositories.RoomGetRepository
-import by.klnvch.link5dots.domain.repositories.RoomSaveRepository
+import by.klnvch.link5dots.domain.repositories.RoomSaveLocalRepository
 import by.klnvch.link5dots.domain.usecases.UndoMoveBotUseCase
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
@@ -42,8 +41,8 @@ fun undoBotGame(room: IRoom?, onGameUpdate: (room: IRoom) -> Unit): Promise<Unit
             override val room = room
         }
 
-        val saveRepository = object : RoomSaveRepository {
-            override suspend fun save(room: IRoom, roomType: RoomType) = onGameUpdate(room)
+        val saveRepository = object : RoomSaveLocalRepository {
+            override suspend fun save(room: IRoom) = onGameUpdate(room)
         }
 
         val useCase = UndoMoveBotUseCase(getRepository, saveRepository)

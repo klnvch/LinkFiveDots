@@ -39,10 +39,10 @@ class CreateOnlineRoomUseCase(
     private val networkUserProvider: NetworkUserProvider,
     private val repository: CreateOnlineRoomRepository,
 ) : CreateMultiplayerRoomUseCase {
-    override suspend fun create() {
-        val key = roomKeyGenerator.generate()
-        val user1 = networkUserProvider.networkUserOrThrow
-        val invitation = CreateOnlineRoomInvitationImpl(key, user1)
-        repository.create(invitation)
-    }
+    override suspend fun create() = repository.create(
+        CreateOnlineRoomInvitationImpl(
+            roomKeyGenerator.generate(),
+            networkUserProvider.networkUserOrThrow
+        )
+    )
 }

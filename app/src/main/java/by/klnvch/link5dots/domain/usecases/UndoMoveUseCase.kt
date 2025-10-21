@@ -27,11 +27,10 @@ package by.klnvch.link5dots.domain.usecases
 import by.klnvch.link5dots.domain.models.IRoom
 import by.klnvch.link5dots.domain.models.IUser
 import by.klnvch.link5dots.domain.models.NetworkRoom
-import by.klnvch.link5dots.domain.models.RoomType
 import by.klnvch.link5dots.domain.models.canUndo
 import by.klnvch.link5dots.domain.repositories.NetworkUserProvider
 import by.klnvch.link5dots.domain.repositories.RoomGetRepository
-import by.klnvch.link5dots.domain.repositories.RoomRepository
+import by.klnvch.link5dots.domain.repositories.RoomSaveLocalRepository
 import by.klnvch.link5dots.domain.repositories.SocketGetRepository
 import by.klnvch.link5dots.domain.repositories.SocketSendRepository
 import by.klnvch.link5dots.domain.repositories.networkUserOrThrow
@@ -43,10 +42,10 @@ class UndoMoveInfoUseCase @Inject constructor() : UndoMoveUseCase {
 
 class UndoMoveTwoUseCase @Inject constructor(
     getRepository: RoomGetRepository,
-    private val saveRepository: RoomRepository,
+    private val saveRepository: RoomSaveLocalRepository,
 ) : UndoMoveCommonUseCase<IRoom>(getRepository) {
     override suspend fun undo(room: IRoom) = room.undo()
-    override suspend fun save(room: IRoom) = saveRepository.save(room, RoomType.TWO_PLAYERS)
+    override suspend fun save(room: IRoom) = saveRepository.save(room)
 }
 
 class UndoMoveSocketUseCase @Inject constructor(

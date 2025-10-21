@@ -42,8 +42,8 @@ import by.klnvch.link5dots.domain.usecases.PrepareScoreUseCase
 import by.klnvch.link5dots.domain.usecases.RoomByDescriptor
 import by.klnvch.link5dots.domain.usecases.SaveScoreUseCase
 import by.klnvch.link5dots.domain.usecases.UndoMoveUseCase
+import by.klnvch.link5dots.domain.usecases.network.CleanMultiplayerRoomUseCase
 import by.klnvch.link5dots.domain.usecases.network.CreateMultiplayerRoomUseCase
-import by.klnvch.link5dots.domain.usecases.network.DeleteMultiplayerRoomUseCase
 import by.klnvch.link5dots.domain.usecases.network.GetNetworkGameActionUseCase
 import by.klnvch.link5dots.domain.usecases.network.GetNetworkRoomStateUseCase
 import by.klnvch.link5dots.domain.usecases.network.InitMultiplayerUseCase
@@ -58,7 +58,6 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onCompletion
-import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -68,7 +67,7 @@ class OnlineGameViewModel @Inject constructor(
     private val initMultiplayerUseCase: InitMultiplayerUseCase,
     private val createMultiplayerRoomUseCase: CreateMultiplayerRoomUseCase,
     private val getNetworkRoomStateUseCase: GetNetworkRoomStateUseCase,
-    private val deleteMultiplayerRoomUseCase: DeleteMultiplayerRoomUseCase,
+    private val cleanMultiplayerRoomUseCase: CleanMultiplayerRoomUseCase,
     private val scanUseCase: ScanUseCase,
     private val getNetworkGameActionUseCase: GetNetworkGameActionUseCase,
     getGameActionsUseCase: GameActionsUseCase,
@@ -98,7 +97,7 @@ class OnlineGameViewModel @Inject constructor(
         .stateIn(viewModelScope, SharingStarted.Eagerly, PickerViewStateImpl())
 
     val uiTitleState = combine(
-        roomFlowGuard.onStart { emit(null) }.map { it as? INetworkRoom },
+        roomFlow.map { it as? INetworkRoom },
         _pickerState
     ) { room, pickerState -> getNetworkGameActionUseCase.get(pickerState, room) }
 
@@ -128,7 +127,7 @@ class OnlineGameViewModel @Inject constructor(
 
     fun deleteRoom() {
         _pickerState.update { it.deleting() }
-        deleteMultiplayerRoomUseCase.delete()
+        cleanMultiplayerRoomUseCase.delete()
     }
 
     fun startScan(e: Throwable? = null) {
@@ -161,7 +160,7 @@ class OnlineGameViewModel @Inject constructor(
 
     fun exitGame() {
         if (_pickerState.value.isConnected) {
-            deleteMultiplayerRoomUseCase.finish()
+            cleanMultiplayerRoomUseCase.finish()
         }
         _pickerState.update { it.reset() }
     }

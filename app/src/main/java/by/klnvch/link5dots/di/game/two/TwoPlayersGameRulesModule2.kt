@@ -21,35 +21,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package by.klnvch.link5dots.di.game.info
+package by.klnvch.link5dots.di.game.two
 
-import by.klnvch.link5dots.domain.usecases.AddDotInfoUseCase
-import by.klnvch.link5dots.domain.usecases.AddDotUseCase
-import by.klnvch.link5dots.domain.usecases.GameActionsInfoUseCase
-import by.klnvch.link5dots.domain.usecases.GameActionsUseCase
-import by.klnvch.link5dots.domain.usecases.GetRoomInfoUseCase
-import by.klnvch.link5dots.domain.usecases.GetRoomUseCase
-import by.klnvch.link5dots.domain.usecases.PrepareScoreOtherUseCase
-import by.klnvch.link5dots.domain.usecases.PrepareScoreUseCase
-import by.klnvch.link5dots.domain.usecases.UndoMoveInfoUseCase
-import by.klnvch.link5dots.domain.usecases.UndoMoveUseCase
-import dagger.Binds
+import by.klnvch.link5dots.domain.models.RoomTwoFactory
+import by.klnvch.link5dots.domain.repositories.RoomSaveLocalRepository
+import by.klnvch.link5dots.domain.usecases.NewGameCommonUseCase
+import by.klnvch.link5dots.domain.usecases.NewGameUseCase
 import dagger.Module
+import dagger.Provides
 
 @Module
-interface InfoGameRulesModule {
-    @Binds
-    fun bindGetRoomUseCase(impl: GetRoomInfoUseCase): GetRoomUseCase
-
-    @Binds
-    fun bindAddDotUseCase(impl: AddDotInfoUseCase): AddDotUseCase
-
-    @Binds
-    fun bindUndoMoveUseCase(impl: UndoMoveInfoUseCase): UndoMoveUseCase
-
-    @Binds
-    fun bindPrepareScoreUseCase(impl: PrepareScoreOtherUseCase): PrepareScoreUseCase
-
-    @Binds
-    fun bindGameActionsUseCase(impl: GameActionsInfoUseCase): GameActionsUseCase
+class TwoPlayersGameRulesModule2 {
+    @Provides
+    fun provideNewGameUseCase(
+        roomFactory: RoomTwoFactory,
+        saveRepository: RoomSaveLocalRepository,
+    ): NewGameUseCase = NewGameCommonUseCase(roomFactory, saveRepository)
 }

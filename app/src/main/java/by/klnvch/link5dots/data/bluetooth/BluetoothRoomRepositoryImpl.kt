@@ -33,7 +33,8 @@ import by.klnvch.link5dots.data.bluetooth.BluetoothExt.getDeviceName
 import by.klnvch.link5dots.data.bluetooth.BluetoothExt.isBonded
 import by.klnvch.link5dots.data.sockets.SocketData
 import by.klnvch.link5dots.data.sockets.SocketRoomRepository
-import by.klnvch.link5dots.domain.models.NetworkUser
+import by.klnvch.link5dots.domain.models.INetworkRoomAcceptance
+import by.klnvch.link5dots.domain.models.INetworkRoomInvitation
 import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
 import by.klnvch.link5dots.domain.models.RoomInvitation
 import by.klnvch.link5dots.domain.repositories.BluetoothRoomRepository
@@ -57,11 +58,11 @@ class BluetoothRoomRepositoryImpl @Inject constructor(
     private val bluetoothManager = context.getSystemService(BluetoothManager::class.java)
     override val TAG = BluetoothParams.TAG
 
-    override suspend fun create() {
+    override suspend fun create(invitation: INetworkRoomInvitation) {
         bluetoothValidator.validate()
         val descriptor = BluetoothLocalRoomDescriptor()
         val serverSocket = bluetoothManager.createServerSocket()
-        startAccepting(descriptor, serverSocket) {
+        startAccepting(descriptor, serverSocket, invitation) {
             val socket = serverSocket.accept()
             bluetoothBondedStore.save(socket.remoteDevice)
             SocketData(socket, socket.inputStream, socket.outputStream)
@@ -99,10 +100,11 @@ class BluetoothRoomRepositoryImpl @Inject constructor(
         override val description get() = device.address ?: ""
         override val isFavorite get() = device.isBonded
         override val time = null
-        override suspend fun onConnect(user2: NetworkUser) = connect(this, user2) {
-            val socket = bluetoothConnectService.connect(device)
-            bluetoothBondedStore.save(device)
-            SocketData(socket, socket.inputStream, socket.outputStream)
-        }
+        override suspend fun onConnect(acceptance: INetworkRoomAcceptance) =
+            connect(this, acceptance) {
+                val socket = bluetoothConnectService.connect(device)
+                bluetoothBondedStore.save(device)
+                SocketData(socket, socket.inputStream, socket.outputStream)
+            }
     }
 }

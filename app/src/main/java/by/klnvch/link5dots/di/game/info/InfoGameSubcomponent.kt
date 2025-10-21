@@ -34,6 +34,7 @@ import dagger.android.AndroidInjector
     modules = [
         OfflineGameViewModelsModule::class,
         InfoGameRulesModule::class,
+        InfoGameRulesModule2::class,
     ]
 )
 interface InfoGameSubcomponent : AndroidInjector<GameInfoActivity> {

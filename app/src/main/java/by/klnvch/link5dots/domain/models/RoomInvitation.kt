@@ -25,5 +25,5 @@
 package by.klnvch.link5dots.domain.models
 
 interface RoomInvitation : RemoteRoomDescriptor {
-    suspend fun onConnect(user2: NetworkUser)
+    suspend fun onConnect(acceptance: INetworkRoomAcceptance)
 }

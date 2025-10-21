@@ -23,84 +23,23 @@
  */
 package by.klnvch.link5dots.di.game.nsd
 
-import by.klnvch.link5dots.domain.repositories.NetworkRoomStateRepository
-import by.klnvch.link5dots.domain.repositories.NetworkUserLocalProvider
-import by.klnvch.link5dots.domain.repositories.NetworkUserProvider
+import by.klnvch.link5dots.domain.models.RoomTypeNsdProvider
+import by.klnvch.link5dots.domain.models.RoomTypeProvider
 import by.klnvch.link5dots.domain.repositories.NsdRoomRepository
-import by.klnvch.link5dots.domain.repositories.SocketCreateRepository
-import by.klnvch.link5dots.domain.repositories.SocketGetRepository
-import by.klnvch.link5dots.domain.repositories.SocketSendRepository
-import by.klnvch.link5dots.domain.repositories.SocketServerRepository
-import by.klnvch.link5dots.domain.usecases.AddDotSocketUseCase
-import by.klnvch.link5dots.domain.usecases.AddDotUseCase
-import by.klnvch.link5dots.domain.usecases.GameActionsSocketUseCase
-import by.klnvch.link5dots.domain.usecases.GameActionsUseCase
-import by.klnvch.link5dots.domain.usecases.GetRoomNsdUseCase
-import by.klnvch.link5dots.domain.usecases.GetRoomUseCase
-import by.klnvch.link5dots.domain.usecases.NewGameSocketUseCase
-import by.klnvch.link5dots.domain.usecases.NewGameUseCase
-import by.klnvch.link5dots.domain.usecases.PrepareScoreMultiplayerUseCase
-import by.klnvch.link5dots.domain.usecases.PrepareScoreUseCase
-import by.klnvch.link5dots.domain.usecases.UndoMoveSocketUseCase
-import by.klnvch.link5dots.domain.usecases.UndoMoveUseCase
-import by.klnvch.link5dots.domain.usecases.network.CreateMultiplayerRoomUseCase
-import by.klnvch.link5dots.domain.usecases.network.CreateSocketRoomUseCase
-import by.klnvch.link5dots.domain.usecases.network.DeleteMultiplayerRoomUseCase
-import by.klnvch.link5dots.domain.usecases.network.DeleteNsdRoomUseCase
+import by.klnvch.link5dots.domain.repositories.SocketRoomRepository
 import by.klnvch.link5dots.domain.usecases.network.InitMultiplayerUseCase
 import by.klnvch.link5dots.domain.usecases.network.InitNsdUseCase
-import by.klnvch.link5dots.domain.usecases.network.NsdScanUseCase
-import by.klnvch.link5dots.domain.usecases.network.ScanUseCase
 import dagger.Binds
 import dagger.Module
 
 @Module
 interface NsdGameRulesModule {
     @Binds
-    fun bindGetRoomUseCase(impl: GetRoomNsdUseCase): GetRoomUseCase
+    fun bindSocketRoomRepository(impl: NsdRoomRepository): SocketRoomRepository
 
     @Binds
-    fun bindNetworkRoomStateRepository(impl: NsdRoomRepository): NetworkRoomStateRepository
-
-    @Binds
-    fun bindNewGameUseCase(impl: NewGameSocketUseCase): NewGameUseCase
-
-    @Binds
-    fun bindAddDotUseCase(impl: AddDotSocketUseCase): AddDotUseCase
-
-    @Binds
-    fun bindUndoMoveUseCase(impl: UndoMoveSocketUseCase): UndoMoveUseCase
-
-    @Binds
-    fun bindPrepareScoreUseCase(impl: PrepareScoreMultiplayerUseCase): PrepareScoreUseCase
+    fun bindRoomTypeProvider(impl: RoomTypeNsdProvider): RoomTypeProvider
 
     @Binds
     fun bindInitMultiplayerUseCase(impl: InitNsdUseCase): InitMultiplayerUseCase
-
-    @Binds
-    fun bindCreateMultiplayerRoomUseCase(impl: CreateSocketRoomUseCase): CreateMultiplayerRoomUseCase
-
-    @Binds
-    fun bindScanUseCase(impl: NsdScanUseCase): ScanUseCase
-
-    @Binds
-    fun bindDeleteMultiplayerRoomUseCase(impl: DeleteNsdRoomUseCase): DeleteMultiplayerRoomUseCase
-
-    @Binds
-    fun bindNetworkUserProvider(impl: NetworkUserLocalProvider): NetworkUserProvider
-
-    @Binds
-    fun bindSocketGetRepository(impl: NsdRoomRepository): SocketGetRepository
-
-    @Binds
-    fun bindSocketCreateRepository(impl: NsdRoomRepository): SocketCreateRepository
-
-    @Binds
-    fun bindSocketSendRepository(impl: NsdRoomRepository): SocketSendRepository
-
-    @Binds
-    fun bindSocketServerRepository(impl: NsdRoomRepository): SocketServerRepository
-
-    @Binds
-    fun bindGameActionsUseCase(impl: GameActionsSocketUseCase): GameActionsUseCase
 }

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023-2025 klnvch
+ * Copyright (c) 2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,20 +22,16 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.domain.usecases.network
+package by.klnvch.link5dots.domain.models
 
-import by.klnvch.link5dots.domain.models.NetworkUser
-import by.klnvch.link5dots.domain.repositories.FirebaseManager
-import by.klnvch.link5dots.domain.repositories.Settings
+import by.klnvch.link5dots.domain.repositories.RoomKeyGenerator
+import by.klnvch.link5dots.domain.repositories.TimeService
 import javax.inject.Inject
 
-class GetNetworkUserUseCase @Inject constructor(
-    private val firebaseManager: FirebaseManager,
-    private val settings: Settings,
-) {
-    suspend fun get(): NetworkUser {
-        val id = firebaseManager.signInAnonymously()
-        val name = settings.getUserName()
-        return NetworkUser(id, name)
-    }
+class RoomTwoFactory @Inject constructor(
+    roomKeyGenerator: RoomKeyGenerator,
+    timeService: TimeService,
+) : RoomCommonFactory(roomKeyGenerator, timeService) {
+    override val user1 = null
+    override val user2 = null
 }

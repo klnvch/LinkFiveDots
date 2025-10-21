@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 klnvch
+ * Copyright (c) 2023-2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,11 +21,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+package by.klnvch.link5dots.di.game.info
 
-package by.klnvch.link5dots.domain.usecases
+import by.klnvch.link5dots.domain.usecases.NewGameEmptyUseCase
+import by.klnvch.link5dots.domain.usecases.NewGameUseCase
+import dagger.Module
+import dagger.Provides
 
-import kotlinx.coroutines.flow.Flow
-
-interface GetUseCase<out T, in P> {
-    fun get(param: P): Flow<T?>
+@Module
+class InfoGameRulesModule2 {
+    @Provides
+    fun provideNewGameUseCase(): NewGameUseCase = NewGameEmptyUseCase()
 }

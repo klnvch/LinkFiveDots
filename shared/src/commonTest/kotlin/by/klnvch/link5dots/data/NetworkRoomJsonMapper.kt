@@ -43,7 +43,7 @@ class NetworkRoomJsonMapper {
             RoomState.FINISHED,
         )
         val json = expected.toJson()
-        val actual = json.toNetworkRoom()
+        val actual = json.toRoom<NetworkRoom>()
         assertEquals(expected, actual)
     }
 }

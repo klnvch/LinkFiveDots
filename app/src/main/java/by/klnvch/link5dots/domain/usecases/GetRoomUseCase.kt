@@ -25,32 +25,38 @@ package by.klnvch.link5dots.domain.usecases
 
 import by.klnvch.link5dots.domain.models.IRoom
 import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
+import by.klnvch.link5dots.domain.models.RoomFactory
 import by.klnvch.link5dots.domain.models.RoomType
-import by.klnvch.link5dots.domain.repositories.BluetoothRoomRepository
 import by.klnvch.link5dots.domain.repositories.GetOnlineRoomRepository
-import by.klnvch.link5dots.domain.repositories.NsdRoomRepository
 import by.klnvch.link5dots.domain.repositories.OnlineRoomRepository
-import by.klnvch.link5dots.domain.repositories.RoomBotGetRepository
+import by.klnvch.link5dots.domain.repositories.RoomFlowLocalRepository
 import by.klnvch.link5dots.domain.repositories.RoomRepository
-import by.klnvch.link5dots.domain.repositories.RoomTwoGetRepository
+import by.klnvch.link5dots.domain.repositories.RoomSaveLocalRepository
+import by.klnvch.link5dots.domain.repositories.SocketGetFlowRepository
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
-interface GetRoomUseCase : GetUseCase<IRoom, RoomParam>
+interface GetRoomUseCase {
+    fun get(param: RoomParam): Flow<IRoom>
+}
 
-class GetRoomOfflineUseCase @Inject constructor(
+class GetRoomCommonUseCase @Inject constructor(
+    private val getRepository: RoomFlowLocalRepository,
+    private val saveRepository: RoomSaveLocalRepository,
+    private val roomFactory: RoomFactory,
+) : GetRoomUseCase {
+    override fun get(param: RoomParam) = getRepository.roomFlow
+        .onEach { if (it == null) saveRepository.save(roomFactory.generate()) }
+        .filterNotNull()
+}
+
+class GetRoomInfoUseCase @Inject constructor(
     private val repository: RoomRepository,
-    private val botGetRepository: RoomBotGetRepository,
-    private val twoGetRepository: RoomTwoGetRepository,
 ) : GetRoomUseCase {
     override fun get(param: RoomParam) = when (param) {
-        is RoomByType -> when (param.type) {
-            RoomType.BOT -> botGetRepository.roomFlow
-            RoomType.TWO_PLAYERS -> twoGetRepository.roomFlow
-            else -> repository.getRecentByType(param.type)
-        }
-
-        is RoomByKey -> repository.getByKey(param.key)
+        is RoomByKey -> repository.getByKey(param.key).filterNotNull()
         else -> throw IllegalArgumentException("Wrong param")
     }
 }
@@ -59,36 +65,14 @@ class GetRoomOnlineUseCase @Inject constructor(
     private val repository: OnlineRoomRepository,
     private val getRepository: GetOnlineRoomRepository,
 ) : GetRoomUseCase {
-    override fun get(param: RoomParam) = when (param) {
-        is RoomByDescriptor -> repository.get()
-            .onEach { getRepository.room = it }
-
-        else -> throw IllegalArgumentException("Wrong param")
-    }
+    override fun get(param: RoomParam) = repository.get().onEach { getRepository.room = it }
 }
 
-class GetRoomNsdUseCase @Inject constructor(
-    private val dbRepository: RoomRepository,
-    private val repository: NsdRoomRepository,
+class GetRoomSocketUseCase @Inject constructor(
+    private val repository: SocketGetFlowRepository,
+    private val saveRepository: RoomSaveLocalRepository,
 ) : GetRoomUseCase {
-    override fun get(param: RoomParam) = when (param) {
-        is RoomByDescriptor -> repository.getFlow()
-            .onEach { if (it !== null) dbRepository.save(it, RoomType.NSD) }
-
-        else -> throw IllegalArgumentException("Wrong param")
-    }
-}
-
-class GetRoomBluetoothUseCase @Inject constructor(
-    private val dbRepository: RoomRepository,
-    private val repository: BluetoothRoomRepository,
-) : GetRoomUseCase {
-    override fun get(param: RoomParam) = when (param) {
-        is RoomByDescriptor -> repository.getFlow()
-            .onEach { if (it !== null) dbRepository.save(it, RoomType.BLUETOOTH) }
-
-        else -> throw IllegalArgumentException("Wrong param")
-    }
+    override fun get(param: RoomParam) = repository.roomFlow.onEach { saveRepository.save(it) }
 }
 
 sealed interface RoomParam

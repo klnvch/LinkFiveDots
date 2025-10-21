@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023-2025 klnvch
+ * Copyright (c) 2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,25 +21,39 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package by.klnvch.link5dots.di.game.two
 
-import by.klnvch.link5dots.di.ActivityScope
-import by.klnvch.link5dots.di.game.CommonBindingModule
-import by.klnvch.link5dots.di.game.OfflineGameViewModelsModule
-import by.klnvch.link5dots.ui.game.activities.offline.TwoPlayersGameActivity
-import dagger.Subcomponent
-import dagger.android.AndroidInjector
+package by.klnvch.link5dots.domain.models
 
-@ActivityScope
-@Subcomponent(
-    modules = [
-        OfflineGameViewModelsModule::class,
-        TwoPlayersGameRulesModule::class,
-        TwoPlayersGameRulesModule2::class,
-        CommonBindingModule::class,
-    ]
-)
-interface TwoPlayersGameSubcomponent : AndroidInjector<TwoPlayersGameActivity> {
-    @Subcomponent.Factory
-    interface Factory : AndroidInjector.Factory<TwoPlayersGameActivity>
+import by.klnvch.link5dots.domain.repositories.RoomKeyGenerator
+import by.klnvch.link5dots.domain.repositories.TimeService
+
+fun generateDots() = generateInitialGame(gameSeed())
+    .map { DotImpl(it, 0) }
+    .toMutableList<Dot>()
+
+interface RoomFactory {
+    fun generate(): IRoom
+}
+
+abstract class RoomCommonFactory(
+    private val roomKeyGenerator: RoomKeyGenerator,
+    private val timeService: TimeService,
+) : RoomFactory {
+    protected abstract val user1: IUser?
+    protected abstract val user2: IUser?
+    override fun generate(): IRoom = Room(
+        roomKeyGenerator.generate(),
+        timeService.time(),
+        generateDots(),
+        user1,
+        user2,
+    )
+}
+
+class RoomBotFactory(
+    roomKeyGenerator: RoomKeyGenerator,
+    timeService: TimeService,
+) : RoomCommonFactory(roomKeyGenerator, timeService) {
+    override val user1 = DeviceOwnerUser
+    override val user2 = BotUser
 }

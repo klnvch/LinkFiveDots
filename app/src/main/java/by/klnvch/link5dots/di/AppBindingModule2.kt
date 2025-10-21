@@ -41,7 +41,6 @@ import by.klnvch.link5dots.domain.repositories.ConnectOnlineRoomRepository
 import by.klnvch.link5dots.domain.repositories.CreateOnlineRoomRepository
 import by.klnvch.link5dots.domain.repositories.GetOnlineRoomRepository
 import by.klnvch.link5dots.domain.repositories.RoomKeyGenerator
-import by.klnvch.link5dots.domain.repositories.RoomRepository
 import by.klnvch.link5dots.domain.repositories.ScanOnlineRoomRepository
 import by.klnvch.link5dots.domain.repositories.Settings
 import by.klnvch.link5dots.domain.repositories.StringProvider
@@ -49,7 +48,6 @@ import by.klnvch.link5dots.domain.repositories.StringRepository
 import by.klnvch.link5dots.domain.repositories.TimeService
 import by.klnvch.link5dots.domain.repositories.UpdateStateOnlineRoomRepository
 import by.klnvch.link5dots.domain.repositories.UserNameSettings
-import by.klnvch.link5dots.domain.usecases.NewGameBotUseCase
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -79,15 +77,6 @@ class AppBindingModule2 {
     @Provides
     fun provideStringProvider(stringRepository: StringRepository): StringProvider =
         stringRepository
-
-    @Singleton
-    @Provides
-    fun provideNewGameBotUseCase(
-        roomKeyGenerator: RoomKeyGenerator,
-        timeService: TimeService,
-        roomRepository: RoomRepository,
-    ) =
-        NewGameBotUseCase(roomKeyGenerator, timeService, roomRepository)
 
     @Singleton
     @Provides

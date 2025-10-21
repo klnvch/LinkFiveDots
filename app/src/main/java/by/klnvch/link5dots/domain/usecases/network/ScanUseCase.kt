@@ -24,13 +24,13 @@
 package by.klnvch.link5dots.domain.usecases.network
 
 import by.klnvch.link5dots.domain.models.FoundRemoteRoom
-import by.klnvch.link5dots.domain.models.NetworkUser
+import by.klnvch.link5dots.domain.models.INetworkRoomAcceptance
+import by.klnvch.link5dots.domain.models.NetworkRoomAcceptance
 import by.klnvch.link5dots.domain.models.RoomInvitation
-import by.klnvch.link5dots.domain.repositories.BluetoothRoomRepository
+import by.klnvch.link5dots.domain.models.generateDots
 import by.klnvch.link5dots.domain.repositories.NetworkUserProvider
-import by.klnvch.link5dots.domain.repositories.NsdRoomRepository
 import by.klnvch.link5dots.domain.repositories.ScanOnlineRoomRepository
-import by.klnvch.link5dots.domain.repositories.ScanRoomInvitationRepository
+import by.klnvch.link5dots.domain.repositories.SocketRoomInvitationRepository
 import by.klnvch.link5dots.domain.repositories.networkUserOrThrow
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -49,29 +49,26 @@ class OnlineScanUseCase @Inject constructor(
 
 private class SocketFoundRemoteRoom(
     invitation: RoomInvitation,
-    getUser: () -> NetworkUser,
-) : CommonOnlineFoundRemoteRoom({ invitation.onConnect(getUser()) }) {
+    getAcceptance: () -> INetworkRoomAcceptance,
+) : CommonOnlineFoundRemoteRoom({ invitation.onConnect(getAcceptance()) }) {
     override val title = invitation.title
     override val description = invitation.description
     override val time = invitation.time
     override val isFavorite = invitation.isFavorite
 }
 
-abstract class CommonScanUseCase(
-    private val repository: ScanRoomInvitationRepository,
+class CommonScanUseCase @Inject constructor(
+    private val repository: SocketRoomInvitationRepository,
     private val networkUserProvider: NetworkUserProvider,
 ) : ScanUseCase {
     override fun scan(): Flow<List<FoundRemoteRoom>> = repository.getInvitations().map { list ->
-        list.map { SocketFoundRemoteRoom(it) { networkUserProvider.networkUserOrThrow } }
+        list.map {
+            SocketFoundRemoteRoom(it) {
+                NetworkRoomAcceptance(
+                    generateDots(),
+                    networkUserProvider.networkUserOrThrow
+                )
+            }
+        }
     }
 }
-
-class NsdScanUseCase @Inject constructor(
-    repository: NsdRoomRepository,
-    networkUserProvider: NetworkUserProvider,
-) : CommonScanUseCase(repository, networkUserProvider)
-
-class BluetoothScanUseCase @Inject constructor(
-    repository: BluetoothRoomRepository,
-    networkUserProvider: NetworkUserProvider,
-) : CommonScanUseCase(repository, networkUserProvider)

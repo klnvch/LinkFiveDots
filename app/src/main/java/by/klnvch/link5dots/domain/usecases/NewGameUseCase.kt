@@ -23,63 +23,37 @@
  */
 package by.klnvch.link5dots.domain.usecases
 
-import by.klnvch.link5dots.domain.models.IRoom
 import by.klnvch.link5dots.domain.models.NetworkRoom
 import by.klnvch.link5dots.domain.models.RoomState
-import by.klnvch.link5dots.domain.models.RoomType
+import by.klnvch.link5dots.domain.models.generateDots
 import by.klnvch.link5dots.domain.repositories.NetworkUserProvider
 import by.klnvch.link5dots.domain.repositories.RoomKeyGenerator
-import by.klnvch.link5dots.domain.repositories.RoomRepository
 import by.klnvch.link5dots.domain.repositories.SocketGetRepository
 import by.klnvch.link5dots.domain.repositories.SocketSendRepository
-import by.klnvch.link5dots.domain.repositories.SocketServerRepository
 import by.klnvch.link5dots.domain.repositories.TimeService
 import by.klnvch.link5dots.domain.repositories.networkUserOrThrow
 import javax.inject.Inject
 
-class NewGameEmptyUseCase @Inject constructor() : NewGameUseCase {
-    override val isImplemented = false
-    override suspend fun create(seed: Long?) = Unit
-}
-
-class NewGameTwoUseCase @Inject constructor(
-    roomKeyGenerator: RoomKeyGenerator,
-    timeRepository: TimeService,
-    private val roomRepository: RoomRepository,
-) : NewGameOfflineUseCase(
-    roomKeyGenerator,
-    timeRepository,
-) {
-    override val user1 = null
-    override val user2 = null
-    override suspend fun save(room: IRoom) = roomRepository.save(room, RoomType.TWO_PLAYERS)
-}
-
 class NewGameSocketUseCase @Inject constructor(
     private val timeRepository: TimeService,
     private val roomKeyGenerator: RoomKeyGenerator,
-    private val repository: SocketServerRepository,
     private val networkUserProvider: NetworkUserProvider,
     private val getRepository: SocketGetRepository,
     private val sendRepository: SocketSendRepository,
-) : NewGameCommonUseCase() {
-    override suspend fun create(seed: Long?) {
-        if (repository.isServer) {
-            val key = roomKeyGenerator.generate()
-            val time = timeRepository.time()
-
-            val user1 = networkUserProvider.networkUserOrThrow
-            val user2 = getRepository.room?.user2
-
+) : NewGameUseCase {
+    override val isImplemented = true
+    override suspend fun create() {
+        val user1 = networkUserProvider.networkUserOrThrow
+        val room = getRepository.room
+        if (room?.user1 == user1) {
             val newRoom = NetworkRoom(
-                key,
-                time,
-                getDots(seed),
+                roomKeyGenerator.generate(),
+                timeRepository.time(),
+                generateDots(),
                 user1,
-                user2,
+                getRepository.room?.user2,
                 RoomState.CREATED
             )
-
             sendRepository.send(newRoom)
         }
     }

@@ -23,16 +23,18 @@
  */
 package by.klnvch.link5dots.di.game.two
 
+import by.klnvch.link5dots.domain.models.RoomFactory
+import by.klnvch.link5dots.domain.models.RoomTwoFactory
+import by.klnvch.link5dots.domain.models.RoomTypeProvider
+import by.klnvch.link5dots.domain.models.RoomTypeTwoProvider
 import by.klnvch.link5dots.domain.repositories.RoomGetRepository
 import by.klnvch.link5dots.domain.repositories.RoomTwoGetRepository
 import by.klnvch.link5dots.domain.usecases.AddDotTwoUseCase
 import by.klnvch.link5dots.domain.usecases.AddDotUseCase
 import by.klnvch.link5dots.domain.usecases.GameActionsTwoUseCase
 import by.klnvch.link5dots.domain.usecases.GameActionsUseCase
-import by.klnvch.link5dots.domain.usecases.GetRoomOfflineUseCase
+import by.klnvch.link5dots.domain.usecases.GetRoomCommonUseCase
 import by.klnvch.link5dots.domain.usecases.GetRoomUseCase
-import by.klnvch.link5dots.domain.usecases.NewGameTwoUseCase
-import by.klnvch.link5dots.domain.usecases.NewGameUseCase
 import by.klnvch.link5dots.domain.usecases.PrepareScoreOtherUseCase
 import by.klnvch.link5dots.domain.usecases.PrepareScoreUseCase
 import by.klnvch.link5dots.domain.usecases.UndoMoveTwoUseCase
@@ -43,10 +45,13 @@ import dagger.Module
 @Module
 interface TwoPlayersGameRulesModule {
     @Binds
-    fun bindGetRoomUseCase(impl: GetRoomOfflineUseCase): GetRoomUseCase
+    fun bindRoomTypeProvider(impl: RoomTypeTwoProvider): RoomTypeProvider
 
     @Binds
-    fun bindNewGameUseCase(impl: NewGameTwoUseCase): NewGameUseCase
+    fun bindRoomFactory(impl: RoomTwoFactory): RoomFactory
+
+    @Binds
+    fun bindGetRoomUseCase(impl: GetRoomCommonUseCase): GetRoomUseCase
 
     @Binds
     fun bindAddDotUseCase(impl: AddDotTwoUseCase): AddDotUseCase

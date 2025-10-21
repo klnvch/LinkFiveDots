@@ -24,9 +24,14 @@
 
 package by.klnvch.link5dots.domain.repositories
 
-import by.klnvch.link5dots.domain.models.RoomInvitation
+import by.klnvch.link5dots.domain.models.NetworkRoomState
 import kotlinx.coroutines.flow.Flow
 
-interface ScanRoomInvitationRepository {
-    fun getInvitations(): Flow<List<RoomInvitation>>
+interface RoomStateRemoteRepository {
+    val state: Flow<NetworkRoomState>
+}
+
+interface RoomCleanRemoteRepository {
+    fun delete()
+    fun finish()
 }

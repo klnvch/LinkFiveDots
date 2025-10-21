@@ -24,7 +24,9 @@
 
 package by.klnvch.link5dots.domain.repositories
 
+import by.klnvch.link5dots.domain.models.INetworkRoomInvitation
 import by.klnvch.link5dots.domain.models.NetworkRoom
+import by.klnvch.link5dots.domain.models.RoomInvitation
 import kotlinx.coroutines.flow.Flow
 
 interface SocketSendRepository {
@@ -33,26 +35,21 @@ interface SocketSendRepository {
 
 interface SocketGetRepository : GetRoomRepository<NetworkRoom>
 
-interface SocketServerRepository {
-    val isServer: Boolean
-}
-
 interface SocketCreateRepository {
-    suspend fun create()
+    suspend fun create(invitation: INetworkRoomInvitation)
 }
 
-interface BluetoothRoomRepository : ScanRoomInvitationRepository, SocketGetRepository,
-    SocketSendRepository, SocketServerRepository, NetworkRoomStateRepository,
-    SocketCreateRepository {
-    fun delete()
-    fun getFlow(): Flow<NetworkRoom?>
-    fun finish()
+interface SocketGetFlowRepository {
+    val roomFlow: Flow<NetworkRoom>
 }
 
-interface NsdRoomRepository : ScanRoomInvitationRepository, SocketGetRepository,
-    SocketSendRepository, SocketServerRepository, NetworkRoomStateRepository,
-    SocketCreateRepository {
-    fun delete()
-    fun getFlow(): Flow<NetworkRoom?>
-    fun finish()
+interface SocketRoomInvitationRepository {
+    fun getInvitations(): Flow<List<RoomInvitation>>
 }
+
+interface SocketRoomRepository : SocketRoomInvitationRepository, SocketGetRepository,
+    SocketSendRepository, RoomStateRemoteRepository,
+    SocketCreateRepository, SocketGetFlowRepository, RoomCleanRemoteRepository
+
+interface BluetoothRoomRepository : SocketRoomRepository
+interface NsdRoomRepository : SocketRoomRepository

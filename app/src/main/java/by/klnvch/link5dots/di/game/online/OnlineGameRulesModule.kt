@@ -24,9 +24,10 @@
 package by.klnvch.link5dots.di.game.online
 
 import by.klnvch.link5dots.data.online.OnlineRoomRepositoryImpl
-import by.klnvch.link5dots.domain.repositories.NetworkRoomStateRepository
 import by.klnvch.link5dots.domain.repositories.NetworkUserFirebaseProvider
 import by.klnvch.link5dots.domain.repositories.NetworkUserProvider
+import by.klnvch.link5dots.domain.repositories.RoomCleanRemoteRepository
+import by.klnvch.link5dots.domain.repositories.RoomStateRemoteRepository
 import by.klnvch.link5dots.domain.usecases.AddDotOnlineUseCase
 import by.klnvch.link5dots.domain.usecases.AddDotUseCase
 import by.klnvch.link5dots.domain.usecases.GetRoomOnlineUseCase
@@ -37,8 +38,6 @@ import by.klnvch.link5dots.domain.usecases.UndoMoveInfoUseCase
 import by.klnvch.link5dots.domain.usecases.UndoMoveUseCase
 import by.klnvch.link5dots.domain.usecases.network.CreateMultiplayerRoomUseCase
 import by.klnvch.link5dots.domain.usecases.network.CreateOnlineRoomUseCase
-import by.klnvch.link5dots.domain.usecases.network.DeleteMultiplayerRoomUseCase
-import by.klnvch.link5dots.domain.usecases.network.DeleteOnlineRoomUseCase
 import by.klnvch.link5dots.domain.usecases.network.InitMultiplayerUseCase
 import by.klnvch.link5dots.domain.usecases.network.InitOnlineUseCase
 import by.klnvch.link5dots.domain.usecases.network.OnlineScanUseCase
@@ -52,7 +51,7 @@ interface OnlineGameRulesModule {
     fun bindGetRoomUseCase(impl: GetRoomOnlineUseCase): GetRoomUseCase
 
     @Binds
-    fun bindNetworkRoomStateRepository(impl: OnlineRoomRepositoryImpl): NetworkRoomStateRepository
+    fun bindNetworkRoomStateRepository(impl: OnlineRoomRepositoryImpl): RoomStateRemoteRepository
 
     @Binds
     fun bindAddDotUseCase(impl: AddDotOnlineUseCase): AddDotUseCase
@@ -73,7 +72,7 @@ interface OnlineGameRulesModule {
     fun bindScanUseCase(impl: OnlineScanUseCase): ScanUseCase
 
     @Binds
-    fun bindDeleteMultiplayerRoomUseCase(impl: DeleteOnlineRoomUseCase): DeleteMultiplayerRoomUseCase
+    fun bindRoomCleanRemoteRepository(impl: OnlineRoomRepositoryImpl): RoomCleanRemoteRepository
 
     @Binds
     fun bindNetworkUserProvider(impl: NetworkUserFirebaseProvider): NetworkUserProvider

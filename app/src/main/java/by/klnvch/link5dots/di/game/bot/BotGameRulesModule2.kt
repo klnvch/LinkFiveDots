@@ -24,14 +24,21 @@
 package by.klnvch.link5dots.di.game.bot
 
 import by.klnvch.link5dots.domain.models.Board
+import by.klnvch.link5dots.domain.models.RoomBotFactory
+import by.klnvch.link5dots.domain.models.RoomFactory
 import by.klnvch.link5dots.domain.models.bot.Bot
 import by.klnvch.link5dots.domain.repositories.RoomGetRepository
-import by.klnvch.link5dots.domain.repositories.RoomRepository
+import by.klnvch.link5dots.domain.repositories.RoomKeyGenerator
+import by.klnvch.link5dots.domain.repositories.RoomSaveLocalRepository
 import by.klnvch.link5dots.domain.repositories.TimeService
 import by.klnvch.link5dots.domain.usecases.AddDotBotUseCase
+import by.klnvch.link5dots.domain.usecases.AddDotUseCase
 import by.klnvch.link5dots.domain.usecases.GameActionsBotUseCase
 import by.klnvch.link5dots.domain.usecases.GameActionsUseCase
+import by.klnvch.link5dots.domain.usecases.NewGameCommonUseCase
+import by.klnvch.link5dots.domain.usecases.NewGameUseCase
 import by.klnvch.link5dots.domain.usecases.UndoMoveBotUseCase
+import by.klnvch.link5dots.domain.usecases.UndoMoveUseCase
 import dagger.Module
 import dagger.Provides
 
@@ -41,21 +48,32 @@ class BotGameRulesModule2 {
     fun provideBot(board: Board) = Bot(board)
 
     @Provides
-    fun provideAddDotBotUseCase(
+    fun provideRoomBotFactory(
+        roomKeyGenerator: RoomKeyGenerator,
+        timeService: TimeService,
+    ): RoomFactory = RoomBotFactory(roomKeyGenerator, timeService)
+
+    @Provides
+    fun provideNewGameUseCase(
+        roomFactory: RoomFactory,
+        saveRepository: RoomSaveLocalRepository,
+    ): NewGameUseCase = NewGameCommonUseCase(roomFactory, saveRepository)
+
+    @Provides
+    fun provideAddDotUseCase(
         roomGetRepository: RoomGetRepository,
         board: Board,
         timeService: TimeService,
-        roomSaveRepository: RoomRepository,
+        roomSaveRepository: RoomSaveLocalRepository,
         bot: Bot,
-    ) =
+    ): AddDotUseCase =
         AddDotBotUseCase(roomGetRepository, board, timeService, roomSaveRepository, bot)
 
     @Provides
-    fun provideUndoMoveBotUseCase(
+    fun provideUndoMoveUseCase(
         roomGetRepository: RoomGetRepository,
-        roomSaveRepository: RoomRepository,
-    ) =
-        UndoMoveBotUseCase(roomGetRepository, roomSaveRepository)
+        roomSaveRepository: RoomSaveLocalRepository,
+    ): UndoMoveUseCase = UndoMoveBotUseCase(roomGetRepository, roomSaveRepository)
 
     @Provides
     fun provideGameActionsUseCase(roomGetRepository: RoomGetRepository): GameActionsUseCase =

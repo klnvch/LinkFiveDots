@@ -28,29 +28,54 @@ import kotlinx.serialization.Serializable
 import kotlin.js.ExperimentalJsExport
 import kotlin.js.JsExport
 
+sealed interface NetworkRoomEntity
+
 @OptIn(ExperimentalJsExport::class)
 @JsExport()
-interface INetworkRoomInvitation {
+interface INetworkRoomInvitation : NetworkRoomEntity {
     val key: String
     val time: Int
     val user1: NetworkUser
 }
 
+interface INetworkRoomAcceptance {
+    val dots: List<Dot>
+    val user2: NetworkUser
+}
+
 @OptIn(ExperimentalJsExport::class)
 @JsExport()
-interface INetworkRoom : INetworkRoomInvitation, IRoom {
+interface INetworkRoom : INetworkRoomInvitation, IRoom, NetworkRoomEntity {
     override val dots: List<Dot>
     override val user2: NetworkUser?
     val state: RoomState
 }
 
+///////////////////////////////////////////////////
+// Implementation
+///////////////////////////////////////////////////
+fun combine(invitation: INetworkRoomInvitation, acceptance: INetworkRoomAcceptance) = NetworkRoom(
+    invitation.key,
+    invitation.time,
+    acceptance.dots,
+    invitation.user1,
+    acceptance.user2,
+    RoomState.CREATED,
+)
+
 @OptIn(ExperimentalJsExport::class)
 @JsExport()
+@Serializable
 data class NetworkRoomInvitation(
     override val key: String,
     override val time: Int,
     override val user1: NetworkUser,
 ) : INetworkRoomInvitation
+
+data class NetworkRoomAcceptance(
+    override val dots: List<Dot>,
+    override val user2: NetworkUser,
+) : INetworkRoomAcceptance
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport()

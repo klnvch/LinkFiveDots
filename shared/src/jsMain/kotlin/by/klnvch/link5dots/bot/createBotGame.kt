@@ -27,10 +27,9 @@ package by.klnvch.link5dots.bot
 import by.klnvch.link5dots.data.RoomKeyGeneratorImpl
 import by.klnvch.link5dots.data.TimeServiceImpl
 import by.klnvch.link5dots.domain.models.IRoom
-import by.klnvch.link5dots.domain.models.RoomType
-import by.klnvch.link5dots.domain.models.gameSeed
-import by.klnvch.link5dots.domain.repositories.RoomSaveRepository
-import by.klnvch.link5dots.domain.usecases.NewGameBotUseCase
+import by.klnvch.link5dots.domain.models.RoomBotFactory
+import by.klnvch.link5dots.domain.repositories.RoomSaveLocalRepository
+import by.klnvch.link5dots.domain.usecases.NewGameCommonUseCase
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.promise
@@ -41,11 +40,12 @@ import kotlin.js.Promise
 fun createBotGame(onGameCreated: (room: IRoom) -> Unit): Promise<Unit> = GlobalScope.promise {
     val timeService = TimeServiceImpl()
     val roomKeyGenerator = RoomKeyGeneratorImpl(timeService)
+    val roomFactory = RoomBotFactory(roomKeyGenerator, timeService)
 
-    val repository = object : RoomSaveRepository {
-        override suspend fun save(room: IRoom, roomType: RoomType) = onGameCreated(room)
+    val saveRepository = object : RoomSaveLocalRepository {
+        override suspend fun save(room: IRoom) = onGameCreated(room)
     }
 
-    val useCase = NewGameBotUseCase(roomKeyGenerator, timeService, repository)
-    useCase.create(gameSeed())
+    val useCase = NewGameCommonUseCase(roomFactory, saveRepository)
+    useCase.create()
 }

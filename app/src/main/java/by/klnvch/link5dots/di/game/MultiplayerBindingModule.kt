@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023-2025 klnvch
+ * Copyright (c) 2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,35 +21,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package by.klnvch.link5dots.domain.usecases.network
 
-import by.klnvch.link5dots.domain.repositories.BluetoothRoomRepository
-import by.klnvch.link5dots.domain.repositories.NsdRoomRepository
-import by.klnvch.link5dots.domain.repositories.OnlineRoomRepository
-import javax.inject.Inject
+package by.klnvch.link5dots.di.game
 
-interface DeleteMultiplayerRoomUseCase {
-    fun delete()
-    fun finish()
-}
+import by.klnvch.link5dots.domain.repositories.NetworkUserProvider
+import by.klnvch.link5dots.domain.usecases.network.GetNetworkGameActionUseCase
+import dagger.Module
+import dagger.Provides
 
-class DeleteOnlineRoomUseCase @Inject constructor(
-    private val repository: OnlineRoomRepository,
-) : DeleteMultiplayerRoomUseCase {
-    override fun delete() = repository.delete()
-    override fun finish() = repository.finish()
-}
-
-class DeleteNsdRoomUseCase @Inject constructor(
-    private val repository: NsdRoomRepository,
-) : DeleteMultiplayerRoomUseCase {
-    override fun delete() = repository.delete()
-    override fun finish() = repository.finish()
-}
-
-class DeleteBluetoothRoomUseCase @Inject constructor(
-    private val repository: BluetoothRoomRepository,
-) : DeleteMultiplayerRoomUseCase {
-    override fun delete() = repository.delete()
-    override fun finish() = repository.finish()
+@Module
+class MultiplayerBindingModule {
+    @Provides
+    fun provideGetNetworkGameActionUseCase(networkUserProvider: NetworkUserProvider) =
+        GetNetworkGameActionUseCase(networkUserProvider)
 }

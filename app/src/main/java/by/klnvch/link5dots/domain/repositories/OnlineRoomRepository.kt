@@ -31,8 +31,6 @@ interface ScanOnlineRoomRepository {
     fun getInvitations(): Flow<List<OnlineRoomInvitation>>
 }
 
-interface OnlineRoomRepository : NetworkRoomStateRepository {
+interface OnlineRoomRepository : RoomStateRemoteRepository, RoomCleanRemoteRepository {
     fun get(): Flow<NetworkRoom>
-    fun delete()
-    fun finish()
 }

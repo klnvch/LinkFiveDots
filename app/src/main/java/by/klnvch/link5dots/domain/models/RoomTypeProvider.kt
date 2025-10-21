@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023-2025 klnvch
+ * Copyright (c) 2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,25 +21,27 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package by.klnvch.link5dots.di.game.two
 
-import by.klnvch.link5dots.di.ActivityScope
-import by.klnvch.link5dots.di.game.CommonBindingModule
-import by.klnvch.link5dots.di.game.OfflineGameViewModelsModule
-import by.klnvch.link5dots.ui.game.activities.offline.TwoPlayersGameActivity
-import dagger.Subcomponent
-import dagger.android.AndroidInjector
+package by.klnvch.link5dots.domain.models
 
-@ActivityScope
-@Subcomponent(
-    modules = [
-        OfflineGameViewModelsModule::class,
-        TwoPlayersGameRulesModule::class,
-        TwoPlayersGameRulesModule2::class,
-        CommonBindingModule::class,
-    ]
-)
-interface TwoPlayersGameSubcomponent : AndroidInjector<TwoPlayersGameActivity> {
-    @Subcomponent.Factory
-    interface Factory : AndroidInjector.Factory<TwoPlayersGameActivity>
+import javax.inject.Inject
+
+interface RoomTypeProvider {
+    val type: RoomType
+}
+
+class RoomTypeBotProvider @Inject constructor() : RoomTypeProvider {
+    override val type = RoomType.BOT
+}
+
+class RoomTypeTwoProvider @Inject constructor() : RoomTypeProvider {
+    override val type = RoomType.TWO_PLAYERS
+}
+
+class RoomTypeBluetoothProvider @Inject constructor() : RoomTypeProvider {
+    override val type = RoomType.BLUETOOTH
+}
+
+class RoomTypeNsdProvider @Inject constructor() : RoomTypeProvider {
+    override val type = RoomType.NSD
 }

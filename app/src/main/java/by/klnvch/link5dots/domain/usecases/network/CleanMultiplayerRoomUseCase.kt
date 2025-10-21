@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2025 klnvch
+ * Copyright (c) 2023-2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,12 +21,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+package by.klnvch.link5dots.domain.usecases.network
 
-package by.klnvch.link5dots.domain.repositories
+import by.klnvch.link5dots.domain.repositories.RoomCleanRemoteRepository
+import javax.inject.Inject
 
-import by.klnvch.link5dots.domain.models.NetworkRoomState
-import kotlinx.coroutines.flow.Flow
-
-interface NetworkRoomStateRepository {
-    val state: Flow<NetworkRoomState>
+class CleanMultiplayerRoomUseCase @Inject constructor(
+    private val repository: RoomCleanRemoteRepository,
+) {
+    fun delete() = repository.delete()
+    fun finish() = repository.finish()
 }
