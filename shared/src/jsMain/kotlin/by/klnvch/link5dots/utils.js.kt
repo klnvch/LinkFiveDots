@@ -29,10 +29,6 @@ import kotlin.js.Date
 actual fun currentTime() = Date.now()
 actual val platformKeyPart = "w"
 
-@OptIn(ExperimentalJsExport::class)
-@JsExport
-fun <T> listOf(elements: Array<T>): List<T> = elements.toList()
-
 actual fun Int.formatDateTime(): String {
     val date = Date(this.toDouble() * 1000.0)
     return date.toLocaleDateString(

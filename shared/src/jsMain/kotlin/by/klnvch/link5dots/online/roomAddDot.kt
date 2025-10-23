@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots
+package by.klnvch.link5dots.online
 
 import by.klnvch.link5dots.data.online.AddDotOnlineRoomRepositoryImpl
 import by.klnvch.link5dots.data.online.FirebaseDbSetDot

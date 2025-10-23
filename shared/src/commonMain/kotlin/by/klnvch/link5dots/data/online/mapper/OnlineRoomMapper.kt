@@ -22,24 +22,24 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.data.online
+package by.klnvch.link5dots.data.online.mapper
 
-import by.klnvch.link5dots.data.online.mapper.mapToOnlineRemoteUser
-import by.klnvch.link5dots.data.online.models.AcceptOnlineRoomInvitation
+import by.klnvch.link5dots.data.online.models.OnlineRoom
+import by.klnvch.link5dots.data.online.models.OnlineRoomCreated
+import by.klnvch.link5dots.data.online.models.OnlineRoomDeleted
+import by.klnvch.link5dots.data.online.models.OnlineRoomFinished
+import by.klnvch.link5dots.data.online.models.OnlineRoomStarted
+import by.klnvch.link5dots.data.online.models.RemoteRoomItem
 import by.klnvch.link5dots.domain.models.RoomState
-import by.klnvch.link5dots.domain.repositories.ConnectOnlineRoomRepository
 
-class ConnectOnlineRoomRepositoryImpl(
-    private val firebaseDb: FirebaseDbSetConnected,
-    private val onlineLocalStore: OnlineLocalStoreWriter,
-) : ConnectOnlineRoomRepository {
-    override suspend fun connect(key: String, accept: AcceptOnlineRoomInvitation) {
-        firebaseDb.setConnected(
-            arrayOf(key),
-            RoomState.STARTED.ordinal,
-            accept.user2.mapToOnlineRemoteUser(),
-            accept.dots.toList(),
-        )
-        onlineLocalStore.save(key)
+
+fun RemoteRoomItem.toOnlineRoom(): OnlineRoom {
+    if (key == null || value == null) return OnlineRoomDeleted
+    val state = this.value.state?.let { RoomState.entries[it] } ?: RoomState.DELETED
+    return when (state) {
+        RoomState.CREATED -> OnlineRoomCreated(value.toInvitation(key))
+        RoomState.DELETED -> OnlineRoomDeleted
+        RoomState.STARTED -> OnlineRoomStarted(value.toRoom(key))
+        RoomState.FINISHED -> OnlineRoomFinished(value.toRoom(key))
     }
 }

@@ -25,9 +25,9 @@
 package by.klnvch.link5dots.data.online
 
 import by.klnvch.link5dots.BuildConfig
-import by.klnvch.link5dots.data.firebase.OnlineRemoteUser
-import by.klnvch.link5dots.data.firebase.mapToOnlineRemoteUser
+import by.klnvch.link5dots.data.online.mapper.mapToOnlineRemoteUser
 import by.klnvch.link5dots.data.online.models.CreateOnlineRoomInvitation
+import by.klnvch.link5dots.data.online.models.OnlineRemoteUser
 import by.klnvch.link5dots.domain.models.Point
 import by.klnvch.link5dots.domain.models.RoomState
 import com.google.firebase.Firebase

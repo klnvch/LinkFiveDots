@@ -93,7 +93,7 @@ abstract class SocketRoomRepository {
                 startCommunication(socket, outputStream, inputStream)
             } catch (e: Throwable) {
                 Log.d(TAG, "accepting: $e")
-                stateFlow.tryEmit(NetworkRoomStateDeleted(descriptor))
+                stateFlow.tryEmit(NetworkRoomStateDeleted)
             }
         }
     }

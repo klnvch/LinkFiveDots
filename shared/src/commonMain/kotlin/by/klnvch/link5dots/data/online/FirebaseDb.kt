@@ -24,8 +24,8 @@
 
 package by.klnvch.link5dots.data.online
 
-import by.klnvch.link5dots.data.firebase.OnlineRemoteUser
 import by.klnvch.link5dots.data.online.models.CreateOnlineRoomInvitation
+import by.klnvch.link5dots.data.online.models.OnlineRemoteUser
 import by.klnvch.link5dots.domain.models.Point
 
 interface FirebaseDbSetDot {

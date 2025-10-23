@@ -45,11 +45,7 @@ interface INetworkRoomAcceptance {
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport()
-interface INetworkRoom : INetworkRoomInvitation, IRoom, NetworkRoomEntity {
-    override val dots: List<Dot>
-    override val user2: NetworkUser?
-    val state: RoomState
-}
+interface INetworkRoom : INetworkRoomInvitation, INetworkRoomAcceptance, IRoom, NetworkRoomEntity
 
 ///////////////////////////////////////////////////
 // Implementation
@@ -60,7 +56,6 @@ fun combine(invitation: INetworkRoomInvitation, acceptance: INetworkRoomAcceptan
     acceptance.dots,
     invitation.user1,
     acceptance.user2,
-    RoomState.CREATED,
 )
 
 @OptIn(ExperimentalJsExport::class)
@@ -85,11 +80,10 @@ data class NetworkRoom(
     override val time: Int,
     override val dots: List<Dot>,
     override val user1: NetworkUser,
-    override val user2: NetworkUser?,
-    override val state: RoomState,
+    override val user2: NetworkUser,
 ) : INetworkRoom {
     override fun move(dot: Dot): NetworkRoom = copy(dots = dots + dot)
     override fun undo() = copy(dots = dots.dropLast(1))
     override fun toString() =
-        "NetworkRoom(key=$key, time=$time, dots=${dots.size}, user1=${user1.name}, user2=${user2?.name})"
+        "NetworkRoom(key=$key, time=$time, dots=${dots.size}, user1=${user1.name}, user2=${user2.name})"
 }

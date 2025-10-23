@@ -24,7 +24,6 @@
 package by.klnvch.link5dots.domain.usecases
 
 import by.klnvch.link5dots.domain.models.NetworkRoom
-import by.klnvch.link5dots.domain.models.RoomState
 import by.klnvch.link5dots.domain.models.generateDots
 import by.klnvch.link5dots.domain.repositories.NetworkUserProvider
 import by.klnvch.link5dots.domain.repositories.RoomKeyGenerator
@@ -43,18 +42,19 @@ class NewGameSocketUseCase @Inject constructor(
 ) : NewGameUseCase {
     override val isImplemented = true
     override suspend fun create() {
-        val user1 = networkUserProvider.networkUserOrThrow
-        val room = getRepository.room
-        if (room?.user1 == user1) {
-            val newRoom = NetworkRoom(
-                roomKeyGenerator.generate(),
-                timeRepository.time(),
-                generateDots(),
-                user1,
-                getRepository.room?.user2,
-                RoomState.CREATED
-            )
-            sendRepository.send(newRoom)
+        getRepository.room?.let {
+            val user1 = networkUserProvider.networkUserOrThrow
+            if (it.user1 == user1) {
+                val newRoom = NetworkRoom(
+                    roomKeyGenerator.generate(),
+                    timeRepository.time(),
+                    generateDots(),
+                    user1,
+                    it.user2,
+                )
+                sendRepository.send(newRoom)
+            }
         }
+
     }
 }

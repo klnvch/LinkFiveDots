@@ -22,6 +22,26 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.data.firebase
+package by.klnvch.link5dots.online
 
-actual fun Any.mapToOnlineRoomRemote(): OnlineRoomRemote = this as OnlineRoomRemote
+import by.klnvch.link5dots.domain.models.INetworkRoom
+import by.klnvch.link5dots.domain.models.NetworkGameAction
+import by.klnvch.link5dots.domain.models.NetworkUser
+import by.klnvch.link5dots.domain.repositories.NetworkUserProvider
+import by.klnvch.link5dots.domain.usecases.network.GetNetworkGameActionUseCase
+import by.klnvch.link5dots.ui.game.picker.states.PickerState
+import kotlinx.coroutines.DelicateCoroutinesApi
+
+@OptIn(ExperimentalJsExport::class, DelicateCoroutinesApi::class)
+@JsExport()
+fun getRoomActionTitle(
+    user: NetworkUser,
+    pickerState: PickerState,
+    room: INetworkRoom?,
+): NetworkGameAction {
+    val identity = object : NetworkUserProvider {
+        override val networkUser = user
+    }
+    val useCase = GetNetworkGameActionUseCase(identity)
+    return useCase.get(pickerState, room)
+}

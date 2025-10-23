@@ -26,8 +26,8 @@ package by.klnvch.link5dots.data.online
 
 import by.klnvch.link5dots.BuildConfig
 import by.klnvch.link5dots.data.online.models.AcceptOnlineRoomInvitation
+import by.klnvch.link5dots.data.online.models.OnlineRoomInvitationRemote
 import by.klnvch.link5dots.domain.models.RoomState
-import by.klnvch.link5dots.domain.models.online.OnlineRoomInvitationRemote
 import by.klnvch.link5dots.domain.models.online.toOnlineRoomInvitation
 import by.klnvch.link5dots.domain.repositories.ConnectOnlineRoomRepository
 import by.klnvch.link5dots.domain.repositories.ScanOnlineRoomRepository

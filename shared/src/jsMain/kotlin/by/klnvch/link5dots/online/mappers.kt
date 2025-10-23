@@ -22,10 +22,14 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots
+package by.klnvch.link5dots.online
 
-import by.klnvch.link5dots.data.firebase.RemoteRoomItem
-import by.klnvch.link5dots.data.online.mapToDescriptors
+import by.klnvch.link5dots.data.online.mapper.toOnlineRoom
+import by.klnvch.link5dots.data.online.models.OnlineDotRemote
+import by.klnvch.link5dots.data.online.models.OnlineRemoteUser
+import by.klnvch.link5dots.data.online.models.OnlineRoom
+import by.klnvch.link5dots.data.online.models.OnlineRoomRemote
+import by.klnvch.link5dots.data.online.models.RemoteRoomItem
 import by.klnvch.link5dots.domain.models.DotsStyleType
 import by.klnvch.link5dots.domain.models.NetworkRoom
 import by.klnvch.link5dots.domain.repositories.GetOnlineRoomRepository
@@ -33,13 +37,26 @@ import by.klnvch.link5dots.domain.usecases.GameActionsOnlineUseCase
 import by.klnvch.link5dots.ui.game.GameViewState
 import by.klnvch.link5dots.ui.game.createGameViewState
 import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlin.js.collections.JsReadonlyArray
-import kotlin.js.collections.toList
+
+fun parseTime(value: dynamic) = (value as Double?)?.toLong()
+fun parseUser(value: dynamic) = if (value != null) OnlineRemoteUser(value.id, value.name) else null
 
 @OptIn(ExperimentalJsExport::class, ExperimentalJsCollectionsApi::class)
 @JsExport()
-fun mapToDescriptors(items: JsReadonlyArray<RemoteRoomItem>, defaultName: String) =
-    mapToDescriptors(items.toList(), defaultName).toTypedArray()
+fun toOnlineRoom(key: String?, value: dynamic?): OnlineRoom {
+    val value = OnlineRoomRemote(
+        parseTime(value.time),
+        (value.dots as Array<dynamic>?)
+            ?.toList()
+            ?.filterNotNull()
+            ?.map { OnlineDotRemote(parseTime(it.t), it.x as Int?, it.y as Int?) },
+        parseUser(value.user1),
+        parseUser(value.user2),
+        value.state as Int?,
+    )
+    val item = RemoteRoomItem(key, value)
+    return item.toOnlineRoom()
+}
 
 @OptIn(ExperimentalJsExport::class, DelicateCoroutinesApi::class)
 @JsExport()
@@ -49,7 +66,7 @@ fun mapToGameViewState(
     room: NetworkRoom,
 ): GameViewState {
     val user1Name = room.user1.name ?: defaultName
-    val user2Name = room.user2?.name ?: defaultName
+    val user2Name = room.user2.name ?: defaultName
 
     val gameActionsOnlineUseCase = GameActionsOnlineUseCase(object : GetOnlineRoomRepository {
         override var room: NetworkRoom? = room

@@ -22,26 +22,27 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots
+package by.klnvch.link5dots.data.online.models
 
-import by.klnvch.link5dots.domain.models.INetworkRoom
-import by.klnvch.link5dots.domain.models.NetworkGameAction
-import by.klnvch.link5dots.domain.models.NetworkUser
-import by.klnvch.link5dots.domain.repositories.NetworkUserProvider
-import by.klnvch.link5dots.domain.usecases.network.GetNetworkGameActionUseCase
-import by.klnvch.link5dots.ui.game.picker.states.PickerState
-import kotlinx.coroutines.DelicateCoroutinesApi
+import by.klnvch.link5dots.domain.models.NetworkRoom
+import by.klnvch.link5dots.domain.models.NetworkRoomInvitation
+import kotlin.js.ExperimentalJsCollectionsApi
+import kotlin.js.ExperimentalJsExport
+import kotlin.js.JsExport
 
-@OptIn(ExperimentalJsExport::class, DelicateCoroutinesApi::class)
+@OptIn(ExperimentalJsExport::class, ExperimentalJsCollectionsApi::class)
 @JsExport()
-fun getRoomActionTitle(
-    user: NetworkUser,
-    pickerState: PickerState,
-    room: INetworkRoom?,
-): NetworkGameAction {
-    val identity = object : NetworkUserProvider {
-        override val networkUser = user
-    }
-    val useCase = GetNetworkGameActionUseCase(identity)
-    return useCase.get(pickerState, room)
+sealed interface OnlineRoom
+sealed interface OnlineRoomDead : OnlineRoom
+sealed interface OnlineRoomLive : OnlineRoom {
+    val room: NetworkRoom
 }
+
+data class OnlineRoomCreated(val invitation: NetworkRoomInvitation) : OnlineRoom
+data class OnlineRoomStarted(override val room: NetworkRoom) : OnlineRoomLive
+data class OnlineRoomFinished(override val room: NetworkRoom) : OnlineRoomLive, OnlineRoomDead
+object OnlineRoomDeleted : OnlineRoomDead
+
+@OptIn(ExperimentalJsExport::class, ExperimentalJsCollectionsApi::class)
+@JsExport()
+fun OnlineRoom.getRoomIfAny() = (this as? OnlineRoomLive)?.room

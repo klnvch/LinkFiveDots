@@ -24,18 +24,10 @@
 
 package by.klnvch.link5dots.domain.models.online
 
-import by.klnvch.link5dots.data.firebase.OnlineRemoteUser
 import by.klnvch.link5dots.data.online.models.AcceptOnlineRoomInvitation
+import by.klnvch.link5dots.data.online.models.OnlineRemoteUser
+import by.klnvch.link5dots.data.online.models.OnlineRoomInvitationRemote
 import by.klnvch.link5dots.domain.models.NetworkUser
-import kotlin.js.ExperimentalJsExport
-import kotlin.js.JsExport
-
-@OptIn(ExperimentalJsExport::class)
-@JsExport()
-data class OnlineRoomInvitationRemote(
-    val time: Double? = null,
-    val user1: OnlineRemoteUser? = null,
-)
 
 class OnlineRoomInvitation(
     val time: Int,

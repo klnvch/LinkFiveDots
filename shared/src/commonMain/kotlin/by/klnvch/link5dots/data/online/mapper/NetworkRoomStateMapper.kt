@@ -22,50 +22,29 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.data.online
+package by.klnvch.link5dots.data.online.mapper
 
-import by.klnvch.link5dots.data.firebase.RemoteRoomItem
-import by.klnvch.link5dots.data.firebase.mapToNetworkRoomInvitation
-import by.klnvch.link5dots.domain.models.INetworkRoomInvitation
-import by.klnvch.link5dots.domain.models.NetworkRoom
+import by.klnvch.link5dots.data.online.models.OnlineRoom
+import by.klnvch.link5dots.data.online.models.OnlineRoomCreated
+import by.klnvch.link5dots.data.online.models.OnlineRoomDeleted
+import by.klnvch.link5dots.data.online.models.OnlineRoomFinished
+import by.klnvch.link5dots.data.online.models.OnlineRoomStarted
 import by.klnvch.link5dots.domain.models.NetworkRoomState
 import by.klnvch.link5dots.domain.models.NetworkRoomStateCreated
 import by.klnvch.link5dots.domain.models.NetworkRoomStateDeleted
 import by.klnvch.link5dots.domain.models.NetworkRoomStateFinished
 import by.klnvch.link5dots.domain.models.NetworkRoomStateStarted
-import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
-import by.klnvch.link5dots.domain.models.RoomState
+import kotlin.js.ExperimentalJsCollectionsApi
 import kotlin.js.ExperimentalJsExport
 import kotlin.js.JsExport
 
-@OptIn(ExperimentalJsExport::class)
+@OptIn(ExperimentalJsExport::class, ExperimentalJsCollectionsApi::class)
 @JsExport()
-class OnlineRoomDescriptor(
-    override val title: String,
-    override val time: Int,
-    val key: String,
-) : RemoteRoomDescriptor {
-    override val description = null
-    override val isFavorite = false
-}
-
-fun INetworkRoomInvitation.createDescriptor(defaultName: String) = OnlineRoomDescriptor(
-    user1.name ?: defaultName,
-    time,
-    key,
-)
-
-fun mapToDescriptors(items: List<RemoteRoomItem>, defaultName: String) = items
-    .mapNotNull { it.mapToNetworkRoomInvitation() }
-    .map { it.createDescriptor(defaultName) }
-
-@OptIn(ExperimentalJsExport::class)
-@JsExport()
-fun NetworkRoom.toNetworkRoomState(defaultName: String): NetworkRoomState {
-    return when (state) {
-        RoomState.CREATED -> NetworkRoomStateCreated(this.createDescriptor(defaultName))
-        RoomState.DELETED -> NetworkRoomStateDeleted(this.createDescriptor(defaultName))
-        RoomState.STARTED -> NetworkRoomStateStarted(this.createDescriptor(defaultName))
-        RoomState.FINISHED -> NetworkRoomStateFinished
+fun OnlineRoom.toNetworkRoomState(defaultName: String): NetworkRoomState {
+    return when (this) {
+        is OnlineRoomCreated -> NetworkRoomStateCreated(invitation.toDescriptor(defaultName))
+        OnlineRoomDeleted -> NetworkRoomStateDeleted
+        is OnlineRoomFinished -> NetworkRoomStateFinished
+        is OnlineRoomStarted -> NetworkRoomStateStarted(room.toDescriptor(defaultName))
     }
 }

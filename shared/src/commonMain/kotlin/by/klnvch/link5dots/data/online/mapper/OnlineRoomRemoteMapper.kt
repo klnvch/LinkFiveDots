@@ -22,28 +22,9 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.data.firebase
+package by.klnvch.link5dots.data.online.mapper
 
-import kotlin.js.ExperimentalJsExport
-import kotlin.js.JsExport
+import by.klnvch.link5dots.data.online.models.OnlineRemoteUser
+import by.klnvch.link5dots.domain.models.NetworkUser
 
-data class OnlineRoomRemote(
-    val state: Int? = null,
-    val dots: List<OnlineDotRemote>? = null,
-    val time: Long? = null,
-    val user1: OnlineRemoteUser? = null,
-    val user2: OnlineRemoteUser? = null,
-)
-
-data class OnlineDotRemote(
-    val t: Long? = null,
-    val x: Int? = null,
-    val y: Int? = null,
-)
-
-@OptIn(ExperimentalJsExport::class)
-@JsExport()
-data class OnlineRemoteUser(
-    val id: String? = null,
-    val name: String? = null,
-)
+fun NetworkUser.mapToOnlineRemoteUser() = OnlineRemoteUser(id, name)

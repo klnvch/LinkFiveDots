@@ -22,22 +22,13 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.data.firebase
+package by.klnvch.link5dots.data.online.mapper
 
-import kotlin.js.collections.JsArray
-import kotlin.js.collections.toList
+import by.klnvch.link5dots.data.online.models.OnlineRoomDescriptor
+import by.klnvch.link5dots.domain.models.INetworkRoomInvitation
 
-@OptIn(ExperimentalJsCollectionsApi::class)
-actual fun Any.mapToOnlineRoomRemote(): OnlineRoomRemote {
-    val jsRoom = this.asDynamic()
-    return OnlineRoomRemote(
-        jsRoom.state as Int?,
-        (jsRoom.dots as JsArray<dynamic>?)
-            ?.toList()
-            ?.filterNotNull()
-            ?.map { OnlineDotRemote((it.t as Double?)?.toLong(), it.x as Int?, it.y as Int?) },
-        (jsRoom.time as Double?)?.toLong(),
-        if (jsRoom.user1 != null) OnlineRemoteUser(jsRoom.user1.id, jsRoom.user1.name) else null,
-        if (jsRoom.user2 != null) OnlineRemoteUser(jsRoom.user2.id, jsRoom.user2.name) else null,
-    )
-}
+fun INetworkRoomInvitation.toDescriptor(defaultName: String) = OnlineRoomDescriptor(
+    user1.name ?: defaultName,
+    time,
+    key,
+)

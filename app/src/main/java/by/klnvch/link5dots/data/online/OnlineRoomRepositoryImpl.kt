@@ -25,12 +25,13 @@ package by.klnvch.link5dots.data.online
 
 import android.content.Context
 import by.klnvch.link5dots.BuildConfig
-import by.klnvch.link5dots.data.firebase.OnlineRoomRemote
-import by.klnvch.link5dots.data.firebase.RemoteRoomItem
-import by.klnvch.link5dots.data.firebase.mapToNetworkRoom
 import by.klnvch.link5dots.data.online.CleanUpOnlineRoomWorker.Companion.launchCleanUpOnlineRoomWorker
-import by.klnvch.link5dots.domain.models.NetworkRoomStateDeleted
-import by.klnvch.link5dots.domain.models.NetworkRoomStateFinished
+import by.klnvch.link5dots.data.online.mapper.toNetworkRoomState
+import by.klnvch.link5dots.data.online.mapper.toOnlineRoom
+import by.klnvch.link5dots.data.online.models.OnlineRoomDead
+import by.klnvch.link5dots.data.online.models.OnlineRoomRemote
+import by.klnvch.link5dots.data.online.models.RemoteRoomItem
+import by.klnvch.link5dots.data.online.models.getRoomIfAny
 import by.klnvch.link5dots.domain.models.RoomState
 import by.klnvch.link5dots.domain.repositories.OnlineRoomRepository
 import by.klnvch.link5dots.domain.repositories.StringRepository
@@ -44,6 +45,7 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
+import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 class OnlineRoomRepositoryImpl @Inject constructor(
@@ -61,17 +63,15 @@ class OnlineRoomRepositoryImpl @Inject constructor(
         reference.child(key).snapshots
             .map { it }
             .map { it.toRemoteRoomItem() }
+            .map { it.toOnlineRoom() }
     }
 
-    override fun get() = remote.mapNotNull { it.mapToNetworkRoom() }
+    override fun get() = remote.mapNotNull { it.getRoomIfAny() }
 
-    override val state = get().map {
-        val state = it.toNetworkRoomState(stringRepository.unknownName)
-        if (state is NetworkRoomStateDeleted || state is NetworkRoomStateFinished) {
-            onlineLocalStore.clear()
-        }
-        return@map state
-    }.distinctUntilChanged()
+    override val state = remote
+        .onEach { if (it is OnlineRoomDead) onlineLocalStore.clear() }
+        .map { it.toNetworkRoomState(stringRepository.unknownName) }
+        .distinctUntilChanged()
 
     override fun delete() = context.launchCleanUpOnlineRoomWorker(RoomState.DELETED)
 

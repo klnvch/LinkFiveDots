@@ -22,38 +22,11 @@
  * SOFTWARE.
  */
 
-import by.klnvch.link5dots.data.firebase.OnlineDotRemote
-import by.klnvch.link5dots.data.firebase.OnlineRemoteUser
-import by.klnvch.link5dots.data.firebase.OnlineRoomRemote
-import by.klnvch.link5dots.data.firebase.mapToOnlineRoomRemote
 import by.klnvch.link5dots.formatDateTime
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class MyJsTests {
-    @Test
-    fun mapToOnlineRoomRemote() {
-        val jsObj = js(
-            "({" +
-                    "state:2," +
-                    "time: 1753106016872," +
-                    "dots: [{t: 1753106018872, x: 5, y: 8,}]," +
-                    "user1: {id: '111'}," +
-                    "user2: {id: '222', name: 'web user'}" +
-                    "})"
-        )
-        val actual = (jsObj as Any).mapToOnlineRoomRemote()
-        assertEquals(
-            OnlineRoomRemote(
-                state = 2,
-                time = 1753106016872,
-                dots = listOf(OnlineDotRemote(1753106018872, 5, 8)),
-                user1 = OnlineRemoteUser("111", null),
-                user2 = OnlineRemoteUser("222", "web user"),
-            ), actual
-        )
-    }
-
     @Test
     fun formatDateTime() {
         val actual = 1755519247.formatDateTime()

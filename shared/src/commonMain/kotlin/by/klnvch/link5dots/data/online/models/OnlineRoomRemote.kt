@@ -22,24 +22,30 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.data.online
+package by.klnvch.link5dots.data.online.models
 
-import by.klnvch.link5dots.data.online.mapper.mapToOnlineRemoteUser
-import by.klnvch.link5dots.data.online.models.AcceptOnlineRoomInvitation
-import by.klnvch.link5dots.domain.models.RoomState
-import by.klnvch.link5dots.domain.repositories.ConnectOnlineRoomRepository
+data class RemoteRoomItem(val key: String?, val value: OnlineRoomRemote?)
 
-class ConnectOnlineRoomRepositoryImpl(
-    private val firebaseDb: FirebaseDbSetConnected,
-    private val onlineLocalStore: OnlineLocalStoreWriter,
-) : ConnectOnlineRoomRepository {
-    override suspend fun connect(key: String, accept: AcceptOnlineRoomInvitation) {
-        firebaseDb.setConnected(
-            arrayOf(key),
-            RoomState.STARTED.ordinal,
-            accept.user2.mapToOnlineRemoteUser(),
-            accept.dots.toList(),
-        )
-        onlineLocalStore.save(key)
-    }
-}
+open class OnlineRoomInvitationRemote(
+    open val time: Long? = null,
+    open val user1: OnlineRemoteUser? = null,
+)
+
+class OnlineRoomRemote(
+    time: Long? = null,
+    val dots: List<OnlineDotRemote?>? = null,
+    user1: OnlineRemoteUser? = null,
+    val user2: OnlineRemoteUser? = null,
+    val state: Int? = null,
+) : OnlineRoomInvitationRemote(time, user1)
+
+data class OnlineDotRemote(
+    val t: Long? = null,
+    val x: Int? = null,
+    val y: Int? = null,
+)
+
+data class OnlineRemoteUser(
+    val id: String? = null,
+    val name: String? = null,
+)

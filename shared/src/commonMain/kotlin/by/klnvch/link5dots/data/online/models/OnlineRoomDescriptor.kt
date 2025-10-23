@@ -22,24 +22,19 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.data.online
+package by.klnvch.link5dots.data.online.models
 
-import by.klnvch.link5dots.data.online.mapper.mapToOnlineRemoteUser
-import by.klnvch.link5dots.data.online.models.AcceptOnlineRoomInvitation
-import by.klnvch.link5dots.domain.models.RoomState
-import by.klnvch.link5dots.domain.repositories.ConnectOnlineRoomRepository
+import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
+import kotlin.js.ExperimentalJsExport
+import kotlin.js.JsExport
 
-class ConnectOnlineRoomRepositoryImpl(
-    private val firebaseDb: FirebaseDbSetConnected,
-    private val onlineLocalStore: OnlineLocalStoreWriter,
-) : ConnectOnlineRoomRepository {
-    override suspend fun connect(key: String, accept: AcceptOnlineRoomInvitation) {
-        firebaseDb.setConnected(
-            arrayOf(key),
-            RoomState.STARTED.ordinal,
-            accept.user2.mapToOnlineRemoteUser(),
-            accept.dots.toList(),
-        )
-        onlineLocalStore.save(key)
-    }
+@OptIn(ExperimentalJsExport::class)
+@JsExport()
+class OnlineRoomDescriptor(
+    override val title: String,
+    override val time: Int,
+    val key: String,
+) : RemoteRoomDescriptor {
+    override val description = null
+    override val isFavorite = false
 }

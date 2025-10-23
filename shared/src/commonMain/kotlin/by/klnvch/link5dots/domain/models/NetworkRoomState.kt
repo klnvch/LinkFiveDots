@@ -37,7 +37,7 @@ data class NetworkRoomStateCreated(val descriptor: RemoteRoomDescriptor) : Netwo
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport()
-data class NetworkRoomStateDeleted(val descriptor: RemoteRoomDescriptor) : NetworkRoomState
+object NetworkRoomStateDeleted : NetworkRoomState
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport()

@@ -22,17 +22,17 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots
+package by.klnvch.link5dots.online
 
-import by.klnvch.link5dots.data.firebase.OnlineRemoteUser
 import by.klnvch.link5dots.data.online.ConnectOnlineRoomRepositoryImpl
 import by.klnvch.link5dots.data.online.FirebaseDbSetConnected
 import by.klnvch.link5dots.data.online.OnlineLocalStoreWriter
+import by.klnvch.link5dots.data.online.models.OnlineRemoteUser
+import by.klnvch.link5dots.data.online.models.OnlineRoomInvitationRemote
 import by.klnvch.link5dots.domain.models.FoundRemoteRoom
 import by.klnvch.link5dots.domain.models.NetworkUser
 import by.klnvch.link5dots.domain.models.Point
 import by.klnvch.link5dots.domain.models.online.OnlineRoomInvitation
-import by.klnvch.link5dots.domain.models.online.OnlineRoomInvitationRemote
 import by.klnvch.link5dots.domain.models.online.toOnlineRoomInvitation
 import by.klnvch.link5dots.domain.repositories.ConnectOnlineRoomRepository
 import by.klnvch.link5dots.domain.repositories.NetworkUserProvider
@@ -85,13 +85,10 @@ private fun map(
     connectRepository: ConnectOnlineRoomRepository,
 ): OnlineRoomInvitation? {
     val remote = OnlineRoomInvitationRemote(
-        value.time as Double?,
-        if (value.user1 != null) OnlineRemoteUser(value.user1.id, value.user1.name) else null
+        parseTime(value.time),
+        parseUser(value.user1),
     )
-    return toOnlineRoomInvitation(
-        key,
-        remote
-    ) { key, accept ->
+    return toOnlineRoomInvitation(key, remote) { key, accept ->
         connectRepository.connect(key, accept)
     }
 }
