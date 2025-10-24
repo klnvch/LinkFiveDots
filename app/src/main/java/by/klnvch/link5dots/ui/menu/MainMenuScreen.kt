@@ -33,7 +33,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Help
@@ -44,7 +43,6 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material3.ElevatedButton
-import androidx.compose.material3.Icon
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -64,6 +62,8 @@ import by.klnvch.link5dots.R
 import by.klnvch.link5dots.ui.common.MenuTextButton
 import by.klnvch.link5dots.ui.common.TextNoSurface
 import by.klnvch.link5dots.ui.common.UsernameDialog
+import by.klnvch.link5dots.ui.common.adaptive.AdaptiveIcon
+import by.klnvch.link5dots.ui.common.adaptive.adaptiveWidthInMax
 
 @Composable
 fun MainMenuScreen(
@@ -96,12 +96,11 @@ private fun MainMenuScreenPortrait(
         verticalArrangement = Arrangement.Center,
         modifier = Modifier.fillMaxSize(),
     ) {
-        GreetingText(
-            userName = userName,
-            onUserNameChanged = onUserNameChanged
-        )
-        GameButtonColumn(onNavigate)
-        InfoButtonColumn(onNavigate)
+        GreetingText(userName, onUserNameChanged)
+        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            GameButtonColumn(onNavigate)
+            InfoButtonColumn(onNavigate)
+        }
     }
 }
 
@@ -116,11 +115,10 @@ private fun MainMenuScreenLandscape(
         verticalArrangement = Arrangement.Center,
         modifier = Modifier.fillMaxSize(),
     ) {
-        GreetingText(
-            userName = userName,
-            onUserNameChanged = onUserNameChanged,
-        )
-        Row {
+        GreetingText(userName, onUserNameChanged)
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
             GameButtonColumn(onNavigate)
             InfoButtonColumn(onNavigate)
         }
@@ -129,7 +127,7 @@ private fun MainMenuScreenLandscape(
 
 @Composable
 private fun GameButtonColumn(onNavigate: (Screen) -> Unit) {
-    Column {
+    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
         MenuTextButton(
             onClick = { onNavigate(Screen.BotGame) },
             imageVector = Icons.Filled.Android,
@@ -145,7 +143,8 @@ private fun GameButtonColumn(onNavigate: (Screen) -> Unit) {
 
 @Composable
 private fun InfoButtonColumn(onNavigate: (Screen) -> Unit) {
-    Column {
+    val widthInMax = adaptiveWidthInMax()
+    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
         MenuTextButton(
             onClick = { onNavigate(Screen.Scores) },
             imageVector = Icons.Filled.Star,
@@ -154,7 +153,7 @@ private fun InfoButtonColumn(onNavigate: (Screen) -> Unit) {
         Row(
             horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.widthIn(0.dp, 320.dp),
+            modifier = Modifier.widthIn(0.dp, widthInMax),
         ) {
             MenuIconButton(
                 onClick = { onNavigate(Screen.Settings) },
@@ -195,10 +194,11 @@ private fun GreetingText(
             })
         }
     }
+    val widthInMax = adaptiveWidthInMax()
     Box(
         contentAlignment = Alignment.CenterEnd,
         modifier = modifier
-            .widthIn(0.dp, 320.dp)
+            .widthIn(0.dp, widthInMax)
             .padding(16.dp),
     ) {
         val name = userName ?: stringResource(R.string.unknown)
@@ -210,9 +210,10 @@ private fun GreetingText(
         TextButton(
             onClick = { openUserNameDialog.value = true }
         ) {
-            Icon(
+            AdaptiveIcon(
                 imageVector = Icons.Rounded.Edit,
-                contentDescription = stringResource(R.string.name)
+                size = 18.dp,
+                contentDescription = stringResource(R.string.name),
             )
         }
     }
@@ -225,14 +226,10 @@ private fun MenuIconButton(
     @StringRes textId: Int,
     modifier: Modifier,
 ) {
-    ElevatedButton(
-        onClick = onClick,
-        modifier,
-    ) {
-        Icon(
+    ElevatedButton(onClick, modifier) {
+        AdaptiveIcon(
             imageVector = imageVector,
             contentDescription = stringResource(textId),
-            modifier = Modifier.size(24.dp),
         )
     }
 }

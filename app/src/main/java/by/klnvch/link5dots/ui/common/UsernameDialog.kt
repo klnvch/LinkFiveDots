@@ -27,7 +27,6 @@ package by.klnvch.link5dots.ui.common
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Mood
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
@@ -35,7 +34,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import by.klnvch.link5dots.R
+import by.klnvch.link5dots.formatUserName
+import by.klnvch.link5dots.ui.common.adaptive.AdaptiveIcon
+import by.klnvch.link5dots.ui.common.adaptive.AdaptiveText
+import by.klnvch.link5dots.ui.common.adaptive.adaptiveFontSize
 
 @Composable
 fun UsernameDialog(
@@ -43,10 +47,11 @@ fun UsernameDialog(
     onConfirmation: (userName: String?) -> Unit,
     onDismissRequest: () -> Unit,
 ) {
+    val fontSize = adaptiveFontSize()
     val text = remember { mutableStateOf(userName) }
     AlertDialog(
         icon = {
-            Icon(
+            AdaptiveIcon(
                 imageVector = Icons.Filled.Mood,
                 contentDescription = null
             )
@@ -55,7 +60,8 @@ fun UsernameDialog(
         text = {
             TextField(
                 value = text.value ?: "",
-                onValueChange = { text.value = it },
+                textStyle = TextStyle(fontSize = fontSize),
+                onValueChange = { text.value = it.formatUserName() },
                 placeholder = { Text(text = stringResource(R.string.unknown)) },
                 singleLine = true,
             )
@@ -65,15 +71,8 @@ fun UsernameDialog(
             TextButton(
                 onClick = { onConfirmation(text.value) }
             ) {
-                Text(text = stringResource(R.string.okay))
+                AdaptiveText(text = stringResource(R.string.okay))
             }
         },
-        dismissButton = {
-            TextButton(
-                onClick = { onDismissRequest() }
-            ) {
-                Text(text = stringResource(R.string.cancel))
-            }
-        }
     )
 }

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023-2025 klnvch
+ * Copyright (c) 2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,12 +22,29 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.domain.usecases
+package by.klnvch.link5dots.ui.common.adaptive
 
-import by.klnvch.link5dots.domain.repositories.Settings
-import by.klnvch.link5dots.formatUserName
-import javax.inject.Inject
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 
-class SetUserNameUseCase @Inject constructor(private val settings: Settings) {
-    suspend fun set(userName: String?) = settings.setUserName(userName.formatUserName())
+@Composable
+fun AdaptiveText(
+    text: String,
+    modifier: Modifier = Modifier,
+    color: Color = Color.Unspecified,
+    fontWeight: FontWeight? = null,
+    textAlign: TextAlign? = null,
+) {
+    Text(
+        text = text,
+        modifier = modifier,
+        color = color,
+        fontSize = adaptiveFontSize(),
+        fontWeight = fontWeight,
+        textAlign = textAlign,
+    )
 }

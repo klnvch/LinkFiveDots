@@ -25,16 +25,16 @@
 package by.klnvch.link5dots.ui.common
 
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
+import by.klnvch.link5dots.ui.common.adaptive.AdaptiveText
 
 @Composable
 fun TextNoSurface(text: String, modifier: Modifier = Modifier, textAlign: TextAlign? = null) {
-    Text(
+    AdaptiveText(
         text = text,
-        modifier,
+        modifier = modifier,
         color = MaterialTheme.colorScheme.onSurface,
         textAlign = textAlign,
     )

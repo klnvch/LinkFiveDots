@@ -118,6 +118,7 @@ dependencies {
     implementation(libs.androidx.material.icons.extended)
     implementation(libs.androidx.compose.ui.preview)
     implementation(project(":shared"))
+    implementation(libs.androidx.compose.adaptive)
     debugImplementation(libs.androidx.compose.ui)
 
     implementation(libs.androidx.core.ktx)

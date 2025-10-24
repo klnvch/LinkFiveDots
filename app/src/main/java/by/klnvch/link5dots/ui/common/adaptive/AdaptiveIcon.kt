@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023-2025 klnvch
+ * Copyright (c) 2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,12 +22,31 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.domain.usecases
+package by.klnvch.link5dots.ui.common.adaptive
 
-import by.klnvch.link5dots.domain.repositories.Settings
-import by.klnvch.link5dots.formatUserName
-import javax.inject.Inject
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Icon
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 
-class SetUserNameUseCase @Inject constructor(private val settings: Settings) {
-    suspend fun set(userName: String?) = settings.setUserName(userName.formatUserName())
+@Composable
+fun AdaptiveIcon(
+    imageVector: ImageVector,
+    size: Dp = 24.dp,
+    contentDescription: String? = null,
+) {
+    val screenSize = screenSize()
+    val size = when (screenSize) {
+        ScreenSizeType.Large -> size * 2
+        ScreenSizeType.Medium -> size * 1.5f
+        ScreenSizeType.Normal -> size
+    }
+    Icon(
+        imageVector = imageVector,
+        contentDescription = contentDescription,
+        modifier = Modifier.size(size),
+    )
 }

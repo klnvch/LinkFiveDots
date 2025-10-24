@@ -286,7 +286,6 @@ val unspecified_scheme = ColorFamily(
 @Composable
 fun AppTheme(
     nightMode: NightMode = NightMode.System,
-    // Dynamic color is available on Android 12+
     dynamicColor: Boolean = true,
     content: @Composable() () -> Unit,
 ) {

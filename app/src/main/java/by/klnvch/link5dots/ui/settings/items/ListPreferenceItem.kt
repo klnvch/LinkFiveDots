@@ -35,8 +35,6 @@ import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -52,6 +50,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import by.klnvch.link5dots.R
+import by.klnvch.link5dots.ui.common.adaptive.AdaptiveIcon
+import by.klnvch.link5dots.ui.common.adaptive.AdaptiveText
 
 @Composable
 fun <Key> ListPreferenceItem(
@@ -96,9 +96,7 @@ fun <Key> RadioButtonsDialog(
 ) {
     val (selectedKey, onKeySelected) = remember { mutableStateOf(key) }
     AlertDialog(
-        icon = {
-            Icon(imageVector, contentDescription = null)
-        },
+        icon = { AdaptiveIcon(imageVector) },
         title = { Text(text = stringResource(title)) },
         text = {
             RadioButtonSingleSelection(
@@ -110,12 +108,12 @@ fun <Key> RadioButtonsDialog(
         onDismissRequest = { onDismissRequest() },
         confirmButton = {
             TextButton(onClick = { onConfirmation(selectedKey) }) {
-                Text(text = stringResource(R.string.okay))
+                AdaptiveText(text = stringResource(R.string.okay))
             }
         },
         dismissButton = {
             TextButton(onClick = { onDismissRequest() }) {
-                Text(text = stringResource(R.string.cancel))
+                AdaptiveText(text = stringResource(R.string.cancel))
             }
         }
     )
@@ -149,9 +147,8 @@ fun <Key> RadioButtonSingleSelection(
                     selected = (option.key == selectedKey),
                     onClick = null
                 )
-                Text(
+                AdaptiveText(
                     text = option.value,
-                    style = MaterialTheme.typography.bodyLarge,
                     modifier = Modifier.padding(start = 16.dp)
                 )
             }

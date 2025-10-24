@@ -38,6 +38,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.unit.dp
 import by.klnvch.link5dots.R
 import by.klnvch.link5dots.ui.common.MenuTextButton
 
@@ -57,8 +58,10 @@ private fun MultiplayerMenuScreenPortrait(onNavigate: (Screen) -> Unit) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {
-        ButtonColumn1(onNavigate)
-        ButtonColumn2(onNavigate)
+        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            ButtonColumn1(onNavigate)
+            ButtonColumn2(onNavigate)
+        }
     }
 }
 
@@ -76,7 +79,7 @@ private fun MultiplayerMenuScreenLandscape(onNavigate: (Screen) -> Unit) {
 
 @Composable
 private fun ButtonColumn1(onNavigate: (Screen) -> Unit) {
-    Column {
+    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
         MenuTextButton(
             onClick = { onNavigate(Screen.MultiplayerTwo) },
             imageVector = Icons.Filled.People,
@@ -92,7 +95,7 @@ private fun ButtonColumn1(onNavigate: (Screen) -> Unit) {
 
 @Composable
 private fun ButtonColumn2(onNavigate: (Screen) -> Unit) {
-    Column {
+    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
         MenuTextButton(
             onClick = { onNavigate(Screen.MultiplayerNsd) },
             imageVector = Icons.Filled.Router,
