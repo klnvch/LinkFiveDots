@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 klnvch
+ * Copyright (c) 2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,23 +22,12 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.di
+package by.klnvch.link5dots.domain.repositories
 
-import android.app.Application
-import android.content.Context
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.preferencesDataStore
-import dagger.Module
-import dagger.Provides
-import javax.inject.Singleton
-
-
-val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
-
-@Module
-class DataStoreModule {
-    @Singleton
-    @Provides
-    fun provideDatabase(app: Application) = app.dataStore
+interface ClearLocalStore {
+    suspend fun clear()
 }
+
+interface ClearOnlineLocalStore : ClearLocalStore
+
+interface ClearBluetoothLocalStore : ClearLocalStore

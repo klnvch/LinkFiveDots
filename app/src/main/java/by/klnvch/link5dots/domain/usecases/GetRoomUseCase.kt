@@ -32,9 +32,12 @@ import by.klnvch.link5dots.domain.repositories.OnlineRoomRepository
 import by.klnvch.link5dots.domain.repositories.RoomFlowLocalRepository
 import by.klnvch.link5dots.domain.repositories.RoomRepository
 import by.klnvch.link5dots.domain.repositories.RoomSaveLocalRepository
+import by.klnvch.link5dots.domain.repositories.Settings
 import by.klnvch.link5dots.domain.repositories.SocketGetFlowRepository
+import by.klnvch.link5dots.domain.repositories.VibratorService
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
@@ -64,15 +67,23 @@ class GetRoomInfoUseCase @Inject constructor(
 class GetRoomOnlineUseCase @Inject constructor(
     private val repository: OnlineRoomRepository,
     private val getRepository: GetOnlineRoomRepository,
+    private val settings: Settings,
+    private val vibratorService: VibratorService,
 ) : GetRoomUseCase {
-    override fun get(param: RoomParam) = repository.get().onEach { getRepository.room = it }
+    override fun get(param: RoomParam) = repository.get()
+        .onEach { if (settings.isVibrationEnabled.first()) vibratorService.vibrate() }
+        .onEach { getRepository.room = it }
 }
 
 class GetRoomSocketUseCase @Inject constructor(
     private val repository: SocketGetFlowRepository,
     private val saveRepository: RoomSaveLocalRepository,
+    private val settings: Settings,
+    private val vibratorService: VibratorService,
 ) : GetRoomUseCase {
-    override fun get(param: RoomParam) = repository.roomFlow.onEach { saveRepository.save(it) }
+    override fun get(param: RoomParam) = repository.roomFlow
+        .onEach { if (settings.isVibrationEnabled.first()) vibratorService.vibrate() }
+        .onEach { saveRepository.save(it) }
 }
 
 sealed interface RoomParam

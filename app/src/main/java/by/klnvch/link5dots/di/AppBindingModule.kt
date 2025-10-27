@@ -32,12 +32,17 @@ import by.klnvch.link5dots.data.GameScoreRepositoryImpl
 import by.klnvch.link5dots.data.LanguageManagerImpl
 import by.klnvch.link5dots.data.RoomRepositoryImpl
 import by.klnvch.link5dots.data.StringProvider
+import by.klnvch.link5dots.data.VibratorServiceImpl
+import by.klnvch.link5dots.data.bluetooth.BluetoothLocalStore
 import by.klnvch.link5dots.data.bluetooth.BluetoothRoomRepositoryImpl
 import by.klnvch.link5dots.data.firebase.FirebaseManagerImpl
 import by.klnvch.link5dots.data.nsd.NsdRoomRepositoryImpl
+import by.klnvch.link5dots.data.online.OnlineLocalStore
 import by.klnvch.link5dots.data.online.OnlineRoomRepositoryImpl
 import by.klnvch.link5dots.data.settings.SettingsImpl
 import by.klnvch.link5dots.domain.repositories.BluetoothRoomRepository
+import by.klnvch.link5dots.domain.repositories.ClearBluetoothLocalStore
+import by.klnvch.link5dots.domain.repositories.ClearOnlineLocalStore
 import by.klnvch.link5dots.domain.repositories.CrashRepository
 import by.klnvch.link5dots.domain.repositories.DeviceInfo
 import by.klnvch.link5dots.domain.repositories.FirebaseManager
@@ -48,6 +53,7 @@ import by.klnvch.link5dots.domain.repositories.OnlineRoomRepository
 import by.klnvch.link5dots.domain.repositories.RoomRepository
 import by.klnvch.link5dots.domain.repositories.Settings
 import by.klnvch.link5dots.domain.repositories.StringRepository
+import by.klnvch.link5dots.domain.repositories.VibratorService
 import dagger.Binds
 import dagger.Module
 import javax.inject.Singleton
@@ -102,4 +108,16 @@ interface AppBindingModule {
     @Singleton
     @Binds
     fun bindBluetoothRoomRepository(impl: BluetoothRoomRepositoryImpl): BluetoothRoomRepository
+
+    @Singleton
+    @Binds
+    fun bindVibratorService(impl: VibratorServiceImpl): VibratorService
+
+    @Singleton
+    @Binds
+    fun bindClearOnlineLocalStore(impl: OnlineLocalStore): ClearOnlineLocalStore
+
+    @Singleton
+    @Binds
+    fun bindClearBluetoothLocalStore(impl: BluetoothLocalStore): ClearBluetoothLocalStore
 }

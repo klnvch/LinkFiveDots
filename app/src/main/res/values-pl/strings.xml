@@ -79,7 +79,8 @@
     <string name="settings_night_mode">"Podświetlenie nocne"</string>
     <string name="name_not_set">"Nie ustawiono"</string>
     <string name="name">"Nazwa"</string>
-    <string name="settings_delete_all">"Wymaż wszystko"</string>
+    <string name="main_clear_title">"Wykasuj wszystkie dane"</string>
+    <string name="main_clear_confirm_title">"Usunąć wszystkie dane?"</string>
     <string name="progress_text">"Zaczekaj…"</string>
     <string name="help">"Pomoc"</string>
     <string name="loading">"Ładuję…"</string>

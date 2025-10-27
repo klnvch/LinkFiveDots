@@ -79,7 +79,8 @@
     <string name="settings_night_mode">"Luz nocturna"</string>
     <string name="name_not_set">"No definido"</string>
     <string name="name">"Nombre"</string>
-    <string name="settings_delete_all">"Borrar todo"</string>
+    <string name="main_clear_title">"Volver al estado de fábrica"</string>
+    <string name="main_clear_confirm_title">"¿Borrar todos los datos?"</string>
     <string name="progress_text">"Espera…"</string>
     <string name="help">"Ayuda"</string>
     <string name="loading">"Cargando…"</string>

@@ -30,4 +30,5 @@ interface FirebaseManager {
     suspend fun signInAnonymously(): String
     fun signOut()
     val userId: Flow<String?>
+    suspend fun delete()
 }

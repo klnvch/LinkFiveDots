@@ -22,33 +22,8 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.data.online
+package by.klnvch.link5dots.domain.repositories
 
-import android.content.Context
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.stringPreferencesKey
-import androidx.datastore.preferences.preferencesDataStore
-import by.klnvch.link5dots.domain.repositories.ClearOnlineLocalStore
-import kotlinx.coroutines.flow.map
-import javax.inject.Inject
-import javax.inject.Singleton
-
-@Singleton
-class OnlineLocalStore @Inject constructor(
-    private val context: Context,
-) : OnlineLocalStoreWriter, OnlineLocalStoreRemover, ClearOnlineLocalStore {
-    private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "online")
-    private val keyKey = stringPreferencesKey("key")
-
-    override suspend fun save(key: String) {
-        context.dataStore.edit { it[keyKey] = key }
-    }
-
-    override suspend fun clear() {
-        context.dataStore.edit { it.remove(keyKey) }
-    }
-
-    val key = context.dataStore.data.map { it[keyKey] }
+interface VibratorService {
+    fun vibrate()
 }

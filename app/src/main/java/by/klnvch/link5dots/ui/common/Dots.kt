@@ -25,7 +25,6 @@
 package by.klnvch.link5dots.ui.common
 
 import androidx.compose.foundation.layout.Row
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
@@ -35,6 +34,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import by.klnvch.link5dots.ui.common.adaptive.AdaptiveIcon
 import by.klnvch.link5dots.ui.theme.dotColorsPalette
 
 @Preview
@@ -51,25 +51,25 @@ fun Dots() {
 @Composable
 fun RedDot() {
     val tint = MaterialTheme.dotColorsPalette.user1
-    Icon(imageVector = Dot, contentDescription = null, tint = tint)
+    AdaptiveIcon(imageVector = Dot, size = 16.dp, tint = tint)
 }
 
 @Composable
 fun BlueDot() {
     val tint = MaterialTheme.dotColorsPalette.user2
-    Icon(imageVector = Dot, contentDescription = null, tint = tint)
+    AdaptiveIcon(imageVector = Dot, size = 16.dp, tint = tint)
 }
 
 @Composable
 fun RedCross() {
     val tint = MaterialTheme.dotColorsPalette.user1
-    Icon(imageVector = Cross, contentDescription = null, tint = tint)
+    AdaptiveIcon(imageVector = Cross, size = 16.dp, tint = tint)
 }
 
 @Composable
 fun BlueCircle() {
     val tint = MaterialTheme.dotColorsPalette.user2
-    Icon(imageVector = Circle, contentDescription = null, tint = tint)
+    AdaptiveIcon(imageVector = Circle, size = 16.dp, tint = tint)
 }
 
 val Dot: ImageVector

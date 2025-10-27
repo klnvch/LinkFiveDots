@@ -24,6 +24,9 @@
 
 package by.klnvch.link5dots.domain.usecases
 
+import by.klnvch.link5dots.domain.repositories.ClearBluetoothLocalStore
+import by.klnvch.link5dots.domain.repositories.ClearOnlineLocalStore
+import by.klnvch.link5dots.domain.repositories.FirebaseManager
 import by.klnvch.link5dots.domain.repositories.LanguageManager
 import by.klnvch.link5dots.domain.repositories.RoomRepository
 import by.klnvch.link5dots.domain.repositories.Settings
@@ -33,10 +36,16 @@ class ResetAllDataUseCase @Inject constructor(
     private val settings: Settings,
     private val roomRepository: RoomRepository,
     private val languageManager: LanguageManager,
+    private val onlineLocalStore: ClearOnlineLocalStore,
+    private val bluetoothLocalStore: ClearBluetoothLocalStore,
+    private val firebaseManager: FirebaseManager,
 ) {
     suspend fun reset() {
         settings.reset()
         roomRepository.deleteAll()
         languageManager.reset()
+        onlineLocalStore.clear()
+        bluetoothLocalStore.clear()
+        firebaseManager.delete()
     }
 }

@@ -23,12 +23,14 @@
  */
 package by.klnvch.link5dots.data.settings
 
+import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.datastore.preferences.preferencesDataStore
 import by.klnvch.link5dots.domain.models.AllSettings
 import by.klnvch.link5dots.domain.models.DotsStyleType
 import by.klnvch.link5dots.domain.models.NightMode
@@ -45,9 +47,10 @@ import kotlinx.coroutines.flow.stateIn
 import java.util.UUID
 import javax.inject.Inject
 
-class SettingsImpl @Inject constructor(
-    private val dataStore: DataStore<Preferences>,
-) : Settings {
+private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
+
+class SettingsImpl @Inject constructor(context: Context) : Settings {
+    private val dataStore = context.dataStore
 
     companion object {
         private val USER_NAME = stringPreferencesKey(Settings.KEY_USER_NAME)
@@ -103,7 +106,6 @@ class SettingsImpl @Inject constructor(
         dataStore.edit { it[DOTS_TYPE] = SettingsMapper.Dots.map(style) }
     }
 
-    @OptIn(DelicateCoroutinesApi::class)
     override val userId = dataStore.data
         .map { it[USER_ID] }
         .onEach { id ->
@@ -125,7 +127,7 @@ class SettingsImpl @Inject constructor(
         dataStore.edit { it[FIRST_RUN] = true }
     }
 
-    fun isVibrationEnabled() = dataStore.data
+    override val isVibrationEnabled = dataStore.data
         .map { it[VIBRATION] ?: DEFAULT_VIBRATION }
         .distinctUntilChanged()
 
@@ -141,12 +143,12 @@ class SettingsImpl @Inject constructor(
     override suspend fun reset() {
         dataStore.edit {
             it.remove(USER_NAME)
-            it[USER_ID] = UUID.randomUUID().toString()
-            it[LANGUAGE] = DEFAULT_LANGUAGE
-            it[VIBRATION] = DEFAULT_VIBRATION
+            it.remove(USER_ID)
+            it.remove(LANGUAGE)
+            it.remove(VIBRATION)
             it.remove(NIGHT_MODE)
-            it[DOTS_TYPE] = SettingsMapper.Dots.map(null as DotsStyleType?)
-            it[FIRST_RUN] = DEFAULT_FIRST_RUN
+            it.remove(DOTS_TYPE)
+            it.remove(FIRST_RUN)
         }
     }
 }

@@ -43,6 +43,7 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
+import kotlin.coroutines.suspendCoroutine
 
 class FirebaseManagerImpl @Inject constructor(
     private val context: Context,
@@ -79,6 +80,15 @@ class FirebaseManagerImpl @Inject constructor(
     }
 
     override fun signOut() = Firebase.auth.signOut()
+
+    override suspend fun delete(): Unit = suspendCoroutine { cont ->
+        val user = Firebase.auth.currentUser
+        if (user != null) {
+            user.delete().addOnCompleteListener { cont.resume(Unit) }
+        } else {
+            cont.resume(Unit)
+        }
+    }
 
     override val userId: Flow<String?> = callbackFlow {
         val listener = FirebaseAuth.AuthStateListener {

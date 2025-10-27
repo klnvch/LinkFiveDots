@@ -79,7 +79,8 @@
     <string name="settings_night_mode">"Начная падсветка"</string>
     <string name="name_not_set">"Не задана"</string>
     <string name="name">"Назва"</string>
-    <string name="settings_delete_all">"Выдаліць усе"</string>
+    <string name="main_clear_title">"Сцерці ўсе даныя"</string>
+    <string name="main_clear_confirm_title">"Сцерці ўсе даныя?"</string>
     <string name="progress_text">"Калі ласка, пачакайце…"</string>
     <string name="help">"Даведка"</string>
     <string name="loading">"Загрузка…"</string>

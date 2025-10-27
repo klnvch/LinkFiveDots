@@ -79,7 +79,8 @@
     <string name="settings_night_mode">"Éclairage nocturne"</string>
     <string name="name_not_set">"Non défini"</string>
     <string name="name">"Nom"</string>
-    <string name="settings_delete_all">"Tout effacer"</string>
+    <string name="main_clear_title">"Effacer toutes les données"</string>
+    <string name="main_clear_confirm_title">"Effacer toutes les données ?"</string>
     <string name="progress_text">"Veuillez patienter…"</string>
     <string name="help">"Aide"</string>
     <string name="loading">"Chargement…"</string>

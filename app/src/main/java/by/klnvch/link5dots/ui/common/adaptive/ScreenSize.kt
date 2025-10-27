@@ -55,6 +55,16 @@ fun screenSize(): ScreenSizeType {
 }
 
 @Composable
+fun adaptiveIconSize(size: Dp = 24.dp): Dp {
+    val screenSize = screenSize()
+    return when (screenSize) {
+        ScreenSizeType.Large -> size * 2
+        ScreenSizeType.Medium -> size * 1.5f
+        ScreenSizeType.Normal -> size
+    }
+}
+
+@Composable
 fun adaptiveWidthInMax(): Dp {
     val screenSize = screenSize()
     return when (screenSize) {

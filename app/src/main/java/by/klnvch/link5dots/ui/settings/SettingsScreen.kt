@@ -28,7 +28,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Language
 import androidx.compose.material.icons.filled.Mood
 import androidx.compose.material.icons.filled.Vibration
@@ -43,10 +42,10 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import by.klnvch.link5dots.R
 import by.klnvch.link5dots.domain.models.NightMode
 import by.klnvch.link5dots.ui.common.TextCenterInfo
+import by.klnvch.link5dots.ui.settings.items.DeleteAllPreferenceItem
 import by.klnvch.link5dots.ui.settings.items.DotsStylePreferenceItem
 import by.klnvch.link5dots.ui.settings.items.EditTextPreferenceItem
 import by.klnvch.link5dots.ui.settings.items.ListPreferenceItem
-import by.klnvch.link5dots.ui.settings.items.PreferenceItem
 import by.klnvch.link5dots.ui.settings.items.SwitchPreferenceItem
 import by.klnvch.link5dots.ui.settings.items.optionsFromResource
 
@@ -102,9 +101,7 @@ fun SettingsScreen(
                 value = state.settings.dotsStyle,
                 onChange = { viewModel.setDotsStyle(it) },
             )
-            PreferenceItem(
-                imageVector = Icons.Filled.Delete,
-                title = R.string.settings_delete_all,
+            DeleteAllPreferenceItem(
                 onClick = { viewModel.reset() },
             )
         }

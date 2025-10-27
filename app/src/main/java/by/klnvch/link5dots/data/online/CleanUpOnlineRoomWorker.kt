@@ -43,7 +43,7 @@ class CleanUpOnlineRoomWorker @Inject constructor(
 ) : CoroutineWorker(appContext, params) {
 
     override suspend fun doWork(): Result {
-        val key = onlineLocalStore.getKey().firstOrNull()
+        val key = onlineLocalStore.key.firstOrNull()
         val ordinal = params.inputData.getInt(ROOM_STATE, -1)
         if (key != null && ordinal >= 0) {
             val state = RoomState.entries[ordinal]

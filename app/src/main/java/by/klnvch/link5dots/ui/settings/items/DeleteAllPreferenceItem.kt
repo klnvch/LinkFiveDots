@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023-2025 klnvch
+ * Copyright (c) 2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,52 +22,48 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.ui.common
+package by.klnvch.link5dots.ui.settings.items
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Mood
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import by.klnvch.link5dots.R
-import by.klnvch.link5dots.formatUserName
 import by.klnvch.link5dots.ui.common.adaptive.AdaptiveIcon
 import by.klnvch.link5dots.ui.common.adaptive.AdaptiveText
-import by.klnvch.link5dots.ui.common.adaptive.adaptiveFontSize
 
 @Composable
-fun UsernameDialog(
-    userName: String?,
-    onConfirmation: (userName: String?) -> Unit,
-    onDismissRequest: () -> Unit,
-) {
-    val fontSize = adaptiveFontSize()
-    val text = remember { mutableStateOf(userName) }
-    AlertDialog(
-        icon = { AdaptiveIcon(imageVector = Icons.Filled.Mood) },
-        title = { Text(text = stringResource(R.string.username)) },
-        text = {
-            TextField(
-                value = text.value ?: "",
-                textStyle = TextStyle(fontSize = fontSize),
-                onValueChange = { text.value = it.formatUserName() },
-                placeholder = { Text(text = stringResource(R.string.unknown)) },
-                singleLine = true,
-            )
-        },
-        onDismissRequest = { onDismissRequest() },
-        confirmButton = {
-            TextButton(
-                onClick = { onConfirmation(text.value) }
-            ) {
-                AdaptiveText(text = stringResource(R.string.okay))
-            }
-        },
+fun DeleteAllPreferenceItem(onClick: () -> Unit) {
+    val openDialog = remember { mutableStateOf(false) }
+    PreferenceItem(
+        imageVector = Icons.Filled.Delete,
+        title = R.string.main_clear_title,
+        onClick = { openDialog.value = true },
     )
+    when {
+        openDialog.value -> {
+            AlertDialog(
+                icon = { AdaptiveIcon(imageVector = Icons.Filled.Delete) },
+                title = { AdaptiveText(text = stringResource(R.string.main_clear_confirm_title)) },
+                onDismissRequest = { openDialog.value = false },
+                confirmButton = {
+                    TextButton(onClick = {
+                        openDialog.value = false
+                        onClick()
+                    }) {
+                        AdaptiveText(text = stringResource(R.string.okay))
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = { openDialog.value = false }) {
+                        AdaptiveText(text = stringResource(R.string.cancel))
+                    }
+                }
+            )
+        }
+    }
 }

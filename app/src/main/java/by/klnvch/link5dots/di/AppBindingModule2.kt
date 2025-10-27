@@ -24,6 +24,8 @@
 
 package by.klnvch.link5dots.di
 
+import android.bluetooth.BluetoothManager
+import android.content.Context
 import by.klnvch.link5dots.data.RoomKeyGeneratorImpl
 import by.klnvch.link5dots.data.TimeServiceImpl
 import by.klnvch.link5dots.data.online.AddDotOnlineRoomRepositoryImpl
@@ -116,4 +118,9 @@ class AppBindingModule2 {
     @Singleton
     @Provides
     fun provideBoard() = Board()
+
+    @Singleton
+    @Provides
+    fun provideBluetoothManager(context: Context): BluetoothManager =
+        context.getSystemService(BluetoothManager::class.java)
 }

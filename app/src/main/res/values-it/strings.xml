@@ -79,7 +79,8 @@
     <string name="settings_night_mode">"Luminosità notturna"</string>
     <string name="name_not_set">"Non impostato"</string>
     <string name="name">"Nome"</string>
-    <string name="settings_delete_all">"Cancella tutto"</string>
+    <string name="main_clear_title">"Cancella tutti i dati"</string>
+    <string name="main_clear_confirm_title">"Vuoi cancellare tutti i dati?"</string>
     <string name="progress_text">"Attendere prego…"</string>
     <string name="help">"Guida"</string>
     <string name="loading">"Caricamento…"</string>

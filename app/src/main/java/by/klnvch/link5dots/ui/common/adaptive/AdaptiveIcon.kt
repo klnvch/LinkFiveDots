@@ -26,8 +26,10 @@ package by.klnvch.link5dots.ui.common.adaptive
 
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -37,16 +39,13 @@ fun AdaptiveIcon(
     imageVector: ImageVector,
     size: Dp = 24.dp,
     contentDescription: String? = null,
+    tint: Color = LocalContentColor.current,
 ) {
-    val screenSize = screenSize()
-    val size = when (screenSize) {
-        ScreenSizeType.Large -> size * 2
-        ScreenSizeType.Medium -> size * 1.5f
-        ScreenSizeType.Normal -> size
-    }
+    val size = adaptiveIconSize(size)
     Icon(
         imageVector = imageVector,
         contentDescription = contentDescription,
         modifier = Modifier.size(size),
+        tint = tint,
     )
 }

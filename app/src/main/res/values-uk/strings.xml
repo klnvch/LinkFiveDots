@@ -79,7 +79,8 @@
     <string name="settings_night_mode">"Нічний режим"</string>
     <string name="name_not_set">"Не встановлено"</string>
     <string name="name">"Назва"</string>
-    <string name="settings_delete_all">"Видалити все"</string>
+    <string name="main_clear_title">"Стерти всі дані"</string>
+    <string name="main_clear_confirm_title">"Стерти всі дані?"</string>
     <string name="progress_text">"Зачекайте…"</string>
     <string name="help">"Довідка"</string>
     <string name="loading">"Завант-ня…"</string>

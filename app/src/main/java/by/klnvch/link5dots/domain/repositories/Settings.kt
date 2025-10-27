@@ -43,6 +43,7 @@ interface Settings : UserNameSettings {
     suspend fun setFirstRun()
     fun getDotsType(): Flow<DotsStyleType>
     fun getLanguage(): Flow<String>
+    val isVibrationEnabled: Flow<Boolean>
     val nightMode: StateFlow<NightMode>
     suspend fun reset()
 

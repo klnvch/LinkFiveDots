@@ -22,33 +22,44 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.data.online
+package by.klnvch.link5dots.data.bluetooth
 
 import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.datastore.preferences.core.stringSetPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
-import by.klnvch.link5dots.domain.repositories.ClearOnlineLocalStore
+import by.klnvch.link5dots.domain.repositories.ClearBluetoothLocalStore
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@Singleton
-class OnlineLocalStore @Inject constructor(
-    private val context: Context,
-) : OnlineLocalStoreWriter, OnlineLocalStoreRemover, ClearOnlineLocalStore {
-    private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "online")
-    private val keyKey = stringPreferencesKey("key")
+private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "bluetooth")
 
-    override suspend fun save(key: String) {
-        context.dataStore.edit { it[keyKey] = key }
+@Singleton
+class BluetoothLocalStore @Inject constructor(context: Context) : ClearBluetoothLocalStore {
+    private val dataStore = context.dataStore
+    private val bondedDevices = stringSetPreferencesKey("bonded")
+
+    suspend fun add(address: String) {
+        dataStore.edit {
+            val set = it[bondedDevices] ?: emptySet()
+            it[bondedDevices] = set.plus(address)
+        }
     }
+
+    suspend fun remove(address: String) {
+        dataStore.edit {
+            val set = it[bondedDevices] ?: emptySet()
+            it[bondedDevices] = set.minus(address)
+        }
+    }
+
+    suspend fun getAddresses() = dataStore.data.map { it[bondedDevices] ?: emptySet() }.first()
 
     override suspend fun clear() {
-        context.dataStore.edit { it.remove(keyKey) }
+        dataStore.edit { it.remove(bondedDevices) }
     }
-
-    val key = context.dataStore.data.map { it[keyKey] }
 }

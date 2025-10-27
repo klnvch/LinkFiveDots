@@ -90,7 +90,8 @@
     <string name="settings_night_mode">"نور شب"</string>
     <string name="name_not_set">"تنظیم نشده است"</string>
     <string name="name">"نام"</string>
-    <string name="settings_delete_all">"پاک کردن همه موارد"</string>
+    <string name="main_clear_title">"پاک کردن همه داده‌ها"</string>
+    <string name="main_clear_confirm_title">"همه داده‌ها پاک شود؟"</string>
     <string name="progress_text">"لطفاً صبر کنید…"</string>
     <string name="help">"راهنمایی"</string>
     <string name="loading">"در حال بارگیری…"</string>

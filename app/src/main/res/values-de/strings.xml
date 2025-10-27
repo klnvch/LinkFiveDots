@@ -79,7 +79,8 @@
     <string name="settings_night_mode">"Nachtlicht"</string>
     <string name="name_not_set">"Nicht definiert"</string>
     <string name="name">"Name"</string>
-    <string name="settings_delete_all">"Alles löschen"</string>
+    <string name="main_clear_title">"Alle Daten löschen"</string>
+    <string name="main_clear_confirm_title">"Alle Daten löschen?"</string>
     <string name="progress_text">"Bitte warten…"</string>
     <string name="help">"Hilfe"</string>
     <string name="loading">"Wird geladen…"</string>

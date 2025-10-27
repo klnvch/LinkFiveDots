@@ -22,33 +22,36 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.data.online
+package by.klnvch.link5dots.data
 
 import android.content.Context
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.stringPreferencesKey
-import androidx.datastore.preferences.preferencesDataStore
-import by.klnvch.link5dots.domain.repositories.ClearOnlineLocalStore
-import kotlinx.coroutines.flow.map
+import android.os.Build
+import android.os.VibrationEffect
+import android.os.Vibrator
+import android.os.VibratorManager
+import by.klnvch.link5dots.domain.repositories.VibratorService
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class OnlineLocalStore @Inject constructor(
-    private val context: Context,
-) : OnlineLocalStoreWriter, OnlineLocalStoreRemover, ClearOnlineLocalStore {
-    private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "online")
-    private val keyKey = stringPreferencesKey("key")
+class VibratorServiceImpl @Inject constructor(private val context: Context) : VibratorService {
+    private val vibrator: Vibrator
 
-    override suspend fun save(key: String) {
-        context.dataStore.edit { it[keyKey] = key }
+    init {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            val vibratorManager = context
+                .getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
+            vibrator = vibratorManager.defaultVibrator
+        } else {
+            vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        }
     }
 
-    override suspend fun clear() {
-        context.dataStore.edit { it.remove(keyKey) }
+    override fun vibrate() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            vibrator.vibrate(
+                VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE)
+            )
+        } else {
+            vibrator.vibrate(100)
+        }
     }
-
-    val key = context.dataStore.data.map { it[keyKey] }
 }

@@ -41,7 +41,6 @@ import javax.inject.Singleton
         AppBindingModule2::class,
         NetworkModule::class,
         DatabaseModule::class,
-        DataStoreModule::class,
         AndroidSupportInjectionModule::class,
         ViewModelFactoryModule::class,
         MenuModule::class,

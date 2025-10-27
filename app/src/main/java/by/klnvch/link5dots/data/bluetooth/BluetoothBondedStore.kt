@@ -26,41 +26,21 @@ package by.klnvch.link5dots.data.bluetooth
 
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
-import android.content.Context
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.stringSetPreferencesKey
-import androidx.datastore.preferences.preferencesDataStore
 import by.klnvch.link5dots.data.bluetooth.BluetoothExt.bondedDevices
 import by.klnvch.link5dots.data.bluetooth.BluetoothExt.deviceName
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 
-class BluetoothBondedStore @Inject constructor(private val context: Context) {
-    private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "bluetooth")
-    private val bondedDevices = stringSetPreferencesKey("bonded")
-    private val bluetoothManager = context.getSystemService(BluetoothManager::class.java)
-
-    suspend fun save(device: BluetoothDevice) {
-        context.dataStore.edit {
-            val set = it[bondedDevices] ?: emptySet()
-            it[bondedDevices] = set.plus(device.address)
-        }
-    }
-
-    suspend fun remove(address: String) {
-        context.dataStore.edit {
-            val set = it[bondedDevices] ?: emptySet()
-            it[bondedDevices] = set.minus(address)
-        }
-    }
+class BluetoothBondedStore @Inject constructor(
+    private val bluetoothManager: BluetoothManager,
+    private val localStore: BluetoothLocalStore,
+) {
+    suspend fun save(device: BluetoothDevice) = localStore.add(device.address)
+    suspend fun remove(address: String) = localStore.remove(address)
 
     suspend fun getKnown(): List<BluetoothDevice> {
         val bonded = bluetoothManager.bondedDevices
-        val savedAddresses = context.dataStore.data.map { it[bondedDevices] ?: emptySet() }.first()
+        val savedAddresses = localStore.getAddresses()
         if (bonded !== null) {
             // clean storage
             val bondedAddresses = bonded.map { it.address }
