@@ -30,6 +30,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -37,12 +38,14 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
 import by.klnvch.link5dots.BuildConfig
 import by.klnvch.link5dots.R
 import by.klnvch.link5dots.ui.common.CustomButtonWithText
 import by.klnvch.link5dots.ui.common.TextNoSurface
+import by.klnvch.link5dots.ui.common.adaptive.adaptiveIconSize
 
 @Composable
 fun InfoScreen(onNavigate: (Screen) -> Unit) {
@@ -84,7 +87,9 @@ private fun Column1() {
         verticalArrangement = Arrangement.Center,
     ) {
         ContextCompat.getDrawable(LocalContext.current, R.mipmap.ic_launcher)?.let {
+            val size = adaptiveIconSize(64.dp)
             Image(
+                modifier = Modifier.size(size),
                 bitmap = it.toBitmap().asImageBitmap(),
                 contentDescription = stringResource(id = R.string.app_name)
             )

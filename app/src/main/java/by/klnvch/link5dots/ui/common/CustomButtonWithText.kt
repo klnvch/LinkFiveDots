@@ -27,13 +27,13 @@ package by.klnvch.link5dots.ui.common
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.ElevatedButton
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import by.klnvch.link5dots.ui.common.adaptive.AdaptiveText
 
 @Composable
 fun CustomButtonWithText(
@@ -46,7 +46,7 @@ fun CustomButtonWithText(
         modifier = Modifier.widthIn(0.dp, 320.dp),
         enabled,
     ) {
-        Text(
+        AdaptiveText(
             text = stringResource(textId).uppercase(),
             textAlign = TextAlign.Center,
             fontWeight = FontWeight.Bold,
