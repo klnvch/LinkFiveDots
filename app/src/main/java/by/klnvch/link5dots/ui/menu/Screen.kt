@@ -47,10 +47,6 @@ sealed class Screen() {
     object MultiplayerBluetooth : Screen()
     object MultiplayerNsd : Screen()
     object MultiplayerOnline : Screen()
-    object SourceCode : Screen()
-    object RateApp : Screen()
-    object ShareApp : Screen()
-    object Feedback : Screen()
     data class GameInfo(val key: String) : Screen()
 
     companion object {

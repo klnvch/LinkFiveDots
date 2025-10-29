@@ -133,7 +133,7 @@ fun App(
                 )
             }
             composable(route = Route.Info.name) {
-                InfoScreen { onNavigate(it) }
+                InfoScreen()
             }
             composable(route = Route.Help.name) {
                 HelpScreen()

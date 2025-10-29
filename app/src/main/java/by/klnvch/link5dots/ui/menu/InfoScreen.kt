@@ -24,6 +24,7 @@
 
 package by.klnvch.link5dots.ui.menu
 
+import android.content.Intent
 import android.content.res.Configuration
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -37,6 +38,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
@@ -48,35 +50,35 @@ import by.klnvch.link5dots.ui.common.TextNoSurface
 import by.klnvch.link5dots.ui.common.adaptive.adaptiveIconSize
 
 @Composable
-fun InfoScreen(onNavigate: (Screen) -> Unit) {
+fun InfoScreen() {
     val configuration = LocalConfiguration.current
     when (configuration.orientation) {
-        Configuration.ORIENTATION_PORTRAIT -> InfoScreenPortrait(onNavigate)
-        else -> InfoScreenScreenLandscape(onNavigate)
+        Configuration.ORIENTATION_PORTRAIT -> InfoScreenPortrait()
+        else -> InfoScreenScreenLandscape()
     }
 }
 
 @Composable
-private fun InfoScreenPortrait(onNavigate: (Screen) -> Unit) {
+private fun InfoScreenPortrait() {
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceEvenly,
     ) {
         Column1()
-        Column2(onNavigate)
+        Column2()
     }
 }
 
 @Composable
-private fun InfoScreenScreenLandscape(onNavigate: (Screen) -> Unit) {
+private fun InfoScreenScreenLandscape() {
     Row(
         modifier = Modifier.fillMaxSize(),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceEvenly,
     ) {
         Column1()
-        Column2(onNavigate)
+        Column2()
     }
 }
 
@@ -101,22 +103,41 @@ private fun Column1() {
 }
 
 @Composable
-private fun Column2(onNavigate: (Screen) -> Unit) {
+private fun Column2() {
+    val context = LocalContext.current
+    val uriHandler = LocalUriHandler.current
+
     Column {
         CustomButtonWithText(
-            onClick = { onNavigate(Screen.SourceCode) },
+            onClick = { uriHandler.openUri("https://github.com/klnvch/LinkFiveDots") },
             textId = R.string.btn_github,
         )
         CustomButtonWithText(
-            onClick = { onNavigate(Screen.RateApp) },
+            onClick = { uriHandler.openUri("market://details?id=by.klnvch.link5dots") },
             textId = R.string.rate_this_app,
         )
         CustomButtonWithText(
-            onClick = { onNavigate(Screen.Feedback) },
+            onClick = {
+                val target = Intent(Intent.ACTION_SEND).apply {
+                    putExtra(Intent.EXTRA_EMAIL, arrayOf("link5dots@gmail.com"))
+                    type = "message/rfc822"
+                }
+                context.startActivity(Intent.createChooser(target, null))
+            },
             textId = R.string.send_mail,
         )
         CustomButtonWithText(
-            onClick = { onNavigate(Screen.ShareApp) },
+            onClick = {
+                val sendIntent: Intent = Intent().apply {
+                    action = Intent.ACTION_SEND
+                    putExtra(
+                        Intent.EXTRA_TEXT,
+                        "https://play.google.com/store/apps/details?id=by.klnvch.link5dots"
+                    )
+                    type = "text/plain"
+                }
+                context.startActivity(Intent.createChooser(sendIntent, null))
+            },
             textId = R.string.share,
         )
     }
