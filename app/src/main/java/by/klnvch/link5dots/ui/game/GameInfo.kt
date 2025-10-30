@@ -38,9 +38,7 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Card
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -59,6 +57,8 @@ import by.klnvch.link5dots.domain.models.DotsStyleType
 import by.klnvch.link5dots.ui.common.Circle
 import by.klnvch.link5dots.ui.common.Cross
 import by.klnvch.link5dots.ui.common.Dot
+import by.klnvch.link5dots.ui.common.adaptive.AdaptiveIcon
+import by.klnvch.link5dots.ui.common.adaptive.AdaptiveText
 import by.klnvch.link5dots.ui.theme.dotColorsPalette
 import kotlinx.coroutines.delay
 
@@ -90,7 +90,7 @@ fun GameInfo(modifier: Modifier = Modifier, infoViewState: GameInfoViewState) {
     val user2Tint = MaterialTheme.dotColorsPalette.user2
     Row(modifier = modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
         Card {
-            Text(
+            AdaptiveText(
                 modifier = Modifier.padding(horizontal = 8.dp),
                 text = infoViewState.size,
             )
@@ -147,7 +147,7 @@ private fun TextDuration(state: GameInfoUserViewState) {
             }
         }
     }
-    Text(
+    AdaptiveText(
         modifier = Modifier.padding(horizontal = 4.dp),
         text = (state.duration + elapsedTime).formatDuration(),
         fontWeight = if (state.canMove || state.isWon) FontWeight.Bold else null,
@@ -159,15 +159,13 @@ private fun TextDuration(state: GameInfoUserViewState) {
 @Composable
 private fun UserDot(state: GameInfoUserViewState, imageVector: ImageVector, tint: Color) {
     if (state.isWon) {
-        Icon(
+        AdaptiveIcon(
             imageVector = Icons.Filled.Star,
-            contentDescription = null,
             tint = tint,
         )
     } else {
-        Icon(
+        AdaptiveIcon(
             imageVector = imageVector,
-            contentDescription = null,
             tint = tint,
         )
     }
@@ -175,7 +173,7 @@ private fun UserDot(state: GameInfoUserViewState, imageVector: ImageVector, tint
 
 @Composable
 private fun TextUserName(state: GameInfoUserViewState) {
-    Text(
+    AdaptiveText(
         modifier = Modifier.padding(horizontal = 4.dp),
         text = state.name,
         fontWeight = if (state.canMove || state.isWon) FontWeight.Bold else null,

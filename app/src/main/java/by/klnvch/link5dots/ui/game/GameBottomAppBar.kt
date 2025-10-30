@@ -34,8 +34,6 @@ import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.BottomAppBar
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -47,6 +45,8 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import by.klnvch.link5dots.R
+import by.klnvch.link5dots.ui.common.adaptive.AdaptiveIcon
+import by.klnvch.link5dots.ui.common.adaptive.AdaptiveText
 
 @Composable
 private fun BottomBarButton(
@@ -61,12 +61,11 @@ private fun BottomBarButton(
             modifier = modifier,
             onClick = onClick,
         ) {
-            Icon(
+            AdaptiveIcon(
                 imageVector = imageVector,
-                contentDescription = null,
                 tint = Color(250, 250, 250),
             )
-            Text(
+            AdaptiveText(
                 text = stringResource(textId),
                 fontWeight = FontWeight.Bold,
                 color = Color(250, 250, 250)

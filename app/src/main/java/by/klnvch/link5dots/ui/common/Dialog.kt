@@ -22,22 +22,24 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.ui.game.activities.online
+package by.klnvch.link5dots.ui.common
 
-import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import by.klnvch.link5dots.R
-import by.klnvch.link5dots.ui.common.DialogCancelButton
-import by.klnvch.link5dots.ui.common.DialogConfirmButton
 import by.klnvch.link5dots.ui.common.adaptive.AdaptiveText
 
 @Composable
-fun DisconnectDialog(onConfirm: () -> Unit, onCancel: () -> Unit) {
-    AlertDialog(
-        title = { AdaptiveText(text = stringResource(R.string.wifi_p2p_disconnect_title)) },
-        onDismissRequest = onCancel,
-        confirmButton = { DialogConfirmButton(onClick = onConfirm) },
-        dismissButton = { DialogCancelButton(onClick = onCancel) }
-    )
+fun DialogConfirmButton(onClick: () -> Unit) {
+    TextButton(onClick = onClick) {
+        AdaptiveText(text = stringResource(R.string.okay))
+    }
+}
+
+@Composable
+fun DialogCancelButton(onClick: () -> Unit) {
+    TextButton(onClick = onClick) {
+        AdaptiveText(text = stringResource(R.string.cancel))
+    }
 }

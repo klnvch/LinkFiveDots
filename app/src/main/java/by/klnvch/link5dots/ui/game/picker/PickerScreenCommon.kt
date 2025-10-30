@@ -39,13 +39,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -64,6 +61,7 @@ import by.klnvch.link5dots.domain.models.FoundRemoteRoom
 import by.klnvch.link5dots.domain.models.PermissionException
 import by.klnvch.link5dots.ui.common.CustomButtonWithText
 import by.klnvch.link5dots.ui.common.TextNoSurface
+import by.klnvch.link5dots.ui.common.adaptive.AdaptiveText
 
 
 @Composable
@@ -129,8 +127,8 @@ private fun PickerScreenLandscape(
         CommonPart(uiState.common)
         Row(
             modifier = Modifier.fillMaxSize(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center
+            verticalAlignment = Alignment.Top,
+            horizontalArrangement = Arrangement.SpaceEvenly,
         ) {
             CreationPart(uiState.creation, onCreate, onDelete)
             VerticalDivider()
@@ -158,7 +156,7 @@ private fun CommonPart(uiState: PickerCommonViewState) {
                 is ConnectException -> stringResource(R.string.connecting_error_message, it.target)
                 is PermissionException -> stringResource(R.string.runtime_permissions_summary_no_permissions_granted)
             }
-            Text(
+            AdaptiveText(
                 modifier = Modifier.fillMaxWidth(),
                 text = text,
                 color = MaterialTheme.colorScheme.error,
@@ -174,47 +172,46 @@ private fun CreationPart(
     onCreate: () -> Unit,
     onDelete: () -> Unit,
 ) {
-    if (uiState.isCreateButtonVisible) {
-        CustomButtonWithText(
-            textId = R.string.create,
-            onClick = onCreate,
-            enabled = uiState.isEnabled,
-        )
-    }
-    if (uiState.isDeleteButtonVisible) {
-        CustomButtonWithText(
-            textId = R.string.delete,
-            onClick = onDelete,
-            enabled = uiState.isEnabled,
-        )
-    }
-
-    val statusAlpha = if (uiState.isEnabled) 1f else .2f
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 32.dp)
-            .alpha(statusAlpha)
-    ) {
-        TextNoSurface(
-            text = stringResource(R.string.name) + ":"
-        )
-        if (uiState.text.isEmpty()) {
-            TextNoSurface(
-                modifier = Modifier.padding(horizontal = 8.dp),
-                text = stringResource(R.string.name_not_set)
+    Column {
+        if (uiState.isCreateButtonVisible) {
+            CustomButtonWithText(
+                textId = R.string.create,
+                onClick = onCreate,
+                enabled = uiState.isEnabled,
             )
-        } else {
-            Row(
-                modifier = Modifier
-                    .padding(horizontal = 8.dp)
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                uiState.text.map {
-                    when (it) {
-                        is String -> TextNoSurface(text = it)
-                        is PassedTime -> PassedTimeText(it)
+        }
+        if (uiState.isDeleteButtonVisible) {
+            CustomButtonWithText(
+                textId = R.string.delete,
+                onClick = onDelete,
+                enabled = uiState.isEnabled,
+            )
+        }
+
+        val statusAlpha = if (uiState.isEnabled) 1f else .2f
+        Row(modifier = Modifier.alpha(statusAlpha)) {
+            TextNoSurface(
+                text = stringResource(R.string.name) + ":"
+            )
+            if (uiState.text.isEmpty()) {
+                TextNoSurface(
+                    modifier = Modifier.padding(horizontal = 8.dp),
+                    text = stringResource(R.string.name_not_set)
+                )
+            } else {
+                Row(
+                    modifier = Modifier.padding(horizontal = 8.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                ) {
+                    uiState.text.map {
+                        when (it) {
+                            is String -> TextNoSurface(
+                                text = it,
+                                modifier = Modifier.padding(horizontal = 4.dp)
+                            )
+
+                            is PassedTime -> PassedTimeText(it)
+                        }
                     }
                 }
             }
@@ -229,79 +226,70 @@ private fun ScanPart(
     onCancel: () -> Unit,
     onConnect: (invitation: FoundRemoteRoom) -> Unit,
 ) {
-    if (uiState.isStartScanButtonVisible) {
-        CustomButtonWithText(
-            textId = R.string.scan,
-            onClick = onScan,
-            enabled = uiState.isEnabled,
-        )
-    }
-    if (uiState.isCancelScanButtonVisible) {
-        CustomButtonWithText(
-            textId = R.string.cancel,
-            onClick = onCancel,
-            enabled = uiState.isEnabled,
-        )
-    }
-
     val openConnectDialog = remember { mutableStateOf<PickerItemViewState?>(null) }
     openConnectDialog.value?.let {
-        AlertDialog(text = {
-            Text(
-                text = stringResource(R.string.connection_dialog_text, it.shortName)
-            )
-        }, onDismissRequest = { openConnectDialog.value = null }, confirmButton = {
-            TextButton(
-                onClick = {
-                    openConnectDialog.value = null
-                    onConnect(it.descriptor)
-                }) {
-                Text(text = stringResource(R.string.okay))
-            }
-        }, dismissButton = {
-            TextButton(
-                onClick = { openConnectDialog.value = null }) {
-                Text(text = stringResource(R.string.cancel))
-            }
-        })
+        ConnectDialog(
+            name = it.shortName,
+            onConfirm = {
+                openConnectDialog.value = null
+                onConnect(it.descriptor)
+            },
+            onCancel = {
+                openConnectDialog.value = null
+            },
+        )
     }
-
-    LazyColumn(
-        modifier = Modifier.widthIn(0.dp, 320.dp),
-        contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
-    ) {
-        items(
-            items = uiState.discoveredItems,
-            key = { it.id },
-        ) { room ->
-            Card(
-                modifier = Modifier
-                    .animateItem()
-                    .fillParentMaxWidth(),
-                onClick = { openConnectDialog.value = room }) {
-                FlowRow(
+    Column {
+        if (uiState.isStartScanButtonVisible) {
+            CustomButtonWithText(
+                textId = R.string.scan,
+                onClick = onScan,
+                enabled = uiState.isEnabled,
+            )
+        }
+        if (uiState.isCancelScanButtonVisible) {
+            CustomButtonWithText(
+                textId = R.string.cancel,
+                onClick = onCancel,
+                enabled = uiState.isEnabled,
+            )
+        }
+        LazyColumn(
+            modifier = Modifier.widthIn(0.dp, 320.dp),
+            contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            items(
+                items = uiState.discoveredItems,
+                key = { it.id },
+            ) { room ->
+                Card(
                     modifier = Modifier
-                        .padding(8.dp)
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                ) {
-                    room.longName.map { Text(text = it) }
+                        .animateItem()
+                        .fillParentMaxWidth(),
+                    onClick = { openConnectDialog.value = room }) {
+                    FlowRow(
+                        modifier = Modifier
+                            .padding(8.dp)
+                            .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                    ) {
+                        room.longName.map { AdaptiveText(text = it) }
+                    }
                 }
             }
         }
-    }
-
-    if (uiState.isEmptyMessageVisible) {
-        TextNoSurface(text = stringResource(R.string.search_no_results))
+        if (uiState.isEmptyMessageVisible) {
+            TextNoSurface(text = stringResource(R.string.search_no_results))
+        }
     }
 }
 
 @Composable
 fun PassedTimeText(passedTime: PassedTime) {
     when (passedTime.unit) {
-        PassedTimeUnit.JustNow -> Text(stringResource(R.string.posted_just_now))
-        PassedTimeUnit.Minutes -> Text(
+        PassedTimeUnit.JustNow -> AdaptiveText(stringResource(R.string.posted_just_now))
+        PassedTimeUnit.Minutes -> AdaptiveText(
             pluralStringResource(
                 R.plurals.num_minutes_ago,
                 passedTime.count,
@@ -309,7 +297,7 @@ fun PassedTimeText(passedTime: PassedTime) {
             )
         )
 
-        PassedTimeUnit.Hours -> Text(
+        PassedTimeUnit.Hours -> AdaptiveText(
             pluralStringResource(
                 R.plurals.num_hours_ago,
                 passedTime.count,
@@ -317,7 +305,7 @@ fun PassedTimeText(passedTime: PassedTime) {
             )
         )
 
-        PassedTimeUnit.Days -> Text(
+        PassedTimeUnit.Days -> AdaptiveText(
             pluralStringResource(
                 R.plurals.num_days_ago,
                 passedTime.count,

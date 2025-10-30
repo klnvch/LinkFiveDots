@@ -26,10 +26,10 @@ package by.klnvch.link5dots.ui.game.topBar
 
 import androidx.annotation.StringRes
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import by.klnvch.link5dots.domain.models.ActionAvailability
+import by.klnvch.link5dots.ui.common.adaptive.AdaptiveText
 
 @Composable
 fun GameDropdownMenuItem(
@@ -39,7 +39,7 @@ fun GameDropdownMenuItem(
 ) {
     if (availability.isVisible) {
         DropdownMenuItem(
-            text = { Text(stringResource(textId)) },
+            text = { AdaptiveText(stringResource(textId)) },
             onClick = onClick,
             enabled = availability.isEnabled,
         )

@@ -36,8 +36,6 @@ import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.RadioButton
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.mutableStateOf
@@ -49,7 +47,8 @@ import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
-import by.klnvch.link5dots.R
+import by.klnvch.link5dots.ui.common.DialogCancelButton
+import by.klnvch.link5dots.ui.common.DialogConfirmButton
 import by.klnvch.link5dots.ui.common.adaptive.AdaptiveIcon
 import by.klnvch.link5dots.ui.common.adaptive.AdaptiveText
 
@@ -97,7 +96,7 @@ fun <Key> RadioButtonsDialog(
     val (selectedKey, onKeySelected) = remember { mutableStateOf(key) }
     AlertDialog(
         icon = { AdaptiveIcon(imageVector) },
-        title = { Text(text = stringResource(title)) },
+        title = { AdaptiveText(text = stringResource(title)) },
         text = {
             RadioButtonSingleSelection(
                 options = options,
@@ -106,16 +105,8 @@ fun <Key> RadioButtonsDialog(
             )
         },
         onDismissRequest = { onDismissRequest() },
-        confirmButton = {
-            TextButton(onClick = { onConfirmation(selectedKey) }) {
-                AdaptiveText(text = stringResource(R.string.okay))
-            }
-        },
-        dismissButton = {
-            TextButton(onClick = { onDismissRequest() }) {
-                AdaptiveText(text = stringResource(R.string.cancel))
-            }
-        }
+        confirmButton = { DialogConfirmButton(onClick = { onConfirmation(selectedKey) }) },
+        dismissButton = { DialogCancelButton(onClick = { onDismissRequest() }) }
     )
 }
 

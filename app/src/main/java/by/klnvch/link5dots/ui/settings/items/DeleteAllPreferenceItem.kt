@@ -27,12 +27,13 @@ package by.klnvch.link5dots.ui.settings.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.res.stringResource
 import by.klnvch.link5dots.R
+import by.klnvch.link5dots.ui.common.DialogCancelButton
+import by.klnvch.link5dots.ui.common.DialogConfirmButton
 import by.klnvch.link5dots.ui.common.adaptive.AdaptiveIcon
 import by.klnvch.link5dots.ui.common.adaptive.AdaptiveText
 
@@ -51,18 +52,12 @@ fun DeleteAllPreferenceItem(onClick: () -> Unit) {
                 title = { AdaptiveText(text = stringResource(R.string.main_clear_confirm_title)) },
                 onDismissRequest = { openDialog.value = false },
                 confirmButton = {
-                    TextButton(onClick = {
+                    DialogConfirmButton(onClick = {
                         openDialog.value = false
                         onClick()
-                    }) {
-                        AdaptiveText(text = stringResource(R.string.okay))
-                    }
+                    })
                 },
-                dismissButton = {
-                    TextButton(onClick = { openDialog.value = false }) {
-                        AdaptiveText(text = stringResource(R.string.cancel))
-                    }
-                }
+                dismissButton = { DialogCancelButton(onClick = { openDialog.value = false }) }
             )
         }
     }

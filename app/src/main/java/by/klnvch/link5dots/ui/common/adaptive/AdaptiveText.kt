@@ -38,6 +38,7 @@ fun AdaptiveText(
     color: Color = Color.Unspecified,
     fontWeight: FontWeight? = null,
     textAlign: TextAlign? = null,
+    maxLines: Int = Int.MAX_VALUE,
 ) {
     Text(
         text = text,
@@ -46,5 +47,6 @@ fun AdaptiveText(
         fontSize = adaptiveFontSize(),
         fontWeight = fontWeight,
         textAlign = textAlign,
+        maxLines = maxLines,
     )
 }

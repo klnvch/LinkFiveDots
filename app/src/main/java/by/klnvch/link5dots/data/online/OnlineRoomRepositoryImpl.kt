@@ -24,6 +24,7 @@
 package by.klnvch.link5dots.data.online
 
 import android.content.Context
+import android.util.Log
 import by.klnvch.link5dots.BuildConfig
 import by.klnvch.link5dots.data.online.CleanUpOnlineRoomWorker.Companion.launchCleanUpOnlineRoomWorker
 import by.klnvch.link5dots.data.online.mapper.toNetworkRoomState
@@ -66,7 +67,7 @@ class OnlineRoomRepositoryImpl @Inject constructor(
             .map { it.toOnlineRoom() }
     }
 
-    override fun get() = remote.mapNotNull { it.getRoomIfAny() }
+    override fun get() = remote.mapNotNull { it.getRoomIfAny() }.onEach { Log.d("Online", "$it") }
 
     override val state = remote
         .onEach { if (it is OnlineRoomDead) onlineLocalStore.clear() }

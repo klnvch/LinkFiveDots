@@ -27,8 +27,6 @@ package by.klnvch.link5dots.ui.common
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Mood
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -51,23 +49,18 @@ fun UsernameDialog(
     val text = remember { mutableStateOf(userName) }
     AlertDialog(
         icon = { AdaptiveIcon(imageVector = Icons.Filled.Mood) },
-        title = { Text(text = stringResource(R.string.username)) },
+        title = { AdaptiveText(text = stringResource(R.string.username)) },
         text = {
             TextField(
                 value = text.value ?: "",
                 textStyle = TextStyle(fontSize = fontSize),
                 onValueChange = { text.value = it.formatUserName() },
-                placeholder = { Text(text = stringResource(R.string.unknown)) },
+                placeholder = { AdaptiveText(text = stringResource(R.string.unknown)) },
                 singleLine = true,
             )
         },
         onDismissRequest = { onDismissRequest() },
-        confirmButton = {
-            TextButton(
-                onClick = { onConfirmation(text.value) }
-            ) {
-                AdaptiveText(text = stringResource(R.string.okay))
-            }
-        },
+        confirmButton = { DialogConfirmButton(onClick = { onConfirmation(text.value) }) },
+        dismissButton = { DialogCancelButton(onClick = { onDismissRequest() }) }
     )
 }

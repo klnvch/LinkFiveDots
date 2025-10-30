@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.ui.game.activities.online
+package by.klnvch.link5dots.ui.game.picker
 
 import androidx.compose.material3.AlertDialog
 import androidx.compose.runtime.Composable
@@ -33,11 +33,16 @@ import by.klnvch.link5dots.ui.common.DialogConfirmButton
 import by.klnvch.link5dots.ui.common.adaptive.AdaptiveText
 
 @Composable
-fun DisconnectDialog(onConfirm: () -> Unit, onCancel: () -> Unit) {
+fun ConnectDialog(
+    name: String,
+    onConfirm: () -> Unit,
+    onCancel: () -> Unit,
+) {
     AlertDialog(
-        title = { AdaptiveText(text = stringResource(R.string.wifi_p2p_disconnect_title)) },
+        text = {
+            AdaptiveText(text = stringResource(R.string.connection_dialog_text, name))
+        },
         onDismissRequest = onCancel,
         confirmButton = { DialogConfirmButton(onClick = onConfirm) },
-        dismissButton = { DialogCancelButton(onClick = onCancel) }
-    )
+        dismissButton = { DialogCancelButton(onClick = onCancel) })
 }
