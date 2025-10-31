@@ -27,9 +27,9 @@ package by.klnvch.link5dots.data.sockets
 import android.util.Log
 import by.klnvch.link5dots.data.toJson
 import by.klnvch.link5dots.data.toRoom
+import by.klnvch.link5dots.domain.models.INetworkRoom
 import by.klnvch.link5dots.domain.models.INetworkRoomAcceptance
 import by.klnvch.link5dots.domain.models.INetworkRoomInvitation
-import by.klnvch.link5dots.domain.models.NetworkRoom
 import by.klnvch.link5dots.domain.models.NetworkRoomEntity
 import by.klnvch.link5dots.domain.models.NetworkRoomState
 import by.klnvch.link5dots.domain.models.NetworkRoomStateCreated
@@ -52,7 +52,7 @@ import kotlin.concurrent.thread
 
 abstract class SocketRoomRepository {
     protected abstract val TAG: String
-    private val _roomFlow = MutableStateFlow<NetworkRoom?>(null)
+    private val _roomFlow = MutableStateFlow<INetworkRoom?>(null)
     private val stateFlow = MutableSharedFlow<NetworkRoomState>(1)
     private var _serverSocket: Closeable? = null
     private var _socket: Closeable? = null
@@ -85,7 +85,7 @@ abstract class SocketRoomRepository {
 
                 // receive a game with filled user
                 Log.d(TAG, "accepting: wait for user2")
-                val acceptedRoom = inputStream.readRoom<NetworkRoom>()
+                val acceptedRoom = inputStream.readRoom<INetworkRoom>()
                 Log.d(TAG, "accepting: new room accepted $acceptedRoom")
                 _roomFlow.tryEmit(acceptedRoom)
 
@@ -142,7 +142,7 @@ abstract class SocketRoomRepository {
         thread {
             try {
                 while (true) {
-                    val room = inputStream.readRoom<NetworkRoom>()
+                    val room = inputStream.readRoom<INetworkRoom>()
                     _roomFlow.tryEmit(room)
                     Log.d(TAG, "received: $room")
                 }
@@ -156,7 +156,7 @@ abstract class SocketRoomRepository {
         }
     }
 
-    suspend fun send(room: NetworkRoom) {
+    suspend fun send(room: INetworkRoom) {
         Log.d(TAG, "game updated: $room")
         _roomFlow.emit(room)
         _outputStream?.writeRoom(room)
@@ -176,7 +176,7 @@ abstract class SocketRoomRepository {
 
     val state = stateFlow
 
-    val roomFlow: Flow<NetworkRoom> = _roomFlow.filterNotNull()
+    val roomFlow: Flow<INetworkRoom> = _roomFlow.filterNotNull()
     val room get() = _roomFlow.value
 
     private fun DataOutputStream.writeRoom(room: NetworkRoomEntity) {

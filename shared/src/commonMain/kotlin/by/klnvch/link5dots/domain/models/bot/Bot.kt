@@ -26,6 +26,7 @@ package by.klnvch.link5dots.domain.models.bot
 
 import by.klnvch.link5dots.domain.models.Board
 import by.klnvch.link5dots.domain.models.Point
+import by.klnvch.link5dots.domain.models.createPoint
 
 
 private data class Dot(val x: Int, val y: Int, val type: Int) {
@@ -132,7 +133,7 @@ class Bot(private val board: Board) {
             throw RuntimeException("Bot error")
         }
 
-        return Point(result.x, result.y)
+        return createPoint(result.x, result.y)
     }
 
     private fun getDotRate(net: Array<Array<Dot>>, dot: Dot, type: Int): Float {
@@ -169,7 +170,13 @@ class Bot(private val board: Board) {
 
         for (i in -4..4) {
             for (j in -4..4) {
-                if (board.isInside(Point(x + i, y + j)) && net[x + i][y + j].type == Dot.HOST) {
+                if (board.isInside(
+                        createPoint(
+                            x + i,
+                            y + j
+                        )
+                    ) && net[x + i][y + j].type == Dot.HOST
+                ) {
                     result += if (i > 3 || i < -3 || j > 3 || j < -3) {
                         1
                     } else if (i > 2 || i < -2 || j > 2 || j < -2) {
@@ -200,7 +207,7 @@ class Bot(private val board: Board) {
 
         //init the 9-length array with types of dots
         for (i in -4..4) {
-            if (board.isInside(Point(x + dx * i, y + dy * i))) {
+            if (board.isInside(createPoint(x + dx * i, y + dy * i))) {
                 array[i + 4] = net[x + dx * i][y + dy * i].type
             } else {
                 array[i + 4] = 0

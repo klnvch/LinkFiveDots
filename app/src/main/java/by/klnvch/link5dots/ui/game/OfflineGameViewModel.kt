@@ -27,6 +27,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import by.klnvch.link5dots.domain.models.BotGameScore
 import by.klnvch.link5dots.domain.models.Point
+import by.klnvch.link5dots.domain.models.createPoint
 import by.klnvch.link5dots.domain.models.isNew
 import by.klnvch.link5dots.domain.models.lastPoint
 import by.klnvch.link5dots.domain.repositories.Settings
@@ -86,7 +87,7 @@ open class OfflineGameViewModel @Inject constructor(
         )
     }.stateIn(viewModelScope, SharingStarted.Eagerly, GameViewStateImpl())
 
-    private val _focus = MutableStateFlow<Point?>(Point(9, 9))
+    private val _focus = MutableStateFlow<Point?>(createPoint(9, 9))
     val focus: StateFlow<Point?> = _focus
 
     init {

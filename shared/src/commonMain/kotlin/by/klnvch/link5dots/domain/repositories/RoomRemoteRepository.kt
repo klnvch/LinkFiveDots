@@ -22,11 +22,8 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.data.online
+package by.klnvch.link5dots.domain.repositories
 
-import by.klnvch.link5dots.domain.models.NetworkRoom
-import by.klnvch.link5dots.domain.repositories.GetOnlineRoomRepository
+import by.klnvch.link5dots.domain.models.INetworkRoom
 
-class GetOnlineRoomRepositoryImpl : GetOnlineRoomRepository {
-    override var room: NetworkRoom? = null
-}
+interface RoomRemoteRepository : GetRoomRepository<INetworkRoom>

@@ -45,3 +45,7 @@ class RoomTypeBluetoothProvider @Inject constructor() : RoomTypeProvider {
 class RoomTypeNsdProvider @Inject constructor() : RoomTypeProvider {
     override val type = RoomType.NSD
 }
+
+class RoomTypeOnlineProvider @Inject constructor() : RoomTypeProvider {
+    override val type = RoomType.ONLINE
+}

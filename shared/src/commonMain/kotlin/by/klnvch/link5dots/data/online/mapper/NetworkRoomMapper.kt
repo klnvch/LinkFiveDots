@@ -30,6 +30,8 @@ import by.klnvch.link5dots.data.online.models.OnlineRoomInvitationRemote
 import by.klnvch.link5dots.data.online.models.OnlineRoomRemote
 import by.klnvch.link5dots.domain.models.Dot
 import by.klnvch.link5dots.domain.models.DotImpl
+import by.klnvch.link5dots.domain.models.INetworkRoom
+import by.klnvch.link5dots.domain.models.INetworkRoomInvitation
 import by.klnvch.link5dots.domain.models.NetworkRoom
 import by.klnvch.link5dots.domain.models.NetworkRoomInvitation
 import by.klnvch.link5dots.domain.models.NetworkUser
@@ -50,10 +52,10 @@ private fun OnlineDotRemote?.parseDot(time: Int): Dot? = this?.let {
 private fun List<OnlineDotRemote?>?.toDots(time: Int) =
     this?.mapNotNull { it.parseDot(time) } ?: emptyList()
 
-fun OnlineRoomInvitationRemote.toInvitation(key: String) =
+fun OnlineRoomInvitationRemote.toInvitation(key: String): INetworkRoomInvitation =
     NetworkRoomInvitation(key, time.parseTime(), user1.parseUser())
 
-fun OnlineRoomRemote.toRoom(key: String): NetworkRoom {
+fun OnlineRoomRemote.toRoom(key: String): INetworkRoom {
     val time = time.parseTime()
     return NetworkRoom(
         key,

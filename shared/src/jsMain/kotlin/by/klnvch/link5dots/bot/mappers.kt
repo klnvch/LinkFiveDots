@@ -44,7 +44,7 @@ import kotlinx.serialization.modules.polymorphic
 import kotlinx.serialization.modules.subclass
 
 @OptIn(ExperimentalJsExport::class, DelicateCoroutinesApi::class)
-@JsExport()
+@JsExport
 fun mapToBotGameViewState(
     dotsStyleType: DotsStyleType,
     userName: String?,
@@ -86,9 +86,9 @@ private val json = Json {
 }
 
 @OptIn(ExperimentalJsExport::class)
-@JsExport()
+@JsExport
 fun roomToJson(room: IRoom) = json.encodeToString(room)
 
 @OptIn(ExperimentalJsExport::class)
-@JsExport()
-fun jsonToRoom(str: String): IRoom = json.decodeFromString<Room>(str)
+@JsExport
+fun jsonToRoom(str: String): IRoom = json.decodeFromString<IRoom>(str)

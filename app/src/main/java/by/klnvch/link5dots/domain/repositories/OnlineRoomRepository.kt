@@ -23,7 +23,6 @@
  */
 package by.klnvch.link5dots.domain.repositories
 
-import by.klnvch.link5dots.domain.models.NetworkRoom
 import by.klnvch.link5dots.domain.models.online.OnlineRoomInvitation
 import kotlinx.coroutines.flow.Flow
 
@@ -31,6 +30,8 @@ interface ScanOnlineRoomRepository {
     fun getInvitations(): Flow<List<OnlineRoomInvitation>>
 }
 
-interface OnlineRoomRepository : RoomStateRemoteRepository, RoomCleanRemoteRepository {
-    fun get(): Flow<NetworkRoom>
-}
+interface OnlineRoomRepository :
+    RoomStateRemoteRepository,
+    RoomCleanRemoteRepository,
+    RoomFlowRemoteRepository,
+    RoomRemoteRepository

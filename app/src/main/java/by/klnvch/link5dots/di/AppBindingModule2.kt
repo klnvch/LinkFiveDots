@@ -32,7 +32,6 @@ import by.klnvch.link5dots.data.online.AddDotOnlineRoomRepositoryImpl
 import by.klnvch.link5dots.data.online.ConnectOnlineRoomRepositoryImpl
 import by.klnvch.link5dots.data.online.CreateOnlineRoomRepositoryImpl
 import by.klnvch.link5dots.data.online.FirebaseDbImpl
-import by.klnvch.link5dots.data.online.GetOnlineRoomRepositoryImpl
 import by.klnvch.link5dots.data.online.OnlineLocalStore
 import by.klnvch.link5dots.data.online.OnlineLocalStoreWriter
 import by.klnvch.link5dots.data.online.ScanOnlineRoomRepositoryImpl
@@ -41,7 +40,6 @@ import by.klnvch.link5dots.domain.models.Board
 import by.klnvch.link5dots.domain.repositories.AddDotOnlineRoomRepository
 import by.klnvch.link5dots.domain.repositories.ConnectOnlineRoomRepository
 import by.klnvch.link5dots.domain.repositories.CreateOnlineRoomRepository
-import by.klnvch.link5dots.domain.repositories.GetOnlineRoomRepository
 import by.klnvch.link5dots.domain.repositories.RoomKeyGenerator
 import by.klnvch.link5dots.domain.repositories.ScanOnlineRoomRepository
 import by.klnvch.link5dots.domain.repositories.Settings
@@ -52,6 +50,9 @@ import by.klnvch.link5dots.domain.repositories.UpdateStateOnlineRoomRepository
 import by.klnvch.link5dots.domain.repositories.UserNameSettings
 import dagger.Module
 import dagger.Provides
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import javax.inject.Singleton
 
 @Module
@@ -112,15 +113,14 @@ class AppBindingModule2 {
 
     @Singleton
     @Provides
-    fun provideGetOnlineRoomRepositoryImpl(): GetOnlineRoomRepository =
-        GetOnlineRoomRepositoryImpl()
-
-    @Singleton
-    @Provides
     fun provideBoard() = Board()
 
     @Singleton
     @Provides
     fun provideBluetoothManager(context: Context): BluetoothManager =
         context.getSystemService(BluetoothManager::class.java)
+
+    @Provides
+    @Singleton
+    fun provideApplicationScope() = CoroutineScope(SupervisorJob() + Dispatchers.Default)
 }

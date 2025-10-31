@@ -27,14 +27,13 @@ package by.klnvch.link5dots.online
 import by.klnvch.link5dots.data.online.AddDotOnlineRoomRepositoryImpl
 import by.klnvch.link5dots.data.online.FirebaseDbSetDot
 import by.klnvch.link5dots.data.online.FirebaseDbSetState
-import by.klnvch.link5dots.data.online.GetOnlineRoomRepositoryImpl
 import by.klnvch.link5dots.data.online.UpdateStateOnlineRoomRepositoryImpl
 import by.klnvch.link5dots.domain.models.Board
-import by.klnvch.link5dots.domain.models.IRoom
-import by.klnvch.link5dots.domain.models.NetworkRoom
+import by.klnvch.link5dots.domain.models.INetworkRoom
 import by.klnvch.link5dots.domain.models.NetworkUser
 import by.klnvch.link5dots.domain.models.Point
 import by.klnvch.link5dots.domain.repositories.NetworkUserProvider
+import by.klnvch.link5dots.domain.repositories.RoomRemoteRepository
 import by.klnvch.link5dots.domain.usecases.AddDotOnlineUseCase
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
@@ -43,10 +42,10 @@ import kotlinx.coroutines.launch
 import kotlin.js.Promise
 
 @OptIn(DelicateCoroutinesApi::class, ExperimentalJsExport::class)
-@JsExport()
+@JsExport
 fun roomAddDot(
     user: NetworkUser?,
-    room: IRoom,
+    room: INetworkRoom,
     p: Point,
     onDbSet: (key: String, value: Any) -> Promise<Unit>,
     onDbSetDot: (path: String, p: Point) -> Promise<Unit>,
@@ -65,16 +64,17 @@ fun roomAddDot(
     }
     val addDotRepository = AddDotOnlineRoomRepositoryImpl(firebaseDb)
     val updateStateRepository = UpdateStateOnlineRoomRepositoryImpl(firebaseDb)
-    val getRepository = GetOnlineRoomRepositoryImpl()
-    getRepository.room = room as NetworkRoom
+    val roomRemoteRepository = object : RoomRemoteRepository {
+        override var room = room
+    }
 
     val useCase = AddDotOnlineUseCase(
-        getRepository,
+        roomRemoteRepository,
         board,
         networkUserProvider,
         addDotRepository,
         updateStateRepository,
     )
 
-    return Promise { resolve, reject -> GlobalScope.launch { useCase.addDot(p) } }
+    return Promise { _, _ -> GlobalScope.launch { useCase.addDot(p) } }
 }

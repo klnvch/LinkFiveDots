@@ -29,7 +29,7 @@ import kotlin.js.ExperimentalJsExport
 import kotlin.js.JsExport
 
 @OptIn(ExperimentalJsExport::class)
-@JsExport()
+@JsExport
 interface IRoom {
     val key: String
     val time: Int
@@ -70,7 +70,7 @@ fun List<Dot>.findWinningLine(): WinningLine? {
     val lastDot = last()
     val lastIndex = lastIndex % 2
 
-    val points = filterIndexed { i, _ -> i % 2 == lastIndex }.map { Point(it.x, it.y) }
+    val points = filterIndexed { i, _ -> i % 2 == lastIndex }
 
     // y = x + (py - px)
     // y = -x + (py + px)

@@ -29,10 +29,8 @@ import kotlin.js.ExperimentalJsExport
 import kotlin.js.JsExport
 
 @OptIn(ExperimentalJsExport::class)
-@JsExport()
-interface Dot {
-    val x: Int
-    val y: Int
+@JsExport
+interface Dot : Point {
     val dt: Int
 }
 
@@ -41,6 +39,6 @@ data class DotImpl(
     override val x: Int,
     override val y: Int,
     override val dt: Int,
-) : Dot {
-    constructor(p: Point, dt: Int) : this(p.x, p.y, dt)
-}
+) : Dot
+
+fun Point.toDot(dt: Int): Dot = DotImpl(x, y, dt)

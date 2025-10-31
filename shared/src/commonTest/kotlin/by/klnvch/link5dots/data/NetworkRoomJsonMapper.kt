@@ -25,6 +25,7 @@
 package by.klnvch.link5dots.data
 
 import by.klnvch.link5dots.domain.models.DotImpl
+import by.klnvch.link5dots.domain.models.INetworkRoom
 import by.klnvch.link5dots.domain.models.NetworkRoom
 import by.klnvch.link5dots.domain.models.NetworkUser
 import kotlin.test.Test
@@ -41,7 +42,7 @@ class NetworkRoomJsonMapper {
             NetworkUser("2", "b"),
         )
         val json = expected.toJson()
-        val actual = json.toRoom<NetworkRoom>()
+        val actual = json.toRoom<INetworkRoom>()
         assertEquals(expected, actual)
     }
 }

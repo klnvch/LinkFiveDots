@@ -26,14 +26,14 @@ package by.klnvch.link5dots.domain.models
 
 import kotlin.random.Random
 
-private val topLeft = Point(8, 8)
-private val bottomRight = Point(12, 12)
+private val topLeft = createPoint(8, 8)
+private val bottomRight = createPoint(12, 12)
 
 fun generateInitialGame(seed: Long): MutableList<Point> {
     val points = mutableListOf<Point>()
     for (i in topLeft.x..bottomRight.x) {
         for (j in topLeft.y..bottomRight.y) {
-            points.add(Point(i, j))
+            points.add(createPoint(i, j))
         }
     }
     points.shuffle(Random(seed))

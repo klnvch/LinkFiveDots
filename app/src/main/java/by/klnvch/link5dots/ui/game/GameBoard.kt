@@ -58,44 +58,48 @@ import by.klnvch.link5dots.domain.models.Dot
 import by.klnvch.link5dots.domain.models.DotImpl
 import by.klnvch.link5dots.domain.models.Point
 import by.klnvch.link5dots.domain.models.WinningLineImpl
+import by.klnvch.link5dots.domain.models.createPoint
 import by.klnvch.link5dots.ui.game.utils.invertMap
 import by.klnvch.link5dots.ui.game.utils.postTranslate
 import by.klnvch.link5dots.ui.game.utils.scale
 import by.klnvch.link5dots.ui.game.utils.scaleAndTranslate
 import by.klnvch.link5dots.ui.theme.dotColorsPalette
 
-@Preview()
+@Preview
 @Composable
 fun GameScreenPreview() {
     GameBoard(
         viewState = GameBoardViewStateImpl(
-        dots = arrayOf(
-            DotImpl(0, 0, 0),
-            DotImpl(1, 1, 0),
-            DotImpl(2, 2, 0),
-            DotImpl(3, 3, 0),
-            DotImpl(4, 4, 0),
-            DotImpl(5, 5, 0),
-            DotImpl(6, 6, 0),
-            DotImpl(7, 7, 0),
-            DotImpl(8, 8, 0),
-            DotImpl(9, 9, 0),
-            DotImpl(10, 10, 0),
-            DotImpl(11, 11, 0),
-            DotImpl(12, 12, 0),
-            DotImpl(13, 13, 0),
-            DotImpl(14, 14, 0),
-            DotImpl(15, 15, 0),
-            DotImpl(16, 16, 0),
-            DotImpl(17, 17, 0),
-            DotImpl(18, 18, 0),
-            DotImpl(19, 19, 0),
-        ), winningLine = WinningLineImpl(
-            listOf(
-                Point(5, 5), Point(6, 5), Point(7, 5), Point(8, 5)
+            dots = arrayOf(
+                DotImpl(0, 0, 0),
+                DotImpl(1, 1, 0),
+                DotImpl(2, 2, 0),
+                DotImpl(3, 3, 0),
+                DotImpl(4, 4, 0),
+                DotImpl(5, 5, 0),
+                DotImpl(6, 6, 0),
+                DotImpl(7, 7, 0),
+                DotImpl(8, 8, 0),
+                DotImpl(9, 9, 0),
+                DotImpl(10, 10, 0),
+                DotImpl(11, 11, 0),
+                DotImpl(12, 12, 0),
+                DotImpl(13, 13, 0),
+                DotImpl(14, 14, 0),
+                DotImpl(15, 15, 0),
+                DotImpl(16, 16, 0),
+                DotImpl(17, 17, 0),
+                DotImpl(18, 18, 0),
+                DotImpl(19, 19, 0),
+            ), winningLine = WinningLineImpl(
+                listOf(
+                    createPoint(5, 5), createPoint(6, 5), createPoint(7, 5), createPoint(8, 5)
+                )
             )
-        )
-    ), focus = Point(19, 19), onMoveDone = { Log.d("GameBoard", it.toString()) }, onUnfocus = {})
+        ),
+        focus = createPoint(19, 19),
+        onMoveDone = { Log.d("GameBoard", it.toString()) },
+        onUnfocus = {})
 }
 
 @Composable
@@ -118,13 +122,13 @@ fun GameBoard(
 
     val user1Image = paper.user1Dot.toImageBitmap()
     val user2Image = paper.user2Dot.toImageBitmap()
-    fun Int.toImage() = if(this % 2 == 0) user1Image else user2Image
+    fun Int.toImage() = if (this % 2 == 0) user1Image else user2Image
 
     val paperSize = paperImage.width.toFloat()
 
     var matrix by remember { mutableStateOf(Matrix().apply { scale(density, density) }) }
 
-    val state = rememberTransformableState { zoomChange, offsetChange, rotationChange ->
+    val state = rememberTransformableState { zoomChange, offsetChange, _ ->
         matrix = matrix.scaleAndTranslate(zoomChange, offsetChange)
     }
 
@@ -169,7 +173,7 @@ fun GameBoard(
                 )
             }
             viewState.winningLine?.let {
-                val color = if(viewState.dots.size % 2 == 1) user1Tint else user2Tint
+                val color = if (viewState.dots.size % 2 == 1) user1Tint else user2Tint
                 val line = paper.toLineOnPaper(it, color)
                 val image = line.lineBitmap.toImageBitmap()
                 for (seg in line.linePositions) {

@@ -28,8 +28,8 @@ import by.klnvch.link5dots.domain.repositories.RoomKeyGenerator
 import by.klnvch.link5dots.domain.repositories.TimeService
 
 fun generateDots() = generateInitialGame(gameSeed())
-    .map { DotImpl(it, 0) }
-    .toMutableList<Dot>()
+    .map { it.toDot(0) }
+    .toMutableList()
 
 interface RoomFactory {
     fun generate(): IRoom

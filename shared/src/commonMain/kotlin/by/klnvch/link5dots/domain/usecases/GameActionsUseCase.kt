@@ -26,8 +26,8 @@ package by.klnvch.link5dots.domain.usecases
 
 import by.klnvch.link5dots.domain.models.ActionAvailability
 import by.klnvch.link5dots.domain.models.isNotEmpty
-import by.klnvch.link5dots.domain.repositories.GetOnlineRoomRepository
 import by.klnvch.link5dots.domain.repositories.RoomGetRepository
+import by.klnvch.link5dots.domain.repositories.RoomRemoteRepository
 
 interface GameActionsUseCase {
     val undoAction: ActionAvailability
@@ -50,7 +50,7 @@ class GameActionsBotUseCase(private val getRepository: RoomGetRepository) : Game
     override val shareAction = ActionAvailability.Available
 }
 
-class GameActionsOnlineUseCase(private val repository: GetOnlineRoomRepository) :
+class GameActionsOnlineUseCase(private val repository: RoomRemoteRepository) :
     GameActionsUseCase {
     override val undoAction = ActionAvailability.Gone
     override val newAction

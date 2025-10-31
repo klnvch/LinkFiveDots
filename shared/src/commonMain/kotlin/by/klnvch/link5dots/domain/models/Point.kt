@@ -28,7 +28,13 @@ import kotlin.js.ExperimentalJsExport
 import kotlin.js.JsExport
 
 @OptIn(ExperimentalJsExport::class)
-@JsExport()
-data class Point(val x: Int, val y: Int)
+@JsExport
+interface Point {
+    val x: Int
+    val y: Int
+}
 
-fun Point.invert() = Point(y, x)
+private data class PointImpl(override val x: Int, override val y: Int) : Point
+
+fun Point.invert(): Point = PointImpl(y, x)
+fun createPoint(x: Int, y: Int): Point = PointImpl(y, x)

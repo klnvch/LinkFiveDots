@@ -29,19 +29,20 @@ import by.klnvch.link5dots.domain.models.DotsStyleType
 import by.klnvch.link5dots.domain.models.LineOrientation
 import by.klnvch.link5dots.domain.models.Point
 import by.klnvch.link5dots.domain.models.WinningLine
+import by.klnvch.link5dots.domain.models.createPoint
 import kotlin.js.ExperimentalJsExport
 import kotlin.js.JsExport
 import kotlin.math.abs
 
 @OptIn(ExperimentalJsExport::class)
-@JsExport()
+@JsExport
 interface PaperPosition {
     val x: Float
     val y: Float
 }
 
 @OptIn(ExperimentalJsExport::class)
-@JsExport()
+@JsExport
 interface LineOnPaper {
     val lineBitmap: GameBitmap
     val linePositions: Array<PaperPosition>
@@ -55,7 +56,7 @@ class LineOnPaperImpl(
 ) : LineOnPaper
 
 @OptIn(ExperimentalJsExport::class)
-@JsExport()
+@JsExport
 class Paper(
     styleType: DotsStyleType,
     sizePx: Int,
@@ -98,7 +99,8 @@ class Paper(
     fun toArrowsPaperPosition(dot: Dot): PaperPosition =
         PaperPositionImpl(arrowsLocations[dot.x], arrowsLocations[dot.y])
 
-    fun toBoardPosition(x: Float, y: Float) = Point(findClosestIndex(x), findClosestIndex(y))
+    fun toBoardPosition(x: Float, y: Float): Point =
+        createPoint(findClosestIndex(x), findClosestIndex(y))
 
     fun toLineOnPaper(line: WinningLine, color: Int): LineOnPaper {
         val lineBitmap = when (line.orientation) {

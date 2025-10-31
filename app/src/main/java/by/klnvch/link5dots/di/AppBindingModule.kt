@@ -38,7 +38,6 @@ import by.klnvch.link5dots.data.bluetooth.BluetoothRoomRepositoryImpl
 import by.klnvch.link5dots.data.firebase.FirebaseManagerImpl
 import by.klnvch.link5dots.data.nsd.NsdRoomRepositoryImpl
 import by.klnvch.link5dots.data.online.OnlineLocalStore
-import by.klnvch.link5dots.data.online.OnlineRoomRepositoryImpl
 import by.klnvch.link5dots.data.settings.SettingsImpl
 import by.klnvch.link5dots.domain.repositories.BluetoothRoomRepository
 import by.klnvch.link5dots.domain.repositories.ClearBluetoothLocalStore
@@ -49,7 +48,6 @@ import by.klnvch.link5dots.domain.repositories.FirebaseManager
 import by.klnvch.link5dots.domain.repositories.GameScoreRepository
 import by.klnvch.link5dots.domain.repositories.LanguageManager
 import by.klnvch.link5dots.domain.repositories.NsdRoomRepository
-import by.klnvch.link5dots.domain.repositories.OnlineRoomRepository
 import by.klnvch.link5dots.domain.repositories.RoomRepository
 import by.klnvch.link5dots.domain.repositories.Settings
 import by.klnvch.link5dots.domain.repositories.StringRepository
@@ -96,10 +94,6 @@ interface AppBindingModule {
     @Singleton
     @Binds
     fun bindStringRepository(impl: StringProvider): StringRepository
-
-    @Singleton
-    @Binds
-    fun bindOnlineRoomRepository(impl: OnlineRoomRepositoryImpl): OnlineRoomRepository
 
     @Singleton
     @Binds

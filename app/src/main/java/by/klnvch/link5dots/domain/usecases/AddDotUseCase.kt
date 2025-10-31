@@ -24,16 +24,16 @@
 package by.klnvch.link5dots.domain.usecases
 
 import by.klnvch.link5dots.domain.models.Board
-import by.klnvch.link5dots.domain.models.DotImpl
+import by.klnvch.link5dots.domain.models.INetworkRoom
 import by.klnvch.link5dots.domain.models.IRoom
 import by.klnvch.link5dots.domain.models.IUser
-import by.klnvch.link5dots.domain.models.NetworkRoom
 import by.klnvch.link5dots.domain.models.Point
 import by.klnvch.link5dots.domain.models.RoomType
+import by.klnvch.link5dots.domain.models.toDot
 import by.klnvch.link5dots.domain.repositories.NetworkUserProvider
 import by.klnvch.link5dots.domain.repositories.RoomGetRepository
+import by.klnvch.link5dots.domain.repositories.RoomRemoteRepository
 import by.klnvch.link5dots.domain.repositories.RoomRepository
-import by.klnvch.link5dots.domain.repositories.SocketGetRepository
 import by.klnvch.link5dots.domain.repositories.SocketSendRepository
 import by.klnvch.link5dots.domain.repositories.TimeService
 import by.klnvch.link5dots.domain.repositories.networkUserOrThrow
@@ -44,16 +44,16 @@ class AddDotInfoUseCase @Inject constructor() : AddDotUseCase {
 }
 
 class AddDotSocketUseCase @Inject constructor(
-    getRepository: SocketGetRepository,
+    getRepository: RoomRemoteRepository,
     board: Board,
     private val timeService: TimeService,
     private val sendRepository: SocketSendRepository,
     private val networkUserProvider: NetworkUserProvider,
-) : AddDotCommonUseCase<NetworkRoom>(getRepository, board) {
-    override val user: IUser? get() = networkUserProvider.networkUserOrThrow
-    override suspend fun addDot(room: NetworkRoom, p: Point) {
+) : AddDotCommonUseCase<INetworkRoom>(getRepository, board) {
+    override val user: IUser get() = networkUserProvider.networkUserOrThrow
+    override suspend fun addDot(room: INetworkRoom, p: Point) {
         val dt = timeService.dt(room.time)
-        val updatedRoom = room.move(DotImpl(p, dt))
+        val updatedRoom = room.move(p.toDot(dt))
         sendRepository.send(updatedRoom)
     }
 }
@@ -67,7 +67,7 @@ class AddDotTwoUseCase @Inject constructor(
     override val user: IUser? get() = null
     override suspend fun addDot(room: IRoom, p: Point) {
         val dt = timeService.dt(room.time)
-        val updatedRoom = room.move(DotImpl(p, dt))
+        val updatedRoom = room.move(p.toDot(dt))
         saveRepository.save(updatedRoom, RoomType.TWO_PLAYERS)
     }
 }

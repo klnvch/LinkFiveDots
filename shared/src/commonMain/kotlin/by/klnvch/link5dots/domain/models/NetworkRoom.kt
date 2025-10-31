@@ -31,7 +31,7 @@ import kotlin.js.JsExport
 sealed interface NetworkRoomEntity
 
 @OptIn(ExperimentalJsExport::class)
-@JsExport()
+@JsExport
 interface INetworkRoomInvitation : NetworkRoomEntity {
     val key: String
     val time: Int
@@ -44,22 +44,24 @@ interface INetworkRoomAcceptance {
 }
 
 @OptIn(ExperimentalJsExport::class)
-@JsExport()
-interface INetworkRoom : INetworkRoomInvitation, INetworkRoomAcceptance, IRoom, NetworkRoomEntity
+@JsExport
+interface INetworkRoom : INetworkRoomInvitation, INetworkRoomAcceptance, IRoom, NetworkRoomEntity {
+    override fun move(dot: Dot): INetworkRoom
+    override fun undo(): INetworkRoom
+}
 
 ///////////////////////////////////////////////////
 // Implementation
 ///////////////////////////////////////////////////
-fun combine(invitation: INetworkRoomInvitation, acceptance: INetworkRoomAcceptance) = NetworkRoom(
-    invitation.key,
-    invitation.time,
-    acceptance.dots,
-    invitation.user1,
-    acceptance.user2,
-)
+fun combine(invitation: INetworkRoomInvitation, acceptance: INetworkRoomAcceptance): INetworkRoom =
+    NetworkRoom(
+        invitation.key,
+        invitation.time,
+        acceptance.dots,
+        invitation.user1,
+        acceptance.user2,
+    )
 
-@OptIn(ExperimentalJsExport::class)
-@JsExport()
 @Serializable
 data class NetworkRoomInvitation(
     override val key: String,
@@ -72,8 +74,6 @@ data class NetworkRoomAcceptance(
     override val user2: NetworkUser,
 ) : INetworkRoomAcceptance
 
-@OptIn(ExperimentalJsExport::class)
-@JsExport()
 @Serializable
 data class NetworkRoom(
     override val key: String,
@@ -82,8 +82,10 @@ data class NetworkRoom(
     override val user1: NetworkUser,
     override val user2: NetworkUser,
 ) : INetworkRoom {
-    override fun move(dot: Dot): NetworkRoom = copy(dots = dots + dot)
-    override fun undo() = copy(dots = dots.dropLast(1))
+    override fun move(dot: Dot): INetworkRoom = copy(dots = dots + dot)
+    override fun undo(): INetworkRoom = copy(dots = dots.dropLast(1))
     override fun toString() =
         "NetworkRoom(key=$key, time=$time, dots=${dots.size}, user1=${user1.name}, user2=${user2.name})"
 }
+
+fun INetworkRoom.isOwner(user: NetworkUser): Boolean = user1.id == user.id

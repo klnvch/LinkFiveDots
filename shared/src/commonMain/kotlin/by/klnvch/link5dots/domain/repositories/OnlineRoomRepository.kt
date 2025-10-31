@@ -26,7 +26,6 @@ package by.klnvch.link5dots.domain.repositories
 
 import by.klnvch.link5dots.data.online.models.AcceptOnlineRoomInvitation
 import by.klnvch.link5dots.data.online.models.CreateOnlineRoomInvitation
-import by.klnvch.link5dots.domain.models.NetworkRoom
 import by.klnvch.link5dots.domain.models.Point
 import by.klnvch.link5dots.domain.models.RoomState
 
@@ -44,8 +43,4 @@ interface AddDotOnlineRoomRepository {
 
 interface UpdateStateOnlineRoomRepository {
     suspend fun update(key: String, state: RoomState)
-}
-
-interface GetOnlineRoomRepository : GetRoomRepository<NetworkRoom> {
-    override var room: NetworkRoom?
 }

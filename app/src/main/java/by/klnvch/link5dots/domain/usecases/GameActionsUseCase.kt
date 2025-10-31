@@ -27,9 +27,10 @@ package by.klnvch.link5dots.domain.usecases
 import by.klnvch.link5dots.domain.models.ActionAvailability
 import by.klnvch.link5dots.domain.models.canUndo
 import by.klnvch.link5dots.domain.models.isNotEmpty
+import by.klnvch.link5dots.domain.models.isOwner
 import by.klnvch.link5dots.domain.repositories.NetworkUserProvider
 import by.klnvch.link5dots.domain.repositories.RoomGetRepository
-import by.klnvch.link5dots.domain.repositories.SocketGetRepository
+import by.klnvch.link5dots.domain.repositories.RoomRemoteRepository
 import javax.inject.Inject
 
 class GameActionsInfoUseCase @Inject constructor() : GameActionsUseCase {
@@ -56,7 +57,7 @@ class GameActionsTwoUseCase @Inject constructor(
 }
 
 class GameActionsSocketUseCase @Inject constructor(
-    private val repository: SocketGetRepository,
+    private val repository: RoomRemoteRepository,
     private val networkUserProvider: NetworkUserProvider,
 ) : GameActionsUseCase {
     override val undoAction: ActionAvailability
@@ -76,7 +77,7 @@ class GameActionsSocketUseCase @Inject constructor(
             val user = networkUserProvider.networkUser
             return when {
                 room == null || user == null -> ActionAvailability.Gone
-                room.user1 == user -> ActionAvailability.Available
+                room.isOwner(user) -> ActionAvailability.Available
                 else -> ActionAvailability.Gone
             }
         }

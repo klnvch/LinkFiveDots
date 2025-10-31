@@ -31,8 +31,8 @@ import by.klnvch.link5dots.data.online.models.OnlineRoom
 import by.klnvch.link5dots.data.online.models.OnlineRoomRemote
 import by.klnvch.link5dots.data.online.models.RemoteRoomItem
 import by.klnvch.link5dots.domain.models.DotsStyleType
-import by.klnvch.link5dots.domain.models.NetworkRoom
-import by.klnvch.link5dots.domain.repositories.GetOnlineRoomRepository
+import by.klnvch.link5dots.domain.models.INetworkRoom
+import by.klnvch.link5dots.domain.repositories.RoomRemoteRepository
 import by.klnvch.link5dots.domain.usecases.GameActionsOnlineUseCase
 import by.klnvch.link5dots.ui.game.GameViewState
 import by.klnvch.link5dots.ui.game.createGameViewState
@@ -42,7 +42,7 @@ fun parseTime(value: dynamic) = (value as Double?)?.toLong()
 fun parseUser(value: dynamic) = if (value != null) OnlineRemoteUser(value.id, value.name) else null
 
 @OptIn(ExperimentalJsExport::class, ExperimentalJsCollectionsApi::class)
-@JsExport()
+@JsExport
 fun toOnlineRoom(key: String?, value: dynamic?): OnlineRoom {
     val value = OnlineRoomRemote(
         parseTime(value.time),
@@ -59,17 +59,17 @@ fun toOnlineRoom(key: String?, value: dynamic?): OnlineRoom {
 }
 
 @OptIn(ExperimentalJsExport::class, DelicateCoroutinesApi::class)
-@JsExport()
+@JsExport
 fun mapToGameViewState(
     dotsStyleType: DotsStyleType,
     defaultName: String,
-    room: NetworkRoom,
+    room: INetworkRoom,
 ): GameViewState {
     val user1Name = room.user1.name ?: defaultName
     val user2Name = room.user2.name ?: defaultName
 
-    val gameActionsOnlineUseCase = GameActionsOnlineUseCase(object : GetOnlineRoomRepository {
-        override var room: NetworkRoom? = room
+    val gameActionsOnlineUseCase = GameActionsOnlineUseCase(object : RoomRemoteRepository {
+        override var room = room
     })
 
     return createGameViewState(

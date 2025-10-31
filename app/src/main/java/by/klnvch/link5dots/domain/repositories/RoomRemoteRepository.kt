@@ -24,11 +24,16 @@
 
 package by.klnvch.link5dots.domain.repositories
 
+import by.klnvch.link5dots.domain.models.INetworkRoom
 import by.klnvch.link5dots.domain.models.NetworkRoomState
 import kotlinx.coroutines.flow.Flow
 
 interface RoomStateRemoteRepository {
     val state: Flow<NetworkRoomState>
+}
+
+interface RoomFlowRemoteRepository {
+    val roomFlow: Flow<INetworkRoom>
 }
 
 interface RoomCleanRemoteRepository {

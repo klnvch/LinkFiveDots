@@ -39,13 +39,11 @@ class CommonBindingModule {
     fun bindRoomSaveLocalRepository(
         repository: RoomRepository,
         roomTypeProvider: RoomTypeProvider,
-    ): RoomSaveLocalRepository =
-        RoomSaveLocalRepositoryImpl(repository, roomTypeProvider)
+    ): RoomSaveLocalRepository = RoomSaveLocalRepositoryImpl(repository, roomTypeProvider)
 
     @Provides
     fun bindRoomFlowLocalRepository(
         repository: RoomRepository,
         roomTypeProvider: RoomTypeProvider,
-    ): RoomFlowLocalRepository =
-        RoomFlowLocalRepositoryImpl(repository, roomTypeProvider)
+    ): RoomFlowLocalRepository = RoomFlowLocalRepositoryImpl(repository, roomTypeProvider)
 }

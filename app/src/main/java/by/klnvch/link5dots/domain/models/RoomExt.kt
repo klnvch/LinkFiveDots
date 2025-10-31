@@ -25,5 +25,5 @@
 package by.klnvch.link5dots.domain.models
 
 fun IRoom.isNotEmpty() = dots.isNotEmpty()
-fun IRoom.lastPoint() = dots.lastOrNull()?.let { Point(it.x, it.y) }
+fun IRoom.lastPoint(): Point? = dots.lastOrNull()
 fun IRoom.isNew() = dots.lastOrNull()?.dt == 0

@@ -25,9 +25,10 @@ package by.klnvch.link5dots.domain.usecases
 
 import by.klnvch.link5dots.domain.models.NetworkRoom
 import by.klnvch.link5dots.domain.models.generateDots
+import by.klnvch.link5dots.domain.models.isOwner
 import by.klnvch.link5dots.domain.repositories.NetworkUserProvider
 import by.klnvch.link5dots.domain.repositories.RoomKeyGenerator
-import by.klnvch.link5dots.domain.repositories.SocketGetRepository
+import by.klnvch.link5dots.domain.repositories.RoomRemoteRepository
 import by.klnvch.link5dots.domain.repositories.SocketSendRepository
 import by.klnvch.link5dots.domain.repositories.TimeService
 import by.klnvch.link5dots.domain.repositories.networkUserOrThrow
@@ -37,14 +38,14 @@ class NewGameSocketUseCase @Inject constructor(
     private val timeRepository: TimeService,
     private val roomKeyGenerator: RoomKeyGenerator,
     private val networkUserProvider: NetworkUserProvider,
-    private val getRepository: SocketGetRepository,
+    private val getRepository: RoomRemoteRepository,
     private val sendRepository: SocketSendRepository,
 ) : NewGameUseCase {
     override val isImplemented = true
     override suspend fun create() {
         getRepository.room?.let {
             val user1 = networkUserProvider.networkUserOrThrow
-            if (it.user1 == user1) {
+            if (it.isOwner(user1)) {
                 val newRoom = NetworkRoom(
                     roomKeyGenerator.generate(),
                     timeRepository.time(),
@@ -55,6 +56,5 @@ class NewGameSocketUseCase @Inject constructor(
                 sendRepository.send(newRoom)
             }
         }
-
     }
 }

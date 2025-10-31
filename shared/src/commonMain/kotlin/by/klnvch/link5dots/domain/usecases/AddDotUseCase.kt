@@ -26,20 +26,20 @@ package by.klnvch.link5dots.domain.usecases
 
 import by.klnvch.link5dots.domain.models.Board
 import by.klnvch.link5dots.domain.models.DeviceOwnerUser
-import by.klnvch.link5dots.domain.models.DotImpl
+import by.klnvch.link5dots.domain.models.INetworkRoom
 import by.klnvch.link5dots.domain.models.IRoom
 import by.klnvch.link5dots.domain.models.IUser
-import by.klnvch.link5dots.domain.models.NetworkRoom
 import by.klnvch.link5dots.domain.models.Point
 import by.klnvch.link5dots.domain.models.RoomState
 import by.klnvch.link5dots.domain.models.bot.Bot
 import by.klnvch.link5dots.domain.models.canMove
 import by.klnvch.link5dots.domain.models.findWinningLine
+import by.klnvch.link5dots.domain.models.toDot
 import by.klnvch.link5dots.domain.repositories.AddDotOnlineRoomRepository
-import by.klnvch.link5dots.domain.repositories.GetOnlineRoomRepository
 import by.klnvch.link5dots.domain.repositories.GetRoomRepository
 import by.klnvch.link5dots.domain.repositories.NetworkUserProvider
 import by.klnvch.link5dots.domain.repositories.RoomGetRepository
+import by.klnvch.link5dots.domain.repositories.RoomRemoteRepository
 import by.klnvch.link5dots.domain.repositories.RoomSaveLocalRepository
 import by.klnvch.link5dots.domain.repositories.TimeService
 import by.klnvch.link5dots.domain.repositories.UpdateStateOnlineRoomRepository
@@ -73,16 +73,16 @@ abstract class AddDotCommonUseCase<Room : IRoom>(
 }
 
 class AddDotOnlineUseCase(
-    getRepository: GetOnlineRoomRepository,
+    getRepository: RoomRemoteRepository,
     board: Board,
     private val networkUserProvider: NetworkUserProvider,
     private val addDotRepository: AddDotOnlineRoomRepository,
     private val updateStateRepository: UpdateStateOnlineRoomRepository,
-) : AddDotCommonUseCase<NetworkRoom>(getRepository, board) {
-    override val user: IUser? get() = networkUserProvider.networkUserOrThrow
-    override suspend fun addDot(room: NetworkRoom, p: Point) {
+) : AddDotCommonUseCase<INetworkRoom>(getRepository, board) {
+    override val user: IUser get() = networkUserProvider.networkUserOrThrow
+    override suspend fun addDot(room: INetworkRoom, p: Point) {
         addDotRepository.addDot(room.key, room.dots.size, p)
-        val dot = DotImpl(p, 0)
+        val dot = p.toDot(0)
         if ((room.dots + dot).findWinningLine() != null) {
             updateStateRepository.update(room.key, RoomState.FINISHED)
         }
@@ -99,11 +99,11 @@ class AddDotBotUseCase(
     override val user: IUser get() = DeviceOwnerUser
     override suspend fun addDot(room: IRoom, p: Point) {
         val dt = timeService.dt(room.time)
-        var updatedRoom = room.move(DotImpl(p, dt))
+        var updatedRoom = room.move(p.toDot(dt))
 
         if (updatedRoom.isNotOver()) {
-            val botPoint = bot.findAnswer(updatedRoom.dots.map { Point(it.x, it.y) })
-            updatedRoom = updatedRoom.move(DotImpl(botPoint, dt))
+            val botPoint = bot.findAnswer(updatedRoom.dots)
+            updatedRoom = updatedRoom.move(botPoint.toDot(dt))
         }
 
         saveRepository.save(updatedRoom)

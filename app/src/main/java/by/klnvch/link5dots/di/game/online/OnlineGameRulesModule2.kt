@@ -26,9 +26,9 @@ package by.klnvch.link5dots.di.game.online
 import by.klnvch.link5dots.domain.models.Board
 import by.klnvch.link5dots.domain.repositories.AddDotOnlineRoomRepository
 import by.klnvch.link5dots.domain.repositories.CreateOnlineRoomRepository
-import by.klnvch.link5dots.domain.repositories.GetOnlineRoomRepository
 import by.klnvch.link5dots.domain.repositories.NetworkUserProvider
 import by.klnvch.link5dots.domain.repositories.RoomKeyGenerator
+import by.klnvch.link5dots.domain.repositories.RoomRemoteRepository
 import by.klnvch.link5dots.domain.repositories.StringProvider
 import by.klnvch.link5dots.domain.repositories.UpdateStateOnlineRoomRepository
 import by.klnvch.link5dots.domain.usecases.AddDotOnlineUseCase
@@ -47,7 +47,7 @@ class OnlineGameRulesModule2 {
     fun provideNewGameUseCase(): NewGameUseCase = NewGameEmptyUseCase()
 
     @Provides
-    fun provideGameActionsUseCase(getRepository: GetOnlineRoomRepository): GameActionsUseCase =
+    fun provideGameActionsUseCase(getRepository: RoomRemoteRepository): GameActionsUseCase =
         GameActionsOnlineUseCase(getRepository)
 
     @Provides
@@ -63,7 +63,7 @@ class OnlineGameRulesModule2 {
 
     @Provides
     fun provideAddDotOnlineUseCase(
-        getRepository: GetOnlineRoomRepository,
+        getRepository: RoomRemoteRepository,
         board: Board,
         networkUserProvider: NetworkUserProvider,
         addDotRepository: AddDotOnlineRoomRepository,

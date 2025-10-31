@@ -24,13 +24,18 @@
 package by.klnvch.link5dots.di.game.online
 
 import by.klnvch.link5dots.data.online.OnlineRoomRepositoryImpl
+import by.klnvch.link5dots.domain.models.RoomTypeOnlineProvider
+import by.klnvch.link5dots.domain.models.RoomTypeProvider
 import by.klnvch.link5dots.domain.repositories.NetworkUserFirebaseProvider
 import by.klnvch.link5dots.domain.repositories.NetworkUserProvider
+import by.klnvch.link5dots.domain.repositories.OnlineRoomRepository
 import by.klnvch.link5dots.domain.repositories.RoomCleanRemoteRepository
+import by.klnvch.link5dots.domain.repositories.RoomFlowRemoteRepository
+import by.klnvch.link5dots.domain.repositories.RoomRemoteRepository
 import by.klnvch.link5dots.domain.repositories.RoomStateRemoteRepository
 import by.klnvch.link5dots.domain.usecases.AddDotOnlineUseCase
 import by.klnvch.link5dots.domain.usecases.AddDotUseCase
-import by.klnvch.link5dots.domain.usecases.GetRoomOnlineUseCase
+import by.klnvch.link5dots.domain.usecases.GetRoomNetworkUseCase
 import by.klnvch.link5dots.domain.usecases.GetRoomUseCase
 import by.klnvch.link5dots.domain.usecases.PrepareScoreMultiplayerUseCase
 import by.klnvch.link5dots.domain.usecases.PrepareScoreUseCase
@@ -48,10 +53,16 @@ import dagger.Module
 @Module
 interface OnlineGameRulesModule {
     @Binds
-    fun bindGetRoomUseCase(impl: GetRoomOnlineUseCase): GetRoomUseCase
+    fun bindGetRoomUseCase(impl: GetRoomNetworkUseCase): GetRoomUseCase
 
     @Binds
-    fun bindNetworkRoomStateRepository(impl: OnlineRoomRepositoryImpl): RoomStateRemoteRepository
+    fun bindRoomTypeProvider(impl: RoomTypeOnlineProvider): RoomTypeProvider
+
+    @Binds
+    fun bindOnlineRoomRepository(impl: OnlineRoomRepositoryImpl): OnlineRoomRepository
+
+    @Binds
+    fun bindNetworkRoomStateRepository(impl: OnlineRoomRepository): RoomStateRemoteRepository
 
     @Binds
     fun bindAddDotUseCase(impl: AddDotOnlineUseCase): AddDotUseCase
@@ -72,8 +83,14 @@ interface OnlineGameRulesModule {
     fun bindScanUseCase(impl: OnlineScanUseCase): ScanUseCase
 
     @Binds
-    fun bindRoomCleanRemoteRepository(impl: OnlineRoomRepositoryImpl): RoomCleanRemoteRepository
+    fun bindRoomCleanRemoteRepository(impl: OnlineRoomRepository): RoomCleanRemoteRepository
 
     @Binds
     fun bindNetworkUserProvider(impl: NetworkUserFirebaseProvider): NetworkUserProvider
+
+    @Binds
+    fun bindRoomFlowRemoteRepository(impl: OnlineRoomRepository): RoomFlowRemoteRepository
+
+    @Binds
+    fun bindRoomRemoteRepository(impl: OnlineRoomRepository): RoomRemoteRepository
 }

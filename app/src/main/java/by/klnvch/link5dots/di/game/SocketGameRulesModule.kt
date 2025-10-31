@@ -27,10 +27,10 @@ package by.klnvch.link5dots.di.game
 import by.klnvch.link5dots.domain.repositories.NetworkUserLocalProvider
 import by.klnvch.link5dots.domain.repositories.NetworkUserProvider
 import by.klnvch.link5dots.domain.repositories.RoomCleanRemoteRepository
+import by.klnvch.link5dots.domain.repositories.RoomFlowRemoteRepository
+import by.klnvch.link5dots.domain.repositories.RoomRemoteRepository
 import by.klnvch.link5dots.domain.repositories.RoomStateRemoteRepository
 import by.klnvch.link5dots.domain.repositories.SocketCreateRepository
-import by.klnvch.link5dots.domain.repositories.SocketGetFlowRepository
-import by.klnvch.link5dots.domain.repositories.SocketGetRepository
 import by.klnvch.link5dots.domain.repositories.SocketRoomInvitationRepository
 import by.klnvch.link5dots.domain.repositories.SocketRoomRepository
 import by.klnvch.link5dots.domain.repositories.SocketSendRepository
@@ -38,7 +38,7 @@ import by.klnvch.link5dots.domain.usecases.AddDotSocketUseCase
 import by.klnvch.link5dots.domain.usecases.AddDotUseCase
 import by.klnvch.link5dots.domain.usecases.GameActionsSocketUseCase
 import by.klnvch.link5dots.domain.usecases.GameActionsUseCase
-import by.klnvch.link5dots.domain.usecases.GetRoomSocketUseCase
+import by.klnvch.link5dots.domain.usecases.GetRoomNetworkUseCase
 import by.klnvch.link5dots.domain.usecases.GetRoomUseCase
 import by.klnvch.link5dots.domain.usecases.NewGameSocketUseCase
 import by.klnvch.link5dots.domain.usecases.NewGameUseCase
@@ -56,7 +56,7 @@ import dagger.Module
 @Module
 interface SocketGameRulesModule {
     @Binds
-    fun bindGetRoomUseCase(impl: GetRoomSocketUseCase): GetRoomUseCase
+    fun bindGetRoomUseCase(impl: GetRoomNetworkUseCase): GetRoomUseCase
 
     @Binds
     fun bindNewGameUseCase(impl: NewGameSocketUseCase): NewGameUseCase
@@ -83,7 +83,7 @@ interface SocketGameRulesModule {
     fun bindGameActionsUseCase(impl: GameActionsSocketUseCase): GameActionsUseCase
 
     @Binds
-    fun bindSocketGetFlowRepository(impl: SocketRoomRepository): SocketGetFlowRepository
+    fun bindSocketGetFlowRepository(impl: SocketRoomRepository): RoomFlowRemoteRepository
 
     @Binds
     fun bindNetworkRoomStateRepository(impl: SocketRoomRepository): RoomStateRemoteRepository
@@ -92,7 +92,7 @@ interface SocketGameRulesModule {
     fun bindRoomCleanRemoteRepository(impl: SocketRoomRepository): RoomCleanRemoteRepository
 
     @Binds
-    fun bindSocketGetRepository(impl: SocketRoomRepository): SocketGetRepository
+    fun bindSocketGetRepository(impl: SocketRoomRepository): RoomRemoteRepository
 
     @Binds
     fun bindSocketCreateRepository(impl: SocketRoomRepository): SocketCreateRepository

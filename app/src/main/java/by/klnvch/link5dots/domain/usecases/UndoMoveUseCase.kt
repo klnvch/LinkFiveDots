@@ -24,14 +24,14 @@
 
 package by.klnvch.link5dots.domain.usecases
 
+import by.klnvch.link5dots.domain.models.INetworkRoom
 import by.klnvch.link5dots.domain.models.IRoom
 import by.klnvch.link5dots.domain.models.IUser
-import by.klnvch.link5dots.domain.models.NetworkRoom
 import by.klnvch.link5dots.domain.models.canUndo
 import by.klnvch.link5dots.domain.repositories.NetworkUserProvider
 import by.klnvch.link5dots.domain.repositories.RoomGetRepository
+import by.klnvch.link5dots.domain.repositories.RoomRemoteRepository
 import by.klnvch.link5dots.domain.repositories.RoomSaveLocalRepository
-import by.klnvch.link5dots.domain.repositories.SocketGetRepository
 import by.klnvch.link5dots.domain.repositories.SocketSendRepository
 import by.klnvch.link5dots.domain.repositories.networkUserOrThrow
 import javax.inject.Inject
@@ -49,11 +49,11 @@ class UndoMoveTwoUseCase @Inject constructor(
 }
 
 class UndoMoveSocketUseCase @Inject constructor(
-    getRepository: SocketGetRepository,
+    getRepository: RoomRemoteRepository,
     private val sendRepository: SocketSendRepository,
     private val networkUserProvider: NetworkUserProvider,
-) : UndoMoveCommonUseCase<NetworkRoom>(getRepository) {
+) : UndoMoveCommonUseCase<INetworkRoom>(getRepository) {
     private val user: IUser get() = networkUserProvider.networkUserOrThrow
-    override suspend fun undo(room: NetworkRoom) = if (room.canUndo(user)) room.undo() else null
-    override suspend fun save(room: NetworkRoom) = sendRepository.send(room)
+    override suspend fun undo(room: INetworkRoom) = if (room.canUndo(user)) room.undo() else null
+    override suspend fun save(room: INetworkRoom) = sendRepository.send(room)
 }
