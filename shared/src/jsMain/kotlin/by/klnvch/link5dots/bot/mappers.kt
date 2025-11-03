@@ -26,12 +26,11 @@ package by.klnvch.link5dots.bot
 
 import by.klnvch.link5dots.domain.models.BotUser
 import by.klnvch.link5dots.domain.models.DeviceOwnerUser
-import by.klnvch.link5dots.domain.models.Dot
-import by.klnvch.link5dots.domain.models.DotImpl
 import by.klnvch.link5dots.domain.models.DotsStyleType
 import by.klnvch.link5dots.domain.models.IRoom
 import by.klnvch.link5dots.domain.models.IUser
 import by.klnvch.link5dots.domain.models.Room
+import by.klnvch.link5dots.domain.models.dotModule
 import by.klnvch.link5dots.domain.repositories.RoomGetRepository
 import by.klnvch.link5dots.domain.repositories.StringProvider
 import by.klnvch.link5dots.domain.usecases.GameActionsBotUseCase
@@ -40,6 +39,7 @@ import by.klnvch.link5dots.ui.game.createGameViewState
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.SerializersModule
+import kotlinx.serialization.modules.plus
 import kotlinx.serialization.modules.polymorphic
 import kotlinx.serialization.modules.subclass
 
@@ -75,14 +75,11 @@ private val json = Json {
         polymorphic(IRoom::class) {
             subclass(Room::class)
         }
-        polymorphic(Dot::class) {
-            subclass(DotImpl::class)
-        }
         polymorphic(IUser::class) {
             subclass(BotUser::class)
             subclass(DeviceOwnerUser::class)
         }
-    }
+    } + dotModule
 }
 
 @OptIn(ExperimentalJsExport::class)

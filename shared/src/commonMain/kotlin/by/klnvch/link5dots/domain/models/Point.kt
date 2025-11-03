@@ -37,4 +37,4 @@ interface Point {
 private data class PointImpl(override val x: Int, override val y: Int) : Point
 
 fun Point.invert(): Point = PointImpl(y, x)
-fun createPoint(x: Int, y: Int): Point = PointImpl(y, x)
+fun createPoint(x: Int, y: Int): Point = PointImpl(x, y)

@@ -29,16 +29,16 @@ import by.klnvch.link5dots.data.online.models.OnlineRemoteUser
 import by.klnvch.link5dots.data.online.models.OnlineRoomInvitationRemote
 import by.klnvch.link5dots.data.online.models.OnlineRoomRemote
 import by.klnvch.link5dots.domain.models.Dot
-import by.klnvch.link5dots.domain.models.DotImpl
 import by.klnvch.link5dots.domain.models.INetworkRoom
 import by.klnvch.link5dots.domain.models.INetworkRoomInvitation
 import by.klnvch.link5dots.domain.models.NetworkRoom
 import by.klnvch.link5dots.domain.models.NetworkRoomInvitation
-import by.klnvch.link5dots.domain.models.NetworkUser
+import by.klnvch.link5dots.domain.models.createDot
+import by.klnvch.link5dots.domain.models.createNetworkUser
 
 private class ParseException(entity: String) : Exception("Failed to parse $entity")
 
-private fun OnlineRemoteUser?.parseUser() = this?.id?.let { NetworkUser(it, name) }
+private fun OnlineRemoteUser?.parseUser() = this?.id?.let { createNetworkUser(it, name) }
     ?: throw ParseException("user")
 
 private fun Long?.parseTime() = this?.let { it / 1000 }?.toInt()
@@ -46,7 +46,7 @@ private fun Long?.parseTime() = this?.let { it / 1000 }?.toInt()
 
 private fun Long?.parseDt(time: Int) = this?.let { (it / 1000).toInt() - time } ?: 0
 private fun OnlineDotRemote?.parseDot(time: Int): Dot? = this?.let {
-    if (it.x != null && it.y != null) DotImpl(it.x, it.y, it.t.parseDt(time)) else null
+    if (it.x != null && it.y != null) createDot(it.x, it.y, it.t.parseDt(time)) else null
 }
 
 private fun List<OnlineDotRemote?>?.toDots(time: Int) =

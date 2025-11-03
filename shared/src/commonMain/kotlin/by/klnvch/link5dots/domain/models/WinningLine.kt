@@ -28,7 +28,7 @@ import kotlin.js.ExperimentalJsExport
 import kotlin.js.JsExport
 
 @OptIn(ExperimentalJsExport::class)
-@JsExport()
+@JsExport
 interface WinningLine {
     val points: Array<Point>
     val orientation: LineOrientation
@@ -47,7 +47,7 @@ class WinningLineImpl(points: List<Point>) : WinningLine {
 }
 
 @OptIn(ExperimentalJsExport::class)
-@JsExport()
+@JsExport
 enum class LineOrientation {
     HORIZONTAL, VERTICAL, DIAGONAL_LEFT, DIAGONAL_RIGHT
 }

@@ -25,6 +25,9 @@
 package by.klnvch.link5dots.domain.models
 
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.modules.SerializersModule
+import kotlinx.serialization.modules.polymorphic
+import kotlinx.serialization.modules.subclass
 import kotlin.js.ExperimentalJsExport
 import kotlin.js.JsExport
 
@@ -40,5 +43,13 @@ data class DotImpl(
     override val y: Int,
     override val dt: Int,
 ) : Dot
+
+val dotModule = SerializersModule {
+    polymorphic(Dot::class) {
+        subclass(DotImpl::class)
+    }
+}
+
+fun createDot(x: Int, y: Int, dt: Int): Dot = DotImpl(x, y, dt)
 
 fun Point.toDot(dt: Int): Dot = DotImpl(x, y, dt)

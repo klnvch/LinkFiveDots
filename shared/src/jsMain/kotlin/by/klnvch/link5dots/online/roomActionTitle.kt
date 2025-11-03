@@ -33,7 +33,7 @@ import by.klnvch.link5dots.ui.game.picker.states.PickerState
 import kotlinx.coroutines.DelicateCoroutinesApi
 
 @OptIn(ExperimentalJsExport::class, DelicateCoroutinesApi::class)
-@JsExport()
+@JsExport
 fun getRoomActionTitle(
     user: NetworkUser,
     pickerState: PickerState,

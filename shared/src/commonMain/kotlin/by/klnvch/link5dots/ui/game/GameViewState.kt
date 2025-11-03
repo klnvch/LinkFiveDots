@@ -33,7 +33,7 @@ import kotlin.js.JsExport
 import kotlin.time.Duration.Companion.seconds
 
 @OptIn(ExperimentalJsExport::class)
-@JsExport()
+@JsExport
 interface GameViewState {
     val infoViewState: GameInfoViewState
     val boardViewState: GameBoardViewState
@@ -42,7 +42,7 @@ interface GameViewState {
 }
 
 @OptIn(ExperimentalJsExport::class)
-@JsExport()
+@JsExport
 interface GameInfoUserViewState {
     val name: String
     val duration: Int
@@ -52,7 +52,7 @@ interface GameInfoUserViewState {
 }
 
 @OptIn(ExperimentalJsExport::class)
-@JsExport()
+@JsExport
 interface GameInfoViewState {
     val dotsStyleType: DotsStyleType
     val user1: GameInfoUserViewState
@@ -61,7 +61,7 @@ interface GameInfoViewState {
 }
 
 @OptIn(ExperimentalJsExport::class)
-@JsExport()
+@JsExport
 interface GameBoardViewState {
     val dotsStyleType: DotsStyleType
     val dots: Array<Dot>
@@ -70,7 +70,7 @@ interface GameBoardViewState {
 }
 
 @OptIn(ExperimentalJsExport::class)
-@JsExport()
+@JsExport
 interface MenuViewState {
     val newOption: ActionAvailability
     val undoOption: ActionAvailability
@@ -163,7 +163,7 @@ data class MenuViewStateImpl(
 private fun Int.formatDurationPart() = if (this < 10) "0${this}" else toString()
 
 @OptIn(ExperimentalJsExport::class)
-@JsExport()
+@JsExport
 fun Int.formatDuration() =
     if (this > 0) seconds.toComponents { hours, minutes, seconds, _ ->
         if (hours > 0) "${hours}:${minutes.formatDurationPart()}:${seconds.formatDurationPart()}"

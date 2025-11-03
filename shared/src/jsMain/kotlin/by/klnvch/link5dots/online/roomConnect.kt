@@ -47,14 +47,14 @@ import kotlin.js.Promise
 import kotlin.js.json
 
 @OptIn(ExperimentalJsExport::class)
-@JsExport()
+@JsExport
 data class RemoteInvitation(
     val key: String?,
     val value: dynamic?,
 )
 
 @OptIn(DelicateCoroutinesApi::class, ExperimentalJsExport::class)
-@JsExport()
+@JsExport
 fun toDescriptors(
     user2: NetworkUser,
     invitations: Array<RemoteInvitation>,

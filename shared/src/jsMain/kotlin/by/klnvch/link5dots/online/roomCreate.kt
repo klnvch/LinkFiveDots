@@ -40,7 +40,7 @@ import kotlinx.coroutines.launch
 import kotlin.js.Promise
 
 @OptIn(DelicateCoroutinesApi::class, ExperimentalJsExport::class)
-@JsExport()
+@JsExport
 fun roomCreate(
     user: NetworkUser?,
     onDbCreateInvitation: (invitation: CreateOnlineRoomInvitation) -> Promise<Unit>,
@@ -56,7 +56,7 @@ fun roomCreate(
             onDbCreateInvitation(invitation).await()
     }
 
-    return Promise { resolve, reject ->
+    return Promise { resolve, _ ->
         val onlineLocalStore = object : OnlineLocalStoreWriter {
             override suspend fun save(key: String) = resolve(key)
         }

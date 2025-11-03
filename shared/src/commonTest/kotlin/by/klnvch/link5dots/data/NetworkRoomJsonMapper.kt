@@ -24,10 +24,10 @@
 
 package by.klnvch.link5dots.data
 
-import by.klnvch.link5dots.domain.models.DotImpl
 import by.klnvch.link5dots.domain.models.INetworkRoom
 import by.klnvch.link5dots.domain.models.NetworkRoom
-import by.klnvch.link5dots.domain.models.NetworkUser
+import by.klnvch.link5dots.domain.models.createDot
+import by.klnvch.link5dots.domain.models.createNetworkUser
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -37,9 +37,9 @@ class NetworkRoomJsonMapper {
         val expected = NetworkRoom(
             "key",
             1,
-            listOf(DotImpl(1, 1, 1), DotImpl(2, 2, 2)),
-            NetworkUser("1", "a"),
-            NetworkUser("2", "b"),
+            listOf(createDot(1, 1, 1), createDot(2, 2, 2)),
+            createNetworkUser("1", "a"),
+            createNetworkUser("2", "b"),
         )
         val json = expected.toJson()
         val actual = json.toRoom<INetworkRoom>()

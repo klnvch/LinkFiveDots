@@ -64,7 +64,7 @@ data class Room(
     override fun undo() = copy(dots = dots.dropLast(1))
 }
 
-fun List<Dot>.findWinningLine(): WinningLine? {
+fun List<Point>.findWinningLine(): WinningLine? {
     if (size < 9) return null
 
     val lastDot = last()

@@ -26,12 +26,7 @@ package by.klnvch.link5dots.data.online.models
 
 import by.klnvch.link5dots.domain.models.NetworkUser
 import by.klnvch.link5dots.domain.models.Point
-import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlin.js.ExperimentalJsExport
-import kotlin.js.JsExport
 
-@OptIn(DelicateCoroutinesApi::class, ExperimentalJsExport::class)
-@JsExport()
 class AcceptOnlineRoomInvitation(
     val user2: NetworkUser,
     val dots: Array<Point>,

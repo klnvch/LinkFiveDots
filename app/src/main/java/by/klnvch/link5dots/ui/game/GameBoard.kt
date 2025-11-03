@@ -55,9 +55,9 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
 import by.klnvch.link5dots.R
 import by.klnvch.link5dots.domain.models.Dot
-import by.klnvch.link5dots.domain.models.DotImpl
 import by.klnvch.link5dots.domain.models.Point
 import by.klnvch.link5dots.domain.models.WinningLineImpl
+import by.klnvch.link5dots.domain.models.createDot
 import by.klnvch.link5dots.domain.models.createPoint
 import by.klnvch.link5dots.ui.game.utils.invertMap
 import by.klnvch.link5dots.ui.game.utils.postTranslate
@@ -71,26 +71,26 @@ fun GameScreenPreview() {
     GameBoard(
         viewState = GameBoardViewStateImpl(
             dots = arrayOf(
-                DotImpl(0, 0, 0),
-                DotImpl(1, 1, 0),
-                DotImpl(2, 2, 0),
-                DotImpl(3, 3, 0),
-                DotImpl(4, 4, 0),
-                DotImpl(5, 5, 0),
-                DotImpl(6, 6, 0),
-                DotImpl(7, 7, 0),
-                DotImpl(8, 8, 0),
-                DotImpl(9, 9, 0),
-                DotImpl(10, 10, 0),
-                DotImpl(11, 11, 0),
-                DotImpl(12, 12, 0),
-                DotImpl(13, 13, 0),
-                DotImpl(14, 14, 0),
-                DotImpl(15, 15, 0),
-                DotImpl(16, 16, 0),
-                DotImpl(17, 17, 0),
-                DotImpl(18, 18, 0),
-                DotImpl(19, 19, 0),
+                createDot(0, 0, 0),
+                createDot(1, 1, 0),
+                createDot(2, 2, 0),
+                createDot(3, 3, 0),
+                createDot(4, 4, 0),
+                createDot(5, 5, 0),
+                createDot(6, 6, 0),
+                createDot(7, 7, 0),
+                createDot(8, 8, 0),
+                createDot(9, 9, 0),
+                createDot(10, 10, 0),
+                createDot(11, 11, 0),
+                createDot(12, 12, 0),
+                createDot(13, 13, 0),
+                createDot(14, 14, 0),
+                createDot(15, 15, 0),
+                createDot(16, 16, 0),
+                createDot(17, 17, 0),
+                createDot(18, 18, 0),
+                createDot(19, 19, 0),
             ), winningLine = WinningLineImpl(
                 listOf(
                     createPoint(5, 5), createPoint(6, 5), createPoint(7, 5), createPoint(8, 5)

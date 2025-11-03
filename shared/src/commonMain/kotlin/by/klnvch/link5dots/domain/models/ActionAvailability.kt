@@ -28,7 +28,7 @@ import kotlin.js.ExperimentalJsExport
 import kotlin.js.JsExport
 
 @OptIn(ExperimentalJsExport::class)
-@JsExport()
+@JsExport
 enum class ActionAvailability(val isVisible: Boolean, val isEnabled: Boolean) {
     Gone(false, false),
     Disabled(true, false),

@@ -82,8 +82,7 @@ class AddDotOnlineUseCase(
     override val user: IUser get() = networkUserProvider.networkUserOrThrow
     override suspend fun addDot(room: INetworkRoom, p: Point) {
         addDotRepository.addDot(room.key, room.dots.size, p)
-        val dot = p.toDot(0)
-        if ((room.dots + dot).findWinningLine() != null) {
+        if ((room.dots + p).findWinningLine() != null) {
             updateStateRepository.update(room.key, RoomState.FINISHED)
         }
     }

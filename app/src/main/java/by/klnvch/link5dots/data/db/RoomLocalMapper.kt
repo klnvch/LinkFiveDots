@@ -33,6 +33,7 @@ import by.klnvch.link5dots.domain.models.IUser
 import by.klnvch.link5dots.domain.models.NetworkUser
 import by.klnvch.link5dots.domain.models.Room
 import by.klnvch.link5dots.domain.models.RoomType
+import by.klnvch.link5dots.domain.models.createNetworkUser
 
 fun RoomLocal.mapToRoom(): IRoom = Room(
     key,
@@ -73,7 +74,7 @@ private fun UserLocal.mapToUser(): IUser? = when (id) {
     "bot" -> BotUser
     "host" -> DeviceOwnerUser
     null -> null
-    else -> NetworkUser(id, name)
+    else -> createNetworkUser(id, name)
 }
 
 fun RoomType.mapToDbValue() = when (this) {

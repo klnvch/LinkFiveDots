@@ -25,11 +25,7 @@
 package by.klnvch.link5dots.data.online.models
 
 import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
-import kotlin.js.ExperimentalJsExport
-import kotlin.js.JsExport
 
-@OptIn(ExperimentalJsExport::class)
-@JsExport()
 class OnlineRoomDescriptor(
     override val title: String,
     override val time: Int,

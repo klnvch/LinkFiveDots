@@ -39,28 +39,28 @@ class RoomExtTest {
         assertEquals(0, dots.getDuration(0))
         // first dot
         dots = listOf(
-            DotImpl(1, 1, 0),
-            DotImpl(2, 2, 0),
-            DotImpl(3, 3, 10),
+            createDot(1, 1, 0),
+            createDot(2, 2, 0),
+            createDot(3, 3, 10),
         )
         assertEquals(0, dots.getDuration(1))
         assertEquals(0, dots.getDuration(0))
         // second dot
         dots = listOf(
-            DotImpl(1, 1, 0),
-            DotImpl(2, 2, 0),
-            DotImpl(3, 3, 10),
-            DotImpl(3, 3, 20),
+            createDot(1, 1, 0),
+            createDot(2, 2, 0),
+            createDot(3, 3, 10),
+            createDot(3, 3, 20),
         )
         assertEquals(0, dots.getDuration(1))
         assertEquals(10, dots.getDuration(0))
         // third dot
         dots = listOf(
-            DotImpl(1, 1, 0),
-            DotImpl(2, 2, 0),
-            DotImpl(3, 3, 10),
-            DotImpl(3, 3, 20),
-            DotImpl(3, 3, 30),
+            createDot(1, 1, 0),
+            createDot(2, 2, 0),
+            createDot(3, 3, 10),
+            createDot(3, 3, 20),
+            createDot(3, 3, 30),
         )
         assertEquals(10, dots.getDuration(1))
         assertEquals(10, dots.getDuration(0))

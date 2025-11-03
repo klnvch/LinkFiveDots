@@ -24,31 +24,31 @@
 
 package by.klnvch.link5dots.data
 
-import by.klnvch.link5dots.domain.models.Dot
-import by.klnvch.link5dots.domain.models.DotImpl
 import by.klnvch.link5dots.domain.models.INetworkRoom
 import by.klnvch.link5dots.domain.models.INetworkRoomInvitation
 import by.klnvch.link5dots.domain.models.NetworkRoom
 import by.klnvch.link5dots.domain.models.NetworkRoomEntity
 import by.klnvch.link5dots.domain.models.NetworkRoomInvitation
+import by.klnvch.link5dots.domain.models.dotModule
+import by.klnvch.link5dots.domain.models.userModule
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.SerializersModule
+import kotlinx.serialization.modules.plus
 import kotlinx.serialization.modules.polymorphic
 import kotlinx.serialization.modules.subclass
 
+val roomModule = SerializersModule {
+    polymorphic(INetworkRoomInvitation::class) {
+        subclass(NetworkRoomInvitation::class)
+    }
+    polymorphic(INetworkRoom::class) {
+        subclass(NetworkRoom::class)
+    }
+}
+
 val json = Json {
     ignoreUnknownKeys = true
-    serializersModule = SerializersModule {
-        polymorphic(INetworkRoomInvitation::class) {
-            subclass(NetworkRoomInvitation::class)
-        }
-        polymorphic(INetworkRoom::class) {
-            subclass(NetworkRoom::class)
-        }
-        polymorphic(Dot::class) {
-            subclass(DotImpl::class)
-        }
-    }
+    serializersModule = roomModule + userModule + dotModule
 }
 
 private fun INetworkRoom.toJson() = json.encodeToString(this)

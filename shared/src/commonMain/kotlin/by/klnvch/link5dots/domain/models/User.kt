@@ -25,11 +25,14 @@
 package by.klnvch.link5dots.domain.models
 
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.modules.SerializersModule
+import kotlinx.serialization.modules.polymorphic
+import kotlinx.serialization.modules.subclass
 import kotlin.js.ExperimentalJsExport
 import kotlin.js.JsExport
 
 @OptIn(ExperimentalJsExport::class)
-@JsExport()
+@JsExport
 sealed interface IUser
 
 @Serializable
@@ -39,6 +42,24 @@ object BotUser : IUser
 object DeviceOwnerUser : IUser
 
 @OptIn(ExperimentalJsExport::class)
-@JsExport()
+@JsExport
+interface NetworkUser : IUser {
+    val id: String
+    val name: String?
+}
+
+@OptIn(ExperimentalJsExport::class)
+@JsExport
+fun createNetworkUser(id: String, name: String?): NetworkUser = NetworkUserImpl(id, name)
+
 @Serializable
-data class NetworkUser(val id: String, val name: String?) : IUser
+private data class NetworkUserImpl(
+    override val id: String,
+    override val name: String?,
+) : NetworkUser
+
+val userModule = SerializersModule {
+    polymorphic(NetworkUser::class) {
+        subclass(NetworkUserImpl::class)
+    }
+}

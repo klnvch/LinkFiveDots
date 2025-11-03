@@ -24,7 +24,7 @@
 
 package by.klnvch.link5dots.domain.repositories
 
-import by.klnvch.link5dots.domain.models.NetworkUser
+import by.klnvch.link5dots.domain.models.createNetworkUser
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
@@ -42,7 +42,7 @@ class NetworkUserFirebaseProvider @Inject constructor(
     private val userFlow = combine(
         firebaseManager.userId.filterNotNull(),
         settings.getUserNameFlow()
-    ) { id, name -> NetworkUser(id, name) }
+    ) { id, name -> createNetworkUser(id, name) }
         .stateIn(scope, SharingStarted.Eagerly, null)
     override val networkUser get() = userFlow.value
 }
@@ -55,7 +55,7 @@ class NetworkUserLocalProvider @Inject constructor(
     private val userFlow = combine(
         settings.userId,
         settings.getUserNameFlow()
-    ) { id, name -> NetworkUser(id, name) }
+    ) { id, name -> createNetworkUser(id, name) }
         .stateIn(scope, SharingStarted.Eagerly, null)
     override val networkUser get() = userFlow.value
 }

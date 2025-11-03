@@ -28,6 +28,7 @@ import by.klnvch.link5dots.data.online.models.AcceptOnlineRoomInvitation
 import by.klnvch.link5dots.data.online.models.OnlineRemoteUser
 import by.klnvch.link5dots.data.online.models.OnlineRoomInvitationRemote
 import by.klnvch.link5dots.domain.models.NetworkUser
+import by.klnvch.link5dots.domain.models.createNetworkUser
 
 class OnlineRoomInvitation(
     val time: Int,
@@ -39,7 +40,7 @@ inline fun <T1 : Any, T2 : Any, R : Any> safeLet(p1: T1?, p2: T2?, block: (T1, T
     return if (p1 != null && p2 != null) block(p1, p2) else null
 }
 
-private fun OnlineRemoteUser.toNetworkUser() = id?.let { NetworkUser(it, name) }
+private fun OnlineRemoteUser.toNetworkUser() = id?.let { createNetworkUser(it, name) }
 private fun OnlineRoomInvitationRemote.toOnlineRoomInvitation(
     key: String,
     onConnect: suspend (key: String, accept: AcceptOnlineRoomInvitation) -> Unit,
