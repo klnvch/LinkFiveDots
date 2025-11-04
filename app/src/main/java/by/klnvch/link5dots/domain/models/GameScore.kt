@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 klnvch
+ * Copyright (c) 2023-2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,35 +23,18 @@
  */
 package by.klnvch.link5dots.domain.models
 
+enum class GameResult { WON, LOST }
+
 sealed interface GameScore {
     val size: Int
     val duration: Int
     val timestamp: Long
-}
-
-class SimpleGameScore(
-    override val size: Int,
-    override val duration: Int,
-    override val timestamp: Long
-) : GameScore
-
-sealed interface RealGameScore : GameScore {
     val status: GameResult
 }
 
-class BotGameScore(
+data class BotGameScore(
     override val size: Int,
     override val duration: Int,
     override val timestamp: Long,
-    override val status: GameResult
-) : RealGameScore
-
-class NetworkGameScore(
-    override val size: Int,
-    override val duration: Int,
-    override val timestamp: Long,
-    override val status: GameResult
-) : RealGameScore
-
-
-enum class GameResult { WON, LOST }
+    override val status: GameResult,
+) : GameScore

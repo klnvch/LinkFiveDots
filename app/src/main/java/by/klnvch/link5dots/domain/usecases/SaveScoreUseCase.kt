@@ -24,27 +24,48 @@
 package by.klnvch.link5dots.domain.usecases
 
 import by.klnvch.link5dots.domain.models.BotGameScore
+import by.klnvch.link5dots.domain.models.GameResult
 import by.klnvch.link5dots.domain.models.UnauthorizedException
 import by.klnvch.link5dots.domain.repositories.DeviceInfo
 import by.klnvch.link5dots.domain.repositories.FirebaseManager
 import by.klnvch.link5dots.domain.repositories.GameScoreRepository
+import by.klnvch.link5dots.domain.repositories.RoomGetRepository
 import by.klnvch.link5dots.domain.repositories.Settings
 import by.klnvch.link5dots.domain.repositories.StringRepository
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
+interface SaveScoreUseCase {
+    suspend fun save()
+}
+
+class SaveScoreBotEmptyUseCase @Inject constructor() : SaveScoreUseCase {
+    override suspend fun save() = Unit
+}
+
 // TODO: add isSupported and login
-class SaveScoreUseCase @Inject constructor(
+class SaveScoreBotUseCase @Inject constructor(
     private val deviceInfo: DeviceInfo,
     private val firebaseManager: FirebaseManager,
     private val gameScoreRepository: GameScoreRepository,
     private val settings: Settings,
     private val stringRepository: StringRepository,
-) {
-    suspend fun save(score: BotGameScore) {
-        val deviceId = deviceInfo.getAndroidId()
-        val userId = firebaseManager.userId.first() ?: throw UnauthorizedException()
-        val userName = settings.getUserName() ?: stringRepository.unknownName
-        gameScoreRepository.save(score, userName, userId, deviceId)
+    private val getRepository: RoomGetRepository,
+) : SaveScoreUseCase {
+    override suspend fun save() {
+        getRepository.room?.let {
+            if (it.isOver()) {
+                val score = BotGameScore(
+                    it.dots.size,
+                    it.getDuration(),
+                    it.getEndTime().toLong(),
+                    if (it.dots.size % 2 == 1) GameResult.WON else GameResult.LOST
+                )
+                val deviceId = deviceInfo.getAndroidId()
+                val userId = firebaseManager.userId.first() ?: throw UnauthorizedException()
+                val userName = settings.getUserName() ?: stringRepository.unknownName
+                gameScoreRepository.save(score, userName, userId, deviceId)
+            }
+        }
     }
 }

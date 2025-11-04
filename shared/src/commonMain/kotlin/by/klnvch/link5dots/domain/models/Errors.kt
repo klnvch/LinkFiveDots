@@ -30,7 +30,11 @@ import kotlin.js.JsExport
 class UnauthorizedException : Exception()
 
 @OptIn(ExperimentalJsExport::class)
-@JsExport()
+@JsExport
 sealed class RecoverableGameException(cause: Throwable?) : Exception(cause)
+
+@OptIn(ExperimentalJsExport::class)
+@JsExport
 class ConnectException(val target: String, cause: Throwable?) : RecoverableGameException(cause)
+
 class PermissionException() : RecoverableGameException(null)

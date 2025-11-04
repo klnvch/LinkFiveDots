@@ -35,8 +35,8 @@ import by.klnvch.link5dots.domain.usecases.GameActionsTwoUseCase
 import by.klnvch.link5dots.domain.usecases.GameActionsUseCase
 import by.klnvch.link5dots.domain.usecases.GetRoomCommonUseCase
 import by.klnvch.link5dots.domain.usecases.GetRoomUseCase
-import by.klnvch.link5dots.domain.usecases.PrepareScoreOtherUseCase
-import by.klnvch.link5dots.domain.usecases.PrepareScoreUseCase
+import by.klnvch.link5dots.domain.usecases.SaveScoreBotEmptyUseCase
+import by.klnvch.link5dots.domain.usecases.SaveScoreUseCase
 import by.klnvch.link5dots.domain.usecases.UndoMoveTwoUseCase
 import by.klnvch.link5dots.domain.usecases.UndoMoveUseCase
 import dagger.Binds
@@ -60,7 +60,7 @@ interface TwoPlayersGameRulesModule {
     fun bindUndoMoveUseCase(impl: UndoMoveTwoUseCase): UndoMoveUseCase
 
     @Binds
-    fun bindPrepareScoreUseCase(impl: PrepareScoreOtherUseCase): PrepareScoreUseCase
+    fun bindSaveScoreUseCase(impl: SaveScoreBotEmptyUseCase): SaveScoreUseCase
 
     @Binds
     fun bindRoomGetRepository(impl: RoomTwoGetRepository): RoomGetRepository

@@ -29,8 +29,8 @@ import by.klnvch.link5dots.domain.usecases.GameActionsInfoUseCase
 import by.klnvch.link5dots.domain.usecases.GameActionsUseCase
 import by.klnvch.link5dots.domain.usecases.GetRoomInfoUseCase
 import by.klnvch.link5dots.domain.usecases.GetRoomUseCase
-import by.klnvch.link5dots.domain.usecases.PrepareScoreOtherUseCase
-import by.klnvch.link5dots.domain.usecases.PrepareScoreUseCase
+import by.klnvch.link5dots.domain.usecases.SaveScoreBotEmptyUseCase
+import by.klnvch.link5dots.domain.usecases.SaveScoreUseCase
 import by.klnvch.link5dots.domain.usecases.UndoMoveInfoUseCase
 import by.klnvch.link5dots.domain.usecases.UndoMoveUseCase
 import dagger.Binds
@@ -48,7 +48,7 @@ interface InfoGameRulesModule {
     fun bindUndoMoveUseCase(impl: UndoMoveInfoUseCase): UndoMoveUseCase
 
     @Binds
-    fun bindPrepareScoreUseCase(impl: PrepareScoreOtherUseCase): PrepareScoreUseCase
+    fun bindSaveScoreUseCase(impl: SaveScoreBotEmptyUseCase): SaveScoreUseCase
 
     @Binds
     fun bindGameActionsUseCase(impl: GameActionsInfoUseCase): GameActionsUseCase

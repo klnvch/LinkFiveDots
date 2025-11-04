@@ -37,8 +37,8 @@ import by.klnvch.link5dots.domain.usecases.AddDotOnlineUseCase
 import by.klnvch.link5dots.domain.usecases.AddDotUseCase
 import by.klnvch.link5dots.domain.usecases.GetRoomNetworkUseCase
 import by.klnvch.link5dots.domain.usecases.GetRoomUseCase
-import by.klnvch.link5dots.domain.usecases.PrepareScoreMultiplayerUseCase
-import by.klnvch.link5dots.domain.usecases.PrepareScoreUseCase
+import by.klnvch.link5dots.domain.usecases.SaveScoreBotEmptyUseCase
+import by.klnvch.link5dots.domain.usecases.SaveScoreUseCase
 import by.klnvch.link5dots.domain.usecases.UndoMoveInfoUseCase
 import by.klnvch.link5dots.domain.usecases.UndoMoveUseCase
 import by.klnvch.link5dots.domain.usecases.network.CreateMultiplayerRoomUseCase
@@ -71,7 +71,7 @@ interface OnlineGameRulesModule {
     fun bindUndoMoveUseCase(impl: UndoMoveInfoUseCase): UndoMoveUseCase
 
     @Binds
-    fun bindPrepareScoreUseCase(impl: PrepareScoreMultiplayerUseCase): PrepareScoreUseCase
+    fun bindSaveScoreUseCase(impl: SaveScoreBotEmptyUseCase): SaveScoreUseCase
 
     @Binds
     fun bindInitMultiplayerUseCase(impl: InitOnlineUseCase): InitMultiplayerUseCase

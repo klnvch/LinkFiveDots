@@ -25,7 +25,6 @@ package by.klnvch.link5dots.ui.game
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import by.klnvch.link5dots.domain.models.BotGameScore
 import by.klnvch.link5dots.domain.models.Point
 import by.klnvch.link5dots.domain.models.createPoint
 import by.klnvch.link5dots.domain.models.isNew
@@ -36,7 +35,6 @@ import by.klnvch.link5dots.domain.usecases.GameActionsUseCase
 import by.klnvch.link5dots.domain.usecases.GetRoomUseCase
 import by.klnvch.link5dots.domain.usecases.GetUserNameUseCase
 import by.klnvch.link5dots.domain.usecases.NewGameUseCase
-import by.klnvch.link5dots.domain.usecases.PrepareScoreUseCase
 import by.klnvch.link5dots.domain.usecases.RoomParam
 import by.klnvch.link5dots.domain.usecases.SaveScoreUseCase
 import by.klnvch.link5dots.domain.usecases.UndoMoveUseCase
@@ -58,7 +56,6 @@ open class OfflineGameViewModel @Inject constructor(
     private val newGameUseCase: NewGameUseCase,
     private val addDotUseCase: AddDotUseCase,
     private val undoMoveUseCase: UndoMoveUseCase,
-    private val prepareScoreUseCase: PrepareScoreUseCase,
     private val saveScoreUseCase: SaveScoreUseCase,
     private val settings: Settings,
     private val getUserNameUseCase: GetUserNameUseCase,
@@ -69,18 +66,18 @@ open class OfflineGameViewModel @Inject constructor(
     @OptIn(ExperimentalCoroutinesApi::class)
     protected val roomFlow = _searchQueryFlow.flatMapLatest { getRoomUseCase.get(it) }
 
-    val uiState = roomFlow.map {
-        val type = settings.getDotsType().first()
-        val user1Name = getUserNameUseCase.get(it.user1)
-        val user2Name = getUserNameUseCase.get(it.user2)
+    val uiState = roomFlow.map { room ->
+        val dotsStyleType = settings.getDotsType().first()
+        val user1Name = getUserNameUseCase.get(room.user1)
+        val user2Name = getUserNameUseCase.get(room.user2)
         val newActionAvailability = getGameActionsUseCase.newAction
         val undoActionAvailability = getGameActionsUseCase.undoAction
         val shareActionAvailability = getGameActionsUseCase.shareAction
         createGameViewState(
-            type,
+            dotsStyleType,
             user1Name,
             user2Name,
-            it,
+            room,
             newActionAvailability,
             undoActionAvailability,
             shareActionAvailability,
@@ -114,11 +111,7 @@ open class OfflineGameViewModel @Inject constructor(
     }
 
     fun saveScore() = viewModelScope.launch {
-        val room = roomFlow.firstOrNull()
-        if (room != null) {
-            val score = prepareScoreUseCase.get(room)
-            saveScoreUseCase.save(score as BotGameScore)
-        }
+        saveScoreUseCase.save()
     }
 
     fun focus() = viewModelScope.launch {

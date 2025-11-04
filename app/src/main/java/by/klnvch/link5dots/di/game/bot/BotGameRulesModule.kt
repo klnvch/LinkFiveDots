@@ -29,8 +29,8 @@ import by.klnvch.link5dots.domain.repositories.RoomBotGetRepository
 import by.klnvch.link5dots.domain.repositories.RoomGetRepository
 import by.klnvch.link5dots.domain.usecases.GetRoomCommonUseCase
 import by.klnvch.link5dots.domain.usecases.GetRoomUseCase
-import by.klnvch.link5dots.domain.usecases.PrepareScoreBotUseCase
-import by.klnvch.link5dots.domain.usecases.PrepareScoreUseCase
+import by.klnvch.link5dots.domain.usecases.SaveScoreBotUseCase
+import by.klnvch.link5dots.domain.usecases.SaveScoreUseCase
 import dagger.Binds
 import dagger.Module
 
@@ -43,7 +43,7 @@ interface BotGameRulesModule {
     fun bindGetRoomUseCase(impl: GetRoomCommonUseCase): GetRoomUseCase
 
     @Binds
-    fun bindPrepareScoreUseCase(impl: PrepareScoreBotUseCase): PrepareScoreUseCase
+    fun bindSaveScoreUseCase(impl: SaveScoreBotUseCase): SaveScoreUseCase
 
     @Binds
     fun bindRoomGetRepository(impl: RoomBotGetRepository): RoomGetRepository
