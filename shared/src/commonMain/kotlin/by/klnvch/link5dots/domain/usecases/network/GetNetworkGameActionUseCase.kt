@@ -27,6 +27,7 @@ package by.klnvch.link5dots.domain.usecases.network
 import by.klnvch.link5dots.domain.models.INetworkRoom
 import by.klnvch.link5dots.domain.models.NetworkGameAction
 import by.klnvch.link5dots.domain.models.NetworkUser
+import by.klnvch.link5dots.domain.models.canMove
 import by.klnvch.link5dots.domain.repositories.NetworkUserProvider
 import by.klnvch.link5dots.ui.game.picker.states.PickerState
 
@@ -47,20 +48,7 @@ class GetNetworkGameActionUseCase(private val networkUserProvider: NetworkUserPr
     }
 }
 
-private fun INetworkRoom.canMove(user: NetworkUser?) = when {
-    user1.id == user?.id -> dots.size % 2 == 0
-    user2.id == user?.id -> dots.size % 2 == 1
-    else -> null
-}
-
-private fun INetworkRoom?.isMove(user: NetworkUser?) =
-    this !== null && canMove(user) == true
-
-private fun INetworkRoom?.isWait(user: NetworkUser?) =
-    this !== null && canMove(user) == false
-
-private fun INetworkRoom?.isWon(user: NetworkUser?) =
-    this !== null && isOver() && canMove(user) == false
-
-private fun INetworkRoom?.isLost(user: NetworkUser?) =
-    this !== null && isOver() && canMove(user) == true
+private fun INetworkRoom?.isMove(user: NetworkUser?) = this !== null && canMove(user)
+private fun INetworkRoom?.isWait(user: NetworkUser?) = this !== null && !canMove(user)
+private fun INetworkRoom?.isWon(user: NetworkUser?) = this !== null && isOver() && !canMove(user)
+private fun INetworkRoom?.isLost(user: NetworkUser?) = this !== null && isOver() && canMove(user)

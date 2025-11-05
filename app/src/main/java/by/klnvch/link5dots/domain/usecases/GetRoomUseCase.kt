@@ -27,6 +27,9 @@ import by.klnvch.link5dots.domain.models.IRoom
 import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
 import by.klnvch.link5dots.domain.models.RoomFactory
 import by.klnvch.link5dots.domain.models.RoomType
+import by.klnvch.link5dots.domain.models.canMove
+import by.klnvch.link5dots.domain.models.isNew
+import by.klnvch.link5dots.domain.repositories.NetworkUserProvider
 import by.klnvch.link5dots.domain.repositories.RoomFlowLocalRepository
 import by.klnvch.link5dots.domain.repositories.RoomFlowRemoteRepository
 import by.klnvch.link5dots.domain.repositories.RoomRepository
@@ -67,9 +70,15 @@ class GetRoomNetworkUseCase @Inject constructor(
     private val saveRepository: RoomSaveLocalRepository,
     private val settings: Settings,
     private val vibratorService: VibratorService,
+    private val networkUserProvider: NetworkUserProvider,
 ) : GetRoomUseCase {
     override fun get(param: RoomParam) = repository.roomFlow
-        .onEach { if (settings.isVibrationEnabled.first()) vibratorService.vibrate() }
+        .onEach {
+            val isEnabled = settings.isVibrationEnabled.first()
+            val canMove = it.canMove(networkUserProvider.networkUser) == true
+            val isNew = it.isNew()
+            if (isEnabled && (canMove || isNew)) vibratorService.vibrate()
+        }
         .onEach { saveRepository.save(it) }
 }
 

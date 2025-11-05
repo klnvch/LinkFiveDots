@@ -89,3 +89,4 @@ data class NetworkRoom(
 }
 
 fun INetworkRoom.isOwner(user: NetworkUser): Boolean = user1.id == user.id
+fun INetworkRoom.canMove(user: NetworkUser?) = (if (size % 2 == 0) user1 else user2).id == user?.id

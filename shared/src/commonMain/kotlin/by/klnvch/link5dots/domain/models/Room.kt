@@ -51,6 +51,9 @@ interface IRoom {
 fun IRoom.canMove(user: IUser?) = (if (dots.size % 2 == 0) user1 else user2) == user
 fun IRoom.canUndo(user: IUser?) = (if (dots.size % 2 == 1) user1 else user2) == user
 fun IRoom.isNotEmpty() = dots.isNotEmpty()
+fun IRoom.lastPoint(): Point? = dots.lastOrNull()
+fun IRoom.isNew() = dots.lastOrNull()?.dt == 0
+val IRoom.size get() = dots.size
 
 @Serializable
 data class Room(
