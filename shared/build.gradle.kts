@@ -45,6 +45,7 @@ kotlin {
         namespace = "by.klnvch.link5dots"
         compileSdk = 36
         minSdk = 23
+        version = "0.0.1"
 
         withHostTestBuilder {
         }
@@ -57,6 +58,21 @@ kotlin {
     }
 
     js(IR) {
+        outputModuleName = "@klnvch/link-five-dots-shared"
+        compilations["main"].packageJson {
+            customField(
+                "repository", mapOf(
+                    "type" to "git",
+                    "url" to "https://github.com/klnvch/LinkFiveDots.git",
+                )
+            )
+            customField(
+                "publishConfig", mapOf(
+                    "registry" to "https://npm.pkg.github.com",
+                )
+            )
+        }
+
         binaries.library()
         useEsModules()
         browser()
