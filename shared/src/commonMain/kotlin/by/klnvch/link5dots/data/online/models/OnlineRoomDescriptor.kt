@@ -26,7 +26,7 @@ package by.klnvch.link5dots.data.online.models
 
 import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
 
-class OnlineRoomDescriptor(
+data class OnlineRoomDescriptor(
     override val title: String,
     override val time: Int,
     val key: String,

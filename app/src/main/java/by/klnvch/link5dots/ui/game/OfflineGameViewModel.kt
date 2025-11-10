@@ -23,6 +23,7 @@
  */
 package by.klnvch.link5dots.ui.game
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import by.klnvch.link5dots.domain.models.Point
@@ -43,6 +44,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flatMapLatest
@@ -64,9 +66,11 @@ open class OfflineGameViewModel @Inject constructor(
     private val _searchQueryFlow = MutableSharedFlow<RoomParam>(1)
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    protected val roomFlow = _searchQueryFlow.flatMapLatest { getRoomUseCase.get(it) }
+    protected val roomFlow =
+        _searchQueryFlow.distinctUntilChanged().flatMapLatest { getRoomUseCase.get(it) }
 
     val uiState = roomFlow.map { room ->
+        Log.d("ViewModel", "updated: $room")
         val dotsStyleType = settings.getDotsType().first()
         val user1Name = getUserNameUseCase.get(room.user1)
         val user2Name = getUserNameUseCase.get(room.user2)

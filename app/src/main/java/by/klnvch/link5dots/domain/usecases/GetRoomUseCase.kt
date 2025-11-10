@@ -75,7 +75,7 @@ class GetRoomNetworkUseCase @Inject constructor(
     override fun get(param: RoomParam) = repository.roomFlow
         .onEach {
             val isEnabled = settings.isVibrationEnabled.first()
-            val canMove = it.canMove(networkUserProvider.networkUser) == true
+            val canMove = it.canMove(networkUserProvider.networkUser)
             val isNew = it.isNew()
             if (isEnabled && (canMove || isNew)) vibratorService.vibrate()
         }
