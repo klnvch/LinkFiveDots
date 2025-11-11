@@ -32,10 +32,10 @@ import androidx.compose.runtime.remember
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import by.klnvch.link5dots.R
-import by.klnvch.link5dots.ui.game.OfflineGameViewModel
-import by.klnvch.link5dots.ui.game.OnlineGameViewModel
 import by.klnvch.link5dots.ui.game.error.ErrorScreenNsd
 import by.klnvch.link5dots.ui.game.picker.PickerScreen
+import by.klnvch.link5dots.ui.game.viewmodels.BaseGameViewModel
+import by.klnvch.link5dots.ui.game.viewmodels.OnlineGameViewModel
 import by.klnvch.link5dots.ui.settings.SettingsViewModel
 import dagger.android.support.DaggerAppCompatActivity
 import javax.inject.Inject
@@ -51,7 +51,7 @@ class NsdGameActivity : DaggerAppCompatActivity() {
         val viewModel = ViewModelProvider(
             this,
             viewModelFactory
-        )[OfflineGameViewModel.KEY, OnlineGameViewModel::class.java]
+        )[BaseGameViewModel.KEY, OnlineGameViewModel::class.java]
 
         setContent {
             val getVMFactory: () -> ViewModelProvider.Factory = remember { { viewModelFactory } }

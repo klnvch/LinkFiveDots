@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023-2025 klnvch
+ * Copyright (c) 2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,20 +21,27 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package by.klnvch.link5dots.di.game.info
 
-import by.klnvch.link5dots.domain.usecases.GameActionsInfoUseCase
+package by.klnvch.link5dots.ui.game.viewmodels
+
+import by.klnvch.link5dots.domain.models.Point
+import by.klnvch.link5dots.domain.repositories.KeyForInfoRepository
+import by.klnvch.link5dots.domain.repositories.Settings
 import by.klnvch.link5dots.domain.usecases.GameActionsUseCase
-import by.klnvch.link5dots.domain.usecases.GetRoomInfoUseCase
 import by.klnvch.link5dots.domain.usecases.GetRoomUseCase
-import dagger.Binds
-import dagger.Module
+import by.klnvch.link5dots.domain.usecases.GetUserNameUseCase
+import javax.inject.Inject
 
-@Module
-interface InfoGameRulesModule {
-    @Binds
-    fun bindGetRoomUseCase(impl: GetRoomInfoUseCase): GetRoomUseCase
-
-    @Binds
-    fun bindGameActionsUseCase(impl: GameActionsInfoUseCase): GameActionsUseCase
+class InfoGameViewModel @Inject constructor(
+    getRoomUseCase: GetRoomUseCase,
+    settings: Settings,
+    getUserNameUseCase: GetUserNameUseCase,
+    getGameActionsUseCase: GameActionsUseCase,
+    private val keyForInfoRepository: KeyForInfoRepository,
+) : BaseGameViewModel(getRoomUseCase, settings, getUserNameUseCase, getGameActionsUseCase) {
+    override fun undo() = Unit
+    override fun new(): Boolean = false
+    override fun addDot(p: Point) = Unit
+    override fun saveScore() = Unit
+    fun setKey(key: String) = keyForInfoRepository.setKey(key)
 }

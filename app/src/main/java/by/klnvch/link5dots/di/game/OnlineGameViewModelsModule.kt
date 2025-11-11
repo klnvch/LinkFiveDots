@@ -26,9 +26,9 @@ package by.klnvch.link5dots.di.game
 
 import androidx.lifecycle.ViewModel
 import by.klnvch.link5dots.di.viewmodels.ViewModelKey
-import by.klnvch.link5dots.ui.game.OnlineGameViewModel
 import by.klnvch.link5dots.ui.game.picker.FirebaseStatusViewModel
 import by.klnvch.link5dots.ui.game.picker.VisibilityViewModel
+import by.klnvch.link5dots.ui.game.viewmodels.OnlineGameViewModel
 import by.klnvch.link5dots.ui.settings.SettingsViewModel
 import dagger.Binds
 import dagger.Module

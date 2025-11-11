@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package by.klnvch.link5dots.ui.game
+package by.klnvch.link5dots.ui.game.viewmodels
 
 import androidx.lifecycle.viewModelScope
 import by.klnvch.link5dots.domain.models.FoundRemoteRoom
@@ -31,14 +31,12 @@ import by.klnvch.link5dots.domain.models.NetworkRoomStateCreated
 import by.klnvch.link5dots.domain.models.NetworkRoomStateDeleted
 import by.klnvch.link5dots.domain.models.NetworkRoomStateFinished
 import by.klnvch.link5dots.domain.models.NetworkRoomStateStarted
-import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
 import by.klnvch.link5dots.domain.repositories.Settings
 import by.klnvch.link5dots.domain.usecases.AddDotUseCase
 import by.klnvch.link5dots.domain.usecases.GameActionsUseCase
 import by.klnvch.link5dots.domain.usecases.GetRoomUseCase
 import by.klnvch.link5dots.domain.usecases.GetUserNameUseCase
 import by.klnvch.link5dots.domain.usecases.NewGameUseCase
-import by.klnvch.link5dots.domain.usecases.RoomByDescriptor
 import by.klnvch.link5dots.domain.usecases.SaveScoreUseCase
 import by.klnvch.link5dots.domain.usecases.UndoMoveUseCase
 import by.klnvch.link5dots.domain.usecases.network.CleanMultiplayerRoomUseCase
@@ -79,13 +77,13 @@ class OnlineGameViewModel @Inject constructor(
     settings: Settings,
 ) : OfflineGameViewModel(
     getRoomUseCase,
+    settings,
+    getUserNameUseCase,
+    getGameActionsUseCase,
     newGameUseCase,
     addDotUseCase,
     undoMoveUseCase,
     saveScoreUseCase,
-    settings,
-    getUserNameUseCase,
-    getGameActionsUseCase,
 ) {
     private val _pickerState = MutableStateFlow(createInitialPickerState())
 
@@ -166,13 +164,8 @@ class OnlineGameViewModel @Inject constructor(
         when (state) {
             is NetworkRoomStateCreated -> _pickerState.update { it.created(state.descriptor) }
             is NetworkRoomStateDeleted -> _pickerState.update { it.reset() }
-            is NetworkRoomStateStarted -> onConnected(state.descriptor)
+            is NetworkRoomStateStarted -> _pickerState.update { it.connected(state.descriptor) }
             is NetworkRoomStateFinished -> _pickerState.update { it.disconnected() }
         }
-    }
-
-    private fun onConnected(descriptor: RemoteRoomDescriptor) {
-        _pickerState.update { it.connected(descriptor) }
-        setParam(RoomByDescriptor(descriptor))
     }
 }

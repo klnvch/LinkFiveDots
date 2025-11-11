@@ -36,7 +36,7 @@ import by.klnvch.link5dots.domain.repositories.SocketSendRepository
 import by.klnvch.link5dots.domain.repositories.networkUserOrThrow
 import javax.inject.Inject
 
-class UndoMoveInfoUseCase @Inject constructor() : UndoMoveUseCase {
+class UndoMoveEmptyUseCase @Inject constructor() : UndoMoveUseCase {
     override suspend fun undo() = Unit
 }
 

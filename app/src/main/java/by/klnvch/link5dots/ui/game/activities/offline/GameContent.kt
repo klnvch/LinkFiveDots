@@ -27,43 +27,37 @@ package by.klnvch.link5dots.ui.game.activities.offline
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import by.klnvch.link5dots.domain.models.NightMode
-import by.klnvch.link5dots.domain.usecases.RoomParam
 import by.klnvch.link5dots.ui.game.GameBottomAppBar
 import by.klnvch.link5dots.ui.game.GameScreen
-import by.klnvch.link5dots.ui.game.OfflineGameViewModel
 import by.klnvch.link5dots.ui.game.topBar.TopBar
+import by.klnvch.link5dots.ui.game.viewmodels.GameActions
 import by.klnvch.link5dots.ui.theme.AppTheme
 
 @Composable
 fun GameContent(
-    viewModel: OfflineGameViewModel,
+    actions: GameActions,
     nightMode: NightMode,
-    param: RoomParam,
     title: @Composable () -> Unit,
     navigateUp: () -> Unit,
 ) {
-    LaunchedEffect(true) {
-        viewModel.setParam(param)
-    }
     AppTheme(nightMode) {
         Scaffold(
             containerColor = Color.Transparent,
             topBar = {
                 TopBar(
-                    viewModel = viewModel,
+                    actions = actions,
                     title = title,
                     navigateUp = navigateUp
                 )
             },
-            bottomBar = { GameBottomAppBar(viewModel) }
+            bottomBar = { GameBottomAppBar(actions) }
         ) { innerPadding ->
             GameScreen(
                 modifier = Modifier.padding(innerPadding),
-                viewModel = viewModel,
+                actions = actions,
             )
         }
     }

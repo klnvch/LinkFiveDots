@@ -39,7 +39,7 @@ interface SaveScoreUseCase {
     suspend fun save()
 }
 
-class SaveScoreBotEmptyUseCase @Inject constructor() : SaveScoreUseCase {
+class SaveScoreEmptyUseCase @Inject constructor() : SaveScoreUseCase {
     override suspend fun save() = Unit
 }
 

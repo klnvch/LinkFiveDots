@@ -31,22 +31,23 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import by.klnvch.link5dots.ui.game.viewmodels.GameActions
 
 @Composable
 fun GameScreen(
     modifier: Modifier = Modifier,
-    viewModel: OfflineGameViewModel,
+    actions: GameActions,
 ) {
-    val uiState by viewModel.uiState.collectAsState()
-    val focus by viewModel.focus.collectAsState()
+    val uiState by actions.uiState.collectAsState()
+    val focus by actions.focus.collectAsState()
 
     Box(modifier = modifier.fillMaxSize()) {
         GameBoard(
             Modifier.fillMaxSize(),
             uiState.boardViewState,
             focus,
-            onMoveDone = { viewModel.addDot(it) },
-            onUnfocus = { viewModel.unfocus() },
+            onMoveDone = { actions.addDot(it) },
+            onUnfocus = { actions.unfocus() },
         )
         GameInfo(
             Modifier.align(Alignment.TopEnd),

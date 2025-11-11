@@ -24,7 +24,6 @@
 package by.klnvch.link5dots.di.game.info
 
 import by.klnvch.link5dots.di.ActivityScope
-import by.klnvch.link5dots.di.game.OfflineGameViewModelsModule
 import by.klnvch.link5dots.ui.game.activities.offline.GameInfoActivity
 import dagger.Subcomponent
 import dagger.android.AndroidInjector
@@ -32,9 +31,8 @@ import dagger.android.AndroidInjector
 @ActivityScope
 @Subcomponent(
     modules = [
-        OfflineGameViewModelsModule::class,
+        InfoGameViewModelsModule::class,
         InfoGameRulesModule::class,
-        InfoGameRulesModule2::class,
     ]
 )
 interface InfoGameSubcomponent : AndroidInjector<GameInfoActivity> {

@@ -34,10 +34,9 @@ import androidx.compose.runtime.remember
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import by.klnvch.link5dots.R
-import by.klnvch.link5dots.domain.models.RoomType
-import by.klnvch.link5dots.domain.usecases.RoomByType
 import by.klnvch.link5dots.ui.common.TopBarTitle
-import by.klnvch.link5dots.ui.game.OfflineGameViewModel
+import by.klnvch.link5dots.ui.game.viewmodels.BaseGameViewModel
+import by.klnvch.link5dots.ui.game.viewmodels.OfflineGameViewModel
 import by.klnvch.link5dots.ui.settings.SettingsViewModel
 import dagger.android.support.DaggerAppCompatActivity
 import javax.inject.Inject
@@ -66,16 +65,15 @@ class BotGameActivity : DaggerAppCompatActivity() {
         val gameViewModel = ViewModelProvider(
             this,
             viewModelFactory
-        )[OfflineGameViewModel.KEY, OfflineGameViewModel::class.java]
+        )[BaseGameViewModel.KEY, OfflineGameViewModel::class.java]
 
         setContent {
             val getVMFactory: () -> ViewModelProvider.Factory = remember { { viewModelFactory } }
             val settingsViewModel: SettingsViewModel = viewModel(factory = getVMFactory())
             val nightMode by settingsViewModel.nightMode.collectAsState()
             GameContent(
-                viewModel = gameViewModel,
+                actions = gameViewModel,
                 nightMode = nightMode,
-                param = RoomByType(RoomType.BOT),
                 title = { GameTitle(gameViewModel) },
                 navigateUp = { finish() },
             )

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023-2025 klnvch
+ * Copyright (c) 2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,20 +21,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package by.klnvch.link5dots.di.game.info
 
-import by.klnvch.link5dots.domain.usecases.GameActionsInfoUseCase
-import by.klnvch.link5dots.domain.usecases.GameActionsUseCase
-import by.klnvch.link5dots.domain.usecases.GetRoomInfoUseCase
-import by.klnvch.link5dots.domain.usecases.GetRoomUseCase
-import dagger.Binds
-import dagger.Module
+package by.klnvch.link5dots.ui.game.viewmodels
 
-@Module
-interface InfoGameRulesModule {
-    @Binds
-    fun bindGetRoomUseCase(impl: GetRoomInfoUseCase): GetRoomUseCase
+import by.klnvch.link5dots.domain.models.Point
+import by.klnvch.link5dots.ui.game.GameViewState
+import kotlinx.coroutines.flow.StateFlow
 
-    @Binds
-    fun bindGameActionsUseCase(impl: GameActionsInfoUseCase): GameActionsUseCase
+interface GameActions {
+    val uiState: StateFlow<GameViewState>
+    val focus: StateFlow<Point?>
+    fun new(): Boolean
+    fun addDot(p: Point)
+    fun undo()
+    fun saveScore()
+    fun focus()
+    fun unfocus()
 }

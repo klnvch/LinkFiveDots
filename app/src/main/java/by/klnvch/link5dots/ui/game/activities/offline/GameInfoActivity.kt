@@ -28,16 +28,16 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import by.klnvch.link5dots.R
-import by.klnvch.link5dots.domain.usecases.RoomByKey
-import by.klnvch.link5dots.domain.usecases.RoomParam
 import by.klnvch.link5dots.ui.common.TopBarTitle
-import by.klnvch.link5dots.ui.game.OfflineGameViewModel
+import by.klnvch.link5dots.ui.game.viewmodels.BaseGameViewModel
+import by.klnvch.link5dots.ui.game.viewmodels.InfoGameViewModel
 import by.klnvch.link5dots.ui.settings.SettingsViewModel
 import dagger.android.support.DaggerAppCompatActivity
 import javax.inject.Inject
@@ -53,25 +53,27 @@ class GameInfoActivity : DaggerAppCompatActivity() {
         val gameViewModel = ViewModelProvider(
             this,
             viewModelFactory
-        )[OfflineGameViewModel.KEY, OfflineGameViewModel::class.java]
+        )[BaseGameViewModel.KEY, InfoGameViewModel::class.java]
 
         setContent {
             val getVMFactory: () -> ViewModelProvider.Factory = remember { { viewModelFactory } }
             val settingsViewModel: SettingsViewModel = viewModel(factory = getVMFactory())
             val nightMode by settingsViewModel.nightMode.collectAsState()
+            LaunchedEffect(true) {
+                gameViewModel.setKey(getKey())
+            }
             GameContent(
-                viewModel = gameViewModel,
+                actions = gameViewModel,
                 nightMode = nightMode,
-                param = getParam(),
                 title = { TopBarTitle(R.string.application_info_label) },
                 navigateUp = { finish() },
             )
         }
     }
 
-    private fun getParam(): RoomParam {
+    private fun getKey(): String {
         val key = intent.getStringExtra(KEY)
-        if (key != null) return RoomByKey(key)
+        if (key != null) return key
         else throw IllegalArgumentException()
     }
 

@@ -39,10 +39,6 @@ import by.klnvch.link5dots.domain.repositories.TimeService
 import by.klnvch.link5dots.domain.repositories.networkUserOrThrow
 import javax.inject.Inject
 
-class AddDotInfoUseCase @Inject constructor() : AddDotUseCase {
-    override suspend fun addDot(p: Point) = Unit
-}
-
 class AddDotSocketUseCase @Inject constructor(
     getRepository: RoomRemoteRepository,
     board: Board,

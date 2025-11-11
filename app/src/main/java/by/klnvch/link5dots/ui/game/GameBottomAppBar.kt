@@ -47,6 +47,7 @@ import androidx.compose.ui.text.font.FontWeight
 import by.klnvch.link5dots.R
 import by.klnvch.link5dots.ui.common.adaptive.AdaptiveIcon
 import by.klnvch.link5dots.ui.common.adaptive.AdaptiveText
+import by.klnvch.link5dots.ui.game.viewmodels.GameActions
 
 @Composable
 private fun BottomBarButton(
@@ -140,10 +141,10 @@ private fun BottomBarDefault(
 
 @Composable
 fun GameBottomAppBar(
-    viewModel: OfflineGameViewModel,
+    actions: GameActions,
     onNewGameNotImplemented: (() -> Unit)? = null,
 ) {
-    val uiState by viewModel.uiState.collectAsState()
+    val uiState by actions.uiState.collectAsState()
 
     BottomAppBar(
         containerColor = Color(33, 33, 33),
@@ -152,15 +153,15 @@ fun GameBottomAppBar(
         if (uiState.isOver) {
             BottomBar(
                 uiState.menuViewState,
-                { if (!viewModel.newGame()) onNewGameNotImplemented?.invoke() },
-                { viewModel.undoLastMove() },
-                { viewModel.saveScore() },
+                { if (!actions.new()) onNewGameNotImplemented?.invoke() },
+                { actions.undo() },
+                { actions.saveScore() },
             )
         } else {
             BottomBarDefault(
                 uiState.menuViewState,
-                { viewModel.undoLastMove() },
-                { viewModel.focus() },
+                { actions.undo() },
+                { actions.focus() },
             )
         }
     }

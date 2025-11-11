@@ -35,7 +35,7 @@ import by.klnvch.link5dots.domain.usecases.GameActionsTwoUseCase
 import by.klnvch.link5dots.domain.usecases.GameActionsUseCase
 import by.klnvch.link5dots.domain.usecases.GetRoomCommonUseCase
 import by.klnvch.link5dots.domain.usecases.GetRoomUseCase
-import by.klnvch.link5dots.domain.usecases.SaveScoreBotEmptyUseCase
+import by.klnvch.link5dots.domain.usecases.SaveScoreEmptyUseCase
 import by.klnvch.link5dots.domain.usecases.SaveScoreUseCase
 import by.klnvch.link5dots.domain.usecases.UndoMoveTwoUseCase
 import by.klnvch.link5dots.domain.usecases.UndoMoveUseCase
@@ -60,7 +60,7 @@ interface TwoPlayersGameRulesModule {
     fun bindUndoMoveUseCase(impl: UndoMoveTwoUseCase): UndoMoveUseCase
 
     @Binds
-    fun bindSaveScoreUseCase(impl: SaveScoreBotEmptyUseCase): SaveScoreUseCase
+    fun bindSaveScoreUseCase(impl: SaveScoreEmptyUseCase): SaveScoreUseCase
 
     @Binds
     fun bindRoomGetRepository(impl: RoomTwoGetRepository): RoomGetRepository

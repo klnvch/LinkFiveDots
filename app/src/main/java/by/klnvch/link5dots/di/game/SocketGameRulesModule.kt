@@ -42,7 +42,7 @@ import by.klnvch.link5dots.domain.usecases.GetRoomNetworkUseCase
 import by.klnvch.link5dots.domain.usecases.GetRoomUseCase
 import by.klnvch.link5dots.domain.usecases.NewGameSocketUseCase
 import by.klnvch.link5dots.domain.usecases.NewGameUseCase
-import by.klnvch.link5dots.domain.usecases.SaveScoreBotEmptyUseCase
+import by.klnvch.link5dots.domain.usecases.SaveScoreEmptyUseCase
 import by.klnvch.link5dots.domain.usecases.SaveScoreUseCase
 import by.klnvch.link5dots.domain.usecases.UndoMoveSocketUseCase
 import by.klnvch.link5dots.domain.usecases.UndoMoveUseCase
@@ -68,7 +68,7 @@ interface SocketGameRulesModule {
     fun bindUndoMoveUseCase(impl: UndoMoveSocketUseCase): UndoMoveUseCase
 
     @Binds
-    fun bindSaveScoreUseCase(impl: SaveScoreBotEmptyUseCase): SaveScoreUseCase
+    fun bindSaveScoreUseCase(impl: SaveScoreEmptyUseCase): SaveScoreUseCase
 
     @Binds
     fun bindCreateMultiplayerRoomUseCase(impl: CreateSocketRoomUseCase): CreateMultiplayerRoomUseCase

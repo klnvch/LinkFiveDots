@@ -24,11 +24,10 @@
 package by.klnvch.link5dots.domain.usecases
 
 import by.klnvch.link5dots.domain.models.IRoom
-import by.klnvch.link5dots.domain.models.RemoteRoomDescriptor
 import by.klnvch.link5dots.domain.models.RoomFactory
-import by.klnvch.link5dots.domain.models.RoomType
 import by.klnvch.link5dots.domain.models.canMove
 import by.klnvch.link5dots.domain.models.isNew
+import by.klnvch.link5dots.domain.repositories.KeyForInfoRepository
 import by.klnvch.link5dots.domain.repositories.NetworkUserProvider
 import by.klnvch.link5dots.domain.repositories.RoomFlowLocalRepository
 import by.klnvch.link5dots.domain.repositories.RoomFlowRemoteRepository
@@ -36,43 +35,46 @@ import by.klnvch.link5dots.domain.repositories.RoomRepository
 import by.klnvch.link5dots.domain.repositories.RoomSaveLocalRepository
 import by.klnvch.link5dots.domain.repositories.Settings
 import by.klnvch.link5dots.domain.repositories.VibratorService
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 interface GetRoomUseCase {
-    fun get(param: RoomParam): Flow<IRoom>
+    val room: Flow<IRoom>
 }
 
 class GetRoomCommonUseCase @Inject constructor(
-    private val getRepository: RoomFlowLocalRepository,
+    getRepository: RoomFlowLocalRepository,
     private val saveRepository: RoomSaveLocalRepository,
     private val roomFactory: RoomFactory,
 ) : GetRoomUseCase {
-    override fun get(param: RoomParam) = getRepository.roomFlow
+    override val room: Flow<IRoom> = getRepository.roomFlow
         .onEach { if (it == null) saveRepository.save(roomFactory.generate()) }
         .filterNotNull()
 }
 
 class GetRoomInfoUseCase @Inject constructor(
     private val repository: RoomRepository,
+    keyForInfoRepository: KeyForInfoRepository,
 ) : GetRoomUseCase {
-    override fun get(param: RoomParam) = when (param) {
-        is RoomByKey -> repository.getByKey(param.key).filterNotNull()
-        else -> throw IllegalArgumentException("Wrong param")
+    @OptIn(ExperimentalCoroutinesApi::class)
+    override val room: Flow<IRoom> = keyForInfoRepository.key.flatMapLatest {
+        repository.getByKey(it).filterNotNull()
     }
 }
 
 class GetRoomNetworkUseCase @Inject constructor(
-    private val repository: RoomFlowRemoteRepository,
+    repository: RoomFlowRemoteRepository,
     private val saveRepository: RoomSaveLocalRepository,
     private val settings: Settings,
     private val vibratorService: VibratorService,
     private val networkUserProvider: NetworkUserProvider,
 ) : GetRoomUseCase {
-    override fun get(param: RoomParam) = repository.roomFlow
+    override val room: Flow<IRoom> = repository.roomFlow
         .onEach {
             val isEnabled = settings.isVibrationEnabled.first()
             val canMove = it.canMove(networkUserProvider.networkUser)
@@ -81,8 +83,3 @@ class GetRoomNetworkUseCase @Inject constructor(
         }
         .onEach { saveRepository.save(it) }
 }
-
-sealed interface RoomParam
-data class RoomByType(val type: RoomType) : RoomParam
-data class RoomByKey(val key: String) : RoomParam
-data class RoomByDescriptor(val descriptor: RemoteRoomDescriptor) : RoomParam

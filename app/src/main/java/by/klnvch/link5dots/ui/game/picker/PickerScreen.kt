@@ -27,7 +27,7 @@ package by.klnvch.link5dots.ui.game.picker
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import by.klnvch.link5dots.ui.game.OnlineGameViewModel
+import by.klnvch.link5dots.ui.game.viewmodels.OnlineGameViewModel
 
 @Composable
 fun PickerScreen(

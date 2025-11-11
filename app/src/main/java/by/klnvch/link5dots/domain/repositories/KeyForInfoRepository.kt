@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023-2025 klnvch
+ * Copyright (c) 2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,20 +21,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package by.klnvch.link5dots.di.game.info
 
-import by.klnvch.link5dots.domain.usecases.GameActionsInfoUseCase
-import by.klnvch.link5dots.domain.usecases.GameActionsUseCase
-import by.klnvch.link5dots.domain.usecases.GetRoomInfoUseCase
-import by.klnvch.link5dots.domain.usecases.GetRoomUseCase
-import dagger.Binds
-import dagger.Module
+package by.klnvch.link5dots.domain.repositories
 
-@Module
-interface InfoGameRulesModule {
-    @Binds
-    fun bindGetRoomUseCase(impl: GetRoomInfoUseCase): GetRoomUseCase
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.filterNotNull
+import javax.inject.Inject
+import javax.inject.Singleton
 
-    @Binds
-    fun bindGameActionsUseCase(impl: GameActionsInfoUseCase): GameActionsUseCase
+@Singleton
+class KeyForInfoRepository @Inject constructor() {
+    private val _key = MutableStateFlow<String?>(null)
+    val key: Flow<String> = _key.filterNotNull()
+    fun setKey(key: String) {
+        _key.value = key
+    }
 }

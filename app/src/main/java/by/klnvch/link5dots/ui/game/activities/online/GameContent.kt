@@ -48,11 +48,11 @@ import by.klnvch.link5dots.ui.common.TopBarTitle
 import by.klnvch.link5dots.ui.common.tiledBackground
 import by.klnvch.link5dots.ui.game.GameBottomAppBar
 import by.klnvch.link5dots.ui.game.GameScreen
-import by.klnvch.link5dots.ui.game.OnlineGameViewModel
 import by.klnvch.link5dots.ui.game.picker.PickerScreenError
 import by.klnvch.link5dots.ui.game.picker.PickerScreenGame
 import by.klnvch.link5dots.ui.game.picker.PickerScreenNone
 import by.klnvch.link5dots.ui.game.topBar.TopBar
+import by.klnvch.link5dots.ui.game.viewmodels.OnlineGameViewModel
 import by.klnvch.link5dots.ui.theme.AppTheme
 
 private enum class MultiplayerRoute() { Picker, Game, Error }
@@ -118,7 +118,7 @@ fun GameContent(
             topBar = {
                 if (navBackStackEntry.isGameScreen()) {
                     TopBar(
-                        viewModel = viewModel,
+                        actions = viewModel,
                         title = { GameTitle(action, defaultTitle) },
                         navigateUp = disconnectGuard,
                     )
@@ -132,7 +132,7 @@ fun GameContent(
             bottomBar = {
                 if (navBackStackEntry.isGameScreen()) {
                     GameBottomAppBar(
-                        viewModel = viewModel,
+                        actions = viewModel,
                         onNewGameNotImplemented = { disconnectGuard() },
                     )
                 }
@@ -147,7 +147,7 @@ fun GameContent(
                     pickerScreen()
                 }
                 composable(route = MultiplayerRoute.Game.name) {
-                    GameScreen(viewModel = viewModel)
+                    GameScreen(actions = viewModel)
                 }
                 composable(route = MultiplayerRoute.Error.name) {
                     if (pickerScreen is PickerScreenError)

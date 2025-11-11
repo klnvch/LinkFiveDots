@@ -44,10 +44,10 @@ import by.klnvch.link5dots.R
 import by.klnvch.link5dots.domain.models.PermissionException
 import by.klnvch.link5dots.ui.common.CustomButtonWithText
 import by.klnvch.link5dots.ui.common.TextNoSurface
-import by.klnvch.link5dots.ui.game.OnlineGameViewModel
 import by.klnvch.link5dots.ui.game.picker.states.InvisibleViewState
 import by.klnvch.link5dots.ui.game.picker.states.VisibilityViewState
 import by.klnvch.link5dots.ui.game.picker.states.VisibleViewState
+import by.klnvch.link5dots.ui.game.viewmodels.OnlineGameViewModel
 
 @Composable
 fun BluetoothPickerScreen(

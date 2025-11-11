@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023-2025 klnvch
+ * Copyright (c) 2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,7 +21,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package by.klnvch.link5dots.ui.game
+
+package by.klnvch.link5dots.ui.game.viewmodels
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -31,45 +32,32 @@ import by.klnvch.link5dots.domain.models.createPoint
 import by.klnvch.link5dots.domain.models.isNew
 import by.klnvch.link5dots.domain.models.lastPoint
 import by.klnvch.link5dots.domain.repositories.Settings
-import by.klnvch.link5dots.domain.usecases.AddDotUseCase
 import by.klnvch.link5dots.domain.usecases.GameActionsUseCase
 import by.klnvch.link5dots.domain.usecases.GetRoomUseCase
 import by.klnvch.link5dots.domain.usecases.GetUserNameUseCase
-import by.klnvch.link5dots.domain.usecases.NewGameUseCase
-import by.klnvch.link5dots.domain.usecases.RoomParam
-import by.klnvch.link5dots.domain.usecases.SaveScoreUseCase
-import by.klnvch.link5dots.domain.usecases.UndoMoveUseCase
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.MutableSharedFlow
+import by.klnvch.link5dots.ui.game.GameViewStateImpl
+import by.klnvch.link5dots.ui.game.createGameViewState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
-import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-open class OfflineGameViewModel @Inject constructor(
-    private val getRoomUseCase: GetRoomUseCase,
-    private val newGameUseCase: NewGameUseCase,
-    private val addDotUseCase: AddDotUseCase,
-    private val undoMoveUseCase: UndoMoveUseCase,
-    private val saveScoreUseCase: SaveScoreUseCase,
+abstract class BaseGameViewModel(
+    getRoomUseCase: GetRoomUseCase,
     private val settings: Settings,
     private val getUserNameUseCase: GetUserNameUseCase,
     private val getGameActionsUseCase: GameActionsUseCase,
-) : ViewModel() {
-    private val _searchQueryFlow = MutableSharedFlow<RoomParam>(1)
+) : ViewModel(), GameActions {
+    private val _focus = MutableStateFlow<Point?>(createPoint(9, 9))
+    override val focus: StateFlow<Point?> = _focus
 
-    @OptIn(ExperimentalCoroutinesApi::class)
-    protected val roomFlow =
-        _searchQueryFlow.distinctUntilChanged().flatMapLatest { getRoomUseCase.get(it) }
+    protected val roomFlow = getRoomUseCase.room
 
-    val uiState = roomFlow.map { room ->
+    override val uiState = roomFlow.map { room ->
         Log.d("ViewModel", "updated: $room")
         val dotsStyleType = settings.getDotsType().first()
         val user1Name = getUserNameUseCase.get(room.user1)
@@ -88,9 +76,6 @@ open class OfflineGameViewModel @Inject constructor(
         )
     }.stateIn(viewModelScope, SharingStarted.Eagerly, GameViewStateImpl())
 
-    private val _focus = MutableStateFlow<Point?>(createPoint(9, 9))
-    val focus: StateFlow<Point?> = _focus
-
     init {
         viewModelScope.launch {
             roomFlow.collect {
@@ -101,28 +86,13 @@ open class OfflineGameViewModel @Inject constructor(
         }
     }
 
-    fun setParam(param: RoomParam) = viewModelScope.launch { _searchQueryFlow.emit(param) }
-
-    fun undoLastMove() = viewModelScope.launch { undoMoveUseCase.undo() }
-
-    fun newGame(): Boolean {
-        viewModelScope.launch { newGameUseCase.create() }
-        return newGameUseCase.isImplemented
+    override fun focus() {
+        viewModelScope.launch {
+            _focus.value = roomFlow.firstOrNull()?.lastPoint()
+        }
     }
 
-    fun addDot(p: Point) = viewModelScope.launch {
-        addDotUseCase.addDot(p)
-    }
-
-    fun saveScore() = viewModelScope.launch {
-        saveScoreUseCase.save()
-    }
-
-    fun focus() = viewModelScope.launch {
-        _focus.value = roomFlow.firstOrNull()?.lastPoint()
-    }
-
-    fun unfocus() {
+    override fun unfocus() {
         _focus.value = null
     }
 

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023-2025 klnvch
+ * Copyright (c) 2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,15 +21,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
 package by.klnvch.link5dots.di.game.info
 
-import by.klnvch.link5dots.domain.usecases.NewGameEmptyUseCase
-import by.klnvch.link5dots.domain.usecases.NewGameUseCase
+import androidx.lifecycle.ViewModel
+import by.klnvch.link5dots.di.viewmodels.ViewModelKey
+import by.klnvch.link5dots.ui.game.viewmodels.InfoGameViewModel
+import by.klnvch.link5dots.ui.settings.SettingsViewModel
+import dagger.Binds
 import dagger.Module
-import dagger.Provides
+import dagger.multibindings.IntoMap
 
 @Module
-class InfoGameRulesModule2 {
-    @Provides
-    fun provideNewGameUseCase(): NewGameUseCase = NewGameEmptyUseCase()
+abstract class InfoGameViewModelsModule {
+    @Binds
+    @IntoMap
+    @ViewModelKey(InfoGameViewModel::class)
+    abstract fun bindInfoGameViewModel(viewModel: InfoGameViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(SettingsViewModel::class)
+    abstract fun bindSettingsViewModel(viewModel: SettingsViewModel): ViewModel
 }

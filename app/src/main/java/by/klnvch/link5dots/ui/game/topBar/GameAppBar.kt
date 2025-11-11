@@ -40,21 +40,21 @@ import by.klnvch.link5dots.ui.common.IconMenuItem
 import by.klnvch.link5dots.ui.common.NavigationIcon
 import by.klnvch.link5dots.ui.common.topAppBarColors
 import by.klnvch.link5dots.ui.game.MenuViewState
-import by.klnvch.link5dots.ui.game.OfflineGameViewModel
+import by.klnvch.link5dots.ui.game.viewmodels.GameActions
 
 @Composable
 fun TopBar(
-    viewModel: OfflineGameViewModel,
+    actions: GameActions,
     title: @Composable () -> Unit,
     navigateUp: () -> Unit,
 ) {
-    val uiState by viewModel.uiState.collectAsState()
+    val uiState by actions.uiState.collectAsState()
     GameTopBar(
         title = title,
         navigateUp = navigateUp,
         viewState = uiState.menuViewState,
-        onNew = { viewModel.newGame() },
-        onUndo = { viewModel.undoLastMove() },
+        onNew = { actions.new() },
+        onUndo = { actions.undo() },
     )
 }
 
