@@ -39,7 +39,7 @@ import kotlin.js.ExperimentalJsExport
 import kotlin.js.JsExport
 
 @OptIn(ExperimentalJsExport::class, ExperimentalJsCollectionsApi::class)
-@JsExport()
+@JsExport
 fun OnlineRoom.toNetworkRoomState(defaultName: String): NetworkRoomState {
     return when (this) {
         is OnlineRoomCreated -> NetworkRoomStateCreated(invitation.toDescriptor(defaultName))

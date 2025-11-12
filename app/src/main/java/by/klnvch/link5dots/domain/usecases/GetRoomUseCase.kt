@@ -23,6 +23,7 @@
  */
 package by.klnvch.link5dots.domain.usecases
 
+import android.util.Log
 import by.klnvch.link5dots.domain.models.IRoom
 import by.klnvch.link5dots.domain.models.RoomFactory
 import by.klnvch.link5dots.domain.models.canMove
@@ -35,12 +36,16 @@ import by.klnvch.link5dots.domain.repositories.RoomRepository
 import by.klnvch.link5dots.domain.repositories.RoomSaveLocalRepository
 import by.klnvch.link5dots.domain.repositories.Settings
 import by.klnvch.link5dots.domain.repositories.VibratorService
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.shareIn
 import javax.inject.Inject
 
 interface GetRoomUseCase {
@@ -49,12 +54,18 @@ interface GetRoomUseCase {
 
 class GetRoomCommonUseCase @Inject constructor(
     getRepository: RoomFlowLocalRepository,
+    scope: CoroutineScope,
     private val saveRepository: RoomSaveLocalRepository,
     private val roomFactory: RoomFactory,
 ) : GetRoomUseCase {
     override val room: Flow<IRoom> = getRepository.roomFlow
-        .onEach { if (it == null) saveRepository.save(roomFactory.generate()) }
+        .distinctUntilChanged()
+        .onEach {
+            Log.d("GetRoomCommonUseCase", "once per updated: $it")
+            if (it == null) saveRepository.save(roomFactory.generate())
+        }
         .filterNotNull()
+        .shareIn(scope, SharingStarted.WhileSubscribed(), 1)
 }
 
 class GetRoomInfoUseCase @Inject constructor(

@@ -28,7 +28,7 @@ import kotlin.js.ExperimentalJsExport
 import kotlin.js.JsExport
 
 @OptIn(ExperimentalJsExport::class)
-@JsExport()
+@JsExport
 interface RemoteRoomDescriptor {
     val title: String
     val description: String?
@@ -37,7 +37,7 @@ interface RemoteRoomDescriptor {
 }
 
 @OptIn(ExperimentalJsExport::class)
-@JsExport()
+@JsExport
 interface FoundRemoteRoom : RemoteRoomDescriptor {
     fun connect(onSuccess: () -> Unit, onError: (Throwable) -> Unit)
 }

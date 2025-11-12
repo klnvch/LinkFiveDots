@@ -28,21 +28,25 @@ import kotlin.js.ExperimentalJsExport
 import kotlin.js.JsExport
 
 @OptIn(ExperimentalJsExport::class)
-@JsExport()
+@JsExport
 sealed interface NetworkRoomState
 
 @OptIn(ExperimentalJsExport::class)
-@JsExport()
+@JsExport
 data class NetworkRoomStateCreated(val descriptor: RemoteRoomDescriptor) : NetworkRoomState
 
 @OptIn(ExperimentalJsExport::class)
-@JsExport()
-object NetworkRoomStateDeleted : NetworkRoomState
+@JsExport
+object NetworkRoomStateDeleted : NetworkRoomState {
+    override fun toString() = "NetworkRoomStateDeleted"
+}
 
 @OptIn(ExperimentalJsExport::class)
-@JsExport()
+@JsExport
 data class NetworkRoomStateStarted(val descriptor: RemoteRoomDescriptor) : NetworkRoomState
 
 @OptIn(ExperimentalJsExport::class)
-@JsExport()
-object NetworkRoomStateFinished : NetworkRoomState
+@JsExport
+object NetworkRoomStateFinished : NetworkRoomState {
+    override fun toString() = "NetworkRoomStateFinished"
+}
