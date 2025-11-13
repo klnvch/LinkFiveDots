@@ -29,6 +29,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import by.klnvch.link5dots.di.viewmodels.AssistedSavedStateViewModelFactory
 import by.klnvch.link5dots.domain.models.HistoryRoom
+import by.klnvch.link5dots.domain.models.RoomType
 import by.klnvch.link5dots.domain.usecases.DeleteRoomUseCase
 import by.klnvch.link5dots.domain.usecases.GetRoomsUseCase
 import by.klnvch.link5dots.domain.usecases.GetUserNameUseCase
@@ -36,10 +37,13 @@ import by.klnvch.link5dots.domain.usecases.SaveRoomUseCase
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class HistoryViewModel @AssistedInject constructor(
     @Assisted private val savedStateHandle: SavedStateHandle,
     private val getRoomsUseCase: GetRoomsUseCase,
@@ -47,24 +51,36 @@ class HistoryViewModel @AssistedInject constructor(
     private val deleteRoomUseCase: DeleteRoomUseCase,
     private val saveRoomUseCase: SaveRoomUseCase,
 ) : ViewModel() {
-    private val _historyUiState = MutableStateFlow(HistoryViewState.initial())
+    private val searchParams = MutableStateFlow<List<RoomType>>(emptyList())
+
+    private val _historyUiState = MutableStateFlow<HistoryViewState>(HistoryViewStateLoading)
     val historyUiState: StateFlow<HistoryViewState> = _historyUiState
 
     init {
         viewModelScope.launch {
-            getRoomsUseCase.get().collect { rooms ->
-                _historyUiState.value = HistoryViewState(rooms.map {
-                    val user1Name = getUserNameUseCase.get(it.user1)
-                    val user2Name = getUserNameUseCase.get(it.user2)
-                    HistoryItemViewState(it, user1Name, user2Name)
-                })
-            }
+            searchParams
+                .flatMapLatest { getRoomsUseCase.get(it) }
+                .collect { rooms ->
+                    _historyUiState.value = HistoryViewStateCompleted(rooms.map {
+                        val user1Name = getUserNameUseCase.get(it.user1)
+                        val user2Name = getUserNameUseCase.get(it.user2)
+                        HistoryItemViewState(it, user1Name, user2Name)
+                    })
+                }
         }
     }
 
-    fun deleteRoom(room: HistoryRoom) = viewModelScope.launch { deleteRoomUseCase.delete(room) }
+    fun load(types: List<RoomType>) {
+        searchParams.value = types.toList()
+    }
 
-    fun insertRoom(room: HistoryRoom) = viewModelScope.launch { saveRoomUseCase.save(room) }
+    fun deleteRoom(room: HistoryRoom) {
+        viewModelScope.launch { deleteRoomUseCase.delete(room) }
+    }
+
+    fun insertRoom(room: HistoryRoom) {
+        viewModelScope.launch { saveRoomUseCase.save(room) }
+    }
 
     @AssistedFactory
     interface Factory : AssistedSavedStateViewModelFactory<HistoryViewModel>

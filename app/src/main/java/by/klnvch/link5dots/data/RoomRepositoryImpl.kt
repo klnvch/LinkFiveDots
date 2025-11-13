@@ -56,8 +56,8 @@ class RoomRepositoryImpl @Inject constructor(
 
     override suspend fun delete(key: String) = roomLocalSource.deleteByKey(key)
 
-    override fun getAll() = roomLocalSource
-        .getAll()
+    override fun getAll(types: List<RoomType>) = roomLocalSource
+        .getAll(types.map { it.mapToDbValue() })
         .map { list -> list.map { it.mapToHistoryRoom() } }
 
     override fun getByKey(key: String) = roomLocalSource

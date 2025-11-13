@@ -26,11 +26,10 @@ package by.klnvch.link5dots.data.online.models
 
 import by.klnvch.link5dots.domain.models.INetworkRoom
 import by.klnvch.link5dots.domain.models.INetworkRoomInvitation
-import kotlin.js.ExperimentalJsCollectionsApi
 import kotlin.js.ExperimentalJsExport
 import kotlin.js.JsExport
 
-@OptIn(ExperimentalJsExport::class, ExperimentalJsCollectionsApi::class)
+@OptIn(ExperimentalJsExport::class)
 @JsExport
 sealed interface OnlineRoom
 sealed interface OnlineRoomDead : OnlineRoom
@@ -41,8 +40,10 @@ sealed interface OnlineRoomLive : OnlineRoom {
 data class OnlineRoomCreated(val invitation: INetworkRoomInvitation) : OnlineRoom
 data class OnlineRoomStarted(override val room: INetworkRoom) : OnlineRoomLive
 data class OnlineRoomFinished(override val room: INetworkRoom) : OnlineRoomLive, OnlineRoomDead
-object OnlineRoomDeleted : OnlineRoomDead
+object OnlineRoomDeleted : OnlineRoomDead {
+    override fun toString() = "OnlineRoomDeleted"
+}
 
-@OptIn(ExperimentalJsExport::class, ExperimentalJsCollectionsApi::class)
+@OptIn(ExperimentalJsExport::class)
 @JsExport
 fun OnlineRoom.getRoomIfAny() = (this as? OnlineRoomLive)?.room

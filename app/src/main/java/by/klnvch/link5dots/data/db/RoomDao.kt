@@ -38,8 +38,8 @@ interface RoomDao {
     @Query("DELETE FROM rooms WHERE key = :key")
     suspend fun deleteByKey(key: String)
 
-    @Query("SELECT * FROM rooms ORDER BY timestamp DESC")
-    fun getAll(): Flow<List<RoomLocal>>
+    @Query("SELECT * FROM rooms WHERE type IN (:types) ORDER BY timestamp DESC")
+    fun getAll(types: List<Int>): Flow<List<RoomLocal>>
 
     @Query("SELECT * FROM rooms WHERE is_send = 0 ORDER BY timestamp DESC")
     suspend fun getNotSent(): List<RoomLocal>

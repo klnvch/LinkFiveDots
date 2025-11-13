@@ -24,10 +24,10 @@
 
 package by.klnvch.link5dots.ui.scores.history
 
-data class HistoryViewState(
+sealed interface HistoryViewState
+
+object HistoryViewStateLoading : HistoryViewState
+
+data class HistoryViewStateCompleted(
     val items: List<HistoryItemViewState>,
-) {
-    companion object {
-        fun initial() = HistoryViewState(emptyList())
-    }
-}
+) : HistoryViewState

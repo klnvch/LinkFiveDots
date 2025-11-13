@@ -39,7 +39,7 @@ import javax.inject.Singleton
 interface RoomRepository {
     suspend fun sync(isTestDevice: Boolean)
     suspend fun delete(key: String)
-    fun getAll(): Flow<List<HistoryRoom>>
+    fun getAll(types: List<RoomType>): Flow<List<HistoryRoom>>
     fun getByKey(key: String): Flow<IRoom?>
     fun getRecentByType(type: RoomType): Flow<IRoom?>
     suspend fun save(room: IRoom, roomType: RoomType)

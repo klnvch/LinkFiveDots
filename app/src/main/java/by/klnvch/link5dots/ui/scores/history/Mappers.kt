@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023-2025 klnvch
+ * Copyright (c) 2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,12 +22,17 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.domain.usecases
+package by.klnvch.link5dots.ui.scores.history
 
+import by.klnvch.link5dots.R
 import by.klnvch.link5dots.domain.models.RoomType
-import by.klnvch.link5dots.domain.repositories.RoomRepository
-import javax.inject.Inject
 
-class GetRoomsUseCase @Inject constructor(private val roomRepository: RoomRepository) {
-    fun get(types: List<RoomType>) = roomRepository.getAll(types)
+fun RoomType.toStringRes(): Int {
+    return when (this) {
+        RoomType.BLUETOOTH -> R.string.bluetooth
+        RoomType.NSD -> R.string.menu_local_network
+        RoomType.ONLINE -> R.string.menu_online_game
+        RoomType.TWO_PLAYERS -> R.string.menu_two_players
+        RoomType.BOT -> R.string.menu_single_player
+    }
 }
