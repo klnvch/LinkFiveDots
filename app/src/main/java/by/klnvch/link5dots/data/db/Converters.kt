@@ -21,24 +21,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package by.klnvch.link5dots.di
+package by.klnvch.link5dots.data.db
 
-import by.klnvch.link5dots.data.network.NetworkService
-import dagger.Module
-import dagger.Provides
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import javax.inject.Singleton
+import androidx.room.TypeConverter
+import by.klnvch.link5dots.domain.models.Dot
+import by.klnvch.link5dots.domain.models.toDots
+import by.klnvch.link5dots.domain.models.toJson
 
-@Module
-class NetworkModule {
-    @Singleton
-    @Provides
-    fun provideNetworkService(): NetworkService {
-        return Retrofit.Builder()
-            .baseUrl("https://link-five-dots.firebaseio.com/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-            .create(NetworkService::class.java)
-    }
+class Converters {
+    @TypeConverter
+    fun listToString(dots: List<Dot>?) = dots?.toJson()
+
+    @TypeConverter
+    fun stringToList(json: String?) = json?.toDots()
 }

@@ -135,7 +135,6 @@ dependencies {
     implementation(libs.androidx.work.runtime.ktx)
     implementation(libs.retrofit)
     implementation(libs.retrofit.converter.gson)
-    implementation(libs.gson)
     implementation(libs.dagger)
     implementation(libs.dagger.android)
     implementation(libs.dagger.android.support)

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023-2025 klnvch
+ * Copyright (c) 2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,27 +22,37 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.data.db;
+package by.klnvch.link5dots.domain.models
 
-import androidx.room.TypeConverter;
+import kotlin.test.Test
+import kotlin.test.assertEquals
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
-import java.util.List;
-
-import by.klnvch.link5dots.domain.models.Dot;
-import by.klnvch.link5dots.domain.models.DotImpl;
-
-public class Converters {
-    @TypeConverter
-    public static String listToString(List<Dot> dots) {
-        return dots == null ? null : new Gson().toJson(dots);
+class DotTest {
+    @Test
+    fun testToJson() {
+        val dot = createDot(1, 2, 3)
+        val json = dot.toJson()
+        assertEquals("{\"x\":1,\"y\":2,\"dt\":3}", json)
     }
 
-    @TypeConverter
-    public static List<Dot> stringToList(String dots) {
-        return dots == null ? null : new Gson().fromJson(dots, new TypeToken<List<DotImpl>>() {
-        }.getType());
+    @Test
+    fun testFromJson() {
+        val json = "{\"x\":1,\"y\":2,\"dt\":3}"
+        val dot = json.toDot()
+        assertEquals(createDot(1, 2, 3), dot)
+    }
+
+    @Test
+    fun testListToJson() {
+        val dots = listOf(createDot(1, 2, 3))
+        val json = dots.toJson()
+        assertEquals("[{\"x\":1,\"y\":2,\"dt\":3}]", json)
+    }
+
+    @Test
+    fun testListFromJson() {
+        val json = "[{\"x\":1,\"y\":2,\"dt\":3}]"
+        val dots = json.toDots()
+        assertEquals(listOf(createDot(1, 2, 3)), dots)
     }
 }

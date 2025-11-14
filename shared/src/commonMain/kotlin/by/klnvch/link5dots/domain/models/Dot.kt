@@ -25,6 +25,7 @@
 package by.klnvch.link5dots.domain.models
 
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
 import kotlinx.serialization.modules.subclass
@@ -38,7 +39,7 @@ interface Dot : Point {
 }
 
 @Serializable
-data class DotImpl(
+private data class DotImpl(
     override val x: Int,
     override val y: Int,
     override val dt: Int,
@@ -49,6 +50,12 @@ val dotModule = SerializersModule {
         subclass(DotImpl::class)
     }
 }
+
+fun Dot.toJson() = Json.encodeToString<DotImpl>(this as DotImpl)
+fun String.toDot(): Dot = Json.decodeFromString<DotImpl>(this)
+
+fun List<Dot>.toJson() = Json.encodeToString<List<DotImpl>>(this.filterIsInstance<DotImpl>())
+fun String.toDots(): List<Dot> = Json.decodeFromString<List<DotImpl>>(this)
 
 fun createDot(x: Int, y: Int, dt: Int): Dot = DotImpl(x, y, dt)
 
