@@ -22,46 +22,21 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.ui.settings.items
+package by.klnvch.link5dots.ui
 
-import androidx.compose.foundation.layout.Row
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Grain
-import androidx.compose.runtime.Composable
-import by.klnvch.link5dots.R
 import by.klnvch.link5dots.domain.models.DotsStyleType
-import by.klnvch.link5dots.ui.common.BlueCircle
-import by.klnvch.link5dots.ui.common.BlueDot
-import by.klnvch.link5dots.ui.common.RedCross
-import by.klnvch.link5dots.ui.common.RedDot
-import by.klnvch.link5dots.ui.getNextDotsStyleType
+import kotlin.js.ExperimentalJsExport
+import kotlin.js.JsExport
 
-@Composable
-fun DotsStylePreferenceItem(
-    value: DotsStyleType,
-    onChange: (value: DotsStyleType) -> Unit,
-) {
-    PreferenceItem(
-        imageVector = Icons.Filled.Grain,
-        title = R.string.settings_dots,
-        trailing = { DotsTrailing(value) },
-        onClick = { onChange(getNextDotsStyleType(value)) },
-    )
+@OptIn(ExperimentalJsExport::class)
+@JsExport
+fun getNextDotsStyleType(value: DotsStyleType) = when (value) {
+    DotsStyleType.ORIGINAL -> DotsStyleType.CROSS_AND_RING
+    DotsStyleType.CROSS_AND_RING -> DotsStyleType.ORIGINAL
 }
 
-@Composable
-private fun DotsTrailing(dotsStyleType: DotsStyleType) {
-    Row {
-        when (dotsStyleType) {
-            DotsStyleType.ORIGINAL -> {
-                RedDot()
-                BlueDot()
-            }
+private fun String.userNameMaxLength() = if (length > 16) substring(0, 16) else this
 
-            DotsStyleType.CROSS_AND_RING -> {
-                RedCross()
-                BlueCircle()
-            }
-        }
-    }
-}
+@OptIn(ExperimentalJsExport::class)
+@JsExport
+fun String?.formatUserName() = this?.trim()?.ifEmpty { null }?.userNameMaxLength()

@@ -34,10 +34,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import by.klnvch.link5dots.R
-import by.klnvch.link5dots.formatUserName
 import by.klnvch.link5dots.ui.common.adaptive.AdaptiveIcon
 import by.klnvch.link5dots.ui.common.adaptive.AdaptiveText
 import by.klnvch.link5dots.ui.common.adaptive.adaptiveFontSize
+import by.klnvch.link5dots.ui.formatUserName
 
 @Composable
 fun UsernameDialog(

@@ -24,15 +24,6 @@
 
 package by.klnvch.link5dots
 
-import kotlin.js.ExperimentalJsExport
-import kotlin.js.JsExport
-
 expect fun currentTime(): Double
 expect val platformKeyPart: String
 expect fun Int.formatDateTime(): String
-
-private fun String.userNameMaxLength() = if (length > 16) substring(0, 16) else this
-
-@OptIn(ExperimentalJsExport::class)
-@JsExport()
-fun String?.formatUserName() = this?.trim()?.ifEmpty { null }?.userNameMaxLength()

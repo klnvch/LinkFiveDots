@@ -33,7 +33,7 @@ enum class BitmapType {
 }
 
 @OptIn(ExperimentalJsExport::class)
-@JsExport()
+@JsExport
 interface GameBitmap {
     val size: Int
     val buffer: IntArray

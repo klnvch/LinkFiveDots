@@ -24,44 +24,35 @@
 
 package by.klnvch.link5dots.ui.settings.items
 
-import androidx.compose.foundation.layout.Row
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Grain
+import androidx.compose.material.icons.filled.WbSunny
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
 import by.klnvch.link5dots.R
-import by.klnvch.link5dots.domain.models.DotsStyleType
-import by.klnvch.link5dots.ui.common.BlueCircle
-import by.klnvch.link5dots.ui.common.BlueDot
-import by.klnvch.link5dots.ui.common.RedCross
-import by.klnvch.link5dots.ui.common.RedDot
-import by.klnvch.link5dots.ui.getNextDotsStyleType
+import by.klnvch.link5dots.domain.models.NightMode
 
-@Composable
-fun DotsStylePreferenceItem(
-    value: DotsStyleType,
-    onChange: (value: DotsStyleType) -> Unit,
-) {
-    PreferenceItem(
-        imageVector = Icons.Filled.Grain,
-        title = R.string.settings_dots,
-        trailing = { DotsTrailing(value) },
-        onClick = { onChange(getNextDotsStyleType(value)) },
-    )
+private fun getNextValue(value: NightMode) = when (value) {
+    NightMode.System -> NightMode.Off
+    NightMode.Off -> NightMode.On
+    NightMode.On -> NightMode.System
 }
 
 @Composable
-private fun DotsTrailing(dotsStyleType: DotsStyleType) {
-    Row {
-        when (dotsStyleType) {
-            DotsStyleType.ORIGINAL -> {
-                RedDot()
-                BlueDot()
-            }
+private fun getText(value: NightMode) = when (value) {
+    NightMode.System -> stringResource(R.string.settings_system)
+    NightMode.Off -> stringResource(R.string.switch_off_text)
+    NightMode.On -> stringResource(R.string.switch_on_text)
+}
 
-            DotsStyleType.CROSS_AND_RING -> {
-                RedCross()
-                BlueCircle()
-            }
-        }
-    }
+@Composable
+fun NightModePreferenceItem(
+    value: NightMode,
+    onChange: (value: NightMode) -> Unit,
+) {
+    PreferenceItem(
+        imageVector = Icons.Filled.WbSunny,
+        title = R.string.settings_night_mode,
+        value = getText(value),
+        onClick = { onChange(getNextValue(value)) },
+    )
 }

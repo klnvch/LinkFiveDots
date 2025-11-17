@@ -31,7 +31,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Language
 import androidx.compose.material.icons.filled.Mood
 import androidx.compose.material.icons.filled.Vibration
-import androidx.compose.material.icons.filled.WbSunny
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -40,12 +39,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import by.klnvch.link5dots.R
-import by.klnvch.link5dots.domain.models.NightMode
 import by.klnvch.link5dots.ui.common.TextCenterInfo
 import by.klnvch.link5dots.ui.settings.items.DeleteAllPreferenceItem
 import by.klnvch.link5dots.ui.settings.items.DotsStylePreferenceItem
 import by.klnvch.link5dots.ui.settings.items.EditTextPreferenceItem
 import by.klnvch.link5dots.ui.settings.items.ListPreferenceItem
+import by.klnvch.link5dots.ui.settings.items.NightModePreferenceItem
 import by.klnvch.link5dots.ui.settings.items.SwitchPreferenceItem
 import by.klnvch.link5dots.ui.settings.items.optionsFromResource
 
@@ -59,12 +58,6 @@ fun SettingsScreen(
 
     val languageOptions =
         optionsFromResource(R.array.languages_values, R.array.languages_entries)
-
-    val nightModeOptions = mapOf(
-        NightMode.System to stringResource(R.string.settings_system),
-        NightMode.On to stringResource(R.string.switch_on_text),
-        NightMode.Off to stringResource(R.string.switch_off_text),
-    )
 
     when (state) {
         SettingsViewState.Loading -> TextCenterInfo(R.string.loading)
@@ -90,10 +83,7 @@ fun SettingsScreen(
                 value = state.settings.isVibrationEnabled,
                 onChange = { viewModel.setVibration(it) },
             )
-            ListPreferenceItem(
-                imageVector = Icons.Filled.WbSunny,
-                title = R.string.settings_night_mode,
-                options = nightModeOptions,
+            NightModePreferenceItem(
                 value = state.settings.nightMode,
                 onChange = { viewModel.setNightMode(it) },
             )

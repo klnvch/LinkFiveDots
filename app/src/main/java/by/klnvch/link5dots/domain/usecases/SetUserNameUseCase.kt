@@ -25,7 +25,7 @@
 package by.klnvch.link5dots.domain.usecases
 
 import by.klnvch.link5dots.domain.repositories.Settings
-import by.klnvch.link5dots.formatUserName
+import by.klnvch.link5dots.ui.formatUserName
 import javax.inject.Inject
 
 class SetUserNameUseCase @Inject constructor(private val settings: Settings) {
