@@ -106,6 +106,7 @@ private fun Column1() {
 private fun Column2() {
     val context = LocalContext.current
     val uriHandler = LocalUriHandler.current
+    val appName = stringResource(R.string.app_name)
 
     Column {
         CustomButtonWithText(
@@ -120,6 +121,7 @@ private fun Column2() {
             onClick = {
                 val target = Intent(Intent.ACTION_SEND).apply {
                     putExtra(Intent.EXTRA_EMAIL, arrayOf("link5dots@gmail.com"))
+                    putExtra(Intent.EXTRA_SUBJECT, appName)
                     type = "message/rfc822"
                 }
                 context.startActivity(Intent.createChooser(target, null))

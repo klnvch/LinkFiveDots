@@ -35,7 +35,7 @@ interface RoomDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(room: RoomLocal)
 
-    @Query("DELETE FROM rooms WHERE key = :key")
+    @Query("DELETE FROM rooms WHERE `key` = :key")
     suspend fun deleteByKey(key: String)
 
     @Query("SELECT * FROM rooms WHERE type IN (:types) ORDER BY timestamp DESC")
@@ -44,7 +44,7 @@ interface RoomDao {
     @Query("SELECT * FROM rooms WHERE is_send = 0 ORDER BY timestamp DESC")
     suspend fun getNotSent(): List<RoomLocal>
 
-    @Query("UPDATE rooms SET is_send = 1 WHERE key = :key")
+    @Query("UPDATE rooms SET is_send = 1 WHERE `key` = :key")
     suspend fun setSent(key: String)
 
     @Query("DELETE FROM rooms")
@@ -53,6 +53,6 @@ interface RoomDao {
     @Query("SELECT * FROM rooms WHERE type = :type ORDER BY timestamp DESC LIMIT 1")
     fun getRecentByType(type: Int): Flow<List<RoomLocal>>
 
-    @Query("SELECT * FROM rooms WHERE key = :key LIMIT 1")
+    @Query("SELECT * FROM rooms WHERE `key` = :key LIMIT 1")
     fun getByKey(key: String): Flow<List<RoomLocal>>
 }

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 klnvch
+ * Copyright (c) 2023-2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -32,12 +32,12 @@ import by.klnvch.link5dots.domain.models.Dot
 
 data class UserLocal(
     @ColumnInfo(name = "id") val id: String?,
-    @ColumnInfo(name = "name") val name: String?
+    @ColumnInfo(name = "name") val name: String?,
 )
 
 @Entity(tableName = "rooms")
 data class RoomLocal(
-    @PrimaryKey val key: String,
+    @PrimaryKey @ColumnInfo(name = "key") val key: String,
     @ColumnInfo(name = "timestamp") val timestamp: Long,
     @ColumnInfo(name = "dots") val dots: List<Dot>?,
     @Embedded(prefix = "user_1_") val user1: UserLocal?,
