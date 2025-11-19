@@ -35,7 +35,6 @@ import by.klnvch.link5dots.domain.repositories.Settings
 import by.klnvch.link5dots.domain.usecases.AddDotUseCase
 import by.klnvch.link5dots.domain.usecases.GameActionsUseCase
 import by.klnvch.link5dots.domain.usecases.GetRoomUseCase
-import by.klnvch.link5dots.domain.usecases.GetUserNameUseCase
 import by.klnvch.link5dots.domain.usecases.NewGameUseCase
 import by.klnvch.link5dots.domain.usecases.SaveScoreUseCase
 import by.klnvch.link5dots.domain.usecases.UndoMoveUseCase
@@ -68,7 +67,6 @@ class OnlineGameViewModel @Inject constructor(
     private val scanUseCase: ScanUseCase,
     private val getNetworkGameActionUseCase: GetNetworkGameActionUseCase,
     getGameActionsUseCase: GameActionsUseCase,
-    getUserNameUseCase: GetUserNameUseCase,
     getRoomUseCase: GetRoomUseCase,
     newGameUseCase: NewGameUseCase,
     addDotUseCase: AddDotUseCase,
@@ -78,7 +76,6 @@ class OnlineGameViewModel @Inject constructor(
 ) : OfflineGameViewModel(
     getRoomUseCase,
     settings,
-    getUserNameUseCase,
     getGameActionsUseCase,
     newGameUseCase,
     addDotUseCase,
@@ -92,7 +89,7 @@ class OnlineGameViewModel @Inject constructor(
         .stateIn(viewModelScope, SharingStarted.Eagerly, PickerViewStateImpl())
 
     val uiTitleState = combine(
-        roomFlow.map { it as? INetworkRoom },
+        roomFlow.map { it.room as? INetworkRoom },
         _pickerState
     ) { room, pickerState -> getNetworkGameActionUseCase.get(pickerState, room) }
 

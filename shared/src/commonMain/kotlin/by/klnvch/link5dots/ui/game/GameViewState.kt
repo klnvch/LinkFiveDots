@@ -26,7 +26,7 @@ package by.klnvch.link5dots.ui.game
 import by.klnvch.link5dots.domain.models.ActionAvailability
 import by.klnvch.link5dots.domain.models.Dot
 import by.klnvch.link5dots.domain.models.DotsStyleType
-import by.klnvch.link5dots.domain.models.IRoom
+import by.klnvch.link5dots.domain.models.GameState
 import by.klnvch.link5dots.domain.models.WinningLine
 import kotlin.js.ExperimentalJsExport
 import kotlin.js.JsExport
@@ -79,48 +79,45 @@ interface MenuViewState {
 
 fun createGameViewState(
     dotsStyleType: DotsStyleType,
-    user1Name: String?,
-    user2Name: String?,
-    room: IRoom?,
+    gameState: GameState,
     newActionAvailability: ActionAvailability,
     undoActionAvailability: ActionAvailability,
     shareActionAvailability: ActionAvailability,
 ): GameViewState {
-    val dt = room?.dots?.lastOrNull()?.dt ?: 0
-    val lastDotTime = if (room != null && dt > 0) room.time + dt else null
-    val user1CanMove = room.canMove(0)
-    val user2CanMove = room.canMove(1)
+    val lastDotTime = gameState.lastDotTime
+    val user1CanMove = gameState.user1.canMove
+    val user2CanMove = gameState.user2.canMove
 
     return GameViewStateImpl(
         GameInfoViewStateImpl(
             dotsStyleType,
             GameInfoUserViewStateImpl(
-                user1Name ?: "",
-                room?.dots.getDuration(1),
+                gameState.user1.name ?: "",
+                gameState.user1.duration,
                 user1CanMove,
-                room.isWon(1),
+                gameState.user1.isWon,
                 if (user1CanMove) lastDotTime else null,
             ),
             GameInfoUserViewStateImpl(
-                user2Name ?: "",
-                room?.dots.getDuration(0),
+                gameState.user2.name ?: "",
+                gameState.user2.duration,
                 user2CanMove,
-                room.isWon(0),
+                gameState.user2.isWon,
                 if (user2CanMove) lastDotTime else null,
             ),
-            (room?.dots?.size ?: 0).toString(),
+            gameState.size.toString(),
         ),
         GameBoardViewStateImpl(
             dotsStyleType,
-            room?.dots?.toTypedArray() ?: emptyArray(),
-            room?.getWinningLine(),
+            gameState.dots.toTypedArray(),
+            gameState.winningLine,
         ),
         MenuViewStateImpl(
             newActionAvailability,
             undoActionAvailability,
             shareActionAvailability,
         ),
-        room?.isOver() == true,
+        gameState.isOver,
     )
 }
 
@@ -169,17 +166,3 @@ fun Int.formatDuration() =
         if (hours > 0) "${hours}:${minutes.formatDurationPart()}:${seconds.formatDurationPart()}"
         else "${minutes.formatDurationPart()}:${seconds.formatDurationPart()}"
     } else ""
-
-private fun IRoom?.canMove(n: Int) =
-    if (this == null || this.isOver()) false else dots.size % 2 == n
-
-private fun IRoom?.isWon(n: Int) =
-    if (this == null || this.isNotOver()) false else dots.size % 2 == n
-
-fun List<Dot>?.getDuration(d: Int) = this
-    ?.drop(d)
-    ?.chunked(2)
-    ?.filter { it.size > 1 }
-    ?.filter { it[0].dt > 0 && it[1].dt > 0 }
-    ?.sumOf { it[1].dt - it[0].dt }
-    ?: 0

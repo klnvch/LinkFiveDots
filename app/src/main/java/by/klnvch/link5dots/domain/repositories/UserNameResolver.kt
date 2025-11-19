@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023-2025 klnvch
+ * Copyright (c) 2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,18 +21,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package by.klnvch.link5dots.domain.usecases
 
+package by.klnvch.link5dots.domain.repositories
+
+import by.klnvch.link5dots.domain.models.BotUser
+import by.klnvch.link5dots.domain.models.DeviceOwnerUser
 import by.klnvch.link5dots.domain.models.IUser
-import by.klnvch.link5dots.domain.repositories.Settings
-import by.klnvch.link5dots.domain.repositories.UserNameResolver
+import by.klnvch.link5dots.domain.models.NetworkUser
 import javax.inject.Inject
 
-class GetUserNameUseCase @Inject constructor(
+class UserNameResolver @Inject constructor(
     private val settings: Settings,
-    private val userNameResolver: UserNameResolver,
+    private val stringProvider: StringRepository,
 ) {
-    fun get() = settings.getUserNameFlow()
-
-    suspend fun get(user: IUser?) = userNameResolver.get(user)
+    suspend fun get(user: IUser?) = when (user) {
+        is BotUser -> stringProvider.botName
+        is NetworkUser -> user.name ?: stringProvider.unknownName
+        is DeviceOwnerUser -> settings.getUserName() ?: stringProvider.unknownName
+        null -> null
+    }
 }

@@ -32,7 +32,6 @@ import by.klnvch.link5dots.data.online.models.OnlineRoomStarted
 import by.klnvch.link5dots.data.online.models.RemoteRoomItem
 import by.klnvch.link5dots.domain.models.RoomState
 
-
 fun RemoteRoomItem.toOnlineRoom(): OnlineRoom {
     if (key == null || value == null) return OnlineRoomDeleted
     val state = this.value.state?.let { RoomState.entries[it] } ?: RoomState.DELETED

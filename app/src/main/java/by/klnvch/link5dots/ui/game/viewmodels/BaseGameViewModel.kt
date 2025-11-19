@@ -29,12 +29,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import by.klnvch.link5dots.domain.models.Point
 import by.klnvch.link5dots.domain.models.createPoint
-import by.klnvch.link5dots.domain.models.isNew
-import by.klnvch.link5dots.domain.models.lastPoint
 import by.klnvch.link5dots.domain.repositories.Settings
 import by.klnvch.link5dots.domain.usecases.GameActionsUseCase
 import by.klnvch.link5dots.domain.usecases.GetRoomUseCase
-import by.klnvch.link5dots.domain.usecases.GetUserNameUseCase
 import by.klnvch.link5dots.ui.game.GameViewStateImpl
 import by.klnvch.link5dots.ui.game.createGameViewState
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -49,7 +46,6 @@ import kotlinx.coroutines.launch
 abstract class BaseGameViewModel(
     getRoomUseCase: GetRoomUseCase,
     private val settings: Settings,
-    private val getUserNameUseCase: GetUserNameUseCase,
     private val getGameActionsUseCase: GameActionsUseCase,
 ) : ViewModel(), GameActions {
     private val _focus = MutableStateFlow<Point?>(createPoint(9, 9))
@@ -60,15 +56,11 @@ abstract class BaseGameViewModel(
     override val uiState = roomFlow.map { room ->
         Log.d("ViewModel", "updated: $room")
         val dotsStyleType = settings.getDotsType().first()
-        val user1Name = getUserNameUseCase.get(room.user1)
-        val user2Name = getUserNameUseCase.get(room.user2)
         val newActionAvailability = getGameActionsUseCase.newAction
         val undoActionAvailability = getGameActionsUseCase.undoAction
         val shareActionAvailability = getGameActionsUseCase.shareAction
         createGameViewState(
             dotsStyleType,
-            user1Name,
-            user2Name,
             room,
             newActionAvailability,
             undoActionAvailability,
@@ -78,17 +70,15 @@ abstract class BaseGameViewModel(
 
     init {
         viewModelScope.launch {
-            roomFlow.collect {
-                if (it.isNew()) {
-                    focus()
-                }
+            roomFlow.map { it.isNew }.collect {
+                if (it) focus()
             }
         }
     }
 
     override fun focus() {
         viewModelScope.launch {
-            _focus.value = roomFlow.firstOrNull()?.lastPoint()
+            _focus.value = roomFlow.firstOrNull()?.lastPoint
         }
     }
 

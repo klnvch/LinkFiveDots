@@ -29,7 +29,6 @@ import by.klnvch.link5dots.domain.repositories.Settings
 import by.klnvch.link5dots.domain.usecases.AddDotUseCase
 import by.klnvch.link5dots.domain.usecases.GameActionsUseCase
 import by.klnvch.link5dots.domain.usecases.GetRoomUseCase
-import by.klnvch.link5dots.domain.usecases.GetUserNameUseCase
 import by.klnvch.link5dots.domain.usecases.NewGameUseCase
 import by.klnvch.link5dots.domain.usecases.SaveScoreUseCase
 import by.klnvch.link5dots.domain.usecases.UndoMoveUseCase
@@ -39,13 +38,12 @@ import javax.inject.Inject
 open class OfflineGameViewModel @Inject constructor(
     getRoomUseCase: GetRoomUseCase,
     settings: Settings,
-    getUserNameUseCase: GetUserNameUseCase,
     getGameActionsUseCase: GameActionsUseCase,
     private val newGameUseCase: NewGameUseCase,
     private val addDotUseCase: AddDotUseCase,
     private val undoMoveUseCase: UndoMoveUseCase,
     private val saveScoreUseCase: SaveScoreUseCase,
-) : BaseGameViewModel(getRoomUseCase, settings, getUserNameUseCase, getGameActionsUseCase) {
+) : BaseGameViewModel(getRoomUseCase, settings, getGameActionsUseCase) {
 
     override fun undo() {
         viewModelScope.launch { undoMoveUseCase.undo() }

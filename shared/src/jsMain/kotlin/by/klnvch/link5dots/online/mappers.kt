@@ -31,6 +31,7 @@ import by.klnvch.link5dots.data.online.models.OnlineRoom
 import by.klnvch.link5dots.data.online.models.OnlineRoomRemote
 import by.klnvch.link5dots.data.online.models.RemoteRoomItem
 import by.klnvch.link5dots.domain.models.DotsStyleType
+import by.klnvch.link5dots.domain.models.GameState
 import by.klnvch.link5dots.domain.models.INetworkRoom
 import by.klnvch.link5dots.domain.repositories.RoomRemoteRepository
 import by.klnvch.link5dots.domain.usecases.GameActionsOnlineUseCase
@@ -72,11 +73,16 @@ fun mapToGameViewState(
         override var room = room
     })
 
-    return createGameViewState(
-        dotsStyleType,
+    val gameState = GameState(
+        room,
         user1Name,
         user2Name,
-        room,
+        true,
+    )
+
+    return createGameViewState(
+        dotsStyleType,
+        gameState,
         gameActionsOnlineUseCase.newAction,
         gameActionsOnlineUseCase.undoAction,
         gameActionsOnlineUseCase.shareAction,

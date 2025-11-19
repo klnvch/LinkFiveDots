@@ -24,8 +24,10 @@
 
 package by.klnvch.link5dots.domain.models
 
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonIgnoreUnknownKeys
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
 import kotlinx.serialization.modules.subclass
@@ -38,6 +40,8 @@ interface Dot : Point {
     val dt: Int
 }
 
+@OptIn(ExperimentalSerializationApi::class)
+@JsonIgnoreUnknownKeys // TODO remove after DB reset
 @Serializable
 private data class DotImpl(
     override val x: Int,

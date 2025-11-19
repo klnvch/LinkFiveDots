@@ -49,6 +49,8 @@ interface IRoom {
 }
 
 fun IRoom.canMove(user: IUser?) = (if (dots.size % 2 == 0) user1 else user2) == user
+fun IRoom?.canMove(n: Int) = if (this == null || this.isOver()) false else dots.size % 2 == n
+fun IRoom?.isWon(n: Int) = if (this == null || this.isNotOver()) false else dots.size % 2 == n
 fun IRoom.canUndo(user: IUser?) = (if (dots.size % 2 == 1) user1 else user2) == user
 fun IRoom.isNotEmpty() = dots.isNotEmpty()
 fun IRoom.lastPoint(): Point? = dots.lastOrNull()

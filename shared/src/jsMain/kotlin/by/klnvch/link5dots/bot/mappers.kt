@@ -27,6 +27,7 @@ package by.klnvch.link5dots.bot
 import by.klnvch.link5dots.domain.models.BotUser
 import by.klnvch.link5dots.domain.models.DeviceOwnerUser
 import by.klnvch.link5dots.domain.models.DotsStyleType
+import by.klnvch.link5dots.domain.models.GameState
 import by.klnvch.link5dots.domain.models.IRoom
 import by.klnvch.link5dots.domain.models.IUser
 import by.klnvch.link5dots.domain.models.Room
@@ -49,7 +50,7 @@ fun mapToBotGameViewState(
     dotsStyleType: DotsStyleType,
     userName: String?,
     stringProvider: StringProvider,
-    room: IRoom?,
+    room: IRoom,
 ): GameViewState {
     val user1Name = userName ?: stringProvider.unknownName
     val user2Name = stringProvider.botName
@@ -58,11 +59,16 @@ fun mapToBotGameViewState(
         override val room = room
     })
 
-    return createGameViewState(
-        dotsStyleType,
+    val gameState = GameState(
+        room,
         user1Name,
         user2Name,
-        room,
+        true,
+    )
+
+    return createGameViewState(
+        dotsStyleType,
+        gameState,
         gameActionsOnlineUseCase.newAction,
         gameActionsOnlineUseCase.undoAction,
         gameActionsOnlineUseCase.shareAction,
