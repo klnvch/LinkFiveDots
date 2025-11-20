@@ -25,6 +25,8 @@ package by.klnvch.link5dots.domain.usecases
 
 import android.util.Log
 import by.klnvch.link5dots.domain.models.GameState
+import by.klnvch.link5dots.domain.models.INetworkRoom
+import by.klnvch.link5dots.domain.models.IRoom
 import by.klnvch.link5dots.domain.models.RoomFactory
 import by.klnvch.link5dots.domain.models.canMove
 import by.klnvch.link5dots.domain.models.isNew
@@ -50,6 +52,16 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.shareIn
 import javax.inject.Inject
 
+class GameStateFactory @Inject constructor(
+    private val userNameResolver: UserNameResolver,
+) {
+    suspend fun create(room: IRoom, isActive: Boolean): GameState {
+        val user1Name = userNameResolver.get(room.user1)
+        val user2Name = userNameResolver.get(room.user2)
+        return GameState(room, user1Name, user2Name, isActive)
+    }
+}
+
 interface GetRoomUseCase {
     val room: Flow<GameState>
 }
@@ -59,7 +71,7 @@ class GetRoomCommonUseCase @Inject constructor(
     scope: CoroutineScope,
     private val saveRepository: RoomSaveLocalRepository,
     private val roomFactory: RoomFactory,
-    private val userNameResolver: UserNameResolver,
+    private val gameStateFactory: GameStateFactory,
 ) : GetRoomUseCase {
     override val room: Flow<GameState> = getRepository.roomFlow
         .distinctUntilChanged()
@@ -68,48 +80,54 @@ class GetRoomCommonUseCase @Inject constructor(
             if (it == null) saveRepository.save(roomFactory.generate())
         }
         .filterNotNull()
-        .map {
-            val user1Name = userNameResolver.get(it.user1)
-            val user2Name = userNameResolver.get(it.user2)
-            GameState(it, user1Name, user2Name, true)
-        }
+        .map { gameStateFactory.create(it, true) }
         .shareIn(scope, SharingStarted.WhileSubscribed(), 1)
 }
 
 class GetRoomInfoUseCase @Inject constructor(
     private val repository: RoomRepository,
     keyForInfoRepository: KeyForInfoRepository,
-    private val userNameResolver: UserNameResolver,
+    private val gameStateFactory: GameStateFactory,
 ) : GetRoomUseCase {
     @OptIn(ExperimentalCoroutinesApi::class)
     override val room: Flow<GameState> = keyForInfoRepository.key.flatMapLatest { key ->
-        repository.getByKey(key).filterNotNull().map {
-            val user1Name = userNameResolver.get(it.user1)
-            val user2Name = userNameResolver.get(it.user2)
-            GameState(it, user1Name, user2Name, false)
-        }
+        repository.getByKey(key).filterNotNull().map { gameStateFactory.create(it, false) }
     }
 }
 
-class GetRoomNetworkUseCase @Inject constructor(
+class VibrationCommand @Inject constructor(
+    private val settings: Settings,
+    private val networkUserProvider: NetworkUserProvider,
+    private val vibratorService: VibratorService,
+) {
+    suspend fun vibrate(room: INetworkRoom) {
+        val isEnabled = settings.isVibrationEnabled.first()
+        val canMove = room.canMove(networkUserProvider.networkUser)
+        val isNew = room.isNew()
+        if (isEnabled && (canMove || isNew)) vibratorService.vibrate()
+    }
+}
+
+class GetRoomSocketUseCase @Inject constructor(
     repository: RoomFlowRemoteRepository,
     private val saveRepository: RoomSaveLocalRepository,
-    private val settings: Settings,
-    private val vibratorService: VibratorService,
-    private val networkUserProvider: NetworkUserProvider,
-    private val userNameResolver: UserNameResolver,
+    private val gameStateFactory: GameStateFactory,
+    private val vibrationCommand: VibrationCommand,
 ) : GetRoomUseCase {
     override val room: Flow<GameState> = repository.roomFlow
-        .onEach {
-            val isEnabled = settings.isVibrationEnabled.first()
-            val canMove = it.canMove(networkUserProvider.networkUser)
-            val isNew = it.isNew()
-            if (isEnabled && (canMove || isNew)) vibratorService.vibrate()
-        }
+        .onEach { vibrationCommand.vibrate(it) }
         .onEach { saveRepository.save(it) }
-        .map {
-            val user1Name = userNameResolver.get(it.user1)
-            val user2Name = userNameResolver.get(it.user2)
-            GameState(it, user1Name, user2Name, true)
-        }
+        .map { gameStateFactory.create(it, true) }
+}
+
+class GetRoomOnlineUseCase @Inject constructor(
+    repository: RoomFlowRemoteRepository,
+    private val saveRepository: RoomSaveLocalRepository,
+    private val gameStateFactory: GameStateFactory,
+    private val vibrationCommand: VibrationCommand,
+) : GetRoomUseCase {
+    override val room: Flow<GameState> = repository.roomFlow
+        .onEach { vibrationCommand.vibrate(it) }
+        .onEach { saveRepository.save(it) }
+        .map { gameStateFactory.create(it, true) }
 }

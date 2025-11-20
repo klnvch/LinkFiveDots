@@ -35,7 +35,7 @@ import by.klnvch.link5dots.domain.repositories.RoomRemoteRepository
 import by.klnvch.link5dots.domain.repositories.RoomStateRemoteRepository
 import by.klnvch.link5dots.domain.usecases.AddDotOnlineUseCase
 import by.klnvch.link5dots.domain.usecases.AddDotUseCase
-import by.klnvch.link5dots.domain.usecases.GetRoomNetworkUseCase
+import by.klnvch.link5dots.domain.usecases.GetRoomOnlineUseCase
 import by.klnvch.link5dots.domain.usecases.GetRoomUseCase
 import by.klnvch.link5dots.domain.usecases.SaveScoreEmptyUseCase
 import by.klnvch.link5dots.domain.usecases.SaveScoreUseCase
@@ -53,7 +53,7 @@ import dagger.Module
 @Module
 interface OnlineGameRulesModule {
     @Binds
-    fun bindGetRoomUseCase(impl: GetRoomNetworkUseCase): GetRoomUseCase
+    fun bindGetRoomUseCase(impl: GetRoomOnlineUseCase): GetRoomUseCase
 
     @Binds
     fun bindRoomTypeProvider(impl: RoomTypeOnlineProvider): RoomTypeProvider

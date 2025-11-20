@@ -38,7 +38,7 @@ import by.klnvch.link5dots.domain.usecases.AddDotSocketUseCase
 import by.klnvch.link5dots.domain.usecases.AddDotUseCase
 import by.klnvch.link5dots.domain.usecases.GameActionsSocketUseCase
 import by.klnvch.link5dots.domain.usecases.GameActionsUseCase
-import by.klnvch.link5dots.domain.usecases.GetRoomNetworkUseCase
+import by.klnvch.link5dots.domain.usecases.GetRoomSocketUseCase
 import by.klnvch.link5dots.domain.usecases.GetRoomUseCase
 import by.klnvch.link5dots.domain.usecases.NewGameSocketUseCase
 import by.klnvch.link5dots.domain.usecases.NewGameUseCase
@@ -56,7 +56,7 @@ import dagger.Module
 @Module
 interface SocketGameRulesModule {
     @Binds
-    fun bindGetRoomUseCase(impl: GetRoomNetworkUseCase): GetRoomUseCase
+    fun bindGetRoomUseCase(impl: GetRoomSocketUseCase): GetRoomUseCase
 
     @Binds
     fun bindNewGameUseCase(impl: NewGameSocketUseCase): NewGameUseCase

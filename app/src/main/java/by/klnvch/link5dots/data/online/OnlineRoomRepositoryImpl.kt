@@ -28,6 +28,7 @@ import by.klnvch.link5dots.BuildConfig
 import by.klnvch.link5dots.data.online.CleanUpOnlineRoomWorker.Companion.launchCleanUpOnlineRoomWorker
 import by.klnvch.link5dots.data.online.mapper.toNetworkRoomState
 import by.klnvch.link5dots.data.online.mapper.toOnlineRoom
+import by.klnvch.link5dots.data.online.models.OnlineRoom
 import by.klnvch.link5dots.data.online.models.OnlineRoomDead
 import by.klnvch.link5dots.data.online.models.OnlineRoomRemote
 import by.klnvch.link5dots.data.online.models.RemoteRoomItem
@@ -41,6 +42,7 @@ import com.google.firebase.database.database
 import com.google.firebase.database.snapshots
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterNotNull
@@ -63,7 +65,7 @@ class OnlineRoomRepositoryImpl @Inject constructor(
     private val key = onlineLocalStore.key.filterNotNull()
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    private val remote = key.flatMapLatest { key ->
+    private val remote: Flow<OnlineRoom> = key.flatMapLatest { key ->
         reference.child(key).snapshots
             .map { it.toRemoteRoomItem() }
             .map { it.toOnlineRoom() }
