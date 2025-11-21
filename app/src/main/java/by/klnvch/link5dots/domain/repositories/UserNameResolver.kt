@@ -34,10 +34,10 @@ class UserNameResolver @Inject constructor(
     private val settings: Settings,
     private val stringProvider: StringRepository,
 ) {
-    suspend fun get(user: IUser?) = when (user) {
+    fun get(user: IUser?) = when (user) {
         is BotUser -> stringProvider.botName
         is NetworkUser -> user.name ?: stringProvider.unknownName
-        is DeviceOwnerUser -> settings.getUserName() ?: stringProvider.unknownName
+        is DeviceOwnerUser -> settings.userName ?: stringProvider.unknownName
         null -> null
     }
 }

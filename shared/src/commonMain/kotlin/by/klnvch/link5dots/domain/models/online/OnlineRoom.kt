@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.data.online.models
+package by.klnvch.link5dots.domain.models.online
 
 import by.klnvch.link5dots.domain.models.INetworkRoom
 import by.klnvch.link5dots.domain.models.INetworkRoomInvitation
@@ -33,17 +33,27 @@ import kotlin.js.JsExport
 @JsExport
 sealed interface OnlineRoom
 sealed interface OnlineRoomDead : OnlineRoom
+
+@OptIn(ExperimentalJsExport::class)
+@JsExport
 sealed interface OnlineRoomLive : OnlineRoom {
     val room: INetworkRoom
+    val isActive: Boolean
 }
 
 data class OnlineRoomCreated(val invitation: INetworkRoomInvitation) : OnlineRoom
-data class OnlineRoomStarted(override val room: INetworkRoom) : OnlineRoomLive
-data class OnlineRoomFinished(override val room: INetworkRoom) : OnlineRoomLive, OnlineRoomDead
+data class OnlineRoomStarted(override val room: INetworkRoom) : OnlineRoomLive {
+    override val isActive = true
+}
+
+data class OnlineRoomFinished(override val room: INetworkRoom) : OnlineRoomLive, OnlineRoomDead {
+    override val isActive = false
+}
+
 object OnlineRoomDeleted : OnlineRoomDead {
     override fun toString() = "OnlineRoomDeleted"
 }
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport
-fun OnlineRoom.getRoomIfAny() = (this as? OnlineRoomLive)?.room
+fun OnlineRoom.toOnlineRoomLive(): OnlineRoomLive? = this as? OnlineRoomLive

@@ -33,6 +33,7 @@ import by.klnvch.link5dots.domain.models.isNew
 import by.klnvch.link5dots.domain.repositories.KeyForInfoRepository
 import by.klnvch.link5dots.domain.repositories.NetworkUserProvider
 import by.klnvch.link5dots.domain.repositories.RoomFlowLocalRepository
+import by.klnvch.link5dots.domain.repositories.RoomFlowOnlineRepository
 import by.klnvch.link5dots.domain.repositories.RoomFlowRemoteRepository
 import by.klnvch.link5dots.domain.repositories.RoomRepository
 import by.klnvch.link5dots.domain.repositories.RoomSaveLocalRepository
@@ -55,7 +56,7 @@ import javax.inject.Inject
 class GameStateFactory @Inject constructor(
     private val userNameResolver: UserNameResolver,
 ) {
-    suspend fun create(room: IRoom, isActive: Boolean): GameState {
+    fun create(room: IRoom, isActive: Boolean): GameState {
         val user1Name = userNameResolver.get(room.user1)
         val user2Name = userNameResolver.get(room.user2)
         return GameState(room, user1Name, user2Name, isActive)
@@ -121,13 +122,13 @@ class GetRoomSocketUseCase @Inject constructor(
 }
 
 class GetRoomOnlineUseCase @Inject constructor(
-    repository: RoomFlowRemoteRepository,
+    repository: RoomFlowOnlineRepository,
     private val saveRepository: RoomSaveLocalRepository,
     private val gameStateFactory: GameStateFactory,
     private val vibrationCommand: VibrationCommand,
 ) : GetRoomUseCase {
-    override val room: Flow<GameState> = repository.roomFlow
-        .onEach { vibrationCommand.vibrate(it) }
-        .onEach { saveRepository.save(it) }
-        .map { gameStateFactory.create(it, true) }
+    override val room: Flow<GameState> = repository.onlineRoom
+        .onEach { vibrationCommand.vibrate(it.room) }
+        .onEach { saveRepository.save(it.room) }
+        .map { gameStateFactory.create(it.room, it.isActive) }
 }

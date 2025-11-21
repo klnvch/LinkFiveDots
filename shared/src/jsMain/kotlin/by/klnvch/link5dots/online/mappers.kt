@@ -27,12 +27,12 @@ package by.klnvch.link5dots.online
 import by.klnvch.link5dots.data.online.mapper.toOnlineRoom
 import by.klnvch.link5dots.data.online.models.OnlineDotRemote
 import by.klnvch.link5dots.data.online.models.OnlineRemoteUser
-import by.klnvch.link5dots.data.online.models.OnlineRoom
 import by.klnvch.link5dots.data.online.models.OnlineRoomRemote
 import by.klnvch.link5dots.data.online.models.RemoteRoomItem
 import by.klnvch.link5dots.domain.models.DotsStyleType
 import by.klnvch.link5dots.domain.models.GameState
-import by.klnvch.link5dots.domain.models.INetworkRoom
+import by.klnvch.link5dots.domain.models.online.OnlineRoom
+import by.klnvch.link5dots.domain.models.online.OnlineRoomLive
 import by.klnvch.link5dots.domain.repositories.RoomRemoteRepository
 import by.klnvch.link5dots.domain.usecases.GameActionsOnlineUseCase
 import by.klnvch.link5dots.ui.game.GameViewState
@@ -64,20 +64,20 @@ fun toOnlineRoom(key: String?, value: dynamic?): OnlineRoom {
 fun mapToGameViewState(
     dotsStyleType: DotsStyleType,
     defaultName: String,
-    room: INetworkRoom,
+    onlineRoom: OnlineRoomLive,
 ): GameViewState {
-    val user1Name = room.user1.name ?: defaultName
-    val user2Name = room.user2.name ?: defaultName
+    val user1Name = onlineRoom.room.user1.name ?: defaultName
+    val user2Name = onlineRoom.room.user2.name ?: defaultName
 
     val gameActionsOnlineUseCase = GameActionsOnlineUseCase(object : RoomRemoteRepository {
-        override var room = room
+        override var room = onlineRoom.room
     })
 
     val gameState = GameState(
-        room,
+        onlineRoom.room,
         user1Name,
         user2Name,
-        true,
+        onlineRoom.isActive,
     )
 
     return createGameViewState(

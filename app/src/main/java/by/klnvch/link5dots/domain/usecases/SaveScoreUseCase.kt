@@ -63,7 +63,7 @@ class SaveScoreBotUseCase @Inject constructor(
                 )
                 val deviceId = deviceInfo.getAndroidId()
                 val userId = firebaseManager.userId.first() ?: throw UnauthorizedException()
-                val userName = settings.getUserName() ?: stringRepository.unknownName
+                val userName = settings.userName ?: stringRepository.unknownName
                 gameScoreRepository.save(score, userName, userId, deviceId)
             }
         }

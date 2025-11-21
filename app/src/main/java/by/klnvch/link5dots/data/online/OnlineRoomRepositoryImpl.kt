@@ -28,12 +28,13 @@ import by.klnvch.link5dots.BuildConfig
 import by.klnvch.link5dots.data.online.CleanUpOnlineRoomWorker.Companion.launchCleanUpOnlineRoomWorker
 import by.klnvch.link5dots.data.online.mapper.toNetworkRoomState
 import by.klnvch.link5dots.data.online.mapper.toOnlineRoom
-import by.klnvch.link5dots.data.online.models.OnlineRoom
-import by.klnvch.link5dots.data.online.models.OnlineRoomDead
 import by.klnvch.link5dots.data.online.models.OnlineRoomRemote
 import by.klnvch.link5dots.data.online.models.RemoteRoomItem
-import by.klnvch.link5dots.data.online.models.getRoomIfAny
 import by.klnvch.link5dots.domain.models.RoomState
+import by.klnvch.link5dots.domain.models.online.OnlineRoom
+import by.klnvch.link5dots.domain.models.online.OnlineRoomDead
+import by.klnvch.link5dots.domain.models.online.OnlineRoomLive
+import by.klnvch.link5dots.domain.models.online.toOnlineRoomLive
 import by.klnvch.link5dots.domain.repositories.OnlineRoomRepository
 import by.klnvch.link5dots.domain.repositories.StringRepository
 import com.google.firebase.Firebase
@@ -45,6 +46,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
@@ -72,10 +74,11 @@ class OnlineRoomRepositoryImpl @Inject constructor(
     }
 
     private val _remoteFlow = remote
-        .mapNotNull { it.getRoomIfAny() }
+        .mapNotNull { it.toOnlineRoomLive() }
+        .map { it.room }
         .stateIn(scope, SharingStarted.Eagerly, null)
 
-    override val roomFlow = _remoteFlow.filterNotNull()
+    override val onlineRoom: Flow<OnlineRoomLive> = remote.filterIsInstance(OnlineRoomLive::class)
     override val room get() = _remoteFlow.value
 
     override val state = remote

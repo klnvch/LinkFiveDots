@@ -30,7 +30,7 @@ import by.klnvch.link5dots.domain.repositories.NetworkUserFirebaseProvider
 import by.klnvch.link5dots.domain.repositories.NetworkUserProvider
 import by.klnvch.link5dots.domain.repositories.OnlineRoomRepository
 import by.klnvch.link5dots.domain.repositories.RoomCleanRemoteRepository
-import by.klnvch.link5dots.domain.repositories.RoomFlowRemoteRepository
+import by.klnvch.link5dots.domain.repositories.RoomFlowOnlineRepository
 import by.klnvch.link5dots.domain.repositories.RoomRemoteRepository
 import by.klnvch.link5dots.domain.repositories.RoomStateRemoteRepository
 import by.klnvch.link5dots.domain.usecases.AddDotOnlineUseCase
@@ -89,7 +89,7 @@ interface OnlineGameRulesModule {
     fun bindNetworkUserProvider(impl: NetworkUserFirebaseProvider): NetworkUserProvider
 
     @Binds
-    fun bindRoomFlowRemoteRepository(impl: OnlineRoomRepository): RoomFlowRemoteRepository
+    fun bindRoomFlowOnlineRepository(impl: OnlineRoomRepository): RoomFlowOnlineRepository
 
     @Binds
     fun bindRoomRemoteRepository(impl: OnlineRoomRepository): RoomRemoteRepository

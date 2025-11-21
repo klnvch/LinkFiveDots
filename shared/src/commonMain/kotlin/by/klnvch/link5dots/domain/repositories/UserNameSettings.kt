@@ -25,5 +25,5 @@
 package by.klnvch.link5dots.domain.repositories
 
 interface UserNameSettings {
-    suspend fun getUserName(): String?
+    val userName: String?
 }

@@ -24,16 +24,16 @@
 
 package by.klnvch.link5dots.data.online.mapper
 
-import by.klnvch.link5dots.data.online.models.OnlineRoom
-import by.klnvch.link5dots.data.online.models.OnlineRoomCreated
-import by.klnvch.link5dots.data.online.models.OnlineRoomDeleted
-import by.klnvch.link5dots.data.online.models.OnlineRoomFinished
-import by.klnvch.link5dots.data.online.models.OnlineRoomStarted
 import by.klnvch.link5dots.domain.models.NetworkRoomState
 import by.klnvch.link5dots.domain.models.NetworkRoomStateCreated
 import by.klnvch.link5dots.domain.models.NetworkRoomStateDeleted
 import by.klnvch.link5dots.domain.models.NetworkRoomStateFinished
 import by.klnvch.link5dots.domain.models.NetworkRoomStateStarted
+import by.klnvch.link5dots.domain.models.online.OnlineRoom
+import by.klnvch.link5dots.domain.models.online.OnlineRoomCreated
+import by.klnvch.link5dots.domain.models.online.OnlineRoomDeleted
+import by.klnvch.link5dots.domain.models.online.OnlineRoomFinished
+import by.klnvch.link5dots.domain.models.online.OnlineRoomStarted
 import kotlin.js.ExperimentalJsCollectionsApi
 import kotlin.js.ExperimentalJsExport
 import kotlin.js.JsExport

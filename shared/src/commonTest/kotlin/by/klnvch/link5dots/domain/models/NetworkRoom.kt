@@ -24,7 +24,7 @@
 
 package by.klnvch.link5dots.domain.models
 
-import by.klnvch.link5dots.data.online.models.OnlineRoomStarted
+import by.klnvch.link5dots.domain.models.online.OnlineRoomStarted
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

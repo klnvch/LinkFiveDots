@@ -35,12 +35,11 @@ import by.klnvch.link5dots.domain.models.AllSettings
 import by.klnvch.link5dots.domain.models.DotsStyleType
 import by.klnvch.link5dots.domain.models.NightMode
 import by.klnvch.link5dots.domain.repositories.Settings
-import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
@@ -49,7 +48,10 @@ import javax.inject.Inject
 
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 
-class SettingsImpl @Inject constructor(context: Context) : Settings {
+class SettingsImpl @Inject constructor(
+    context: Context,
+    scope: CoroutineScope,
+) : Settings {
     private val dataStore = context.dataStore
 
     companion object {
@@ -84,11 +86,13 @@ class SettingsImpl @Inject constructor(context: Context) : Settings {
         dataStore.edit { if (userName == null) it.remove(USER_NAME) else it[USER_NAME] = userName }
     }
 
-    override suspend fun getUserName() = getUserNameFlow().first()
-
-    override fun getUserNameFlow() = dataStore.data
+    private val _userName: StateFlow<String?> = dataStore.data
         .map { it[USER_NAME] }
         .distinctUntilChanged()
+        .stateIn(scope, SharingStarted.Eagerly, null)
+
+    override fun getUserNameFlow() = _userName
+    override val userName: String? get() = _userName.value
 
     override suspend fun setLanguage(language: String) {
         dataStore.edit { it[LANGUAGE] = language }
@@ -135,10 +139,9 @@ class SettingsImpl @Inject constructor(context: Context) : Settings {
         .map { SettingsMapper.Dots.map(it[DOTS_TYPE]) }
         .distinctUntilChanged()
 
-    @OptIn(DelicateCoroutinesApi::class)
     override val nightMode = dataStore.data
         .map { SettingsMapper.Night.map(it[NIGHT_MODE]) }
-        .stateIn(GlobalScope, SharingStarted.Eagerly, NightMode.System)
+        .stateIn(scope, SharingStarted.Eagerly, NightMode.System)
 
     override suspend fun reset() {
         dataStore.edit {
