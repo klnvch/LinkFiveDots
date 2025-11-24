@@ -28,16 +28,28 @@ import by.klnvch.link5dots.domain.models.BotUser
 import by.klnvch.link5dots.domain.models.DeviceOwnerUser
 import by.klnvch.link5dots.domain.models.IUser
 import by.klnvch.link5dots.domain.models.NetworkUser
-import javax.inject.Inject
 
-class UserNameResolver @Inject constructor(
-    private val settings: Settings,
-    private val stringProvider: StringRepository,
-) {
-    fun get(user: IUser?) = when (user) {
+interface UserNameResolver<User : IUser> {
+    fun get(user: User?): String?
+}
+
+class AnyUserNameResolver(
+    private val settings: UserNameSettings,
+    private val stringProvider: StringProvider,
+) : UserNameResolver<IUser> {
+    override fun get(user: IUser?) = when (user) {
         is BotUser -> stringProvider.botName
         is NetworkUser -> user.name ?: stringProvider.unknownName
         is DeviceOwnerUser -> settings.userName ?: stringProvider.unknownName
+        null -> null
+    }
+}
+
+class NetworkUserNameResolver(
+    private val stringProvider: StringProvider,
+) : UserNameResolver<NetworkUser> {
+    override fun get(user: NetworkUser?) = when (user) {
+        is NetworkUser -> user.name ?: stringProvider.unknownName
         null -> null
     }
 }

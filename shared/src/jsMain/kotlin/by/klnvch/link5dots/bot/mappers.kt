@@ -32,8 +32,10 @@ import by.klnvch.link5dots.domain.models.IRoom
 import by.klnvch.link5dots.domain.models.IUser
 import by.klnvch.link5dots.domain.models.Room
 import by.klnvch.link5dots.domain.models.dotModule
+import by.klnvch.link5dots.domain.repositories.AnyUserNameResolver
 import by.klnvch.link5dots.domain.repositories.RoomGetRepository
 import by.klnvch.link5dots.domain.repositories.StringProvider
+import by.klnvch.link5dots.domain.repositories.UserNameSettings
 import by.klnvch.link5dots.domain.usecases.GameActionsBotUseCase
 import by.klnvch.link5dots.ui.game.GameViewState
 import by.klnvch.link5dots.ui.game.createGameViewState
@@ -52,8 +54,10 @@ fun mapToBotGameViewState(
     stringProvider: StringProvider,
     room: IRoom,
 ): GameViewState {
-    val user1Name = userName ?: stringProvider.unknownName
-    val user2Name = stringProvider.botName
+    val settings = object : UserNameSettings {
+        override val userName = userName
+    }
+    val userNameResolver = AnyUserNameResolver(settings, stringProvider)
 
     val gameActionsOnlineUseCase = GameActionsBotUseCase(object : RoomGetRepository {
         override val room = room
@@ -61,8 +65,8 @@ fun mapToBotGameViewState(
 
     val gameState = GameState(
         room,
-        user1Name,
-        user2Name,
+        userNameResolver.get(room.user1),
+        userNameResolver.get(room.user2),
         true,
     )
 

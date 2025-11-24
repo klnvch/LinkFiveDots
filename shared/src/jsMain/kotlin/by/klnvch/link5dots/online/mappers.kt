@@ -33,7 +33,9 @@ import by.klnvch.link5dots.domain.models.DotsStyleType
 import by.klnvch.link5dots.domain.models.GameState
 import by.klnvch.link5dots.domain.models.online.OnlineRoom
 import by.klnvch.link5dots.domain.models.online.OnlineRoomLive
+import by.klnvch.link5dots.domain.repositories.NetworkUserNameResolver
 import by.klnvch.link5dots.domain.repositories.RoomRemoteRepository
+import by.klnvch.link5dots.domain.repositories.StringProvider
 import by.klnvch.link5dots.domain.usecases.GameActionsOnlineUseCase
 import by.klnvch.link5dots.ui.game.GameViewState
 import by.klnvch.link5dots.ui.game.createGameViewState
@@ -63,11 +65,10 @@ fun toOnlineRoom(key: String?, value: dynamic?): OnlineRoom {
 @JsExport
 fun mapToGameViewState(
     dotsStyleType: DotsStyleType,
-    defaultName: String,
+    stringProvider: StringProvider,
     onlineRoom: OnlineRoomLive,
 ): GameViewState {
-    val user1Name = onlineRoom.room.user1.name ?: defaultName
-    val user2Name = onlineRoom.room.user2.name ?: defaultName
+    val userNameResolver = NetworkUserNameResolver(stringProvider)
 
     val gameActionsOnlineUseCase = GameActionsOnlineUseCase(object : RoomRemoteRepository {
         override var room = onlineRoom.room
@@ -75,8 +76,8 @@ fun mapToGameViewState(
 
     val gameState = GameState(
         onlineRoom.room,
-        user1Name,
-        user2Name,
+        userNameResolver.get(onlineRoom.room.user1),
+        userNameResolver.get(onlineRoom.room.user2),
         onlineRoom.isActive,
     )
 

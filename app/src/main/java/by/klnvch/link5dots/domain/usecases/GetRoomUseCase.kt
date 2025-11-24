@@ -30,7 +30,9 @@ import by.klnvch.link5dots.domain.models.IRoom
 import by.klnvch.link5dots.domain.models.RoomFactory
 import by.klnvch.link5dots.domain.models.canMove
 import by.klnvch.link5dots.domain.models.isNew
+import by.klnvch.link5dots.domain.repositories.AnyUserNameResolver
 import by.klnvch.link5dots.domain.repositories.KeyForInfoRepository
+import by.klnvch.link5dots.domain.repositories.NetworkUserNameResolver
 import by.klnvch.link5dots.domain.repositories.NetworkUserProvider
 import by.klnvch.link5dots.domain.repositories.RoomFlowLocalRepository
 import by.klnvch.link5dots.domain.repositories.RoomFlowOnlineRepository
@@ -38,7 +40,6 @@ import by.klnvch.link5dots.domain.repositories.RoomFlowRemoteRepository
 import by.klnvch.link5dots.domain.repositories.RoomRepository
 import by.klnvch.link5dots.domain.repositories.RoomSaveLocalRepository
 import by.klnvch.link5dots.domain.repositories.Settings
-import by.klnvch.link5dots.domain.repositories.UserNameResolver
 import by.klnvch.link5dots.domain.repositories.VibratorService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -54,9 +55,19 @@ import kotlinx.coroutines.flow.shareIn
 import javax.inject.Inject
 
 class GameStateFactory @Inject constructor(
-    private val userNameResolver: UserNameResolver,
+    private val userNameResolver: AnyUserNameResolver,
 ) {
     fun create(room: IRoom, isActive: Boolean): GameState {
+        val user1Name = userNameResolver.get(room.user1)
+        val user2Name = userNameResolver.get(room.user2)
+        return GameState(room, user1Name, user2Name, isActive)
+    }
+}
+
+class NetworkGameStateFactory @Inject constructor(
+    private val userNameResolver: NetworkUserNameResolver,
+) {
+    fun create(room: INetworkRoom, isActive: Boolean): GameState {
         val user1Name = userNameResolver.get(room.user1)
         val user2Name = userNameResolver.get(room.user2)
         return GameState(room, user1Name, user2Name, isActive)
@@ -112,7 +123,7 @@ class VibrationCommand @Inject constructor(
 class GetRoomSocketUseCase @Inject constructor(
     repository: RoomFlowRemoteRepository,
     private val saveRepository: RoomSaveLocalRepository,
-    private val gameStateFactory: GameStateFactory,
+    private val gameStateFactory: NetworkGameStateFactory,
     private val vibrationCommand: VibrationCommand,
 ) : GetRoomUseCase {
     override val room: Flow<GameState> = repository.roomFlow
@@ -124,7 +135,7 @@ class GetRoomSocketUseCase @Inject constructor(
 class GetRoomOnlineUseCase @Inject constructor(
     repository: RoomFlowOnlineRepository,
     private val saveRepository: RoomSaveLocalRepository,
-    private val gameStateFactory: GameStateFactory,
+    private val gameStateFactory: NetworkGameStateFactory,
     private val vibrationCommand: VibrationCommand,
 ) : GetRoomUseCase {
     override val room: Flow<GameState> = repository.onlineRoom

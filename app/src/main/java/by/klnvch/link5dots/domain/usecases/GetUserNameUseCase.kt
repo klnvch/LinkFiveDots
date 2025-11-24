@@ -24,15 +24,14 @@
 package by.klnvch.link5dots.domain.usecases
 
 import by.klnvch.link5dots.domain.models.IUser
+import by.klnvch.link5dots.domain.repositories.AnyUserNameResolver
 import by.klnvch.link5dots.domain.repositories.Settings
-import by.klnvch.link5dots.domain.repositories.UserNameResolver
 import javax.inject.Inject
 
 class GetUserNameUseCase @Inject constructor(
     private val settings: Settings,
-    private val userNameResolver: UserNameResolver,
+    private val userNameResolver: AnyUserNameResolver,
 ) {
     fun get() = settings.getUserNameFlow()
-
-    suspend fun get(user: IUser?) = userNameResolver.get(user)
+    fun get(user: IUser?) = userNameResolver.get(user)
 }

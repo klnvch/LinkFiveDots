@@ -38,8 +38,10 @@ import by.klnvch.link5dots.data.online.ScanOnlineRoomRepositoryImpl
 import by.klnvch.link5dots.data.online.UpdateStateOnlineRoomRepositoryImpl
 import by.klnvch.link5dots.domain.models.Board
 import by.klnvch.link5dots.domain.repositories.AddDotOnlineRoomRepository
+import by.klnvch.link5dots.domain.repositories.AnyUserNameResolver
 import by.klnvch.link5dots.domain.repositories.ConnectOnlineRoomRepository
 import by.klnvch.link5dots.domain.repositories.CreateOnlineRoomRepository
+import by.klnvch.link5dots.domain.repositories.NetworkUserNameResolver
 import by.klnvch.link5dots.domain.repositories.RoomKeyGenerator
 import by.klnvch.link5dots.domain.repositories.ScanOnlineRoomRepository
 import by.klnvch.link5dots.domain.repositories.Settings
@@ -123,4 +125,17 @@ class AppBindingModule2 {
     @Provides
     @Singleton
     fun provideApplicationScope() = CoroutineScope(SupervisorJob() + Dispatchers.Default)
+
+    @Provides
+    @Singleton
+    fun provideAnyUserNameResolver(
+        settings: UserNameSettings,
+        stringProvider: StringProvider,
+    ) = AnyUserNameResolver(settings, stringProvider)
+
+    @Provides
+    @Singleton
+    fun provideNetworkUserNameResolver(
+        stringProvider: StringProvider,
+    ) = NetworkUserNameResolver(stringProvider)
 }
