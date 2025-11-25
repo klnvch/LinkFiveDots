@@ -26,14 +26,14 @@ package by.klnvch.link5dots.di.game.online
 import by.klnvch.link5dots.domain.models.Board
 import by.klnvch.link5dots.domain.repositories.AddDotOnlineRoomRepository
 import by.klnvch.link5dots.domain.repositories.CreateOnlineRoomRepository
+import by.klnvch.link5dots.domain.repositories.GameActionsFactory
+import by.klnvch.link5dots.domain.repositories.GameActionsOnlineFactory
 import by.klnvch.link5dots.domain.repositories.NetworkUserProvider
 import by.klnvch.link5dots.domain.repositories.RoomKeyGenerator
 import by.klnvch.link5dots.domain.repositories.RoomRemoteRepository
 import by.klnvch.link5dots.domain.repositories.StringProvider
 import by.klnvch.link5dots.domain.repositories.UpdateStateOnlineRoomRepository
 import by.klnvch.link5dots.domain.usecases.AddDotOnlineUseCase
-import by.klnvch.link5dots.domain.usecases.GameActionsOnlineUseCase
-import by.klnvch.link5dots.domain.usecases.GameActionsUseCase
 import by.klnvch.link5dots.domain.usecases.NewGameEmptyUseCase
 import by.klnvch.link5dots.domain.usecases.NewGameUseCase
 import by.klnvch.link5dots.domain.usecases.network.CreateOnlineRoomUseCase
@@ -47,8 +47,7 @@ class OnlineGameRulesModule2 {
     fun provideNewGameUseCase(): NewGameUseCase = NewGameEmptyUseCase()
 
     @Provides
-    fun provideGameActionsUseCase(getRepository: RoomRemoteRepository): GameActionsUseCase =
-        GameActionsOnlineUseCase(getRepository)
+    fun provideGameActionsFactory(): GameActionsFactory = GameActionsOnlineFactory()
 
     @Provides
     fun provideCreateOnlineRoomUseCase(

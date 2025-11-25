@@ -24,6 +24,8 @@
 
 package by.klnvch.link5dots.di.game
 
+import by.klnvch.link5dots.domain.repositories.GameActionsFactory
+import by.klnvch.link5dots.domain.repositories.GameActionsSocketFactory
 import by.klnvch.link5dots.domain.repositories.NetworkUserLocalProvider
 import by.klnvch.link5dots.domain.repositories.NetworkUserProvider
 import by.klnvch.link5dots.domain.repositories.RoomCleanRemoteRepository
@@ -36,8 +38,6 @@ import by.klnvch.link5dots.domain.repositories.SocketRoomRepository
 import by.klnvch.link5dots.domain.repositories.SocketSendRepository
 import by.klnvch.link5dots.domain.usecases.AddDotSocketUseCase
 import by.klnvch.link5dots.domain.usecases.AddDotUseCase
-import by.klnvch.link5dots.domain.usecases.GameActionsSocketUseCase
-import by.klnvch.link5dots.domain.usecases.GameActionsUseCase
 import by.klnvch.link5dots.domain.usecases.GetRoomSocketUseCase
 import by.klnvch.link5dots.domain.usecases.GetRoomUseCase
 import by.klnvch.link5dots.domain.usecases.NewGameSocketUseCase
@@ -80,7 +80,7 @@ interface SocketGameRulesModule {
     fun bindNetworkUserProvider(impl: NetworkUserLocalProvider): NetworkUserProvider
 
     @Binds
-    fun bindGameActionsUseCase(impl: GameActionsSocketUseCase): GameActionsUseCase
+    fun bindGameActionsFactory(impl: GameActionsSocketFactory): GameActionsFactory
 
     @Binds
     fun bindSocketGetFlowRepository(impl: SocketRoomRepository): RoomFlowRemoteRepository

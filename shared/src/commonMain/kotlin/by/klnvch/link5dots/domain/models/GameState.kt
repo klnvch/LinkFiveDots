@@ -41,8 +41,8 @@ data class UserState(
 
 data class GameState(
     val room: IRoom,
-    private val user1Name: String?,
-    private val user2Name: String?,
+    val gameActions: GameActions,
+    private val userNames: ResolvedUserNames,
     private val isActive: Boolean,
 ) {
     val lastDotTime: Int? = room.let {
@@ -56,13 +56,13 @@ data class GameState(
     val winningLine: WinningLine? = room.getWinningLine()
     val size: Int = room.dots.size
     val user1 = UserState(
-        user1Name,
+        userNames.user1Name,
         isActive && room.canMove(0),
         room.isWon(1),
         room.dots.getDuration(1),
     )
     val user2 = UserState(
-        user2Name,
+        userNames.user2Name,
         isActive && room.canMove(1),
         room.isWon(0),
         room.dots.getDuration(0),

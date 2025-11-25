@@ -30,13 +30,12 @@ import by.klnvch.link5dots.data.online.models.OnlineRemoteUser
 import by.klnvch.link5dots.data.online.models.OnlineRoomRemote
 import by.klnvch.link5dots.data.online.models.RemoteRoomItem
 import by.klnvch.link5dots.domain.models.DotsStyleType
-import by.klnvch.link5dots.domain.models.GameState
+import by.klnvch.link5dots.domain.models.GameStateFactory
 import by.klnvch.link5dots.domain.models.online.OnlineRoom
 import by.klnvch.link5dots.domain.models.online.OnlineRoomLive
+import by.klnvch.link5dots.domain.repositories.GameActionsOnlineFactory
 import by.klnvch.link5dots.domain.repositories.NetworkUserNameResolver
-import by.klnvch.link5dots.domain.repositories.RoomRemoteRepository
 import by.klnvch.link5dots.domain.repositories.StringProvider
-import by.klnvch.link5dots.domain.usecases.GameActionsOnlineUseCase
 import by.klnvch.link5dots.ui.game.GameViewState
 import by.klnvch.link5dots.ui.game.createGameViewState
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -69,23 +68,9 @@ fun mapToGameViewState(
     onlineRoom: OnlineRoomLive,
 ): GameViewState {
     val userNameResolver = NetworkUserNameResolver(stringProvider)
+    val gameActionsFactory = GameActionsOnlineFactory()
+    val gameStateFactory = GameStateFactory(userNameResolver, gameActionsFactory)
 
-    val gameActionsOnlineUseCase = GameActionsOnlineUseCase(object : RoomRemoteRepository {
-        override var room = onlineRoom.room
-    })
-
-    val gameState = GameState(
-        onlineRoom.room,
-        userNameResolver.get(onlineRoom.room.user1),
-        userNameResolver.get(onlineRoom.room.user2),
-        onlineRoom.isActive,
-    )
-
-    return createGameViewState(
-        dotsStyleType,
-        gameState,
-        gameActionsOnlineUseCase.newAction,
-        gameActionsOnlineUseCase.undoAction,
-        gameActionsOnlineUseCase.shareAction,
-    )
+    val gameState = gameStateFactory.create(onlineRoom.room, onlineRoom.isActive)
+    return createGameViewState(dotsStyleType, gameState)
 }

@@ -25,12 +25,14 @@ package by.klnvch.link5dots.domain.usecases
 
 import android.util.Log
 import by.klnvch.link5dots.domain.models.GameState
+import by.klnvch.link5dots.domain.models.GameStateFactory
 import by.klnvch.link5dots.domain.models.INetworkRoom
 import by.klnvch.link5dots.domain.models.IRoom
 import by.klnvch.link5dots.domain.models.RoomFactory
 import by.klnvch.link5dots.domain.models.canMove
 import by.klnvch.link5dots.domain.models.isNew
 import by.klnvch.link5dots.domain.repositories.AnyUserNameResolver
+import by.klnvch.link5dots.domain.repositories.GameActionsFactory
 import by.klnvch.link5dots.domain.repositories.KeyForInfoRepository
 import by.klnvch.link5dots.domain.repositories.NetworkUserNameResolver
 import by.klnvch.link5dots.domain.repositories.NetworkUserProvider
@@ -54,25 +56,15 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.shareIn
 import javax.inject.Inject
 
-class GameStateFactory @Inject constructor(
-    private val userNameResolver: AnyUserNameResolver,
-) {
-    fun create(room: IRoom, isActive: Boolean): GameState {
-        val user1Name = userNameResolver.get(room.user1)
-        val user2Name = userNameResolver.get(room.user2)
-        return GameState(room, user1Name, user2Name, isActive)
-    }
-}
+class OfflineGameStateFactory @Inject constructor(
+    userNameResolver: AnyUserNameResolver,
+    gameActionsFactory: GameActionsFactory,
+) : GameStateFactory<IRoom>(userNameResolver, gameActionsFactory)
 
 class NetworkGameStateFactory @Inject constructor(
-    private val userNameResolver: NetworkUserNameResolver,
-) {
-    fun create(room: INetworkRoom, isActive: Boolean): GameState {
-        val user1Name = userNameResolver.get(room.user1)
-        val user2Name = userNameResolver.get(room.user2)
-        return GameState(room, user1Name, user2Name, isActive)
-    }
-}
+    userNameResolver: NetworkUserNameResolver,
+    gameActionsFactory: GameActionsFactory,
+) : GameStateFactory<INetworkRoom>(userNameResolver, gameActionsFactory)
 
 interface GetRoomUseCase {
     val room: Flow<GameState>
@@ -83,7 +75,7 @@ class GetRoomCommonUseCase @Inject constructor(
     scope: CoroutineScope,
     private val saveRepository: RoomSaveLocalRepository,
     private val roomFactory: RoomFactory,
-    private val gameStateFactory: GameStateFactory,
+    private val gameStateFactory: OfflineGameStateFactory,
 ) : GetRoomUseCase {
     override val room: Flow<GameState> = getRepository.roomFlow
         .distinctUntilChanged()
@@ -99,7 +91,7 @@ class GetRoomCommonUseCase @Inject constructor(
 class GetRoomInfoUseCase @Inject constructor(
     private val repository: RoomRepository,
     keyForInfoRepository: KeyForInfoRepository,
-    private val gameStateFactory: GameStateFactory,
+    private val gameStateFactory: OfflineGameStateFactory,
 ) : GetRoomUseCase {
     @OptIn(ExperimentalCoroutinesApi::class)
     override val room: Flow<GameState> = keyForInfoRepository.key.flatMapLatest { key ->

@@ -56,6 +56,7 @@ fun IRoom.isNotEmpty() = dots.isNotEmpty()
 fun IRoom.lastPoint(): Point? = dots.lastOrNull()
 fun IRoom.isNew() = dots.lastOrNull()?.dt == 0
 val IRoom.size get() = dots.size
+fun IRoom.isOwner(user: NetworkUser): Boolean = (user1 as? NetworkUser)?.id == user.id
 
 @Serializable
 data class Room(

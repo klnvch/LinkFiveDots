@@ -27,16 +27,15 @@ package by.klnvch.link5dots.bot
 import by.klnvch.link5dots.domain.models.BotUser
 import by.klnvch.link5dots.domain.models.DeviceOwnerUser
 import by.klnvch.link5dots.domain.models.DotsStyleType
-import by.klnvch.link5dots.domain.models.GameState
+import by.klnvch.link5dots.domain.models.GameStateFactory
 import by.klnvch.link5dots.domain.models.IRoom
 import by.klnvch.link5dots.domain.models.IUser
 import by.klnvch.link5dots.domain.models.Room
 import by.klnvch.link5dots.domain.models.dotModule
 import by.klnvch.link5dots.domain.repositories.AnyUserNameResolver
-import by.klnvch.link5dots.domain.repositories.RoomGetRepository
+import by.klnvch.link5dots.domain.repositories.GameActionsBotFactory
 import by.klnvch.link5dots.domain.repositories.StringProvider
 import by.klnvch.link5dots.domain.repositories.UserNameSettings
-import by.klnvch.link5dots.domain.usecases.GameActionsBotUseCase
 import by.klnvch.link5dots.ui.game.GameViewState
 import by.klnvch.link5dots.ui.game.createGameViewState
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -58,25 +57,11 @@ fun mapToBotGameViewState(
         override val userName = userName
     }
     val userNameResolver = AnyUserNameResolver(settings, stringProvider)
+    val gameActionsFactory = GameActionsBotFactory()
+    val gameStateFactory = GameStateFactory(userNameResolver, gameActionsFactory)
 
-    val gameActionsOnlineUseCase = GameActionsBotUseCase(object : RoomGetRepository {
-        override val room = room
-    })
-
-    val gameState = GameState(
-        room,
-        userNameResolver.get(room.user1),
-        userNameResolver.get(room.user2),
-        true,
-    )
-
-    return createGameViewState(
-        dotsStyleType,
-        gameState,
-        gameActionsOnlineUseCase.newAction,
-        gameActionsOnlineUseCase.undoAction,
-        gameActionsOnlineUseCase.shareAction,
-    )
+    val gameState = gameStateFactory.create(room, true)
+    return createGameViewState(dotsStyleType, gameState)
 }
 
 private val json = Json {

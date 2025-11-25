@@ -27,12 +27,12 @@ import by.klnvch.link5dots.domain.models.RoomFactory
 import by.klnvch.link5dots.domain.models.RoomTwoFactory
 import by.klnvch.link5dots.domain.models.RoomTypeProvider
 import by.klnvch.link5dots.domain.models.RoomTypeTwoProvider
+import by.klnvch.link5dots.domain.repositories.GameActionsFactory
+import by.klnvch.link5dots.domain.repositories.GameActionsTwoFactory
 import by.klnvch.link5dots.domain.repositories.RoomGetRepository
 import by.klnvch.link5dots.domain.repositories.RoomTwoGetRepository
 import by.klnvch.link5dots.domain.usecases.AddDotTwoUseCase
 import by.klnvch.link5dots.domain.usecases.AddDotUseCase
-import by.klnvch.link5dots.domain.usecases.GameActionsTwoUseCase
-import by.klnvch.link5dots.domain.usecases.GameActionsUseCase
 import by.klnvch.link5dots.domain.usecases.GetRoomCommonUseCase
 import by.klnvch.link5dots.domain.usecases.GetRoomUseCase
 import by.klnvch.link5dots.domain.usecases.SaveScoreEmptyUseCase
@@ -66,5 +66,5 @@ interface TwoPlayersGameRulesModule {
     fun bindRoomGetRepository(impl: RoomTwoGetRepository): RoomGetRepository
 
     @Binds
-    fun bindGameActionsUseCase(impl: GameActionsTwoUseCase): GameActionsUseCase
+    fun bindGameActionsFactory(impl: GameActionsTwoFactory): GameActionsFactory
 }

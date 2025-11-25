@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023-2025 klnvch
+ * Copyright (c) 2025 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,20 +21,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package by.klnvch.link5dots.di.game.info
+
+package by.klnvch.link5dots.domain.models
 
 import by.klnvch.link5dots.domain.repositories.GameActionsFactory
-import by.klnvch.link5dots.domain.repositories.GameActionsInfoFactory
-import by.klnvch.link5dots.domain.usecases.GetRoomInfoUseCase
-import by.klnvch.link5dots.domain.usecases.GetRoomUseCase
-import dagger.Binds
-import dagger.Module
+import by.klnvch.link5dots.domain.repositories.UserNameResolver
 
-@Module
-interface InfoGameRulesModule {
-    @Binds
-    fun bindGetRoomUseCase(impl: GetRoomInfoUseCase): GetRoomUseCase
-
-    @Binds
-    fun bindGameActionsFactory(impl: GameActionsInfoFactory): GameActionsFactory
+open class GameStateFactory<Room : IRoom>(
+    private val userNameResolver: UserNameResolver<Room>,
+    private val gameActionsFactory: GameActionsFactory,
+) {
+    fun create(room: Room, isActive: Boolean) = GameState(
+        room,
+        gameActionsFactory.get(room),
+        userNameResolver.get(room),
+        isActive
+    )
 }

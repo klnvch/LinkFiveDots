@@ -27,14 +27,14 @@ import by.klnvch.link5dots.domain.models.Board
 import by.klnvch.link5dots.domain.models.RoomBotFactory
 import by.klnvch.link5dots.domain.models.RoomFactory
 import by.klnvch.link5dots.domain.models.bot.Bot
+import by.klnvch.link5dots.domain.repositories.GameActionsBotFactory
+import by.klnvch.link5dots.domain.repositories.GameActionsFactory
 import by.klnvch.link5dots.domain.repositories.RoomGetRepository
 import by.klnvch.link5dots.domain.repositories.RoomKeyGenerator
 import by.klnvch.link5dots.domain.repositories.RoomSaveLocalRepository
 import by.klnvch.link5dots.domain.repositories.TimeService
 import by.klnvch.link5dots.domain.usecases.AddDotBotUseCase
 import by.klnvch.link5dots.domain.usecases.AddDotUseCase
-import by.klnvch.link5dots.domain.usecases.GameActionsBotUseCase
-import by.klnvch.link5dots.domain.usecases.GameActionsUseCase
 import by.klnvch.link5dots.domain.usecases.NewGameCommonUseCase
 import by.klnvch.link5dots.domain.usecases.NewGameUseCase
 import by.klnvch.link5dots.domain.usecases.UndoMoveBotUseCase
@@ -76,6 +76,5 @@ class BotGameRulesModule2 {
     ): UndoMoveUseCase = UndoMoveBotUseCase(roomGetRepository, roomSaveRepository)
 
     @Provides
-    fun provideGameActionsUseCase(roomGetRepository: RoomGetRepository): GameActionsUseCase =
-        GameActionsBotUseCase(roomGetRepository)
+    fun provideGameActionsFactory(): GameActionsFactory = GameActionsBotFactory()
 }

@@ -22,39 +22,32 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.domain.usecases
+package by.klnvch.link5dots.domain.repositories
 
 import by.klnvch.link5dots.domain.models.ActionAvailability
+import by.klnvch.link5dots.domain.models.GameActions
+import by.klnvch.link5dots.domain.models.IRoom
 import by.klnvch.link5dots.domain.models.isNotEmpty
-import by.klnvch.link5dots.domain.repositories.RoomGetRepository
-import by.klnvch.link5dots.domain.repositories.RoomRemoteRepository
 
-interface GameActionsUseCase {
-    val undoAction: ActionAvailability
-    val newAction: ActionAvailability
-    val shareAction: ActionAvailability
+interface GameActionsFactory {
+    fun get(room: IRoom): GameActions
 }
 
-class GameActionsBotUseCase(private val getRepository: RoomGetRepository) : GameActionsUseCase {
-    override val undoAction: ActionAvailability
-        get() {
-            val room = getRepository.room
-            return when {
-                room == null -> ActionAvailability.Gone
-                room.isNotEmpty() -> ActionAvailability.Available
-                else -> ActionAvailability.Disabled
-            }
-        }
-
-    override val newAction = ActionAvailability.Available
-    override val shareAction = ActionAvailability.Available
+class GameActionsBotFactory() : GameActionsFactory {
+    override fun get(room: IRoom) = GameActions(
+        when {
+            room.isNotEmpty() -> ActionAvailability.Available
+            else -> ActionAvailability.Disabled
+        },
+        ActionAvailability.Available,
+        ActionAvailability.Available
+    )
 }
 
-class GameActionsOnlineUseCase(private val repository: RoomRemoteRepository) : GameActionsUseCase {
-    override val undoAction = ActionAvailability.Gone
-    override val newAction
-        get() = if (repository.room?.isOver() == true) ActionAvailability.Available
-        else ActionAvailability.Disabled
-
-    override val shareAction = ActionAvailability.Gone
+class GameActionsOnlineFactory() : GameActionsFactory {
+    override fun get(room: IRoom) = GameActions(
+        ActionAvailability.Gone,
+        if (room.isOver()) ActionAvailability.Available else ActionAvailability.Disabled,
+        ActionAvailability.Gone
+    )
 }

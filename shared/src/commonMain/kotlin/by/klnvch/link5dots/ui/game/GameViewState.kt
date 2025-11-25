@@ -80,9 +80,6 @@ interface MenuViewState {
 fun createGameViewState(
     dotsStyleType: DotsStyleType,
     gameState: GameState,
-    newActionAvailability: ActionAvailability,
-    undoActionAvailability: ActionAvailability,
-    shareActionAvailability: ActionAvailability,
 ): GameViewState {
     val lastDotTime = gameState.lastDotTime
     val user1CanMove = gameState.user1.canMove
@@ -113,9 +110,9 @@ fun createGameViewState(
             gameState.winningLine,
         ),
         MenuViewStateImpl(
-            newActionAvailability,
-            undoActionAvailability,
-            shareActionAvailability,
+            gameState.gameActions.newAction,
+            gameState.gameActions.undoAction,
+            gameState.gameActions.shareAction,
         ),
         gameState.isOver,
     )

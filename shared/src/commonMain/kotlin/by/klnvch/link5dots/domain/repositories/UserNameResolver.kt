@@ -26,18 +26,26 @@ package by.klnvch.link5dots.domain.repositories
 
 import by.klnvch.link5dots.domain.models.BotUser
 import by.klnvch.link5dots.domain.models.DeviceOwnerUser
+import by.klnvch.link5dots.domain.models.INetworkRoom
+import by.klnvch.link5dots.domain.models.IRoom
 import by.klnvch.link5dots.domain.models.IUser
 import by.klnvch.link5dots.domain.models.NetworkUser
+import by.klnvch.link5dots.domain.models.ResolvedUserNames
 
-interface UserNameResolver<User : IUser> {
-    fun get(user: User?): String?
+interface UserNameResolver<Room : IRoom> {
+    fun get(room: Room): ResolvedUserNames
 }
 
 class AnyUserNameResolver(
     private val settings: UserNameSettings,
     private val stringProvider: StringProvider,
-) : UserNameResolver<IUser> {
-    override fun get(user: IUser?) = when (user) {
+) : UserNameResolver<IRoom> {
+    override fun get(room: IRoom) = ResolvedUserNames(
+        get(room.user1),
+        get(room.user2),
+    )
+
+    fun get(user: IUser?) = when (user) {
         is BotUser -> stringProvider.botName
         is NetworkUser -> user.name ?: stringProvider.unknownName
         is DeviceOwnerUser -> settings.userName ?: stringProvider.unknownName
@@ -47,8 +55,13 @@ class AnyUserNameResolver(
 
 class NetworkUserNameResolver(
     private val stringProvider: StringProvider,
-) : UserNameResolver<NetworkUser> {
-    override fun get(user: NetworkUser?) = when (user) {
+) : UserNameResolver<INetworkRoom> {
+    override fun get(room: INetworkRoom) = ResolvedUserNames(
+        get(room.user1),
+        get(room.user2),
+    )
+
+    private fun get(user: NetworkUser?) = when (user) {
         is NetworkUser -> user.name ?: stringProvider.unknownName
         null -> null
     }

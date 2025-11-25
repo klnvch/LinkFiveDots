@@ -27,16 +27,14 @@ package by.klnvch.link5dots.ui.game.viewmodels
 import by.klnvch.link5dots.domain.models.Point
 import by.klnvch.link5dots.domain.repositories.KeyForInfoRepository
 import by.klnvch.link5dots.domain.repositories.Settings
-import by.klnvch.link5dots.domain.usecases.GameActionsUseCase
 import by.klnvch.link5dots.domain.usecases.GetRoomUseCase
 import javax.inject.Inject
 
 class InfoGameViewModel @Inject constructor(
     getRoomUseCase: GetRoomUseCase,
     settings: Settings,
-    getGameActionsUseCase: GameActionsUseCase,
     private val keyForInfoRepository: KeyForInfoRepository,
-) : BaseGameViewModel(getRoomUseCase, settings, getGameActionsUseCase) {
+) : BaseGameViewModel(getRoomUseCase, settings) {
     override fun undo() = Unit
     override fun new(): Boolean = false
     override fun addDot(p: Point) = Unit

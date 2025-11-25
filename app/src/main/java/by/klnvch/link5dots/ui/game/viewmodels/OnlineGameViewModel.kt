@@ -33,7 +33,6 @@ import by.klnvch.link5dots.domain.models.NetworkRoomStateFinished
 import by.klnvch.link5dots.domain.models.NetworkRoomStateStarted
 import by.klnvch.link5dots.domain.repositories.Settings
 import by.klnvch.link5dots.domain.usecases.AddDotUseCase
-import by.klnvch.link5dots.domain.usecases.GameActionsUseCase
 import by.klnvch.link5dots.domain.usecases.GetRoomUseCase
 import by.klnvch.link5dots.domain.usecases.NewGameUseCase
 import by.klnvch.link5dots.domain.usecases.SaveScoreUseCase
@@ -66,7 +65,6 @@ class OnlineGameViewModel @Inject constructor(
     private val cleanMultiplayerRoomUseCase: CleanMultiplayerRoomUseCase,
     private val scanUseCase: ScanUseCase,
     private val getNetworkGameActionUseCase: GetNetworkGameActionUseCase,
-    getGameActionsUseCase: GameActionsUseCase,
     getRoomUseCase: GetRoomUseCase,
     newGameUseCase: NewGameUseCase,
     addDotUseCase: AddDotUseCase,
@@ -76,7 +74,6 @@ class OnlineGameViewModel @Inject constructor(
 ) : OfflineGameViewModel(
     getRoomUseCase,
     settings,
-    getGameActionsUseCase,
     newGameUseCase,
     addDotUseCase,
     undoMoveUseCase,
