@@ -48,6 +48,9 @@ import by.klnvch.link5dots.R
 import by.klnvch.link5dots.ui.common.CustomButtonWithText
 import by.klnvch.link5dots.ui.common.TextNoSurface
 import by.klnvch.link5dots.ui.common.adaptive.adaptiveIconSize
+import java.text.DateFormat
+import java.util.Date
+import java.util.Locale
 
 @Composable
 fun InfoScreen() {
@@ -88,6 +91,11 @@ private fun Column1() {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {
+        val date = Date(BuildConfig.BUILD_TIME)
+        val dateFormat = DateFormat.getDateInstance(DateFormat.SHORT, Locale.getDefault())
+        val buildDate = dateFormat.format(date)
+        val version = "${BuildConfig.VERSION_NAME} - $buildDate"
+
         ContextCompat.getDrawable(LocalContext.current, R.mipmap.ic_launcher)?.let {
             val size = adaptiveIconSize(64.dp)
             Image(
@@ -97,7 +105,7 @@ private fun Column1() {
             )
         }
         TextNoSurface(
-            text = stringResource(R.string.version_text, BuildConfig.VERSION_NAME),
+            text = stringResource(R.string.version_text, version),
         )
     }
 }

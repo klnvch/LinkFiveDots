@@ -38,7 +38,7 @@ enum class PassedTimeUnit { JustNow, Minutes, Hours, Days }
 data class PassedTime(val time: Int) {
     init {
         val dt = (currentTime() / 1000).toInt() - time
-        dt.seconds.toComponents { days, hours, minutes, seconds, nanoseconds ->
+        dt.seconds.toComponents { days, hours, minutes, seconds, _ ->
             if (days > 0) {
                 unit = PassedTimeUnit.Days
                 count = days.toInt()
@@ -60,23 +60,7 @@ data class PassedTime(val time: Int) {
 }
 
 @OptIn(ExperimentalJsExport::class)
-@JsExport()
-sealed interface PickerScreen
-
-@OptIn(ExperimentalJsExport::class)
-@JsExport()
-object PickerScreenNone : PickerScreen
-
-@OptIn(ExperimentalJsExport::class)
-@JsExport()
-object PickerScreenGame : PickerScreen
-
-@OptIn(ExperimentalJsExport::class)
-@JsExport()
-class PickerScreenError(val e: Throwable) : PickerScreen
-
-@OptIn(ExperimentalJsExport::class)
-@JsExport()
+@JsExport
 interface PickerViewState {
     val screen: PickerScreen
     val common: PickerCommonViewState
@@ -85,14 +69,14 @@ interface PickerViewState {
 }
 
 @OptIn(ExperimentalJsExport::class)
-@JsExport()
+@JsExport
 interface PickerCommonViewState {
     val inProgress: Boolean
     val error: RecoverableGameException?
 }
 
 @OptIn(ExperimentalJsExport::class)
-@JsExport()
+@JsExport
 interface PickerCreationViewState {
     val text: Array<Any>
     val isEnabled: Boolean
@@ -101,7 +85,7 @@ interface PickerCreationViewState {
 }
 
 @OptIn(ExperimentalJsExport::class)
-@JsExport()
+@JsExport
 interface PickerScanningViewState {
     val isEnabled: Boolean
     val isStartScanButtonVisible: Boolean
@@ -111,7 +95,7 @@ interface PickerScanningViewState {
 }
 
 @OptIn(ExperimentalJsExport::class)
-@JsExport()
+@JsExport
 interface PickerItemViewState {
     val id: Int
     val descriptor: FoundRemoteRoom
@@ -121,7 +105,7 @@ interface PickerItemViewState {
 }
 
 @OptIn(ExperimentalJsExport::class)
-@JsExport()
+@JsExport
 fun PickerState.toPickerViewState(): PickerViewState = PickerViewStateImpl(this)
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -136,9 +120,9 @@ data class PickerViewStateImpl(
     private val isTargetChanging = state.isCreating || state.isDeleting || state.isConnecting
 
     override val screen = when {
-        isConnected -> PickerScreenGame
-        error != null && error !is RecoverableGameException -> PickerScreenError(error)
-        else -> PickerScreenNone
+        isConnected -> PickerScreenGameImpl
+        error != null && error !is RecoverableGameException -> PickerScreenErrorImpl(error)
+        else -> PickerScreenNoneImpl
     }
 
     override val common = PickerCommonViewStateImpl(

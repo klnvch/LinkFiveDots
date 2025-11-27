@@ -59,12 +59,14 @@ class GameInfoActivity : DaggerAppCompatActivity() {
             val getVMFactory: () -> ViewModelProvider.Factory = remember { { viewModelFactory } }
             val settingsViewModel: SettingsViewModel = viewModel(factory = getVMFactory())
             val nightMode by settingsViewModel.nightMode.collectAsState()
+            val dotsStyle by settingsViewModel.dotsStyle.collectAsState()
             LaunchedEffect(true) {
                 gameViewModel.setKey(getKey())
             }
             GameContent(
                 actions = gameViewModel,
                 nightMode = nightMode,
+                dotsStyle = dotsStyle,
                 title = { TopBarTitle(R.string.application_info_label) },
                 navigateUp = { finish() },
             )

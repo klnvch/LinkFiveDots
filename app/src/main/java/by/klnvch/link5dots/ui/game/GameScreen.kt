@@ -31,12 +31,14 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import by.klnvch.link5dots.domain.models.DotsStyle
 import by.klnvch.link5dots.ui.game.viewmodels.GameActions
 
 @Composable
 fun GameScreen(
     modifier: Modifier = Modifier,
     actions: GameActions,
+    dotsStyle: DotsStyle,
 ) {
     val uiState by actions.uiState.collectAsState()
     val focus by actions.focus.collectAsState()
@@ -45,6 +47,7 @@ fun GameScreen(
         GameBoard(
             Modifier.fillMaxSize(),
             uiState.boardViewState,
+            dotsStyle,
             focus,
             onMoveDone = { actions.addDot(it) },
             onUnfocus = { actions.unfocus() },
@@ -52,6 +55,7 @@ fun GameScreen(
         GameInfo(
             Modifier.align(Alignment.TopEnd),
             uiState.infoViewState,
+            dotsStyle,
         )
     }
 }

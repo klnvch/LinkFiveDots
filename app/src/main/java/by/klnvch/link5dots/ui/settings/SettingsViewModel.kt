@@ -26,7 +26,7 @@ package by.klnvch.link5dots.ui.settings
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import by.klnvch.link5dots.domain.models.DotsStyleType
+import by.klnvch.link5dots.domain.models.DotsStyle
 import by.klnvch.link5dots.domain.models.NightMode
 import by.klnvch.link5dots.domain.repositories.Settings
 import by.klnvch.link5dots.domain.usecases.GetSettingsUseCase
@@ -58,10 +58,11 @@ class SettingsViewModel @Inject constructor(
     }
 
     val nightMode = settings.nightMode
+    val dotsStyle = settings.dotsStyle
     fun setUserName(userName: String?) = viewModelScope.launch { saveUserNameUseCase.set(userName) }
     fun setLanguage(language: String) = viewModelScope.launch { settings.setLanguage(language) }
     fun setVibration(isOn: Boolean) = viewModelScope.launch { settings.setVibration(isOn) }
     fun setNightMode(mode: NightMode) = viewModelScope.launch { settings.setNightMode(mode) }
-    fun setDotsStyle(style: DotsStyleType) = viewModelScope.launch { settings.setDotsStyle(style) }
+    fun setDotsStyle(style: DotsStyle) = viewModelScope.launch { settings.setDotsStyle(style) }
     fun reset() = viewModelScope.launch { resetAllDataUseCase.reset() }
 }

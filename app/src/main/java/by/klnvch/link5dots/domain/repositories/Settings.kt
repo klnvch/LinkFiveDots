@@ -25,7 +25,7 @@
 package by.klnvch.link5dots.domain.repositories
 
 import by.klnvch.link5dots.domain.models.AllSettings
-import by.klnvch.link5dots.domain.models.DotsStyleType
+import by.klnvch.link5dots.domain.models.DotsStyle
 import by.klnvch.link5dots.domain.models.NightMode
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
@@ -38,10 +38,10 @@ interface Settings : UserNameSettings {
     suspend fun setLanguage(language: String)
     suspend fun setVibration(isOn: Boolean)
     suspend fun setNightMode(mode: NightMode)
-    suspend fun setDotsStyle(style: DotsStyleType)
+    suspend fun setDotsStyle(dotsStyle: DotsStyle)
     fun isFirstRun(): Flow<Boolean>
     suspend fun setFirstRun()
-    fun getDotsType(): Flow<DotsStyleType>
+    val dotsStyle: StateFlow<DotsStyle>
     fun getLanguage(): Flow<String>
     val isVibrationEnabled: Flow<Boolean>
     val nightMode: StateFlow<NightMode>

@@ -25,7 +25,6 @@ package by.klnvch.link5dots.ui.game
 
 import by.klnvch.link5dots.domain.models.ActionAvailability
 import by.klnvch.link5dots.domain.models.Dot
-import by.klnvch.link5dots.domain.models.DotsStyleType
 import by.klnvch.link5dots.domain.models.GameState
 import by.klnvch.link5dots.domain.models.WinningLine
 import kotlin.js.ExperimentalJsExport
@@ -54,7 +53,6 @@ interface GameInfoUserViewState {
 @OptIn(ExperimentalJsExport::class)
 @JsExport
 interface GameInfoViewState {
-    val dotsStyleType: DotsStyleType
     val user1: GameInfoUserViewState
     val user2: GameInfoUserViewState
     val size: String
@@ -63,7 +61,6 @@ interface GameInfoViewState {
 @OptIn(ExperimentalJsExport::class)
 @JsExport
 interface GameBoardViewState {
-    val dotsStyleType: DotsStyleType
     val dots: Array<Dot>
     val winningLine: WinningLine?
     val lastDot: Dot?
@@ -77,17 +74,13 @@ interface MenuViewState {
     val shareOption: ActionAvailability
 }
 
-fun createGameViewState(
-    dotsStyleType: DotsStyleType,
-    gameState: GameState,
-): GameViewState {
+fun createGameViewState(gameState: GameState): GameViewState {
     val lastDotTime = gameState.lastDotTime
     val user1CanMove = gameState.user1.canMove
     val user2CanMove = gameState.user2.canMove
 
     return GameViewStateImpl(
         GameInfoViewStateImpl(
-            dotsStyleType,
             GameInfoUserViewStateImpl(
                 gameState.user1.name ?: "",
                 gameState.user1.duration,
@@ -105,7 +98,6 @@ fun createGameViewState(
             gameState.size.toString(),
         ),
         GameBoardViewStateImpl(
-            dotsStyleType,
             gameState.dots.toTypedArray(),
             gameState.winningLine,
         ),
@@ -134,14 +126,12 @@ data class GameInfoUserViewStateImpl(
 ) : GameInfoUserViewState
 
 class GameInfoViewStateImpl(
-    override val dotsStyleType: DotsStyleType = DotsStyleType.ORIGINAL,
     override val user1: GameInfoUserViewState = GameInfoUserViewStateImpl(),
     override val user2: GameInfoUserViewState = GameInfoUserViewStateImpl(),
     override val size: String = 0.toString(),
 ) : GameInfoViewState
 
 class GameBoardViewStateImpl(
-    override val dotsStyleType: DotsStyleType = DotsStyleType.ORIGINAL,
     override val dots: Array<Dot> = emptyArray(),
     override val winningLine: WinningLine? = null,
 ) : GameBoardViewState {

@@ -67,6 +67,8 @@ android {
         versionCode = 48
         versionName = "5.0.0"
 
+        buildConfigField("long", "BUILD_TIME", System.currentTimeMillis().toString() + "L")
+
         multiDexEnabled = true
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"

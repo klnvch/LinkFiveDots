@@ -29,7 +29,6 @@ import by.klnvch.link5dots.data.online.models.OnlineDotRemote
 import by.klnvch.link5dots.data.online.models.OnlineRemoteUser
 import by.klnvch.link5dots.data.online.models.OnlineRoomRemote
 import by.klnvch.link5dots.data.online.models.RemoteRoomItem
-import by.klnvch.link5dots.domain.models.DotsStyleType
 import by.klnvch.link5dots.domain.models.GameStateFactory
 import by.klnvch.link5dots.domain.models.online.OnlineRoom
 import by.klnvch.link5dots.domain.models.online.OnlineRoomLive
@@ -63,7 +62,6 @@ fun toOnlineRoom(key: String?, value: dynamic?): OnlineRoom {
 @OptIn(ExperimentalJsExport::class, DelicateCoroutinesApi::class)
 @JsExport
 fun mapToGameViewState(
-    dotsStyleType: DotsStyleType,
     stringProvider: StringProvider,
     onlineRoom: OnlineRoomLive,
 ): GameViewState {
@@ -72,5 +70,5 @@ fun mapToGameViewState(
     val gameStateFactory = GameStateFactory(userNameResolver, gameActionsFactory)
 
     val gameState = gameStateFactory.create(onlineRoom.room, onlineRoom.isActive)
-    return createGameViewState(dotsStyleType, gameState)
+    return createGameViewState(gameState)
 }

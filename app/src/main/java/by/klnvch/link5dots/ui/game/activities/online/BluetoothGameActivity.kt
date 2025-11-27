@@ -67,13 +67,15 @@ class BluetoothGameActivity : DaggerAppCompatActivity() {
             val getVMFactory: () -> ViewModelProvider.Factory = remember { { viewModelFactory } }
             val settingsViewModel: SettingsViewModel = viewModel(factory = getVMFactory())
             val nightMode by settingsViewModel.nightMode.collectAsState()
+            val dotsStyle by settingsViewModel.dotsStyle.collectAsState()
             GameContent(
                 viewModel = gameViewModel,
                 nightMode = nightMode,
+                dotsStyle = dotsStyle,
                 defaultTitle = R.string.bluetooth,
                 pickerScreen = { BluetoothPickerScreen(gameViewModel, visibilityViewModel) },
                 errorScreen = { e, onDone -> ErrorScreenBluetooth(e, onDone) },
-                onFinish = { finish() }
+                onFinish = { finish() },
             )
         }
     }

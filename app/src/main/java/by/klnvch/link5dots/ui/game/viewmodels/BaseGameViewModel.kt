@@ -29,14 +29,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import by.klnvch.link5dots.domain.models.Point
 import by.klnvch.link5dots.domain.models.createPoint
-import by.klnvch.link5dots.domain.repositories.Settings
 import by.klnvch.link5dots.domain.usecases.GetRoomUseCase
 import by.klnvch.link5dots.ui.game.GameViewStateImpl
 import by.klnvch.link5dots.ui.game.createGameViewState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
@@ -44,17 +42,15 @@ import kotlinx.coroutines.launch
 
 abstract class BaseGameViewModel(
     getRoomUseCase: GetRoomUseCase,
-    private val settings: Settings,
 ) : ViewModel(), GameActions {
     private val _focus = MutableStateFlow<Point?>(createPoint(9, 9))
     override val focus: StateFlow<Point?> = _focus
 
     protected val roomFlow = getRoomUseCase.room
 
-    override val uiState = roomFlow.map { room ->
-        Log.d("ViewModel", "updated: $room")
-        val dotsStyleType = settings.getDotsType().first()
-        createGameViewState(dotsStyleType, room)
+    override val uiState = roomFlow.map {
+        Log.d("ViewModel", "updated: $it")
+        createGameViewState(it)
     }.stateIn(viewModelScope, SharingStarted.Eagerly, GameViewStateImpl())
 
     init {

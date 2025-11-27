@@ -29,6 +29,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import by.klnvch.link5dots.domain.models.DotsStyle
 import by.klnvch.link5dots.domain.models.NightMode
 import by.klnvch.link5dots.ui.game.GameBottomAppBar
 import by.klnvch.link5dots.ui.game.GameScreen
@@ -40,6 +41,7 @@ import by.klnvch.link5dots.ui.theme.AppTheme
 fun GameContent(
     actions: GameActions,
     nightMode: NightMode,
+    dotsStyle: DotsStyle,
     title: @Composable () -> Unit,
     navigateUp: () -> Unit,
 ) {
@@ -58,6 +60,7 @@ fun GameContent(
             GameScreen(
                 modifier = Modifier.padding(innerPadding),
                 actions = actions,
+                dotsStyle = dotsStyle,
             )
         }
     }

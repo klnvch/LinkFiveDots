@@ -25,7 +25,6 @@ package by.klnvch.link5dots.ui.game.viewmodels
 
 import androidx.lifecycle.viewModelScope
 import by.klnvch.link5dots.domain.models.Point
-import by.klnvch.link5dots.domain.repositories.Settings
 import by.klnvch.link5dots.domain.usecases.AddDotUseCase
 import by.klnvch.link5dots.domain.usecases.GetRoomUseCase
 import by.klnvch.link5dots.domain.usecases.NewGameUseCase
@@ -36,12 +35,11 @@ import javax.inject.Inject
 
 open class OfflineGameViewModel @Inject constructor(
     getRoomUseCase: GetRoomUseCase,
-    settings: Settings,
     private val newGameUseCase: NewGameUseCase,
     private val addDotUseCase: AddDotUseCase,
     private val undoMoveUseCase: UndoMoveUseCase,
     private val saveScoreUseCase: SaveScoreUseCase,
-) : BaseGameViewModel(getRoomUseCase, settings) {
+) : BaseGameViewModel(getRoomUseCase) {
 
     override fun undo() {
         viewModelScope.launch { undoMoveUseCase.undo() }

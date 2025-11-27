@@ -42,6 +42,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import by.klnvch.link5dots.R
+import by.klnvch.link5dots.domain.models.DotsStyle
 import by.klnvch.link5dots.domain.models.NetworkGameAction
 import by.klnvch.link5dots.domain.models.NightMode
 import by.klnvch.link5dots.ui.common.TopBarTitle
@@ -79,6 +80,7 @@ private fun GameTitle(action: NetworkGameAction, @StringRes defaultTitle: Int) {
 fun GameContent(
     viewModel: OnlineGameViewModel,
     nightMode: NightMode,
+    dotsStyle: DotsStyle,
     @StringRes defaultTitle: Int,
     pickerScreen: @Composable () -> Unit,
     errorScreen: @Composable (e: Throwable, onDone: (isSuccess: Boolean) -> Unit) -> Unit,
@@ -107,8 +109,8 @@ fun GameContent(
 
         LaunchedEffect(pickerScreen) {
             when (pickerScreen) {
-                PickerScreenNone -> {}
-                PickerScreenGame -> navController.navigate(MultiplayerRoute.Game.name)
+                is PickerScreenNone -> {}
+                is PickerScreenGame -> navController.navigate(MultiplayerRoute.Game.name)
                 is PickerScreenError -> navController.navigate(MultiplayerRoute.Error.name)
             }
         }
@@ -147,7 +149,10 @@ fun GameContent(
                     pickerScreen()
                 }
                 composable(route = MultiplayerRoute.Game.name) {
-                    GameScreen(actions = viewModel)
+                    GameScreen(
+                        actions = viewModel,
+                        dotsStyle = dotsStyle,
+                    )
                 }
                 composable(route = MultiplayerRoute.Error.name) {
                     if (pickerScreen is PickerScreenError)

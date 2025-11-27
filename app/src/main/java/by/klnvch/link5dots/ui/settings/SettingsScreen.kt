@@ -88,7 +88,7 @@ fun SettingsScreen(
                 onChange = { viewModel.setNightMode(it) },
             )
             DotsStylePreferenceItem(
-                value = state.settings.dotsStyle,
+                dotsStyle = state.settings.dotsStyle,
                 onChange = { viewModel.setDotsStyle(it) },
             )
             DeleteAllPreferenceItem(

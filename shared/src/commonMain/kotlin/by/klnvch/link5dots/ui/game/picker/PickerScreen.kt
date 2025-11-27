@@ -22,21 +22,28 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.ui
+package by.klnvch.link5dots.ui.game.picker
 
-import by.klnvch.link5dots.domain.models.DotsStyle
 import kotlin.js.ExperimentalJsExport
 import kotlin.js.JsExport
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport
-fun getNextDotsStyle(dotsStyle: DotsStyle) = when (dotsStyle) {
-    DotsStyle.ORIGINAL -> DotsStyle.CROSS_AND_RING
-    DotsStyle.CROSS_AND_RING -> DotsStyle.ORIGINAL
+sealed interface PickerScreen {
+    val isGame get() = this is PickerScreenGame
 }
 
-private fun String.userNameMaxLength() = if (length > 16) substring(0, 16) else this
+interface PickerScreenNone : PickerScreen
+interface PickerScreenGame : PickerScreen
+interface PickerScreenError : PickerScreen {
+    val e: Throwable
+}
 
-@OptIn(ExperimentalJsExport::class)
-@JsExport
-fun String?.formatUserName() = this?.trim()?.ifEmpty { null }?.userNameMaxLength()
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// Implementation
+////////////////////////////////////////////////////////////////////////////////////////////////////
+object PickerScreenNoneImpl : PickerScreenNone
+object PickerScreenGameImpl : PickerScreenGame
+data class PickerScreenErrorImpl(override val e: Throwable) : PickerScreenError
+
+

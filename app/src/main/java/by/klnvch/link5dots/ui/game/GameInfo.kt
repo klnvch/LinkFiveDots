@@ -53,7 +53,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import by.klnvch.link5dots.domain.models.DotsStyleType
+import by.klnvch.link5dots.domain.models.DotsStyle
 import by.klnvch.link5dots.ui.common.Circle
 import by.klnvch.link5dots.ui.common.Cross
 import by.klnvch.link5dots.ui.common.Dot
@@ -62,29 +62,34 @@ import by.klnvch.link5dots.ui.common.adaptive.AdaptiveText
 import by.klnvch.link5dots.ui.theme.dotColorsPalette
 import kotlinx.coroutines.delay
 
-@Preview()
+@Preview
 @Composable
 fun GameInfoPreview() {
     Box(modifier = Modifier.fillMaxSize()) {
         GameInfo(
-            modifier = Modifier.align(Alignment.TopCenter), infoViewState = GameInfoViewStateImpl(
-                DotsStyleType.CROSS_AND_RING,
+            modifier = Modifier.align(Alignment.TopCenter),
+            infoViewState = GameInfoViewStateImpl(
                 GameInfoUserViewStateImpl("User 1", 200, canMove = true, isWon = true),
                 GameInfoUserViewStateImpl("a", 0),
-            )
+            ),
+            dotsStyle = DotsStyle.ORIGINAL,
         )
     }
 }
 
 @Composable
-fun GameInfo(modifier: Modifier = Modifier, infoViewState: GameInfoViewState) {
-    val user1Dot = when (infoViewState.dotsStyleType) {
-        DotsStyleType.ORIGINAL -> Dot
-        DotsStyleType.CROSS_AND_RING -> Cross
+fun GameInfo(
+    modifier: Modifier = Modifier,
+    infoViewState: GameInfoViewState,
+    dotsStyle: DotsStyle,
+) {
+    val user1Dot = when (dotsStyle) {
+        DotsStyle.ORIGINAL -> Dot
+        DotsStyle.CROSS_AND_RING -> Cross
     }
-    val user2Dot = when (infoViewState.dotsStyleType) {
-        DotsStyleType.ORIGINAL -> Dot
-        DotsStyleType.CROSS_AND_RING -> Circle
+    val user2Dot = when (dotsStyle) {
+        DotsStyle.ORIGINAL -> Dot
+        DotsStyle.CROSS_AND_RING -> Circle
     }
     val user1Tint = MaterialTheme.dotColorsPalette.user1
     val user2Tint = MaterialTheme.dotColorsPalette.user2

@@ -91,9 +91,11 @@ class OnlineGameActivity : DaggerAppCompatActivity() {
             val getVMFactory: () -> ViewModelProvider.Factory = remember { { viewModelFactory } }
             val settingsViewModel: SettingsViewModel = viewModel(factory = getVMFactory())
             val nightMode by settingsViewModel.nightMode.collectAsState()
+            val dotsStyle by settingsViewModel.dotsStyle.collectAsState()
             GameContent(
                 viewModel = viewModel,
                 nightMode = nightMode,
+                dotsStyle = dotsStyle,
                 defaultTitle = R.string.menu_online_game,
                 pickerScreen = {
                     Column {
@@ -102,7 +104,7 @@ class OnlineGameActivity : DaggerAppCompatActivity() {
                     }
                 },
                 errorScreen = { e, onDone -> ErrorScreenOnline(e, onDone) },
-                onFinish = { finish() }
+                onFinish = { finish() },
             )
         }
     }

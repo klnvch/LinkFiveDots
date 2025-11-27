@@ -31,7 +31,6 @@ import by.klnvch.link5dots.domain.models.NetworkRoomStateCreated
 import by.klnvch.link5dots.domain.models.NetworkRoomStateDeleted
 import by.klnvch.link5dots.domain.models.NetworkRoomStateFinished
 import by.klnvch.link5dots.domain.models.NetworkRoomStateStarted
-import by.klnvch.link5dots.domain.repositories.Settings
 import by.klnvch.link5dots.domain.usecases.AddDotUseCase
 import by.klnvch.link5dots.domain.usecases.GetRoomUseCase
 import by.klnvch.link5dots.domain.usecases.NewGameUseCase
@@ -70,10 +69,8 @@ class OnlineGameViewModel @Inject constructor(
     addDotUseCase: AddDotUseCase,
     undoMoveUseCase: UndoMoveUseCase,
     saveScoreUseCase: SaveScoreUseCase,
-    settings: Settings,
 ) : OfflineGameViewModel(
     getRoomUseCase,
-    settings,
     newGameUseCase,
     addDotUseCase,
     undoMoveUseCase,

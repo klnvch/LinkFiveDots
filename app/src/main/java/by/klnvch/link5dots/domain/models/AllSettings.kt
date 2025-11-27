@@ -29,5 +29,5 @@ data class AllSettings(
     val language: String,
     val isVibrationEnabled: Boolean,
     val nightMode: NightMode,
-    val dotsStyle: DotsStyleType,
+    val dotsStyle: DotsStyle,
 )

@@ -28,5 +28,5 @@ import kotlin.js.ExperimentalJsExport
 import kotlin.js.JsExport
 
 @OptIn(ExperimentalJsExport::class)
-@JsExport()
-enum class DotsStyleType { ORIGINAL, CROSS_AND_RING }
+@JsExport
+enum class DotsStyle { ORIGINAL, CROSS_AND_RING }

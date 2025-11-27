@@ -55,6 +55,7 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
 import by.klnvch.link5dots.R
 import by.klnvch.link5dots.domain.models.Dot
+import by.klnvch.link5dots.domain.models.DotsStyle
 import by.klnvch.link5dots.domain.models.Point
 import by.klnvch.link5dots.domain.models.WinningLineImpl
 import by.klnvch.link5dots.domain.models.createDot
@@ -97,6 +98,7 @@ fun GameScreenPreview() {
                 )
             )
         ),
+        dotsStyle = DotsStyle.ORIGINAL,
         focus = createPoint(19, 19),
         onMoveDone = { Log.d("GameBoard", it.toString()) },
         onUnfocus = {})
@@ -106,6 +108,7 @@ fun GameScreenPreview() {
 fun GameBoard(
     modifier: Modifier = Modifier,
     viewState: GameBoardViewState,
+    dotsStyle: DotsStyle,
     focus: Point?,
     onMoveDone: (point: Point) -> Unit,
     onUnfocus: () -> Unit,
@@ -117,8 +120,7 @@ fun GameBoard(
 
     val arrowsImage = ImageBitmap.imageResource(id = R.drawable.arrows)
     val paperImage = ImageBitmap.imageResource(id = R.drawable.background)
-    val paper =
-        Paper(viewState.dotsStyleType, paperImage.width, user1Tint, user2Tint)
+    val paper = Paper(dotsStyle, paperImage.width, user1Tint, user2Tint)
 
     val user1Image = paper.user1Dot.toImageBitmap()
     val user2Image = paper.user2Dot.toImageBitmap()

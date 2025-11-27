@@ -26,7 +26,6 @@ package by.klnvch.link5dots.bot
 
 import by.klnvch.link5dots.domain.models.BotUser
 import by.klnvch.link5dots.domain.models.DeviceOwnerUser
-import by.klnvch.link5dots.domain.models.DotsStyleType
 import by.klnvch.link5dots.domain.models.GameStateFactory
 import by.klnvch.link5dots.domain.models.IRoom
 import by.klnvch.link5dots.domain.models.IUser
@@ -48,7 +47,6 @@ import kotlinx.serialization.modules.subclass
 @OptIn(ExperimentalJsExport::class, DelicateCoroutinesApi::class)
 @JsExport
 fun mapToBotGameViewState(
-    dotsStyleType: DotsStyleType,
     userName: String?,
     stringProvider: StringProvider,
     room: IRoom,
@@ -61,7 +59,7 @@ fun mapToBotGameViewState(
     val gameStateFactory = GameStateFactory(userNameResolver, gameActionsFactory)
 
     val gameState = gameStateFactory.create(room, true)
-    return createGameViewState(dotsStyleType, gameState)
+    return createGameViewState(gameState)
 }
 
 private val json = Json {

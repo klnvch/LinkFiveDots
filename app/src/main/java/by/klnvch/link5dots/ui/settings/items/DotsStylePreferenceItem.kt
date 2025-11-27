@@ -29,36 +29,36 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Grain
 import androidx.compose.runtime.Composable
 import by.klnvch.link5dots.R
-import by.klnvch.link5dots.domain.models.DotsStyleType
+import by.klnvch.link5dots.domain.models.DotsStyle
 import by.klnvch.link5dots.ui.common.BlueCircle
 import by.klnvch.link5dots.ui.common.BlueDot
 import by.klnvch.link5dots.ui.common.RedCross
 import by.klnvch.link5dots.ui.common.RedDot
-import by.klnvch.link5dots.ui.getNextDotsStyleType
+import by.klnvch.link5dots.ui.getNextDotsStyle
 
 @Composable
 fun DotsStylePreferenceItem(
-    value: DotsStyleType,
-    onChange: (value: DotsStyleType) -> Unit,
+    dotsStyle: DotsStyle,
+    onChange: (dotsStyle: DotsStyle) -> Unit,
 ) {
     PreferenceItem(
         imageVector = Icons.Filled.Grain,
         title = R.string.settings_dots,
-        trailing = { DotsTrailing(value) },
-        onClick = { onChange(getNextDotsStyleType(value)) },
+        trailing = { DotsTrailing(dotsStyle) },
+        onClick = { onChange(getNextDotsStyle(dotsStyle)) },
     )
 }
 
 @Composable
-private fun DotsTrailing(dotsStyleType: DotsStyleType) {
+private fun DotsTrailing(dotsStyle: DotsStyle) {
     Row {
-        when (dotsStyleType) {
-            DotsStyleType.ORIGINAL -> {
+        when (dotsStyle) {
+            DotsStyle.ORIGINAL -> {
                 RedDot()
                 BlueDot()
             }
 
-            DotsStyleType.CROSS_AND_RING -> {
+            DotsStyle.CROSS_AND_RING -> {
                 RedCross()
                 BlueCircle()
             }

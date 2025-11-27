@@ -59,13 +59,15 @@ class NsdGameActivity : DaggerAppCompatActivity() {
             val getVMFactory: () -> ViewModelProvider.Factory = remember { { viewModelFactory } }
             val settingsViewModel: SettingsViewModel = viewModel(factory = getVMFactory())
             val nightMode by settingsViewModel.nightMode.collectAsState()
+            val dotsStyle by settingsViewModel.dotsStyle.collectAsState()
             GameContent(
                 viewModel = viewModel,
                 nightMode = nightMode,
+                dotsStyle = dotsStyle,
                 defaultTitle = R.string.menu_local_network,
                 pickerScreen = { PickerScreen(viewModel) },
                 errorScreen = { e, onDone -> ErrorScreenNsd(e, onDone) },
-                onFinish = { finish() }
+                onFinish = { finish() },
             )
         }
     }

@@ -24,19 +24,19 @@
 
 package by.klnvch.link5dots.data.settings
 
-import by.klnvch.link5dots.domain.models.DotsStyleType
+import by.klnvch.link5dots.domain.models.DotsStyle
 import by.klnvch.link5dots.domain.models.NightMode
 
 object SettingsMapper {
     object Dots {
-        fun map(type: DotsStyleType?) = when (type) {
-            DotsStyleType.CROSS_AND_RING -> 2
+        fun map(dotsStyle: DotsStyle?) = when (dotsStyle) {
+            DotsStyle.CROSS_AND_RING -> 2
             else -> 1
         }
 
-        fun map(type: Int?) = when (type) {
-            2 -> DotsStyleType.CROSS_AND_RING
-            else -> DotsStyleType.ORIGINAL
+        fun map(dotsStyle: Int?) = when (dotsStyle) {
+            2 -> DotsStyle.CROSS_AND_RING
+            else -> DotsStyle.ORIGINAL
         }
     }
 

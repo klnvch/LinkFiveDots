@@ -32,7 +32,7 @@ import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import by.klnvch.link5dots.domain.models.AllSettings
-import by.klnvch.link5dots.domain.models.DotsStyleType
+import by.klnvch.link5dots.domain.models.DotsStyle
 import by.klnvch.link5dots.domain.models.NightMode
 import by.klnvch.link5dots.domain.repositories.Settings
 import kotlinx.coroutines.CoroutineScope
@@ -106,8 +106,8 @@ class SettingsImpl @Inject constructor(
         dataStore.edit { it[NIGHT_MODE] = SettingsMapper.Night.map(mode) }
     }
 
-    override suspend fun setDotsStyle(style: DotsStyleType) {
-        dataStore.edit { it[DOTS_TYPE] = SettingsMapper.Dots.map(style) }
+    override suspend fun setDotsStyle(dotsStyle: DotsStyle) {
+        dataStore.edit { it[DOTS_TYPE] = SettingsMapper.Dots.map(dotsStyle) }
     }
 
     override val userId = dataStore.data
@@ -135,9 +135,9 @@ class SettingsImpl @Inject constructor(
         .map { it[VIBRATION] ?: DEFAULT_VIBRATION }
         .distinctUntilChanged()
 
-    override fun getDotsType() = dataStore.data
+    override val dotsStyle = dataStore.data
         .map { SettingsMapper.Dots.map(it[DOTS_TYPE]) }
-        .distinctUntilChanged()
+        .stateIn(scope, SharingStarted.Eagerly, DotsStyle.ORIGINAL)
 
     override val nightMode = dataStore.data
         .map { SettingsMapper.Night.map(it[NIGHT_MODE]) }

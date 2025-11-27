@@ -73,9 +73,11 @@ class BotGameActivity : DaggerAppCompatActivity() {
             val getVMFactory: () -> ViewModelProvider.Factory = remember { { viewModelFactory } }
             val settingsViewModel: SettingsViewModel = viewModel(factory = getVMFactory())
             val nightMode by settingsViewModel.nightMode.collectAsState()
+            val dotsStyle by settingsViewModel.dotsStyle.collectAsState()
             GameContent(
                 actions = gameViewModel,
                 nightMode = nightMode,
+                dotsStyle = dotsStyle,
                 title = { GameTitle(gameViewModel) },
                 navigateUp = { finish() },
             )
