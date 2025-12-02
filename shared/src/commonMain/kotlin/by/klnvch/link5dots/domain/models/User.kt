@@ -30,6 +30,7 @@ import kotlinx.serialization.modules.polymorphic
 import kotlinx.serialization.modules.subclass
 import kotlin.js.ExperimentalJsExport
 import kotlin.js.JsExport
+import kotlin.jvm.JvmName
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport
@@ -50,6 +51,9 @@ interface NetworkUser : IUser {
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport
+@JvmName("createNetworkUserOrNull")
+fun createNetworkUser(id: String?, name: String?) = id?.let { createNetworkUser(it, name) }
+
 fun createNetworkUser(id: String, name: String?): NetworkUser = NetworkUserImpl(id, name)
 
 @Serializable

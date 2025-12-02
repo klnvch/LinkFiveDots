@@ -28,7 +28,6 @@ import by.klnvch.link5dots.domain.models.createNetworkUser
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -40,7 +39,7 @@ class NetworkUserFirebaseProvider @Inject constructor(
     scope: CoroutineScope,
 ) : NetworkUserProvider {
     private val userFlow = combine(
-        firebaseManager.userId.filterNotNull(),
+        firebaseManager.userId,
         settings.getUserNameFlow()
     ) { id, name -> createNetworkUser(id, name) }
         .stateIn(scope, SharingStarted.Eagerly, null)

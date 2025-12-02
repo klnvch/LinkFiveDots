@@ -73,7 +73,6 @@ private fun IUser.mapToDbEntity() = when (this) {
 private fun UserLocal.mapToUser(): IUser? = when (id) {
     "bot" -> BotUser
     "host" -> DeviceOwnerUser
-    null -> null
     else -> createNetworkUser(id, name)
 }
 

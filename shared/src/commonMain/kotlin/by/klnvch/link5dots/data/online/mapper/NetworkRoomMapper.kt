@@ -38,7 +38,7 @@ import by.klnvch.link5dots.domain.models.createNetworkUser
 
 private class ParseException(entity: String) : Exception("Failed to parse $entity")
 
-private fun OnlineRemoteUser?.parseUser() = this?.id?.let { createNetworkUser(it, name) }
+private fun OnlineRemoteUser?.parseUser() = createNetworkUser(this?.id, this?.name)
     ?: throw ParseException("user")
 
 private fun Long?.parseTime() = this?.let { it / 1000 }?.toInt()
