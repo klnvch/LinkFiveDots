@@ -44,7 +44,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import by.klnvch.link5dots.di.viewmodels.SavedStateViewModelFactory
 import by.klnvch.link5dots.ui.common.NavigationIcon
 import by.klnvch.link5dots.ui.common.TopBarTitle
 import by.klnvch.link5dots.ui.common.tiledBackground
@@ -72,7 +71,6 @@ fun AppBar(
 @Composable
 fun App(
     getVMFactory: () -> ViewModelProvider.Factory,
-    getSSVMFactory: () -> SavedStateViewModelFactory,
     navController: NavHostController = rememberNavController(),
     onNavigate: (Screen) -> Unit,
 ) {
@@ -115,7 +113,7 @@ fun App(
             }
             composable(route = Route.Scores.name) {
                 ScoresScreen(
-                    getSSVMFactory,
+                    getVMFactory,
                     onNavigate = { onNavigate(it) },
                     onSnackbarMessage = { message, actionLabel, action ->
                         scope.launch {

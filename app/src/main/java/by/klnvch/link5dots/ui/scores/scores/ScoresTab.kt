@@ -38,21 +38,20 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import by.klnvch.link5dots.R
-import by.klnvch.link5dots.di.viewmodels.SavedStateViewModelFactory
 import by.klnvch.link5dots.domain.models.GameResult
 import by.klnvch.link5dots.ui.common.TextCenterInfo
 import by.klnvch.link5dots.ui.scores.ScoresViewModel
 
 @Composable
 fun ScoresTab(
-    getSSVMFactory: () -> SavedStateViewModelFactory,
-    viewModel: ScoresViewModel = viewModel(factory = getSSVMFactory()),
+    getVMFactory: () -> ViewModelProvider.Factory,
+    viewModel: ScoresViewModel = viewModel(factory = getVMFactory()),
 ) {
     val uiState by viewModel.scoresUiState.collectAsState()
-    val state = uiState
-    when (state) {
+    when (val state = uiState) {
         is ScoresViewState.Success -> {
             LazyColumn(
                 contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp),

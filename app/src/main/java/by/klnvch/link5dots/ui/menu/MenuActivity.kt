@@ -33,7 +33,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
-import by.klnvch.link5dots.di.viewmodels.SavedStateViewModelFactory
 import by.klnvch.link5dots.ui.game.activities.offline.BotGameActivity
 import by.klnvch.link5dots.ui.game.activities.offline.GameInfoActivity.Companion.launchGameInfoActivity
 import by.klnvch.link5dots.ui.game.activities.offline.TwoPlayersGameActivity
@@ -50,9 +49,6 @@ class MenuActivity : DaggerAppCompatActivity() {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    @Inject
-    lateinit var savedStateViewModelFactory: SavedStateViewModelFactory
-
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
@@ -62,10 +58,7 @@ class MenuActivity : DaggerAppCompatActivity() {
             val settingsViewModel: SettingsViewModel = viewModel(factory = getVMFactory())
             val nightMode by settingsViewModel.nightMode.collectAsState()
             AppTheme(nightMode) {
-                val getSSVMFactory: () -> SavedStateViewModelFactory = remember {
-                    { savedStateViewModelFactory }
-                }
-                App(getVMFactory, getSSVMFactory) { dest -> navigate(dest) }
+                App(getVMFactory) { dest -> navigate(dest) }
             }
         }
     }

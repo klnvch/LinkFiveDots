@@ -24,21 +24,16 @@
 
 package by.klnvch.link5dots.ui.scores
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import by.klnvch.link5dots.di.viewmodels.AssistedSavedStateViewModelFactory
 import by.klnvch.link5dots.domain.usecases.GetScoresUseCase
 import by.klnvch.link5dots.ui.scores.scores.ScoresViewState
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedFactory
-import dagger.assisted.AssistedInject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class ScoresViewModel @AssistedInject constructor(
-    @Assisted private val savedStateHandle: SavedStateHandle,
+class ScoresViewModel @Inject constructor(
     private val getScoresUseCase: GetScoresUseCase,
 ) : ViewModel() {
     private val _scoresUiState = MutableStateFlow<ScoresViewState>(ScoresViewState.initial())
@@ -54,19 +49,4 @@ class ScoresViewModel @AssistedInject constructor(
             }
         }
     }
-
-    fun getCurrentItem(): Int {
-        return savedStateHandle.get<Int>(CURRENT_TAB_POSITION_KEY) ?: 0
-    }
-
-    fun setCurrentItem(currentItem: Int) {
-        savedStateHandle[CURRENT_TAB_POSITION_KEY] = currentItem
-    }
-
-    companion object {
-        private const val CURRENT_TAB_POSITION_KEY = "currentTabPosition"
-    }
-
-    @AssistedFactory
-    interface Factory : AssistedSavedStateViewModelFactory<ScoresViewModel>
 }

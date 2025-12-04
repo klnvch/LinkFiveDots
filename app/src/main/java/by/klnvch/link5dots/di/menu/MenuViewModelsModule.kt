@@ -26,7 +26,6 @@ package by.klnvch.link5dots.di.menu
 
 
 import androidx.lifecycle.ViewModel
-import by.klnvch.link5dots.di.viewmodels.AssistedSavedStateViewModelFactory
 import by.klnvch.link5dots.di.viewmodels.ViewModelKey
 import by.klnvch.link5dots.ui.menu.MainMenuViewModel
 import by.klnvch.link5dots.ui.scores.ScoresViewModel
@@ -51,10 +50,10 @@ abstract class MenuViewModelsModule {
     @Binds
     @IntoMap
     @ViewModelKey(HistoryViewModel::class)
-    abstract fun bindHistoryViewModel(factory: HistoryViewModel.Factory): AssistedSavedStateViewModelFactory<out ViewModel>
+    abstract fun bindHistoryViewModel(viewModel: HistoryViewModel): ViewModel
 
     @Binds
     @IntoMap
     @ViewModelKey(ScoresViewModel::class)
-    abstract fun bindScoresViewModel(factory: ScoresViewModel.Factory): AssistedSavedStateViewModelFactory<out ViewModel>
+    abstract fun bindScoresViewModel(viewModel: ScoresViewModel): ViewModel
 }

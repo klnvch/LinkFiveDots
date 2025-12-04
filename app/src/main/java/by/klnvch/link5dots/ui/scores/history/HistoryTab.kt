@@ -54,13 +54,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import by.klnvch.link5dots.R
-import by.klnvch.link5dots.di.viewmodels.SavedStateViewModelFactory
 import by.klnvch.link5dots.domain.models.RoomType
 import by.klnvch.link5dots.ui.common.BlueDot
 import by.klnvch.link5dots.ui.common.RedDot
@@ -71,13 +70,14 @@ import by.klnvch.link5dots.ui.menu.Screen
 fun HistoryTab(
     onNavigate: (Screen) -> Unit,
     onSnackbarMessage: (message: String, actionLabel: String, action: () -> Unit) -> Unit,
-    getSSVMFactory: () -> SavedStateViewModelFactory,
-    historyViewModel: HistoryViewModel = viewModel(factory = getSSVMFactory()),
+    getVMFactory: () -> ViewModelProvider.Factory,
+    historyViewModel: HistoryViewModel = viewModel(factory = getVMFactory()),
 ) {
-    val context = LocalContext.current
     val uiState by historyViewModel.historyUiState.collectAsState()
     val state = uiState
     val types = remember { mutableStateListOf(*RoomType.entries.toTypedArray()) }
+    val snackBarMessage = stringResource(R.string.done)
+    val snackBarActionLabel = stringResource(R.string.undo)
 
     LaunchedEffect(types.size) {
         historyViewModel.load(types)
@@ -112,8 +112,8 @@ fun HistoryTab(
                                 onRemove = {
                                     historyViewModel.deleteRoom(it.room)
                                     onSnackbarMessage(
-                                        context.getString(R.string.done),
-                                        context.getString(R.string.undo)
+                                        snackBarMessage,
+                                        snackBarActionLabel
                                     ) { historyViewModel.insertRoom(it.room) }
                                 },
                             )

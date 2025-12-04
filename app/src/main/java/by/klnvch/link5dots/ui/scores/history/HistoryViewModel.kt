@@ -24,28 +24,24 @@
 
 package by.klnvch.link5dots.ui.scores.history
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import by.klnvch.link5dots.di.viewmodels.AssistedSavedStateViewModelFactory
 import by.klnvch.link5dots.domain.models.HistoryRoom
 import by.klnvch.link5dots.domain.models.RoomType
 import by.klnvch.link5dots.domain.usecases.DeleteRoomUseCase
 import by.klnvch.link5dots.domain.usecases.GetRoomsUseCase
 import by.klnvch.link5dots.domain.usecases.GetUserNameUseCase
 import by.klnvch.link5dots.domain.usecases.SaveRoomUseCase
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedFactory
-import dagger.assisted.AssistedInject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
+import javax.inject.Inject
+
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class HistoryViewModel @AssistedInject constructor(
-    @Assisted private val savedStateHandle: SavedStateHandle,
+class HistoryViewModel @Inject constructor(
     private val getRoomsUseCase: GetRoomsUseCase,
     private val getUserNameUseCase: GetUserNameUseCase,
     private val deleteRoomUseCase: DeleteRoomUseCase,
@@ -81,7 +77,4 @@ class HistoryViewModel @AssistedInject constructor(
     fun insertRoom(room: HistoryRoom) {
         viewModelScope.launch { saveRoomUseCase.save(room) }
     }
-
-    @AssistedFactory
-    interface Factory : AssistedSavedStateViewModelFactory<HistoryViewModel>
 }

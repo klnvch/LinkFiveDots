@@ -36,9 +36,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.lifecycle.ViewModelProvider
 import by.klnvch.link5dots.R
-import by.klnvch.link5dots.di.viewmodels.SavedStateViewModelFactory
 import by.klnvch.link5dots.ui.menu.Screen
 import by.klnvch.link5dots.ui.scores.history.HistoryTab
 import by.klnvch.link5dots.ui.scores.scores.ScoresTab
@@ -53,12 +52,11 @@ enum class ScoresDestination(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ScoresScreen(
-    getSSVMFactory: () -> SavedStateViewModelFactory,
-    viewModel: ScoresViewModel = viewModel(factory = getSSVMFactory()),
+    getVMFactory: () -> ViewModelProvider.Factory,
     onNavigate: (Screen) -> Unit,
     onSnackbarMessage: (message: String, actionLabel: String, action: () -> Unit) -> Unit,
 ) {
-    var selectedDestination by rememberSaveable { mutableIntStateOf(viewModel.getCurrentItem()) }
+    var selectedDestination by rememberSaveable { mutableIntStateOf(0) }
 
     Column {
         PrimaryTabRow(
@@ -69,7 +67,6 @@ fun ScoresScreen(
                     selected = selectedDestination == index,
                     onClick = {
                         selectedDestination = index
-                        viewModel.setCurrentItem(index)
                     },
                     text = {
                         Text(
@@ -82,11 +79,11 @@ fun ScoresScreen(
             }
         }
         when (selectedDestination) {
-            ScoresDestination.SCORES.ordinal -> ScoresTab(getSSVMFactory)
+            ScoresDestination.SCORES.ordinal -> ScoresTab(getVMFactory)
             ScoresDestination.HISTORY.ordinal -> HistoryTab(
                 onNavigate,
                 onSnackbarMessage,
-                getSSVMFactory
+                getVMFactory
             )
         }
     }
