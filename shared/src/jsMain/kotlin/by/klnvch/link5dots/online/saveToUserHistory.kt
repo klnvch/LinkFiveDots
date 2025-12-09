@@ -24,51 +24,34 @@
 
 package by.klnvch.link5dots.online
 
-import by.klnvch.link5dots.data.RoomKeyGeneratorImpl
-import by.klnvch.link5dots.data.TimeServiceImpl
-import by.klnvch.link5dots.data.online.CreateOnlineRoomRepositoryImpl
-import by.klnvch.link5dots.data.online.OnlineLocalStoreWriter
-import by.klnvch.link5dots.data.online.models.CreateOnlineRoomInvitation
 import by.klnvch.link5dots.domain.models.NetworkUser
+import by.klnvch.link5dots.domain.models.online.OnlineRoomLive
 import by.klnvch.link5dots.domain.repositories.NetworkUserProvider
-import by.klnvch.link5dots.domain.repositories.online.FirebaseDbCreateInvitation
-import by.klnvch.link5dots.domain.usecases.network.CreateOnlineRoomUseCase
+import by.klnvch.link5dots.domain.repositories.online.FirebaseDbAddToUserHistory
+import by.klnvch.link5dots.domain.repositories.online.OnlineUserHistoryRepository
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.await
 import kotlinx.coroutines.launch
 import kotlin.js.Promise
 
-@OptIn(DelicateCoroutinesApi::class, ExperimentalJsExport::class)
+@OptIn(ExperimentalJsExport::class, DelicateCoroutinesApi::class)
 @JsExport
-fun roomCreate(
-    user: NetworkUser?,
-    onDbCreateInvitation: (invitation: CreateOnlineRoomInvitation) -> Promise<Unit>,
-): Promise<String> {
+fun saveToUserHistory(
+    prev: OnlineRoomLive?,
+    next: OnlineRoomLive,
+    user: NetworkUser,
+    onDbUpdate: (key: String) -> Promise<Unit>,
+): Promise<Unit> {
+    val firebaseDb = object : FirebaseDbAddToUserHistory {
+        override suspend fun addToUserHistory(path: Array<String>) {
+            onDbUpdate(path.joinToString("/")).await()
+        }
+    }
     val networkUserProvider = object : NetworkUserProvider {
         override val networkUser = user
     }
-    val timeService = TimeServiceImpl()
-    val roomKeyGenerator = RoomKeyGeneratorImpl(timeService)
+    val repository = OnlineUserHistoryRepository(firebaseDb, networkUserProvider)
 
-    val firebaseDb = object : FirebaseDbCreateInvitation {
-        override suspend fun createInvitation(invitation: CreateOnlineRoomInvitation) =
-            onDbCreateInvitation(invitation).await()
-    }
-
-    return Promise { resolve, _ ->
-        val onlineLocalStore = object : OnlineLocalStoreWriter {
-            override suspend fun save(key: String) = resolve(key)
-        }
-
-        val repository = CreateOnlineRoomRepositoryImpl(firebaseDb, onlineLocalStore)
-
-        val useCase = CreateOnlineRoomUseCase(
-            roomKeyGenerator,
-            networkUserProvider,
-            repository,
-        )
-
-        GlobalScope.launch { useCase.create() }
-    }
+    return Promise { _, _ -> GlobalScope.launch { repository.save(prev, next) } }
 }

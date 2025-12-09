@@ -30,6 +30,7 @@ import by.klnvch.link5dots.data.online.models.CreateOnlineRoomInvitation
 import by.klnvch.link5dots.data.online.models.OnlineRemoteUser
 import by.klnvch.link5dots.domain.models.Point
 import by.klnvch.link5dots.domain.models.RoomState
+import by.klnvch.link5dots.domain.repositories.online.FirebaseDb
 import com.google.firebase.Firebase
 import com.google.firebase.database.ServerValue
 import com.google.firebase.database.database
@@ -77,4 +78,8 @@ class FirebaseDbImpl @Inject constructor() : FirebaseDb {
     }
 
     override suspend fun setState(path: Array<String>, state: Int) = set(path, state)
+
+    override suspend fun addToUserHistory(path: Array<String>) {
+        Firebase.database.reference.child(path.joinToString(separator = "/")).setValue(true).await()
+    }
 }

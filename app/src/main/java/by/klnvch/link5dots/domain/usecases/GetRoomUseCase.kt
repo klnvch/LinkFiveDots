@@ -43,6 +43,7 @@ import by.klnvch.link5dots.domain.repositories.RoomRepository
 import by.klnvch.link5dots.domain.repositories.RoomSaveLocalRepository
 import by.klnvch.link5dots.domain.repositories.Settings
 import by.klnvch.link5dots.domain.repositories.VibratorService
+import by.klnvch.link5dots.domain.repositories.online.OnlineUserHistoryRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -53,6 +54,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.runningFold
 import kotlinx.coroutines.flow.shareIn
 import javax.inject.Inject
 
@@ -129,9 +131,18 @@ class GetRoomOnlineUseCase @Inject constructor(
     private val saveRepository: RoomSaveLocalRepository,
     private val gameStateFactory: NetworkGameStateFactory,
     private val vibrationCommand: VibrationCommand,
+    private val userHistoryRepository: OnlineUserHistoryRepository,
 ) : GetRoomUseCase {
     override val room: Flow<GameState> = repository.onlineRoom
         .onEach { vibrationCommand.vibrate(it.room) }
         .onEach { saveRepository.save(it.room) }
+        .onEachWithPrevious { old, new -> userHistoryRepository.save(old, new) }
         .map { gameStateFactory.create(it.room, it.isActive) }
 }
+
+private fun <T : Any> Flow<T>.onEachWithPrevious(
+    action: suspend (old: T?, new: T) -> Unit,
+): Flow<T> = runningFold<T, Pair<T?, T>?>(null) { acc, new -> Pair(acc?.second, new) }
+    .filterNotNull()
+    .onEach { action(it.first, it.second) }
+    .map { it.second }

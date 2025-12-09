@@ -25,7 +25,6 @@
 package by.klnvch.link5dots.online
 
 import by.klnvch.link5dots.data.online.ConnectOnlineRoomRepositoryImpl
-import by.klnvch.link5dots.data.online.FirebaseDbSetConnected
 import by.klnvch.link5dots.data.online.OnlineLocalStoreWriter
 import by.klnvch.link5dots.data.online.models.OnlineRemoteUser
 import by.klnvch.link5dots.data.online.models.OnlineRoomInvitationRemote
@@ -37,6 +36,7 @@ import by.klnvch.link5dots.domain.models.online.toOnlineRoomInvitation
 import by.klnvch.link5dots.domain.repositories.ConnectOnlineRoomRepository
 import by.klnvch.link5dots.domain.repositories.NetworkUserProvider
 import by.klnvch.link5dots.domain.repositories.StringProvider
+import by.klnvch.link5dots.domain.repositories.online.FirebaseDbSetConnected
 import by.klnvch.link5dots.domain.usecases.network.ScanOnlineRoomDescriptorFactory
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope

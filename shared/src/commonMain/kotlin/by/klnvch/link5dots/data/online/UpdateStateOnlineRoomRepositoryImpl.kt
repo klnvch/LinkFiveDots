@@ -26,6 +26,7 @@ package by.klnvch.link5dots.data.online
 
 import by.klnvch.link5dots.domain.models.RoomState
 import by.klnvch.link5dots.domain.repositories.UpdateStateOnlineRoomRepository
+import by.klnvch.link5dots.domain.repositories.online.FirebaseDbSetState
 
 class UpdateStateOnlineRoomRepositoryImpl(
     private val firebaseDb: FirebaseDbSetState,

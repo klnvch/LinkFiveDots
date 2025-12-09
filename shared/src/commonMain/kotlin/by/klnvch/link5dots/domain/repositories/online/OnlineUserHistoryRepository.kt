@@ -22,32 +22,24 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.data.online
+package by.klnvch.link5dots.domain.repositories.online
 
-import by.klnvch.link5dots.data.online.models.CreateOnlineRoomInvitation
-import by.klnvch.link5dots.data.online.models.OnlineRemoteUser
-import by.klnvch.link5dots.domain.models.Point
+import by.klnvch.link5dots.domain.models.online.OnlineRoomLive
+import by.klnvch.link5dots.domain.repositories.NetworkUserProvider
+import by.klnvch.link5dots.domain.repositories.networkUserOrThrow
 
-interface FirebaseDbSetDot {
-    suspend fun setDot(path: Array<String>, p: Point)
+class OnlineUserHistoryRepository(
+    private val firebaseDb: FirebaseDbAddToUserHistory,
+    private val networkUserProvider: NetworkUserProvider,
+) {
+    suspend fun save(old: OnlineRoomLive?, new: OnlineRoomLive) {
+        if (old == null || old.room.key != new.room.key) {
+            try {
+                val user = networkUserProvider.networkUserOrThrow
+                firebaseDb.addToUserHistory(arrayOf("users", user.id, "history", new.room.key))
+            } catch (_: Throwable) {
+                // can be continued
+            }
+        }
+    }
 }
-
-interface FirebaseDbSetConnected {
-    suspend fun setConnected(
-        path: Array<String>,
-        state: Int,
-        user2: OnlineRemoteUser,
-        dots: List<Point>,
-    )
-}
-
-interface FirebaseDbCreateInvitation {
-    suspend fun createInvitation(invitation: CreateOnlineRoomInvitation)
-}
-
-interface FirebaseDbSetState {
-    suspend fun setState(path: Array<String>, state: Int)
-}
-
-interface FirebaseDb :
-    FirebaseDbSetDot, FirebaseDbSetConnected, FirebaseDbCreateInvitation, FirebaseDbSetState

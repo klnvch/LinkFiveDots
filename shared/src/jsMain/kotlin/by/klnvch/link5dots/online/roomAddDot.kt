@@ -25,8 +25,6 @@
 package by.klnvch.link5dots.online
 
 import by.klnvch.link5dots.data.online.AddDotOnlineRoomRepositoryImpl
-import by.klnvch.link5dots.data.online.FirebaseDbSetDot
-import by.klnvch.link5dots.data.online.FirebaseDbSetState
 import by.klnvch.link5dots.data.online.UpdateStateOnlineRoomRepositoryImpl
 import by.klnvch.link5dots.domain.models.Board
 import by.klnvch.link5dots.domain.models.INetworkRoom
@@ -34,6 +32,8 @@ import by.klnvch.link5dots.domain.models.NetworkUser
 import by.klnvch.link5dots.domain.models.Point
 import by.klnvch.link5dots.domain.repositories.NetworkUserProvider
 import by.klnvch.link5dots.domain.repositories.RoomRemoteRepository
+import by.klnvch.link5dots.domain.repositories.online.FirebaseDbSetDot
+import by.klnvch.link5dots.domain.repositories.online.FirebaseDbSetState
 import by.klnvch.link5dots.domain.usecases.AddDotOnlineUseCase
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope

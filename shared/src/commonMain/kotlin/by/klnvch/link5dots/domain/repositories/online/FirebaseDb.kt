@@ -22,16 +22,37 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.data.online
+package by.klnvch.link5dots.domain.repositories.online
 
+import by.klnvch.link5dots.data.online.models.CreateOnlineRoomInvitation
+import by.klnvch.link5dots.data.online.models.OnlineRemoteUser
 import by.klnvch.link5dots.domain.models.Point
-import by.klnvch.link5dots.domain.repositories.AddDotOnlineRoomRepository
-import by.klnvch.link5dots.domain.repositories.online.FirebaseDbSetDot
 
-class AddDotOnlineRoomRepositoryImpl(
-    private val firebaseDb: FirebaseDbSetDot,
-) : AddDotOnlineRoomRepository {
-    override suspend fun addDot(key: String, position: Int, p: Point) {
-        firebaseDb.setDot(arrayOf(key, "dots", position.toString()), p)
-    }
+interface FirebaseDbSetDot {
+    suspend fun setDot(path: Array<String>, p: Point)
 }
+
+interface FirebaseDbSetConnected {
+    suspend fun setConnected(
+        path: Array<String>,
+        state: Int,
+        user2: OnlineRemoteUser,
+        dots: List<Point>,
+    )
+}
+
+interface FirebaseDbCreateInvitation {
+    suspend fun createInvitation(invitation: CreateOnlineRoomInvitation)
+}
+
+interface FirebaseDbSetState {
+    suspend fun setState(path: Array<String>, state: Int)
+}
+
+interface FirebaseDbAddToUserHistory {
+    suspend fun addToUserHistory(path: Array<String>)
+}
+
+interface FirebaseDb :
+    FirebaseDbSetDot, FirebaseDbSetConnected, FirebaseDbCreateInvitation, FirebaseDbSetState,
+    FirebaseDbAddToUserHistory

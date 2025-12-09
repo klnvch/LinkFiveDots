@@ -28,6 +28,7 @@ import by.klnvch.link5dots.data.online.mapper.mapToOnlineRemoteUser
 import by.klnvch.link5dots.data.online.models.AcceptOnlineRoomInvitation
 import by.klnvch.link5dots.domain.models.RoomState
 import by.klnvch.link5dots.domain.repositories.ConnectOnlineRoomRepository
+import by.klnvch.link5dots.domain.repositories.online.FirebaseDbSetConnected
 
 class ConnectOnlineRoomRepositoryImpl(
     private val firebaseDb: FirebaseDbSetConnected,

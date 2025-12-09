@@ -26,6 +26,7 @@ package by.klnvch.link5dots.data.online
 
 import by.klnvch.link5dots.data.online.models.CreateOnlineRoomInvitation
 import by.klnvch.link5dots.domain.repositories.CreateOnlineRoomRepository
+import by.klnvch.link5dots.domain.repositories.online.FirebaseDbCreateInvitation
 
 class CreateOnlineRoomRepositoryImpl(
     private val firebaseDb: FirebaseDbCreateInvitation,
