@@ -41,11 +41,11 @@ fun saveToUserHistory(
     prev: OnlineRoomLive?,
     next: OnlineRoomLive,
     user: NetworkUser,
-    onDbUpdate: (key: String) -> Promise<Unit>,
+    onDbUpdate: (path: String, value: String) -> Promise<Unit>,
 ): Promise<Unit> {
     val firebaseDb = object : FirebaseDbAddToUserHistory {
-        override suspend fun addToUserHistory(path: Array<String>) {
-            onDbUpdate(path.joinToString("/")).await()
+        override suspend fun addToUserHistory(path: String, value: String) {
+            onDbUpdate(path, value).await()
         }
     }
     val networkUserProvider = object : NetworkUserProvider {

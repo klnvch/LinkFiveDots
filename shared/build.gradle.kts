@@ -45,7 +45,7 @@ kotlin {
         namespace = "by.klnvch.link5dots"
         compileSdk = 36
         minSdk = 23
-        version = "0.5.2"
+        version = "0.5.4"
 
         withHostTestBuilder {
         }
@@ -84,7 +84,9 @@ kotlin {
             dependencies {
                 implementation(libs.kotlin.stdlib)
                 implementation(libs.kotlinx.datetime)
-                implementation(libs.kotlinx.serialization)
+                implementation(libs.kotlinx.serialization.json)
+                implementation(libs.kotlinx.serialization.cbor)
+                implementation(libs.kotlinx.io.core)
                 implementation(libs.kotlinx.coroutines.core)
             }
         }

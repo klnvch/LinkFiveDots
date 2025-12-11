@@ -79,7 +79,10 @@ class FirebaseDbImpl @Inject constructor() : FirebaseDb {
 
     override suspend fun setState(path: Array<String>, state: Int) = set(path, state)
 
-    override suspend fun addToUserHistory(path: Array<String>) {
-        Firebase.database.reference.child(path.joinToString(separator = "/")).setValue(true).await()
+    override suspend fun addToUserHistory(path: String, value: String) {
+        Firebase.database.reference
+            .child(path)
+            .setValue(value)
+            .await()
     }
 }

@@ -25,6 +25,7 @@
 package by.klnvch.link5dots.domain.repositories.online
 
 import by.klnvch.link5dots.domain.models.online.OnlineRoomLive
+import by.klnvch.link5dots.domain.models.online.encode
 import by.klnvch.link5dots.domain.repositories.NetworkUserProvider
 import by.klnvch.link5dots.domain.repositories.networkUserOrThrow
 
@@ -33,10 +34,12 @@ class OnlineUserHistoryRepository(
     private val networkUserProvider: NetworkUserProvider,
 ) {
     suspend fun save(old: OnlineRoomLive?, new: OnlineRoomLive) {
-        if (old == null || old.room.key != new.room.key) {
+        if (old == null || old.room.key != new.room.key || old.isActive != new.isActive) {
             try {
                 val user = networkUserProvider.networkUserOrThrow
-                firebaseDb.addToUserHistory(arrayOf("users", user.id, "history", new.room.key))
+                val path = "users/${user.id}/history/${new.room.key}"
+                val value = encode(user, new)
+                firebaseDb.addToUserHistory(path, value)
             } catch (_: Throwable) {
                 // can be continued
             }

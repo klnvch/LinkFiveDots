@@ -50,7 +50,7 @@ interface FirebaseDbSetState {
 }
 
 interface FirebaseDbAddToUserHistory {
-    suspend fun addToUserHistory(path: Array<String>)
+    suspend fun addToUserHistory(path: String, value: String)
 }
 
 interface FirebaseDb :
