@@ -56,7 +56,7 @@ import by.klnvch.link5dots.ui.game.topBar.TopBar
 import by.klnvch.link5dots.ui.game.viewmodels.OnlineGameViewModel
 import by.klnvch.link5dots.ui.theme.AppTheme
 
-private enum class MultiplayerRoute() { Picker, Game, Error }
+private enum class MultiplayerRoute() { Picker, Game, Error, History }
 
 @Composable
 private fun GameTitle(action: NetworkGameAction, @StringRes defaultTitle: Int) {
@@ -84,6 +84,7 @@ fun GameContent(
     @StringRes defaultTitle: Int,
     pickerScreen: @Composable () -> Unit,
     errorScreen: @Composable (e: Throwable, onDone: (isSuccess: Boolean) -> Unit) -> Unit,
+    historyScreen: (@Composable () -> Unit)? = null,
     onFinish: () -> Unit,
 ) {
     AppTheme(nightMode) {
@@ -96,7 +97,7 @@ fun GameContent(
 
         val disconnectFinal: () -> Unit = {
             viewModel.exitGame()
-            if (navBackStackEntry.isGameScreen()) navController.navigateUp() else onFinish()
+            if (navController.previousBackStackEntry != null) navController.navigateUp() else onFinish()
         }
 
         val disconnectGuard: () -> Unit = {
@@ -128,6 +129,9 @@ fun GameContent(
                     PickerTopBar(
                         title = { GameTitle(action, defaultTitle) },
                         navigateUp = disconnectFinal,
+                        onShowHistory = if (historyScreen != null) {
+                            { navController.navigate(MultiplayerRoute.History.name) }
+                        } else null,
                     )
                 }
             },
@@ -164,6 +168,9 @@ fun GameContent(
                         }
                     else
                         navController.navigateUp()
+                }
+                composable(route = MultiplayerRoute.History.name) {
+                    historyScreen?.invoke()
                 }
             }
             BackHandler(onBack = disconnectGuard)

@@ -128,7 +128,7 @@ fun HistoryTab(
 }
 
 @Composable
-fun HistoryRoomRow(
+private fun HistoryRoomRow(
     modifier: Modifier,
     room: HistoryItemViewState,
     onClick: (key: String) -> Unit,

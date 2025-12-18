@@ -22,41 +22,15 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.domain.repositories.online
+package by.klnvch.link5dots.domain
 
-import by.klnvch.link5dots.data.online.models.CreateOnlineRoomInvitation
-import by.klnvch.link5dots.data.online.models.OnlineRemoteUser
-import by.klnvch.link5dots.domain.models.Point
+import kotlin.time.Duration.Companion.seconds
 
-interface FirebaseDbSetDot {
-    suspend fun setDot(path: Array<String>, p: Point)
+fun Int.formatDuration(): String {
+    return seconds.toComponents { hours, minutes, seconds, _ ->
+        val s = seconds.toString().padStart(2, '0')
+        val m = minutes.toString().padStart(2, '0')
+        val h = hours.toString().padStart(2, '0')
+        if (hours > 0) "$h:$m:$s" else "$m:$s"
+    }
 }
-
-interface FirebaseDbSetConnected {
-    suspend fun setConnected(
-        path: Array<String>,
-        state: Int,
-        user2: OnlineRemoteUser,
-        dots: List<Point>,
-    )
-}
-
-interface FirebaseDbCreateInvitation {
-    suspend fun createInvitation(invitation: CreateOnlineRoomInvitation)
-}
-
-interface FirebaseDbSetState {
-    suspend fun setState(path: Array<String>, state: Int)
-}
-
-interface FirebaseDbAddToUserHistory {
-    suspend fun addToUserHistory(path: String, value: String)
-}
-
-interface FirebaseDbGetUserHistory {
-    suspend fun getUserHistory(path: String): List<String>
-}
-
-interface FirebaseDb :
-    FirebaseDbSetDot, FirebaseDbSetConnected, FirebaseDbCreateInvitation, FirebaseDbSetState,
-    FirebaseDbAddToUserHistory, FirebaseDbGetUserHistory

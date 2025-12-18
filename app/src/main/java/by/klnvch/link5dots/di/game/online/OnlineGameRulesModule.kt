@@ -23,7 +23,9 @@
  */
 package by.klnvch.link5dots.di.game.online
 
+import androidx.lifecycle.ViewModel
 import by.klnvch.link5dots.data.online.OnlineRoomRepositoryImpl
+import by.klnvch.link5dots.di.viewmodels.ViewModelKey
 import by.klnvch.link5dots.domain.models.RoomTypeOnlineProvider
 import by.klnvch.link5dots.domain.models.RoomTypeProvider
 import by.klnvch.link5dots.domain.repositories.NetworkUserFirebaseProvider
@@ -47,8 +49,11 @@ import by.klnvch.link5dots.domain.usecases.network.InitMultiplayerUseCase
 import by.klnvch.link5dots.domain.usecases.network.InitOnlineUseCase
 import by.klnvch.link5dots.domain.usecases.network.OnlineScanUseCase
 import by.klnvch.link5dots.domain.usecases.network.ScanUseCase
+import by.klnvch.link5dots.ui.game.picker.FirebaseStatusViewModel
+import by.klnvch.link5dots.ui.game.viewmodels.OnlineUserHistoryViewModel
 import dagger.Binds
 import dagger.Module
+import dagger.multibindings.IntoMap
 
 @Module
 interface OnlineGameRulesModule {
@@ -93,4 +98,14 @@ interface OnlineGameRulesModule {
 
     @Binds
     fun bindRoomRemoteRepository(impl: OnlineRoomRepository): RoomRemoteRepository
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(FirebaseStatusViewModel::class)
+    fun bindFirebaseStatusViewModel(viewModel: FirebaseStatusViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(OnlineUserHistoryViewModel::class)
+    fun bindOnlineUserHistoryViewModel(viewModel: OnlineUserHistoryViewModel): ViewModel
 }

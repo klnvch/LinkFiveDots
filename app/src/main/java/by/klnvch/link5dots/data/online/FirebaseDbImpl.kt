@@ -85,4 +85,9 @@ class FirebaseDbImpl @Inject constructor() : FirebaseDb {
             .setValue(value)
             .await()
     }
+
+    override suspend fun getUserHistory(path: String): List<String> {
+        val dataSnapshot = Firebase.database.reference.child(path).get().await()
+        return dataSnapshot.children.mapNotNull { it.getValue(String::class.java) }
+    }
 }

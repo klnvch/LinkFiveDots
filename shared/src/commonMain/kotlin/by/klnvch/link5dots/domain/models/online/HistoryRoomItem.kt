@@ -51,20 +51,45 @@ enum class GameStatus {
     Draw,
 }
 
-@Serializable
-data class GameResult(
-    @SerialName("s") val size: Int,
-    @SerialName("d") val duration: Int,
-    @SerialName("o") val status: GameStatus,
-)
+interface GameResult {
+    /** number of dots to measure complexity */
+    val size: Int
+
+    /** number of seconds since game started */
+    val duration: Int
+
+    /** all possible reasons to stop a game */
+    val status: GameStatus
+}
+
+interface HistoryOnlineRoomItem {
+    /** name or default if null */
+    val user1Name: String?
+
+    /** name or default if null */
+    val user2Name: String?
+
+    /** number of seconds since last epoch to measure complexity */
+    val time: Int
+
+    /** game result or null if in progress */
+    val result: GameResult?
+}
 
 @Serializable
-data class HistoryOnlineRoomItem(
-    @SerialName("u1") val user1Name: String?,
-    @SerialName("u2") val user2Name: String?,
-    @SerialName("t") val time: Int,
-    @SerialName("r") val result: GameResult?,
-)
+data class GameResultImpl(
+    @SerialName("s") override val size: Int,
+    @SerialName("d") override val duration: Int,
+    @SerialName("o") override val status: GameStatus,
+) : GameResult
+
+@Serializable
+data class HistoryOnlineRoomItemImpl(
+    @SerialName("u1") override val user1Name: String?,
+    @SerialName("u2") override val user2Name: String?,
+    @SerialName("t") override val time: Int,
+    @SerialName("r") override val result: GameResultImpl?,
+) : HistoryOnlineRoomItem
 
 @OptIn(ExperimentalSerializationApi::class)
 fun encode(user: NetworkUser, room: OnlineRoomLive): String {
@@ -84,10 +109,16 @@ fun encode(user: NetworkUser, room: OnlineRoomLive): String {
             !isActive && canMove -> GameStatus.LostByTimeout
             else -> GameStatus.Draw
         }
-        GameResult(size, duration, status)
+        GameResultImpl(size, duration, status)
     } else null
 
-    val value = HistoryOnlineRoomItem(user1Name, user2Name, time, result)
-    val bytes = Cbor.encodeToByteArray(HistoryOnlineRoomItem.serializer(), value)
+    val value = HistoryOnlineRoomItemImpl(user1Name, user2Name, time, result)
+    val bytes = Cbor.encodeToByteArray(HistoryOnlineRoomItemImpl.serializer(), value)
     return Base64.encode(bytes)
+}
+
+@OptIn(ExperimentalSerializationApi::class)
+fun decode(value: String): HistoryOnlineRoomItem {
+    val bytes = Base64.decode(value)
+    return Cbor.decodeFromByteArray(HistoryOnlineRoomItemImpl.serializer(), bytes)
 }

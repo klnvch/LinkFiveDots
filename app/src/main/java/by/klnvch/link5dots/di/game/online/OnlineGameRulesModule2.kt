@@ -36,6 +36,7 @@ import by.klnvch.link5dots.domain.repositories.StringProvider
 import by.klnvch.link5dots.domain.repositories.UpdateStateOnlineRoomRepository
 import by.klnvch.link5dots.domain.repositories.online.OnlineUserHistoryRepository
 import by.klnvch.link5dots.domain.usecases.AddDotOnlineUseCase
+import by.klnvch.link5dots.domain.usecases.GetOnlineUserHistoryUseCase
 import by.klnvch.link5dots.domain.usecases.NewGameEmptyUseCase
 import by.klnvch.link5dots.domain.usecases.NewGameUseCase
 import by.klnvch.link5dots.domain.usecases.network.CreateOnlineRoomUseCase
@@ -91,4 +92,11 @@ class OnlineGameRulesModule2 {
         firebaseDb: FirebaseDbImpl,
         networkUserProvider: NetworkUserProvider,
     ) = OnlineUserHistoryRepository(firebaseDb, networkUserProvider)
+
+    @Provides
+    fun provideGetOnlineUserHistoryUseCase(
+        firebaseDb: FirebaseDbImpl,
+        networkUserProvider: NetworkUserProvider,
+        stringProvider: StringProvider,
+    ) = GetOnlineUserHistoryUseCase(firebaseDb, networkUserProvider, stringProvider)
 }

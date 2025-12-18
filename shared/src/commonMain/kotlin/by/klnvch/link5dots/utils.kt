@@ -26,4 +26,9 @@ package by.klnvch.link5dots
 
 expect fun currentTime(): Double
 expect val platformKeyPart: String
+
+/**
+ * TODO: Support locales
+ * @return Dec 18, 05:22 PM
+ */
 expect fun Int.formatDateTime(): String

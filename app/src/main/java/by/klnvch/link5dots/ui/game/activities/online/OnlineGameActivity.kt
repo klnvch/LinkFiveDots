@@ -44,10 +44,12 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import by.klnvch.link5dots.BuildConfig
 import by.klnvch.link5dots.R
 import by.klnvch.link5dots.ui.game.error.ErrorScreenOnline
+import by.klnvch.link5dots.ui.game.history.OnlineUserHistory
 import by.klnvch.link5dots.ui.game.picker.FirebaseStatusViewModel
 import by.klnvch.link5dots.ui.game.picker.PickerScreen
 import by.klnvch.link5dots.ui.game.viewmodels.BaseGameViewModel
 import by.klnvch.link5dots.ui.game.viewmodels.OnlineGameViewModel
+import by.klnvch.link5dots.ui.game.viewmodels.OnlineUserHistoryViewModel
 import by.klnvch.link5dots.ui.settings.SettingsViewModel
 import dagger.android.support.DaggerAppCompatActivity
 import javax.inject.Inject
@@ -87,6 +89,11 @@ class OnlineGameActivity : DaggerAppCompatActivity() {
             viewModelFactory
         )[FirebaseStatusViewModel.KEY, FirebaseStatusViewModel::class.java]
 
+        val userHistoryViewModel = ViewModelProvider(
+            this,
+            viewModelFactory
+        )[OnlineUserHistoryViewModel.KEY, OnlineUserHistoryViewModel::class.java]
+
         setContent {
             val getVMFactory: () -> ViewModelProvider.Factory = remember { { viewModelFactory } }
             val settingsViewModel: SettingsViewModel = viewModel(factory = getVMFactory())
@@ -104,6 +111,7 @@ class OnlineGameActivity : DaggerAppCompatActivity() {
                     }
                 },
                 errorScreen = { e, onDone -> ErrorScreenOnline(e, onDone) },
+                historyScreen = { OnlineUserHistory(userHistoryViewModel) },
                 onFinish = { finish() },
             )
         }

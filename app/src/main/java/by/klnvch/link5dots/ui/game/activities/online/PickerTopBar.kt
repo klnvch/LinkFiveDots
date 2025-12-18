@@ -24,9 +24,12 @@
 
 package by.klnvch.link5dots.ui.game.activities.online
 
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.History
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
+import by.klnvch.link5dots.ui.common.IconMenuItem
 import by.klnvch.link5dots.ui.common.NavigationIcon
 import by.klnvch.link5dots.ui.common.topAppBarColors
 
@@ -35,10 +38,19 @@ import by.klnvch.link5dots.ui.common.topAppBarColors
 fun PickerTopBar(
     title: @Composable () -> Unit,
     navigateUp: () -> Unit,
+    onShowHistory: (() -> Unit)? = null,
 ) {
     CenterAlignedTopAppBar(
         title = title,
         colors = topAppBarColors(),
         navigationIcon = { NavigationIcon(onClick = navigateUp) },
+        actions = {
+            if (onShowHistory != null) {
+                IconMenuItem(
+                    imageVector = Icons.Filled.History,
+                    onClick = onShowHistory,
+                )
+            }
+        }
     )
 }

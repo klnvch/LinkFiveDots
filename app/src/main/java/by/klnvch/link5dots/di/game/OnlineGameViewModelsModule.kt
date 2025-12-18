@@ -26,7 +26,6 @@ package by.klnvch.link5dots.di.game
 
 import androidx.lifecycle.ViewModel
 import by.klnvch.link5dots.di.viewmodels.ViewModelKey
-import by.klnvch.link5dots.ui.game.picker.FirebaseStatusViewModel
 import by.klnvch.link5dots.ui.game.picker.VisibilityViewModel
 import by.klnvch.link5dots.ui.game.viewmodels.OnlineGameViewModel
 import by.klnvch.link5dots.ui.settings.SettingsViewModel
@@ -45,11 +44,6 @@ abstract class OnlineGameViewModelsModule {
     @IntoMap
     @ViewModelKey(VisibilityViewModel::class)
     abstract fun bindVisibilityViewModel(viewModel: VisibilityViewModel): ViewModel
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(FirebaseStatusViewModel::class)
-    abstract fun bindFirebaseStatusViewModel(viewModel: FirebaseStatusViewModel): ViewModel
 
     @Binds
     @IntoMap
