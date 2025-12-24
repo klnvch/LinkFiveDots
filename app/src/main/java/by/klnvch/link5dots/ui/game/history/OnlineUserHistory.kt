@@ -57,6 +57,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import by.klnvch.link5dots.R
 import by.klnvch.link5dots.domain.usecases.OnlineGameShortInfo
+import by.klnvch.link5dots.domain.usecases.OnlineGameShortInfoImpl
 import by.klnvch.link5dots.domain.usecases.OnlineGameShortInfoStatus
 import by.klnvch.link5dots.ui.common.BlueDot
 import by.klnvch.link5dots.ui.common.RedDot
@@ -174,7 +175,7 @@ fun HistoryRow(
 @Preview(showBackground = true)
 @Composable
 private fun HistoryItemRowPreview() {
-    val sample = OnlineGameShortInfo(
+    val sample = OnlineGameShortInfoImpl(
         user1Name = "Alice",
         user2Name = "Bob",
         timeText = "Dec 18, 05:22 PM",

@@ -27,7 +27,6 @@ import java.util.Properties
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.firebase.crashlitycs)
     alias(libs.plugins.google.devtools.ksp)
     alias(libs.plugins.google.services)
@@ -98,9 +97,6 @@ android {
         sourceCompatibility = JavaVersion.VERSION_21
         targetCompatibility = JavaVersion.VERSION_21
     }
-    kotlinOptions {
-        jvmTarget = "21"
-    }
     buildFeatures {
         compose = true
         buildConfig = true
@@ -142,8 +138,8 @@ dependencies {
     implementation(libs.dagger.android.support)
     annotationProcessor(libs.dagger.compiler)
     annotationProcessor(libs.dagger.android.processor)
-    kapt(libs.dagger.compiler)
-    kapt(libs.dagger.android.processor)
+    ksp(libs.dagger.compiler)
+    ksp(libs.dagger.android.processor)
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth)
     implementation(libs.firebase.crashlytics)

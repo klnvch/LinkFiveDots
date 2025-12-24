@@ -45,7 +45,7 @@ kotlin {
         namespace = "by.klnvch.link5dots"
         compileSdk = 36
         minSdk = 23
-        version = "0.5.4"
+        version = "0.5.5"
 
         withHostTestBuilder {
         }

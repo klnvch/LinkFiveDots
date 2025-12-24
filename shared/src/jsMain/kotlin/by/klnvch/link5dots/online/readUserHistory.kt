@@ -25,10 +25,11 @@
 package by.klnvch.link5dots.online
 
 import by.klnvch.link5dots.domain.models.NetworkUser
-import by.klnvch.link5dots.domain.models.online.OnlineRoomLive
 import by.klnvch.link5dots.domain.repositories.NetworkUserProvider
-import by.klnvch.link5dots.domain.repositories.online.FirebaseDbAddToUserHistory
-import by.klnvch.link5dots.domain.repositories.online.OnlineUserHistoryRepository
+import by.klnvch.link5dots.domain.repositories.StringProvider
+import by.klnvch.link5dots.domain.repositories.online.FirebaseDbGetUserHistory
+import by.klnvch.link5dots.domain.usecases.GetOnlineUserHistoryUseCase
+import by.klnvch.link5dots.domain.usecases.OnlineGameShortInfo
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.await
@@ -37,21 +38,21 @@ import kotlin.js.Promise
 
 @OptIn(ExperimentalJsExport::class, DelicateCoroutinesApi::class)
 @JsExport
-fun saveToUserHistory(
-    prev: OnlineRoomLive?,
-    next: OnlineRoomLive,
-    user: NetworkUser,
-    onDbUpdate: (path: String, value: String) -> Promise<Unit>,
-): Promise<Unit> {
-    val firebaseDb = object : FirebaseDbAddToUserHistory {
-        override suspend fun addToUserHistory(path: String, value: String) {
-            onDbUpdate(path, value).await()
+fun readUserHistory(
+    user: NetworkUser, // TODO: accept null
+    stringProvider: StringProvider,
+    onDbRead: (path: String) -> Promise<Array<String>>,
+): Promise<Array<OnlineGameShortInfo>> {
+    val repository = object : FirebaseDbGetUserHistory {
+        override suspend fun getUserHistory(path: String): List<String> {
+            return onDbRead(path).await().toList()
         }
     }
+
     val networkUserProvider = object : NetworkUserProvider {
         override val networkUser = user
     }
-    val repository = OnlineUserHistoryRepository(firebaseDb, networkUserProvider)
 
-    return Promise { _, _ -> GlobalScope.launch { repository.save(prev, next) } }
+    val useCase = GetOnlineUserHistoryUseCase(repository, networkUserProvider, stringProvider)
+    return Promise { _, _ -> GlobalScope.launch { useCase.getUserHistory().toTypedArray() } }
 }
