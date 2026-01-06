@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2025 klnvch
+ * Copyright (c) 2025-2026 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -39,13 +39,15 @@ project.plugins.withType<org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsPlu
 kotlin {
     compilerOptions {
         freeCompilerArgs.add("-Xexpect-actual-classes")
+        freeCompilerArgs.add("-Xenable-suspend-function-exporting")
+        languageVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_3)
     }
 
     androidLibrary {
         namespace = "by.klnvch.link5dots"
         compileSdk = 36
         minSdk = 23
-        version = "0.5.5"
+        version = "0.5.6"
 
         withHostTestBuilder {
         }
@@ -94,6 +96,7 @@ kotlin {
         commonTest {
             dependencies {
                 implementation(libs.kotlin.test)
+                implementation(libs.kotlinx.coroutines.test)
             }
         }
 

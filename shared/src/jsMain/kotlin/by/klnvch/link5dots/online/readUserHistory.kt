@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2025 klnvch
+ * Copyright (c) 2025-2026 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -39,7 +39,7 @@ import kotlin.js.Promise
 @OptIn(ExperimentalJsExport::class, DelicateCoroutinesApi::class)
 @JsExport
 fun readUserHistory(
-    user: NetworkUser, // TODO: accept null
+    user: NetworkUser?,
     stringProvider: StringProvider,
     onDbRead: (path: String) -> Promise<Array<String>>,
 ): Promise<Array<OnlineGameShortInfo>> {
@@ -54,5 +54,14 @@ fun readUserHistory(
     }
 
     val useCase = GetOnlineUserHistoryUseCase(repository, networkUserProvider, stringProvider)
-    return Promise { _, _ -> GlobalScope.launch { useCase.getUserHistory().toTypedArray() } }
+    return Promise { resolve, reject ->
+        try {
+            GlobalScope.launch {
+                val result = useCase.getUserHistory().toTypedArray()
+                resolve(result)
+            }
+        } catch (e: Throwable) {
+            reject(e)
+        }
+    }
 }

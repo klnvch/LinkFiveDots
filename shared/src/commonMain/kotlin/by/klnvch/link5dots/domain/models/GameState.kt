@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2025 klnvch
+ * Copyright (c) 2025-2026 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,7 +24,7 @@
 
 package by.klnvch.link5dots.domain.models
 
-private fun List<Dot>?.getDuration(d: Int) = this
+fun List<Dot>?.getDuration(d: Int) = this
     ?.drop(d)
     ?.chunked(2)
     ?.filter { it.size > 1 }

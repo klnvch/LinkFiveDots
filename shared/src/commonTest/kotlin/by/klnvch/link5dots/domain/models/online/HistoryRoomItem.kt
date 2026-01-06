@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2025-2026 klnvch
+ * Copyright (c) 2026 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,46 +22,21 @@
  * SOFTWARE.
  */
 
-package by.klnvch.link5dots.domain.models
+package by.klnvch.link5dots.domain.models.online
 
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class RoomExtTest {
+class HistoryOnlineRoomItemTest {
     @Test
-    fun getDuration() {
-        var dots: List<Dot>? = null
-        // null
-        assertEquals(0, dots.getDuration(0))
-        // empty
-        dots = emptyList()
-        assertEquals(0, dots.getDuration(0))
-        // first dot
-        dots = listOf(
-            createDot(1, 1, 0),
-            createDot(2, 2, 0),
-            createDot(3, 3, 10),
+    fun decode() {
+        val expected = HistoryOnlineRoomItemImpl(
+            "EmulatorTablet6",
+            null,
+            1765456648,
+            GameResultImpl(9, 10, GameStatus.LostByTimeout),
         )
-        assertEquals(0, dots.getDuration(1))
-        assertEquals(0, dots.getDuration(0))
-        // second dot
-        dots = listOf(
-            createDot(1, 1, 0),
-            createDot(2, 2, 0),
-            createDot(3, 3, 10),
-            createDot(3, 3, 20),
-        )
-        assertEquals(0, dots.getDuration(1))
-        assertEquals(10, dots.getDuration(0))
-        // third dot
-        dots = listOf(
-            createDot(1, 1, 0),
-            createDot(2, 2, 0),
-            createDot(3, 3, 10),
-            createDot(3, 3, 20),
-            createDot(3, 3, 30),
-        )
-        assertEquals(10, dots.getDuration(1))
-        assertEquals(10, dots.getDuration(0))
+        val actual = decode("v2J1MW9FbXVsYXRvclRhYmxldDZidTL2YXQaaTq7CGFyv2FzCWFkCmFvYmx0//8=")
+        assertEquals(expected, actual)
     }
 }

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2025 klnvch
+ * Copyright (c) 2025-2026 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -37,8 +37,7 @@ import kotlin.js.Promise
 
 @OptIn(ExperimentalJsExport::class, DelicateCoroutinesApi::class)
 @JsExport
-fun saveToUserHistory(
-    // TODO: rename fun
+fun saveUserHistory(
     prev: OnlineRoomLive?,
     next: OnlineRoomLive,
     user: NetworkUser,

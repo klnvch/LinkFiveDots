@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2025 klnvch
+ * Copyright (c) 2025-2026 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -76,5 +76,14 @@ fun roomAddDot(
         updateStateRepository,
     )
 
-    return Promise { _, _ -> GlobalScope.launch { useCase.addDot(p) } }
+    return Promise { resolve, reject ->
+        try {
+            GlobalScope.launch {
+                useCase.addDot(p)
+                resolve(Unit)
+            }
+        } catch (e: Throwable) {
+            reject(e)
+        }
+    }
 }
