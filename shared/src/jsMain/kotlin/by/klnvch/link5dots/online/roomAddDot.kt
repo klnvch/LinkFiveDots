@@ -30,7 +30,6 @@ import by.klnvch.link5dots.domain.models.Board
 import by.klnvch.link5dots.domain.models.INetworkRoom
 import by.klnvch.link5dots.domain.models.NetworkUser
 import by.klnvch.link5dots.domain.models.Point
-import by.klnvch.link5dots.domain.repositories.NetworkUserProvider
 import by.klnvch.link5dots.domain.repositories.RoomRemoteRepository
 import by.klnvch.link5dots.domain.repositories.online.FirebaseDbSetDot
 import by.klnvch.link5dots.domain.repositories.online.FirebaseDbSetState
@@ -50,9 +49,7 @@ fun roomAddDot(
     onDbSet: (key: String, value: Any) -> Promise<Unit>,
     onDbSetDot: (path: String, p: Point) -> Promise<Unit>,
 ): Promise<Unit> {
-    val networkUserProvider = object : NetworkUserProvider {
-        override val networkUser = user
-    }
+    val networkUserProvider = Factory.createNetworkUserProvider(user)
     val board = Board()
 
     val firebaseDb = object : FirebaseDbSetDot, FirebaseDbSetState {

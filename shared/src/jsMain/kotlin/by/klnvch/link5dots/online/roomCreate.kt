@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2025 klnvch
+ * Copyright (c) 2025-2026 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -30,7 +30,6 @@ import by.klnvch.link5dots.data.online.CreateOnlineRoomRepositoryImpl
 import by.klnvch.link5dots.data.online.OnlineLocalStoreWriter
 import by.klnvch.link5dots.data.online.models.CreateOnlineRoomInvitation
 import by.klnvch.link5dots.domain.models.NetworkUser
-import by.klnvch.link5dots.domain.repositories.NetworkUserProvider
 import by.klnvch.link5dots.domain.repositories.online.FirebaseDbCreateInvitation
 import by.klnvch.link5dots.domain.usecases.network.CreateOnlineRoomUseCase
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -45,9 +44,7 @@ fun roomCreate(
     user: NetworkUser?,
     onDbCreateInvitation: (invitation: CreateOnlineRoomInvitation) -> Promise<Unit>,
 ): Promise<String> {
-    val networkUserProvider = object : NetworkUserProvider {
-        override val networkUser = user
-    }
+    val networkUserProvider = Factory.createNetworkUserProvider(user)
     val timeService = TimeServiceImpl()
     val roomKeyGenerator = RoomKeyGeneratorImpl(timeService)
 

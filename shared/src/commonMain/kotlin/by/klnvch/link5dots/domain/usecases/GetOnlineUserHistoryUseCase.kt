@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2025 klnvch
+ * Copyright (c) 2025-2026 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -36,6 +36,9 @@ import by.klnvch.link5dots.formatDateTime
 import kotlin.js.ExperimentalJsExport
 import kotlin.js.JsExport
 
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// Interfaces
+////////////////////////////////////////////////////////////////////////////////////////////////////
 @OptIn(ExperimentalJsExport::class)
 @JsExport
 enum class OnlineGameShortInfoStatus { Won, Lost, Draw, InProgress }
@@ -51,6 +54,9 @@ interface OnlineGameShortInfo {
     val status: OnlineGameShortInfoStatus
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// Implementation
+////////////////////////////////////////////////////////////////////////////////////////////////////
 data class OnlineGameShortInfoImpl(
     override val user1Name: String,          // real name or default
     override val user2Name: String,          // real name or default
@@ -77,6 +83,9 @@ fun HistoryOnlineRoomItem.toOnlineGameShortInfo(defaultName: String): OnlineGame
         }
     )
 
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// UseCase
+////////////////////////////////////////////////////////////////////////////////////////////////////
 class GetOnlineUserHistoryUseCase(
     private val repository: FirebaseDbGetUserHistory,
     private val networkUserProvider: NetworkUserProvider,

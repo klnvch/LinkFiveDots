@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2025 klnvch
+ * Copyright (c) 2025-2026 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -34,7 +34,6 @@ import by.klnvch.link5dots.domain.models.Point
 import by.klnvch.link5dots.domain.models.online.OnlineRoomInvitation
 import by.klnvch.link5dots.domain.models.online.toOnlineRoomInvitation
 import by.klnvch.link5dots.domain.repositories.ConnectOnlineRoomRepository
-import by.klnvch.link5dots.domain.repositories.NetworkUserProvider
 import by.klnvch.link5dots.domain.repositories.StringProvider
 import by.klnvch.link5dots.domain.repositories.online.FirebaseDbSetConnected
 import by.klnvch.link5dots.domain.usecases.network.ScanOnlineRoomDescriptorFactory
@@ -94,12 +93,10 @@ private fun map(
 }
 
 private fun createScanOnlineRoomDescriptorFactory(
-    user2: NetworkUser?,
+    user: NetworkUser?,
     defaultName: String,
 ): ScanOnlineRoomDescriptorFactory {
-    val networkUserProvider = object : NetworkUserProvider {
-        override val networkUser = user2
-    }
+    val networkUserProvider = Factory.createNetworkUserProvider(user)
     val stringProvider = object : StringProvider {
         override val botName = ""
         override val unknownName = defaultName

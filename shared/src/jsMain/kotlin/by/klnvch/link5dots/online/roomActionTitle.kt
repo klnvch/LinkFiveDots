@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2025 klnvch
+ * Copyright (c) 2025-2026 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,7 +27,6 @@ package by.klnvch.link5dots.online
 import by.klnvch.link5dots.domain.models.INetworkRoom
 import by.klnvch.link5dots.domain.models.NetworkGameAction
 import by.klnvch.link5dots.domain.models.NetworkUser
-import by.klnvch.link5dots.domain.repositories.NetworkUserProvider
 import by.klnvch.link5dots.domain.usecases.network.GetNetworkGameActionUseCase
 import by.klnvch.link5dots.ui.game.picker.states.PickerState
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -39,9 +38,7 @@ fun getRoomActionTitle(
     pickerState: PickerState,
     room: INetworkRoom?,
 ): NetworkGameAction {
-    val identity = object : NetworkUserProvider {
-        override val networkUser = user
-    }
-    val useCase = GetNetworkGameActionUseCase(identity)
+    val networkUserProvider = Factory.createNetworkUserProvider(user)
+    val useCase = GetNetworkGameActionUseCase(networkUserProvider)
     return useCase.get(pickerState, room)
 }

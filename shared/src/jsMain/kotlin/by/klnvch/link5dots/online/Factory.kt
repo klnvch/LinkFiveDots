@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2025-2026 klnvch
+ * Copyright (c) 2026 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,30 +25,10 @@
 package by.klnvch.link5dots.online
 
 import by.klnvch.link5dots.domain.models.NetworkUser
-import by.klnvch.link5dots.domain.models.online.OnlineRoomLive
-import by.klnvch.link5dots.domain.repositories.online.FirebaseDbAddToUserHistory
-import by.klnvch.link5dots.domain.repositories.online.OnlineUserHistoryRepository
-import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.await
-import kotlinx.coroutines.launch
-import kotlin.js.Promise
+import by.klnvch.link5dots.domain.repositories.NetworkUserProvider
 
-@OptIn(ExperimentalJsExport::class, DelicateCoroutinesApi::class)
-@JsExport
-fun saveUserHistory(
-    prev: OnlineRoomLive?,
-    next: OnlineRoomLive,
-    user: NetworkUser,
-    onDbUpdate: (path: String, value: String) -> Promise<Unit>,
-): Promise<Unit> {
-    val firebaseDb = object : FirebaseDbAddToUserHistory {
-        override suspend fun addToUserHistory(path: String, value: String) {
-            onDbUpdate(path, value).await()
-        }
+object Factory {
+    fun createNetworkUserProvider(user: NetworkUser?) = object : NetworkUserProvider {
+        override val networkUser = user
     }
-    val networkUserProvider = Factory.createNetworkUserProvider(user)
-    val repository = OnlineUserHistoryRepository(firebaseDb, networkUserProvider)
-
-    return Promise { _, _ -> GlobalScope.launch { repository.save(prev, next) } }
 }

@@ -25,7 +25,6 @@
 package by.klnvch.link5dots.online
 
 import by.klnvch.link5dots.domain.models.NetworkUser
-import by.klnvch.link5dots.domain.repositories.NetworkUserProvider
 import by.klnvch.link5dots.domain.repositories.StringProvider
 import by.klnvch.link5dots.domain.repositories.online.FirebaseDbGetUserHistory
 import by.klnvch.link5dots.domain.usecases.GetOnlineUserHistoryUseCase
@@ -49,9 +48,7 @@ fun readUserHistory(
         }
     }
 
-    val networkUserProvider = object : NetworkUserProvider {
-        override val networkUser = user
-    }
+    val networkUserProvider = Factory.createNetworkUserProvider(user)
 
     val useCase = GetOnlineUserHistoryUseCase(repository, networkUserProvider, stringProvider)
     return Promise { resolve, reject ->
