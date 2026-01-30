@@ -26,7 +26,7 @@ package by.klnvch.link5dots.ui.game.viewmodels
 
 import by.klnvch.link5dots.domain.models.Point
 import by.klnvch.link5dots.domain.repositories.KeyForInfoRepository
-import by.klnvch.link5dots.domain.usecases.GetRoomUseCase
+import by.klnvch.link5dots.domain.usecases.getRoomUseCase.GetRoomUseCase
 import javax.inject.Inject
 
 class InfoGameViewModel @Inject constructor(

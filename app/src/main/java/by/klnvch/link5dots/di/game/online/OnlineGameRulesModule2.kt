@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023-2025 klnvch
+ * Copyright (c) 2023-2026 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,6 +24,8 @@
 package by.klnvch.link5dots.di.game.online
 
 import by.klnvch.link5dots.data.online.FirebaseDbImpl
+import by.klnvch.link5dots.domain.history.repository.OnlineUserHistoryRepository
+import by.klnvch.link5dots.domain.history.usecase.GetOnlineUserHistoryUseCase
 import by.klnvch.link5dots.domain.models.Board
 import by.klnvch.link5dots.domain.repositories.AddDotOnlineRoomRepository
 import by.klnvch.link5dots.domain.repositories.CreateOnlineRoomRepository
@@ -34,9 +36,7 @@ import by.klnvch.link5dots.domain.repositories.RoomKeyGenerator
 import by.klnvch.link5dots.domain.repositories.RoomRemoteRepository
 import by.klnvch.link5dots.domain.repositories.StringProvider
 import by.klnvch.link5dots.domain.repositories.UpdateStateOnlineRoomRepository
-import by.klnvch.link5dots.domain.repositories.online.OnlineUserHistoryRepository
 import by.klnvch.link5dots.domain.usecases.AddDotOnlineUseCase
-import by.klnvch.link5dots.domain.usecases.GetOnlineUserHistoryUseCase
 import by.klnvch.link5dots.domain.usecases.NewGameEmptyUseCase
 import by.klnvch.link5dots.domain.usecases.NewGameUseCase
 import by.klnvch.link5dots.domain.usecases.network.CreateOnlineRoomUseCase

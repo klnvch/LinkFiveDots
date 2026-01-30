@@ -24,10 +24,10 @@
 
 package by.klnvch.link5dots.online
 
+import by.klnvch.link5dots.domain.history.usecase.GetOnlineUserHistoryUseCase
 import by.klnvch.link5dots.domain.models.NetworkUser
 import by.klnvch.link5dots.domain.repositories.StringProvider
 import by.klnvch.link5dots.domain.repositories.online.FirebaseDbGetUserHistory
-import by.klnvch.link5dots.domain.usecases.GetOnlineUserHistoryUseCase
 import by.klnvch.link5dots.domain.usecases.OnlineGameShortInfo
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope

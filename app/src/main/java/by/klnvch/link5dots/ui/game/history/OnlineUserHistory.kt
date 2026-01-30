@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2025 klnvch
+ * Copyright (c) 2025-2026 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -56,9 +56,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import by.klnvch.link5dots.R
-import by.klnvch.link5dots.domain.usecases.OnlineGameShortInfo
-import by.klnvch.link5dots.domain.usecases.OnlineGameShortInfoImpl
-import by.klnvch.link5dots.domain.usecases.OnlineGameShortInfoStatus
+import by.klnvch.link5dots.domain.history.entities.OnlineGameShortInfo
+import by.klnvch.link5dots.domain.history.entities.OnlineGameShortInfoImpl
+import by.klnvch.link5dots.domain.history.entities.OnlineGameShortInfoStatus
 import by.klnvch.link5dots.ui.common.BlueDot
 import by.klnvch.link5dots.ui.common.RedDot
 import by.klnvch.link5dots.ui.common.TextCenterInfo

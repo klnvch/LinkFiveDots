@@ -26,10 +26,10 @@ package by.klnvch.link5dots.ui.game.viewmodels
 import androidx.lifecycle.viewModelScope
 import by.klnvch.link5dots.domain.models.Point
 import by.klnvch.link5dots.domain.usecases.AddDotUseCase
-import by.klnvch.link5dots.domain.usecases.GetRoomUseCase
 import by.klnvch.link5dots.domain.usecases.NewGameUseCase
 import by.klnvch.link5dots.domain.usecases.SaveScoreUseCase
 import by.klnvch.link5dots.domain.usecases.UndoMoveUseCase
+import by.klnvch.link5dots.domain.usecases.getRoomUseCase.GetRoomUseCase
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 

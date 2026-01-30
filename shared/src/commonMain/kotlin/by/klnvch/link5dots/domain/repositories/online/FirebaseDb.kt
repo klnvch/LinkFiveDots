@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2025 klnvch
+ * Copyright (c) 2025-2026 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,6 +26,7 @@ package by.klnvch.link5dots.domain.repositories.online
 
 import by.klnvch.link5dots.data.online.models.CreateOnlineRoomInvitation
 import by.klnvch.link5dots.data.online.models.OnlineRemoteUser
+import by.klnvch.link5dots.domain.history.repository.UserHistoryRemoteRepository
 import by.klnvch.link5dots.domain.models.Point
 
 interface FirebaseDbSetDot {
@@ -49,14 +50,7 @@ interface FirebaseDbSetState {
     suspend fun setState(path: Array<String>, state: Int)
 }
 
-interface FirebaseDbAddToUserHistory {
-    suspend fun addToUserHistory(path: String, value: String)
-}
-
-interface FirebaseDbGetUserHistory {
-    suspend fun getUserHistory(path: String): List<String>
-}
 
 interface FirebaseDb :
     FirebaseDbSetDot, FirebaseDbSetConnected, FirebaseDbCreateInvitation, FirebaseDbSetState,
-    FirebaseDbAddToUserHistory, FirebaseDbGetUserHistory
+    UserHistoryRemoteRepository

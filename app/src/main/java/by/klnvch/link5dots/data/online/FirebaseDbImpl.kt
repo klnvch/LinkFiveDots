@@ -79,14 +79,16 @@ class FirebaseDbImpl @Inject constructor() : FirebaseDb {
 
     override suspend fun setState(path: Array<String>, state: Int) = set(path, state)
 
-    override suspend fun addToUserHistory(path: String, value: String) {
+    override suspend fun addItemToUserHistory(userId: String, roomId: String, value: String) {
+        val path = "users/${userId}/history/${roomId}"
         Firebase.database.reference
             .child(path)
             .setValue(value)
             .await()
     }
 
-    override suspend fun getUserHistory(path: String): List<String> {
+    override suspend fun getUserHistory(userId: String): List<String> {
+        val path = "users/${userId}/history"
         val dataSnapshot = Firebase.database.reference.child(path).get().await()
         return dataSnapshot.children.mapNotNull { it.getValue(String::class.java) }
     }

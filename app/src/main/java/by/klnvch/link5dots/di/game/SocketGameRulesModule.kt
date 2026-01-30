@@ -38,14 +38,14 @@ import by.klnvch.link5dots.domain.repositories.SocketRoomRepository
 import by.klnvch.link5dots.domain.repositories.SocketSendRepository
 import by.klnvch.link5dots.domain.usecases.AddDotSocketUseCase
 import by.klnvch.link5dots.domain.usecases.AddDotUseCase
-import by.klnvch.link5dots.domain.usecases.GetRoomSocketUseCase
-import by.klnvch.link5dots.domain.usecases.GetRoomUseCase
 import by.klnvch.link5dots.domain.usecases.NewGameSocketUseCase
 import by.klnvch.link5dots.domain.usecases.NewGameUseCase
 import by.klnvch.link5dots.domain.usecases.SaveScoreEmptyUseCase
 import by.klnvch.link5dots.domain.usecases.SaveScoreUseCase
 import by.klnvch.link5dots.domain.usecases.UndoMoveSocketUseCase
 import by.klnvch.link5dots.domain.usecases.UndoMoveUseCase
+import by.klnvch.link5dots.domain.usecases.getRoomUseCase.GetRoomSocketUseCase
+import by.klnvch.link5dots.domain.usecases.getRoomUseCase.GetRoomUseCase
 import by.klnvch.link5dots.domain.usecases.network.CommonScanUseCase
 import by.klnvch.link5dots.domain.usecases.network.CreateMultiplayerRoomUseCase
 import by.klnvch.link5dots.domain.usecases.network.CreateSocketRoomUseCase

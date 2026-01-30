@@ -24,6 +24,9 @@
 
 package by.klnvch.link5dots.domain.models.online
 
+import by.klnvch.link5dots.domain.history.entities.GameResultImpl
+import by.klnvch.link5dots.domain.history.entities.GameStatus
+import by.klnvch.link5dots.domain.history.entities.HistoryOnlineRoomItemImpl
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -36,7 +39,8 @@ class HistoryOnlineRoomItemTest {
             1765456648,
             GameResultImpl(9, 10, GameStatus.LostByTimeout),
         )
-        val actual = decode("v2J1MW9FbXVsYXRvclRhYmxldDZidTL2YXQaaTq7CGFyv2FzCWFkCmFvYmx0//8=")
+        val actual =
+            by.klnvch.link5dots.domain.history.entities.decode("v2J1MW9FbXVsYXRvclRhYmxldDZidTL2YXQaaTq7CGFyv2FzCWFkCmFvYmx0//8=")
         assertEquals(expected, actual)
     }
 }

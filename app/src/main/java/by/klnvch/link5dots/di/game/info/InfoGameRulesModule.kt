@@ -25,8 +25,8 @@ package by.klnvch.link5dots.di.game.info
 
 import by.klnvch.link5dots.domain.repositories.GameActionsFactory
 import by.klnvch.link5dots.domain.repositories.GameActionsInfoFactory
-import by.klnvch.link5dots.domain.usecases.GetRoomInfoUseCase
-import by.klnvch.link5dots.domain.usecases.GetRoomUseCase
+import by.klnvch.link5dots.domain.usecases.getRoomUseCase.GetRoomInfoUseCase
+import by.klnvch.link5dots.domain.usecases.getRoomUseCase.GetRoomUseCase
 import dagger.Binds
 import dagger.Module
 

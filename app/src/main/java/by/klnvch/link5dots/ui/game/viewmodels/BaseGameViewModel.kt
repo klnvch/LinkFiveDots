@@ -29,7 +29,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import by.klnvch.link5dots.domain.models.Point
 import by.klnvch.link5dots.domain.models.createPoint
-import by.klnvch.link5dots.domain.usecases.GetRoomUseCase
+import by.klnvch.link5dots.domain.usecases.getRoomUseCase.GetRoomUseCase
 import by.klnvch.link5dots.ui.game.GameViewStateImpl
 import by.klnvch.link5dots.ui.game.createGameViewState
 import kotlinx.coroutines.flow.MutableStateFlow

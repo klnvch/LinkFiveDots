@@ -24,10 +24,10 @@
 
 package by.klnvch.link5dots.online
 
+import by.klnvch.link5dots.domain.history.repository.OnlineUserHistoryRepository
 import by.klnvch.link5dots.domain.models.NetworkUser
 import by.klnvch.link5dots.domain.models.online.OnlineRoomLive
 import by.klnvch.link5dots.domain.repositories.online.FirebaseDbAddToUserHistory
-import by.klnvch.link5dots.domain.repositories.online.OnlineUserHistoryRepository
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.await

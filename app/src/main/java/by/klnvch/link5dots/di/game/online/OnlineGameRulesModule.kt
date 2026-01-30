@@ -37,12 +37,12 @@ import by.klnvch.link5dots.domain.repositories.RoomRemoteRepository
 import by.klnvch.link5dots.domain.repositories.RoomStateRemoteRepository
 import by.klnvch.link5dots.domain.usecases.AddDotOnlineUseCase
 import by.klnvch.link5dots.domain.usecases.AddDotUseCase
-import by.klnvch.link5dots.domain.usecases.GetRoomOnlineUseCase
-import by.klnvch.link5dots.domain.usecases.GetRoomUseCase
 import by.klnvch.link5dots.domain.usecases.SaveScoreEmptyUseCase
 import by.klnvch.link5dots.domain.usecases.SaveScoreUseCase
 import by.klnvch.link5dots.domain.usecases.UndoMoveEmptyUseCase
 import by.klnvch.link5dots.domain.usecases.UndoMoveUseCase
+import by.klnvch.link5dots.domain.usecases.getRoomUseCase.GetRoomOnlineUseCase
+import by.klnvch.link5dots.domain.usecases.getRoomUseCase.GetRoomUseCase
 import by.klnvch.link5dots.domain.usecases.network.CreateMultiplayerRoomUseCase
 import by.klnvch.link5dots.domain.usecases.network.CreateOnlineRoomUseCase
 import by.klnvch.link5dots.domain.usecases.network.InitMultiplayerUseCase

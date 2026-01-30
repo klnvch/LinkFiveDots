@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2025 klnvch
+ * Copyright (c) 2025-2026 klnvch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,8 +26,8 @@ package by.klnvch.link5dots.ui.game.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import by.klnvch.link5dots.domain.usecases.GetOnlineUserHistoryUseCase
-import by.klnvch.link5dots.domain.usecases.OnlineGameShortInfo
+import by.klnvch.link5dots.domain.history.entities.OnlineGameShortInfo
+import by.klnvch.link5dots.domain.history.usecase.GetOnlineUserHistoryUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch

@@ -27,10 +27,10 @@ import by.klnvch.link5dots.domain.models.RoomTypeBotProvider
 import by.klnvch.link5dots.domain.models.RoomTypeProvider
 import by.klnvch.link5dots.domain.repositories.RoomBotGetRepository
 import by.klnvch.link5dots.domain.repositories.RoomGetRepository
-import by.klnvch.link5dots.domain.usecases.GetRoomCommonUseCase
-import by.klnvch.link5dots.domain.usecases.GetRoomUseCase
 import by.klnvch.link5dots.domain.usecases.SaveScoreBotUseCase
 import by.klnvch.link5dots.domain.usecases.SaveScoreUseCase
+import by.klnvch.link5dots.domain.usecases.getRoomUseCase.GetRoomCommonUseCase
+import by.klnvch.link5dots.domain.usecases.getRoomUseCase.GetRoomUseCase
 import dagger.Binds
 import dagger.Module
 

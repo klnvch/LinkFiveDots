@@ -32,10 +32,10 @@ import by.klnvch.link5dots.domain.models.NetworkRoomStateDeleted
 import by.klnvch.link5dots.domain.models.NetworkRoomStateFinished
 import by.klnvch.link5dots.domain.models.NetworkRoomStateStarted
 import by.klnvch.link5dots.domain.usecases.AddDotUseCase
-import by.klnvch.link5dots.domain.usecases.GetRoomUseCase
 import by.klnvch.link5dots.domain.usecases.NewGameUseCase
 import by.klnvch.link5dots.domain.usecases.SaveScoreUseCase
 import by.klnvch.link5dots.domain.usecases.UndoMoveUseCase
+import by.klnvch.link5dots.domain.usecases.getRoomUseCase.GetRoomUseCase
 import by.klnvch.link5dots.domain.usecases.network.CleanMultiplayerRoomUseCase
 import by.klnvch.link5dots.domain.usecases.network.CreateMultiplayerRoomUseCase
 import by.klnvch.link5dots.domain.usecases.network.GetNetworkGameActionUseCase

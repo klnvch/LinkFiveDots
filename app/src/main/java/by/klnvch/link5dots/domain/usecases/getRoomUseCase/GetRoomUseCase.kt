@@ -1,29 +1,5 @@
-/*
- * MIT License
- *
- * Copyright (c) 2023-2025 klnvch
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
- */
-package by.klnvch.link5dots.domain.usecases
+package by.klnvch.link5dots.domain.usecases.getRoomUseCase
 
-import android.util.Log
 import by.klnvch.link5dots.domain.models.GameState
 import by.klnvch.link5dots.domain.models.GameStateFactory
 import by.klnvch.link5dots.domain.models.INetworkRoom
@@ -37,13 +13,11 @@ import by.klnvch.link5dots.domain.repositories.KeyForInfoRepository
 import by.klnvch.link5dots.domain.repositories.NetworkUserNameResolver
 import by.klnvch.link5dots.domain.repositories.NetworkUserProvider
 import by.klnvch.link5dots.domain.repositories.RoomFlowLocalRepository
-import by.klnvch.link5dots.domain.repositories.RoomFlowOnlineRepository
 import by.klnvch.link5dots.domain.repositories.RoomFlowRemoteRepository
 import by.klnvch.link5dots.domain.repositories.RoomRepository
 import by.klnvch.link5dots.domain.repositories.RoomSaveLocalRepository
 import by.klnvch.link5dots.domain.repositories.Settings
 import by.klnvch.link5dots.domain.repositories.VibratorService
-import by.klnvch.link5dots.domain.repositories.online.OnlineUserHistoryRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -81,10 +55,7 @@ class GetRoomCommonUseCase @Inject constructor(
 ) : GetRoomUseCase {
     override val room: Flow<GameState> = getRepository.roomFlow
         .distinctUntilChanged()
-        .onEach {
-            Log.d("GetRoomCommonUseCase", "once per updated: $it")
-            if (it == null) saveRepository.save(roomFactory.generate())
-        }
+        .onEach { if (it == null) saveRepository.save(roomFactory.generate()) }
         .filterNotNull()
         .map { gameStateFactory.create(it, true) }
         .shareIn(scope, SharingStarted.WhileSubscribed(), 1)
@@ -126,21 +97,7 @@ class GetRoomSocketUseCase @Inject constructor(
         .map { gameStateFactory.create(it, true) }
 }
 
-class GetRoomOnlineUseCase @Inject constructor(
-    repository: RoomFlowOnlineRepository,
-    private val saveRepository: RoomSaveLocalRepository,
-    private val gameStateFactory: NetworkGameStateFactory,
-    private val vibrationCommand: VibrationCommand,
-    private val userHistoryRepository: OnlineUserHistoryRepository,
-) : GetRoomUseCase {
-    override val room: Flow<GameState> = repository.onlineRoom
-        .onEach { vibrationCommand.vibrate(it.room) }
-        .onEach { saveRepository.save(it.room) }
-        .onEachWithPrevious { old, new -> userHistoryRepository.save(old, new) }
-        .map { gameStateFactory.create(it.room, it.isActive) }
-}
-
-private fun <T : Any> Flow<T>.onEachWithPrevious(
+fun <T : Any> Flow<T>.onEachWithPrevious(
     action: suspend (old: T?, new: T) -> Unit,
 ): Flow<T> = runningFold<T, Pair<T?, T>?>(null) { acc, new -> Pair(acc?.second, new) }
     .filterNotNull()
