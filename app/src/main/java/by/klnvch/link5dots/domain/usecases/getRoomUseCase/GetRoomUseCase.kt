@@ -28,7 +28,6 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.runningFold
 import kotlinx.coroutines.flow.shareIn
 import javax.inject.Inject
 
@@ -96,10 +95,3 @@ class GetRoomSocketUseCase @Inject constructor(
         .onEach { saveRepository.save(it) }
         .map { gameStateFactory.create(it, true) }
 }
-
-fun <T : Any> Flow<T>.onEachWithPrevious(
-    action: suspend (old: T?, new: T) -> Unit,
-): Flow<T> = runningFold<T, Pair<T?, T>?>(null) { acc, new -> Pair(acc?.second, new) }
-    .filterNotNull()
-    .onEach { action(it.first, it.second) }
-    .map { it.second }

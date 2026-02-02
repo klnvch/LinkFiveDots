@@ -24,7 +24,7 @@
 package by.klnvch.link5dots.di.game.online
 
 import by.klnvch.link5dots.data.online.FirebaseDbImpl
-import by.klnvch.link5dots.domain.history.repository.OnlineUserHistoryRepository
+import by.klnvch.link5dots.domain.history.service.UserHistoryProxyService
 import by.klnvch.link5dots.domain.history.usecase.GetOnlineUserHistoryUseCase
 import by.klnvch.link5dots.domain.models.Board
 import by.klnvch.link5dots.domain.repositories.AddDotOnlineRoomRepository
@@ -88,10 +88,10 @@ class OnlineGameRulesModule2 {
     )
 
     @Provides
-    fun provideOnlineUserHistoryRepository(
+    fun provideUserHistoryProxyService(
         firebaseDb: FirebaseDbImpl,
         networkUserProvider: NetworkUserProvider,
-    ) = OnlineUserHistoryRepository(firebaseDb, networkUserProvider)
+    ) = UserHistoryProxyService(firebaseDb, networkUserProvider)
 
     @Provides
     fun provideGetOnlineUserHistoryUseCase(
