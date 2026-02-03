@@ -24,12 +24,11 @@
 
 package by.klnvch.link5dots.ui.game.viewmodels
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import by.klnvch.link5dots.application.services.gameRoomOrchestrator.GameRoomOrchestrator
 import by.klnvch.link5dots.domain.models.Point
 import by.klnvch.link5dots.domain.models.createPoint
-import by.klnvch.link5dots.domain.usecases.getRoomUseCase.GetRoomUseCase
 import by.klnvch.link5dots.ui.game.GameViewStateImpl
 import by.klnvch.link5dots.ui.game.createGameViewState
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -41,15 +40,14 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 abstract class BaseGameViewModel(
-    getRoomUseCase: GetRoomUseCase,
+    getRoomUseCase: GameRoomOrchestrator,
 ) : ViewModel(), GameActions {
     private val _focus = MutableStateFlow<Point?>(createPoint(9, 9))
     override val focus: StateFlow<Point?> = _focus
 
-    protected val roomFlow = getRoomUseCase.room
+    protected val roomFlow = getRoomUseCase.observeAndSync()
 
     override val uiState = roomFlow.map {
-        Log.d("ViewModel", "updated: $it")
         createGameViewState(it)
     }.stateIn(viewModelScope, SharingStarted.Eagerly, GameViewStateImpl())
 

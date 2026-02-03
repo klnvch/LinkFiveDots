@@ -1,4 +1,4 @@
-package by.klnvch.link5dots.domain.usecases.getRoomUseCase.utils
+package by.klnvch.link5dots.utils
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterNotNull

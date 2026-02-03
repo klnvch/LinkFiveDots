@@ -23,14 +23,14 @@
  */
 package by.klnvch.link5dots.di.game.bot
 
+import by.klnvch.link5dots.application.services.gameRoomOrchestrator.GameRoomCommonOrchestrator
+import by.klnvch.link5dots.application.services.gameRoomOrchestrator.GameRoomOrchestrator
 import by.klnvch.link5dots.domain.models.RoomTypeBotProvider
 import by.klnvch.link5dots.domain.models.RoomTypeProvider
 import by.klnvch.link5dots.domain.repositories.RoomBotGetRepository
 import by.klnvch.link5dots.domain.repositories.RoomGetRepository
 import by.klnvch.link5dots.domain.usecases.SaveScoreBotUseCase
 import by.klnvch.link5dots.domain.usecases.SaveScoreUseCase
-import by.klnvch.link5dots.domain.usecases.getRoomUseCase.GetRoomCommonUseCase
-import by.klnvch.link5dots.domain.usecases.getRoomUseCase.GetRoomUseCase
 import dagger.Binds
 import dagger.Module
 
@@ -40,7 +40,7 @@ interface BotGameRulesModule {
     fun bindRoomTypeProvider(impl: RoomTypeBotProvider): RoomTypeProvider
 
     @Binds
-    fun bindGetRoomUseCase(impl: GetRoomCommonUseCase): GetRoomUseCase
+    fun bindGameRoomOrchestrator(impl: GameRoomCommonOrchestrator): GameRoomOrchestrator
 
     @Binds
     fun bindSaveScoreUseCase(impl: SaveScoreBotUseCase): SaveScoreUseCase

@@ -24,6 +24,8 @@
 package by.klnvch.link5dots.di.game.online
 
 import androidx.lifecycle.ViewModel
+import by.klnvch.link5dots.application.services.gameRoomOrchestrator.GameRoomOnlineOrchestrator
+import by.klnvch.link5dots.application.services.gameRoomOrchestrator.GameRoomOrchestrator
 import by.klnvch.link5dots.data.online.OnlineRoomRepositoryImpl
 import by.klnvch.link5dots.di.viewmodels.ViewModelKey
 import by.klnvch.link5dots.domain.models.RoomTypeOnlineProvider
@@ -41,8 +43,6 @@ import by.klnvch.link5dots.domain.usecases.SaveScoreEmptyUseCase
 import by.klnvch.link5dots.domain.usecases.SaveScoreUseCase
 import by.klnvch.link5dots.domain.usecases.UndoMoveEmptyUseCase
 import by.klnvch.link5dots.domain.usecases.UndoMoveUseCase
-import by.klnvch.link5dots.domain.usecases.getRoomUseCase.GetRoomOnlineUseCase
-import by.klnvch.link5dots.domain.usecases.getRoomUseCase.GetRoomUseCase
 import by.klnvch.link5dots.domain.usecases.network.CreateMultiplayerRoomUseCase
 import by.klnvch.link5dots.domain.usecases.network.CreateOnlineRoomUseCase
 import by.klnvch.link5dots.domain.usecases.network.InitMultiplayerUseCase
@@ -58,7 +58,7 @@ import dagger.multibindings.IntoMap
 @Module
 interface OnlineGameRulesModule {
     @Binds
-    fun bindGetRoomUseCase(impl: GetRoomOnlineUseCase): GetRoomUseCase
+    fun bindGameRoomOrchestrator(impl: GameRoomOnlineOrchestrator): GameRoomOrchestrator
 
     @Binds
     fun bindRoomTypeProvider(impl: RoomTypeOnlineProvider): RoomTypeProvider

@@ -23,17 +23,17 @@
  */
 package by.klnvch.link5dots.di.game.info
 
+import by.klnvch.link5dots.application.services.gameRoomOrchestrator.GameRoomInfoOrchestrator
+import by.klnvch.link5dots.application.services.gameRoomOrchestrator.GameRoomOrchestrator
 import by.klnvch.link5dots.domain.repositories.GameActionsFactory
 import by.klnvch.link5dots.domain.repositories.GameActionsInfoFactory
-import by.klnvch.link5dots.domain.usecases.getRoomUseCase.GetRoomInfoUseCase
-import by.klnvch.link5dots.domain.usecases.getRoomUseCase.GetRoomUseCase
 import dagger.Binds
 import dagger.Module
 
 @Module
 interface InfoGameRulesModule {
     @Binds
-    fun bindGetRoomUseCase(impl: GetRoomInfoUseCase): GetRoomUseCase
+    fun bindGameRoomOrchestrator(impl: GameRoomInfoOrchestrator): GameRoomOrchestrator
 
     @Binds
     fun bindGameActionsFactory(impl: GameActionsInfoFactory): GameActionsFactory

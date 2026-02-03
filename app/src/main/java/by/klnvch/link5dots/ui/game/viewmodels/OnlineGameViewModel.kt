@@ -24,6 +24,7 @@
 package by.klnvch.link5dots.ui.game.viewmodels
 
 import androidx.lifecycle.viewModelScope
+import by.klnvch.link5dots.application.services.gameRoomOrchestrator.GameRoomOrchestrator
 import by.klnvch.link5dots.domain.models.FoundRemoteRoom
 import by.klnvch.link5dots.domain.models.INetworkRoom
 import by.klnvch.link5dots.domain.models.NetworkRoomState
@@ -35,7 +36,6 @@ import by.klnvch.link5dots.domain.usecases.AddDotUseCase
 import by.klnvch.link5dots.domain.usecases.NewGameUseCase
 import by.klnvch.link5dots.domain.usecases.SaveScoreUseCase
 import by.klnvch.link5dots.domain.usecases.UndoMoveUseCase
-import by.klnvch.link5dots.domain.usecases.getRoomUseCase.GetRoomUseCase
 import by.klnvch.link5dots.domain.usecases.network.CleanMultiplayerRoomUseCase
 import by.klnvch.link5dots.domain.usecases.network.CreateMultiplayerRoomUseCase
 import by.klnvch.link5dots.domain.usecases.network.GetNetworkGameActionUseCase
@@ -64,7 +64,7 @@ class OnlineGameViewModel @Inject constructor(
     private val cleanMultiplayerRoomUseCase: CleanMultiplayerRoomUseCase,
     private val scanUseCase: ScanUseCase,
     private val getNetworkGameActionUseCase: GetNetworkGameActionUseCase,
-    getRoomUseCase: GetRoomUseCase,
+    getRoomUseCase: GameRoomOrchestrator,
     newGameUseCase: NewGameUseCase,
     addDotUseCase: AddDotUseCase,
     undoMoveUseCase: UndoMoveUseCase,

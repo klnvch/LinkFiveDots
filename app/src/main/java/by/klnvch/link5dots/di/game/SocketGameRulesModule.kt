@@ -24,6 +24,8 @@
 
 package by.klnvch.link5dots.di.game
 
+import by.klnvch.link5dots.application.services.gameRoomOrchestrator.GameRoomOrchestrator
+import by.klnvch.link5dots.application.services.gameRoomOrchestrator.GameRoomSocketOrchestrator
 import by.klnvch.link5dots.domain.repositories.GameActionsFactory
 import by.klnvch.link5dots.domain.repositories.GameActionsSocketFactory
 import by.klnvch.link5dots.domain.repositories.NetworkUserLocalProvider
@@ -44,8 +46,6 @@ import by.klnvch.link5dots.domain.usecases.SaveScoreEmptyUseCase
 import by.klnvch.link5dots.domain.usecases.SaveScoreUseCase
 import by.klnvch.link5dots.domain.usecases.UndoMoveSocketUseCase
 import by.klnvch.link5dots.domain.usecases.UndoMoveUseCase
-import by.klnvch.link5dots.domain.usecases.getRoomUseCase.GetRoomSocketUseCase
-import by.klnvch.link5dots.domain.usecases.getRoomUseCase.GetRoomUseCase
 import by.klnvch.link5dots.domain.usecases.network.CommonScanUseCase
 import by.klnvch.link5dots.domain.usecases.network.CreateMultiplayerRoomUseCase
 import by.klnvch.link5dots.domain.usecases.network.CreateSocketRoomUseCase
@@ -56,7 +56,7 @@ import dagger.Module
 @Module
 interface SocketGameRulesModule {
     @Binds
-    fun bindGetRoomUseCase(impl: GetRoomSocketUseCase): GetRoomUseCase
+    fun bindGameRoomOrchestrator(impl: GameRoomSocketOrchestrator): GameRoomOrchestrator
 
     @Binds
     fun bindNewGameUseCase(impl: NewGameSocketUseCase): NewGameUseCase

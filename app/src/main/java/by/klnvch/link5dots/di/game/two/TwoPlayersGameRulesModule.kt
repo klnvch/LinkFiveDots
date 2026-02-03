@@ -23,6 +23,8 @@
  */
 package by.klnvch.link5dots.di.game.two
 
+import by.klnvch.link5dots.application.services.gameRoomOrchestrator.GameRoomCommonOrchestrator
+import by.klnvch.link5dots.application.services.gameRoomOrchestrator.GameRoomOrchestrator
 import by.klnvch.link5dots.domain.models.RoomFactory
 import by.klnvch.link5dots.domain.models.RoomTwoFactory
 import by.klnvch.link5dots.domain.models.RoomTypeProvider
@@ -37,8 +39,6 @@ import by.klnvch.link5dots.domain.usecases.SaveScoreEmptyUseCase
 import by.klnvch.link5dots.domain.usecases.SaveScoreUseCase
 import by.klnvch.link5dots.domain.usecases.UndoMoveTwoUseCase
 import by.klnvch.link5dots.domain.usecases.UndoMoveUseCase
-import by.klnvch.link5dots.domain.usecases.getRoomUseCase.GetRoomCommonUseCase
-import by.klnvch.link5dots.domain.usecases.getRoomUseCase.GetRoomUseCase
 import dagger.Binds
 import dagger.Module
 
@@ -51,7 +51,7 @@ interface TwoPlayersGameRulesModule {
     fun bindRoomFactory(impl: RoomTwoFactory): RoomFactory
 
     @Binds
-    fun bindGetRoomUseCase(impl: GetRoomCommonUseCase): GetRoomUseCase
+    fun bindGameRoomOrchestrator(impl: GameRoomCommonOrchestrator): GameRoomOrchestrator
 
     @Binds
     fun bindAddDotUseCase(impl: AddDotTwoUseCase): AddDotUseCase
