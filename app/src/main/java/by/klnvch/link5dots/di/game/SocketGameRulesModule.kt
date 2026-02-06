@@ -24,8 +24,11 @@
 
 package by.klnvch.link5dots.di.game
 
+import by.klnvch.link5dots.application.services.GameNotificationHandler
 import by.klnvch.link5dots.application.services.gameRoomOrchestrator.GameRoomOrchestrator
 import by.klnvch.link5dots.application.services.gameRoomOrchestrator.GameRoomSocketOrchestrator
+import by.klnvch.link5dots.di.ActivityScope
+import by.klnvch.link5dots.domain.events.DomainHandler
 import by.klnvch.link5dots.domain.repositories.GameActionsFactory
 import by.klnvch.link5dots.domain.repositories.GameActionsSocketFactory
 import by.klnvch.link5dots.domain.repositories.NetworkUserLocalProvider
@@ -52,6 +55,7 @@ import by.klnvch.link5dots.domain.usecases.network.CreateSocketRoomUseCase
 import by.klnvch.link5dots.domain.usecases.network.ScanUseCase
 import dagger.Binds
 import dagger.Module
+import dagger.multibindings.IntoSet
 
 @Module
 interface SocketGameRulesModule {
@@ -102,4 +106,9 @@ interface SocketGameRulesModule {
 
     @Binds
     fun bindSocketRoomInvitationRepository(impl: SocketRoomRepository): SocketRoomInvitationRepository
+
+    @Binds
+    @IntoSet
+    @ActivityScope
+    fun bindGameNotificationHandler(impl: GameNotificationHandler): DomainHandler
 }

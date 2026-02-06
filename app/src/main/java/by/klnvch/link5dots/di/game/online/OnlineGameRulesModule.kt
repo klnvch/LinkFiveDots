@@ -24,10 +24,13 @@
 package by.klnvch.link5dots.di.game.online
 
 import androidx.lifecycle.ViewModel
+import by.klnvch.link5dots.application.services.GameNotificationHandler
 import by.klnvch.link5dots.application.services.gameRoomOrchestrator.GameRoomOnlineOrchestrator
 import by.klnvch.link5dots.application.services.gameRoomOrchestrator.GameRoomOrchestrator
 import by.klnvch.link5dots.data.online.OnlineRoomRepositoryImpl
+import by.klnvch.link5dots.di.ActivityScope
 import by.klnvch.link5dots.di.viewmodels.ViewModelKey
+import by.klnvch.link5dots.domain.events.DomainHandler
 import by.klnvch.link5dots.domain.models.RoomTypeOnlineProvider
 import by.klnvch.link5dots.domain.models.RoomTypeProvider
 import by.klnvch.link5dots.domain.repositories.NetworkUserFirebaseProvider
@@ -54,6 +57,7 @@ import by.klnvch.link5dots.ui.game.viewmodels.OnlineUserHistoryViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
+import dagger.multibindings.IntoSet
 
 @Module
 interface OnlineGameRulesModule {
@@ -108,4 +112,9 @@ interface OnlineGameRulesModule {
     @IntoMap
     @ViewModelKey(OnlineUserHistoryViewModel::class)
     fun bindOnlineUserHistoryViewModel(viewModel: OnlineUserHistoryViewModel): ViewModel
+
+    @Binds
+    @IntoSet
+    @ActivityScope
+    fun bindGameNotificationHandler(impl: GameNotificationHandler): DomainHandler
 }

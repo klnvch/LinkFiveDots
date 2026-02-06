@@ -1,18 +1,33 @@
 package by.klnvch.link5dots.domain.history.service
 
+import by.klnvch.link5dots.domain.events.DomainEventBus
+import by.klnvch.link5dots.domain.events.DomainHandler
+import by.klnvch.link5dots.domain.events.OnlineRoomChangedEvent
 import by.klnvch.link5dots.domain.history.entities.encode
 import by.klnvch.link5dots.domain.history.repository.UserHistorySaveRemoteRepository
 import by.klnvch.link5dots.domain.models.online.OnlineRoomLive
 import by.klnvch.link5dots.domain.repositories.NetworkUserProvider
 import by.klnvch.link5dots.domain.repositories.networkUserOrThrow
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.filterIsInstance
+import kotlinx.coroutines.launch
 
-class UserHistoryService(
+class UserHistoryHandler(
+    private val eventBus: DomainEventBus,
     private val repo: UserHistorySaveRemoteRepository,
     private val userProvider: NetworkUserProvider,
-) {
-    suspend fun syncHistory(prev: OnlineRoomLive?, next: OnlineRoomLive) {
-        if (!shouldUpdateHistory(prev, next)) return
+) : DomainHandler {
+    init {
+        CoroutineScope(Dispatchers.Default).launch {
+            eventBus.events.filterIsInstance<OnlineRoomChangedEvent>().collect { event ->
+                syncIfNeeded(event.previous, event.current)
+            }
+        }
+    }
 
+    private suspend fun syncIfNeeded(prev: OnlineRoomLive?, next: OnlineRoomLive) {
+        if (!shouldUpdateHistory(prev, next)) return
         runCatching {
             val user = userProvider.networkUserOrThrow
             repo.addItemToUserHistory(user.id, next.room.key, encode(user, next))

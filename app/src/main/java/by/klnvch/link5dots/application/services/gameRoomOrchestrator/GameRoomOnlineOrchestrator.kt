@@ -1,12 +1,13 @@
 package by.klnvch.link5dots.application.services.gameRoomOrchestrator
 
-import by.klnvch.link5dots.application.services.GameNotificationOrchestrator
-import by.klnvch.link5dots.domain.history.service.UserHistoryService
+import by.klnvch.link5dots.domain.events.DomainEventPublisher
+import by.klnvch.link5dots.domain.events.NetworkRoomUpdatedEvent
+import by.klnvch.link5dots.domain.events.OnlineRoomChangedEvent
 import by.klnvch.link5dots.domain.models.GameState
 import by.klnvch.link5dots.domain.models.NetworkGameStateFactory
+import by.klnvch.link5dots.domain.models.online.OnlineRoomLive
 import by.klnvch.link5dots.domain.repositories.RoomFlowOnlineRepository
 import by.klnvch.link5dots.domain.repositories.RoomSaveLocalRepository
-import by.klnvch.link5dots.utils.onEachWithPrev
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
@@ -16,16 +17,18 @@ class GameRoomOnlineOrchestrator @Inject constructor(
     private val repository: RoomFlowOnlineRepository,
     private val saveRepository: RoomSaveLocalRepository,
     private val gameStateFactory: NetworkGameStateFactory,
-    private val notifier: GameNotificationOrchestrator,
-    private val userHistoryService: UserHistoryService,
+    private val domainEventPublisher: DomainEventPublisher,
 ) : GameRoomOrchestrator {
+    private var prev: OnlineRoomLive? = null
+
     override fun observeAndSync(): Flow<GameState> = repository.onlineRoom
         .onEach {
-            notifier.notifyIfRequired(it.room)
             saveRepository.save(it.room)
-        }
-        .onEachWithPrev { prev, next ->
-            userHistoryService.syncHistory(prev, next)
+
+            domainEventPublisher.publish(NetworkRoomUpdatedEvent(it.room))
+            
+            domainEventPublisher.publish(OnlineRoomChangedEvent(previous = prev, current = it))
+            prev = it
         }
         .map {
             gameStateFactory.create(it.room, it.isActive)

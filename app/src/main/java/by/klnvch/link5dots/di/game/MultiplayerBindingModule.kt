@@ -24,6 +24,8 @@
 
 package by.klnvch.link5dots.di.game
 
+import by.klnvch.link5dots.domain.events.DomainEventBus
+import by.klnvch.link5dots.domain.events.DomainEventPublisher
 import by.klnvch.link5dots.domain.repositories.NetworkUserProvider
 import by.klnvch.link5dots.domain.usecases.network.GetNetworkGameActionUseCase
 import dagger.Module
@@ -34,4 +36,10 @@ class MultiplayerBindingModule {
     @Provides
     fun provideGetNetworkGameActionUseCase(networkUserProvider: NetworkUserProvider) =
         GetNetworkGameActionUseCase(networkUserProvider)
+
+    @Provides
+    fun provideEventBus() = DomainEventBus()
+
+    @Provides
+    fun provideDomainEventPublisher(eventBus: DomainEventBus): DomainEventPublisher = eventBus
 }
