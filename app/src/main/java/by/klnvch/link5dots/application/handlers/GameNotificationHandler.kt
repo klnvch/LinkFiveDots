@@ -1,4 +1,4 @@
-package by.klnvch.link5dots.application.services
+package by.klnvch.link5dots.application.handlers
 
 import by.klnvch.link5dots.domain.events.DomainEventBus
 import by.klnvch.link5dots.domain.events.DomainHandler
@@ -28,7 +28,7 @@ class GameNotificationHandler @Inject constructor(
         }
     }
 
-    suspend fun notifyIfRequired(room: INetworkRoom) {
+    private suspend fun notifyIfRequired(room: INetworkRoom) {
         if (!policy.isAttentionRequired(room)) return
 
         val isEnabled = settings.isVibrationEnabled.first()

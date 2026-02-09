@@ -2,7 +2,7 @@ package by.klnvch.link5dots.domain.history.service
 
 import by.klnvch.link5dots.domain.events.DomainEventBus
 import by.klnvch.link5dots.domain.events.DomainHandler
-import by.klnvch.link5dots.domain.events.OnlineRoomChangedEvent
+import by.klnvch.link5dots.domain.events.OnlineRoomUpdatedEvent
 import by.klnvch.link5dots.domain.history.entities.encode
 import by.klnvch.link5dots.domain.history.repository.UserHistorySaveRemoteRepository
 import by.klnvch.link5dots.domain.models.online.OnlineRoomLive
@@ -20,7 +20,7 @@ class UserHistoryHandler(
 ) : DomainHandler {
     init {
         CoroutineScope(Dispatchers.Default).launch {
-            eventBus.events.filterIsInstance<OnlineRoomChangedEvent>().collect { event ->
+            eventBus.events.filterIsInstance<OnlineRoomUpdatedEvent>().collect { event ->
                 syncIfNeeded(event.previous, event.current)
             }
         }

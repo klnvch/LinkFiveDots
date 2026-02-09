@@ -24,7 +24,8 @@
 package by.klnvch.link5dots.di.game.online
 
 import androidx.lifecycle.ViewModel
-import by.klnvch.link5dots.application.services.GameNotificationHandler
+import by.klnvch.link5dots.application.handlers.GameNotificationHandler
+import by.klnvch.link5dots.application.handlers.NetworkRoomPersistenceHandler
 import by.klnvch.link5dots.application.services.gameRoomOrchestrator.GameRoomOnlineOrchestrator
 import by.klnvch.link5dots.application.services.gameRoomOrchestrator.GameRoomOrchestrator
 import by.klnvch.link5dots.data.online.OnlineRoomRepositoryImpl
@@ -117,4 +118,9 @@ interface OnlineGameRulesModule {
     @IntoSet
     @ActivityScope
     fun bindGameNotificationHandler(impl: GameNotificationHandler): DomainHandler
+
+    @Binds
+    @IntoSet
+    @ActivityScope
+    fun bindNetworkRoomPersistenceHandler(impl: NetworkRoomPersistenceHandler): DomainHandler
 }
