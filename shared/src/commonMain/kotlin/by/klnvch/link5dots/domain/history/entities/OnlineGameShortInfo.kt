@@ -23,6 +23,21 @@ interface OnlineGameShortInfo {
     val status: OnlineGameShortInfoStatus
 }
 
+@OptIn(ExperimentalJsExport::class)
+@JsExport
+interface Performance {
+    val wins: Int
+    val losses: Int
+    val draws: Int
+}
+
+@OptIn(ExperimentalJsExport::class)
+@JsExport
+interface OnlineHistoryStats {
+    val totalPerformance: Performance
+    val items: List<OnlineGameShortInfo>
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Implementation
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -35,6 +50,41 @@ data class OnlineGameShortInfoImpl(
     override val status: OnlineGameShortInfoStatus,
 ) : OnlineGameShortInfo
 
+private data class PerformanceImpl(
+    override val wins: Int,
+    override val losses: Int,
+    override val draws: Int,
+) : Performance
+
+private data class OnlineHistoryStatsImpl(
+    override val items: List<OnlineGameShortInfo>,
+    override val totalPerformance: PerformanceImpl,
+) : OnlineHistoryStats
+
+fun calculateStats(items: List<OnlineGameShortInfo>): OnlineHistoryStats {
+    var wins = 0
+    var losses = 0
+    var draws = 0
+
+    for (item in items) {
+        when (item.status) {
+            OnlineGameShortInfoStatus.Won -> wins++
+            OnlineGameShortInfoStatus.Lost -> losses++
+            OnlineGameShortInfoStatus.Draw -> draws++
+            OnlineGameShortInfoStatus.InProgress -> {}
+        }
+    }
+
+    return OnlineHistoryStatsImpl(items, PerformanceImpl(wins, losses, draws))
+}
+
+private val GameStatus.toOnlineGameShortInfoStatus
+    get(): OnlineGameShortInfoStatus = when (this) {
+        GameStatus.Won, GameStatus.WonByTimeout -> OnlineGameShortInfoStatus.Won
+        GameStatus.Lost, GameStatus.LostByTimeout -> OnlineGameShortInfoStatus.Lost
+        GameStatus.Draw -> OnlineGameShortInfoStatus.Draw
+    }
+
 fun HistoryOnlineRoomItem.toOnlineGameShortInfo(defaultName: String): OnlineGameShortInfo =
     OnlineGameShortInfoImpl(
         user1Name = this.user1Name ?: defaultName,
@@ -42,12 +92,5 @@ fun HistoryOnlineRoomItem.toOnlineGameShortInfo(defaultName: String): OnlineGame
         timeText = this.time.formatDateTime(),
         sizeText = result?.size?.toString() ?: "…",
         durationText = result?.duration?.formatDuration() ?: "…",
-        status = when (result?.status) {
-            GameStatus.Won -> OnlineGameShortInfoStatus.Won
-            GameStatus.WonByTimeout -> OnlineGameShortInfoStatus.Won
-            GameStatus.Lost -> OnlineGameShortInfoStatus.Lost
-            GameStatus.LostByTimeout -> OnlineGameShortInfoStatus.Lost
-            GameStatus.Draw -> OnlineGameShortInfoStatus.Draw
-            null -> OnlineGameShortInfoStatus.InProgress
-        }
+        status = result?.status?.toOnlineGameShortInfoStatus ?: OnlineGameShortInfoStatus.InProgress
     )

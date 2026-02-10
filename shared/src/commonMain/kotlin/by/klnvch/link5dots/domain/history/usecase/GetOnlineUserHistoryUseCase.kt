@@ -1,6 +1,7 @@
 package by.klnvch.link5dots.domain.history.usecase
 
-import by.klnvch.link5dots.domain.history.entities.OnlineGameShortInfo
+import by.klnvch.link5dots.domain.history.entities.OnlineHistoryStats
+import by.klnvch.link5dots.domain.history.entities.calculateStats
 import by.klnvch.link5dots.domain.history.entities.decode
 import by.klnvch.link5dots.domain.history.entities.toOnlineGameShortInfo
 import by.klnvch.link5dots.domain.history.repository.UserHistoryReadRemoteRepository
@@ -13,15 +14,16 @@ class GetOnlineUserHistoryUseCase(
     private val networkUserProvider: NetworkUserProvider,
     private val stringProvider: StringProvider,
 ) {
-    suspend fun getUserHistory(): List<OnlineGameShortInfo> {
+    suspend fun getUserHistory(): OnlineHistoryStats {
         try {
             val userId = networkUserProvider.networkUserOrThrow.id
-            return repository.getUserHistory(userId)
+            val items = repository.getUserHistory(userId)
                 .map { decode(it) }
                 .map { it.toOnlineGameShortInfo(stringProvider.unknownName) }
+            return calculateStats(items)
         } catch (e: Throwable) {
             println(e.message)
-            return emptyList()
+            return calculateStats(emptyList())
         }
     }
 }
