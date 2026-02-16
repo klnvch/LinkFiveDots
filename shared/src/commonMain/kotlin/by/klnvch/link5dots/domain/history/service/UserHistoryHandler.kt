@@ -4,6 +4,7 @@ import by.klnvch.link5dots.domain.events.DomainEventBus
 import by.klnvch.link5dots.domain.events.DomainHandler
 import by.klnvch.link5dots.domain.events.OnlineRoomUpdatedEvent
 import by.klnvch.link5dots.domain.history.entities.encode
+import by.klnvch.link5dots.domain.history.entities.mapToHistoryOnlineRoomItem
 import by.klnvch.link5dots.domain.history.repository.UserHistorySaveRemoteRepository
 import by.klnvch.link5dots.domain.models.online.OnlineRoomLive
 import by.klnvch.link5dots.domain.repositories.NetworkUserProvider
@@ -30,7 +31,8 @@ class UserHistoryHandler(
         if (!shouldUpdateHistory(prev, next)) return
         runCatching {
             val user = userProvider.networkUserOrThrow
-            repo.addItemToUserHistory(user.id, next.room.key, encode(user, next))
+            val item = next.mapToHistoryOnlineRoomItem(user)
+            repo.addItemToUserHistory(user.id, next.room.key, item.encode())
         }.onFailure { e ->
             println(e.message)
         }

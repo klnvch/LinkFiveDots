@@ -1,5 +1,7 @@
 package by.klnvch.link5dots.domain.history.entities
 
+import by.klnvch.link5dots.domain.history.entities.impl.GameResultImpl
+import by.klnvch.link5dots.domain.history.entities.impl.HistoryOnlineRoomItemImpl
 import by.klnvch.link5dots.domain.models.NetworkUser
 import by.klnvch.link5dots.domain.models.canMove
 import by.klnvch.link5dots.domain.models.online.OnlineRoomLive
@@ -10,9 +12,6 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.cbor.Cbor
 import kotlin.io.encoding.Base64
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
-// Interfaces
-////////////////////////////////////////////////////////////////////////////////////////////////////
 @Serializable
 enum class GameStatus {
     @SerialName("w")
@@ -43,11 +42,11 @@ interface GameResult {
 }
 
 interface HistoryOnlineRoomItem {
-    /** name or default if null */
-    val user1Name: String?
+    /** opponent user id */
+    val userId: String
 
-    /** name or default if null */
-    val user2Name: String?
+    /** opponent user name or default if null */
+    val userName: String?
 
     /** number of seconds since last epoch to measure complexity */
     val time: Int
@@ -56,35 +55,15 @@ interface HistoryOnlineRoomItem {
     val result: GameResult?
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
-// Implementations
-////////////////////////////////////////////////////////////////////////////////////////////////////
-@Serializable
-data class GameResultImpl(
-    @SerialName("s") override val size: Int,
-    @SerialName("d") override val duration: Int,
-    @SerialName("o") override val status: GameStatus,
-) : GameResult
-
-@Serializable
-data class HistoryOnlineRoomItemImpl(
-    @SerialName("u1") override val user1Name: String?,
-    @SerialName("u2") override val user2Name: String?,
-    @SerialName("t") override val time: Int,
-    @SerialName("r") override val result: GameResultImpl?,
-) : HistoryOnlineRoomItem
-
-@OptIn(ExperimentalSerializationApi::class)
-fun encode(user: NetworkUser, room: OnlineRoomLive): String {
-    val user1Name = room.room.user1.name
-    val user2Name = room.room.user2.name
-    val time = room.room.time
-    val isOver = room.room.isOver()
-    val isActive = room.isActive
-    val canMove = room.room.canMove(user)
+fun OnlineRoomLive.mapToHistoryOnlineRoomItem(user: NetworkUser): HistoryOnlineRoomItem {
+    val userId = if (room.user1.id === user.id) room.user2.id else room.user1.id
+    val userName = if (room.user1.id === user.id) room.user2.name else room.user1.name
+    val time = room.time
+    val isOver = room.isOver()
+    val canMove = room.canMove(user)
     val result = if (isOver || !isActive) {
-        val size = room.room.size
-        val duration = room.room.getDuration()
+        val size = room.size
+        val duration = room.getDuration()
         val status = when {
             isOver && !canMove -> GameStatus.Won
             isOver && canMove -> GameStatus.Lost
@@ -95,13 +74,18 @@ fun encode(user: NetworkUser, room: OnlineRoomLive): String {
         GameResultImpl(size, duration, status)
     } else null
 
-    val value = HistoryOnlineRoomItemImpl(user1Name, user2Name, time, result)
+    return HistoryOnlineRoomItemImpl(userId, userName, time, result)
+}
+
+@OptIn(ExperimentalSerializationApi::class)
+fun HistoryOnlineRoomItem.encode(): String {
+    val value = this as HistoryOnlineRoomItemImpl
     val bytes = Cbor.encodeToByteArray(HistoryOnlineRoomItemImpl.serializer(), value)
     return Base64.encode(bytes)
 }
 
 @OptIn(ExperimentalSerializationApi::class)
-fun decode(value: String): HistoryOnlineRoomItem {
-    val bytes = Base64.decode(value)
+fun String.decode(): HistoryOnlineRoomItem {
+    val bytes = Base64.decode(this)
     return Cbor.decodeFromByteArray(HistoryOnlineRoomItemImpl.serializer(), bytes)
 }

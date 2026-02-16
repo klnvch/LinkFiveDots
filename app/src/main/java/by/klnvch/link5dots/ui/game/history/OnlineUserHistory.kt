@@ -1,27 +1,3 @@
-/*
- * MIT License
- *
- * Copyright (c) 2025-2026 klnvch
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
- */
-
 package by.klnvch.link5dots.ui.game.history
 
 import androidx.compose.foundation.clickable
@@ -57,10 +33,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import by.klnvch.link5dots.R
 import by.klnvch.link5dots.domain.history.entities.OnlineGameShortInfo
-import by.klnvch.link5dots.domain.history.entities.OnlineGameShortInfoImpl
 import by.klnvch.link5dots.domain.history.entities.OnlineGameShortInfoStatus
-import by.klnvch.link5dots.ui.common.BlueDot
-import by.klnvch.link5dots.ui.common.RedDot
+import by.klnvch.link5dots.domain.history.entities.Opponent
 import by.klnvch.link5dots.ui.common.TextCenterInfo
 import by.klnvch.link5dots.ui.game.viewmodels.OnlineUserHistoryViewModel
 import by.klnvch.link5dots.ui.game.viewmodels.UserHistoryViewState
@@ -121,23 +95,13 @@ fun HistoryRow(
             )
             Spacer(modifier = Modifier.width(8.dp))
 
-            // Player names with coloured dots
+            // Player names with colored dots
             Column(
                 modifier = Modifier.weight(1f)          // take up remaining space
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    RedDot()
-                    Spacer(modifier = Modifier.width(4.dp))
                     Text(
-                        text = item.user1Name,
-                        style = MaterialTheme.typography.bodyLarge,
-                        fontWeight = FontWeight.Medium
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    BlueDot()
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Text(
-                        text = item.user2Name,
+                        text = item.opponent.name,
                         style = MaterialTheme.typography.bodyLarge,
                         fontWeight = FontWeight.Medium
                     )
@@ -175,14 +139,16 @@ fun HistoryRow(
 @Preview(showBackground = true)
 @Composable
 private fun HistoryItemRowPreview() {
-    val sample = OnlineGameShortInfoImpl(
-        user1Name = "Alice",
-        user2Name = "Bob",
-        timeText = "Dec 18, 05:22 PM",
-        durationText = "12:34",
-        sizeText = "12",
-        status = OnlineGameShortInfoStatus.Won,
-    )
+    val sample = object : OnlineGameShortInfo {
+        override val opponent = object : Opponent {
+            override val id = "id"
+            override val name = "Alice"
+        }
+        override val timeText = "Dec 18, 05:22 PM"
+        override val durationText = "12:34"
+        override val sizeText = "12"
+        override val status = OnlineGameShortInfoStatus.Won
+    }
     MaterialTheme {
         Surface {
             Column {

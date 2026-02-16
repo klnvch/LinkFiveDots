@@ -1,13 +1,14 @@
 package by.klnvch.link5dots.domain.history.entities
 
 import by.klnvch.link5dots.domain.formatDuration
+import by.klnvch.link5dots.domain.history.entities.impl.OnlineGameShortInfoImpl
+import by.klnvch.link5dots.domain.history.entities.impl.OnlineHistoryStatsImpl
+import by.klnvch.link5dots.domain.history.entities.impl.OpponentImpl
+import by.klnvch.link5dots.domain.history.entities.impl.PerformanceImpl
 import by.klnvch.link5dots.formatDateTime
 import kotlin.js.ExperimentalJsExport
 import kotlin.js.JsExport
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
-// Interfaces
-////////////////////////////////////////////////////////////////////////////////////////////////////
 @OptIn(ExperimentalJsExport::class)
 @JsExport
 enum class OnlineGameShortInfoStatus { Won, Lost, Draw, InProgress }
@@ -15,8 +16,7 @@ enum class OnlineGameShortInfoStatus { Won, Lost, Draw, InProgress }
 @OptIn(ExperimentalJsExport::class)
 @JsExport
 interface OnlineGameShortInfo {
-    val user1Name: String          // real name or default
-    val user2Name: String          // real name or default
+    val opponent: Opponent      // opponent with real name or default
     val timeText: String           // e.g. "02:15"
     val sizeText: String           // e.g. "12"
     val durationText: String       // e.g. "Dec 18, 05:22 PM"
@@ -33,49 +33,49 @@ interface Performance {
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport
+interface Opponent {
+    val id: String
+    val name: String
+}
+
+@OptIn(ExperimentalJsExport::class)
+@JsExport
 interface OnlineHistoryStats {
     val totalPerformance: Performance
+    val performanceByUser: Map<Opponent, Performance>
     val items: List<OnlineGameShortInfo>
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
-// Implementation
-////////////////////////////////////////////////////////////////////////////////////////////////////
-data class OnlineGameShortInfoImpl(
-    override val user1Name: String,          // real name or default
-    override val user2Name: String,          // real name or default
-    override val timeText: String,           // e.g. "02:15"
-    override val sizeText: String,           // e.g. "12"
-    override val durationText: String,       // e.g. "Dec 18, 05:22 PM"
-    override val status: OnlineGameShortInfoStatus,
-) : OnlineGameShortInfo
-
-private data class PerformanceImpl(
-    override val wins: Int,
-    override val losses: Int,
-    override val draws: Int,
-) : Performance
-
-private data class OnlineHistoryStatsImpl(
-    override val items: List<OnlineGameShortInfo>,
-    override val totalPerformance: PerformanceImpl,
-) : OnlineHistoryStats
-
 fun calculateStats(items: List<OnlineGameShortInfo>): OnlineHistoryStats {
-    var wins = 0
-    var losses = 0
-    var draws = 0
+    val totalPerformance = PerformanceImpl()
+    val performanceByUser = mutableMapOf<Opponent, PerformanceImpl>()
 
-    for (item in items) {
+    for (item in items.reversed()) {
+        val perfByUser = performanceByUser[item.opponent] ?: PerformanceImpl()
+
         when (item.status) {
-            OnlineGameShortInfoStatus.Won -> wins++
-            OnlineGameShortInfoStatus.Lost -> losses++
-            OnlineGameShortInfoStatus.Draw -> draws++
+            OnlineGameShortInfoStatus.Won -> {
+                totalPerformance.wins++
+                perfByUser.wins++
+            }
+
+            OnlineGameShortInfoStatus.Lost -> {
+                totalPerformance.losses++
+                perfByUser.losses++
+            }
+
+            OnlineGameShortInfoStatus.Draw -> {
+                totalPerformance.draws++
+                perfByUser.draws++
+            }
+
             OnlineGameShortInfoStatus.InProgress -> {}
         }
+
+        performanceByUser[item.opponent] = perfByUser
     }
 
-    return OnlineHistoryStatsImpl(items, PerformanceImpl(wins, losses, draws))
+    return OnlineHistoryStatsImpl(items, totalPerformance, performanceByUser)
 }
 
 private val GameStatus.toOnlineGameShortInfoStatus
@@ -87,9 +87,8 @@ private val GameStatus.toOnlineGameShortInfoStatus
 
 fun HistoryOnlineRoomItem.toOnlineGameShortInfo(defaultName: String): OnlineGameShortInfo =
     OnlineGameShortInfoImpl(
-        user1Name = this.user1Name ?: defaultName,
-        user2Name = this.user2Name ?: defaultName,
-        timeText = this.time.formatDateTime(),
+        opponent = OpponentImpl(userId, userName ?: defaultName),
+        timeText = time.formatDateTime(),
         sizeText = result?.size?.toString() ?: "…",
         durationText = result?.duration?.formatDuration() ?: "…",
         status = result?.status?.toOnlineGameShortInfoStatus ?: OnlineGameShortInfoStatus.InProgress

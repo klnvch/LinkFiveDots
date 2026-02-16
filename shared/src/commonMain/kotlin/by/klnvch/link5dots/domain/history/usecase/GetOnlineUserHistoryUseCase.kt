@@ -18,7 +18,7 @@ class GetOnlineUserHistoryUseCase(
         try {
             val userId = networkUserProvider.networkUserOrThrow.id
             val items = repository.getUserHistory(userId)
-                .map { decode(it) }
+                .map { it.decode() }
                 .map { it.toOnlineGameShortInfo(stringProvider.unknownName) }
             return calculateStats(items)
         } catch (e: Throwable) {
