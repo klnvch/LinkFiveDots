@@ -38,6 +38,7 @@ import by.klnvch.link5dots.domain.history.entities.Opponent
 import by.klnvch.link5dots.ui.common.TextCenterInfo
 import by.klnvch.link5dots.ui.game.viewmodels.OnlineUserHistoryViewModel
 import by.klnvch.link5dots.ui.game.viewmodels.UserHistoryViewState
+import by.klnvch.link5dots.utils.FormatUtils.formatDuration
 
 @Composable
 fun HistoryRow(
@@ -109,7 +110,7 @@ fun HistoryRow(
                 Spacer(modifier = Modifier.height(2.dp))
                 Row {
                     Text(
-                        text = "${stringResource(R.string.settings_dots)}: ${item.sizeText}",
+                        text = "${stringResource(R.string.settings_dots)}: ${item.size}",
                         style = MaterialTheme.typography.labelMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -127,7 +128,7 @@ fun HistoryRow(
                 horizontalAlignment = Alignment.End
             ) {
                 Text(
-                    text = "${stringResource(R.string.duration)}: ${item.durationText}",
+                    text = "${stringResource(R.string.duration)}: ${item.duration.formatDuration()}",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -145,8 +146,8 @@ private fun HistoryItemRowPreview() {
             override val name = "Alice"
         }
         override val timeText = "Dec 18, 05:22 PM"
-        override val durationText = "12:34"
-        override val sizeText = "12"
+        override val duration = 754
+        override val size = 12
         override val status = OnlineGameShortInfoStatus.Won
     }
     MaterialTheme {

@@ -1,6 +1,5 @@
 package by.klnvch.link5dots.domain.history.entities
 
-import by.klnvch.link5dots.domain.formatDuration
 import by.klnvch.link5dots.domain.history.entities.impl.OnlineGameShortInfoImpl
 import by.klnvch.link5dots.domain.history.entities.impl.OnlineHistoryStatsImpl
 import by.klnvch.link5dots.domain.history.entities.impl.OpponentImpl
@@ -17,9 +16,9 @@ enum class OnlineGameShortInfoStatus { Won, Lost, Draw, InProgress }
 @JsExport
 interface OnlineGameShortInfo {
     val opponent: Opponent      // opponent with real name or default
-    val timeText: String           // e.g. "02:15"
-    val sizeText: String           // e.g. "12"
-    val durationText: String       // e.g. "Dec 18, 05:22 PM"
+    val timeText: String        // e.g. "02:15"
+    val size: Int
+    val duration: Int
     val status: OnlineGameShortInfoStatus
 }
 
@@ -29,6 +28,11 @@ interface Performance {
     val wins: Int
     val losses: Int
     val draws: Int
+    val total: Int
+    val duration: Int
+    val durationAvg: Int
+    val size: Int
+    val sizeAvg: Int
 }
 
 @OptIn(ExperimentalJsExport::class)
@@ -56,17 +60,29 @@ fun calculateStats(items: List<OnlineGameShortInfo>): OnlineHistoryStats {
         when (item.status) {
             OnlineGameShortInfoStatus.Won -> {
                 totalPerformance.wins++
+                totalPerformance.duration += item.duration
+                totalPerformance.size += item.size
                 perfByUser.wins++
+                perfByUser.duration += item.duration
+                perfByUser.size += item.size
             }
 
             OnlineGameShortInfoStatus.Lost -> {
                 totalPerformance.losses++
+                totalPerformance.duration += item.duration
+                totalPerformance.size += item.size
                 perfByUser.losses++
+                perfByUser.duration += item.duration
+                perfByUser.size += item.size
             }
 
             OnlineGameShortInfoStatus.Draw -> {
                 totalPerformance.draws++
+                totalPerformance.duration += item.duration
+                totalPerformance.size += item.size
                 perfByUser.draws++
+                perfByUser.duration += item.duration
+                perfByUser.size += item.size
             }
 
             OnlineGameShortInfoStatus.InProgress -> {}
@@ -89,7 +105,7 @@ fun HistoryOnlineRoomItem.toOnlineGameShortInfo(defaultName: String): OnlineGame
     OnlineGameShortInfoImpl(
         opponent = OpponentImpl(userId, userName ?: defaultName),
         timeText = time.formatDateTime(),
-        sizeText = result?.size?.toString() ?: "…",
-        durationText = result?.duration?.formatDuration() ?: "…",
+        size = result?.size ?: 0,
+        duration = result?.duration ?: 0,
         status = result?.status?.toOnlineGameShortInfoStatus ?: OnlineGameShortInfoStatus.InProgress
     )

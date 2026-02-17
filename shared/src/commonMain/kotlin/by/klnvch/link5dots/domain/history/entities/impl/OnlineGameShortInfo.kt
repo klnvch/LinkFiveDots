@@ -14,9 +14,9 @@ internal data class OnlineHistoryStatsImpl(
 
 internal data class OnlineGameShortInfoImpl(
     override val opponent: Opponent,
-    override val timeText: String,           // e.g. "02:15"
-    override val sizeText: String,           // e.g. "12"
-    override val durationText: String,       // e.g. "Dec 18, 05:22 PM"
+    override val timeText: String,
+    override val size: Int,
+    override val duration: Int,
     override val status: OnlineGameShortInfoStatus,
 ) : OnlineGameShortInfo
 
@@ -24,7 +24,13 @@ internal class PerformanceImpl(
     override var wins: Int = 0,
     override var losses: Int = 0,
     override var draws: Int = 0,
-) : Performance
+    override var duration: Int = 0,
+    override var size: Int = 0,
+) : Performance {
+    override val total: Int = wins + losses + draws
+    override val durationAvg: Int = duration / total
+    override var sizeAvg: Int = size / total
+}
 
 internal data class OpponentImpl(
     override val id: String,
