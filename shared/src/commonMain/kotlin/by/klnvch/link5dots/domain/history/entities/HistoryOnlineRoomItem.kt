@@ -4,6 +4,7 @@ import by.klnvch.link5dots.domain.history.entities.impl.GameResultImpl
 import by.klnvch.link5dots.domain.history.entities.impl.HistoryOnlineRoomItemImpl
 import by.klnvch.link5dots.domain.models.NetworkUser
 import by.klnvch.link5dots.domain.models.canMove
+import by.klnvch.link5dots.domain.models.getDuration
 import by.klnvch.link5dots.domain.models.online.OnlineRoomLive
 import by.klnvch.link5dots.domain.models.size
 import kotlinx.serialization.ExperimentalSerializationApi
@@ -37,6 +38,9 @@ interface GameResult {
     /** number of seconds since game started */
     val duration: Int
 
+    /** number of seconds spent on thinking */
+    val dt: Int
+
     /** all possible reasons to stop a game */
     val status: GameStatus
 }
@@ -64,6 +68,7 @@ fun OnlineRoomLive.mapToHistoryOnlineRoomItem(user: NetworkUser): HistoryOnlineR
     val result = if (isOver || !isActive) {
         val size = room.size
         val duration = room.getDuration()
+        val dt = room.dots.getDuration(if (room.user1.id === user.id) 1 else 0)
         val status = when {
             isOver && !canMove -> GameStatus.Won
             isOver && canMove -> GameStatus.Lost
@@ -71,7 +76,7 @@ fun OnlineRoomLive.mapToHistoryOnlineRoomItem(user: NetworkUser): HistoryOnlineR
             !isActive && canMove -> GameStatus.LostByTimeout
             else -> GameStatus.Draw
         }
-        GameResultImpl(size, duration, status)
+        GameResultImpl(size, duration, dt, status)
     } else null
 
     return HistoryOnlineRoomItemImpl(userId, userName, time, result)

@@ -10,6 +10,7 @@ import kotlinx.serialization.Serializable
 internal data class GameResultImpl(
     @SerialName("s") override val size: Int,
     @SerialName("d") override val duration: Int,
+    @SerialName("t") override val dt: Int,
     @SerialName("o") override val status: GameStatus,
 ) : GameResult
 
