@@ -34,7 +34,7 @@ import kotlinx.coroutines.promise
 import kotlin.js.Promise
 
 @OptIn(DelicateCoroutinesApi::class, ExperimentalJsExport::class)
-@JsExport()
+@JsExport
 fun undoBotGame(room: IRoom?, onGameUpdate: (room: IRoom) -> Unit): Promise<Unit> =
     GlobalScope.promise {
         val getRepository = object : RoomGetRepository {

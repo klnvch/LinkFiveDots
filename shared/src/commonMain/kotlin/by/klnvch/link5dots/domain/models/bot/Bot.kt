@@ -314,7 +314,7 @@ class Bot(private val board: Board) {
 
     companion object {
         //masks
-        private val masks = arrayOf<IntArray>( // 0 - empty, 1 - my, 2 - not my, 3 - any
+        private val masks = arrayOf( // 0 - empty, 1 - my, 2 - not my, 3 - any
             //my wins - 100%
             intArrayOf(1, 1, 1, 1, 1, 3, 3, 3, 3),
             intArrayOf(3, 1, 1, 1, 1, 1, 3, 3, 3),

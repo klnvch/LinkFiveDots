@@ -287,7 +287,7 @@ val unspecified_scheme = ColorFamily(
 fun AppTheme(
     nightMode: NightMode = NightMode.System,
     dynamicColor: Boolean = true,
-    content: @Composable() () -> Unit,
+    content: @Composable () -> Unit,
 ) {
     val darkTheme = when (nightMode) {
         NightMode.On -> true

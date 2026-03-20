@@ -26,11 +26,11 @@ package by.klnvch.link5dots.ui.menu
 
 import by.klnvch.link5dots.R
 
-enum class Route() {
+enum class Route {
     MainMenu, MultiplayerMenu, Scores, Info, Help, Settings
 }
 
-sealed class Screen() {
+sealed class Screen {
     open class ComposeScreen(route: Route, val title: Int) : Screen() {
         val route = route.name
     }

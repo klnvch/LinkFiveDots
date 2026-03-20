@@ -37,4 +37,4 @@ sealed class RecoverableGameException(cause: Throwable?) : Exception(cause)
 @JsExport
 class ConnectException(val target: String, cause: Throwable?) : RecoverableGameException(cause)
 
-class PermissionException() : RecoverableGameException(null)
+class PermissionException : RecoverableGameException(null)

@@ -28,7 +28,7 @@ import kotlin.js.ExperimentalJsExport
 import kotlin.js.JsExport
 
 @OptIn(ExperimentalJsExport::class)
-@JsExport()
+@JsExport
 enum class NetworkGameAction {
     PICKER_CREATING,
     PICKER_DELETING,

@@ -64,8 +64,7 @@ class FirebaseManagerImpl @Inject constructor(
                 if (task.isSuccessful) {
                     cont.resume(task.result.user!!.uid)
                 } else {
-                    val exception = task.exception
-                    when (exception) {
+                    when (val exception = task.exception) {
                         is FirebaseNetworkException -> cont.resumeWithException(FeatureDisabled())
                         is FirebaseException -> cont.resumeWithException(UnknownException())
                         is Exception -> cont.resumeWithException(exception)

@@ -25,7 +25,7 @@
 package by.klnvch.link5dots.domain.repositories
 
 @OptIn(ExperimentalJsExport::class)
-@JsExport()
+@JsExport
 actual external interface StringProvider {
     actual val botName: String
     actual val unknownName: String

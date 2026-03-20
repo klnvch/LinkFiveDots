@@ -36,7 +36,7 @@ import kotlinx.coroutines.promise
 import kotlin.js.Promise
 
 @OptIn(DelicateCoroutinesApi::class, ExperimentalJsExport::class)
-@JsExport()
+@JsExport
 fun createBotGame(onGameCreated: (room: IRoom) -> Unit): Promise<Unit> = GlobalScope.promise {
     val timeService = TimeServiceImpl()
     val roomKeyGenerator = RoomKeyGeneratorImpl(timeService)

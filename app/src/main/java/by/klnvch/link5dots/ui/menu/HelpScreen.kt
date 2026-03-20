@@ -33,7 +33,7 @@ import androidx.compose.ui.unit.dp
 import by.klnvch.link5dots.R
 import by.klnvch.link5dots.ui.common.TextNoSurface
 
-@Preview()
+@Preview
 @Composable
 fun HelpScreen() {
     TextNoSurface(

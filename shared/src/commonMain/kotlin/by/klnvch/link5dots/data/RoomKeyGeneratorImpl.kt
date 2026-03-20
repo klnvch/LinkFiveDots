@@ -35,7 +35,7 @@ class RoomKeyGeneratorImpl(
 ) : RoomKeyGenerator {
     override fun generate(): String {
         val time = timeRepository.now().toLong().toString(16)
-        val random = Random.Default.nextUInt().toString(16)
+        val random = Random.nextUInt().toString(16)
         return "${time}_${platformKeyPart}_${random}"
     }
 }

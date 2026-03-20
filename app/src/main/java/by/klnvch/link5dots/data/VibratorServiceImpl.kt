@@ -32,7 +32,7 @@ import android.os.VibratorManager
 import by.klnvch.link5dots.domain.repositories.VibratorService
 import javax.inject.Inject
 
-class VibratorServiceImpl @Inject constructor(private val context: Context) : VibratorService {
+class VibratorServiceImpl @Inject constructor(context: Context) : VibratorService {
     private val vibrator: Vibrator
 
     init {

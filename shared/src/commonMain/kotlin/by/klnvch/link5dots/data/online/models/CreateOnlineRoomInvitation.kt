@@ -30,7 +30,7 @@ import kotlin.js.ExperimentalJsExport
 import kotlin.js.JsExport
 
 @OptIn(DelicateCoroutinesApi::class, ExperimentalJsExport::class)
-@JsExport()
+@JsExport
 interface CreateOnlineRoomInvitation {
     val key: String
     val user1: NetworkUser

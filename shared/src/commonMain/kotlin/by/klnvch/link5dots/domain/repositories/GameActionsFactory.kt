@@ -33,7 +33,7 @@ interface GameActionsFactory {
     fun get(room: IRoom): GameActions
 }
 
-class GameActionsBotFactory() : GameActionsFactory {
+class GameActionsBotFactory : GameActionsFactory {
     override fun get(room: IRoom) = GameActions(
         when {
             room.isNotEmpty() -> ActionAvailability.Available
@@ -44,7 +44,7 @@ class GameActionsBotFactory() : GameActionsFactory {
     )
 }
 
-class GameActionsOnlineFactory() : GameActionsFactory {
+class GameActionsOnlineFactory : GameActionsFactory {
     override fun get(room: IRoom) = GameActions(
         ActionAvailability.Gone,
         if (room.isOver()) ActionAvailability.Available else ActionAvailability.Disabled,

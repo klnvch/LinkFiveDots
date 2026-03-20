@@ -86,7 +86,7 @@ class BluetoothRoomRepositoryImpl @Inject constructor(
                 .map { devices -> devices.map { BluetoothRoomInvitationImpl(it) } })
     }
 
-    private inner class BluetoothLocalRoomDescriptor() : RemoteRoomDescriptor {
+    private inner class BluetoothLocalRoomDescriptor : RemoteRoomDescriptor {
         override val title = bluetoothManager.getDeviceName()
         override val description = bluetoothManager.getDeviceAddress()
         override val isFavorite = false

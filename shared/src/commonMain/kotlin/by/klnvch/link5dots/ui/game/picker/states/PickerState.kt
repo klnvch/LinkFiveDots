@@ -30,7 +30,7 @@ import kotlin.js.ExperimentalJsExport
 import kotlin.js.JsExport
 
 @OptIn(ExperimentalJsExport::class)
-@JsExport()
+@JsExport
 interface PickerState {
     val isNone: Boolean
 
@@ -64,7 +64,7 @@ interface PickerState {
 }
 
 @OptIn(ExperimentalJsExport::class)
-@JsExport()
+@JsExport
 fun createInitialPickerState(): PickerState = PickerStateImpl()
 
 private data class PickerStateImpl(

@@ -24,7 +24,7 @@
 
 package by.klnvch.link5dots.domain.models
 
-class Board() {
+class Board {
     val width = SIZE
     val height = SIZE
 

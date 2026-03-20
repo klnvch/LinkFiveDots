@@ -34,8 +34,7 @@ class BluetoothValidator @Inject constructor(context: Context) {
     private val bluetoothManager = context.getSystemService(BluetoothManager::class.java)
 
     fun validate() {
-        val adapter = bluetoothManager.adapter
-        if (adapter == null) throw FeatureUnsupported()
+        val adapter = bluetoothManager.adapter ?: throw FeatureUnsupported()
         if (!adapter.isEnabled) throw FeatureDisabled()
     }
 }

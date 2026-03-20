@@ -56,7 +56,7 @@ import by.klnvch.link5dots.ui.game.topBar.TopBar
 import by.klnvch.link5dots.ui.game.viewmodels.OnlineGameViewModel
 import by.klnvch.link5dots.ui.theme.AppTheme
 
-private enum class MultiplayerRoute() { Picker, Game, Error, History }
+private enum class MultiplayerRoute { Picker, Game, Error, History }
 
 @Composable
 private fun GameTitle(action: NetworkGameAction, @StringRes defaultTitle: Int) {

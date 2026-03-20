@@ -32,7 +32,7 @@ interface NewGameUseCase {
     suspend fun create()
 }
 
-class NewGameEmptyUseCase() : NewGameUseCase {
+class NewGameEmptyUseCase : NewGameUseCase {
     override val isImplemented = false
     override suspend fun create() = Unit
 }

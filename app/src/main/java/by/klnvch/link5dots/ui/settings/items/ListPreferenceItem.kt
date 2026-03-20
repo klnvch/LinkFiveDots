@@ -157,7 +157,7 @@ fun optionsFromResource(
     val labels = stringArrayResource(entries)
     val options = mutableMapOf<String, String>()
     for (i in values.indices) {
-        options.put(values[i], labels[i])
+        options[values[i]] = labels[i]
     }
     return options
 }

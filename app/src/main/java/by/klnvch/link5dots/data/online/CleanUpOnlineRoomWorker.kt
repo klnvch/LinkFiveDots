@@ -55,7 +55,7 @@ class CleanUpOnlineRoomWorker @Inject constructor(
     companion object {
         private const val ROOM_STATE = "ROOM_STATE"
         fun Context.launchCleanUpOnlineRoomWorker(state: RoomState) {
-            WorkManager.Companion.getInstance(this)
+            WorkManager.getInstance(this)
                 .enqueue(
                     OneTimeWorkRequestBuilder<CleanUpOnlineRoomWorker>()
                         .setInputData(workDataOf(ROOM_STATE to state.ordinal))

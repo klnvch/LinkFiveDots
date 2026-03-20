@@ -26,4 +26,4 @@ package by.klnvch.link5dots.domain.models
 
 import kotlin.random.Random
 
-fun gameSeed() = Random.Default.nextLong(0xFFFF)
+fun gameSeed() = Random.nextLong(0xFFFF)
